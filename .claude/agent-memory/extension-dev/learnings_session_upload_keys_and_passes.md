@@ -19,6 +19,21 @@ lib/autoBackup.ts), and the non-obvious rules behind it.
     forever. Unknown keys (no stamp, no fingerprint) and backups keep the update-only rule.
   - The full pass skips sessions already under the current key with nothing pending, so a pass that
     hit its deadline resumes instead of restarting.
+- **`Session.remoteGone`**: set when this device itself got `gone` for the row (cleared by a later
+  write that finds it). Without it, the stale `uploadedKey` left after a dashboard delete made the
+  NEXT key change look like "old-key row cleared" and re-inserted the deleted session. The full
+  pass counts it as done. Unavoidable trade-off (in a code comment): a dashboard delete made before a
+  reset that this device never observed is indistinguishable and is re-inserted.
+- **Only a VERIFIED binding gives a fingerprint** (`getDataKeyFingerprint`): a legacy key that merely
+  adopted the current row may be stale, and the resume skip must not trust copies written with it.
+- **Backups are user deletes too**: `deleteAutoBackup` (noteSessionDeletedHere + the remembered id in
+  its transaction) and rotation (the stale ids, in the backup's own transaction) use
+  `addDeletedSessionIds` as an `updateSettings` entry. Downloaded backups are stamped with the key
+  they were decrypted with.
+- **A backup run never clobbers a running pass's token**: `rearmSessionsFlagForBackup` leaves
+  `pass:...` alone (the backup's pending mark covers its retry).
+- **The changed-sessions pass is bounded like the full one**: `cycleDeadline()` and stop at the first
+  `failed` (the first sync after an update otherwise uploads every never-stamped session at once).
 - **The full-pass flag is "due unless `=== true`"**. A running pass stores its own random token
   (`pass:<nanoid>`); the end-of-pass compare-and-set and the orphan cleanup (remote deletes) act
   only while THAT token is still stored. A shared constant marker let popup B's pass (after "Clear

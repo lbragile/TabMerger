@@ -15,10 +15,20 @@ import {
 import type { Group, Session } from '@/lib/types';
 import { isTourDemoGroup } from '@tabmerger/shared';
 import { TIER_LIMITS } from '@/lib/types';
-import { getGroupsState, getSessions, deleteSession, getSetting, setSetting, commitSessions, commitSessionsIfGuardHolds, compareAndSetSetting } from '@/lib/localDb';
+import {
+  getGroupsState,
+  getSessions,
+  deleteSession,
+  getSetting,
+  setSetting,
+  commitSessions,
+  commitSessionsIfGuardHolds,
+  compareAndSetSetting,
+  addDeletedSessionIds
+} from '@/lib/localDb';
 import { supabase } from '@/lib/supabase';
 import { fetchTier } from '@/lib/entitlementTier';
-import { uploadSessionRow, deleteRemoteSessions, isSignedInAs } from '@/lib/sessionUpload';
+import { uploadSessionRow, deleteRemoteSessions, isSignedInAs, noteSessionDeletedHere } from '@/lib/sessionUpload';
 import { saveBackupFile, isBackupFileResult, type BackupFileLast, type BackupFileResult, type BackupFileStatus } from '@/lib/autoBackupFile';
 import {
   APP_SETTINGS_KEY,
@@ -30,6 +40,8 @@ import {
   AUTO_BACKUP_STORE_GUARD_KEY,
   LAST_USER_ID_KEY,
   REARMED_BY_BACKUP,
+  SESSIONS_DELETED_HERE_KEY,
+  SESSIONS_HEAL_PASS_PREFIX,
   SESSIONS_MIGRATION_DONE_KEY
 } from '@/lib/syncSettingKeys';
 
@@ -101,9 +113,15 @@ export async function getPendingRemoteDeletes(): Promise<string[]> {
 /**
  * The sessions "nothing left to upload" flag as a backup commit leaves it, from the value stored
  * when that transaction runs: `true` becomes {@link REARMED_BY_BACKUP} (this backup is the only
- * thing left, see there), anything else becomes `false`.
+ * thing left, see there); a running pass's own token (`pass:...`) is left alone, so that pass can
+ * still finish and set `true` (the backup's own `uploadPending` mark covers its retry); anything else
+ * becomes `false`.
  */
-export const rearmSessionsFlagForBackup = (stored: unknown): false | typeof REARMED_BY_BACKUP => (stored === true ? REARMED_BY_BACKUP : false);
+export const rearmSessionsFlagForBackup = (stored: unknown): unknown => {
+  if (stored === true) return REARMED_BY_BACKUP;
+  if (typeof stored === 'string' && stored.startsWith(SESSIONS_HEAL_PASS_PREFIX)) return stored;
+  return false;
+};
 
 /** The guard every backup write is conditional on: the store is still claimed for `userId`. */
 const storeGuard = (userId: string) => ({ key: AUTO_BACKUP_STORE_GUARD_KEY, value: userId });
@@ -186,7 +204,13 @@ export async function deleteAutoBackup(id: string): Promise<void> {
     await deleteSession(id);
     return;
   }
-  await commitSessions({ deleteSessionIds: [id], updateSettings: { [AUTO_BACKUP_PENDING_DELETES_KEY]: addPendingRemoteDeletes([id]) } });
+  // an upload of it in flight here or in another context deletes the row it re-creates (see
+  // deleteRowIfDeletedHere): noted here first, and remembered in the delete's own transaction
+  noteSessionDeletedHere(id);
+  await commitSessions({
+    deleteSessionIds: [id],
+    updateSettings: { [AUTO_BACKUP_PENDING_DELETES_KEY]: addPendingRemoteDeletes([id]), [SESSIONS_DELETED_HERE_KEY]: addDeletedSessionIds([id]) }
+  });
   try {
     await withBackupLock(async () => {
       const claim = await claimBackupStore();
@@ -437,6 +461,8 @@ async function runLocked({ manual = false, recheckTier = false, now = Date.now()
     updateSettings: {
       // added to the list as stored when this transaction runs, never to an earlier read of it
       [AUTO_BACKUP_PENDING_DELETES_KEY]: addPendingRemoteDeletes(staleIds),
+      // rotated out: a popup uploading one of them right now must not re-create its row
+      ...(staleIds.length > 0 ? { [SESSIONS_DELETED_HERE_KEY]: addDeletedSessionIds(staleIds, now) } : {}),
       // The new backup carries its own `uploadPending` mark (see above). The sessions flag also
       // gets the run's marker while the run is going: a flag that was `true` becomes
       // REARMED_BY_BACKUP, which the run turns back into `true` when its upload ends (below);

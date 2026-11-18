@@ -169,7 +169,11 @@ export async function refreshSessionRow(session: Session, expectedUserId: string
     const keyFingerprint = gate.keyFingerprint;
     const withKey = <T extends SessionRefreshOutcome>(outcome: T) => (keyFingerprint ? { outcome, keyFingerprint } : { outcome });
     if (!row) {
-      const olderKey = session.auto !== true && !!session.uploadedKey && !!keyFingerprint && session.uploadedKey !== keyFingerprint;
+      // Never after this device itself saw the row gone (`remoteGone`): that was a delete, whatever
+      // key changed since. Known trade-off: a dashboard delete made BEFORE a reset that this device
+      // never observed looks exactly like "cleared the unreadable old-key rows" and is re-inserted.
+      const olderKey =
+        session.auto !== true && session.remoteGone !== true && !!session.uploadedKey && !!keyFingerprint && session.uploadedKey !== keyFingerprint;
       if (!olderKey) return { outcome: 'gone' };
       return (await upsertSessionRow(session, expectedUserId, gate.key)) ? withKey('reinserted') : failed;
     }
@@ -333,7 +337,8 @@ export function uploadStoredSession(id: string, expectedUserId: string): Promise
       id,
       typeof stored.uploadedAt === 'number' ? stored.uploadedAt : Date.now(),
       stored.uploadPending,
-      result === 'gone-remote' ? undefined : keyFingerprint
+      result === 'gone-remote' ? undefined : keyFingerprint,
+      result === 'gone-remote' ? 'remote-gone' : 'written'
     );
     // a write that could have created the row: deleted again if the user deleted the session meanwhile
     if (result !== 'gone-remote') await deleteRowIfDeletedHere(id, expectedUserId);

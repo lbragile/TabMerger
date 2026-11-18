@@ -62,6 +62,7 @@ const h = vi.hoisted(() => {
     duringUpload: null as null | (() => void),
     commits: [] as unknown[],
     casCalls: [] as unknown[][],
+    notedDeleted: [] as string[],
     beforeCas: null as null | (() => void),
   }
 })
@@ -128,6 +129,8 @@ vi.mock('@/lib/localDb', () => ({
   }),
   // the unguarded form (deleting a backup on this device)
   commitSessions: vi.fn(async (changes: Changes) => void applyChanges(changes)),
+  // the remembered "deleted here" ids (real shape: { id: at })
+  addDeletedSessionIds: (ids: string[], now = 1) => (stored: unknown) => ({ ...((stored as Record<string, number>) ?? {}), ...Object.fromEntries(ids.map((id) => [id, now])) }),
   // one transaction in the real thing: strict equality on the stored value, written only on a match
   compareAndSetSetting: vi.fn(async (k: string, expected: unknown, next: unknown) => {
     h.casCalls.push([k, expected, next])
@@ -167,6 +170,7 @@ vi.mock('@/lib/sessionUpload', () => ({
     if (h.uploadResult instanceof Error) throw h.uploadResult
     return h.uploadResult ? { ok: true, keyFingerprint: 'key-1' } : { ok: false }
   }),
+  noteSessionDeletedHere: vi.fn((id: string) => void h.notedDeleted.push(id)),
   deleteRemoteSessions: vi.fn(async (ids: string[], uid: string) => {
     h.log.push(`remoteDelete:${ids.join(',')}:${uid}`)
     return h.remoteDeleteResult
@@ -1167,13 +1171,13 @@ describe('runAutoBackup: accounts that must not get a backup', () => {
 })
 
 describe('deleteAutoBackup: one transaction', () => {
-  it('the local delete and the pending id are ONE commitSessions call', async () => {
+  it('the local delete, the pending id and the remembered "deleted here" id are ONE commitSessions call', async () => {
     h.sessions = [session('b1', 1)]
     h.remoteDeleteResult = false
     await deleteAutoBackup('b1')
     const first = h.commits[0] as { deleteSessionIds: string[]; updateSettings: Record<string, unknown> }
     expect(first.deleteSessionIds).toEqual(['b1'])
-    expect(Object.keys(first.updateSettings)).toEqual([AUTO_BACKUP_PENDING_DELETES_KEY])
+    expect(Object.keys(first.updateSettings)).toEqual([AUTO_BACKUP_PENDING_DELETES_KEY, 'sessionsDeletedHere'])
   })
 
   it('nothing is sent when the backup lock is busy; the id stays remembered', async () => {
@@ -1210,6 +1214,8 @@ describe('the sessions self-heal flag: a healthy backup causes no sessions pass'
     expect(REARMED_BY_BACKUP).toBe('')
     expect(rearmSessionsFlagForBackup(true)).toBe(REARMED_BY_BACKUP)
     for (const v of [false, 0, '', undefined, null, 'x', 1]) expect(rearmSessionsFlagForBackup(v)).toBe(false)
+    // a running pass's own token is left alone: that pass can still finish and set true
+    expect(rearmSessionsFlagForBackup(`${SESSIONS_HEAL_PASS_PREFIX}abc`)).toBe(`${SESSIONS_HEAL_PASS_PREFIX}abc`)
     // a pass token can never be mistaken for the backup's marker
     expect(`${SESSIONS_HEAL_PASS_PREFIX}abc`).not.toBe(REARMED_BY_BACKUP)
   })
@@ -1371,5 +1377,24 @@ describe('pending remote deletes are flushed on every path after the claim', () 
     seedPending()
     await runAutoBackup({ now: NOW })
     expect(sentCalls()).toEqual([])
+  })
+})
+
+describe('F2: deleted and rotated-out backups are remembered as deleted here', () => {
+  it('deleteAutoBackup notes the id in this context and remembers it in the delete transaction', async () => {
+    h.notedDeleted.length = 0
+    h.sessions = [session('bk1', NOW - DAY)]
+    await deleteAutoBackup('bk1')
+    expect(h.notedDeleted).toEqual(['bk1'])
+    expect(h.settings.get('sessionsDeletedHere')).toMatchObject({ bk1: expect.any(Number) })
+    expect(h.sessions).toEqual([])
+  })
+
+  it('a rotation remembers the rotated-out ids in the same transaction as the new backup', async () => {
+    h.sessions = Array.from({ length: AUTO_BACKUP_RETENTION_COUNT }, (_, i) => session(`old${i}`, NOW - (i + 2) * DAY))
+    expect(await runAutoBackup({ now: NOW })).toMatchObject({ status: 'created' })
+    const remembered = Object.keys((h.settings.get('sessionsDeletedHere') as Record<string, number>) ?? {})
+    expect(remembered.length).toBeGreaterThan(0)
+    for (const id of remembered) expect(h.sessions.some((s) => (s as { id: string }).id === id)).toBe(false)
   })
 })

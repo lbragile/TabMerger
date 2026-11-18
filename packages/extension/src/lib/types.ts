@@ -116,6 +116,14 @@ export interface Session {
    */
   uploadedKey?: string;
   /**
+   * Local-only: the server answered that this session's row is gone (deleted in the dashboard or on
+   * another device) while this device held the copy. Remembered so that a LATER key change does not
+   * take the old `uploadedKey` as "the copy there was an unreadable old-key row" and re-insert it
+   * (see `refreshSessionRow`), and so the full pass after a key change does not ask again. Cleared
+   * by a later write that finds the row there again.
+   */
+  remoteGone?: true;
+  /**
    * Local-only: this session changed (saved, colour changed) and that change is not confirmed on
    * the server yet. A token (epoch ms of the change): an upload clears it only if it is still the
    * token it uploaded (`markSessionUploaded`), so a later change keeps its own mark. The sync's

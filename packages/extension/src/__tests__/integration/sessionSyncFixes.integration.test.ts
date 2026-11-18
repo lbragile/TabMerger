@@ -156,6 +156,22 @@ describe('S1: the key a copy was uploaded under', () => {
     expect(await getSession('s1')).toBeDefined()
   })
 
+  it('F1: a delete this device saw under k1 stays a delete after a reset to k2 (nothing re-inserted)', async () => {
+    remote.gate.keyFingerprint = 'k1'
+    await saveSession(session('s1', { uploadPending: 1 }))
+    expect(await uploadStoredSession('s1', 'u1')).toBe('uploaded')
+    // deleted in the dashboard; this device notices on its next upload
+    remote.rows.delete('s1')
+    await commitSessions({ putSessions: [{ ...(await getSession('s1'))!, uploadPending: 2 }] })
+    expect(await uploadStoredSession('s1', 'u1')).toBe('gone-remote')
+    expect(await getSession('s1')).toMatchObject({ remoteGone: true, uploadedKey: 'k1' })
+    // reset elsewhere: key k2. The full pass (or a colour change) asks again: still a delete
+    remote.gate.keyFingerprint = 'k2'
+    await commitSessions({ putSessions: [{ ...(await getSession('s1'))!, uploadPending: 3 }] })
+    expect(await uploadStoredSession('s1', 'u1')).toBe('gone-remote')
+    expect(remote.rows.has('s1')).toBe(false)
+  })
+
   it('S7: a sign-out and sign-in as the same user during the read is failed, never gone', async () => {
     await saveSession(session('s1', { uploadedAt: 1, uploadedKey: 'key-B', uploadPending: 1 }))
     const { supabase } = await import('@/lib/supabase')

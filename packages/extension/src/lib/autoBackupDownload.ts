@@ -310,7 +310,13 @@ async function downloadLocked(now: number): Promise<BackupDownloadResult> {
   const { backups, unreadable, dropped } = await decryptAutoBackupRows(data, gate.key, new Set([...localIds, ...blockedIds]), now);
 
   // what is added is on the server by definition: marked so, like a backup this device uploaded
-  const toAdd = selectBackupsToAdd(local, backups, blockedIds).map((s) => ({ ...s, uploadedAt: now }));
+  // ...and under the key it was just decrypted with (when known), so the full pass after a key
+  // change does not ask the server about it again unless the key really changed
+  const toAdd = selectBackupsToAdd(local, backups, blockedIds).map((s) => ({
+    ...s,
+    uploadedAt: now,
+    ...(gate.keyFingerprint ? { uploadedKey: gate.keyFingerprint } : {})
+  }));
   const seeded = seedStateAfterDownload(parseAutoBackupState(await getSetting<unknown>(AUTO_BACKUP_STATE_KEY, null)), toAdd);
 
   // The rows were requested, and decrypted, for `userId`. They are stored only if that is still

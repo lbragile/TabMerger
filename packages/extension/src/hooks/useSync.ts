@@ -124,7 +124,10 @@ export function useSync() {
         // a pass that ran out of time resumes where it stopped instead of starting over.
         const currentKey = await getDataKeyFingerprint(session.user.id);
         const isUploaded = (s: Session) => typeof s.uploadedAt === 'number';
-        const done = (s: Session) => isUploaded(s) && !!currentKey && s.uploadedKey === currentKey && s.uploadPending === undefined;
+        // done: nothing pending, and either under the current key or known gone from the server
+        // (`remoteGone`: a delete made elsewhere, never re-created and never asked about again)
+        const done = (s: Session) =>
+          isUploaded(s) && s.uploadPending === undefined && (s.remoteGone === true || (!!currentKey && s.uploadedKey === currentKey));
         // Never-uploaded sessions FIRST: a pass that runs out of time must have spent it on what
         // the server does not have yet, not on refreshing rows it already holds (stable sort).
         const sessions = [...(await getSessions())].filter((s) => !done(s)).sort((a, b) => Number(isUploaded(a)) - Number(isUploaded(b)));
@@ -188,12 +191,18 @@ export function useSync() {
       //  - `uploadPending`: a save, a colour change or an automatic backup whose upload did not finish;
       //  - a SAVED session never uploaded at all (`uploadedAt` missing): saved while the plan was not
       //    known yet, while offline, or before saves were marked (each is stamped once uploaded).
-      // A failure waits for the retry delay like a full pass.
+      // Bounded like a full pass: no new request after one cycle budget (the rest goes next sync), and
+      // the first failure stops it and waits for the retry delay (offline: the rest would fail too).
       sessionsHealRunning.current = true;
       try {
+        const deadline = cycleDeadline();
         const changed = (await getSessions()).filter((s) => typeof s.uploadPending === 'number' || (s.uploadedAt === undefined && s.auto !== true));
         for (const s of changed) {
-          if ((await uploadStoredSession(s.id, session.user.id)) === 'failed') sessionsRetryAt.current = Date.now() + SESSIONS_RETRY_MS;
+          if (Date.now() > deadline) break;
+          if ((await uploadStoredSession(s.id, session.user.id)) === 'failed') {
+            sessionsRetryAt.current = Date.now() + SESSIONS_RETRY_MS;
+            break;
+          }
         }
       } catch (e) {
         console.warn('[useSync] pending session upload failed', e);

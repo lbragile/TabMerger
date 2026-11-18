@@ -753,6 +753,14 @@ export function liveDeletedSessionIds(raw: unknown, now: number): Record<string,
 }
 
 /**
+ * `updateSettings` entry for {@link SESSIONS_DELETED_HERE_KEY}: adds `ids` (deleted by the user, or
+ * rotated out of the automatic backups) to the remembered list as stored when the transaction runs.
+ */
+export const addDeletedSessionIds =
+  (ids: readonly string[], now: number = Date.now()) =>
+  (stored: unknown): Record<string, number> => ({ ...liveDeletedSessionIds(stored, now), ...Object.fromEntries(ids.map((id) => [id, now])) });
+
+/**
  * Whether the USER deleted session `id` on this device recently (any popup or the worker): a row an
  * upload re-created after that must be deleted again. A wipe ("Clear all data", an account switch)
  * is not a user delete and records nothing.
@@ -772,7 +780,7 @@ export async function deleteSession(id: string, now: number = Date.now()): Promi
   const tx = db.transaction(['sessions', 'settings'], 'readwrite');
   const settings = tx.objectStore('settings');
   const record = (await settings.get(SESSIONS_DELETED_HERE_KEY)) as { id: string; value: unknown } | undefined;
-  const deleted = { ...liveDeletedSessionIds(record?.value, now), [id]: now };
+  const deleted = addDeletedSessionIds([id], now)(record?.value);
   await Promise.all([tx.objectStore('sessions').delete(id), settings.put({ id: SESSIONS_DELETED_HERE_KEY, value: deleted }), tx.done]);
 }
 
@@ -807,7 +815,13 @@ export async function updateSessionColor(id: string, color: string, uploadPendin
  * ran set a new token and still needs its own upload. With `keyFingerprint`, the key the server's
  * copy is now under is recorded (`uploadedKey`).
  */
-export async function markSessionUploaded(id: string, at: number, uploadedPending?: number, keyFingerprint?: string): Promise<void> {
+export async function markSessionUploaded(
+  id: string,
+  at: number,
+  uploadedPending?: number,
+  keyFingerprint?: string,
+  outcome: 'written' | 'remote-gone' = 'written'
+): Promise<void> {
   const db = await getDb();
   const tx = db.transaction('sessions', 'readwrite');
   const stored = await tx.store.get(id);
@@ -817,6 +831,9 @@ export async function markSessionUploaded(id: string, at: number, uploadedPendin
   }
   const next: Session = { ...stored, uploadedAt: at, ...(keyFingerprint ? { uploadedKey: keyFingerprint } : {}) };
   if (uploadedPending !== undefined && stored.uploadPending === uploadedPending) delete next.uploadPending;
+  // `remote-gone`: the server answered the row is gone (see Session.remoteGone); a write clears it
+  if (outcome === 'remote-gone') next.remoteGone = true;
+  else delete next.remoteGone;
   const put = tx.store.put(next);
   tx.commit();
   await Promise.all([put, tx.done]);

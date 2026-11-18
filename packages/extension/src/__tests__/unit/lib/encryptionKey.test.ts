@@ -121,6 +121,14 @@ describe('setupEncryption', () => {
     expect(await getDataKeyFingerprint('fp-user')).toBeUndefined()
   })
 
+  it('F3: a key that only ADOPTED the row (legacy, not verified on this device) has no fingerprint', async () => {
+    const { getDataKeyFingerprint } = await import('@/lib/encryptionKey')
+    await chrome.storage.local.set({ dataKey_legacy: 'b64', dataKeyRow_legacy: { fingerprint: 'salt.iv', verified: false } })
+    expect(await getDataKeyFingerprint('legacy')).toBeUndefined()
+    await chrome.storage.local.set({ dataKeyRow_legacy: { fingerprint: 'salt.iv', verified: true } })
+    expect(await getDataKeyFingerprint('legacy')).toBe('salt.iv')
+  })
+
   it('throws when there is no active session', async () => {
     mockGetSession.mockResolvedValue({ data: { session: null } })
     const { setupEncryption } = await import('@/lib/encryptionKey')

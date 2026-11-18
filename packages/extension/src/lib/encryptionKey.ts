@@ -94,7 +94,11 @@ async function cacheDataKey(dataKey: CryptoKey, userId: string, fingerprint: str
 export async function getDataKeyFingerprint(userId: string): Promise<string | undefined> {
   try {
     if (!(await readStored<string>(localKeyFor(userId)))) return undefined;
-    const fingerprint = (await readStored<KeyBinding>(bindingKeyFor(userId)))?.fingerprint;
+    const binding = await readStored<KeyBinding>(bindingKeyFor(userId));
+    // only a key VERIFIED against that row on this device: a legacy key that merely adopted the
+    // current row may itself be stale, and copies written with it must not count as "current key"
+    if (binding?.verified !== true) return undefined;
+    const fingerprint = binding.fingerprint;
     return typeof fingerprint === 'string' && fingerprint !== '' ? fingerprint : undefined;
   } catch {
     return undefined;

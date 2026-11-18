@@ -444,6 +444,35 @@ describe('useSync — sessions encryption migration self-heal', () => {
     await waitFor(() => expect(mockMarkSessionUploaded).toHaveBeenCalledWith('offline-save', expect.any(Number), undefined))
   })
 
+  it('F5: the changed-sessions pass stops at the first failure (and waits for the retry delay)', async () => {
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: true })
+    mockGetSetting.mockResolvedValue(true)
+    mockGetSessions.mockResolvedValue([
+      { id: 'a', name: 'A', groups: [], createdAt: 1 },
+      { id: 'b', name: 'B', groups: [], createdAt: 2 },
+      { id: 'c', name: 'C', groups: [], createdAt: 3 },
+    ])
+    mockUploadStoredSession.mockReset().mockResolvedValueOnce('uploaded').mockResolvedValueOnce('failed').mockResolvedValue('uploaded')
+    renderHook(() => useSync(), { wrapper: makeWrapper(new QueryClient()) })
+    await waitFor(() => expect(mockUploadStoredSession).toHaveBeenCalledTimes(2))
+    await new Promise((r) => setTimeout(r, 30))
+    expect(mockUploadStoredSession.mock.calls.map((c) => c[0])).toEqual(['a', 'b'])
+  })
+
+  it('F5: the changed-sessions pass starts no request after the cycle budget', async () => {
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: true })
+    mockGetSetting.mockResolvedValue(true)
+    mockCycleDeadline.mockReturnValue(Date.now() - 1)
+    mockGetSessions.mockResolvedValue([{ id: 'a', name: 'A', groups: [], createdAt: 1 }])
+    renderHook(() => useSync(), { wrapper: makeWrapper(new QueryClient()) })
+    await waitFor(() => expect(mockGetSessions).toHaveBeenCalled())
+    await new Promise((r) => setTimeout(r, 30))
+    expect(mockUploadStoredSession).not.toHaveBeenCalled()
+    mockCycleDeadline.mockImplementation(() => Date.now() + 60_000)
+  })
+
   it('with the flag set, uploads only the sessions marked uploadPending, one by one, as stored', async () => {
     mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
     mockUseEntitlements.mockReturnValue({ cloudSync: true })
@@ -728,6 +757,17 @@ describe('useSync — sessions pass: order and cleanup of sessions deleted mid-p
     await waitFor(() => expect(mockCompareAndSetSetting).toHaveBeenCalled())
     expect(mockUploadStoredSession.mock.calls.map((c) => c[0])).toEqual(['never', 'old-key', 'changed'])
     vi.mocked(getDataKeyFingerprint).mockResolvedValue(undefined)
+  })
+
+  it('F1/F6: a session known gone from the server is done for a full pass: not asked about again', async () => {
+    mockGetSessions.mockResolvedValue([
+      { ...manual('gone-there'), uploadedAt: 1, uploadedKey: 'k1', remoteGone: true },
+      { ...manual('gone-no-key'), uploadedAt: 1, remoteGone: true },
+      manual('never'),
+    ])
+    run()
+    await waitFor(() => expect(mockCompareAndSetSetting).toHaveBeenCalled())
+    expect(mockUploadStoredSession.mock.calls.map((c) => c[0])).toEqual(['never'])
   })
 
   it('a stored flag "" (left by a backup run) starts a pass like false', async () => {

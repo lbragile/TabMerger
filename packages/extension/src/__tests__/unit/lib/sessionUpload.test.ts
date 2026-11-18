@@ -93,11 +93,13 @@ vi.mock('@/lib/syncEngine', () => ({ canUploadOnFirefox: vi.fn(async () => h.fir
 vi.mock('@/lib/localDb', () => ({
   getSession: vi.fn(async (id: string) => h.local.get(id)),
   wasSessionDeletedHere: vi.fn(async (id: string) => h.deletedElsewhere.has(id)),
-  markSessionUploaded: vi.fn(async (id: string, at: number, token?: number, keyFingerprint?: string) => {
+  markSessionUploaded: vi.fn(async (id: string, at: number, token?: number, keyFingerprint?: string, outcome = 'written') => {
     h.marks.push([id, at, token])
     const row = h.local.get(id)
     if (!row) return
     const next: Record<string, unknown> = { ...row, uploadedAt: at, ...(keyFingerprint ? { uploadedKey: keyFingerprint } : {}) }
+    if (outcome === 'remote-gone') next.remoteGone = true
+    else delete next.remoteGone
     if (token !== undefined && row.uploadPending === token) delete next.uploadPending
     h.local.set(id, next)
   }),
@@ -561,3 +563,28 @@ describe('S3: a delete made in ANOTHER popup is honoured after a first upload', 
   })
 })
 
+describe('F1: a delete this device saw is not undone by a later key change', () => {
+  const stamped = (extra: Record<string, unknown> = {}) => ({ ...base, uploadedAt: 1, ...extra }) as unknown as Record<string, unknown>
+
+  it('gone under k1 is remembered; after a reset to k2 the missing row is still a delete: nothing upserted', async () => {
+    h.readRow = null
+    h.gate = { key, keyFingerprint: 'k1' }
+    h.local.set('s1', stamped({ uploadedKey: 'k1', uploadPending: 2 }))
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('gone-remote')
+    expect(h.local.get('s1')!.remoteGone).toBe(true)
+    // encryption reset elsewhere: the gate now has k2; a colour change marks it pending again
+    h.gate = { key, keyFingerprint: 'k2' }
+    h.local.set('s1', { ...h.local.get('s1')!, uploadPending: 3 })
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('gone-remote')
+    expect(h.upserts).toHaveLength(0)
+    expect(h.local.get('s1')!.uploadedKey).toBe('k1')
+  })
+
+  it('a later write that finds the row there again (re-created elsewhere) clears the marker', async () => {
+    h.gate = { key, keyFingerprint: 'k2' }
+    h.local.set('s1', stamped({ uploadedKey: 'k1', remoteGone: true, uploadPending: 1 }))
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('refreshed')
+    expect('remoteGone' in h.local.get('s1')!).toBe(false)
+    expect(h.local.get('s1')!.uploadedKey).toBe('k2')
+  })
+})
