@@ -145,7 +145,7 @@ export function useSync() {
           // copy there was under an older key (`reinserted`, see refreshSessionRow).
           try {
             const outcome = await uploadStoredSession(s.id, session.user.id);
-            if (outcome === 'failed') allUploaded = false;
+            if (outcome === 'failed' || outcome === 'rejected') allUploaded = false;
             else if (outcome === 'uploaded') pushedIds.push(s.id);
           } catch (e) {
             allUploaded = false;
@@ -191,19 +191,26 @@ export function useSync() {
       //  - `uploadPending`: a save, a colour change or an automatic backup whose upload did not finish;
       //  - a SAVED session never uploaded at all (`uploadedAt` missing): saved while the plan was not
       //    known yet, while offline, or before saves were marked (each is stamped once uploaded).
-      // Bounded like a full pass: no new request after one cycle budget (the rest goes next sync), and
-      // the first failure stops it and waits for the retry delay (offline: the rest would fail too).
+      // Bounded like a full pass: no new request after one cycle budget (the rest goes next sync). A
+      // failure that would hit every row (offline, timeout, auth, a locked key) stops it and waits for
+      // the retry delay. A row the server refused for its own content (`rejected`: too large,
+      // invalid) is skipped, so one bad session never blocks the ones after it; the pass then still
+      // waits for the retry delay before trying that row again.
       sessionsHealRunning.current = true;
       try {
         const deadline = cycleDeadline();
+        let rowRejected = false;
         const changed = (await getSessions()).filter((s) => typeof s.uploadPending === 'number' || (s.uploadedAt === undefined && s.auto !== true));
         for (const s of changed) {
           if (Date.now() > deadline) break;
-          if ((await uploadStoredSession(s.id, session.user.id)) === 'failed') {
+          const outcome = await uploadStoredSession(s.id, session.user.id);
+          if (outcome === 'rejected') rowRejected = true;
+          if (outcome === 'failed') {
             sessionsRetryAt.current = Date.now() + SESSIONS_RETRY_MS;
             break;
           }
         }
+        if (rowRejected) sessionsRetryAt.current = Date.now() + SESSIONS_RETRY_MS;
       } catch (e) {
         console.warn('[useSync] pending session upload failed', e);
       } finally {

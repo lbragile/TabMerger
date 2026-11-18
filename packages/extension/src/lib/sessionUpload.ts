@@ -5,7 +5,8 @@ import { getContentUploadKey, UPLOAD_BLOCKED_MESSAGE } from '@/lib/contentUpload
 import { canUploadOnFirefox } from '@/lib/syncEngine';
 import { syncRequestSignal } from '@/lib/syncRequest';
 import { validSessionColor } from '@/lib/sessionColor';
-import { getSession, markSessionUploaded, wasSessionDeletedHere } from '@/lib/localDb';
+import { commitSessions, getSession, markSessionUploaded, wasSessionDeletedHere } from '@/lib/localDb';
+import { AUTO_BACKUP_PENDING_DELETES_KEY } from '@/lib/syncSettingKeys';
 
 /** Whether the client's CURRENT session belongs to `userId`. A failed read counts as "no". */
 export async function isSignedInAs(userId: string): Promise<boolean> {
@@ -75,8 +76,11 @@ export async function pushSessionToSupabase(session: Session, expectedUserId: st
   return (await uploadSessionRow(session, expectedUserId)).ok;
 }
 
-/** What an upload wrote: on success, which key row it encrypted with (`Session.uploadedKey`), when known. */
-export type SessionRowWrite = { ok: true; keyFingerprint?: string } | { ok: false };
+/**
+ * What an upload wrote: on success, which key row it encrypted with (`Session.uploadedKey`), when
+ * known. `rejected`: the server refused this row only (see {@link isRowRejection}).
+ */
+export type SessionRowWrite = { ok: true; keyFingerprint?: string } | { ok: false; rejected?: true };
 
 /** {@link pushSessionToSupabase}, also telling which key the row was encrypted with. */
 export async function uploadSessionRow(session: Session, expectedUserId: string): Promise<SessionRowWrite> {
@@ -90,14 +94,31 @@ export async function uploadSessionRow(session: Session, expectedUserId: string)
   }
   // Checked again after the lookup: everything from here to the request is for the expected account.
   if (!(await isSignedInAs(expectedUserId))) return { ok: false };
-  if (!(await upsertSessionRow(session, expectedUserId, gate.key))) return { ok: false };
+  const written = await upsertSessionRow(session, expectedUserId, gate.key);
+  if (written !== 'ok') return written === 'rejected' ? { ok: false, rejected: true } : { ok: false };
   return gate.keyFingerprint ? { ok: true, keyFingerprint: gate.keyFingerprint } : { ok: true };
 }
 
-/** The upsert itself (callers checked the account and the key). Resolves whether the server accepted it. */
-async function upsertSessionRow(session: Session, expectedUserId: string, key: CryptoKey): Promise<boolean> {
+/**
+ * Whether a server error is about THIS row only (its content: too large, invalid, a constraint), so
+ * the next session may well go through: HTTP 413, or a Postgres data / integrity / size class
+ * (`22…`, `23…`, `54…`). Everything else (no network, a timeout, auth, RLS refusing the account, a
+ * 5xx) would hit every row the same way. Unknown is "every row": the safe side for the retry delay.
+ */
+export function isRowRejection(error: { code?: unknown } | null | undefined, status?: number): boolean {
+  if (!error) return false;
+  if (status === 413) return true;
+  const code = typeof error.code === 'string' ? error.code : '';
+  return /^(22|23|54)/.test(code);
+}
+
+/** What one write of a row ended as: `rejected` = the server refused THIS row (see {@link isRowRejection}). */
+type RowWrite = 'ok' | 'rejected' | 'failed';
+
+/** The upsert itself (callers checked the account and the key). */
+async function upsertSessionRow(session: Session, expectedUserId: string, key: CryptoKey): Promise<RowWrite> {
   const { iv, ct } = await encryptBlob(key, sessionContent(session));
-  const { error } = await supabase
+  const { error, status } = await supabase
     .from('sessions')
     .upsert({
       id: session.id,
@@ -110,9 +131,9 @@ async function upsertSessionRow(session: Session, expectedUserId: string, key: C
     .abortSignal(syncRequestSignal());
   if (error) {
     console.warn('[TabMerger] Session sync to Supabase failed', session.id, error.message);
-    return false;
+    return isRowRejection(error, status) ? 'rejected' : 'failed';
   }
-  return true;
+  return 'ok';
 }
 
 /** What {@link refreshSessionRow} did. */
@@ -123,6 +144,8 @@ export type SessionRefreshOutcome =
   | 'reinserted'
   /** the row was deleted elsewhere (the dashboard, another device): nothing re-created */
   | 'gone'
+  /** the server refused this row only (too large, invalid): other sessions may still go through */
+  | 'rejected'
   /** not sent or not confirmed: try later */
   | 'failed';
 
@@ -174,18 +197,22 @@ export async function refreshSessionRow(session: Session, expectedUserId: string
       // never observed looks exactly like "cleared the unreadable old-key rows" and is re-inserted.
       const olderKey =
         session.auto !== true && session.remoteGone !== true && !!session.uploadedKey && !!keyFingerprint && session.uploadedKey !== keyFingerprint;
-      if (!olderKey) return { outcome: 'gone' };
-      return (await upsertSessionRow(session, expectedUserId, gate.key)) ? withKey('reinserted') : failed;
+      // `keyFingerprint` comes with `gone` only when the current key was KNOWN at the read: only then
+      // can the caller remember the row as deleted for good (Session.remoteGone)
+      if (!olderKey) return withKey('gone');
+      const reinserted = await upsertSessionRow(session, expectedUserId, gate.key);
+      return reinserted === 'ok' ? withKey('reinserted') : reinserted === 'rejected' ? { outcome: 'rejected' } : failed;
     }
     const { iv, ct } = await encryptBlob(gate.key, sessionContent(session));
     // UPDATE, not upsert: a row deleted between the read above and here stays deleted.
-    const { data: written, error } = await supabase
+    const { data: written, error, status } = await supabase
       .from('sessions')
       .update({ groups: { v: 1, iv, ct } })
       .eq('id', session.id)
       .eq('user_id', expectedUserId)
       .select('id')
       .abortSignal(syncRequestSignal());
+    if (error && isRowRejection(error, status)) return { outcome: 'rejected' };
     if (error || !Array.isArray(written) || written.length !== 1) return failed;
     return withKey('updated');
   } catch (e) {
@@ -269,11 +296,20 @@ export async function deleteRowIfDeletedHere(id: string, expectedUserId: string)
   try {
     if (!deletedHere.has(id) && !(await wasSessionDeletedHere(id))) return;
     if (await getSession(id)) return;
-    await deleteRemoteSessions([id], expectedUserId);
+    if (await deleteRemoteSessions([id], expectedUserId)) return;
+    // Not confirmed (offline): remembered with the automatic backups' pending remote deletes, which
+    // the next backup run or download sends again (and a download never brings such an id back).
+    await commitSessions({ updateSettings: { [AUTO_BACKUP_PENDING_DELETES_KEY]: rememberPendingDelete(id) } });
   } catch (e) {
     console.warn('[TabMerger] Session delete after upload failed', id, e);
   }
 }
+
+/** `updateSettings` entry adding `id` to the pending remote deletes (the list is parsed and capped where it is read). */
+const rememberPendingDelete =
+  (id: string) =>
+  (stored: unknown): string[] =>
+    [...new Set([...(Array.isArray(stored) ? stored.filter((x): x is string => typeof x === 'string') : []), id])];
 
 /**
  * {@link deleteRemoteSessions} for sessions the user deleted here, queued behind any upload of
@@ -296,6 +332,8 @@ export type StoredSessionUploadResult =
   | 'gone-remote'
   /** no longer stored here: nothing sent */
   | 'gone-local'
+  /** the server refused THIS row (too large, invalid): the mark stays; other sessions may go through */
+  | 'rejected'
   /** not sent or not accepted: the `uploadPending` mark stays for a retry */
   | 'failed';
 
@@ -319,18 +357,18 @@ export function uploadStoredSession(id: string, expectedUserId: string): Promise
       if (typeof stored.uploadedAt === 'number') {
         const refreshed = await refreshSessionRow(stored, expectedUserId);
         keyFingerprint = refreshed.keyFingerprint;
-        result =
-          refreshed.outcome === 'updated' ? 'refreshed' : refreshed.outcome === 'reinserted' ? 'reinserted' : refreshed.outcome === 'gone' ? 'gone-remote' : 'failed';
+        const byOutcome = { updated: 'refreshed', reinserted: 'reinserted', gone: 'gone-remote', rejected: 'rejected', failed: 'failed' } as const;
+        result = byOutcome[refreshed.outcome];
       } else {
         const written = await uploadSessionRow(stored, expectedUserId);
         if (written.ok) keyFingerprint = written.keyFingerprint;
-        result = written.ok ? 'uploaded' : 'failed';
+        result = written.ok ? 'uploaded' : written.rejected ? 'rejected' : 'failed';
       }
     } catch (e) {
       console.warn('[TabMerger] Session upload failed', id, e);
       result = 'failed';
     }
-    if (result === 'failed') return result;
+    if (result === 'failed' || result === 'rejected') return result;
     // on the row as stored NOW (if it still is): stamps a first upload, clears this upload's mark,
     // records the key the server's copy is under now (not after `gone`: nothing was written)
     await markSessionUploaded(
@@ -338,7 +376,9 @@ export function uploadStoredSession(id: string, expectedUserId: string): Promise
       typeof stored.uploadedAt === 'number' ? stored.uploadedAt : Date.now(),
       stored.uploadPending,
       result === 'gone-remote' ? undefined : keyFingerprint,
-      result === 'gone-remote' ? 'remote-gone' : 'written'
+      // remembered as deleted for good only when the current key was known at the read; otherwise
+      // the old behaviour (a marker set earlier stays, none is added)
+      result === 'gone-remote' ? (keyFingerprint ? 'remote-gone' : 'keep') : 'written'
     );
     // a write that could have created the row: deleted again if the user deleted the session meanwhile
     if (result !== 'gone-remote') await deleteRowIfDeletedHere(id, expectedUserId);

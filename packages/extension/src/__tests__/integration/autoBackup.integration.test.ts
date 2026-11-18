@@ -316,6 +316,17 @@ describe('automatic backup download — real IndexedDB', () => {
     expect(await getSetting(AUTO_BACKUP_STATE_KEY, null)).toMatchObject({ lastBackupId: 'r2', fingerprint: '' })
   })
 
+  it('G3: a backup the user deleted here recently is never brought back by a download', async () => {
+    // deleted here (remembered in the delete transaction), but its row survived on the server
+    await saveSession({ id: 'r1', name: 'x', groups: [savedGroup('z')], createdAt: Date.now() - DAY, auto: true, uploadedAt: 1 })
+    await deleteSession('r1')
+    await remoteBackup('r1', Date.now() - DAY)
+    await remoteBackup('r2', Date.now() - 2 * DAY)
+    const out = await downloadAutoBackups()
+    expect(out).toMatchObject({ status: 'done', added: 1 })
+    expect((await getSessions()).map((s) => s.id)).toEqual(['r2'])
+  })
+
   it('F6: downloaded backups are stamped with the key they were just decrypted with', async () => {
     net.keyFingerprint = 'key-now'
     await remoteBackup('r1', Date.now() - DAY)

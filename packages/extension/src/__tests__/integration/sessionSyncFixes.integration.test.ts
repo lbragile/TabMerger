@@ -11,6 +11,7 @@ const remote = vi.hoisted(() => ({
   /** awaited inside an upsert, before the row is written (holds a request in flight) */
   duringUpsert: null as null | (() => Promise<void>),
   deletes: [] as string[][],
+  failDelete: false,
   auth: { user: { id: 'u1' }, access_token: 't1' } as Record<string, unknown> | null,
   gate: { key: null as CryptoKey | null, keyFingerprint: 'key-B' as string | undefined },
 }))
@@ -29,6 +30,7 @@ vi.mock('@/lib/supabase', () => ({
         }
         if (q.op === 'delete') {
           remote.deletes.push(q.inIds ?? [])
+          if (remote.failDelete) return { error: { message: 'offline' } }
           for (const id of q.inIds ?? []) remote.rows.delete(id)
           return { error: null }
         }
@@ -74,6 +76,7 @@ beforeEach(async () => {
   remote.rows.clear()
   remote.deletes.length = 0
   remote.duringUpsert = null
+  remote.failDelete = false
   remote.auth = { user: { id: 'u1' }, access_token: 't1' }
   remote.gate = { key: await generateDataKey(), keyFingerprint: 'key-B' }
   vi.spyOn(console, 'warn').mockImplementation(() => {})
@@ -98,6 +101,17 @@ describe('S3: a user delete is remembered in IndexedDB, in the delete transactio
     expect(await uploadStoredSession('s1', 'u1')).toBe('uploaded')
     expect(remote.rows.has('s1')).toBe(false)
     expect(remote.deletes).toEqual([['s1']])
+  })
+
+  it('G3: the re-delete did not reach the server: the id is remembered with the pending remote deletes', async () => {
+    const { getSetting } = await import('@/lib/localDb')
+    await saveSession(session('s1', { uploadPending: 1 }))
+    remote.duringUpsert = async () => {
+      await deleteSession('s1')
+    }
+    remote.failDelete = true
+    expect(await uploadStoredSession('s1', 'u1')).toBe('uploaded')
+    expect(await getSetting('autoBackupPendingRemoteDeletes', [])).toEqual(['s1'])
   })
 
   it('a wipe (no remembered id) never deletes the re-created row', async () => {

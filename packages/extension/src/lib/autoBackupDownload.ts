@@ -3,13 +3,13 @@ import { validSessionColor } from '@/lib/sessionColor';
 import { lazyMessages } from '@/lib/i18n';
 import { AUTO_BACKUP_DOWNLOAD_LIMITS, AUTO_BACKUP_RETENTION_COUNT, autoBackupName, decryptBlob, isEncryptedBlob } from '@tabmerger/shared';
 import type { Group, Session } from '@/lib/types';
-import { getSessions, getSetting, commitSessionsIfGuardHolds } from '@/lib/localDb';
+import { getSessions, getSetting, commitSessionsIfGuardHolds, liveDeletedSessionIds } from '@/lib/localDb';
 import { supabase } from '@/lib/supabase';
 import { getContentUploadKey } from '@/lib/contentUploadKey';
 import { importGroups } from '@/lib/importExport';
 import { isSignedInAs } from '@/lib/sessionUpload';
 import { syncRequestSignal } from '@/lib/syncRequest';
-import { AUTO_BACKUP_STATE_KEY, AUTO_BACKUP_STORE_GUARD_KEY } from '@/lib/syncSettingKeys';
+import { AUTO_BACKUP_STATE_KEY, AUTO_BACKUP_STORE_GUARD_KEY, SESSIONS_DELETED_HERE_KEY } from '@/lib/syncSettingKeys';
 import {
   backupIdentityHolds,
   claimBackupStore,
@@ -302,7 +302,10 @@ async function downloadLocked(now: number): Promise<BackupDownloadResult> {
   // (session removed + id noted), so whichever side of the sessions read it lands on, one of the
   // two reads shows it: before, the id is in this list; after, the session is still in `local`.
   // Nothing takes an id off the list meanwhile: that only happens under the lock this holds.
-  const blockedIds = new Set([...pendingDeletes, ...(await getPendingRemoteDeletes())]);
+  // ...and the sessions the user deleted here recently (a re-delete after an upload that re-created
+  // the row may not have reached the server: its row must not come back through the download)
+  const deletedHere = Object.keys(liveDeletedSessionIds(await getSetting<unknown>(SESSIONS_DELETED_HERE_KEY, null), now));
+  const blockedIds = new Set([...pendingDeletes, ...(await getPendingRemoteDeletes()), ...deletedHere]);
   const localIds = new Set(local.map((s) => s.id));
   // Rows already on this device (or deleted here) are counted without being decrypted again.
   const known = data.filter((r) => isBackupId((r as RemoteSessionRow)?.id) && localIds.has((r as RemoteSessionRow).id as string));

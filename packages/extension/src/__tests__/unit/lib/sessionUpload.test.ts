@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { AUTO_ITEM_COLORS, decryptBlob, generateDataKey, isEncryptedBlob } from '@tabmerger/shared'
 import type { Session } from '@/lib/types'
 import {
+  isRowRejection,
   deleteRemoteSessions,
   deleteRemoteSessionsQueued,
   noteSessionDeletedHere,
@@ -17,6 +18,11 @@ const h = vi.hoisted(() => ({
   gate: { key: null } as { key: CryptoKey | null; reason?: string; keyFingerprint?: string },
   firefoxOk: true,
   upsertError: null as unknown,
+  /** HTTP status of the upsert / update answer */
+  upsertStatus: 201 as number,
+  updateStatus: 200 as number,
+  /** updateSettings entries written through commitSessions */
+  committed: [] as Record<string, unknown>[],
   deleteError: null as unknown,
   deleteThrows: false,
   upserts: [] as Record<string, unknown>[],
@@ -52,7 +58,7 @@ vi.mock('@/lib/supabase', () => ({
           await h.beforeUpsert?.()
           h.upserts.push(q.payload as Record<string, unknown>)
           h.done.push(`upsert:${(q.payload as { id: string }).id}`)
-          return { error: h.upsertError }
+          return { error: h.upsertError, status: h.upsertStatus }
         }
         if (q.op === 'delete') {
           if (h.deleteThrows) throw new Error('offline')
@@ -64,7 +70,7 @@ vi.mock('@/lib/supabase', () => ({
         }
         if (q.op === 'update') {
           h.updates.push(q.payload as Record<string, unknown>)
-          return { data: h.updateRows, error: h.updateError }
+          return { data: h.updateRows, error: h.updateError, status: h.updateStatus }
         }
         h.onRead?.()
         return { data: h.readRow, error: h.readError }
@@ -93,13 +99,16 @@ vi.mock('@/lib/syncEngine', () => ({ canUploadOnFirefox: vi.fn(async () => h.fir
 vi.mock('@/lib/localDb', () => ({
   getSession: vi.fn(async (id: string) => h.local.get(id)),
   wasSessionDeletedHere: vi.fn(async (id: string) => h.deletedElsewhere.has(id)),
+  commitSessions: vi.fn(async (changes: { updateSettings?: Record<string, (s: unknown) => unknown> }) => {
+    for (const [k, fn] of Object.entries(changes.updateSettings ?? {})) h.committed.push({ [k]: fn(undefined) })
+  }),
   markSessionUploaded: vi.fn(async (id: string, at: number, token?: number, keyFingerprint?: string, outcome = 'written') => {
     h.marks.push([id, at, token])
     const row = h.local.get(id)
     if (!row) return
     const next: Record<string, unknown> = { ...row, uploadedAt: at, ...(keyFingerprint ? { uploadedKey: keyFingerprint } : {}) }
     if (outcome === 'remote-gone') next.remoteGone = true
-    else delete next.remoteGone
+    else if (outcome === 'written') delete next.remoteGone
     if (token !== undefined && row.uploadPending === token) delete next.uploadPending
     h.local.set(id, next)
   }),
@@ -136,6 +145,9 @@ beforeEach(async () => {
   h.local.clear()
   h.marks.length = 0
   h.deletedElsewhere.clear()
+  h.upsertStatus = 201
+  h.updateStatus = 200
+  h.committed.length = 0
   vi.spyOn(console, 'warn').mockImplementation(() => {})
 })
 
@@ -586,5 +598,74 @@ describe('F1: a delete this device saw is not undone by a later key change', () 
     expect(await uploadStoredSession('s1', 'user-1')).toBe('refreshed')
     expect('remoteGone' in h.local.get('s1')!).toBe(false)
     expect(h.local.get('s1')!.uploadedKey).toBe('k2')
+  })
+})
+
+describe('G1: a delete is remembered for good only when the current key was known', () => {
+  it('gone while the key is unknown: no marker (a later key change may still re-upload it)', async () => {
+    h.readRow = null
+    h.gate = { key } // no fingerprint: unverified binding, or the lookup failed
+    h.local.set('s1', { ...base, uploadedAt: 1, uploadedKey: 'k1', uploadPending: 2 } as unknown as Record<string, unknown>)
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('gone-remote')
+    expect('remoteGone' in h.local.get('s1')!).toBe(false)
+    expect('uploadPending' in h.local.get('s1')!).toBe(false)
+  })
+
+  it('gone with the key unknown keeps a marker set earlier', async () => {
+    h.readRow = null
+    h.gate = { key }
+    h.local.set('s1', { ...base, uploadedAt: 1, remoteGone: true, uploadPending: 2 } as unknown as Record<string, unknown>)
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('gone-remote')
+    expect(h.local.get('s1')!.remoteGone).toBe(true)
+  })
+})
+
+describe('G2: a row the server refuses for its own content is rejected, not failed', () => {
+  it('isRowRejection: 413 and data / integrity / size classes only', () => {
+    expect(isRowRejection({ code: '22001' })).toBe(true)
+    expect(isRowRejection({ code: '23514' })).toBe(true)
+    expect(isRowRejection({ code: '54000' })).toBe(true)
+    expect(isRowRejection({ code: '' }, 413)).toBe(true)
+    for (const code of ['42501', 'PGRST301', '', '08006', undefined]) expect(isRowRejection({ code })).toBe(false)
+    expect(isRowRejection(null, 413)).toBe(false)
+  })
+
+  it('a first upload refused for its content: rejected, the pending mark stays', async () => {
+    h.local.set('s1', { ...base, uploadPending: 1 } as unknown as Record<string, unknown>)
+    h.upsertError = { code: '', message: 'Payload Too Large' }
+    h.upsertStatus = 413
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('rejected')
+    expect(h.local.get('s1')!.uploadPending).toBe(1)
+  })
+
+  it('an update refused for its content: rejected; an RLS refusal (every row): failed', async () => {
+    h.local.set('s1', { ...base, uploadedAt: 1, uploadPending: 1 } as unknown as Record<string, unknown>)
+    h.updateError = { code: '22001', message: 'value too long' }
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('rejected')
+    h.updateError = { code: '42501', message: 'rls' }
+    expect(await uploadStoredSession('s1', 'user-1')).toBe('failed')
+  })
+})
+
+describe('G3: a re-delete that did not reach the server is remembered for the backup flush', () => {
+  it('deleted in another context, the re-delete fails: the id joins the pending remote deletes', async () => {
+    h.local.set('b1', { ...base, id: 'b1', auto: true, uploadPending: 1 } as unknown as Record<string, unknown>)
+    h.beforeUpsert = async () => {
+      h.local.delete('b1')
+      h.deletedElsewhere.add('b1')
+    }
+    h.deleteError = { message: 'offline' }
+    expect(await uploadStoredSession('b1', 'user-1')).toBe('uploaded')
+    expect(h.committed).toEqual([{ autoBackupPendingRemoteDeletes: ['b1'] }])
+  })
+
+  it('a re-delete that worked writes nothing more', async () => {
+    h.local.set('b1', { ...base, id: 'b1', uploadPending: 1 } as unknown as Record<string, unknown>)
+    h.beforeUpsert = async () => {
+      h.local.delete('b1')
+      h.deletedElsewhere.add('b1')
+    }
+    await uploadStoredSession('b1', 'user-1')
+    expect(h.committed).toEqual([])
   })
 })

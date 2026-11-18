@@ -460,6 +460,21 @@ describe('useSync — sessions encryption migration self-heal', () => {
     expect(mockUploadStoredSession.mock.calls.map((c) => c[0])).toEqual(['a', 'b'])
   })
 
+  it('G2: a row refused for its own content is skipped; the sessions after it still go up', async () => {
+    mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
+    mockUseEntitlements.mockReturnValue({ cloudSync: true })
+    mockGetSetting.mockResolvedValue(true)
+    mockGetSessions.mockResolvedValue([
+      { id: 'too-big', name: 'T', groups: [], createdAt: 3 },
+      { id: 'b', name: 'B', groups: [], createdAt: 2 },
+      { id: 'c', name: 'C', groups: [], createdAt: 1 },
+    ])
+    mockUploadStoredSession.mockReset().mockResolvedValueOnce('rejected').mockResolvedValue('uploaded')
+    renderHook(() => useSync(), { wrapper: makeWrapper(new QueryClient()) })
+    await waitFor(() => expect(mockUploadStoredSession).toHaveBeenCalledTimes(3))
+    expect(mockUploadStoredSession.mock.calls.map((c) => c[0])).toEqual(['too-big', 'b', 'c'])
+  })
+
   it('F5: the changed-sessions pass starts no request after the cycle budget', async () => {
     mockUseAuth.mockReturnValue({ session: { user: { id: 'u1' } } })
     mockUseEntitlements.mockReturnValue({ cloudSync: true })

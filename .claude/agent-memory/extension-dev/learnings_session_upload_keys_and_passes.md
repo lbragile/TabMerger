@@ -32,8 +32,17 @@ lib/autoBackup.ts), and the non-obvious rules behind it.
   they were decrypted with.
 - **A backup run never clobbers a running pass's token**: `rearmSessionsFlagForBackup` leaves
   `pass:...` alone (the backup's pending mark covers its retry).
-- **The changed-sessions pass is bounded like the full one**: `cycleDeadline()` and stop at the first
-  `failed` (the first sync after an update otherwise uploads every never-stamped session at once).
+- **The changed-sessions pass is bounded like the full one**: `cycleDeadline()`, and it stops at the
+  first `failed` (a failure that would hit every row: offline, timeout, auth, RLS, locked key). A
+  `rejected` row (`isRowRejection`: HTTP 413 or Postgres `22…`/`23…`/`54…`, read from the PostgREST
+  answer's `error.code` and `status`) is skipped, so one oversized session never blocks the rest;
+  the retry delay still applies afterwards.
+- **`remoteGone` only when the key was known at the read**: `refreshSessionRow` returns the
+  fingerprint with `gone` only if it had one; without it the stamp is `'keep'` (no marker added, an
+  earlier one kept). Otherwise an unverified device made a possibly-unreadable-row delete permanent.
+- **A failed re-delete after an upload goes into the backups' pending remote deletes**
+  (`deleteRowIfDeletedHere`), and the backup download also skips ids in `SESSIONS_DELETED_HERE_KEY`:
+  a row that survived on the server is never brought back as a backup.
 - **The full-pass flag is "due unless `=== true`"**. A running pass stores its own random token
   (`pass:<nanoid>`); the end-of-pass compare-and-set and the orphan cleanup (remote deletes) act
   only while THAT token is still stored. A shared constant marker let popup B's pass (after "Clear

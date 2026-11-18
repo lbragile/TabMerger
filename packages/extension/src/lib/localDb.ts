@@ -820,7 +820,7 @@ export async function markSessionUploaded(
   at: number,
   uploadedPending?: number,
   keyFingerprint?: string,
-  outcome: 'written' | 'remote-gone' = 'written'
+  outcome: 'written' | 'remote-gone' | 'keep' = 'written'
 ): Promise<void> {
   const db = await getDb();
   const tx = db.transaction('sessions', 'readwrite');
@@ -833,7 +833,7 @@ export async function markSessionUploaded(
   if (uploadedPending !== undefined && stored.uploadPending === uploadedPending) delete next.uploadPending;
   // `remote-gone`: the server answered the row is gone (see Session.remoteGone); a write clears it
   if (outcome === 'remote-gone') next.remoteGone = true;
-  else delete next.remoteGone;
+  else if (outcome === 'written') delete next.remoteGone;
   const put = tx.store.put(next);
   tx.commit();
   await Promise.all([put, tx.done]);

@@ -41,6 +41,8 @@ const h = vi.hoisted(() => ({
 }))
 
 vi.mock('@/lib/localDb', () => ({
+  // the remembered "deleted here" ids as stored (shape { id: at }); expiry is the real function's job
+  liveDeletedSessionIds: (raw: unknown) => (raw && typeof raw === 'object' ? (raw as Record<string, number>) : {}),
   getSessions: vi.fn(async () => {
     h.reads.push('sessions')
     const snapshot = [...h.sessions]
@@ -714,6 +716,13 @@ describe('downloadAutoBackups: a delete made while the fetch is in flight', () =
     const out = await downloadAutoBackups(NOW)
     expect(out).toMatchObject({ status: 'done', added: 1 })
     expect(ids()).toEqual(['late'])
+  })
+
+  it('G3: a backup the user deleted here recently is not added back, even with no pending remote delete', async () => {
+    h.settings.set('sessionsDeletedHere', { gone: NOW - 1000 })
+    h.rows = [await rowFor('gone', content()), await rowFor('fine', content())]
+    expect(await downloadAutoBackups(NOW)).toMatchObject({ status: 'done', added: 1 })
+    expect(ids()).toEqual(['fine'])
   })
 
   it('both lists are blocked together (union)', async () => {
