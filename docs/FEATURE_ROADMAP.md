@@ -82,7 +82,7 @@ _Last updated 2026-11-16. Keep this current in the same change as the work (a CL
 - [ ] Group templates (group structure without URLs)
 - [ ] Global quick-open hotkey outside the popup. Search inside the popup exists (Ctrl/Cmd+K).
 - [ ] Export to Notion or Obsidian (markdown links). Export is JSON only today.
-- [ ] Recently closed tabs list (in progress, not released): every closed tab and window is kept on the device and listed by day in a sidebar section; reopen, restore a window, save to a group, and search them with Ctrl/Cmd+K (`closed:`). Free keeps up to 50 from the last 7 days, Pro up to 1,000 for 30 days. No new browser permission; never synced. Ships with: archived groups and sessions opening read-only on the right, session colours, and colours for auto-saved groups.
+- [ ] Recently closed tabs list (in progress, not released): every closed tab and window is kept on the device and listed by day in a sidebar section; reopen, restore a window, save to a group, and search them with Ctrl/Cmd+K (`closed:`). Free keeps your last 2 days with closed tabs, Pro and Pro AI your last 30 days. No new browser permission; never synced. Ships with: archived groups and sessions opening read-only on the right, session colours, and colours for auto-saved groups.
 
 ## Growth
 
