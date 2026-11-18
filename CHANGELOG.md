@@ -1,3 +1,10 @@
+# [3.15.0](https://github.com/lbragile/TabMerger/compare/v3.14.0...v3.15.0) (2026-11-18)
+
+
+### Features
+
+* **extension:** recently closed tabs and read-only views for archived groups and sessions ([#129](https://github.com/lbragile/TabMerger/issues/129)) ([57159b8](https://github.com/lbragile/TabMerger/commit/57159b8185f26d3cda0c3324feea38e76930e31c))
+
 # [3.14.0](https://github.com/lbragile/TabMerger/compare/v3.13.1...v3.14.0) (2026-11-09)
 
 
