@@ -11,7 +11,8 @@ import { contrastRatio, parseRgba, readableTextColor } from '@/lib/color'
  * - the session header's bookmark icon on its tinted tile (`.tm-session-tile`, which mixes the
  *   session colour into the background for the fill and into black for the icon, by theme
  *   tokens): at least 3:1 (WCAG 1.4.11, a graphic);
- * - the view header's primary button (Restore, Restore session) on its own `--view-primary` tokens;
+ * - every solid primary fill with a text label (Button and Badge default variants, Restore) on the
+ *   `--primary-solid` tokens, at rest and on hover;
  * - the muted 10-11px text beside them (tab counts, group counts, "End of session") on the panel.
  * Reads the tokens from globals.css, so a token change that breaks one of these fails here.
  */
@@ -68,10 +69,19 @@ describe.each(THEMES)('session view contrast ($theme theme)', ({ block }) => {
     expect(contrastRatio(css3(icon), css3(tile))).toBeGreaterThanOrEqual(3)
   })
 
-  it('the view header primary button (Restore) has its label at 4.5:1 or more on its own token', () => {
-    const fill = css3(hsl(token(block, 'view-primary')))
-    const label = css3(hsl(token(block, 'view-primary-foreground')))
+  it('solid primary buttons have their label at 4.5:1 or more on the solid token', () => {
+    const fill = css3(hsl(token(block, 'primary-solid')))
+    const label = css3(hsl(token(block, 'primary-solid-foreground')))
     expect(contrastRatio(label, fill)).toBeGreaterThanOrEqual(4.5)
+  })
+
+  it('solid primary buttons keep their label at 4.5:1 or more on hover', () => {
+    const label = css3(hsl(token(block, 'primary-solid-foreground')))
+    // The hover token may carry an alpha (`H S% L% / 0.9`): composite it over the page background
+    const [colour, alpha] = token(block, 'primary-solid-hover').split('/').map((part) => part.trim())
+    const over = hsl(colour)
+    const hover = alpha === undefined ? over : mix(over, Number(alpha), background)
+    expect(contrastRatio(label, css3(hover))).toBeGreaterThanOrEqual(4.5)
   })
 
   it('muted counts and the end line are at 4.5:1 or more on the panel', () => {
@@ -80,10 +90,17 @@ describe.each(THEMES)('session view contrast ($theme theme)', ({ block }) => {
 })
 
 describe('theme values of the session view', () => {
-  it('the Restore button needs its own token in the light theme: white on --primary is under 4.5:1', () => {
+  it('solid fills need their own token in the light theme: white on --primary is under 4.5:1', () => {
     expect(contrastRatio('#ffffff', css3(hsl(token(':root', 'primary'))))).toBeLessThan(4.5)
-    // and the dark theme keeps the primary look
-    expect(token('.dark', 'view-primary')).toBe(token('.dark', 'primary'))
+    // and the dark theme keeps the primary look, at rest and on hover (the old `bg-primary/90`)
+    expect(token('.dark', 'primary-solid')).toBe(token('.dark', 'primary'))
+    expect(token('.dark', 'primary-solid-foreground')).toBe(token('.dark', 'primary-foreground'))
+    expect(token('.dark', 'primary-solid-hover')).toBe(`${token('.dark', 'primary')} / 0.9`)
+  })
+
+  it('--primary stays the brand accent: unchanged in both themes', () => {
+    expect(token(':root', 'primary')).toBe('193 100% 40%')
+    expect(token('.dark', 'primary')).toBe('193 80% 55%')
   })
 
   it('the light theme darkens the icon (the colour alone is too faint on white) and keeps it pure in the dark', () => {

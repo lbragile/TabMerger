@@ -69,9 +69,9 @@ export function SectionViewHeader({ color, icon, prominent = false, title, meta,
           )}
         </div>
         {primaryLabel && (
-          // Its own tokens (--view-primary): white on the light theme's --primary is 3.04:1, under
+          // Its own tokens (--primary-solid): white on the light theme's --primary is 3.04:1, under
           // the 4.5:1 its 12px label needs
-          <Button size="sm" className={cn('shrink-0 rounded-none bg-view-primary text-xs text-view-primary-foreground hover:bg-view-primary/90', prominent ? 'h-8 gap-1.5 px-3.5 font-semibold [&_svg]:size-3.5' : 'h-7 px-3')} onClick={onPrimary} disabled={primaryDisabled}>
+          <Button size="sm" className={cn('shrink-0 rounded-none bg-primary-solid text-xs text-primary-solid-foreground hover:bg-primary-solid-hover', prominent ? 'h-8 gap-1.5 px-3.5 font-semibold [&_svg]:size-3.5' : 'h-7 px-3')} onClick={onPrimary} disabled={primaryDisabled}>
             {primaryIcon}
             {primaryLabel}
           </Button>

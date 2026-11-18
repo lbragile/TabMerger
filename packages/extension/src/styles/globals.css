@@ -27,8 +27,9 @@
   --color-zone-sidebar: hsl(var(--zone-sidebar));
   --color-tooltip: hsl(var(--tooltip));
   --color-tooltip-foreground: hsl(var(--tooltip-foreground));
-  --color-view-primary: hsl(var(--view-primary));
-  --color-view-primary-foreground: hsl(var(--view-primary-foreground));
+  --color-primary-solid: hsl(var(--primary-solid));
+  --color-primary-solid-foreground: hsl(var(--primary-solid-foreground));
+  --color-primary-solid-hover: hsl(var(--primary-solid-hover));
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
@@ -49,11 +50,13 @@
        (white on --primary is only 3.05:1) */
     --tooltip: 193 100% 28%;
     --tooltip-foreground: 0 0% 100%;
-    /* The primary action of a read-only view's header (Restore, Restore session): the primary hue,
-       darker in the light theme so its white 12px label reaches 5.7:1 (white on --primary: 3.04:1).
-       Own tokens, so a restyle of tooltips or of --primary never recolours it by accident. */
-    --view-primary: 193 100% 28%;
-    --view-primary-foreground: 0 0% 100%;
+    /* Solid primary fills with a text label (Button default variant, Restore): the primary hue,
+       darker in the light theme so a white label reaches 5.7:1 (white on --primary: 3.04:1).
+       --primary itself stays the brand accent for tints, links, rings and the switch. Hover is
+       a darker solid, so it never gets lighter than rest (a see-through --primary/90 would, toward white). */
+    --primary-solid: 193 100% 28%;
+    --primary-solid-foreground: 0 0% 100%;
+    --primary-solid-hover: 193 100% 24%;
     /* Links inside a sentence ("See Pro", "Turn on in Settings"): the primary hue, dark enough
        for 4.5:1 on white, the sidebar and its hover (--primary itself is ~3:1 there) */
     --inline-link: 193 100% 25%;
@@ -127,9 +130,11 @@
     /* Tooltips keep the primary look in the dark theme (7.3:1) */
     --tooltip: 193 80% 55%;
     --tooltip-foreground: 193 100% 10%;
-    /* Unchanged from --primary in the dark theme (dark text on it: 7.3:1) */
-    --view-primary: 193 80% 55%;
-    --view-primary-foreground: 193 100% 10%;
+    /* Unchanged from --primary in the dark theme (dark text on it: 7.3:1); hover is the old
+       primary at 90% opacity */
+    --primary-solid: 193 80% 55%;
+    --primary-solid-foreground: 193 100% 10%;
+    --primary-solid-hover: 193 80% 55% / 0.9;
     --inline-link: 193 80% 55%;
     --secondary: 33 85% 60%;
     --secondary-foreground: 33 91% 10%;

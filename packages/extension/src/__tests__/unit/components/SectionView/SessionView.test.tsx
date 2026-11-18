@@ -105,7 +105,7 @@ describe('SessionView — Option M layout', () => {
     const restore = screen.getByRole('button', { name: 'Restore session' })
     expect(restore.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
     // its own colour tokens (white on the light theme's --primary is only 3.04:1)
-    expect(restore).toHaveClass('bg-view-primary', 'text-view-primary-foreground')
+    expect(restore).toHaveClass('bg-primary-solid', 'text-primary-solid-foreground')
     expect(restore).not.toHaveClass('bg-primary')
     await act(async () => restore.click())
     expect(await screen.findByRole('alertdialog', { name: 'Restore this session?' })).toBeInTheDocument()
