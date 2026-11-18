@@ -26,7 +26,7 @@
     },
     "recentlyClosed": {
       "title": "Tab yang baru ditutup",
-      "description": "Setiap tab dan jendela yang Anda tutup masuk ke daftar Baru ditutup di bilah samping, dikelompokkan per hari. Buka kembali tab, pulihkan seluruh jendela atau simpan ke grup, atau temukan dengan Ctrl/Cmd+K: awali pencarian dengan closed: untuk mencari di sana saja. Paket gratis menyimpan hingga {freeEntries, number} dari {freeDays, plural, other {# hari}} terakhir; Pro menyimpan hingga {proEntries, number} selama {proDays, plural, other {# hari}}. Daftar ini tetap di perangkat Anda: tidak pernah disinkronkan, diunggah, atau diekspor, jendela pribadi tidak pernah dicatat, dan Anda dapat menonaktifkan atau mengosongkannya di Pengaturan → Data."
+      "description": "Setiap tab dan jendela yang Anda tutup masuk ke daftar Baru ditutup di bilah samping, dikelompokkan per hari. Buka kembali tab, pulihkan seluruh jendela atau simpan ke grup, atau temukan dengan Ctrl/Cmd+K: awali pencarian dengan closed: untuk mencari di sana saja. Paket gratis menyimpan {freeDays, plural, other {# hari}} terakhir Anda yang memiliki tab tertutup; Pro menyimpan {proDays, plural, other {# hari}} terakhir Anda. Daftar ini tetap di perangkat Anda: tidak pernah disinkronkan, diunggah, atau diekspor, jendela pribadi tidak pernah dicatat, dan Anda dapat menonaktifkan atau mengosongkannya di Pengaturan → Data."
     },
     "dnd": {
       "title": "Penataan ulang dengan seret dan lepas",

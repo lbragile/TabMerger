@@ -15,7 +15,8 @@ Shape:
   group row, else the section toggle inside `[data-recently-closed-section]`
   (`RECENTLY_CLOSED_SECTION_ATTR` lives in `lib/sidebarSections.ts`, NOT the component module:
   MainPanel importing the section component dragged its hooks into every MainPanel test).
-- `uiStore.openSidebarSection` now defaults to `recentlyClosed` (not persisted, so every popup open).
+- `uiStore.openSidebarSection` defaults to null (every section collapsed when the popup opens);
+  `SidebarSection` makes the expanded section's label semibold.
 - All list actions + toasts + status line + analytics live in ONE hook,
   `hooks/useRecentlyClosedActions.ts`; components get `true` back when the entry really left, and
   only then move focus (`useFocusAfterRowRemoval` gained a `fallbackSelector`, the day view uses
@@ -85,6 +86,13 @@ Accessibility pass (after an accessibility-auditor review):
   `chromeGroupColor` (CSS `yellow` is #ffff00).
 - jest-dom: `.not.toHaveAccessibleDescription()` with no argument failed on an element with no
   description; assert `aria-describedby` is null instead.
+
+Plan limits (shared `RECENTLY_CLOSED_LIMITS`): Free `{ recentDays, entries }` = the newest N
+LOCAL days that have closes, rolling (not consecutive dates, no calendar age); Pro `{ days,
+entries }` = calendar days. `entries` is a hidden storage cap on both, never shown in copy.
+`planPrune` handles both shapes; `localDayKey` lives in the worker-safe `lib/recentlyClosed.ts` so
+pruning and the day rows share one day boundary. In tests, `process.env.TZ = 'America/New_York'`
+set in `beforeAll` (restored in `afterAll`) gives a real 25-hour DST day on Windows; assert it.
 
 Test gotchas:
 - E2E submenus (real Chrome): moving the pointer from a SubTrigger to its items crosses the other

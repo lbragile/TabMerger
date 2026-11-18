@@ -61,9 +61,7 @@ const featureSections: {
         key: 'recentlyClosed',
         icon: RotateCcw,
         values: {
-          freeEntries: RECENTLY_CLOSED_LIMITS.free.entries,
-          freeDays: RECENTLY_CLOSED_LIMITS.free.days,
-          proEntries: RECENTLY_CLOSED_LIMITS.pro.entries,
+          freeDays: RECENTLY_CLOSED_LIMITS.free.recentDays,
           proDays: RECENTLY_CLOSED_LIMITS.pro.days,
         },
       },

@@ -8,9 +8,13 @@ import { AUTO_SAVE_COPY, RECENTLY_CLOSED_COPY, RECENTLY_CLOSED_LIMITS, getPricin
  */
 describe('recently closed pricing copy', () => {
   it('reads the Free and Pro limits from RECENTLY_CLOSED_LIMITS', () => {
-    expect(RECENTLY_CLOSED_LIMITS).toEqual({ free: { entries: 50, days: 7 }, pro: { entries: 1000, days: 30 } });
-    expect(RECENTLY_CLOSED_COPY.pricingFeatureFree).toBe('Recently closed tabs: last 50 or 7 days');
-    expect(RECENTLY_CLOSED_COPY.pricingFeaturePro).toBe('Recently closed tabs: up to 1,000, kept 30 days');
+    expect(RECENTLY_CLOSED_LIMITS).toEqual({ free: { recentDays: 2, entries: 1000 }, pro: { days: 30, entries: 1000 } });
+    // Free's entry count is only a storage cap, never lower than Pro's
+    expect(RECENTLY_CLOSED_LIMITS.free.entries).toBe(RECENTLY_CLOSED_LIMITS.pro.entries);
+    expect(RECENTLY_CLOSED_COPY.pricingFeatureFree).toBe('Recently closed tabs: your last 2 days');
+    expect(RECENTLY_CLOSED_COPY.pricingFeaturePro).toBe('Recently closed tabs: your last 30 days');
+    // the entry caps are storage limits only: never in the copy
+    expect(`${RECENTLY_CLOSED_COPY.pricingFeatureFree} ${RECENTLY_CLOSED_COPY.pricingFeaturePro}`).not.toMatch(/1,000|1000/);
   });
 
   it('Free lists it right after auto-save, outside the first three lines', () => {

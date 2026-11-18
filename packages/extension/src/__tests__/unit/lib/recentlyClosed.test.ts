@@ -187,11 +187,43 @@ describe('planPrune', () => {
     expect(planPrune([win, cleared], tabEntry('n', 'https://example.com/a', NOW), pro, NOW)).toEqual([])
   })
 
-  it('prunes by age for the plan', () => {
-    const eightDays = tabEntry('8d', 'https://a.test', NOW - 8 * DAY)
-    const sixDays = tabEntry('6d', 'https://b.test', NOW - 6 * DAY)
-    expect(planPrune([eightDays, sixDays], null, free, NOW)).toEqual(['8d'])
-    expect(planPrune([eightDays, sixDays], null, pro, NOW)).toEqual([])
+  it('Pro prunes by calendar age (its days)', () => {
+    const old = tabEntry('31d', 'https://a.test', NOW - (pro.days + 1) * DAY)
+    const recent = tabEntry('29d', 'https://b.test', NOW - (pro.days - 1) * DAY)
+    expect(planPrune([old, recent], null, pro, NOW)).toEqual(['31d'])
+  })
+
+  it('Free keeps the newest recentDays local days that have closes, however far apart (rolling)', () => {
+    // three days with closes: today, 5 days ago, 20 days ago (not consecutive)
+    const today = tabEntry('t', 'https://t.test', NOW)
+    const fiveAgo = tabEntry('f', 'https://f.test', NOW - 5 * DAY)
+    const fiveAgoToo = tabEntry('f2', 'https://f2.test', NOW - 5 * DAY + 60_000)
+    const twentyAgo = tabEntry('w', 'https://w.test', NOW - 20 * DAY)
+    expect(free.recentDays).toBe(2)
+    expect(planPrune([today, fiveAgo, fiveAgoToo, twentyAgo], null, free, NOW)).toEqual(['w'])
+    // no calendar age limit: two old days with nothing newer both stay
+    expect(planPrune([fiveAgo, twentyAgo], null, free, NOW)).toEqual([])
+  })
+
+  it('Free: a close on a new day rolls the oldest day out; one on a kept day drops nothing', () => {
+    const yesterday = tabEntry('y', 'https://y.test', NOW - DAY)
+    const threeAgo = tabEntry('3', 'https://3.test', NOW - 3 * DAY)
+    expect(planPrune([yesterday, threeAgo], tabEntry('n', 'https://n.test', NOW), free, NOW)).toEqual(['3'])
+    expect(planPrune([yesterday, threeAgo], tabEntry('n2', 'https://n2.test', NOW - DAY + 1000), free, NOW)).toEqual([])
+  })
+
+  it('Free never drops the entry being added, even with a wrong clock', () => {
+    const today = tabEntry('t', 'https://t.test', NOW)
+    const yesterday = tabEntry('y', 'https://y.test', NOW - DAY)
+    const skewed = tabEntry('skewed', 'https://s.test', NOW - 400 * DAY)
+    expect(planPrune([today, yesterday], skewed, free, NOW)).not.toContain('skewed')
+  })
+
+  it('Free: cleared entries do not count as a day with closes', () => {
+    const today = { ...tabEntry('t', 'https://t.test', NOW), clearedAt: NOW - 1000 }
+    const fiveAgo = tabEntry('f', 'https://f.test', NOW - 5 * DAY)
+    const tenAgo = tabEntry('x', 'https://x.test', NOW - 10 * DAY)
+    expect(planPrune([today, fiveAgo, tenAgo], null, free, NOW)).toEqual([])
   })
 
   it('prunes by count, oldest first, never the entry being added', () => {

@@ -26,7 +26,7 @@
     },
     "recentlyClosed": {
       "title": "Son kapatılan sekmeler",
-      "description": "Kapattığınız her sekme ve pencere, kenar çubuğundaki Son kapatılanlar listesine güne göre gruplanarak eklenir. Bir sekmeyi yeniden açın, bütün bir pencereyi geri yükleyin ya da bir gruba kaydedin veya Ctrl/Cmd+K ile bulun: yalnızca orada aramak için aramanıza closed: ile başlayın. Ücretsiz plan son {freeDays, plural, one {# günün} other {# günün}} en fazla {freeEntries, number} kaydını saklar; Pro ise en fazla {proEntries, number} kaydı {proDays, plural, one {# gün} other {# gün}} boyunca saklar. Liste cihazınızda kalır: asla eşitlenmez, yüklenmez veya dışa aktarılmaz, gizli pencereler asla kaydedilmez ve listeyi Ayarlar → Veri bölümünden kapatabilir ya da temizleyebilirsiniz."
+      "description": "Kapattığınız her sekme ve pencere, kenar çubuğundaki Son kapatılanlar listesine güne göre gruplanarak eklenir. Bir sekmeyi yeniden açın, bütün bir pencereyi geri yükleyin ya da bir gruba kaydedin veya Ctrl/Cmd+K ile bulun: yalnızca orada aramak için aramanıza closed: ile başlayın. Ücretsiz plan sekme kapattığınız son {freeDays, plural, one {# günü} other {# günü}} saklar; Pro ise son {proDays, plural, one {# gününüzü} other {# gününüzü}} saklar. Liste cihazınızda kalır: asla eşitlenmez, yüklenmez veya dışa aktarılmaz, gizli pencereler asla kaydedilmez ve listeyi Ayarlar → Veri bölümünden kapatabilir ya da temizleyebilirsiniz."
     },
     "dnd": {
       "title": "Sürükle-bırak ile yeniden sıralama",

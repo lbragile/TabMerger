@@ -13,13 +13,24 @@ export const FREE_TIER_LIMITS = { groups: 5, tabs: 50, urlRules: 3, sessions: 3 
 
 /**
  * How long "Recently closed tabs" keeps entries, per plan (local-only data: the client limits are
- * all the enforcement it needs). An entry is one closed tab or one closed window. Free limits apply
- * only when the plan is KNOWN to be Free; an unknown plan (offline, failed check) keeps the Pro ones.
+ * all the enforcement it needs). An entry is one closed tab or one closed window. The two plans use
+ * different fields because they mean different things: Free keeps the newest `recentDays` days that
+ * have closes, Pro a number of calendar `days`. Free limits apply only when the plan is KNOWN to be
+ * Free; an unknown plan (offline, failed check) keeps the Pro ones.
  */
 export const RECENTLY_CLOSED_LIMITS = {
-  free: { entries: 50, days: 7 },
-  pro: { entries: 1000, days: 30 },
+  /**
+   * The newest `recentDays` local days that have closed tabs, rolling (not necessarily
+   * consecutive calendar days): when a newer day appears, the oldest one's entries go. `entries`
+   * is only a storage cap (one heavy day must not fill the device), the same as Pro's.
+   */
+  free: { recentDays: 2, entries: 1000 },
+  /** Closes of the last `days` calendar days; `entries` is only a storage cap, never advertised. */
+  pro: { days: 30, entries: 1000 },
 } as const;
+
+/** "your last day" / "your last 2 days": a plan's window in words (the entry caps are never advertised). */
+const lastDays = (n: number) => (n === 1 ? 'your last day' : `your last ${n.toLocaleString('en-US')} days`);
 
 /**
  * "Recently closed tabs" lines in the plan feature lists, built from {@link RECENTLY_CLOSED_LIMITS}
@@ -28,9 +39,9 @@ export const RECENTLY_CLOSED_LIMITS = {
  */
 export const RECENTLY_CLOSED_COPY = {
   /** Line in the Free plan's feature list. */
-  pricingFeatureFree: `Recently closed tabs: last ${RECENTLY_CLOSED_LIMITS.free.entries.toLocaleString('en-US')} or ${RECENTLY_CLOSED_LIMITS.free.days.toLocaleString('en-US')} days`,
+  pricingFeatureFree: `Recently closed tabs: ${lastDays(RECENTLY_CLOSED_LIMITS.free.recentDays)}`,
   /** Line in the Pro plan's feature list. */
-  pricingFeaturePro: `Recently closed tabs: up to ${RECENTLY_CLOSED_LIMITS.pro.entries.toLocaleString('en-US')}, kept ${RECENTLY_CLOSED_LIMITS.pro.days.toLocaleString('en-US')} days`,
+  pricingFeaturePro: `Recently closed tabs: ${lastDays(RECENTLY_CLOSED_LIMITS.pro.days)}`,
 } as const;
 
 /** Paid plans have no caps. */

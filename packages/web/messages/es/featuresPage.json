@@ -26,7 +26,7 @@
     },
     "recentlyClosed": {
       "title": "Pestañas cerradas recientemente",
-      "description": "Cada pestaña y ventana que cierras va a la lista Cerrado recientemente de la barra lateral, agrupada por día. Vuelve a abrir una pestaña, restaura una ventana entera o guárdala en un grupo, o encuéntrala con Ctrl/Cmd+K: empieza tu búsqueda con closed: para buscar solo ahí. El plan gratuito conserva hasta {freeEntries, number} de los últimos {freeDays, plural, one {# día} other {# días}}; Pro conserva hasta {proEntries, number} durante {proDays, plural, one {# día} other {# días}}. La lista se queda en tu dispositivo: nunca se sincroniza, se sube ni se exporta, las ventanas privadas nunca se registran y puedes desactivarla o vaciarla en Ajustes → Datos."
+      "description": "Cada pestaña y ventana que cierras va a la lista Cerrado recientemente de la barra lateral, agrupada por día. Vuelve a abrir una pestaña, restaura una ventana entera o guárdala en un grupo, o encuéntrala con Ctrl/Cmd+K: empieza tu búsqueda con closed: para buscar solo ahí. El plan gratuito conserva {freeDays, plural, one {tu último día} other {tus últimos # días}} con pestañas cerradas; Pro conserva {proDays, plural, one {tu último día} other {tus últimos # días}}. La lista se queda en tu dispositivo: nunca se sincroniza, se sube ni se exporta, las ventanas privadas nunca se registran y puedes desactivarla o vaciarla en Ajustes → Datos."
     },
     "dnd": {
       "title": "Reordenar arrastrando y soltando",

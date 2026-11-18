@@ -33,9 +33,16 @@ beforeEach(async () => {
 describe('recording (add + dedupe + prune in one transaction)', () => {
   it('adds, drops the older entry of the same URL, and prunes by age for the plan', async () => {
     await addRecentlyClosedEntry(tab('old-a', 'https://a.test/', NOW - 2 * DAY), pro, NOW)
-    await addRecentlyClosedEntry(tab('ancient', 'https://b.test/', NOW - 8 * DAY), pro, NOW)
-    await addRecentlyClosedEntry(tab('new-a', 'https://A.test/', NOW), free, NOW)
+    await addRecentlyClosedEntry(tab('ancient', 'https://b.test/', NOW - (pro.days! + 1) * DAY), pro, NOW)
+    await addRecentlyClosedEntry(tab('new-a', 'https://A.test/', NOW), pro, NOW)
     expect(await ids()).toEqual(['new-a'])
+  })
+
+  it('Free keeps the newest 2 days that have closes (rolling), not calendar days', async () => {
+    await addRecentlyClosedEntry(tab('eight-days', 'https://b.test/', NOW - 8 * DAY), pro, NOW)
+    await addRecentlyClosedEntry(tab('three-days', 'https://c.test/', NOW - 3 * DAY), pro, NOW)
+    await addRecentlyClosedEntry(tab('now', 'https://d.test/', NOW), free, NOW)
+    expect(await ids()).toEqual(['now', 'three-days'])
   })
 
   it('keeps only the newest entries over the count limit', async () => {
@@ -87,12 +94,13 @@ describe('clear marks, undo and the delayed delete', () => {
     expect(await unmarkRecentlyClosedCleared(['a'])).toBe(0)
   })
 
-  it('a worker start sweep prunes for the plan (Pro to Free trims) and drops corrupt rows', async () => {
+  it('a worker start sweep prunes for the plan (Pro to Free trims to 2 days) and drops corrupt rows', async () => {
+    await addRecentlyClosedEntry(tab('today', 'https://n.test', NOW), pro, NOW)
     await addRecentlyClosedEntry(tab('recent', 'https://r.test', NOW - DAY), pro, NOW)
     await addRecentlyClosedEntry(tab('twenty-days', 'https://t.test', NOW - 20 * DAY), pro, NOW)
     await (await getDb()).put('recentlyClosed', { id: 'corrupt', closedAt: 'x' } as unknown as RecentlyClosedEntry)
     expect((await pruneRecentlyClosed(free, NOW)).deleted).toBe(2)
-    expect(await ids(true)).toEqual(['recent'])
+    expect(await ids(true)).toEqual(['today', 'recent'])
   })
 
   it('reopen deletes; undo of a reopen puts the entry back without a mark', async () => {

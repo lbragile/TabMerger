@@ -26,7 +26,7 @@
     },
     "recentlyClosed": {
       "title": "Recently closed tabs",
-      "description": "Every tab and window you close goes into a Recently closed list in the sidebar, grouped by day. Reopen a tab, restore a whole window or save it to a group, or find it with Ctrl/Cmd+K: start your search with closed: to look only there. The free plan keeps up to {freeEntries, number} from the last {freeDays, plural, one {# day} other {# days}}; Pro keeps up to {proEntries, number} for {proDays, plural, one {# day} other {# days}}. The list stays on your device: it's never synced, uploaded or exported, private windows are never recorded, and you can turn it off or clear it in Settings → Data."
+      "description": "Every tab and window you close goes into a Recently closed list in the sidebar, grouped by day. Reopen a tab, restore a whole window or save it to a group, or find it with Ctrl/Cmd+K: start your search with closed: to look only there. The free plan keeps your {freeDays, plural, one {most recent day} other {# most recent days}} with closed tabs; Pro keeps your last {proDays, plural, one {# day} other {# days}}. The list stays on your device: it's never synced, uploaded or exported, private windows are never recorded, and you can turn it off or clear it in Settings → Data."
     },
     "dnd": {
       "title": "Drag-and-drop reordering",

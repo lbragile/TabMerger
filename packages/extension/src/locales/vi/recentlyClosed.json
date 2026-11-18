@@ -13,7 +13,7 @@
   "settings": {
     "title": "Ghi nhớ thẻ đã đóng",
     "purpose": "Các thẻ và cửa sổ bạn đóng sẽ ở lại trong Đã đóng gần đây để bạn mở lại. Chỉ lưu trên thiết bị này. Cửa sổ riêng tư không bao giờ được ghi lại.",
-    "keeps_other": "Gói của bạn giữ tối đa {{entries}} mục trong {{count}} ngày",
+    "keeps_other": "Gói của bạn giữ {{count}} ngày gần nhất",
     "inList_other": "{{count}} trong danh sách",
     "off": "Ghi nhớ thẻ đã đóng đang tắt.",
     "clear": "Xóa danh sách",
@@ -34,11 +34,11 @@
   "section": {
     "title": "Đã đóng gần đây",
     "offCount": "tắt",
-    "empty_other": "Chưa đóng thẻ nào. Các thẻ bạn đóng sẽ hiện ở đây theo ngày, trong {{count}} ngày.",
+    "empty_other": "Chưa đóng thẻ nào. Các thẻ bạn đóng sẽ hiện ở đây theo ngày, cho {{count}} ngày gần nhất của bạn.",
     "offBody": "Ghi nhớ thẻ đã đóng đang tắt.",
     "turnOn": "Bật trong Cài đặt",
-    "freeKeeps_other": "Free giữ tối đa {{entries}} mục trong {{count}} ngày gần nhất.",
-    "proKeeps_other": "Pro giữ tối đa {{entries}} mục trong {{count}} ngày.",
+    "freeKeeps_other": "Free giữ {{count}} ngày gần nhất của bạn.",
+    "proKeeps_other": "Pro giữ {{count}} ngày gần nhất của bạn.",
     "seePro": "Xem Pro",
     "dayDetail": "{{tabs}} · {{windows}}",
     "showDay_today": "Hiện các thẻ đã đóng hôm nay",

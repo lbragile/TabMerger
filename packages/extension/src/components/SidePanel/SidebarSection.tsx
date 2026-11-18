@@ -44,7 +44,8 @@ export function sidebarRowDetailClass(active: boolean): string {
  * (chevron + label + count), an optional right-aligned action button as a SIBLING of the
  * toggle (never nested — nested interactive elements are invalid HTML and break both a11y
  * and click handling), and a collapsible body that shows `emptyLabel` when there is
- * nothing to list. Every section always renders — only the body is gated on `open`. The toggle
+ * nothing to list. Every section always renders — only the body is gated on `open`. The open
+ * section's label is semibold (collapsed ones regular), so the expanded one stands out. The toggle
  * says what it controls (`aria-controls`, while the body exists). The label is shown in capitals by
  * CSS, so screen readers read the words, not letters.
  */
@@ -88,7 +89,8 @@ export function SidebarSection({
           data-sidebar-section-toggle=""
         >
           {open ? <ChevronDown className="h-3 w-3 shrink-0" /> : <ChevronRight className="h-3 w-3 shrink-0 rtl:-scale-x-100" />}
-          <span className="truncate uppercase">{t('sidePanel.sectionLabel', { label, count })}</span>
+          {/* the expanded section's label is semibold, the collapsed ones regular (same colour tokens) */}
+          <span className={cn('truncate uppercase', open ? 'font-semibold' : 'font-normal')}>{t('sidePanel.sectionLabel', { label, count })}</span>
         </button>
         {action}
       </div>

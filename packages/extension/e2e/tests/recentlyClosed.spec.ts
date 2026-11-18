@@ -112,7 +112,7 @@ test.describe('Recently closed: recording', () => {
     await openDataTab(page);
     await expect(section(page).getByRole('heading', { level: 3, name: 'Remember closed tabs' })).toBeVisible();
     await expect(toggle(page)).toBeChecked();
-    await expect(page.getByTestId('recently-closed-summary')).toContainText('Your plan keeps up to 50 for 7 days · 0 in the list');
+    await expect(page.getByTestId('recently-closed-summary')).toContainText('Your plan keeps your last 2 days · 0 in the list');
     await expect(section(page).getByRole('button', { name: 'Clear list' })).toBeDisabled();
   });
 

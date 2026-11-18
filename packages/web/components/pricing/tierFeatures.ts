@@ -34,7 +34,7 @@ interface FeatureLine {
     | 'ownApiKey'
     | 'chooseModel'
   count?: number
-  /** A second number (the recently-closed lines: how many days entries are kept). */
+  /** Days in the recently-closed lines. */
   days?: number
   /** "Everything in X": a capability the plan below already has (a check mark, not a +). */
   inherited?: boolean
@@ -52,7 +52,8 @@ export const TIER_FEATURE_LINES: Record<TierKey, readonly FeatureLine[]> = {
     { key: 'upToUrlRules', count: FREE_TIER_LIMITS.urlRules },
     { key: 'saveSessions', count: FREE_TIER_LIMITS.sessions },
     { key: 'autoSaveFree', count: AUTO_SAVE_FREE_KEEP_COUNT },
-    { key: 'recentlyClosedFree', count: RECENTLY_CLOSED_LIMITS.free.entries, days: RECENTLY_CLOSED_LIMITS.free.days },
+    // Both plans advertise only their days; the entry counts are hidden storage caps.
+    { key: 'recentlyClosedFree', days: RECENTLY_CLOSED_LIMITS.free.recentDays },
     { key: 'localOnly' },
     { key: 'importExport' },
     { key: 'dragDrop' },
@@ -65,7 +66,7 @@ export const TIER_FEATURE_LINES: Record<TierKey, readonly FeatureLine[]> = {
     { key: 'sessionsSynced' },
     { key: 'autoBackups' },
     { key: 'autoSavePro' },
-    { key: 'recentlyClosedPro', count: RECENTLY_CLOSED_LIMITS.pro.entries, days: RECENTLY_CLOSED_LIMITS.pro.days },
+    { key: 'recentlyClosedPro', days: RECENTLY_CLOSED_LIMITS.pro.days },
     { key: 'prioritySupport' },
   ],
   proAi: [

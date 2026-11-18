@@ -25,9 +25,13 @@ Adding or renaming a plan feature line touches more than `PRICING_TIERS`:
 - Recently closed tabs has a line on Free and Pro (`recentlyClosedFree` / `recentlyClosedPro`,
   after each auto-save line), from `RECENTLY_CLOSED_COPY`. That object sits in
   `constants/index.ts` beside `RECENTLY_CLOSED_LIMITS`, not in `recentlyClosed.ts`: index.ts
-  re-exports that file, so importing the limits there would be a cycle. These lines carry two
-  numbers, so `FeatureLine` has a `days` field and `useTierFeatures` passes `{ count, days }`
-  (cast the key to a two-placeholder key so the extra value type-checks). On `/features`, a
+  re-exports that file, so importing the limits there would be a cycle. These lines carry
+  a day count, not `count`, so `FeatureLine` has a `days` field and `useTierFeatures` passes
+  `{ count, days }` (cast the key to a two-placeholder key so the extra value type-checks). Both
+  plans read "your last N days" (Free `recentDays`, Pro `days`); both `entries` values are
+  hidden storage caps, never advertised, and the tests assert no line shows them. A day count of
+  2 renders as a dual word in Arabic ("يومين") and Hebrew ("יומיים"), with no digit, so per-locale
+  "contains the number" tests must skip when `new Intl.PluralRules(locale).select(n) === 'two'`. On `/features`, a
   description with several numbers takes a `values` record on its `featureSections` entry.
   Pinned by `recently-closed-copy.test.tsx` (web) and `recentlyClosedCopy.test.ts` (shared).
 - The privacy page is English-only binding text (JSX literals, lint-exempt, no catalog), so a

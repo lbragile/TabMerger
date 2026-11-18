@@ -13,7 +13,7 @@
   "settings": {
     "title": "记住关闭的标签页",
     "purpose": "你关闭的标签页和窗口会保留在“最近关闭”中，方便你重新打开。仅保存在此设备上。隐私窗口永远不会被记录。",
-    "keeps_other": "你的套餐最多保留 {{entries}} 项，保留 {{count}} 天",
+    "keeps_other": "你的套餐保留最近 {{count}} 天的记录",
     "inList_other": "列表中有 {{count}} 项",
     "off": "记住关闭的标签页已关闭。",
     "clear": "清空列表",
@@ -34,11 +34,11 @@
   "section": {
     "title": "最近关闭",
     "offCount": "已关闭",
-    "empty_other": "还没有关闭任何标签页。你关闭的标签页会按天显示在这里，保留 {{count}} 天。",
+    "empty_other": "还没有关闭任何标签页。你关闭的标签页会按天显示在这里，保留最近 {{count}} 天。",
     "offBody": "记住关闭的标签页已关闭。",
     "turnOn": "在设置中开启",
-    "freeKeeps_other": "Free 最多保留最近 {{count}} 天内的 {{entries}} 项。",
-    "proKeeps_other": "Pro 最多保留 {{entries}} 项，保留 {{count}} 天。",
+    "freeKeeps_other": "Free 保留你最近 {{count}} 天的记录。",
+    "proKeeps_other": "Pro 保留你最近 {{count}} 天的记录。",
     "seePro": "了解 Pro",
     "dayDetail": "{{tabs}} · {{windows}}",
     "showDay_today": "显示今天关闭的标签页",

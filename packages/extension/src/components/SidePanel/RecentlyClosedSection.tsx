@@ -12,8 +12,8 @@ import { useRecentlyClosedActions } from '@/hooks/useRecentlyClosedActions';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { useEntitlements } from '@/hooks/useEntitlements';
 import { useFocusAfterRowRemoval } from '@/hooks/useFocusAfterRowRemoval';
-import { limitsForPlan, readRememberClosedTabs } from '@/lib/recentlyClosed';
-import { recentlyClosedPlanNote, type RecentlyClosedDay } from '@/lib/recentlyClosedDays';
+import { readRememberClosedTabs } from '@/lib/recentlyClosed';
+import { recentlyClosedEmptyText, recentlyClosedPlanNote, type RecentlyClosedDay } from '@/lib/recentlyClosedDays';
 import { trackEvent } from '@/lib/analytics';
 import { INLINE_LINK } from '@/lib/inlineLink';
 import {
@@ -36,7 +36,7 @@ export function useDayDetail(): (day: RecentlyClosedDay) => string {
 }
 
 /**
- * The "Recently closed" sidebar section, first in the bottom stack and open when the popup opens:
+ * The "Recently closed" sidebar section, first in the bottom stack (collapsed when the popup opens):
  * one row per local day, newest first (Today, Yesterday, "Wed, Nov 11"). A row's name opens the
  * day in the main panel (`mainView` `closedDay`) and is the current row while it shows; its Remove
  * button (a sibling, never nested) removes the whole day with an Undo toast. The header counts the
@@ -62,7 +62,6 @@ export function RecentlyClosedSection({ groups }: { groups: readonly Group[] }) 
 
   const on = readRememberClosedTabs(settings);
   const free = !planLoading && tier === 'free';
-  const keptDays = limitsForPlan(free ? 'free' : 'pro').days;
 
   const show = (day: RecentlyClosedDay) => {
     if (selectionMode) return;
@@ -76,7 +75,7 @@ export function RecentlyClosedSection({ groups }: { groups: readonly Group[] }) 
   };
 
   const emptyLabel = on ? (
-    t('recentlyClosed.section.empty', { count: keptDays })
+    recentlyClosedEmptyText(free ? 'free' : 'pro')
   ) : (
     <>
       {t('recentlyClosed.section.offBody')}{' '}

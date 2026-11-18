@@ -391,7 +391,7 @@ describe('ClosedDayView — search, long days, Free note', () => {
     openDay('2030-01-02')
     const note = screen.getByTestId('closed-day-free-note')
     // both limits of both plans (RECENTLY_CLOSED_LIMITS), numbers formatted for the locale
-    expect(note).toHaveTextContent('Free keeps up to 50 from the last 7 days. Pro keeps up to 1,000 for 30 days.')
+    expect(note).toHaveTextContent('Free keeps your last 2 days. Pro keeps your last 30 days.')
     await user.click(within(note).getByRole('button', { name: 'See Pro' }))
     expect(h.create).toHaveBeenCalledWith({ url: expect.stringMatching(/\/pricing$/), active: true })
   })

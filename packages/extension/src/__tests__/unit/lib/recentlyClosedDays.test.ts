@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { colorForDay } from '@tabmerger/shared'
-import { dayLabel, formatClosedTime, groupEntriesByDay, localDayBounds, localDayKey, recentlyClosedKeepsLine, recentlyClosedPlanNote } from '@/lib/recentlyClosedDays'
+import { dayLabel, formatClosedTime, groupEntriesByDay, localDayBounds, localDayKey, recentlyClosedEmptyText, recentlyClosedKeepsLine, recentlyClosedPlanNote } from '@/lib/recentlyClosedDays'
 import { i18n } from '@/lib/i18n'
 import type { RecentlyClosedEntry } from '@/lib/recentlyClosed'
 
@@ -102,30 +102,33 @@ describe('formatClosedTime', () => {
   })
 })
 
-describe('plan limits copy (both limits, from RECENTLY_CLOSED_LIMITS)', () => {
+describe('plan copy (each plan\'s window, from RECENTLY_CLOSED_LIMITS)', () => {
   afterEach(async () => {
     await i18n.changeLanguage('en')
   })
 
-  it('English: entries and days of both plans, the big number formatted', () => {
-    expect(recentlyClosedPlanNote()).toBe('Free keeps up to 50 from the last 7 days. Pro keeps up to 1,000 for 30 days.')
-    expect(recentlyClosedKeepsLine('free')).toBe('Your plan keeps up to 50 for 7 days')
-    expect(recentlyClosedKeepsLine('pro')).toBe('Your plan keeps up to 1,000 for 30 days')
+  it('English: Free\'s rolling days and Pro\'s days, never the entry caps', () => {
+    expect(recentlyClosedPlanNote()).toBe('Free keeps your last 2 days. Pro keeps your last 30 days.')
+    expect(recentlyClosedKeepsLine('free')).toBe('Your plan keeps your last 2 days')
+    expect(recentlyClosedKeepsLine('pro')).toBe('Your plan keeps your last 30 days')
+    expect(recentlyClosedEmptyText('free')).toBe('Nothing closed yet. Tabs you close show up here by day, for your last 2 days.')
+    expect(recentlyClosedEmptyText('pro')).toBe('Nothing closed yet. Tabs you close show up here by day, for your last 30 days.')
+    expect(recentlyClosedPlanNote()).not.toMatch(/1,000|1000/)
   })
 
-  it('Russian picks the plural form of each day count (7 and 30 are both "many")', async () => {
+  it('Russian picks the plural form of each count (2 is "few", 30 is "many")', async () => {
     await i18n.changeLanguage('ru')
     const note = recentlyClosedPlanNote()
-    expect(note).toContain('7 дней')
+    expect(note).toContain('2 дня')
     expect(note).toContain('30 дней')
     expect(note).not.toContain('{{')
   })
 
-  it('Arabic picks the few form for 7 and the many form for 30', async () => {
+  it('Arabic uses the dual for 2 and the many form for 30', async () => {
     await i18n.changeLanguage('ar')
     const note = recentlyClosedPlanNote()
-    expect(note).toContain('أيام')
-    expect(note).toContain('يومًا')
+    expect(note).toContain('يومين')
+    expect(note).toContain('30 يومًا')
     expect(note).not.toContain('{{')
   })
 })

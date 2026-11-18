@@ -26,7 +26,7 @@
     },
     "recentlyClosed": {
       "title": "Tab đã đóng gần đây",
-      "description": "Mọi tab và cửa sổ bạn đóng đều được đưa vào danh sách Đã đóng gần đây ở thanh bên, nhóm theo ngày. Mở lại một tab, khôi phục cả cửa sổ hoặc lưu vào một nhóm, hay tìm lại bằng Ctrl/Cmd+K: bắt đầu tìm kiếm bằng closed: để chỉ tìm ở đó. Gói miễn phí giữ tối đa {freeEntries, number} mục trong {freeDays, plural, other {# ngày}} gần nhất; gói Pro giữ tối đa {proEntries, number} mục trong {proDays, plural, other {# ngày}}. Danh sách chỉ nằm trên thiết bị của bạn: không bao giờ được đồng bộ, tải lên hay xuất ra, cửa sổ riêng tư không bao giờ được ghi lại, và bạn có thể tắt hoặc xóa danh sách trong Cài đặt → Dữ liệu."
+      "description": "Mọi tab và cửa sổ bạn đóng đều được đưa vào danh sách Đã đóng gần đây ở thanh bên, nhóm theo ngày. Mở lại một tab, khôi phục cả cửa sổ hoặc lưu vào một nhóm, hay tìm lại bằng Ctrl/Cmd+K: bắt đầu tìm kiếm bằng closed: để chỉ tìm ở đó. Gói miễn phí giữ {freeDays, plural, other {# ngày}} gần nhất mà bạn có đóng tab; gói Pro giữ {proDays, plural, other {# ngày}} gần nhất của bạn. Danh sách chỉ nằm trên thiết bị của bạn: không bao giờ được đồng bộ, tải lên hay xuất ra, cửa sổ riêng tư không bao giờ được ghi lại, và bạn có thể tắt hoặc xóa danh sách trong Cài đặt → Dữ liệu."
     },
     "dnd": {
       "title": "Sắp xếp lại bằng kéo và thả",

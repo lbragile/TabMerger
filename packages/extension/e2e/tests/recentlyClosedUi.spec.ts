@@ -66,27 +66,37 @@ async function closeTab(sw: Worker, title: string): Promise<void> {
   }, title);
 }
 
-async function setup(context: BrowserContext, extensionId: string): Promise<{ page: Page; sw: Worker }> {
+const sectionToggle = (page: Page) => page.getByRole('button', { name: /^recently closed \(/i });
+
+/** Opens the popup on seeded groups; `expand` (default) opens the Recently closed section, which starts collapsed. */
+async function setup(context: BrowserContext, extensionId: string, { expand = true }: { expand?: boolean } = {}): Promise<{ page: Page; sw: Worker }> {
   const page = await openPopup(context, extensionId);
   await seedAndReload(page, [NOW_OPEN, WORK_GROUP]);
   const [sw] = context.serviceWorkers();
+  if (expand) {
+    await sectionToggle(page).click();
+    await expect(sectionToggle(page)).toHaveAttribute('aria-expanded', 'true');
+  }
   return { page, sw };
 }
-
-const sectionToggle = (page: Page) => page.getByRole('button', { name: /^recently closed \(/i });
 const todayRow = (page: Page) => page.getByRole('button', { name: 'Show tabs closed today' });
 const dayView = (page: Page) => page.getByTestId('closed-day-view');
 /** The Undo button of the toast that says `text`. */
 const toastUndo = (page: Page, text: string | RegExp) => page.locator('[data-sonner-toast]').filter({ hasText: text }).getByRole('button', { name: 'Undo' });
 
 test.describe('Recently closed: sidebar section and day view', () => {
-  test('starts open and empty, then shows Today after a close; the day opens on the right as the current row', async ({ context, extensionId }) => {
+  test('starts collapsed; expanded (bold header) and empty, then shows Today after a close; the day opens on the right as the current row', async ({ context, extensionId }) => {
     const server = await startTitleServer();
     try {
-      const { page, sw } = await setup(context, extensionId);
+      const { page, sw } = await setup(context, extensionId, { expand: false });
+      await expect(sectionToggle(page)).toHaveAttribute('aria-expanded', 'false');
+      await expect(sectionToggle(page).locator('span.uppercase')).toHaveCSS('font-weight', '400');
+      await sectionToggle(page).click();
       await expect(sectionToggle(page)).toHaveAttribute('aria-expanded', 'true');
+      await expect(sectionToggle(page).locator('span.uppercase')).toHaveCSS('font-weight', '600');
       await expect(sectionToggle(page)).toHaveAccessibleName(/recently closed \(0\)/i);
-      await expect(page.getByText(/^Nothing closed yet\./)).toBeVisible();
+      // signed out = Free: its rolling window
+      await expect(page.getByText('Nothing closed yet. Tabs you close show up here by day, for your last 2 days.')).toBeVisible();
 
       await openWindow(sw, server, ['Keep A', 'Closed B']);
       await closeTab(sw, 'Closed B');

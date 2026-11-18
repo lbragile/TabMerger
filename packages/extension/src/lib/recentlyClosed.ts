@@ -87,9 +87,26 @@ export interface RecentlyClosedEntry {
  */
 export type RecentlyClosedPlan = 'free' | 'pro' | 'unknown';
 
+/**
+ * What a plan keeps (see `RECENTLY_CLOSED_LIMITS`): at most `entries`, and either the last `days`
+ * calendar days (Pro) or the newest `recentDays` local days that have closes, rolling (Free).
+ */
 export interface RecentlyClosedLimits {
   entries: number;
-  days: number;
+  days?: number;
+  recentDays?: number;
+}
+
+const pad2 = (n: number) => String(n).padStart(2, '0');
+
+/**
+ * The local calendar day of `ms` as `YYYY-MM-DD`: the day rows' key (lib/recentlyClosedDays.ts) and
+ * the unit Free's rolling window counts in. Built from the local date, so DST never moves a close
+ * to another day.
+ */
+export function localDayKey(ms: number): string {
+  const d = new Date(ms);
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`;
 }
 
 /** The limits a plan keeps. Only a plan KNOWN to be Free gets the Free limits. */
@@ -234,7 +251,8 @@ export function buildEntry(snapshots: TabSnapshot[], closedAt: number, id: strin
 /**
  * The ids to delete in the same transaction that adds `entry` (or, with no entry, on a sweep):
  *  1. an older `tab` entry with the same normalized URL as a new `tab` entry (the newest close wins);
- *  2. entries older than the plan's days;
+ *  2. entries older than the plan's `days` (Pro), or outside the newest `recentDays` local days that
+ *     have entries (Free: a rolling window of day rows, not necessarily consecutive dates);
  *  3. beyond the plan's count, the oldest ones;
  *  4. entries cleared longer than the undo window ago.
  * Entries marked cleared are not counted toward the limit and never deduped (their Undo must still
@@ -242,7 +260,7 @@ export function buildEntry(snapshots: TabSnapshot[], closedAt: number, id: strin
  */
 export function planPrune(existing: RecentlyClosedEntry[], entry: RecentlyClosedEntry | null, limits: RecentlyClosedLimits, now: number): string[] {
   const drop = new Set<string>();
-  const oldest = now - limits.days * DAY_MS;
+  const oldest = limits.days === undefined ? -Infinity : now - limits.days * DAY_MS;
   for (const e of existing) {
     if (e.clearedAt !== undefined) {
       if (now - e.clearedAt >= RECENTLY_CLOSED_CLEAR_DELAY_MS) drop.add(e.id);
@@ -256,8 +274,16 @@ export function planPrune(existing: RecentlyClosedEntry[], entry: RecentlyClosed
       if (e.id !== entry.id && e.clearedAt === undefined && e.kind === 'tab' && normalizeUrl(e.tabs[0]?.url ?? '') === key) drop.add(e.id);
     }
   }
-  const kept = existing.filter((e) => e.clearedAt === undefined && !drop.has(e.id) && e.id !== entry?.id);
+  let kept = existing.filter((e) => e.clearedAt === undefined && !drop.has(e.id) && e.id !== entry?.id);
   if (entry) kept.push(entry);
+  if (limits.recentDays !== undefined) {
+    // the newest N local days that have entries; the entry being added is always among them
+    const days = [...new Set(kept.map((e) => localDayKey(e.closedAt)))].sort().reverse();
+    const keepDays = new Set(days.slice(0, Math.max(1, limits.recentDays)));
+    if (entry) keepDays.add(localDayKey(entry.closedAt));
+    for (const e of kept) if (!keepDays.has(localDayKey(e.closedAt)) && e.id !== entry?.id) drop.add(e.id);
+    kept = kept.filter((e) => !drop.has(e.id));
+  }
   if (kept.length > limits.entries) {
     kept.sort((a, b) => b.closedAt - a.closedAt);
     // never the entry being added: it is the newest close (a wrong clock could make it look older)

@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import type { GroupsState } from '@/lib/types';
 import { withoutTourDemoGroups } from '@tabmerger/shared';
 import { setSetting } from '@/lib/localDb';
-import { SIDEBAR_SECTION, type SidebarSectionId } from '@/lib/sidebarSections';
+import type { SidebarSectionId } from '@/lib/sidebarSections';
 
 export type ModalType =
   | 'addGroup'
@@ -89,10 +89,7 @@ interface UIState {
    * the group view is showing.
    */
   mainViewReturnGroupId: string | null;
-  /**
-   * The one expanded sidebar section (an accordion), or null when all are collapsed. Not persisted:
-   * every popup opens with Recently closed expanded (the most used section).
-   */
+  /** The one expanded sidebar section (an accordion), or null when all are collapsed (as every popup opens). Not persisted. */
   openSidebarSection: SidebarSectionId | null;
   searchFilter: string;
   renameTarget: RenameTarget | null;
@@ -291,7 +288,7 @@ export const useUIStore = create<UIState>((set, get) => ({
   activeGroupIndex: 0,
   mainView: GROUP_VIEW,
   mainViewReturnGroupId: null,
-  openSidebarSection: SIDEBAR_SECTION.recentlyClosed,
+  openSidebarSection: null,
   scrollToWindowIndex: null,
   searchFilter: '',
   renameTarget: null,

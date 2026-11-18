@@ -121,7 +121,7 @@ export default function PrivacyPage() {
             </div>
             <div id="recently-closed" className="flex gap-4 px-4 py-3 scroll-mt-24">
               <span className="font-medium w-40 shrink-0">Recently closed tabs (all tiers)</span>
-              <span className="text-muted-foreground">The extension keeps a list of the tabs and windows you close (their addresses, titles and icons) so you can reopen them, in IndexedDB on that device only, for up to {RECENTLY_CLOSED_LIMITS.free.days} days on Free and {RECENTLY_CLOSED_LIMITS.pro.days} days on Pro and Pro AI. The list is never synced, uploaded to our servers or included in exports, tabs in private windows are never recorded, and you can turn it off and clear it in the extension&apos;s Settings → Data.</span>
+              <span className="text-muted-foreground">The extension keeps a list of the tabs and windows you close (their addresses, titles and icons) so you can reopen them, in IndexedDB on that device only, for your {RECENTLY_CLOSED_LIMITS.free.recentDays} most recent days with closed tabs on Free and your last {RECENTLY_CLOSED_LIMITS.pro.days} days on Pro and Pro AI. The list is never synced, uploaded to our servers or included in exports, tabs in private windows are never recorded, and you can turn it off and clear it in the extension&apos;s Settings → Data.</span>
             </div>
             <div className="flex gap-4 px-4 py-3">
               <span className="font-medium w-40 shrink-0">Backup files (optional)</span>

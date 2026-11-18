@@ -26,7 +26,7 @@
     },
     "recentlyClosed": {
       "title": "最近关闭的标签页",
-      "description": "您关闭的每个标签页和窗口都会按日期归入侧边栏的“最近关闭”列表。您可以重新打开标签页、恢复整个窗口或将其保存到分组，也可以用 Ctrl/Cmd+K 查找：在搜索内容前加上 closed: 即可只搜索已关闭的标签页。免费版最多保留最近 {freeDays, plural, other {# 天}}内的 {freeEntries, number} 项；Pro 最多保留 {proEntries, number} 项，保存 {proDays, plural, other {# 天}}。该列表只保存在您的设备上：绝不会同步、上传或导出，隐私窗口永远不会被记录，您可以在“设置 → 数据”中关闭或清空它。"
+      "description": "您关闭的每个标签页和窗口都会按日期归入侧边栏的“最近关闭”列表。您可以重新打开标签页、恢复整个窗口或将其保存到分组，也可以用 Ctrl/Cmd+K 查找：在搜索内容前加上 closed: 即可只搜索已关闭的标签页。免费版保留最近 {freeDays, plural, other {# 天}}（只计有关闭标签页的日子）；Pro 保留最近 {proDays, plural, other {# 天}}。该列表只保存在您的设备上：绝不会同步、上传或导出，隐私窗口永远不会被记录，您可以在“设置 → 数据”中关闭或清空它。"
     },
     "dnd": {
       "title": "拖放排序",

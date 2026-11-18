@@ -1,6 +1,6 @@
 import { RECENTLY_CLOSED_LIMITS, colorForDay } from '@tabmerger/shared';
-import { activeLocale, formatNumber, t } from '@/lib/i18n';
-import type { RecentlyClosedEntry } from '@/lib/recentlyClosed';
+import { activeLocale, t } from '@/lib/i18n';
+import { localDayKey, type RecentlyClosedEntry } from '@/lib/recentlyClosed';
 
 /**
  * The recently-closed list grouped into local days, for the sidebar's day rows and the day view.
@@ -34,13 +34,8 @@ export interface RecentlyClosedDay {
   allTabCount: number;
 }
 
-const pad = (n: number) => String(n).padStart(2, '0');
-
-/** The local calendar day of `ms` as `YYYY-MM-DD`. */
-export function localDayKey(ms: number): string {
-  const d = new Date(ms);
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-}
+// One definition with the pruning (worker-safe module): day rows and Free's rolling window agree.
+export { localDayKey };
 
 /** Local midnight starting the day of `ms`, and the next one (built from the calendar date, so DST days come out right). */
 export function localDayBounds(ms: number): { start: number; end: number } {
@@ -105,20 +100,28 @@ export function formatClosedTime(closedAt: number, locale: string = activeLocale
   }
 }
 
+/** How many days a plan keeps: Free's rolling `recentDays` (the newest days with closes), Pro's calendar `days`. */
+export function recentlyClosedKeptDays(plan: 'free' | 'pro'): number {
+  return plan === 'free' ? RECENTLY_CLOSED_LIMITS.free.recentDays : RECENTLY_CLOSED_LIMITS.pro.days;
+}
+
 /**
- * How long each plan keeps the list, with BOTH limits (entries and days, from
- * `RECENTLY_CLOSED_LIMITS`, never literal numbers): "Free keeps up to 50 from the last 7 days. Pro
- * keeps up to 1,000 for 30 days." The quiet line on Free under the sidebar section and the oldest day.
+ * How long each plan keeps the list, from `RECENTLY_CLOSED_LIMITS` (never literal numbers): "Free
+ * keeps your last 2 days. Pro keeps your last 30 days." The entry counts are storage caps only and
+ * are never shown. The quiet line on Free under the sidebar section and the oldest day.
  */
 export function recentlyClosedPlanNote(): string {
-  const { free, pro } = RECENTLY_CLOSED_LIMITS;
-  const freeLine = t('recentlyClosed.section.freeKeeps', { count: free.days, entries: formatNumber(free.entries) });
-  const proLine = t('recentlyClosed.section.proKeeps', { count: pro.days, entries: formatNumber(pro.entries) });
+  const freeLine = t('recentlyClosed.section.freeKeeps', { count: recentlyClosedKeptDays('free') });
+  const proLine = t('recentlyClosed.section.proKeeps', { count: recentlyClosedKeptDays('pro') });
   return `${freeLine} ${proLine}`;
 }
 
-/** Settings → Data's line for the plan's own limits: "Your plan keeps up to 50 for 7 days". */
+/** Settings → Data's line for the plan's own window: "Your plan keeps your last 2 days" (30 on Pro). */
 export function recentlyClosedKeepsLine(plan: 'free' | 'pro'): string {
-  const limits = RECENTLY_CLOSED_LIMITS[plan];
-  return t('recentlyClosed.settings.keeps', { count: limits.days, entries: formatNumber(limits.entries) });
+  return t('recentlyClosed.settings.keeps', { count: recentlyClosedKeptDays(plan) });
+}
+
+/** The empty section's text, with the plan's window ("…, for your last 2 days."). */
+export function recentlyClosedEmptyText(plan: 'free' | 'pro'): string {
+  return t('recentlyClosed.section.empty', { count: recentlyClosedKeptDays(plan) });
 }

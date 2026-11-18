@@ -89,7 +89,7 @@ describe('RecentlyClosedSettings', () => {
     h.entries = [entry('a'), entry('b'), entry('c')]
     renderIt()
     await waitFor(() =>
-      expect(screen.getByTestId('recently-closed-summary')).toHaveTextContent(`Your plan keeps up to ${RECENTLY_CLOSED_LIMITS.pro.entries.toLocaleString('en-US')} for ${RECENTLY_CLOSED_LIMITS.pro.days} days · 3 in the list`)
+      expect(screen.getByTestId('recently-closed-summary')).toHaveTextContent(`Your plan keeps your last ${RECENTLY_CLOSED_LIMITS.pro.days} days · 3 in the list`)
     )
   })
 
@@ -97,7 +97,7 @@ describe('RecentlyClosedSettings', () => {
     h.entitlements = { tier: 'free', loading: false }
     renderIt()
     await waitFor(() =>
-      expect(screen.getByTestId('recently-closed-summary')).toHaveTextContent(`Your plan keeps up to ${RECENTLY_CLOSED_LIMITS.free.entries} for ${RECENTLY_CLOSED_LIMITS.free.days} days · 0 in the list`)
+      expect(screen.getByTestId('recently-closed-summary')).toHaveTextContent(`Your plan keeps your last ${RECENTLY_CLOSED_LIMITS.free.recentDays} days · 0 in the list`)
     )
   })
 

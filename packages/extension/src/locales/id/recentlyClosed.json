@@ -13,7 +13,7 @@
   "settings": {
     "title": "Ingat tab yang ditutup",
     "purpose": "Tab dan jendela yang Anda tutup tetap ada di Baru ditutup, jadi Anda bisa membukanya lagi. Hanya disimpan di perangkat ini. Jendela pribadi tidak pernah dicatat.",
-    "keeps_other": "Paket Anda menyimpan hingga {{entries}} selama {{count}} hari",
+    "keeps_other": "Paket Anda menyimpan {{count}} hari terakhir Anda",
     "inList_other": "{{count}} di daftar",
     "off": "Mengingat tab yang ditutup nonaktif.",
     "clear": "Kosongkan daftar",
@@ -34,11 +34,11 @@
   "section": {
     "title": "Baru ditutup",
     "offCount": "nonaktif",
-    "empty_other": "Belum ada yang ditutup. Tab yang Anda tutup muncul di sini per hari, selama {{count}} hari.",
+    "empty_other": "Belum ada yang ditutup. Tab yang Anda tutup muncul di sini per hari, untuk {{count}} hari terakhir Anda.",
     "offBody": "Mengingat tab yang ditutup nonaktif.",
     "turnOn": "Aktifkan di Setelan",
-    "freeKeeps_other": "Free menyimpan hingga {{entries}} dari {{count}} hari terakhir.",
-    "proKeeps_other": "Pro menyimpan hingga {{entries}} selama {{count}} hari.",
+    "freeKeeps_other": "Free menyimpan {{count}} hari terakhir Anda.",
+    "proKeeps_other": "Pro menyimpan {{count}} hari terakhir Anda.",
     "seePro": "Lihat Pro",
     "dayDetail": "{{tabs}} · {{windows}}",
     "showDay_today": "Tampilkan tab yang ditutup hari ini",

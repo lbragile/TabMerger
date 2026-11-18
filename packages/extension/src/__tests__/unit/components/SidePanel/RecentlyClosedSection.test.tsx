@@ -79,9 +79,19 @@ beforeEach(() => {
 })
 
 describe('RecentlyClosedSection', () => {
-  it('is the section open when the popup opens (accordion default)', () => {
+  it('starts collapsed when the popup opens (no section open by default)', () => {
     useUIStore.setState(useUIStore.getInitialState())
-    expect(useUIStore.getState().openSidebarSection).toBe(SIDEBAR_SECTION.recentlyClosed)
+    expect(useUIStore.getState().openSidebarSection).toBeNull()
+  })
+
+  it('the expanded header is semibold, a collapsed one regular', async () => {
+    const user = userEvent.setup()
+    renderSection()
+    const label = () => screen.getByRole('button', { name: /^recently closed \(/i }).querySelector('span.uppercase')!
+    expect(label().className).toContain('font-semibold')
+    await user.click(screen.getByRole('button', { name: /^recently closed \(/i }))
+    expect(label().className).toContain('font-normal')
+    expect(label().className).not.toContain('font-semibold')
   })
 
   it('header counts the day rows; each row has its label, tabs and windows, entry count and colour bar', () => {
@@ -156,14 +166,14 @@ describe('RecentlyClosedSection', () => {
   it('empty: says what will show up and for how long (the plan’s days)', () => {
     h.days = []
     renderSection()
-    expect(screen.getByText('Nothing closed yet. Tabs you close show up here by day, for 30 days.')).toBeInTheDocument()
+    expect(screen.getByText('Nothing closed yet. Tabs you close show up here by day, for your last 30 days.')).toBeInTheDocument()
   })
 
-  it('empty on Free says 7 days', () => {
+  it('empty on Free says its rolling 2 days', () => {
     h.days = []
     h.tier = 'free'
     renderSection()
-    expect(screen.getByText('Nothing closed yet. Tabs you close show up here by day, for 7 days.')).toBeInTheDocument()
+    expect(screen.getByText('Nothing closed yet. Tabs you close show up here by day, for your last 2 days.')).toBeInTheDocument()
   })
 
   it('off: the header says (off) and the body links to Settings → Data', async () => {
@@ -183,7 +193,8 @@ describe('RecentlyClosedSection', () => {
     const { unmount } = renderSection()
     const note = screen.getByTestId('recently-closed-free-note')
     // both limits of both plans (RECENTLY_CLOSED_LIMITS), numbers formatted for the locale
-    expect(note).toHaveTextContent('Free keeps up to 50 from the last 7 days. Pro keeps up to 1,000 for 30 days.')
+    // both windows from RECENTLY_CLOSED_LIMITS; the entry caps are never shown
+    expect(note).toHaveTextContent('Free keeps your last 2 days. Pro keeps your last 30 days.')
     await user.click(within(note).getByRole('button', { name: 'See Pro' }))
     expect(h.create).toHaveBeenCalledWith({ url: expect.stringMatching(/\/pricing$/), active: true })
     expect(h.track).toHaveBeenCalledWith('upgrade_clicked', { source: 'recently_closed_sidebar' })
