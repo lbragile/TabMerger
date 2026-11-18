@@ -1,5 +1,7 @@
 # web-dev Memory Index
 
+- [Next MCP log reload loop](learnings/next-mcp-log-reload-loop.md) — `experimental.mcpServer` writes `.next/dev/logs/next-development.log` inside Turbopack's monorepo-root watch, so dev recompiles and reloads every ~2s; kept off in next.config.ts
+
 - [Flex img collapse on mobile](learnings/navbar-flex-collapse.md) — next/image in nested flex rows can collapse to 0x0 at narrow viewports without shrink-0; verify logo/icons at 375px with actual boundingBox checks, not just screenshots.
 - [SEO metadata](learnings/seo-metadata.md) — `pageMetadata()` per page (openGraph replace drops the file image), relative canonical + preview-only X-Robots-Tag, noindex vs Disallow, 404 duplicate noindex, JSON-LD `<` escaping
 - [CHANGELOG.md parsing](learnings/changelog-md-parsing.md) — angular-preset heading/section format and the `**scope:**` double-colon trap (file access notes superseded by build-time-generated-module)
