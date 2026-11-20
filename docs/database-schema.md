@@ -2,7 +2,7 @@
 
 This is the per-table reference: columns, RLS, indexes and E2E encryption. For the day-to-day workflow (local stack, migrations, sync, queries) see [DATABASE.md](DATABASE.md).
 
-The migrations in `supabase/migrations/` (`001`–`028`) are the source of truth. This doc is a snapshot of their end state, so read the SQL before relying on it for anything security-relevant.
+The migrations in `supabase/migrations/` (`001`–`031`) are the source of truth. This doc is a snapshot of their end state, so read the SQL before relying on it for anything security-relevant.
 
 ## Migration history
 
@@ -38,6 +38,7 @@ The migrations in `supabase/migrations/` (`001`–`028`) are the source of truth
 | 028 | `028_ai_request_slots.sql` | `ai_request_slots` table (per-user concurrent AI request leases) with the service-role-only `ai_slot_acquire()`, `ai_slot_release()` and `ai_slot_purge()` and the pg_cron job `ai-slot-purge`; the read-only `ai_credits_exhausted()` credit pre-check (never stricter than `ai_reserve_credits()`); and `rate_limit_peek()`, a look at a `rate_limit_counters` bucket that counts nothing. See the `ai_request_slots` section below. |
 | 029 | `029_ai_credit_purchases_carried_from_month.sql` | `ai_credit_purchases.carried_from_month` (which packs were carried with lowered credits); its own file so each transaction takes one ACCESS EXCLUSIVE lock |
 | 030 | `030_ai_billing_period_credits.sql` | Credits reset per paid billing period: `subscriptions.ai_period_start`/`ai_period_end`, `ai_allowance_month()`, `ai_credit_cap()`, `ai_grant_credit_pack()`, triggers `subscriptions_keep_ai_period` and `subscriptions_carry_ai_packs`; the freeze uses the old period; `ai_settle_credits` stops at the cap |
+| 031 | `031_blog_post_votes.sql` | Helpful votes on blog posts: `blog_posts` (slug PK, seeded with `save-all-open-tabs`, read-only for the API roles) and `blog_post_votes` (one row per post and account; read, add and remove your own; no update), and `blog_helpful_count(p_slug)` for anon and authenticated. See the `blog_posts` / `blog_post_votes` section below. |
 
 > **Local ≠ hosted.** `supabase db reset` proves only that the migrations apply locally. It does not show that the hosted project has them: 009 and 010 once sat unapplied on Cloud until someone ran `supabase db push` by hand. Check `supabase migration list --linked` against **each** hosted project (preview and production, see [ARCHITECTURE.md § Environments](ARCHITECTURE.md#environments)).
 
@@ -285,6 +286,33 @@ All four functions are `security definer` with an empty `search_path`, and only 
 - `ai_slot_purge(p_limit integer default 1000) returns integer`: deletes up to `p_limit` (1-100000, else `22023`) leases that ended more than an hour ago, oldest first, skipping locked rows; returns how many. Run by the pg_cron job `ai-slot-purge` every 10 minutes with `p_limit = 5000`.
 - `ai_credits_exhausted(p_user uuid, p_month text) returns boolean` (read-only): true only when the user has no `ai_credit_purchases` row for `p_month` (revoked or not) and `ai_usage.credits_used` is at least the managed allowance as `ai_reserve_credits()` counts it (`active` only). With no pack rows the reservation's cap is at most `greatest(allowance, allowance_spent)` and `allowance_spent <= credits_used` (027's check), so "exhausted" means a reservation would be refused: it is never stricter, and the reservation stays the authority. The web app calls it before counting tokens, so a managed user with no credits left never reaches Anthropic. Raises `22004` for a NULL user and `22023` for a month that is not `YYYY-MM`. The migration fails if `ai_usage_allowance_spent_check` is missing.
 
+### `blog_posts` / `blog_post_votes`
+
+Helpful votes on blog posts (031). Signed-in accounts only, one vote per account per post; voting is not a paid feature, so free accounts vote too. The browser client writes `blog_post_votes` directly (no API route), so the rule lives in the database. Slugs stay English in every locale, so all locales share one count.
+
+`blog_posts`: one row per post that accepts votes. A new post adds its row in its own migration.
+
+| Column | Type | Constraints |
+|---|---|---|
+| `slug` | `text` | PK, `check (char_length(slug) <= 80 and slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$')` (`blog_posts_slug_check`): words of lowercase letters and digits joined by single hyphens |
+| `created_at` | `timestamptz` | not null, default `now()` |
+
+**RLS:** `blog_posts_select_all` (`using (true)`, anon and authenticated), the only policy. `anon`/`authenticated` hold `SELECT` only, so only a migration or the service role adds a post.
+
+`blog_post_votes`:
+
+| Column | Type | Constraints |
+|---|---|---|
+| `post_slug` | `text` | not null, FK `blog_posts(slug)` `on update cascade on delete cascade` (a slug rename carries the votes); a made-up slug is refused (`23503`) |
+| `user_id` | `uuid` | not null, default `auth.uid()`, FK `auth.users(id)` `on delete cascade` |
+| `created_at` | `timestamptz` | not null, default `now()` |
+| — | — | PK `(post_slug, user_id)`: a second vote is refused (`23505`) |
+
+**RLS (all `to authenticated`):** `blog_post_votes_select_own` and `blog_post_votes_delete_own` (`auth.uid() = user_id`); `blog_post_votes_insert_own` (`auth.uid() = user_id` and the JWT's `is_anonymous` is not true, so an anonymous Supabase session can't vote if anonymous sign-ins are ever enabled). No update policy: a vote is added or removed, never edited. **Privileges:** `authenticated` holds `SELECT`, `INSERT`, `DELETE`; `anon` holds none (an anon insert is `42501`). **Index:** `blog_post_votes_user_id_idx (user_id)`, for the account-delete cascade (the PK covers lookups by post). The migration runs with `lock_timeout = 5s`, because creating the FK locks `auth.users`.
+
+- `blog_helpful_count(p_slug text) returns bigint`: the number of votes on a post, 0 for an unknown slug. `stable`, `security definer` with an empty `search_path`, because RLS hides other accounts' votes from the caller; it returns the count only, never who voted. Executable by `anon`, `authenticated` and `service_role` (not PUBLIC). The page calls it via `rpc` after hydration so the post stays static.
+- An insert with `on conflict do nothing` for an existing vote adds no row and raises nothing, so a client may use it as an idempotent "vote". `on conflict do update` is refused (`42501`, no `UPDATE` privilege).
+
 ## Grants (migration 010)
 
 Local CLI stacks don't get the schema-level grants to `anon`/`authenticated` that Supabase Cloud provisions implicitly. Without them, Postgres rejects a query before RLS is even evaluated. Migration 010 grants `select, insert, update, delete` on all public tables, and on future ones via `alter default privileges`. RLS remains the access control. Server-written tables are narrower, so a client write is refused by the privilege check (`42501`) even if a write policy were ever added: migration 021 leaves the API roles with `select` only on `profiles`, and migration 023 does the same for `subscriptions`, `ai_usage` and `ai_credit_purchases`.
@@ -303,12 +331,14 @@ erDiagram
     auth_users ||--o{ ai_usage : "user_id"
     auth_users ||--o{ ai_credit_purchases : "user_id"
     auth_users ||--o{ ai_request_slots : "user_id"
+    auth_users ||--o{ blog_post_votes : "user_id"
+    blog_posts ||--o{ blog_post_votes : "post_slug (cascade)"
 ```
 
 - `profiles`, `subscriptions`, `groups` and `sessions` reference `public.profiles`. Every later table references `auth.users` directly. The two are equivalent in practice, because `profiles.id` cascades 1:1 from `auth.users.id`.
 - `profiles` and `subscriptions` are managed by the trigger. Never INSERT into them from app code.
 - `sessions.groups` and `shared_bundles.groups_snapshot` are **copies**. Editing or deleting a group later does not change them.
-- Every FK is `on delete cascade`, so deleting an auth user removes their rows from all ten tables. `groups.archived` is a flag, not a soft-delete table.
+- Every FK is `on delete cascade`, so deleting an auth user removes their rows from every table that has a `user_id` (votes included). `groups.archived` is a flag, not a soft-delete table.
 - `rate_limit_counters` has no FK and is not in the diagram: a row keyed by a deleted user's id stays until `rate_limit_purge()` removes it, two days after its window ends, so at most about three days after the key's last hit (windows are at most one day; the purge runs every 10 minutes).
 
 ## TypeScript mirrors (`packages/shared/src/types/index.ts`)
@@ -318,4 +348,4 @@ These types only partly mirror the schema:
 - `SupabaseGroup` is missing `public_slug`, `view_count`, `permanent`, `starred`, `archived` and `note`. It types `windows` as `ExtWindow[]` even though the value can be an `EncryptedBlob`.
 - `Subscription` doesn't model `cancel_at_period_end`, `stripe_price_id`, `ai_mode` or `ai_monthly_credits`. `useEntitlements` selects them with its own local row type.
 - `DeviceSession` covers `device_id`, `device_name`, `now_open_snapshot` and `last_active`.
-- There are no shared types for `shared_bundles`, `encryption_keys`, `ai_usage` or `ai_credit_purchases`.
+- There are no shared types for `shared_bundles`, `encryption_keys`, `ai_usage`, `ai_credit_purchases`, `blog_posts` or `blog_post_votes` (the Helpful button only needs a count and whether the signed-in account has a row).
