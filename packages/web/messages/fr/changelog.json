@@ -1,6 +1,6 @@
 {
-  "metaTitle": "Journal des modifications",
-  "metaDescription": "Nouveautés, améliorations et corrections de TabMerger.",
+  "metaTitle": "Journal des modifications et notes de version",
+  "metaDescription": "Les notes de chaque version de TabMerger depuis 2020, de la plus récente à la plus ancienne : nouveautés, améliorations et correctifs, avec les liens vers GitHub.",
   "title": "Journal des modifications",
   "lead": "Tout ce que nous avons publié, du plus récent au plus ancien.",
   "githubRelease": "Version GitHub",

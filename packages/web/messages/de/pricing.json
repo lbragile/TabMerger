@@ -65,8 +65,8 @@
   "cancelAnytime": "Jederzeit über dein Konto kündbar – ohne Bindung, ohne Rückfragen.",
   "keepAccess": "Du behältst den Zugriff bis zum Ende deines Abrechnungszeitraums.",
   "page": {
-    "metaTitle": "Preise",
-    "metaDescription": "Einfache, transparente Preise. Starte kostenlos und upgrade, wenn du mehr brauchst.",
+    "metaTitle": "Preise: kostenloser Tarif, Pro und Pro AI",
+    "metaDescription": "Starte kostenlos mit bis zu {groups} Gruppen und {tabs} Tabs, ohne Konto. Pro bietet unbegrenzte Gruppen und Tabs, Ende-zu-Ende-verschlüsselten Sync und Backups. Jederzeit kündbar.",
     "title": "Einfache, transparente Preise",
     "lead": "Starte kostenlos. Upgrade, wenn du bereit für mehr bist.",
     "moreQuestions": "Weitere Fragen? Sieh dir die <link>FAQ</link> an."

@@ -65,8 +65,8 @@
   "cancelAnytime": "Hesabınızdan istediğiniz zaman iptal edin — taahhüt yok, soru sorulmaz.",
   "keepAccess": "Erişiminiz fatura döneminizin sonuna kadar devam eder.",
   "page": {
-    "metaTitle": "Fiyatlandırma",
-    "metaDescription": "Basit, şeffaf fiyatlandırma. Ücretsiz başlayın, daha fazlasına ihtiyaç duyduğunuzda yükseltin.",
+    "metaTitle": "Planlar ve fiyatlar: Ücretsiz, Pro ve Pro AI",
+    "metaDescription": "Hesap gerekmeden {groups} gruba ve {tabs} sekmeye kadar ücretsiz başlayın. Pro sınırsız grup ve sekme, uçtan uca şifreli eşitleme ve yedekler ekler. İstediğiniz zaman iptal edin.",
     "title": "Basit, şeffaf fiyatlandırma",
     "lead": "Ücretsiz başlayın. Daha fazlasına hazır olduğunuzda yükseltin.",
     "moreQuestions": "Başka sorularınız mı var? <link>SSS</link> sayfasına göz atın."
