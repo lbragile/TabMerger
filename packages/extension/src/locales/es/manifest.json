@@ -1,5 +1,5 @@
 {
-  "extDescription": "Guarda pestañas en grupos con nombre y color y restáuralas cuando quieras. Sin conexión, con sincronización cifrada opcional (Pro).",
+  "extDescription": "Gestor de pestañas: guarda pestañas en grupos y recupera pestañas cerradas y sesiones. Sin conexión; sincronización cifrada (Pro).",
   "commandActivate": "Activar la extensión",
   "commandSaveCurrentTab": "Guardar la pestaña actual en TabMerger",
   "commandSaveTabsLeft": "Guardar pestañas a la izquierda en TabMerger",

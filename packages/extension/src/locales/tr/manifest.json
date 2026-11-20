@@ -1,5 +1,5 @@
 {
-  "extDescription": "Sekmeleri adlı, renk kodlu gruplara kaydedip istediğiniz an geri yükleyin. Çevrimdışı çalışır; isteğe bağlı şifreli eşitleme (Pro).",
+  "extDescription": "Sekme yöneticisi: açık sekmeleri gruplara kaydedin, kapatılan sekmeleri ve oturumları geri açın. Çevrimdışı; şifreli eşitleme (Pro).",
   "commandActivate": "Uzantıyı etkinleştir",
   "commandSaveCurrentTab": "Geçerli sekmeyi TabMerger'a kaydet",
   "commandSaveTabsLeft": "Soldaki sekmeleri TabMerger'a kaydet",

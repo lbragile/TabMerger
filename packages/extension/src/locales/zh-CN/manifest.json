@@ -1,5 +1,5 @@
 {
-  "extDescription": "将打开的标签页保存到命名且带颜色的分组中，随时恢复。可离线使用，并可选择加密同步（Pro）。",
+  "extDescription": "标签页管理器：将所有打开的标签页保存到命名分组，恢复已关闭的标签页和会话。可离线使用，支持端到端加密同步（Pro）。",
   "commandActivate": "激活扩展",
   "commandSaveCurrentTab": "将当前标签页保存到 TabMerger",
   "commandSaveTabsLeft": "将左侧的标签页保存到 TabMerger",

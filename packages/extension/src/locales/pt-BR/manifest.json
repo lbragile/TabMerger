@@ -1,5 +1,5 @@
 {
-  "extDescription": "Salve abas em grupos nomeados e coloridos e restaure quando quiser. Funciona offline; sincronização criptografada opcional (Pro).",
+  "extDescription": "Gerenciador de abas: salve as abas abertas em grupos, restaure abas fechadas e sessões. Offline; sincronização criptografada (Pro).",
   "commandActivate": "Ativar a extensão",
   "commandSaveCurrentTab": "Salvar a aba atual no TabMerger",
   "commandSaveTabsLeft": "Salvar abas à esquerda no TabMerger",
