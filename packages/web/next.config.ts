@@ -106,6 +106,10 @@ const nextConfig: NextConfig = {
     // "Compiled", writes the file again, and the page reloads every ~2s forever. Nothing in this
     // repo uses Next's MCP endpoint.
     mcpServer: false,
+    // Tells coding agents that run `next upgrade --agent` to apply security patches only (not
+    // every new stable or canary release) when the installed Next.js version has a published
+    // advisory.
+    agentUpgrade: 'security',
   },
   images: {
     remotePatterns: [
