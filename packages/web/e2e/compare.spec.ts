@@ -29,7 +29,7 @@ test.describe('compare page', () => {
   test('loads with its heading and the table', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 })
     await page.goto('/compare')
-    await expect(page.getByRole('heading', { level: 1, name: 'How TabMerger compares' })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'How TabMerger compares with other tab managers' })).toBeVisible()
     await expect(page.getByRole('table')).toBeAttached()
     await expect(page.getByRole('combobox', { name: 'Compare TabMerger with' })).toContainText('All tools')
     // TabMerger plus nine competitors, plus the feature column.

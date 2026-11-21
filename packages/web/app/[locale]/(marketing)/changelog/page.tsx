@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl'
 import { getTranslations } from 'next-intl/server'
 import { pageMetadata } from '@/lib/seo'
+import { PageBreadcrumbJsonLd } from '@/components/seo/PageBreadcrumbJsonLd'
 import { ExternalLink } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { getGeneratedChangelog, type ChangeEntry, type ChangeType } from '@/lib/changelog'
@@ -276,9 +277,11 @@ function anchorId(version: string) {
 export default function ChangelogPage() {
   const entries = [...getGeneratedChangelog(), V3_0_0, ...ORIGINAL_EXTENSION]
   const t = useTranslations('changelog')
+  const nav = useTranslations('nav')
 
   return (
     <div className="container py-16 max-w-3xl">
+      <PageBreadcrumbJsonLd path="/changelog" name={nav('changelog')} />
       <div className="mb-12 pb-8 border-b border-line">
         <h1 className="text-4xl font-semibold tracking-tight mb-3">{t('title')}</h1>
         <p className="text-text2">{t('lead')}</p>
@@ -298,12 +301,15 @@ export default function ChangelogPage() {
               )}
             >
               <div>
-                <a
-                  href={`#${anchorId(entry.version)}`}
-                  className="font-mono font-semibold text-base tracking-tight hover:text-primary transition-colors"
-                >
-                  {entry.version}
-                </a>
+                {/* One heading per release, so the page's outline (and a crawler) sees the versions. */}
+                <h2 className="text-base">
+                  <a
+                    href={`#${anchorId(entry.version)}`}
+                    className="font-mono font-semibold text-base tracking-tight hover:text-primary transition-colors"
+                  >
+                    {entry.version}
+                  </a>
+                </h2>
                 <div className="text-xs text-text3 mt-1">{entry.date}</div>
                 {entry.releaseUrl && (
                   <div className="mt-1.5">

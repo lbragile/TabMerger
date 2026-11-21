@@ -1,5 +1,6 @@
 import { useLocale } from 'next-intl'
 import { pageMetadata } from '@/lib/seo'
+import { PageBreadcrumbJsonLd } from '@/components/seo/PageBreadcrumbJsonLd'
 import { DEFAULT_LOCALE, localeDirection } from '@/i18n/locales'
 import { Link } from '@/i18n/navigation'
 import { LegalToc } from '@/components/legal-toc'
@@ -7,11 +8,14 @@ import { LegalToc } from '@/components/legal-toc'
 // English only, under every locale: this is the binding text, so it is not translated (and not
 // in the message catalog). Its canonical is the English URL and only English is listed as an
 // alternate; the rest of the page (navbar, footer) follows the visitor's language.
+const PAGE_NAME = 'Terms of Service'
+
 export function generateMetadata() {
   return pageMetadata({
     path: '/terms',
-    title: 'Terms of Service',
-    description: 'The terms and conditions for using TabMerger.',
+    title: PAGE_NAME,
+    description:
+      'The terms for using the TabMerger extension and website: accounts, subscriptions and billing, acceptable use, liability, termination and changes to the terms.',
     englishOnly: true,
   })
 }
@@ -39,6 +43,7 @@ export default function TermsPage() {
   const dir = localeDirection(locale) === 'rtl' ? 'ltr' : undefined
   return (
     <div className="container py-16 max-w-5xl" lang={lang} dir={dir}>
+      <PageBreadcrumbJsonLd path="/terms" name={PAGE_NAME} englishOnly />
       {/* Header — distinct neutral/surface treatment vs Privacy's brand-soft callout */}
       <div className="mb-11 rounded-none bg-surface2 border border-border px-8 py-7">
         <p className="text-[10px] font-semibold uppercase tracking-widest text-text3 mb-2.5">Legal</p>

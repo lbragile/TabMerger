@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server'
 import { pageMetadata } from '@/lib/seo'
+import { PageBreadcrumbJsonLd } from '@/components/seo/PageBreadcrumbJsonLd'
 import { getVisitorBrowser } from '@/lib/visitorBrowser'
 import { FinalCta } from '@/components/marketing/FinalCta'
 import { ComparisonTable } from '@/components/compare/ComparisonTable'
@@ -18,10 +19,11 @@ export async function generateMetadata() {
  * the visitor's browser.
  */
 export default async function ComparePage() {
-  const [t, browser] = await Promise.all([getTranslations('compare.table'), getVisitorBrowser()])
+  const [t, nav, browser] = await Promise.all([getTranslations('compare.table'), getTranslations('nav'), getVisitorBrowser()])
 
   return (
     <>
+      <PageBreadcrumbJsonLd path="/compare" name={nav('compare')} />
       <div className="container">
         <div className="mx-auto max-w-[67.5rem]">
           <CompareHero />

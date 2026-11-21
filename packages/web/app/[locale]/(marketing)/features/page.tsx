@@ -8,6 +8,7 @@ import { AUTO_BACKUP_RETENTION_COUNT, AUTO_SAVE_FREE_KEEP_COUNT, FREE_TIER_LIMIT
 import { getStoreLinks } from '@/lib/storeLinks'
 import { STORE_ICON } from '@/components/marketing/BrowserIcons'
 import { StoreLink } from '@/components/StoreLink'
+import { PageBreadcrumbJsonLd } from '@/components/seo/PageBreadcrumbJsonLd'
 import { getVisitorBrowser, type InstallBrowser } from '@/lib/visitorBrowser'
 import {
   Layers,
@@ -106,9 +107,10 @@ export default async function FeaturesPage() {
   // installs for the visitor's browser (read here so the first HTML is already right). Async, so
   // the translations come from `getTranslations` (hooks can't run in an async component).
   const storeLinks = getStoreLinks()
-  const [t, common, browser] = await Promise.all([
+  const [t, common, nav, browser] = await Promise.all([
     getTranslations('featuresPage'),
     getTranslations('common'),
+    getTranslations('nav'),
     getVisitorBrowser(),
   ])
   const BrowserIcon = STORE_ICON[browser]
@@ -119,6 +121,7 @@ export default async function FeaturesPage() {
 
   return (
     <div className="py-16">
+      <PageBreadcrumbJsonLd path="/features" name={nav('features')} />
       <div className="container">
         {/* Header */}
         <div className="text-center mb-20">

@@ -65,8 +65,8 @@
   "cancelAnytime": "随时可在账户中取消，无捆绑，无需任何理由。",
   "keepAccess": "计费周期结束前您仍可继续使用。",
   "page": {
-    "metaTitle": "定价",
-    "metaDescription": "简单透明的定价。免费开始，需要更多时再升级。",
+    "metaTitle": "套餐与价格：免费版、Pro 和 Pro AI",
+    "metaDescription": "无需账号即可免费开始，最多 {groups} 个分组、{tabs} 个标签页。Pro 提供无限分组和标签页、端到端加密同步和备份，可随时取消。",
     "title": "简单透明的定价",
     "lead": "免费开始，需要更多时再升级。",
     "moreQuestions": "还有其他问题？请查看<link>常见问题</link>。"

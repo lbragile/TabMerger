@@ -65,8 +65,8 @@
   "cancelAnytime": "Batalkan kapan saja dari akun Anda — tanpa ikatan, tanpa banyak tanya.",
   "keepAccess": "Akses tetap tersedia hingga akhir periode tagihan Anda.",
   "page": {
-    "metaTitle": "Harga",
-    "metaDescription": "Harga sederhana dan transparan. Mulai gratis, tingkatkan saat Anda butuh lebih.",
+    "metaTitle": "Paket dan harga: Gratis, Pro, dan Pro AI",
+    "metaDescription": "Mulai gratis hingga {groups} grup dan {tabs} tab, tanpa akun. Pro menambahkan grup dan tab tanpa batas, sinkronisasi terenkripsi end-to-end, dan cadangan. Batalkan kapan saja.",
     "title": "Harga sederhana dan transparan",
     "lead": "Mulai gratis. Tingkatkan saat Anda siap untuk lebih.",
     "moreQuestions": "Punya pertanyaan lain? Lihat <link>FAQ</link>."

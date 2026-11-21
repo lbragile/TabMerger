@@ -65,8 +65,8 @@
   "cancelAnytime": "Cancel anytime from your account — no lock-in, no questions asked.",
   "keepAccess": "You keep access until the end of your billing period.",
   "page": {
-    "metaTitle": "Pricing",
-    "metaDescription": "Simple, transparent pricing. Start free, upgrade when you need more.",
+    "metaTitle": "Plans and pricing: Free, Pro and Pro AI",
+    "metaDescription": "Start free with up to {groups} groups and {tabs} tabs, no account needed. Pro adds unlimited groups and tabs, end-to-end encrypted sync and backups. Cancel anytime.",
     "title": "Simple, transparent pricing",
     "lead": "Start free. Upgrade when you're ready for more.",
     "moreQuestions": "Have more questions? See the <link>FAQ</link>."

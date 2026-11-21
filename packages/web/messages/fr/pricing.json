@@ -65,8 +65,8 @@
   "cancelAnytime": "Résiliez à tout moment depuis votre compte, sans engagement ni justification.",
   "keepAccess": "Vous gardez l’accès jusqu’à la fin de votre période de facturation.",
   "page": {
-    "metaTitle": "Tarifs",
-    "metaDescription": "Des tarifs simples et transparents. Commencez gratuitement, passez à l’offre supérieure quand vous en avez besoin.",
+    "metaTitle": "Tarifs : offre gratuite, Pro et Pro AI",
+    "metaDescription": "Commencez gratuitement avec jusqu’à {groups} groupes et {tabs} onglets, sans compte. Pro ajoute groupes et onglets illimités, synchronisation chiffrée de bout en bout et sauvegardes. Résiliable à tout moment.",
     "title": "Des tarifs simples et transparents",
     "lead": "Commencez gratuitement. Passez à l’offre supérieure quand vous êtes prêt.",
     "moreQuestions": "D’autres questions ? Consultez la <link>FAQ</link>."
