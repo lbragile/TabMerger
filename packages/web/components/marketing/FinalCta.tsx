@@ -26,7 +26,8 @@ export function FinalCta({ browser = 'chrome' }: FinalCtaProps = {}) {
   const Icon = STORE_ICON[browser]
 
   return (
-    <section className="py-16 sm:py-[72px] px-6 sm:px-11 bg-surface2">
+    // id="install": where /download sends a browser that can't install the extension.
+    <section id="install" className="scroll-mt-16 py-16 sm:py-[72px] px-6 sm:px-11 bg-surface2">
       <div className="container max-w-[720px] text-center">
         <h2 className="font-semibold tracking-tight mb-3 text-[28px] sm:text-[34px] leading-tight">
           {t('title')}

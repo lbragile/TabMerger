@@ -7,16 +7,25 @@
  *   request, so async Server Components and `generateMetadata` render in jsdom.
  */
 import React from 'react'
-import { NextIntlClientProvider, createFormatter, createTranslator } from 'next-intl'
+import { IntlErrorCode, NextIntlClientProvider, createFormatter, createTranslator, type IntlError } from 'next-intl'
 import en from '@/messages/en'
 import { DEFAULT_LOCALE } from '@/i18n/locales'
 
 export const TEST_LOCALE = DEFAULT_LOCALE
 export const testMessages = en
 
+/**
+ * A missing blog message fails the test instead of rendering its key path ("blog.sources"), which
+ * is what next-intl shows by default. Other errors are logged as next-intl does.
+ */
+export function onIntlError(error: IntlError): void {
+  if (error.code === IntlErrorCode.MISSING_MESSAGE && /blog\./.test(error.message)) throw error
+  console.error(error)
+}
+
 export function IntlWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <NextIntlClientProvider locale={TEST_LOCALE} messages={en}>
+    <NextIntlClientProvider locale={TEST_LOCALE} messages={en} onError={onIntlError}>
       {children}
     </NextIntlClientProvider>
   )
@@ -71,7 +80,7 @@ export const createNavigationMock = (NextLink: React.ComponentType<{ href: strin
 /** Stand-ins for `next-intl/server` with the English catalog. */
 export const serverIntlMock = {
   getTranslations: async (arg?: NamespaceArg) =>
-    createTranslator({ locale: TEST_LOCALE, messages: en, namespace: namespaceOf(arg) as never }),
+    createTranslator({ locale: TEST_LOCALE, messages: en, namespace: namespaceOf(arg) as never, onError: onIntlError }),
   getLocale: async () => TEST_LOCALE,
   getMessages: async () => en,
   getFormatter: async () => createFormatter({ locale: TEST_LOCALE }),

@@ -3,8 +3,8 @@
  * menu panel below `lg` (all links). `label` is a key in the `nav` catalog.
  *
  * `barFromXl`: shown in the header bar only from `xl` (1280px) up. Between `lg` and `xl` five
- * links don't leave 2rem of slack in every language, so the least-needed link steps out there;
- * it stays in the footer (and the menu panel below `lg`).
+ * links don't leave 2rem of slack in every language, so the least-needed links (Blog, Changelog)
+ * step out there; they stay in the footer (and the menu panel below `lg`).
  */
 /**
  * How a header or menu-panel link (`NavLink`) looks while its page is showing: a square teal tint
@@ -20,10 +20,11 @@
  */
 export const NAV_LINK_ACTIVE_CLASS = 'rounded-none bg-primary/10 text-primary hover:bg-primary/12 hover:text-primary'
 
-export const NAV_LINKS: readonly { href: string; label: 'features' | 'pricing' | 'compare' | 'changelog' | 'faq'; barFromXl?: true }[] = [
+export const NAV_LINKS: readonly { href: string; label: 'features' | 'pricing' | 'compare' | 'blog' | 'changelog' | 'faq'; barFromXl?: true }[] = [
   { href: '/features', label: 'features' },
   { href: '/pricing', label: 'pricing' },
   { href: '/compare', label: 'compare' },
+  { href: '/blog', label: 'blog', barFromXl: true },
   { href: '/changelog', label: 'changelog', barFromXl: true },
   { href: '/faq', label: 'faq' },
 ]

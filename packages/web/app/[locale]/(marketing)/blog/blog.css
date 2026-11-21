@@ -1,0 +1,82 @@
+/*
+ * Blog post motion and Markdown callouts. Every animation is inside
+ * `prefers-reduced-motion: no-preference`; nothing is hidden unless ScrollReveal has marked it
+ * pending, so readers without JS, readers who asked for less motion and crawlers get the content
+ * as it is.
+ */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Smooth in-page jumps (contents links); sections carry scroll-margin-top for the 4rem header. */
+  html:has(.blog-article) {
+    scroll-behavior: smooth;
+  }
+
+  /* The browser switcher, screenshot theme and lightbox swap with a short cross-fade. */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 180ms;
+  }
+  ::view-transition-group(blog-figure-zoom) {
+    animation-duration: 240ms;
+    animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+  }
+}
+
+/* `> [!NOTE]` / `> [!WARNING]` … (remark-github-blockquote-alert): the look of the post's callouts. */
+.blog-article .markdown-alert {
+  margin: 0 0 1.25rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid hsl(var(--primary) / 0.3);
+  background: hsl(var(--primary) / 0.05);
+}
+.dark .blog-article .markdown-alert {
+  background: hsl(var(--accent));
+}
+.blog-article .markdown-alert > p {
+  margin: 0;
+  font-size: 1rem;
+}
+.blog-article .markdown-alert .markdown-alert-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+  font-weight: 700;
+  color: hsl(var(--primary));
+}
+.blog-article .markdown-alert .markdown-alert-title svg {
+  width: 1rem;
+  height: 1rem;
+  fill: currentColor;
+}
+.blog-article :is(.markdown-alert-warning, .markdown-alert-caution, .markdown-alert-important) {
+  border-color: hsl(var(--secondary) / 0.4);
+  background: hsl(var(--accent));
+}
+.dark .blog-article :is(.markdown-alert-warning, .markdown-alert-caution, .markdown-alert-important) {
+  border-color: hsl(var(--secondary) / 0.3);
+  background: hsl(var(--secondary) / 0.1);
+}
+.blog-article :is(.markdown-alert-warning, .markdown-alert-caution, .markdown-alert-important) .markdown-alert-title {
+  color: hsl(var(--accent-foreground));
+}
+.dark .blog-article :is(.markdown-alert-warning, .markdown-alert-caution, .markdown-alert-important) .markdown-alert-title {
+  color: hsl(var(--secondary));
+}
+
+/*
+ * One-shot reveals (components/blog/ScrollReveal.tsx sets data-reveal; time-based, never scrubbed
+ * by scroll, so nothing stays half-faded or half-drawn). Without the script, or with reduced motion,
+ * no element ever gets data-reveal="pending", so everything shows as it is.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .blog-section[data-reveal='pending'] {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+  .blog-section[data-reveal='shown'] {
+    transition:
+      opacity 400ms ease-out,
+      transform 400ms ease-out;
+  }
+}

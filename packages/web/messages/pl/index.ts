@@ -21,6 +21,7 @@ import account from './account.json'
 import beta from './beta.json'
 import auth from './auth.json'
 import consent from './consent.json'
+import blog from './blog.json'
 
 const messages = {
   metadata,
@@ -45,6 +46,7 @@ const messages = {
   beta,
   auth,
   consent,
+  blog,
 }
 
 export default messages

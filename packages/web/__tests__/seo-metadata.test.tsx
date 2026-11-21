@@ -6,7 +6,7 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { render } from '@testing-library/react'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
 import type { Metadata } from 'next'
 import { createTranslator } from 'next-intl'
 import { FREE_TIER_LIMITS, PRICING_TIERS, STORE_LISTING_URL, SUPPORTED_LOCALES, getPricingTier } from '@tabmerger/shared'
@@ -394,6 +394,12 @@ describe('FAQ JSON-LD', () => {
 })
 
 describe('preview noindex header', () => {
+  // The first import of next.config (Sentry, next-intl and MDX plugins, the build-time generators)
+  // can take longer than a test's 5s budget on a busy full-suite run: load it once up front.
+  beforeAll(async () => {
+    await import('../next.config')
+  }, 30_000)
+
   afterEach(() => {
     vi.unstubAllEnvs()
   })

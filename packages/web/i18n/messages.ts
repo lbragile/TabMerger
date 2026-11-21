@@ -84,6 +84,7 @@ export const CLIENT_NAMESPACES = [
   'beta.interactive',
   'auth',
   'consent',
+  'blog.interactive',
 ] as const
 
 /** The client subset of a catalog, for `NextIntlClientProvider`. */

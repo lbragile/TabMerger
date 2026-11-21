@@ -2,14 +2,21 @@ import type { NextConfig } from 'next'
 import path from 'path'
 import { withSentryConfig } from '@sentry/nextjs/config'
 import createNextIntlPlugin from 'next-intl/plugin'
+import createMDX from '@next/mdx'
 import { FIREFOX_BETA } from '@tabmerger/shared'
 import { deployEnv, isPreviewDeployment } from './lib/deployment'
 import { generateChangelogModule } from './scripts/generate-changelog.mjs'
+import { generateBlogIndexModule } from './scripts/generate-blog-index.mjs'
 
 // /changelog's release notes are compiled in from the repo-root CHANGELOG.md (no runtime file
 // read). Done here so every `next dev` and `next build` refreshes them, whatever command runs
 // Next; throws, failing the build, when CHANGELOG.md is missing.
 generateChangelogModule()
+
+// The blog's post files (content/blog/<slug>/<locale>.mdx) are listed in generated/blog.ts, with
+// each file's word count for the read time, so pages, static params and the sitemap need no
+// filesystem at runtime. Restart `next dev` after adding a post or a locale file.
+generateBlogIndexModule()
 
 /**
  * Public base of the Vercel Blob store CI uploads the self-distributed Firefox beta build to
@@ -141,7 +148,45 @@ const nextConfig: NextConfig = {
 // next-intl: points the `next-intl/server` APIs at the per-request config (locale + catalog).
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts')
 
-export default withSentryConfig(withNextIntl(nextConfig), {
+// MDX for the blog's posts (imported by app/[locale]/(marketing)/blog/[slug], not routed as files,
+// so pageExtensions is unchanged; components come from mdx-components.tsx).
+//
+// Turbopack runs the MDX compiler in Rust-land, so plugins are given by package NAME with
+// JSON-serialisable options only (no imported functions, no callbacks), and each package must
+// default-export its plugin (@next/mdx imports the name and takes `default`).
+// - remark-gfm: Markdown tables, footnotes, strikethrough, autolinked URLs.
+// - remark-github-blockquote-alert: `> [!NOTE]` / `> [!WARNING]` callouts (styled in blog.css).
+// - rehype-unwrap-images: no <p> around a Markdown image (successor of remark-unwrap-images).
+// - rehype-slug: ids for plain Markdown headings (### …) that have none. They follow the heading
+//   text, so they change when a post is translated: the contents list only uses the explicit ids
+//   of `<Section id>` (JSX, which these plugins never see).
+// - rehype-autolink-headings: a "#" link after each of those headings (aria-hidden and out of
+//   the Tab order: the heading itself is the content; shown on hover).
+// - rehype-external-links: new tab + noopener/noreferrer on links to other sites (followed: the
+//   sources are authoritative, so no nofollow).
+// - lib/blog/mdx/rehype-figure-numbers.mjs (ours, by absolute path): numbers the figures 1..N in
+//   document order, the per-browser alternatives sharing one number per slot.
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: ['remark-gfm', 'remark-github-blockquote-alert'],
+    rehypePlugins: [
+      'rehype-unwrap-images',
+      'rehype-slug',
+      [
+        'rehype-autolink-headings',
+        {
+          behavior: 'append',
+          properties: { className: ['heading-anchor'], ariaHidden: 'true', tabIndex: -1 },
+          content: { type: 'text', value: '#' },
+        },
+      ],
+      ['rehype-external-links', { target: '_blank', rel: ['noopener', 'noreferrer'] }],
+      path.resolve(process.cwd(), 'lib', 'blog', 'mdx', 'rehype-figure-numbers.mjs'),
+    ],
+  },
+})
+
+export default withSentryConfig(withNextIntl(withMDX(nextConfig)), {
   silent: true,
   telemetry: false,
   // Routes Sentry requests through our own origin so ad blockers that target
