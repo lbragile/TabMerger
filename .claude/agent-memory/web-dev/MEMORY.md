@@ -71,3 +71,6 @@
 - [Blog client/test gotchas](learnings/blog-client-test-gotchas.md) — user-event clipboard stub, jsdom matchMedia, refs-in-render, copy-then-open activation, raw-key guard, RTL hashtags
 - [Windows shell edit scripts](learnings/windows-shell-edit-scripts.md) — heredoc/`-c` scripts eat regex backslashes; write scripts to a scratch file, check with cat -A
 - [Localized browser UI labels](learnings/localized-browser-ui-labels.md) — official sources for Chrome (support.google.com hl=), Firefox (mozilla-l10n .ftl keys) and Edge strings; missing ftl key = English; de-style gloss convention; bdi/← and no U+200E/U+200F in post fields for RTL
+- [Blog listing client state](learnings/blog-listing-client-state.md) — history.replaceState (not router.replace) for client-only URL state on ƒ pages, raw ICU subset + createTranslator, stable slots keep input focus, hydration-safe shortcut e2e
+- [Scroll track containing block](learnings/scroll-track-containing-block.md) — overflow:auto doesn't clip absolutes whose containing block is outside it (9px RTL page scroll); `relative` on the track; bisect recipe
+- [Blog covers at build time](learnings/blog-covers-build-time.md) — generator resolves/validates covers (public/ not on server fs), header-read image size, 4:3 whole-image rule, lazy theme pairs
