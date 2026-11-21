@@ -1,0 +1,320 @@
+export const post = {
+  slug: 'save-all-open-tabs',
+  title: 'Alle offenen Tabs speichern und später wiederherstellen',
+  seoTitle: 'Alle offenen Tabs speichern (Chrome, Edge, Firefox)',
+  description:
+    'Alle offenen Tabs in Chrome, Edge oder Firefox mit einem Tastenkürzel speichern, Tabs nach einem Neustart wieder öffnen und geschlossene Tabs zurückholen.',
+  shareSummary: 'Ein Tastenkürzel, Start-Wiederherstellung und geschlossene Tabs zurück in Chrome, Edge und Firefox.',
+  dek: 'Fünf Wege, alle offenen Tabs zu behalten, und was jeder davon stillschweigend auslässt.',
+  published: '2026-11-19',
+  updated: '2026-11-19',
+  testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D speichert nur das aktuelle Fenster.', source: 'In allen drei getestet, 19. Nov. 2026' },
+    { text: 'Ctrl+Shift+T öffnet geschlossene Tabs und Fenster wieder.', source: 'Hilfeseiten von Chrome, Edge und Firefox' },
+    {
+      text: 'Erweiterungen sehen Chromes geschlossene gespeicherte Gruppen nicht.',
+      source: 'Doku zu chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'Die Edge-Sammlungen gibt es ab Edge 149 nicht mehr.', source: 'Microsoft Support' },
+  ],
+  faq: [
+    {
+      question: 'Speichert Ctrl+Shift+D die Tabs aller Fenster?',
+      answer: 'Nein. Es speichert nur das aktuelle Fenster als Lesezeichen. Wiederhole es für jedes Fenster oder nutze ein Tool, das alle Fenster liest.',
+    },
+    {
+      question: 'Kann ich alle offenen Tabs ohne Erweiterung speichern?',
+      answer: 'Ja: mit Ctrl+Shift+D und der Starteinstellung, beide in Chrome, Edge und Firefox eingebaut.',
+    },
+    {
+      question: 'Warum sind meine Tabs nach einem Neustart nicht wieder da?',
+      answer:
+        'Beim Start kommt zurück, was beim Beenden des Browsers offen war. Früher geschlossene und private Fenster gehören nicht dazu. Versuche Ctrl+Shift+T oder den Verlauf.',
+    },
+    {
+      question: 'Wo bewahrt TabMerger gespeicherte Tabs auf?',
+      answer:
+        'Auf deinem Gerät, im lokalen Speicher des Browsers. Pro synchronisiert zwischen Geräten, Ende-zu-Ende-verschlüsselt. Mehr dazu in den FAQ.',
+      link: { text: 'FAQ', href: '/faq' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/chrome-bookmarks-folder.webp', alt: 'Chrome-Lesezeichenmanager mit dem ausgewählten Ordner „Tab manager research“ und sechs gespeicherten Seiten' },
+    { src: '/blog/save-all-open-tabs/edge-bookmarks-folder.webp', alt: 'Edge-Favoriten mit dem geöffneten Ordner „Tab manager research“: sechs Seiten und ihre Adressen' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Chrome-Einstellungen, „On startup“ (Beim Start), mit ausgewählter Option „Continue where you left off“ (Zuletzt angesehene Seiten öffnen)' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Edge-Einstellungen, „Start, home, and new tab page“, mit ausgewählter Option „Open tabs from the previous session“' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Firefox-Einstellungen, „Home and startup“ (Startseite), mit aktivierter Option „Open previous windows and tabs“ (Vorherige Fenster und Tabs öffnen)' },
+    { src: '/blog/save-all-open-tabs/chrome-history.webp', alt: 'Chrome-Verlauf mit sechs heute besuchten Seiten und den Tabs „By date“ und „By group“' },
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Edge-Verlauf mit „All“, „Recently closed“ und „Tabs from other devices“ in der Seitenleiste' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-light.webp', alt: 'TabMerger, „Now Open“ (Jetzt geöffnet) mit zwei Browserfenstern zu je fünf Tabs, helles Design' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-dark.webp', alt: 'TabMerger, „Now Open“ (Jetzt geöffnet) mit zwei Browserfenstern zu je fünf Tabs, dunkles Design' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-light.webp', alt: 'TabMerger-Gruppenmenü mit „Merge with current“ (Mit aktueller zusammenführen), das deine geöffneten Browserfenster zu dieser Gruppe hinzufügt, helles Design' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-dark.webp', alt: 'TabMerger-Gruppenmenü mit „Merge with current“ (Mit aktueller zusammenführen), das deine geöffneten Browserfenster zu dieser Gruppe hinzufügt, dunkles Design' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-light.webp', alt: 'Die Gruppe „Open tabs, Nov 19“ mit 2 Fenstern und 10 Tabs, helles Design' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-dark.webp', alt: 'Die Gruppe „Open tabs, Nov 19“ mit 2 Fenstern und 10 Tabs, dunkles Design' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-light.webp', alt: 'TabMerger, „Recently closed“ (Zuletzt geschlossen) von heute, mit Stundenleiste und drei geschlossenen Tabs, helles Design' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-dark.webp', alt: 'TabMerger, „Recently closed“ (Zuletzt geschlossen) von heute, mit Stundenleiste und drei geschlossenen Tabs, dunkles Design' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-light.webp', alt: 'TabMerger-Suche nach „closed: seat“ mit einem kürzlich geschlossenen Tab, helles Design' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-dark.webp', alt: 'TabMerger-Suche nach „closed: seat“ mit einem kürzlich geschlossenen Tab, dunkles Design' },
+    { src: '/blog/save-all-open-tabs/tm-search-light.webp', alt: 'TabMerger-Suche nach „lisbon“: Treffer mit der Markierung „Now Open“ oder „Open tabs, Nov 19“, helles Design' },
+    { src: '/blog/save-all-open-tabs/tm-search-dark.webp', alt: 'TabMerger-Suche nach „lisbon“: Treffer mit der Markierung „Now Open“ oder „Open tabs, Nov 19“, dunkles Design' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-light.webp', alt: 'TabMerger-Dialog „Save Session“ (Sitzung speichern) mit dem Namen „Before the trip“, helles Design' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-dark.webp', alt: 'TabMerger-Dialog „Save Session“ (Sitzung speichern) mit dem Namen „Before the trip“, dunkles Design' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-light.webp', alt: 'Die gespeicherte Sitzung „Before the trip“ mit drei Gruppen („Work“, „Reading list“ und „Open tabs, Nov 19“) und der Schaltfläche „Restore session“ (Sitzung wiederherstellen), helles Design' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-dark.webp', alt: 'Die gespeicherte Sitzung „Before the trip“ mit drei Gruppen („Work“, „Reading list“ und „Open tabs, Nov 19“) und der Schaltfläche „Restore session“ (Sitzung wiederherstellen), dunkles Design' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-light.webp', alt: 'TabMerger-Einstellungen, Tab „Data“ (Daten): „Auto-save open tabs“, „Backups“ und „Remember closed tabs“, helles Design' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-dark.webp', alt: 'TabMerger-Einstellungen, Tab „Data“ (Daten): „Auto-save open tabs“, „Backups“ und „Remember closed tabs“, dunkles Design' },
+  ],
+  tags: ['tab-management', 'save-tabs', 'restore-closed-tabs', 'bookmarks', 'browser-productivity', 'chrome', 'edge', 'firefox'],
+  // Before publishing: check each title against its page, and replace the Microsoft entry with
+  // the exact Edge help article (restore tabs / startup pages).
+  sources: [
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Microsoft Edge help and learning',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/microsoft-edge',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-19',
+    },
+  ],
+  screenshotsCaptured: '2026-11-19',
+  ogImage: { src: '/blog/save-all-open-tabs/og.png', alt: 'Titelkarte „How to save all open tabs and get them back later“: eine TabMerger-Anleitung für Chrome, Edge und Firefox, mit einer Gruppe aus zwei gespeicherten Fenstern' },
+  toc: [
+    { id: 'quick', label: 'Kurze Antwort' },
+    { id: 'bookmark', label: '1. Alle Tabs als Lesezeichen' },
+    { id: 'startup', label: '2. Beim Start wieder öffnen' },
+    { id: 'closed', label: '3. Geschlossene Tabs zurückholen' },
+    { id: 'groups', label: '4. Tab-Gruppen' },
+    { id: 'tabmerger', label: '5. Alle Fenster auf einmal' },
+    { id: 'compare', label: 'Welche Methode?' },
+    { id: 'faq', label: 'Häufige Fragen' },
+  ],
+  browserSections: ['bookmark', 'startup', 'closed'],
+  browserFact: {
+    label: 'Starteinstellung',
+    values: { chrome: 'chrome://settings/onStartup', edge: 'edge://settings/startHomeNTP', firefox: 'about:preferences#home' },
+  },
+}
+
+<QuickAnswer>
+
+Um alle offenen Tabs zu speichern, drücke <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> auf dem Mac): Jeder Tab des aktuellen Fensters landet als Lesezeichen in einem neuen Ordner. Das funktioniert in Chrome, Edge und Firefox. Damit Tabs automatisch wieder aufgehen, aktiviere **Zuletzt angesehene Seiten öffnen** („Continue where you left off“, Chrome), **Open tabs from the previous session** (Edge) oder **Vorherige Fenster und Tabs öffnen** („Open previous windows and tabs“, Firefox).
+
+</QuickAnswer>
+
+<BrowserSwitcher />
+
+<Section id="bookmark" title="1. Alle Tabs mit einem Tastendruck als Lesezeichen speichern">
+
+Jeder große Browser speichert die Tabs eines Fensters als Lesezeichenordner. Der Ordner bleibt, bis du ihn löschst, und wird synchronisiert, wenn du im Browser angemeldet bist.
+
+Die Browser-Screenshots zeigen die englische Oberfläche. Wo die deutsche Bezeichnung anders lautet, steht die englische beim ersten Mal in Klammern.
+
+<BrowserPanels section="bookmark">
+<BrowserPanel browser="chrome">
+
+1. Klicke auf einen beliebigen Tab in dem Fenster, das du behalten willst.
+2. Drücke <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> auf dem Mac).
+3. Gib dem Ordner einen Namen, wähle den Speicherort und klicke auf Speichern.
+4. Um die Tabs später wieder zu öffnen, drücke <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>, suche den Ordner und öffne alle seine Lesezeichen.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-bookmarks-folder.webp" alt="Chrome-Lesezeichenmanager mit dem ausgewählten Ordner „Tab manager research“ und sechs gespeicherten Seiten" width={1600} height={524} eager boxes={[{ id: 'folder' }]} source="chrome://bookmarks · Chrome 157.0.8103.79">Chromes Lesezeichenmanager („Bookmark Manager“) nach Ctrl+Shift+D: Der neue Ordner enthält ein Lesezeichen pro Tab des Fensters.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Klicke auf einen beliebigen Tab in dem Fenster, das du behalten willst.
+2. Drücke <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> auf dem Mac). Edge speichert die Tabs als Favoriten in einem neuen Ordner.
+3. Gib dem Ordner einen Namen und speichere ihn.
+4. Um sie später wieder zu öffnen, drücke <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> für die **Favoriten** („Favorites“), suche den Ordner und öffne alle Einträge.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-bookmarks-folder.webp" alt="Edge-Favoriten mit dem geöffneten Ordner „Tab manager research“: sechs Seiten und ihre Adressen" width={1600} height={553} boxes={[{ id: 'folder' }]} source="edge://favorites · Edge 157.0.4341.60">Die Edge-Favoriten nach demselben Tastenkürzel: Die Tabs liegen als Favoriten in einem neuen Ordner.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Klicke auf einen beliebigen Tab in dem Fenster, das du behalten willst.
+2. Drücke <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> auf dem Mac), um alle Tabs als Lesezeichen zu speichern.
+3. Gib dem Ordner einen Namen und klicke auf Speichern.
+4. Um sie später wieder zu öffnen, drücke <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> (**Lesezeichen verwalten**, „Manage Bookmarks“) und öffne alle Lesezeichen des Ordners.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox Library (Ctrl+Shift+O) with the new folder selected. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>Es wird *nur das aktuelle Fenster* gespeichert. Drei Fenster bedeuten drei Ordner. Lesezeichen behalten außerdem nur die Adresse; Scrollposition und Formulareingaben gehen verloren.</Catch>
+
+</Section>
+
+<Section id="startup" title="2. Den Browser beim Start alles wieder öffnen lassen">
+
+Wenn dir Neustarts und Updates die Tabs nehmen, lass den Browser die Sitzung wiederherstellen.
+
+<BrowserPanels section="startup">
+<BrowserPanel browser="chrome">
+
+In Chrome: **Einstellungen → Beim Start → Zuletzt angesehene Seiten öffnen** („Settings → On startup → Continue where you left off“). Oder füge `chrome://settings/onStartup` in die Adressleiste ein.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Chrome-Einstellungen, „On startup“ (Beim Start), mit ausgewählter Option „Continue where you left off“ (Zuletzt angesehene Seiten öffnen)" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">Chromes Einstellung „Beim Start“, so eingestellt, dass die letzte Sitzung wieder geöffnet wird.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+In Edge: **Einstellungen → Start, home, and new tab page → On startup → Open tabs from the previous session**. Am schnellsten geht es, wenn du `edge://settings/startHomeNTP` in die Adressleiste einfügst.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Edge-Einstellungen, „Start, home, and new tab page“, mit ausgewählter Option „Open tabs from the previous session“" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">Die Edge-Einstellungen „Start, home, and new tab page“, so eingestellt, dass die letzte Sitzung wieder geöffnet wird.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+In Firefox: **Einstellungen → Startseite → Start → Vorherige Fenster und Tabs öffnen** („Settings → Home and startup → Startup → Open previous windows and tabs“). Oder füge `about:preferences#home` in die Adressleiste ein.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Firefox-Einstellungen, „Home and startup“ (Startseite), mit aktivierter Option „Open previous windows and tabs“ (Vorherige Fenster und Tabs öffnen)" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Firefox 159 führt die Option unter „Startseite“; ältere Anleitungen nennen „Allgemein“.</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>Wiederhergestellt wird nur, was beim letzten Beenden des Browsers offen war. Ein Fenster, das du vorher geschlossen hast, gehört nicht dazu, und private Fenster kommen nie zurück.</Catch>
+
+</Section>
+
+<Section id="closed" title="3. Bereits geschlossene Tabs zurückholen">
+
+Drücke <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>), um den zuletzt geschlossenen Tab oder das zuletzt geschlossene Fenster wieder zu öffnen; drücke erneut, um weiter zurückzugehen. Für Älteres öffnest du den Verlauf mit <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>.
+
+<BrowserPanels section="closed">
+<BrowserPanel browser="chrome">
+
+Chrome listet kürzlich geschlossene Tabs und Fenster auch unter ⋮ → **Verlauf** („History“).
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-history.webp" alt="Chrome-Verlauf mit sechs heute besuchten Seiten und den Tabs „By date“ und „By group“" width={1600} height={640} source="chrome://history · Chrome 157.0.8103.79" className="m-0">Chromes Verlauf; Version 157 ergänzt die Ansicht „By group“ (nach Gruppe).</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge listet die kürzlich geschlossenen Tabs („Recently closed“) direkt auf der Seite **Verlauf**.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Edge-Verlauf mit „All“, „Recently closed“ und „Tabs from other devices“ in der Seitenleiste" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60" className="m-0">Der Edge-Verlauf mit der Liste „Recently closed“ in der Seitenleiste.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox listet kürzlich geschlossene Tabs und Fenster im Menü **Chronik** („History“) unter **Kürzlich geschlossene Tabs** und **Kürzlich geschlossene Fenster** (drücke Alt, um die Menüleiste einzublenden).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with recently closed tabs open. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="groups" title="4. Tab-Gruppen: gut für den Fokus, begrenzt zum Speichern">
+
+- **Chrome** kann eine Gruppe speichern und wieder öffnen, aber Erweiterungen sehen eine geschlossene gespeicherte Gruppe nicht ([tabGroups-API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
+- **Firefox**-Gruppen bleiben auf dem Gerät und werden nicht mit Firefox Sync übertragen.
+- **Edge** hat seit Edge 149 keine Sammlungen („Collections“) mehr.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
+
+</Section>
+
+<Section id="tabmerger" title="5. Alle offenen Tabs aller Fenster mit TabMerger speichern">
+
+Die eingebauten Methoden decken jeweils ein Fenster, einen Neustart oder einen geschlossenen Tab ab. [TabMerger](/features), unsere kostenlose Erweiterung für Chrome, Edge und Firefox, listet alle offenen Fenster unter **Jetzt geöffnet** und speichert sie alle in einer Gruppe.
+
+<ScreenshotThemeToggle />
+
+1. Klicke auf **Gruppe hinzufügen** und gib ihr einen Namen, etwa „Offene Tabs, 19. Nov.“ (in den Screenshots „Open tabs, Nov 19“).
+2. Öffne das **⋯**-Menü der Gruppe und wähle **Mit aktueller zusammenführen**: Das fügt deine geöffneten Browserfenster hinzu. (*Durch aktuelle ersetzen* tauscht stattdessen die Fenster der Gruppe aus.)
+3. Schließe die Fenster, wann du willst. Die Gruppe behält beide Fenster und alle zehn Tabs.
+
+<Carousel label="Alle Fenster in einer Gruppe speichern" steps={[{ title: 'Jetzt geöffnet' }, { title: 'Gruppenmenü' }, { title: 'Gespeicherte Gruppe' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-now-open" alt="TabMerger, „Now Open“ (Jetzt geöffnet) mit zwei Browserfenstern zu je fünf Tabs, helles Design" darkAlt="TabMerger, „Now Open“ (Jetzt geöffnet) mit zwei Browserfenstern zu je fünf Tabs, dunkles Design">„Jetzt geöffnet“ spiegelt den Browser: jedes offene Fenster mit seinen Tabs.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merge-menu" alt="TabMerger-Gruppenmenü mit „Merge with current“ (Mit aktueller zusammenführen), das deine geöffneten Browserfenster zu dieser Gruppe hinzufügt, helles Design" darkAlt="TabMerger-Gruppenmenü mit „Merge with current“ (Mit aktueller zusammenführen), das deine geöffneten Browserfenster zu dieser Gruppe hinzufügt, dunkles Design" boxes={[{ id: 'group-menu-button', label: 'Gruppenmenü' }, { id: 'merge-with-current', label: 'Mit aktueller zusammenführen' }]}>Nach „Gruppe hinzufügen“ öffnest du das Menü der neuen Gruppe und wählst die Option, die alle offenen Fenster hineinkopiert.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merged-group" alt="Die Gruppe „Open tabs, Nov 19“ mit 2 Fenstern und 10 Tabs, helles Design" darkAlt="Die Gruppe „Open tabs, Nov 19“ mit 2 Fenstern und 10 Tabs, dunkles Design">Nach „Mit aktueller zusammenführen“: Beide Fenster sind in einer Gruppe gespeichert und bleiben es, auch wenn sie geschlossen werden.</ThemedScreenshot>
+</Carousel>
+
+### Lieber mit der Tastatur?
+
+<ComparisonTable
+  head={['Tastenkürzel', 'Speichert']}
+  keysColumn={0}
+  rows={[
+    ['Ctrl+Shift+P', 'Alle anderen Tabs im Fenster'],
+    ['Ctrl+Shift+S', 'Den aktuellen Tab'],
+    ['Ctrl+Shift+K', 'Die Tabs links davon'],
+    ['Ctrl+Shift+U', 'Die Tabs rechts davon'],
+  ]}
+/>
+
+Auf dem Mac nimmst du <Kbd>⌘</Kbd>. Jedes Kürzel fragt, wohin gespeichert wird; **Schnellspeichern (neue Gruppe)** legt sofort eine Gruppe an. In Firefox öffnet <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> ein privates Fenster. Wähle dort unter `about:addons` → „Manage Extension Shortcuts“ eine andere Taste.
+
+### Etwas aus Versehen geschlossen?
+
+**Zuletzt geschlossen** behält jeden Tab und jedes Fenster, das du schließt, nach Tagen geordnet, mit einer Leiste für die Uhrzeit. Kostenlos bleiben sie 2 Tage, mit Pro 30. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> durchsucht offene, gespeicherte und geschlossene Tabs; beginne mit `closed:`, um nur geschlossene Tabs zu finden.
+
+<Carousel label="Geschlossene Tabs zurückholen" steps={[{ title: 'Zuletzt geschlossen' }, { title: 'Suche mit closed:' }, { title: 'Alles durchsuchen' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-recently-closed" alt="TabMerger, „Recently closed“ (Zuletzt geschlossen) von heute, mit Stundenleiste und drei geschlossenen Tabs, helles Design" darkAlt="TabMerger, „Recently closed“ (Zuletzt geschlossen) von heute, mit Stundenleiste und drei geschlossenen Tabs, dunkles Design" boxes={[{ id: 'hour-strip' }]}>Die heute geschlossenen Tabs mit der Uhrzeit, zu der sie geschlossen wurden.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search-closed" alt="TabMerger-Suche nach „closed: seat“ mit einem kürzlich geschlossenen Tab, helles Design" darkAlt="TabMerger-Suche nach „closed: seat“ mit einem kürzlich geschlossenen Tab, dunkles Design" boxes={[{ id: 'search-input' }]}>Drücke Ctrl+K und beginne mit `closed:`, um nur geschlossene Tabs zu durchsuchen.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search" alt="TabMerger-Suche nach „lisbon“: Treffer mit der Markierung „Now Open“ oder „Open tabs, Nov 19“, helles Design" darkAlt="TabMerger-Suche nach „lisbon“: Treffer mit der Markierung „Now Open“ oder „Open tabs, Nov 19“, dunkles Design" boxes={[{ id: 'group-tag-1' }]}>Ohne Präfix durchsucht die Suche offene und gespeicherte Tabs, jeweils mit ihrer Gruppe markiert.</ThemedScreenshot>
+</Carousel>
+
+### Momentaufnahmen und Speichern auf Autopilot
+
+**Aktuelle Sitzung speichern** legt eine benannte Momentaufnahme deiner gespeicherten Gruppen an (nicht deiner offenen Tabs), die du gemeinsam wiederherstellen kannst. **Einstellungen → Daten → Offene Tabs automatisch speichern** sichert deine offenen Tabs automatisch als neue Gruppe; kostenlos bleiben die neuesten 2, die zu den 5 Gruppen und 50 Tabs zählen.
+
+<Carousel label="Sitzungen und automatisches Speichern" steps={[{ title: 'Sitzung speichern' }, { title: 'Sitzungsansicht' }, { title: 'Einstellungen → Daten' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-save-session-dialog" alt="TabMerger-Dialog „Save Session“ (Sitzung speichern) mit dem Namen „Before the trip“, helles Design" darkAlt="TabMerger-Dialog „Save Session“ (Sitzung speichern) mit dem Namen „Before the trip“, dunkles Design" boxes={[{ id: 'session-name' }]}>„Aktuelle Sitzung speichern“ fragt nach einem Namen.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-session-view" alt="Die gespeicherte Sitzung „Before the trip“ mit drei Gruppen („Work“, „Reading list“ und „Open tabs, Nov 19“) und der Schaltfläche „Restore session“ (Sitzung wiederherstellen), helles Design" darkAlt="Die gespeicherte Sitzung „Before the trip“ mit drei Gruppen („Work“, „Reading list“ und „Open tabs, Nov 19“) und der Schaltfläche „Restore session“ (Sitzung wiederherstellen), dunkles Design" boxes={[{ id: 'restore-session' }]}>Nach dem Speichern öffnest du die Sitzung: „Before the trip“ mit ihren drei Gruppen.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-settings-data" alt="TabMerger-Einstellungen, Tab „Data“ (Daten): „Auto-save open tabs“, „Backups“ und „Remember closed tabs“, helles Design" darkAlt="TabMerger-Einstellungen, Tab „Data“ (Daten): „Auto-save open tabs“, „Backups“ und „Remember closed tabs“, dunkles Design" boxes={[{ id: 'auto-save-toggle' }]}>Einstellungen → Daten, wo du das automatische Speichern einschaltest.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Kostenlos für Chrome, Edge und Firefox. Zum Start ist kein Konto nötig.</InstallCta>
+
+</Section>
+
+<Section id="compare" title="Welche Methode solltest du nutzen?">
+
+<ComparisonTable
+  head={['', 'Alle als Lesezeichen', 'Wiederherstellung beim Start', 'Ctrl+Shift+T, Verlauf', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="38rem"
+  rows={[
+    ['Alle Fenster auf einmal', 'Nein', 'Ja, beim Neustart', 'Eins nach dem anderen', 'Ja'],
+    ['Bleibt nach dem Schließen eines Fensters', 'Ja', 'Nein', 'Im Verlauf', 'Ja'],
+    ['Suche', 'Lesezeichen', 'Keine', 'Verlauf', 'Ctrl+K, auch geschlossene'],
+    ['Kosten', 'Kostenlos', 'Kostenlos', 'Kostenlos', 'Kostenlos; Pro für Sync'],
+  ]}
+/>
+
+Schalte die Starteinstellung in jedem Fall ein. Ein einzelnes Fenster, das sich lohnt, speicherst du als Lesezeichen. Eine Erweiterung lohnt sich, wenn du mit mehreren Fenstern jonglierst oder einen geschlossenen Tab noch Tage später brauchst. Mehr dazu auf unserer [Vergleichsseite](/compare).
+
+</Section>
+
+<Section id="faq" title="Häufige Fragen">
+
+<Faq items={post.faq} />
+
+
+</Section>

@@ -1,0 +1,320 @@
+export const post = {
+  slug: 'save-all-open-tabs',
+  title: 'كيف تحفظ جميع علامات التبويب المفتوحة وتستعيدها لاحقًا',
+  seoTitle: 'حفظ جميع علامات التبويب المفتوحة في Chrome وEdge وFirefox',
+  description:
+    'احفظ جميع علامات التبويب المفتوحة في Chrome أو Edge أو Firefox باختصار واحد، واجعلها تُفتح من جديد بعد إعادة التشغيل، واستعد ما أغلقته منها.',
+  shareSummary: 'اختصار واحد، واستعادة عند بدء التشغيل، واسترجاع علامات التبويب المغلقة في Chrome وEdge وFirefox.',
+  dek: 'خمس طرق للاحتفاظ بكل علامات التبويب المفتوحة، والشيء الوحيد الذي تفوّته كل طريقة منها دون أن تنتبه.',
+  published: '2026-11-19',
+  updated: '2026-11-19',
+  testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'الاختصار Ctrl+Shift+D يحفظ النافذة الحالية فقط.', source: 'جرّبناه في المتصفحات الثلاثة، 19 نوفمبر 2026' },
+    { text: 'الاختصار Ctrl+Shift+T يعيد فتح علامات التبويب والنوافذ المغلقة.', source: 'صفحات المساعدة في Chrome وEdge وFirefox' },
+    {
+      text: 'لا تستطيع الإضافات رؤية مجموعات Chrome المحفوظة بعد إغلاقها.',
+      source: 'توثيق chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'لم تعد ميزة Collections موجودة منذ Edge 149.', source: 'دعم Microsoft' },
+  ],
+  faq: [
+    {
+      question: 'هل يحفظ الاختصار Ctrl+Shift+D علامات التبويب من كل النوافذ؟',
+      answer: 'لا. فهو يضيف النافذة الحالية فقط إلى الإشارات المرجعية. كرّره في كل نافذة، أو استخدم أداة تقرأ كل النوافذ.',
+    },
+    {
+      question: 'هل يمكنني حفظ جميع علامات التبويب المفتوحة دون إضافة؟',
+      answer: 'نعم: الاختصار Ctrl+Shift+D وإعداد بدء التشغيل، وكلاهما مدمج في Chrome وEdge وFirefox.',
+    },
+    {
+      question: 'لماذا لم تعد علامات التبويب بعد إعادة التشغيل؟',
+      answer:
+        'تعيد الاستعادة عند بدء التشغيل ما كان مفتوحًا عند إغلاق المتصفح. النوافذ التي أُغلقت قبل ذلك والنوافذ الخاصة لا تعود. جرّب Ctrl+Shift+T أو السجلّ.',
+    },
+    {
+      question: 'أين يحفظ TabMerger علامات التبويب؟',
+      answer:
+        'على جهازك، في التخزين المحلي للمتصفح. وتزامنها خطة Pro بين أجهزتك بتشفير تام بين الطرفين. راجع الأسئلة الشائعة.',
+      link: { text: 'الأسئلة الشائعة', href: '/faq' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/chrome-bookmarks-folder.webp', alt: 'مدير الإشارات المرجعية في Chrome، والمجلد Tab manager research محدد ويضم ست صفحات محفوظة' },
+    { src: '/blog/save-all-open-tabs/edge-bookmarks-folder.webp', alt: 'المفضلة في Edge، والمجلد Tab manager research مفتوح ويعرض ست صفحات وعناوينها' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'إعدادات Chrome، قسم On startup (عند بدء التشغيل)، والخيار Continue where you left off (المتابعة من حيث توقفت) محدد' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'إعدادات Edge، قسم Start, home, and new tab page، والخيار Open tabs from the previous session محدد' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'إعدادات Firefox، قسم Home and startup (الصفحة الرئيسية والبدء)، والخيار Open previous windows and tabs (افتح النوافذ والألسنة السابقة) مفعّل' },
+    { src: '/blog/save-all-open-tabs/chrome-history.webp', alt: 'صفحة السجلّ في Chrome تعرض ست صفحات زرتها اليوم، مع طريقتَي العرض By date وBy group' },
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'صفحة السجلّ في Edge، وفي الشريط الجانبي All وRecently closed وTabs from other devices' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-light.webp', alt: 'قسم Now Open (المفتوحة الآن) في TabMerger يعرض نافذتين في كل منهما خمس علامات تبويب، المظهر الفاتح' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-dark.webp', alt: 'قسم Now Open (المفتوحة الآن) في TabMerger يعرض نافذتين في كل منهما خمس علامات تبويب، المظهر الداكن' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-light.webp', alt: 'قائمة المجموعة في TabMerger مع الخيار Merge with current (دمج مع الحالية) الذي يضيف نوافذ المتصفح المفتوحة إلى هذه المجموعة، المظهر الفاتح' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-dark.webp', alt: 'قائمة المجموعة في TabMerger مع الخيار Merge with current (دمج مع الحالية) الذي يضيف نوافذ المتصفح المفتوحة إلى هذه المجموعة، المظهر الداكن' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-light.webp', alt: 'المجموعة Open tabs, Nov 19 وفيها نافذتان و10 علامات تبويب، المظهر الفاتح' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-dark.webp', alt: 'المجموعة Open tabs, Nov 19 وفيها نافذتان و10 علامات تبويب، المظهر الداكن' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-light.webp', alt: 'قسم Recently closed (المغلقة مؤخرًا) في TabMerger لليوم، مع شريط الساعات وثلاث علامات تبويب مغلقة، المظهر الفاتح' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-dark.webp', alt: 'قسم Recently closed (المغلقة مؤخرًا) في TabMerger لليوم، مع شريط الساعات وثلاث علامات تبويب مغلقة، المظهر الداكن' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-light.webp', alt: 'بحث TabMerger عن closed: seat يعرض علامة تبويب واحدة أُغلقت مؤخرًا، المظهر الفاتح' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-dark.webp', alt: 'بحث TabMerger عن closed: seat يعرض علامة تبويب واحدة أُغلقت مؤخرًا، المظهر الداكن' },
+    { src: '/blog/save-all-open-tabs/tm-search-light.webp', alt: 'بحث TabMerger عن lisbon: نتائج موسومة بـ Now Open أو Open tabs, Nov 19، المظهر الفاتح' },
+    { src: '/blog/save-all-open-tabs/tm-search-dark.webp', alt: 'بحث TabMerger عن lisbon: نتائج موسومة بـ Now Open أو Open tabs, Nov 19، المظهر الداكن' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-light.webp', alt: 'نافذة Save Session (حفظ الجلسة) في TabMerger بالاسم Before the trip، المظهر الفاتح' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-dark.webp', alt: 'نافذة Save Session (حفظ الجلسة) في TabMerger بالاسم Before the trip، المظهر الداكن' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-light.webp', alt: 'الجلسة المحفوظة Before the trip بمجموعاتها الثلاث (Work وReading list وOpen tabs, Nov 19) وزر Restore session، المظهر الفاتح' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-dark.webp', alt: 'الجلسة المحفوظة Before the trip بمجموعاتها الثلاث (Work وReading list وOpen tabs, Nov 19) وزر Restore session، المظهر الداكن' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-light.webp', alt: 'إعدادات TabMerger، تبويب Data: Auto-save open tabs وBackups وRemember closed tabs، المظهر الفاتح' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-dark.webp', alt: 'إعدادات TabMerger، تبويب Data: Auto-save open tabs وBackups وRemember closed tabs، المظهر الداكن' },
+  ],
+  tags: ['tab-management', 'save-tabs', 'restore-closed-tabs', 'bookmarks', 'browser-productivity', 'chrome', 'edge', 'firefox'],
+  // Before publishing: check each title against its page, and replace the Microsoft entry with
+  // the exact Edge help article (restore tabs / startup pages).
+  sources: [
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Microsoft Edge help and learning',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/microsoft-edge',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-19',
+    },
+  ],
+  screenshotsCaptured: '2026-11-19',
+  ogImage: { src: '/blog/save-all-open-tabs/og.png', alt: 'كيف تحفظ جميع علامات التبويب المفتوحة وتستعيدها لاحقًا: دليل TabMerger لـ Chrome وEdge وFirefox، مع مجموعة تضم نافذتين محفوظتين' },
+  toc: [
+    { id: 'quick', label: 'إجابة سريعة' },
+    { id: 'bookmark', label: '1. كل علامات التبويب في الإشارات المرجعية' },
+    { id: 'startup', label: '2. إعادة الفتح عند بدء التشغيل' },
+    { id: 'closed', label: '3. استعادة المغلقة' },
+    { id: 'groups', label: '4. مجموعات علامات التبويب' },
+    { id: 'tabmerger', label: '5. كل النوافذ دفعة واحدة' },
+    { id: 'compare', label: 'أي طريقة تختار' },
+    { id: 'faq', label: 'الأسئلة الشائعة' },
+  ],
+  browserSections: ['bookmark', 'startup', 'closed'],
+  browserFact: {
+    label: 'إعداد بدء التشغيل',
+    values: { chrome: 'chrome://settings/onStartup', edge: 'edge://settings/startHomeNTP', firefox: 'about:preferences#home' },
+  },
+}
+
+<QuickAnswer>
+
+لحفظ جميع علامات التبويب المفتوحة في النافذة الحالية، اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> على Mac)، فتُضاف كلها إلى مجلد جديد في الإشارات المرجعية. تعمل هذه الطريقة في Chrome وEdge وFirefox. ولكي تُفتح علامات التبويب تلقائيًا من جديد، فعّل **المتابعة من حيث توقفت** (<bdi dir="ltr">Continue where you left off</bdi>) في Chrome، أو <bdi dir="ltr">**Open tabs from the previous session**</bdi> في Edge، أو **افتح النوافذ والألسنة السابقة** (<bdi dir="ltr">Open previous windows and tabs</bdi>) في Firefox.
+
+</QuickAnswer>
+
+<BrowserSwitcher />
+
+<Section id="bookmark" title="1. أضف كل علامات التبويب إلى الإشارات المرجعية بضغطة واحدة">
+
+يستطيع كل متصفح رئيسي حفظ علامات التبويب في نافذة على شكل مجلد من الإشارات المرجعية. يبقى المجلد حتى تحذفه، ويتزامن إذا كنت مسجّلًا الدخول إلى المتصفح.
+
+<BrowserPanels section="bookmark">
+<BrowserPanel browser="chrome">
+
+1. انقر أي علامة تبويب في النافذة التي تريد الاحتفاظ بها.
+2. اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> على Mac).
+3. سمِّ المجلد، واختر مكانه، ثم احفظه.
+4. لإعادة فتحها لاحقًا، اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd></bdi>، وابحث عن المجلد وافتح كل إشاراته المرجعية.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-bookmarks-folder.webp" alt="مدير الإشارات المرجعية في Chrome، والمجلد Tab manager research محدد ويضم ست صفحات محفوظة" width={1600} height={524} eager boxes={[{ id: 'folder' }]} source="chrome://bookmarks · Chrome 157.0.8103.79">مدير الإشارات (<bdi dir="ltr">Bookmark Manager</bdi>) في Chrome بعد <bdi dir="ltr">Ctrl+Shift+D</bdi>: يضم المجلد الجديد إشارة مرجعية لكل علامة تبويب في النافذة.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. انقر أي علامة تبويب في النافذة التي تريد الاحتفاظ بها.
+2. اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> على Mac). يحفظ Edge علامات التبويب في المفضلة داخل مجلد جديد.
+3. سمِّ المجلد واحفظه.
+4. لإعادة فتحها لاحقًا، اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd></bdi> لفتح المفضلة (Favorites)، وابحث عن المجلد وافتحها كلها.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-bookmarks-folder.webp" alt="المفضلة في Edge، والمجلد Tab manager research مفتوح ويعرض ست صفحات وعناوينها" width={1600} height={553} boxes={[{ id: 'folder' }]} source="edge://favorites · Edge 157.0.4341.60">المفضلة في Edge بعد الاختصار نفسه: حُفظت علامات التبويب في المفضلة داخل مجلد جديد.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. انقر أي علامة تبويب في النافذة التي تريد الاحتفاظ بها.
+2. اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> على Mac) لإضافة كل علامات التبويب إلى الإشارات المرجعية.
+3. سمِّ المجلد واحفظه.
+4. لإعادة فتحها لاحقًا، اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd></bdi> لفتح نافذة «المكتبة» (<bdi dir="ltr">Library</bdi>)، ثم افتح كل الإشارات المرجعية في المجلد.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox Library (Ctrl+Shift+O) with the new folder selected. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+تعرض لقطات شاشة المتصفحات في هذه المقالة الواجهة الإنجليزية، لذا نذكر الاسم الإنجليزي بين قوسين عند أول ذكر للإعداد إذا اختلف عن الاسم العربي.
+
+<Catch>تحفظ هذه الطريقة *النافذة الحالية فقط*. ثلاث نوافذ تعني ثلاثة مجلدات. كما تحتفظ الإشارة المرجعية بالعنوان فقط، فيضيع موضع التمرير وما كتبته في النماذج.</Catch>
+
+</Section>
+
+<Section id="startup" title="2. اجعل المتصفح يعيد فتح كل شيء عند بدء التشغيل">
+
+إذا كانت إعادة التشغيل والتحديثات هي ما يضيّع علامات التبويب، فدع المتصفح يستعيد الجلسة.
+
+<BrowserPanels section="startup">
+<BrowserPanel browser="chrome">
+
+في Chrome: **الإعدادات ← عند بدء التشغيل ← المتابعة من حيث توقفت** (<bdi dir="ltr">Settings → On startup → Continue where you left off</bdi>). أو الصق <bdi dir="ltr">`chrome://settings/onStartup`</bdi> في شريط العناوين.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="إعدادات Chrome، قسم On startup (عند بدء التشغيل)، والخيار Continue where you left off (المتابعة من حيث توقفت) محدد" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">إعداد <bdi dir="ltr">On startup</bdi> (عند بدء التشغيل) في Chrome مضبوط على إعادة فتح الجلسة الأخيرة.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+في Edge: **الإعدادات** ← <bdi dir="ltr">**Start, home, and new tab page → On startup → Open tabs from the previous session**</bdi>. أو الصق <bdi dir="ltr">`edge://settings/startHomeNTP`</bdi> في شريط العناوين.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="إعدادات Edge، قسم Start, home, and new tab page، والخيار Open tabs from the previous session محدد" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">إعدادات <bdi dir="ltr">Start, home, and new tab page</bdi> في Edge مضبوطة على إعادة فتح الجلسة الأخيرة.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+في Firefox: **الإعدادات ← الصفحة الرئيسية والبدء ← البدء ← افتح النوافذ والألسنة السابقة** (<bdi dir="ltr">Settings → Home and startup → Startup → Open previous windows and tabs</bdi>). أو الصق <bdi dir="ltr">`about:preferences#home`</bdi> في شريط العناوين.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="إعدادات Firefox، قسم Home and startup (الصفحة الرئيسية والبدء)، والخيار Open previous windows and tabs (افتح النوافذ والألسنة السابقة) مفعّل" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">يضع Firefox 159 هذا الخيار تحت <bdi dir="ltr">Home and startup</bdi> (الصفحة الرئيسية والبدء)، أما الأدلة القديمة فتذكر <bdi dir="ltr">General</bdi> (عام).</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>يستعيد هذا الإعداد ما كان مفتوحًا عند آخر إغلاق للمتصفح. النافذة التي أغلقتها قبل ذلك ليست ضمنه، والنوافذ الخاصة لا تعود أبدًا.</Catch>
+
+</Section>
+
+<Section id="closed" title="3. استعد علامات التبويب التي أغلقتها">
+
+اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi>) لإعادة فتح آخر علامة تبويب أو نافذة أغلقتها، واضغطه مرة أخرى لتعود أبعد. ولما هو أقدم، افتح السجلّ (History) بالاختصار <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi>.
+
+<BrowserPanels section="closed">
+<BrowserPanel browser="chrome">
+
+يعرض Chrome أيضًا علامات التبويب والنوافذ المغلقة مؤخرًا في ⋮ ← السجلّ.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-history.webp" alt="صفحة السجلّ في Chrome تعرض ست صفحات زرتها اليوم، مع طريقتَي العرض By date وBy group" width={1600} height={640} source="chrome://history · Chrome 157.0.8103.79" className="m-0">صفحة السجلّ في Chrome، ويضيف الإصدار 157 طريقة العرض <bdi dir="ltr">By group</bdi>.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+يعرض Edge قائمة «Recently closed» (المغلقة مؤخرًا) مباشرة في صفحة السجلّ.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="صفحة السجلّ في Edge، وفي الشريط الجانبي All وRecently closed وTabs from other devices" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60" className="m-0">صفحة السجلّ في Edge، مع قائمة <bdi dir="ltr">Recently closed</bdi> في الشريط الجانبي.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+يعرض Firefox علامات التبويب والنوافذ المغلقة مؤخرًا في قائمة «التأريخ» (<bdi dir="ltr">History</bdi>)، تحت «الألسنة المُغلقة مؤخرًا» و«النوافذ المغلقة مؤخرًا» (اضغط Alt لإظهار شريط القوائم).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with recently closed tabs open. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="groups" title="4. مجموعات علامات التبويب: جيدة للتركيز، محدودة للحفظ">
+
+- يستطيع **Chrome** حفظ مجموعة وإعادة فتحها، لكن الإضافات لا ترى المجموعة المحفوظة بعد إغلاقها ([tabGroups API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
+- تبقى مجموعات **Firefox** على الجهاز ولا تنتقل مع Firefox Sync.
+- لم تعد ميزة Collections موجودة في **Edge** بدءًا من Edge 149.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
+
+</Section>
+
+<Section id="tabmerger" title="5. احفظ جميع علامات التبويب المفتوحة من كل النوافذ مع TabMerger">
+
+كل طريقة مدمجة تغطي نافذة واحدة، أو إعادة تشغيل واحدة، أو علامة تبويب مغلقة واحدة في كل مرة. أما [TabMerger](/features)، إضافتنا المجانية لـ Chrome وEdge وFirefox، فيعرض كل نافذة مفتوحة تحت **المفتوحة الآن** ويحفظها كلها في مجموعة واحدة.
+
+<ScreenshotThemeToggle />
+
+1. انقر **إضافة مجموعة** وسمِّها، مثل «علامات مفتوحة، 19 نوفمبر».
+2. افتح قائمة **⋯** الخاصة بالمجموعة واختر **دمج مع الحالية**، الذي يضيف نوافذ المتصفح المفتوحة. (أما *استبدال بالحالية* فيستبدل نوافذ المجموعة.)
+3. أغلق النوافذ متى شئت. تحتفظ المجموعة بالنافذتين وبعلامات التبويب العشر كلها.
+
+<Carousel label="حفظ كل النوافذ في مجموعة واحدة" steps={[{ title: 'المفتوحة الآن' }, { title: 'قائمة المجموعة' }, { title: 'المجموعة المحفوظة' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-now-open" alt="قسم Now Open (المفتوحة الآن) في TabMerger يعرض نافذتين في كل منهما خمس علامات تبويب، المظهر الفاتح" darkAlt="قسم Now Open (المفتوحة الآن) في TabMerger يعرض نافذتين في كل منهما خمس علامات تبويب، المظهر الداكن">يعكس قسم المفتوحة الآن المتصفح: كل نافذة مفتوحة وعلامات تبويبها.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merge-menu" alt="قائمة المجموعة في TabMerger مع الخيار Merge with current (دمج مع الحالية) الذي يضيف نوافذ المتصفح المفتوحة إلى هذه المجموعة، المظهر الفاتح" darkAlt="قائمة المجموعة في TabMerger مع الخيار Merge with current (دمج مع الحالية) الذي يضيف نوافذ المتصفح المفتوحة إلى هذه المجموعة، المظهر الداكن" boxes={[{ id: 'group-menu-button', label: 'قائمة المجموعة' }, { id: 'merge-with-current', label: 'دمج مع الحالية' }]}>بعد «إضافة مجموعة»، افتح قائمة المجموعة الجديدة واختر الخيار الذي ينسخ إليها كل النوافذ المفتوحة.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merged-group" alt="المجموعة Open tabs, Nov 19 وفيها نافذتان و10 علامات تبويب، المظهر الفاتح" darkAlt="المجموعة Open tabs, Nov 19 وفيها نافذتان و10 علامات تبويب، المظهر الداكن">بعد اختيار «دمج مع الحالية»: النافذتان محفوظتان في مجموعة واحدة، وتبقيان فيها بعد إغلاقهما.</ThemedScreenshot>
+</Carousel>
+
+### تفضّل لوحة المفاتيح؟
+
+<ComparisonTable
+  head={['الاختصار', 'ما يحفظه']}
+  keysColumn={0}
+  rows={[
+    ['Ctrl+Shift+P', 'كل علامات التبويب الأخرى في النافذة'],
+    ['Ctrl+Shift+S', 'علامة التبويب الحالية'],
+    ['Ctrl+Shift+K', 'علامات التبويب على اليمين'],
+    ['Ctrl+Shift+U', 'علامات التبويب على اليسار'],
+  ]}
+/>
+
+استخدم <Kbd>⌘</Kbd> على Mac. يسألك كل اختصار أين تحفظ، و**حفظ سريع (مجموعة جديدة)** ينشئ مجموعة فورًا. في Firefox يفتح <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd></bdi> نافذة خاصة، لذا اختر مفتاحًا آخر من <bdi dir="ltr">`about:addons`</bdi> ← «أدِر اختصارات الامتدادات» (<bdi dir="ltr">Manage Extension Shortcuts</bdi>).
+
+### أغلقت شيئًا بالخطأ؟
+
+يحتفظ **المغلقة مؤخرًا** بكل علامة تبويب ونافذة تغلقها، مرتبة حسب اليوم، مع شريط يبيّن ساعة الإغلاق. تحتفظ بها الخطة المجانية يومين، وPro ثلاثين يومًا. يبحث <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> في علامات التبويب المفتوحة والمحفوظة والمغلقة؛ ابدأ بـ <bdi dir="ltr">`closed:`</bdi> للبحث في المغلقة فقط.
+
+<Carousel label="استعادة علامات التبويب المغلقة" steps={[{ title: 'المغلقة مؤخرًا' }, { title: 'البحث في المغلقة' }, { title: 'البحث في كل شيء' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-recently-closed" alt="قسم Recently closed (المغلقة مؤخرًا) في TabMerger لليوم، مع شريط الساعات وثلاث علامات تبويب مغلقة، المظهر الفاتح" darkAlt="قسم Recently closed (المغلقة مؤخرًا) في TabMerger لليوم، مع شريط الساعات وثلاث علامات تبويب مغلقة، المظهر الداكن" boxes={[{ id: 'hour-strip' }]}>علامات التبويب المغلقة اليوم، مع ساعة إغلاقها.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search-closed" alt="بحث TabMerger عن closed: seat يعرض علامة تبويب واحدة أُغلقت مؤخرًا، المظهر الفاتح" darkAlt="بحث TabMerger عن closed: seat يعرض علامة تبويب واحدة أُغلقت مؤخرًا، المظهر الداكن" boxes={[{ id: 'search-input' }]}>اضغط <bdi dir="ltr">Ctrl+K</bdi> وابدأ بـ <bdi dir="ltr">`closed:`</bdi> للبحث في علامات التبويب المغلقة فقط.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search" alt="بحث TabMerger عن lisbon: نتائج موسومة بـ Now Open أو Open tabs, Nov 19، المظهر الفاتح" darkAlt="بحث TabMerger عن lisbon: نتائج موسومة بـ Now Open أو Open tabs, Nov 19، المظهر الداكن" boxes={[{ id: 'group-tag-1' }]}>من دون البادئة، يشمل البحث علامات التبويب المفتوحة والمحفوظة، موسومة حسب المجموعة.</ThemedScreenshot>
+</Carousel>
+
+### اللقطات والحفظ التلقائي
+
+يأخذ **حفظ الجلسة الحالية** لقطة باسم لمجموعاتك المحفوظة (لا لعلامات التبويب المفتوحة) يمكنك استعادتها معًا. ويحفظ **الإعدادات ← البيانات ← الحفظ التلقائي لعلامات التبويب المفتوحة** علامات التبويب المفتوحة تلقائيًا كمجموعة جديدة؛ تحتفظ الخطة المجانية بأحدث مجموعتين، وتُحسبان ضمن حد 5 مجموعات و50 علامة تبويب.
+
+<Carousel label="الجلسات والحفظ التلقائي" steps={[{ title: 'حفظ الجلسة' }, { title: 'عرض الجلسة' }, { title: 'الإعدادات ← البيانات' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-save-session-dialog" alt="نافذة Save Session (حفظ الجلسة) في TabMerger بالاسم Before the trip، المظهر الفاتح" darkAlt="نافذة Save Session (حفظ الجلسة) في TabMerger بالاسم Before the trip، المظهر الداكن" boxes={[{ id: 'session-name' }]}>يطلب «حفظ الجلسة الحالية» اسمًا.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-session-view" alt="الجلسة المحفوظة Before the trip بمجموعاتها الثلاث (Work وReading list وOpen tabs, Nov 19) وزر Restore session، المظهر الفاتح" darkAlt="الجلسة المحفوظة Before the trip بمجموعاتها الثلاث (Work وReading list وOpen tabs, Nov 19) وزر Restore session، المظهر الداكن" boxes={[{ id: 'restore-session' }]}>بعد الحفظ، افتح الجلسة <bdi dir="ltr">Before the trip</bdi> (قبل الرحلة) لترى مجموعاتها الثلاث.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-settings-data" alt="إعدادات TabMerger، تبويب Data: Auto-save open tabs وBackups وRemember closed tabs، المظهر الفاتح" darkAlt="إعدادات TabMerger، تبويب Data: Auto-save open tabs وBackups وRemember closed tabs، المظهر الداكن" boxes={[{ id: 'auto-save-toggle' }]}>الإعدادات ← البيانات، حيث يُفعَّل الحفظ التلقائي.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>مجانية لـ Chrome وEdge وFirefox. لا تحتاج إلى حساب للبدء.</InstallCta>
+
+</Section>
+
+<Section id="compare" title="أي طريقة تستخدم؟">
+
+<ComparisonTable
+  head={['', 'إشارات مرجعية للكل', 'الاستعادة عند بدء التشغيل', 'Ctrl+Shift+T، السجلّ', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="38rem"
+  rows={[
+    ['كل النوافذ دفعة واحدة', 'لا', 'نعم، عند إعادة التشغيل', 'واحدة تلو الأخرى', 'نعم'],
+    ['يبقى بعد إغلاق النافذة', 'نعم', 'لا', 'في السجلّ', 'نعم'],
+    ['البحث', 'في الإشارات المرجعية', 'لا يوجد', 'في السجلّ', 'Ctrl+K، يشمل المغلقة'],
+    ['التكلفة', 'مجاني', 'مجاني', 'مجاني', 'مجاني؛ Pro للمزامنة'],
+  ]}
+/>
+
+أيًّا كان اختيارك، فعّل إعداد بدء التشغيل. أضف إلى الإشارات المرجعية أي نافذة واحدة تستحق الحفظ. واستخدم إضافة عندما تتعامل مع عدة نوافذ أو تحتاج إلى علامة تبويب مغلقة بعد أيام. المزيد في [صفحة المقارنة](/compare).
+
+</Section>
+
+<Section id="faq" title="الأسئلة الشائعة">
+
+<Faq items={post.faq} />
+
+
+</Section>

@@ -1,0 +1,316 @@
+export const post = {
+  slug: 'save-all-open-tabs',
+  title: '開いているタブをすべて保存して、あとで元に戻す方法',
+  seoTitle: '開いているタブをすべて保存する方法（Chrome・Edge・Firefox）',
+  description:
+    'Chrome、Edge、Firefox で開いているタブをショートカット一つですべて保存する方法、再起動後にタブを自動で開き直す設定、閉じたタブを取り戻す方法を解説します。',
+  shareSummary: 'ショートカット一つで保存、起動時に復元、閉じたタブも取り戻す。Chrome・Edge・Firefox 対応。',
+  dek: '開いているタブをすべて残す5つの方法と、それぞれが見落としがちな点。',
+  published: '2026-11-19',
+  updated: '2026-11-19',
+  testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D で保存されるのは現在のウィンドウだけです。', source: '3つのブラウザで検証（2026年11月19日）' },
+    { text: 'Ctrl+Shift+T で閉じたタブやウィンドウを開き直せます。', source: 'Chrome、Edge、Firefox のヘルプページ' },
+    {
+      text: '拡張機能は、閉じた Chrome の保存済みグループを一覧できません。',
+      source: 'chrome.tabGroups のドキュメント',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'Edge のコレクションは Edge 149 で廃止されました。', source: 'Microsoft サポート' },
+  ],
+  faq: [
+    {
+      question: 'Ctrl+Shift+D ですべてのウィンドウのタブを保存できますか？',
+      answer: 'いいえ。ブックマークされるのは現在のウィンドウだけです。ウィンドウごとに繰り返すか、すべてのウィンドウを読み取れるツールを使ってください。',
+    },
+    {
+      question: '拡張機能なしで開いているタブをすべて保存できますか？',
+      answer: 'はい。Ctrl+Shift+D と起動時の設定を使います。どちらも Chrome、Edge、Firefox に標準で備わっています。',
+    },
+    {
+      question: '再起動したのにタブが戻らなかったのはなぜですか？',
+      answer:
+        '起動時の復元で戻るのは、ブラウザを終了した時点で開いていたものです。それより前に閉じたウィンドウやプライベートウィンドウは含まれません。Ctrl+Shift+T か履歴を試してください。',
+    },
+    {
+      question: 'TabMerger は保存したタブをどこに保管しますか？',
+      answer:
+        'お使いのデバイス上の、ブラウザのローカルストレージです。Pro ではエンドツーエンドで暗号化したうえでデバイス間で同期します。詳しくはよくある質問をご覧ください。',
+      link: { text: 'よくある質問', href: '/faq' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/chrome-bookmarks-folder.webp', alt: 'Chrome のブックマーク マネージャ。フォルダ「Tab manager research」が選択され、保存した6ページが並んでいる' },
+    { src: '/blog/save-all-open-tabs/edge-bookmarks-folder.webp', alt: 'Edge のお気に入り（Favorites）。フォルダ「Tab manager research」が開き、6ページとそのアドレスが並んでいる' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Chrome の設定の「On startup」（起動時）で「Continue where you left off」（前回開いていたページを開く）が選択されている' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Edge の設定の「Start, home, and new tab page」で「Open tabs from the previous session」が選択されている' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Firefox の設定の「Home and startup」（ホームと起動）で「Open previous windows and tabs」（前回のウィンドウとタブを開く）にチェックが入っている' },
+    { src: '/blog/save-all-open-tabs/chrome-history.webp', alt: 'Chrome の履歴ページ。今日訪れた6ページと、「By date」「By group」のタブ' },
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Edge の履歴ページ。サイドバーに「All」「Recently closed」「Tabs from other devices」' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-light.webp', alt: 'TabMerger の「現在開いているタブ」。ブラウザのウィンドウ2つに、それぞれタブが5つ。ライトテーマ' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-dark.webp', alt: 'TabMerger の「現在開いているタブ」。ブラウザのウィンドウ2つに、それぞれタブが5つ。ダークテーマ' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-light.webp', alt: 'TabMerger のグループメニュー。開いているブラウザのウィンドウをこのグループに追加する「現在の内容と統合」がある。ライトテーマ' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-dark.webp', alt: 'TabMerger のグループメニュー。開いているブラウザのウィンドウをこのグループに追加する「現在の内容と統合」がある。ダークテーマ' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-light.webp', alt: 'グループ「Open tabs, Nov 19」（開いているタブ 11/19）にウィンドウ2つとタブ10個が入っている。ライトテーマ' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-dark.webp', alt: 'グループ「Open tabs, Nov 19」（開いているタブ 11/19）にウィンドウ2つとタブ10個が入っている。ダークテーマ' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-light.webp', alt: 'TabMerger の「最近閉じたタブ」の今日の分。時間帯のバーと、閉じたタブ3つ。ライトテーマ' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-dark.webp', alt: 'TabMerger の「最近閉じたタブ」の今日の分。時間帯のバーと、閉じたタブ3つ。ダークテーマ' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-light.webp', alt: 'TabMerger で「closed: seat」を検索し、最近閉じたタブが1つ表示されている。ライトテーマ' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-dark.webp', alt: 'TabMerger で「closed: seat」を検索し、最近閉じたタブが1つ表示されている。ダークテーマ' },
+    { src: '/blog/save-all-open-tabs/tm-search-light.webp', alt: 'TabMerger で「lisbon」を検索した結果。各結果に「現在開いているタブ」または「Open tabs, Nov 19」のラベル。ライトテーマ' },
+    { src: '/blog/save-all-open-tabs/tm-search-dark.webp', alt: 'TabMerger で「lisbon」を検索した結果。各結果に「現在開いているタブ」または「Open tabs, Nov 19」のラベル。ダークテーマ' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-light.webp', alt: 'TabMerger の「セッションを保存」ダイアログ。名前は「Before the trip」（旅行の前）。ライトテーマ' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-dark.webp', alt: 'TabMerger の「セッションを保存」ダイアログ。名前は「Before the trip」（旅行の前）。ダークテーマ' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-light.webp', alt: '保存したセッション「Before the trip」。3つのグループ（Work、Reading list、Open tabs, Nov 19）と「セッションを復元」ボタン。ライトテーマ' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-dark.webp', alt: '保存したセッション「Before the trip」。3つのグループ（Work、Reading list、Open tabs, Nov 19）と「セッションを復元」ボタン。ダークテーマ' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-light.webp', alt: 'TabMerger の設定の「データ」タブ。「開いているタブを自動保存」「バックアップ」「閉じたタブを記憶する」。ライトテーマ' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-dark.webp', alt: 'TabMerger の設定の「データ」タブ。「開いているタブを自動保存」「バックアップ」「閉じたタブを記憶する」。ダークテーマ' },
+  ],
+  tags: ['tab-management', 'save-tabs', 'restore-closed-tabs', 'bookmarks', 'browser-productivity', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Microsoft Edge help and learning',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/microsoft-edge',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-19',
+    },
+  ],
+  screenshotsCaptured: '2026-11-19',
+  ogImage: { src: '/blog/save-all-open-tabs/og.png', alt: '開いているタブをすべて保存して、あとで元に戻す方法：Chrome、Edge、Firefox 向けの TabMerger ガイド。保存したウィンドウ2つを持つグループの画像' },
+  toc: [
+    { id: 'quick', label: '簡単な答え' },
+    { id: 'bookmark', label: '1. すべてのタブをブックマーク' },
+    { id: 'startup', label: '2. 起動時に開き直す' },
+    { id: 'closed', label: '3. 閉じたタブを戻す' },
+    { id: 'groups', label: '4. タブグループ' },
+    { id: 'tabmerger', label: '5. すべてのウィンドウを一度に' },
+    { id: 'compare', label: 'どれを使うか' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+  browserSections: ['bookmark', 'startup', 'closed'],
+  browserFact: {
+    label: '起動時の設定',
+    values: { chrome: 'chrome://settings/onStartup', edge: 'edge://settings/startHomeNTP', firefox: 'about:preferences#home' },
+  },
+}
+
+<QuickAnswer>
+
+開いているタブをすべて保存するには、<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>（Mac では <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>）を押します。現在のウィンドウのタブがすべて、新しいブックマーク フォルダに保存されます。Chrome、Edge、Firefox のどれでも使えます。タブを自動で開き直したい場合は、Chrome の「前回開いていたページを開く」（Continue where you left off）、Edge の「Open tabs from the previous session」、Firefox の「前回のウィンドウとタブを開く」（Open previous windows and tabs）をオンにします。
+
+</QuickAnswer>
+
+<BrowserSwitcher />
+
+<Section id="bookmark" title="1. キー操作一つですべてのタブをブックマーク">
+
+主要なブラウザはどれも、ウィンドウのタブをまとめてブックマークのフォルダとして保存できます。フォルダは削除するまで残り、ブラウザにログインしていれば同期もされます。
+
+<BrowserPanels section="bookmark">
+<BrowserPanel browser="chrome">
+
+1. 残したいウィンドウのタブをどれか一つクリックします。
+2. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>（Mac では <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>）を押します。
+3. フォルダに名前を付け、保存先を選んで「保存」をクリックします。
+4. あとで開き直すときは <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> を押し、フォルダを探して中のブックマークをすべて開きます。
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-bookmarks-folder.webp" alt="Chrome のブックマーク マネージャ。フォルダ「Tab manager research」が選択され、保存した6ページが並んでいる" width={1600} height={524} eager boxes={[{ id: 'folder' }]} source="chrome://bookmarks · Chrome 157.0.8103.79">Ctrl+Shift+D を押した後の Chrome のブックマーク マネージャ（Bookmark Manager）。新しいフォルダに、ウィンドウのタブ1つにつき1つのブックマークが入っています。この記事のブラウザのスクリーンショットは英語版の画面です。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. 残したいウィンドウのタブをどれか一つクリックします。
+2. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>（Mac では <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>）を押します。Edge はタブを新しいフォルダにお気に入り（Favorites）として保存します。
+3. フォルダに名前を付けて保存します。
+4. あとで開き直すときは <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> でお気に入りを開き、フォルダを探してすべて開きます。
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-bookmarks-folder.webp" alt="Edge のお気に入り（Favorites）。フォルダ「Tab manager research」が開き、6ページとそのアドレスが並んでいる" width={1600} height={553} boxes={[{ id: 'folder' }]} source="edge://favorites · Edge 157.0.4341.60">同じショートカットを押した後の Edge のお気に入り。タブが新しいフォルダにお気に入りとして保存されています。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. 残したいウィンドウのタブをどれか一つクリックします。
+2. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>（Mac では <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>）を押して、すべてのタブをブックマークします。
+3. フォルダに名前を付けて「保存」をクリックします。
+4. あとで開き直すときは <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> で「ブラウジングライブラリー」（Library）ウィンドウを開き、フォルダのブックマークをすべて開きます。
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox Library (Ctrl+Shift+O) with the new folder selected. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>保存されるのは**現在のウィンドウだけ**です。ウィンドウが3つならフォルダも3つになります。また、ブックマークに残るのはアドレスだけで、スクロール位置やフォームへの入力内容は失われます。</Catch>
+
+</Section>
+
+<Section id="startup" title="2. 起動時にすべてを開き直すようにする">
+
+再起動やアップデートでタブが消えてしまうなら、ブラウザに前回のセッションを復元させましょう。
+
+<BrowserPanels section="startup">
+<BrowserPanel browser="chrome">
+
+Chrome では **設定 → 起動時 → 前回開いていたページを開く**（Settings → On startup → Continue where you left off）を選びます。アドレスバーに `chrome://settings/onStartup` を貼り付けても開けます。
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Chrome の設定の「On startup」（起動時）で「Continue where you left off」（前回開いていたページを開く）が選択されている" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">前回のセッションを開き直すように設定した、Chrome の「起動時」。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge では **設定 →「Start, home, and new tab page」→「On startup」→「Open tabs from the previous session」** を選びます。アドレスバーに `edge://settings/startHomeNTP` を貼り付けても開けます。
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Edge の設定の「Start, home, and new tab page」で「Open tabs from the previous session」が選択されている" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">前回のセッションを開き直すように設定した、Edge の「Start, home, and new tab page」。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox では **設定 → ホームと起動 → 起動 → 前回のウィンドウとタブを開く**（Settings → Home and startup → Startup → Open previous windows and tabs）を選びます。アドレスバーに `about:preferences#home` を貼り付けても開けます。
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Firefox の設定の「Home and startup」（ホームと起動）で「Open previous windows and tabs」（前回のウィンドウとタブを開く）にチェックが入っている" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Firefox 159 ではこの項目は「Home and startup」（ホームと起動）にあります。古い解説では「一般」にあると書かれています。</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>復元されるのは、最後にブラウザを終了したときに開いていたものです。それより前に閉じたウィンドウは含まれず、プライベートウィンドウは復元されません。</Catch>
+
+</Section>
+
+<Section id="closed" title="3. 閉じてしまったタブを取り戻す">
+
+<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>（<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>）を押すと、最後に閉じたタブかウィンドウが開き直します。続けて押すと、さらに前に閉じたものへさかのぼります。もっと前のものは <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> で履歴を開いて探します。
+
+<BrowserPanels section="closed">
+<BrowserPanel browser="chrome">
+
+Chrome では ⋮ →「履歴」にも、最近閉じたタブとウィンドウが表示されます。
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-history.webp" alt="Chrome の履歴ページ。今日訪れた6ページと、「By date」「By group」のタブ" width={1600} height={640} source="chrome://history · Chrome 157.0.8103.79" className="m-0">Chrome の履歴ページ。バージョン 157 で「By group」表示が加わりました。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge では履歴ページに「Recently closed」の一覧がそのまま表示されます。
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Edge の履歴ページ。サイドバーに「All」「Recently closed」「Tabs from other devices」" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60" className="m-0">Edge の履歴ページ。サイドバーに「Recently closed」の一覧があります。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox では「履歴」（History）メニューの「最近閉じたタブ」と「最近閉じたウィンドウ」に、閉じたタブとウィンドウが表示されます（メニューバーは Alt キーで表示できます）。
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with recently closed tabs open. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="groups" title="4. タブグループ：集中には便利、保存には不向き">
+
+- **Chrome** ではグループを保存して開き直せますが、閉じた保存済みグループは拡張機能からは見えません（[tabGroups API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)）。
+- **Firefox** のグループはそのデバイスにだけ残り、Firefox Sync では同期されません。
+- **Edge** のコレクションは Edge 149 で廃止されました。
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
+
+</Section>
+
+<Section id="tabmerger" title="5. TabMerger ですべてのウィンドウを一度に保存する">
+
+ブラウザに標準で備わっている方法は、どれも一度に扱えるのがウィンドウ1つ、再起動1回分、閉じたタブ1つまでです。Chrome、Edge、Firefox 向けの無料拡張機能 [TabMerger](/features) なら、開いているウィンドウがすべて **現在開いているタブ** に表示され、それらをまとめて一つのグループに保存できます。
+
+<ScreenshotThemeToggle />
+
+1. **グループを追加** をクリックし、「開いているタブ 11/19」のような名前を付けます（スクリーンショットでは「Open tabs, Nov 19」）。
+2. グループの **⋯** メニューを開き、**現在の内容と統合** を選びます。開いているブラウザのウィンドウがこのグループに追加されます（「現在の内容で置き換え」を選ぶと、グループのウィンドウが入れ替わります）。
+3. あとはいつウィンドウを閉じてもかまいません。グループには2つのウィンドウと10個のタブがすべて残ります。
+
+<Carousel label="すべてのウィンドウを一つのグループに保存する" steps={[{ title: '現在開いているタブ' }, { title: '統合メニュー' }, { title: '保存したグループ' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-now-open" alt="TabMerger の「現在開いているタブ」。ブラウザのウィンドウ2つに、それぞれタブが5つ。ライトテーマ" darkAlt="TabMerger の「現在開いているタブ」。ブラウザのウィンドウ2つに、それぞれタブが5つ。ダークテーマ">「現在開いているタブ」はブラウザをそのまま映します。開いているウィンドウとそのタブがすべて並びます。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merge-menu" alt="TabMerger のグループメニュー。開いているブラウザのウィンドウをこのグループに追加する「現在の内容と統合」がある。ライトテーマ" darkAlt="TabMerger のグループメニュー。開いているブラウザのウィンドウをこのグループに追加する「現在の内容と統合」がある。ダークテーマ" boxes={[{ id: 'group-menu-button', label: 'グループメニュー' }, { id: 'merge-with-current', label: '現在の内容と統合' }]}>「グループを追加」の後、新しいグループのメニューを開き、開いているウィンドウをすべてコピーする項目を選びます。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merged-group" alt="グループ「Open tabs, Nov 19」（開いているタブ 11/19）にウィンドウ2つとタブ10個が入っている。ライトテーマ" darkAlt="グループ「Open tabs, Nov 19」（開いているタブ 11/19）にウィンドウ2つとタブ10個が入っている。ダークテーマ">「現在の内容と統合」を選んだ後。2つのウィンドウが一つのグループに保存され、閉じた後も残ります。</ThemedScreenshot>
+</Carousel>
+
+### キーボード派なら
+
+<ComparisonTable
+  head={['ショートカット', '保存されるもの']}
+  keysColumn={0}
+  rows={[
+    ['Ctrl+Shift+P', 'ウィンドウ内のほかのタブすべて'],
+    ['Ctrl+Shift+S', '現在のタブ'],
+    ['Ctrl+Shift+K', '左側のタブ'],
+    ['Ctrl+Shift+U', '右側のタブ'],
+  ]}
+/>
+
+Mac では <Kbd>⌘</Kbd> を使います。どのショートカットも保存先を尋ねてきます。**クイック保存（新しいグループ）** を選ぶと、その場でグループが作られます。Firefox では <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> がプライベートウィンドウを開くキーなので、`about:addons` の「拡張機能のショートカットキーの管理」（Manage Extension Shortcuts）で別のキーを割り当ててください。
+
+### うっかり閉じてしまったら
+
+**最近閉じたタブ** には、閉じたタブとウィンドウがすべて日ごとに残り、閉じた時刻が分かるバーも表示されます。無料プランでは2日分、Pro では30日分を残します。<Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> で、開いているタブ、保存したタブ、閉じたタブをまとめて検索できます。閉じたタブだけを探すときは、`closed:` から入力します。
+
+<Carousel label="閉じたタブを取り戻す" steps={[{ title: '最近閉じたタブ' }, { title: 'closed: 検索' }, { title: 'すべてを検索' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-recently-closed" alt="TabMerger の「最近閉じたタブ」の今日の分。時間帯のバーと、閉じたタブ3つ。ライトテーマ" darkAlt="TabMerger の「最近閉じたタブ」の今日の分。時間帯のバーと、閉じたタブ3つ。ダークテーマ" boxes={[{ id: 'hour-strip' }]}>今日閉じたタブと、閉じた時刻。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search-closed" alt="TabMerger で「closed: seat」を検索し、最近閉じたタブが1つ表示されている。ライトテーマ" darkAlt="TabMerger で「closed: seat」を検索し、最近閉じたタブが1つ表示されている。ダークテーマ" boxes={[{ id: 'search-input' }]}>Ctrl+K を押して `closed:` から入力すると、閉じたタブだけを検索します。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search" alt="TabMerger で「lisbon」を検索した結果。各結果に「現在開いているタブ」または「Open tabs, Nov 19」のラベル。ライトテーマ" darkAlt="TabMerger で「lisbon」を検索した結果。各結果に「現在開いているタブ」または「Open tabs, Nov 19」のラベル。ダークテーマ" boxes={[{ id: 'group-tag-1' }]}>接頭辞を付けなければ、開いているタブと保存したタブを検索し、グループ名のラベルを付けて表示します。</ThemedScreenshot>
+</Carousel>
+
+### スナップショットと自動保存
+
+**現在のセッションを保存** は、保存済みのグループ（開いているタブではありません）に名前を付けてスナップショットとして残し、まとめて復元できるようにします。**設定 → データ → 開いているタブを自動保存** をオンにすると、開いているタブが自動で新しいグループとして保存されます。無料プランでは最新の2つが残り、無料プランの上限（5グループ、50タブ）に含まれます。
+
+<Carousel label="セッションと自動保存" steps={[{ title: 'セッションを保存' }, { title: 'セッションの表示' }, { title: '設定 → データ' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-save-session-dialog" alt="TabMerger の「セッションを保存」ダイアログ。名前は「Before the trip」（旅行の前）。ライトテーマ" darkAlt="TabMerger の「セッションを保存」ダイアログ。名前は「Before the trip」（旅行の前）。ダークテーマ" boxes={[{ id: 'session-name' }]}>「現在のセッションを保存」では名前を入力します。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-session-view" alt="保存したセッション「Before the trip」。3つのグループ（Work、Reading list、Open tabs, Nov 19）と「セッションを復元」ボタン。ライトテーマ" darkAlt="保存したセッション「Before the trip」。3つのグループ（Work、Reading list、Open tabs, Nov 19）と「セッションを復元」ボタン。ダークテーマ" boxes={[{ id: 'restore-session' }]}>保存後にセッションを開いたところ。「Before the trip」と、その3つのグループが表示されます。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-settings-data" alt="TabMerger の設定の「データ」タブ。「開いているタブを自動保存」「バックアップ」「閉じたタブを記憶する」。ライトテーマ" darkAlt="TabMerger の設定の「データ」タブ。「開いているタブを自動保存」「バックアップ」「閉じたタブを記憶する」。ダークテーマ" boxes={[{ id: 'auto-save-toggle' }]}>自動保存をオンにする、設定 → データ の画面。</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Chrome、Edge、Firefox に無料で追加できます。使い始めるのにアカウントは不要です。</InstallCta>
+
+</Section>
+
+<Section id="compare" title="どの方法を使うべきか">
+
+<ComparisonTable
+  head={['', 'すべてブックマーク', '起動時の復元', 'Ctrl+Shift+T、履歴', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="38rem"
+  rows={[
+    ['すべてのウィンドウを一度に', 'いいえ', 'はい（再起動時）', '1つずつ', 'はい'],
+    ['ウィンドウを閉じた後も残る', 'はい', 'いいえ', '履歴に残る', 'はい'],
+    ['検索', 'ブックマーク', 'なし', '履歴', 'Ctrl+K（閉じたタブも対象）'],
+    ['料金', '無料', '無料', '無料', '無料（同期は Pro）'],
+  ]}
+/>
+
+ほかに何を選ぶにしても、起動時の設定はオンにしておきましょう。残しておきたいウィンドウが一つだけなら、ブックマークで十分です。複数のウィンドウを使い分けている場合や、何日も後に閉じたタブが必要になる場合は、拡張機能を使います。詳しくは[比較ページ](/compare)をご覧ください。
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+
+</Section>

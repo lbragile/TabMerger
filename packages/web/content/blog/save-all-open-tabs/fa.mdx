@@ -1,0 +1,316 @@
+export const post = {
+  slug: 'save-all-open-tabs',
+  title: 'چطور همهٔ زبانه‌های باز را ذخیره کنیم و بعداً برگردانیم',
+  seoTitle: 'ذخیرهٔ همهٔ زبانه‌های باز در Chrome،‏ Edge و Firefox',
+  description:
+    'همهٔ زبانه‌های (تب‌های) باز را در Chrome،‏ Edge یا Firefox با یک میان‌بر ذخیره کنید، بگذارید پس از راه‌اندازی خودکار باز شوند و زبانه‌های بسته‌شده را برگردانید.',
+  shareSummary: 'یک میان‌بر، بازگردانی هنگام راه‌اندازی و پس گرفتن زبانه‌های بسته‌شده در Chrome،‏ Edge و Firefox.',
+  dek: 'پنج راه برای نگه داشتن همهٔ زبانه‌های باز، و چیزی که هرکدام بی‌سروصدا از قلم می‌اندازد.',
+  published: '2026-11-19',
+  updated: '2026-11-19',
+  testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'میان‌بر Ctrl+Shift+D فقط پنجرهٔ فعلی را ذخیره می‌کند.', source: 'آزموده در هر سه مرورگر، ۱۹ نوامبر ۲۰۲۶' },
+    { text: 'میان‌بر Ctrl+Shift+T زبانه‌ها و پنجره‌های بسته‌شده را دوباره باز می‌کند.', source: 'صفحه‌های راهنمای Chrome،‏ Edge و Firefox' },
+    {
+      text: 'افزونه‌ها نمی‌توانند گروه‌های ذخیره‌شدهٔ بستهٔ Chrome را فهرست کنند.',
+      source: 'مستندات chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'قابلیت Collections از نسخهٔ 149 در Edge حذف شده است.', source: 'پشتیبانی Microsoft' },
+  ],
+  faq: [
+    {
+      question: 'آیا Ctrl+Shift+D زبانه‌های همهٔ پنجره‌ها را ذخیره می‌کند؟',
+      answer: 'نه. فقط پنجرهٔ فعلی را نشانک‌گذاری می‌کند. برای هر پنجره جداگانه تکرارش کنید، یا از ابزاری استفاده کنید که همهٔ پنجره‌ها را می‌خواند.',
+    },
+    {
+      question: 'آیا می‌شود همهٔ زبانه‌های باز را بدون افزونه ذخیره کرد؟',
+      answer: 'بله: با Ctrl+Shift+D و تنظیم راه‌اندازی، که هر دو در Chrome،‏ Edge و Firefox وجود دارند.',
+    },
+    {
+      question: 'چرا زبانه‌هایم پس از راه‌اندازی دوباره برنگشتند؟',
+      answer:
+        'بازگردانی هنگام راه‌اندازی فقط چیزی را برمی‌گرداند که هنگام بستن مرورگر باز بود. پنجره‌هایی که زودتر بسته‌اید و پنجره‌های خصوصی جزو آن نیستند. میان‌بر Ctrl+Shift+T یا تاریخچه را امتحان کنید.',
+    },
+    {
+      question: 'TabMerger زبانه‌های ذخیره‌شده را کجا نگه می‌دارد؟',
+      answer:
+        'روی دستگاه خودتان، در فضای ذخیره‌سازی محلی مرورگر. طرح Pro آن‌ها را با رمزگذاری سرتاسری بین دستگاه‌ها همگام می‌کند. پرسش‌های متداول را ببینید.',
+      link: { text: 'پرسش‌های متداول', href: '/faq' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/chrome-bookmarks-folder.webp', alt: 'مدیر نشانک‌های Chrome با پوشهٔ انتخاب‌شدهٔ Tab manager research که شش صفحهٔ ذخیره‌شده را فهرست می‌کند' },
+    { src: '/blog/save-all-open-tabs/edge-bookmarks-folder.webp', alt: 'بخش Favorites در Edge با پوشهٔ بازِ Tab manager research که شش صفحه و نشانی‌هایشان را فهرست می‌کند' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'تنظیمات Chrome، بخش On startup (هنگام راه‌اندازی)، با گزینهٔ انتخاب‌شدهٔ Continue where you left off (ادامه از جایی که ترک کردید)' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'تنظیمات Edge، بخش Start, home, and new tab page، با گزینهٔ انتخاب‌شدهٔ Open tabs from the previous session' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'تنظیمات Firefox، بخش Home and startup (خانه و راه‌اندازی)، با گزینهٔ تیک‌خوردهٔ Open previous windows and tabs (باز کردن پنجره‌ها و زبانه‌های قبلی)' },
+    { src: '/blog/save-all-open-tabs/chrome-history.webp', alt: 'صفحهٔ تاریخچهٔ Chrome با شش صفحهٔ بازدیدشدهٔ امروز و زبانه‌های By date و By group' },
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'صفحهٔ تاریخچهٔ Edge با گزینه‌های All،‏ Recently closed و Tabs from other devices در نوار کناری' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-light.webp', alt: 'بخش «هم‌اکنون باز» در TabMerger با دو پنجرهٔ مرورگر که هرکدام پنج زبانه دارند، پوستهٔ روشن' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-dark.webp', alt: 'بخش «هم‌اکنون باز» در TabMerger با دو پنجرهٔ مرورگر که هرکدام پنج زبانه دارند، پوستهٔ تیره' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-light.webp', alt: 'منوی گروه در TabMerger با گزینهٔ «ادغام با وضعیت فعلی» که پنجره‌های باز مرورگر را به این گروه اضافه می‌کند، پوستهٔ روشن' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-dark.webp', alt: 'منوی گروه در TabMerger با گزینهٔ «ادغام با وضعیت فعلی» که پنجره‌های باز مرورگر را به این گروه اضافه می‌کند، پوستهٔ تیره' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-light.webp', alt: 'گروه Open tabs, Nov 19 (زبانه‌های باز، ۱۹ نوامبر) با ۲ پنجره و ۱۰ زبانه، پوستهٔ روشن' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-dark.webp', alt: 'گروه Open tabs, Nov 19 (زبانه‌های باز، ۱۹ نوامبر) با ۲ پنجره و ۱۰ زبانه، پوستهٔ تیره' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-light.webp', alt: 'بخش «اخیراً بسته‌شده» در TabMerger برای امروز، با نوار ساعت‌ها و سه زبانهٔ بسته‌شده، پوستهٔ روشن' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-dark.webp', alt: 'بخش «اخیراً بسته‌شده» در TabMerger برای امروز، با نوار ساعت‌ها و سه زبانهٔ بسته‌شده، پوستهٔ تیره' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-light.webp', alt: 'جست‌وجوی closed: seat در TabMerger که یک زبانهٔ اخیراً بسته‌شده را نشان می‌دهد، پوستهٔ روشن' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-dark.webp', alt: 'جست‌وجوی closed: seat در TabMerger که یک زبانهٔ اخیراً بسته‌شده را نشان می‌دهد، پوستهٔ تیره' },
+    { src: '/blog/save-all-open-tabs/tm-search-light.webp', alt: 'جست‌وجوی lisbon در TabMerger با نتیجه‌هایی که برچسب «هم‌اکنون باز» یا Open tabs, Nov 19 دارند، پوستهٔ روشن' },
+    { src: '/blog/save-all-open-tabs/tm-search-dark.webp', alt: 'جست‌وجوی lisbon در TabMerger با نتیجه‌هایی که برچسب «هم‌اکنون باز» یا Open tabs, Nov 19 دارند، پوستهٔ تیره' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-light.webp', alt: 'پنجرهٔ «ذخیرهٔ نشست» در TabMerger با نام Before the trip (پیش از سفر)، پوستهٔ روشن' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-dark.webp', alt: 'پنجرهٔ «ذخیرهٔ نشست» در TabMerger با نام Before the trip (پیش از سفر)، پوستهٔ تیره' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-light.webp', alt: 'نشست ذخیره‌شدهٔ Before the trip با سه گروه (Work،‏ Reading list و Open tabs, Nov 19) و دکمهٔ «بازیابی نشست»، پوستهٔ روشن' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-dark.webp', alt: 'نشست ذخیره‌شدهٔ Before the trip با سه گروه (Work،‏ Reading list و Open tabs, Nov 19) و دکمهٔ «بازیابی نشست»، پوستهٔ تیره' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-light.webp', alt: 'تنظیمات TabMerger، زبانهٔ «داده‌ها»: ذخیرهٔ خودکار زبانه‌های باز، پشتیبان‌ها و به خاطر سپردن زبانه‌های بسته‌شده، پوستهٔ روشن' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-dark.webp', alt: 'تنظیمات TabMerger، زبانهٔ «داده‌ها»: ذخیرهٔ خودکار زبانه‌های باز، پشتیبان‌ها و به خاطر سپردن زبانه‌های بسته‌شده، پوستهٔ تیره' },
+  ],
+  tags: ['tab-management', 'save-tabs', 'restore-closed-tabs', 'bookmarks', 'browser-productivity', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Microsoft Edge help and learning',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/microsoft-edge',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-19',
+    },
+  ],
+  screenshotsCaptured: '2026-11-19',
+  ogImage: { src: '/blog/save-all-open-tabs/og.png', alt: 'چطور همهٔ زبانه‌های باز را ذخیره کنیم و بعداً برگردانیم: راهنمای TabMerger برای Chrome،‏ Edge و Firefox، با گروهی که دو پنجرهٔ ذخیره‌شده را نگه می‌دارد' },
+  toc: [
+    { id: 'quick', label: 'پاسخ کوتاه' },
+    { id: 'bookmark', label: '۱. نشانک‌گذاری همهٔ زبانه‌ها' },
+    { id: 'startup', label: '۲. باز شدن دوباره هنگام راه‌اندازی' },
+    { id: 'closed', label: '۳. برگرداندن زبانه‌های بسته‌شده' },
+    { id: 'groups', label: '۴. گروه‌های زبانه' },
+    { id: 'tabmerger', label: '۵. همهٔ پنجره‌ها یک‌جا' },
+    { id: 'compare', label: 'کدام را انتخاب کنیم' },
+    { id: 'faq', label: 'پرسش‌های متداول' },
+  ],
+  browserSections: ['bookmark', 'startup', 'closed'],
+  browserFact: {
+    label: 'تنظیم راه‌اندازی',
+    values: { chrome: 'chrome://settings/onStartup', edge: 'edge://settings/startHomeNTP', firefox: 'about:preferences#home' },
+  },
+}
+
+<QuickAnswer>
+
+برای ذخیرهٔ همهٔ زبانه‌های باز (تب‌های باز) پنجرهٔ فعلی در یک پوشهٔ نشانک تازه، <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> را بزنید (در Mac، <bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi>). این میان‌بر در Chrome،‏ Edge و Firefox کار می‌کند. برای اینکه زبانه‌ها خودکار دوباره باز شوند، در Chrome گزینهٔ **ادامه از جایی که ترک کردید** (<bdi dir="ltr">Continue where you left off</bdi>)، در Edge گزینهٔ **Open tabs from the previous session** و در Firefox گزینهٔ **باز کردن پنجره‌ها و زبانه‌های قبلی** (<bdi dir="ltr">Open previous windows and tabs</bdi>) را روشن کنید.
+
+</QuickAnswer>
+
+<BrowserSwitcher />
+
+<Section id="bookmark" title="۱. نشانک‌گذاری همهٔ زبانه‌ها با یک میان‌بر">
+
+همهٔ مرورگرهای اصلی زبانه‌های یک پنجره را به‌صورت پوشه‌ای از نشانک‌ها ذخیره می‌کنند. پوشه تا وقتی پاکش نکنید می‌ماند و اگر در مرورگر وارد حساب‌تان شده باشید، همگام هم می‌شود.
+
+<BrowserPanels section="bookmark">
+<BrowserPanel browser="chrome">
+
+1. روی یکی از زبانه‌های پنجره‌ای که می‌خواهید نگه دارید کلیک کنید.
+2. <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> را بزنید (در Mac، <bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi>).
+3. برای پوشه نام بگذارید، جایش را انتخاب کنید و روی ذخیره کلیک کنید.
+4. برای باز کردن دوباره، <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd></bdi> را بزنید، پوشه را پیدا کنید و همهٔ نشانک‌هایش را باز کنید.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-bookmarks-folder.webp" alt="مدیر نشانک‌های Chrome با پوشهٔ انتخاب‌شدهٔ Tab manager research که شش صفحهٔ ذخیره‌شده را فهرست می‌کند" width={1600} height={524} eager boxes={[{ id: 'folder' }]} source="chrome://bookmarks · Chrome 157.0.8103.79">مدیر نشانک Chrome (<bdi dir="ltr">Bookmark Manager</bdi>) پس از زدن Ctrl+Shift+D: پوشهٔ تازه برای هر زبانهٔ پنجره یک نشانک دارد. تصویرهای مرورگر در این راهنما رابط انگلیسی را نشان می‌دهند.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. روی یکی از زبانه‌های پنجره‌ای که می‌خواهید نگه دارید کلیک کنید.
+2. <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> را بزنید (در Mac، <bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi>). Edge زبانه‌ها را در پوشه‌ای تازه در «Favorites» ذخیره می‌کند.
+3. برای پوشه نام بگذارید و ذخیره‌اش کنید.
+4. برای باز کردن دوباره، <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd></bdi> را بزنید تا «Favorites» باز شود، پوشه را پیدا کنید و همه را باز کنید.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-bookmarks-folder.webp" alt="بخش Favorites در Edge با پوشهٔ بازِ Tab manager research که شش صفحه و نشانی‌هایشان را فهرست می‌کند" width={1600} height={553} boxes={[{ id: 'folder' }]} source="edge://favorites · Edge 157.0.4341.60">بخش Favorites در Edge پس از همان میان‌بر: زبانه‌ها در پوشه‌ای تازه ذخیره شده‌اند.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. روی یکی از زبانه‌های پنجره‌ای که می‌خواهید نگه دارید کلیک کنید.
+2. <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> را بزنید (در Mac، <bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi>) تا همهٔ زبانه‌ها نشانک‌گذاری شوند.
+3. برای پوشه نام بگذارید و روی ذخیره کلیک کنید.
+4. برای باز کردن دوباره، <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd></bdi> را بزنید تا پنجرهٔ «مخزن» (<bdi dir="ltr">Library</bdi>) باز شود و همهٔ نشانک‌های پوشه را باز کنید.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox Library (Ctrl+Shift+O) with the new folder selected. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>فقط **پنجرهٔ فعلی** را ذخیره می‌کند. سه پنجره یعنی سه پوشه. نشانک‌ها هم فقط نشانی را نگه می‌دارند؛ جای اسکرول و متنی که در فرم‌ها نوشته‌اید از دست می‌رود.</Catch>
+
+</Section>
+
+<Section id="startup" title="۲. کاری کنید مرورگر هنگام راه‌اندازی همه‌چیز را دوباره باز کند">
+
+اگر راه‌اندازی دوباره و به‌روزرسانی‌ها زبانه‌هایتان را از بین می‌برند، بگذارید مرورگر جلسهٔ قبل را برگرداند. تصویرهای مرورگر رابط انگلیسی را نشان می‌دهند؛ هر جا نام فارسی گزینه فرق دارد، بار اول نام انگلیسی هم در پرانتز آمده است.
+
+<BrowserPanels section="startup">
+<BrowserPanel browser="chrome">
+
+در Chrome به **تنظیمات ← هنگام راه‌اندازی ← ادامه از جایی که ترک کردید** (<bdi dir="ltr">Settings → On startup → Continue where you left off</bdi>) بروید. یا `chrome://settings/onStartup` را در نوار نشانی بچسبانید.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="تنظیمات Chrome، بخش On startup (هنگام راه‌اندازی)، با گزینهٔ انتخاب‌شدهٔ Continue where you left off (ادامه از جایی که ترک کردید)" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">تنظیم On startup (هنگام راه‌اندازی) در Chrome، روی باز کردن دوبارهٔ جلسهٔ قبل.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+در Edge به **Settings → Start, home, and new tab page → On startup → Open tabs from the previous session** بروید. یا `edge://settings/startHomeNTP` را در نوار نشانی بچسبانید.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="تنظیمات Edge، بخش Start, home, and new tab page، با گزینهٔ انتخاب‌شدهٔ Open tabs from the previous session" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">تنظیمات Start, home, and new tab page در Edge، روی باز کردن دوبارهٔ جلسهٔ قبل.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+در Firefox به **تنظیمات ← خانه و راه‌اندازی ← راه‌اندازی ← باز کردن پنجره‌ها و زبانه‌های قبلی** (<bdi dir="ltr">Settings → Home and startup → Startup → Open previous windows and tabs</bdi>) بروید. یا `about:preferences#home` را در نوار نشانی بچسبانید.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="تنظیمات Firefox، بخش Home and startup (خانه و راه‌اندازی)، با گزینهٔ تیک‌خوردهٔ Open previous windows and tabs (باز کردن پنجره‌ها و زبانه‌های قبلی)" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">در Firefox 159 این گزینه زیر Home and startup (خانه و راه‌اندازی) است؛ راهنماهای قدیمی‌تر آن را زیر General (عمومی) می‌دانند.</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>چیزی را برمی‌گرداند که هنگام آخرین بسته شدن مرورگر باز بود. پنجره‌ای که زودتر بسته‌اید جزو آن نیست و پنجره‌های خصوصی هیچ‌وقت برنمی‌گردند.</Catch>
+
+</Section>
+
+<Section id="closed" title="۳. زبانه‌هایی را که بسته‌اید برگردانید">
+
+<bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> را بزنید (<bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi>) تا آخرین زبانه یا پنجره‌ای که بسته‌اید دوباره باز شود؛ دوباره بزنید تا عقب‌تر بروید. برای موارد قدیمی‌تر، تاریخچه را با <bdi><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi> باز کنید.
+
+<BrowserPanels section="closed">
+<BrowserPanel browser="chrome">
+
+Chrome زبانه‌ها و پنجره‌های اخیراً بسته‌شده را در منوی ⋮ ← سابقه (History) هم فهرست می‌کند.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-history.webp" alt="صفحهٔ تاریخچهٔ Chrome با شش صفحهٔ بازدیدشدهٔ امروز و زبانه‌های By date و By group" width={1600} height={640} source="chrome://history · Chrome 157.0.8103.79" className="m-0">صفحهٔ تاریخچهٔ Chrome؛ نسخهٔ 157 نمای By group را اضافه کرده است.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge فهرست «Recently closed» را مستقیم در صفحهٔ تاریخچه نشان می‌دهد.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="صفحهٔ تاریخچهٔ Edge با گزینه‌های All،‏ Recently closed و Tabs from other devices در نوار کناری" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60" className="m-0">صفحهٔ تاریخچهٔ Edge، با فهرست Recently closed در نوار کناری.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox زبانه‌ها و پنجره‌های اخیراً بسته‌شده را در منوی «تاریخچه» (<bdi dir="ltr">History</bdi>)، زیر «زبانه‌های تازه بسته شده» و «پنجره‌های تازه بسته شده» فهرست می‌کند (برای نمایش نوار منو، Alt را بزنید).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with recently closed tabs open. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="groups" title="۴. گروه‌های زبانه: خوب برای تمرکز، محدود برای ذخیره">
+
+- **Chrome** می‌تواند یک گروه را ذخیره و دوباره باز کند، اما افزونه‌ها گروه ذخیره‌شده‌ای را که بسته شده نمی‌بینند ([tabGroups API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
+- گروه‌های **Firefox** روی همان دستگاه می‌مانند و با Firefox Sync به دستگاه‌های دیگر نمی‌روند.
+- **Edge** از نسخهٔ 149 دیگر Collections ندارد.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
+
+</Section>
+
+<Section id="tabmerger" title="۵. همهٔ پنجره‌ها را یک‌جا با TabMerger ذخیره کنید">
+
+روش‌های داخلی مرورگر هرکدام فقط یک پنجره، یک راه‌اندازی یا هر بار یک زبانهٔ بسته‌شده را پوشش می‌دهند. [TabMerger](/features)، افزونهٔ رایگان ما برای Chrome،‏ Edge و Firefox، همهٔ پنجره‌های باز را زیر **هم‌اکنون باز** فهرست می‌کند و همه را در یک گروه ذخیره می‌کند.
+
+<ScreenshotThemeToggle />
+
+1. روی **افزودن گروه** کلیک کنید و برایش نامی بگذارید، مثلاً «زبانه‌های باز، ۱۹ نوامبر» (در تصویرها: Open tabs, Nov 19).
+2. منوی **⋯** گروه را باز کنید و **ادغام با وضعیت فعلی** را انتخاب کنید تا پنجره‌های باز مرورگرتان به گروه اضافه شوند. («جایگزینی با وضعیت فعلی» به‌جای آن، پنجره‌های گروه را با پنجره‌های باز عوض می‌کند.)
+3. هر وقت خواستید پنجره‌ها را ببندید. گروه هر دو پنجره و هر ده زبانه را نگه می‌دارد.
+
+<Carousel label="ذخیرهٔ همهٔ پنجره‌ها در یک گروه" steps={[{ title: 'هم‌اکنون باز' }, { title: 'منوی ادغام' }, { title: 'گروه ذخیره‌شده' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-now-open" alt="بخش «هم‌اکنون باز» در TabMerger با دو پنجرهٔ مرورگر که هرکدام پنج زبانه دارند، پوستهٔ روشن" darkAlt="بخش «هم‌اکنون باز» در TabMerger با دو پنجرهٔ مرورگر که هرکدام پنج زبانه دارند، پوستهٔ تیره">«هم‌اکنون باز» آینهٔ مرورگر است: همهٔ پنجره‌های باز و زبانه‌هایشان.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merge-menu" alt="منوی گروه در TabMerger با گزینهٔ «ادغام با وضعیت فعلی» که پنجره‌های باز مرورگر را به این گروه اضافه می‌کند، پوستهٔ روشن" darkAlt="منوی گروه در TabMerger با گزینهٔ «ادغام با وضعیت فعلی» که پنجره‌های باز مرورگر را به این گروه اضافه می‌کند، پوستهٔ تیره" boxes={[{ id: 'group-menu-button', label: 'منوی گروه' }, { id: 'merge-with-current', label: 'ادغام با وضعیت فعلی' }]}>پس از «افزودن گروه»، منوی گروه تازه را باز کنید و گزینه‌ای را بزنید که همهٔ پنجره‌های باز را در آن کپی می‌کند.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merged-group" alt="گروه Open tabs, Nov 19 (زبانه‌های باز، ۱۹ نوامبر) با ۲ پنجره و ۱۰ زبانه، پوستهٔ روشن" darkAlt="گروه Open tabs, Nov 19 (زبانه‌های باز، ۱۹ نوامبر) با ۲ پنجره و ۱۰ زبانه، پوستهٔ تیره">پس از انتخاب «ادغام با وضعیت فعلی»: هر دو پنجره در یک گروه ذخیره شده‌اند و پس از بستنشان هم می‌مانند.</ThemedScreenshot>
+</Carousel>
+
+### کار با صفحه‌کلید را ترجیح می‌دهید؟
+
+<ComparisonTable
+  head={['میان‌بر', 'چه چیزی را ذخیره می‌کند']}
+  keysColumn={0}
+  rows={[
+    ['Ctrl+Shift+P', 'همهٔ زبانه‌های دیگر پنجره'],
+    ['Ctrl+Shift+S', 'زبانهٔ فعلی'],
+    ['Ctrl+Shift+K', 'زبانه‌های سمت راست'],
+    ['Ctrl+Shift+U', 'زبانه‌های سمت چپ'],
+  ]}
+/>
+
+در Mac از <Kbd>⌘</Kbd> استفاده کنید. هرکدام می‌پرسد کجا ذخیره شود؛ **ذخیرهٔ سریع (گروه جدید)** همان لحظه گروهی تازه می‌سازد. در Firefox، <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd></bdi> پنجرهٔ خصوصی باز می‌کند، پس در `about:addons`، از «مدیریت میانبرهای افزودنی» (<bdi dir="ltr">Manage Extension Shortcuts</bdi>) کلید دیگری انتخاب کنید.
+
+### چیزی را اشتباهی بستید؟
+
+**اخیراً بسته‌شده** همهٔ زبانه‌ها و پنجره‌هایی را که می‌بندید، روزبه‌روز و با نواری که ساعت بستن را نشان می‌دهد، نگه می‌دارد. طرح رایگان ۲ روز و طرح Pro تا ۳۰ روز نگه می‌دارد. <bdi><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> در زبانه‌های باز، ذخیره‌شده و بسته‌شده جست‌وجو می‌کند؛ برای جست‌وجو فقط در زبانه‌های بسته‌شده، با <bdi>`closed:`</bdi> شروع کنید.
+
+<Carousel label="برگرداندن زبانه‌های بسته‌شده" steps={[{ title: 'اخیراً بسته‌شده' }, { title: 'جست‌وجوی closed:' }, { title: 'جست‌وجو در همه‌چیز' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-recently-closed" alt="بخش «اخیراً بسته‌شده» در TabMerger برای امروز، با نوار ساعت‌ها و سه زبانهٔ بسته‌شده، پوستهٔ روشن" darkAlt="بخش «اخیراً بسته‌شده» در TabMerger برای امروز، با نوار ساعت‌ها و سه زبانهٔ بسته‌شده، پوستهٔ تیره" boxes={[{ id: 'hour-strip' }]}>زبانه‌هایی که امروز بسته شده‌اند، با ساعت بسته شدنشان.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search-closed" alt="جست‌وجوی closed: seat در TabMerger که یک زبانهٔ اخیراً بسته‌شده را نشان می‌دهد، پوستهٔ روشن" darkAlt="جست‌وجوی closed: seat در TabMerger که یک زبانهٔ اخیراً بسته‌شده را نشان می‌دهد، پوستهٔ تیره" boxes={[{ id: 'search-input' }]}>Ctrl+K را بزنید و با <bdi>`closed:`</bdi> شروع کنید تا فقط در زبانه‌های بسته‌شده جست‌وجو شود.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search" alt="جست‌وجوی lisbon در TabMerger با نتیجه‌هایی که برچسب «هم‌اکنون باز» یا Open tabs, Nov 19 دارند، پوستهٔ روشن" darkAlt="جست‌وجوی lisbon در TabMerger با نتیجه‌هایی که برچسب «هم‌اکنون باز» یا Open tabs, Nov 19 دارند، پوستهٔ تیره" boxes={[{ id: 'group-tag-1' }]}>بدون پیشوند، جست‌وجو زبانه‌های باز و ذخیره‌شده را با برچسب گروهشان نشان می‌دهد.</ThemedScreenshot>
+</Carousel>
+
+### نسخه‌های لحظه‌ای و ذخیرهٔ خودکار
+
+**ذخیرهٔ نشست فعلی** از گروه‌های ذخیره‌شده‌تان (نه زبانه‌های باز) یک نسخهٔ لحظه‌ای با نام می‌گیرد که می‌توانید همه را با هم بازیابی کنید. **تنظیمات ← داده‌ها ← ذخیرهٔ خودکار زبانه‌های باز** زبانه‌های باز را خودکار به‌صورت گروهی تازه ذخیره می‌کند؛ طرح رایگان ۲ نسخهٔ آخر را نگه می‌دارد که جزو سقف ۵ گروه و ۵۰ زبانهٔ آن حساب می‌شوند.
+
+<Carousel label="نشست‌ها و ذخیرهٔ خودکار" steps={[{ title: 'ذخیرهٔ نشست' }, { title: 'نمای نشست' }, { title: 'تنظیمات ← داده‌ها' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-save-session-dialog" alt="پنجرهٔ «ذخیرهٔ نشست» در TabMerger با نام Before the trip (پیش از سفر)، پوستهٔ روشن" darkAlt="پنجرهٔ «ذخیرهٔ نشست» در TabMerger با نام Before the trip (پیش از سفر)، پوستهٔ تیره" boxes={[{ id: 'session-name' }]}>«ذخیرهٔ نشست فعلی» یک نام می‌خواهد.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-session-view" alt="نشست ذخیره‌شدهٔ Before the trip با سه گروه (Work،‏ Reading list و Open tabs, Nov 19) و دکمهٔ «بازیابی نشست»، پوستهٔ روشن" darkAlt="نشست ذخیره‌شدهٔ Before the trip با سه گروه (Work،‏ Reading list و Open tabs, Nov 19) و دکمهٔ «بازیابی نشست»، پوستهٔ تیره" boxes={[{ id: 'restore-session' }]}>پس از ذخیره، نشست را باز کنید: Before the trip با سه گروهش.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-settings-data" alt="تنظیمات TabMerger، زبانهٔ «داده‌ها»: ذخیرهٔ خودکار زبانه‌های باز، پشتیبان‌ها و به خاطر سپردن زبانه‌های بسته‌شده، پوستهٔ روشن" darkAlt="تنظیمات TabMerger، زبانهٔ «داده‌ها»: ذخیرهٔ خودکار زبانه‌های باز، پشتیبان‌ها و به خاطر سپردن زبانه‌های بسته‌شده، پوستهٔ تیره" boxes={[{ id: 'auto-save-toggle' }]}>تنظیمات ← داده‌ها، جایی که ذخیرهٔ خودکار روشن می‌شود.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>رایگان برای Chrome،‏ Edge و Firefox. برای شروع به حساب کاربری نیازی نیست.</InstallCta>
+
+</Section>
+
+<Section id="compare" title="کدام روش را انتخاب کنید؟">
+
+<ComparisonTable
+  head={['', 'نشانک‌گذاری همه', 'بازگردانی هنگام راه‌اندازی', 'Ctrl+Shift+T، تاریخچه', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="38rem"
+  rows={[
+    ['همهٔ پنجره‌ها یک‌جا', 'نه', 'بله، هنگام راه‌اندازی', 'هر بار یکی', 'بله'],
+    ['پس از بستن پنجره می‌ماند', 'بله', 'نه', 'در تاریخچه', 'بله'],
+    ['جست‌وجو', 'نشانک‌ها', 'ندارد', 'تاریخچه', 'Ctrl+K، با زبانه‌های بسته‌شده'],
+    ['هزینه', 'رایگان', 'رایگان', 'رایگان', 'رایگان؛ Pro برای همگام‌سازی'],
+  ]}
+/>
+
+هر روش دیگری هم که انتخاب کنید، تنظیم راه‌اندازی را روشن کنید. پنجره‌ای را که ارزش نگه داشتن دارد نشانک‌گذاری کنید. وقتی با چند پنجره کار می‌کنید یا چند روز بعد به زبانه‌ای بسته‌شده نیاز دارید، از یک افزونه استفاده کنید. توضیح بیشتر در [صفحهٔ مقایسه](/compare).
+
+</Section>
+
+<Section id="faq" title="پرسش‌های متداول">
+
+<Faq items={post.faq} />
+
+
+</Section>

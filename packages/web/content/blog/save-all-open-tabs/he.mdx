@@ -1,0 +1,316 @@
+export const post = {
+  slug: 'save-all-open-tabs',
+  title: 'איך לשמור את כל הכרטיסיות הפתוחות ולפתוח אותן שוב אחר כך',
+  seoTitle: 'שמירת כל הכרטיסיות הפתוחות ב-Chrome, ב-Edge וב-Firefox',
+  description:
+    'איך שומרים את כל הכרטיסיות הפתוחות ב-Chrome, ב-Edge או ב-Firefox בקיצור מקשים אחד, גורמים להן להיפתח שוב אחרי הפעלה מחדש ומחזירים כרטיסיות שנסגרו.',
+  shareSummary: 'קיצור מקשים אחד, שחזור בהפעלה והחזרת כרטיסיות שנסגרו ב-Chrome, ב-Edge וב-Firefox.',
+  dek: 'חמש דרכים לשמור כל כרטיסייה פתוחה, והדבר שכל אחת מהן מפספסת בשקט.',
+  published: '2026-11-19',
+  updated: '2026-11-19',
+  testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'הקיצור Ctrl+Shift+D שומר את החלון הנוכחי בלבד.', source: 'נבדק בשלושת הדפדפנים, 19 בנובמבר 2026' },
+    { text: 'הקיצור Ctrl+Shift+T פותח מחדש כרטיסיות וחלונות שנסגרו.', source: 'דפי העזרה של Chrome, של Edge ושל Firefox' },
+    {
+      text: 'תוספים לא יכולים לראות את הקבוצות השמורות הסגורות של Chrome.',
+      source: 'התיעוד של chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'התכונה Collections הוסרה מ-Edge החל מגרסה 149.', source: 'התמיכה של Microsoft' },
+  ],
+  faq: [
+    {
+      question: 'האם Ctrl+Shift+D שומר כרטיסיות מכל החלונות?',
+      answer: 'לא. הוא מוסיף לסימניות את החלון הנוכחי בלבד. צריך לחזור על זה בכל חלון, או להשתמש בכלי שקורא את כל החלונות.',
+    },
+    {
+      question: 'אפשר לשמור את כל הכרטיסיות הפתוחות בלי תוסף?',
+      answer: 'כן: Ctrl+Shift+D יחד עם הגדרת ההפעלה, ושניהם מובנים ב-Chrome, ב-Edge וב-Firefox.',
+    },
+    {
+      question: 'למה הכרטיסיות שלי לא חזרו אחרי הפעלה מחדש?',
+      answer:
+        'השחזור בהפעלה מחזיר את מה שהיה פתוח כשהדפדפן נסגר. חלונות שנסגרו קודם וחלונות פרטיים לא כלולים. אפשר לנסות את Ctrl+Shift+T או את ההיסטוריה.',
+    },
+    {
+      question: 'איפה TabMerger שומר את הכרטיסיות?',
+      answer:
+        'במכשיר שלך, באחסון המקומי של הדפדפן. תוכנית Pro מסנכרנת אותן בין מכשירים עם הצפנה מקצה לקצה. פרטים בשאלות הנפוצות.',
+      link: { text: 'שאלות הנפוצות', href: '/faq' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/chrome-bookmarks-folder.webp', alt: 'מנהל הסימניות של Chrome, כשהתיקייה Tab manager research מסומנת ומציגה שישה דפים שמורים' },
+    { src: '/blog/save-all-open-tabs/edge-bookmarks-folder.webp', alt: 'המועדפים (Favorites) ב-Edge, כשהתיקייה Tab manager research פתוחה ומציגה שישה דפים והכתובות שלהם' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'ההגדרות של Chrome בקטע On startup (כשפותחים את הדפדפן), כשהאפשרות Continue where you left off (אני רוצה להמשיך מהמקום שבו הפסקתי) מסומנת' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'ההגדרות של Edge בקטע Start, home, and new tab page, כשהאפשרות Open tabs from the previous session מסומנת' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'ההגדרות של Firefox בקטע Home and startup (בית והפעלה), כשהאפשרות Open previous windows and tabs (פתיחת חלונות ולשוניות קודמות) מסומנת' },
+    { src: '/blog/save-all-open-tabs/chrome-history.webp', alt: 'דף ההיסטוריה של Chrome עם שישה דפים שבהם ביקרו היום, והלשוניות By date ו-By group' },
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'דף ההיסטוריה של Edge, ובסרגל הצד All, ‏Recently closed ו-Tabs from other devices' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-light.webp', alt: 'הקטע פתוח עכשיו ב-TabMerger עם שני חלונות דפדפן, בכל אחד חמש כרטיסיות, ערכת נושא בהירה' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-dark.webp', alt: 'הקטע פתוח עכשיו ב-TabMerger עם שני חלונות דפדפן, בכל אחד חמש כרטיסיות, ערכת נושא כהה' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-light.webp', alt: 'תפריט הקבוצה ב-TabMerger עם האפשרות מיזוג עם הנוכחיים, שמוסיפה לקבוצה את חלונות הדפדפן הפתוחים, ערכת נושא בהירה' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-dark.webp', alt: 'תפריט הקבוצה ב-TabMerger עם האפשרות מיזוג עם הנוכחיים, שמוסיפה לקבוצה את חלונות הדפדפן הפתוחים, ערכת נושא כהה' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-light.webp', alt: 'הקבוצה Open tabs, Nov 19 (כרטיסיות פתוחות, 19 בנובמבר) עם 2 חלונות ו-10 כרטיסיות, ערכת נושא בהירה' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-dark.webp', alt: 'הקבוצה Open tabs, Nov 19 (כרטיסיות פתוחות, 19 בנובמבר) עם 2 חלונות ו-10 כרטיסיות, ערכת נושא כהה' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-light.webp', alt: 'הקטע נסגרו לאחרונה ב-TabMerger, היום, עם פס שעות ושלוש כרטיסיות שנסגרו, ערכת נושא בהירה' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-dark.webp', alt: 'הקטע נסגרו לאחרונה ב-TabMerger, היום, עם פס שעות ושלוש כרטיסיות שנסגרו, ערכת נושא כהה' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-light.webp', alt: 'חיפוש closed: seat ב-TabMerger שמציג כרטיסייה אחת שנסגרה לאחרונה, ערכת נושא בהירה' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-dark.webp', alt: 'חיפוש closed: seat ב-TabMerger שמציג כרטיסייה אחת שנסגרה לאחרונה, ערכת נושא כהה' },
+    { src: '/blog/save-all-open-tabs/tm-search-light.webp', alt: 'חיפוש lisbon ב-TabMerger עם תוצאות שמתויגות פתוח עכשיו או Open tabs, Nov 19, ערכת נושא בהירה' },
+    { src: '/blog/save-all-open-tabs/tm-search-dark.webp', alt: 'חיפוש lisbon ב-TabMerger עם תוצאות שמתויגות פתוח עכשיו או Open tabs, Nov 19, ערכת נושא כהה' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-light.webp', alt: 'חלון שמירת סשן ב-TabMerger עם השם Before the trip (לפני הטיול), ערכת נושא בהירה' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-dark.webp', alt: 'חלון שמירת סשן ב-TabMerger עם השם Before the trip (לפני הטיול), ערכת נושא כהה' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-light.webp', alt: 'הסשן השמור Before the trip עם שלוש קבוצות (Work, ‏Reading list ו-Open tabs, Nov 19) וכפתור שחזור הסשן, ערכת נושא בהירה' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-dark.webp', alt: 'הסשן השמור Before the trip עם שלוש קבוצות (Work, ‏Reading list ו-Open tabs, Nov 19) וכפתור שחזור הסשן, ערכת נושא כהה' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-light.webp', alt: 'ההגדרות של TabMerger, הלשונית נתונים: שמירה אוטומטית של כרטיסיות פתוחות, גיבויים ולזכור כרטיסיות סגורות, ערכת נושא בהירה' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-dark.webp', alt: 'ההגדרות של TabMerger, הלשונית נתונים: שמירה אוטומטית של כרטיסיות פתוחות, גיבויים ולזכור כרטיסיות סגורות, ערכת נושא כהה' },
+  ],
+  tags: ['tab-management', 'save-tabs', 'restore-closed-tabs', 'bookmarks', 'browser-productivity', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Microsoft Edge help and learning',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/microsoft-edge',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-19',
+    },
+  ],
+  screenshotsCaptured: '2026-11-19',
+  ogImage: { src: '/blog/save-all-open-tabs/og.png', alt: 'איך לשמור את כל הכרטיסיות הפתוחות ולפתוח אותן שוב אחר כך: מדריך של TabMerger ל-Chrome, ל-Edge ול-Firefox, עם קבוצה שמחזיקה שני חלונות שמורים' },
+  toc: [
+    { id: 'quick', label: 'תשובה קצרה' },
+    { id: 'bookmark', label: '1. סימניות לכל הכרטיסיות' },
+    { id: 'startup', label: '2. פתיחה מחדש בהפעלה' },
+    { id: 'closed', label: '3. החזרת כרטיסיות שנסגרו' },
+    { id: 'groups', label: '4. קבוצות כרטיסיות' },
+    { id: 'tabmerger', label: '5. כל החלונות בבת אחת' },
+    { id: 'compare', label: 'במה לבחור' },
+    { id: 'faq', label: 'שאלות נפוצות' },
+  ],
+  browserSections: ['bookmark', 'startup', 'closed'],
+  browserFact: {
+    label: 'הגדרת ההפעלה',
+    values: { chrome: 'chrome://settings/onStartup', edge: 'edge://settings/startHomeNTP', firefox: 'about:preferences#home' },
+  },
+}
+
+<QuickAnswer>
+
+כדי לשמור את כל הכרטיסיות הפתוחות בחלון הנוכחי בתיקיית סימניות חדשה, לוחצים על <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> (או <bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> ב-Mac). זה עובד ב-Chrome, ב-Edge וב-Firefox. כדי שהכרטיסיות ייפתחו מחדש אוטומטית, מפעילים את **אני רוצה להמשיך מהמקום שבו הפסקתי** (<bdi dir="ltr">Continue where you left off</bdi>) ב-Chrome, את **Open tabs from the previous session** ב-Edge או את **פתיחת חלונות ולשוניות קודמות** (<bdi dir="ltr">Open previous windows and tabs</bdi>) ב-Firefox.
+
+</QuickAnswer>
+
+<BrowserSwitcher />
+
+<Section id="bookmark" title="1. סימניות לכל הכרטיסיות בלחיצה אחת">
+
+כל הדפדפנים הגדולים שומרים את הכרטיסיות של חלון כתיקייה של סימניות. התיקייה נשארת עד שמוחקים אותה, ומסתנכרנת אם התחברתם לדפדפן.
+
+<BrowserPanels section="bookmark">
+<BrowserPanel browser="chrome">
+
+1. לוחצים על כרטיסייה כלשהי בחלון שרוצים לשמור.
+2. לוחצים על <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> (או <bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> ב-Mac).
+3. נותנים שם לתיקייה, בוחרים איפה היא תישמר ולוחצים על שמירה.
+4. כדי לפתוח שוב, לוחצים על <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd></bdi>, מוצאים את התיקייה ופותחים את כל הסימניות שבה.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-bookmarks-folder.webp" alt="מנהל הסימניות של Chrome, כשהתיקייה Tab manager research מסומנת ומציגה שישה דפים שמורים" width={1600} height={524} eager boxes={[{ id: 'folder' }]} source="chrome://bookmarks · Chrome 157.0.8103.79">דף ניהול הסימניות (<bdi dir="ltr">Bookmark Manager</bdi>) ב-Chrome אחרי Ctrl+Shift+D: בתיקייה החדשה יש סימנייה לכל כרטיסייה בחלון. צילומי המסך של הדפדפנים במדריך מציגים את הממשק באנגלית.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. לוחצים על כרטיסייה כלשהי בחלון שרוצים לשמור.
+2. לוחצים על <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> (או <bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> ב-Mac). ‏Edge שומר את הכרטיסיות כמועדפים בתיקייה חדשה.
+3. נותנים שם לתיקייה ושומרים.
+4. כדי לפתוח שוב, לוחצים על <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd></bdi> כדי לפתוח את המועדפים, מוצאים את התיקייה ופותחים את כולם.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-bookmarks-folder.webp" alt="המועדפים (Favorites) ב-Edge, כשהתיקייה Tab manager research פתוחה ומציגה שישה דפים והכתובות שלהם" width={1600} height={553} boxes={[{ id: 'folder' }]} source="edge://favorites · Edge 157.0.4341.60">המועדפים ב-Edge אחרי אותו קיצור: הכרטיסיות נשמרו כמועדפים בתיקייה חדשה.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. לוחצים על כרטיסייה כלשהי בחלון שרוצים לשמור.
+2. לוחצים על <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> (או <bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> ב-Mac) כדי להוסיף את כל הכרטיסיות לסימניות.
+3. נותנים שם לתיקייה ולוחצים על שמירה.
+4. כדי לפתוח שוב, לוחצים על <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd></bdi> כדי לפתוח את החלון "ספרייה" (<bdi dir="ltr">Library</bdi>), ופותחים את כל הסימניות שבתיקייה.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox Library (Ctrl+Shift+O) with the new folder selected. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>נשמר **רק החלון הנוכחי**. שלושה חלונות הם שלוש תיקיות. סימניות גם שומרות רק את הכתובת; מיקום הגלילה ומה שהוקלד בטפסים הולכים לאיבוד.</Catch>
+
+</Section>
+
+<Section id="startup" title="2. לגרום לדפדפן לפתוח הכול מחדש בהפעלה">
+
+אם הפעלות מחדש ועדכונים הם מה שמעלים לכם כרטיסיות, אפשר לתת לדפדפן להחזיר את הסשן. צילומי המסך מציגים את הממשק באנגלית; כשהשם בעברית שונה, השם באנגלית מופיע בסוגריים בפעם הראשונה.
+
+<BrowserPanels section="startup">
+<BrowserPanel browser="chrome">
+
+ב-Chrome: **הגדרות ← כשפותחים את הדפדפן ← אני רוצה להמשיך מהמקום שבו הפסקתי** (<bdi dir="ltr">Settings → On startup → Continue where you left off</bdi>). אפשר גם להדביק את `chrome://settings/onStartup` בשורת הכתובת.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="ההגדרות של Chrome בקטע On startup (כשפותחים את הדפדפן), כשהאפשרות Continue where you left off (אני רוצה להמשיך מהמקום שבו הפסקתי) מסומנת" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">ההגדרה On startup (כשפותחים את הדפדפן) ב-Chrome, כשהיא מוגדרת לפתוח מחדש את הסשן האחרון.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+ב-Edge: **הגדרות** ← <bdi dir="ltr">**Start, home, and new tab page → On startup → Open tabs from the previous session**</bdi>. אפשר גם להדביק את `edge://settings/startHomeNTP` בשורת הכתובת.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="ההגדרות של Edge בקטע Start, home, and new tab page, כשהאפשרות Open tabs from the previous session מסומנת" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">ההגדרות Start, home, and new tab page ב-Edge, כשהן מוגדרות לפתוח מחדש את הסשן האחרון.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+ב-Firefox: **הגדרות ← בית והפעלה ← הפעלה ← פתיחת חלונות ולשוניות קודמות** (<bdi dir="ltr">Settings → Home and startup → Startup → Open previous windows and tabs</bdi>). אפשר גם להדביק את `about:preferences#home` בשורת הכתובת.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="ההגדרות של Firefox בקטע Home and startup (בית והפעלה), כשהאפשרות Open previous windows and tabs (פתיחת חלונות ולשוניות קודמות) מסומנת" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">ב-Firefox 159 האפשרות נמצאת תחת Home and startup (בית והפעלה); במדריכים ישנים יותר כתוב General (כללי).</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>משוחזר מה שהיה פתוח כשהדפדפן נסגר בפעם האחרונה. חלון שסגרתם קודם לא נכלל, וחלונות פרטיים לא חוזרים אף פעם.</Catch>
+
+</Section>
+
+<Section id="closed" title="3. להחזיר כרטיסיות שכבר נסגרו">
+
+לוחצים על <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> (<bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi>) כדי לפתוח מחדש את הכרטיסייה או החלון האחרונים שנסגרו; לוחצים שוב כדי להמשיך אחורה. לדברים ישנים יותר, פותחים את ההיסטוריה עם <bdi><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi>.
+
+<BrowserPanels section="closed">
+<BrowserPanel browser="chrome">
+
+ב-Chrome יש גם רשימה של כרטיסיות וחלונות שנסגרו לאחרונה בתפריט ⋮ ← היסטוריה.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-history.webp" alt="דף ההיסטוריה של Chrome עם שישה דפים שבהם ביקרו היום, והלשוניות By date ו-By group" width={1600} height={640} source="chrome://history · Chrome 157.0.8103.79" className="m-0">דף ההיסטוריה של Chrome; בגרסה 157 נוספה התצוגה By group.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+ב-Edge הרשימה "Recently closed" מופיעה ישירות בדף ההיסטוריה.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="דף ההיסטוריה של Edge, ובסרגל הצד All, ‏Recently closed ו-Tabs from other devices" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60" className="m-0">דף ההיסטוריה של Edge, עם הרשימה Recently closed בסרגל הצד.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+ב-Firefox יש רשימה של כרטיסיות וחלונות שנסגרו לאחרונה בתפריט "היסטוריה" (<bdi dir="ltr">History</bdi>), תחת "לשוניות שנסגרו לאחרונה" ו"חלונות שנסגרו לאחרונה" (לוחצים על Alt כדי להציג את שורת התפריטים).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with recently closed tabs open. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="groups" title="4. קבוצות כרטיסיות: טובות לריכוז, מוגבלות לשמירה">
+
+- ב-**Chrome** אפשר לשמור קבוצה ולפתוח אותה שוב, אבל תוספים לא רואים קבוצה שמורה שנסגרה ([tabGroups API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
+- ב-**Firefox** הקבוצות נשארות במכשיר ולא עוברות עם Firefox Sync.
+- ב-**Edge** אין יותר Collections, החל מגרסה 149.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
+
+</Section>
+
+<Section id="tabmerger" title="5. לשמור את כל החלונות בבת אחת עם TabMerger">
+
+כל אחת מהשיטות המובנות מכסה חלון אחד, הפעלה אחת או כרטיסייה סגורה אחת בכל פעם. [TabMerger](/features), התוסף החינמי שלנו ל-Chrome, ל-Edge ול-Firefox, מציג את כל החלונות הפתוחים תחת **פתוח עכשיו** ושומר את כולם בקבוצה אחת.
+
+<ScreenshotThemeToggle />
+
+1. לוחצים על **הוספת קבוצה** ונותנים לה שם, למשל "כרטיסיות פתוחות, 19 בנובמבר" (בצילומי המסך: Open tabs, Nov 19).
+2. פותחים את תפריט ה-**⋯** של הקבוצה ובוחרים **מיזוג עם הנוכחיים**, שמוסיף לקבוצה את חלונות הדפדפן הפתוחים. (האפשרות "החלפה בנוכחיים" מחליפה במקום זה את החלונות של הקבוצה.)
+3. סוגרים את החלונות מתי שרוצים. הקבוצה שומרת את שני החלונות ואת כל עשר הכרטיסיות.
+
+<Carousel label="שמירת כל החלונות בקבוצה אחת" steps={[{ title: 'פתוח עכשיו' }, { title: 'תפריט המיזוג' }, { title: 'הקבוצה השמורה' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-now-open" alt="הקטע פתוח עכשיו ב-TabMerger עם שני חלונות דפדפן, בכל אחד חמש כרטיסיות, ערכת נושא בהירה" darkAlt="הקטע פתוח עכשיו ב-TabMerger עם שני חלונות דפדפן, בכל אחד חמש כרטיסיות, ערכת נושא כהה">פתוח עכשיו משקף את הדפדפן: כל חלון פתוח והכרטיסיות שבו.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merge-menu" alt="תפריט הקבוצה ב-TabMerger עם האפשרות מיזוג עם הנוכחיים, שמוסיפה לקבוצה את חלונות הדפדפן הפתוחים, ערכת נושא בהירה" darkAlt="תפריט הקבוצה ב-TabMerger עם האפשרות מיזוג עם הנוכחיים, שמוסיפה לקבוצה את חלונות הדפדפן הפתוחים, ערכת נושא כהה" boxes={[{ id: 'group-menu-button', label: 'תפריט הקבוצה' }, { id: 'merge-with-current', label: 'מיזוג עם הנוכחיים' }]}>אחרי הוספת קבוצה, פותחים את התפריט של הקבוצה החדשה ובוחרים באפשרות שמעתיקה אליה כל חלון פתוח.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merged-group" alt="הקבוצה Open tabs, Nov 19 (כרטיסיות פתוחות, 19 בנובמבר) עם 2 חלונות ו-10 כרטיסיות, ערכת נושא בהירה" darkAlt="הקבוצה Open tabs, Nov 19 (כרטיסיות פתוחות, 19 בנובמבר) עם 2 חלונות ו-10 כרטיסיות, ערכת נושא כהה">אחרי בחירה במיזוג עם הנוכחיים: שני החלונות שמורים בקבוצה אחת, והם נשארים גם אחרי שנסגרו.</ThemedScreenshot>
+</Carousel>
+
+### מעדיפים מקלדת?
+
+<ComparisonTable
+  head={['קיצור', 'מה נשמר']}
+  keysColumn={0}
+  rows={[
+    ['Ctrl+Shift+P', 'כל שאר הכרטיסיות בחלון'],
+    ['Ctrl+Shift+S', 'הכרטיסייה הנוכחית'],
+    ['Ctrl+Shift+K', 'הכרטיסיות מימין'],
+    ['Ctrl+Shift+U', 'הכרטיסיות משמאל'],
+  ]}
+/>
+
+ב-Mac משתמשים ב-<Kbd>⌘</Kbd>. כל אחד מהם שואל איפה לשמור; **שמירה מהירה (קבוצה חדשה)** יוצרת קבוצה במקום. ב-Firefox הקיצור <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd></bdi> פותח חלון פרטי, אז כדאי לבחור מקש אחר ב-`about:addons`, תחת "ניהול קיצורי דרך להרחבות" (<bdi dir="ltr">Manage Extension Shortcuts</bdi>).
+
+### סגרתם משהו בטעות?
+
+**נסגרו לאחרונה** שומר כל כרטיסייה וכל חלון שסוגרים, לפי יום, עם פס שמראה את השעה. בתוכנית החינמית נשמרים יומיים, ובתוכנית Pro נשמרים 30 יום. <bdi><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> מחפש בכרטיסיות פתוחות, שמורות וסגורות; כדי לחפש רק בכרטיסיות סגורות, מתחילים ב-<bdi>`closed:`</bdi>.
+
+<Carousel label="החזרת כרטיסיות שנסגרו" steps={[{ title: 'נסגרו לאחרונה' }, { title: 'חיפוש closed:' }, { title: 'חיפוש בהכול' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-recently-closed" alt="הקטע נסגרו לאחרונה ב-TabMerger, היום, עם פס שעות ושלוש כרטיסיות שנסגרו, ערכת נושא בהירה" darkAlt="הקטע נסגרו לאחרונה ב-TabMerger, היום, עם פס שעות ושלוש כרטיסיות שנסגרו, ערכת נושא כהה" boxes={[{ id: 'hour-strip' }]}>הכרטיסיות שנסגרו היום, עם השעה שבה נסגרו.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search-closed" alt="חיפוש closed: seat ב-TabMerger שמציג כרטיסייה אחת שנסגרה לאחרונה, ערכת נושא בהירה" darkAlt="חיפוש closed: seat ב-TabMerger שמציג כרטיסייה אחת שנסגרה לאחרונה, ערכת נושא כהה" boxes={[{ id: 'search-input' }]}>לוחצים על Ctrl+K ומתחילים ב-<bdi>`closed:`</bdi> כדי לחפש רק בכרטיסיות סגורות.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search" alt="חיפוש lisbon ב-TabMerger עם תוצאות שמתויגות פתוח עכשיו או Open tabs, Nov 19, ערכת נושא בהירה" darkAlt="חיפוש lisbon ב-TabMerger עם תוצאות שמתויגות פתוח עכשיו או Open tabs, Nov 19, ערכת נושא כהה" boxes={[{ id: 'group-tag-1' }]}>בלי הקידומת, החיפוש עובר על כרטיסיות פתוחות ושמורות, עם תגית של הקבוצה.</ThemedScreenshot>
+</Carousel>
+
+### תמונות מצב ושמירה אוטומטית
+
+**שמירת הסשן הנוכחי** יוצרת תמונת מצב עם שם של הקבוצות השמורות (לא של הכרטיסיות הפתוחות), שאפשר לשחזר יחד. **הגדרות ← נתונים ← שמירה אוטומטית של כרטיסיות פתוחות** שומרת את הכרטיסיות הפתוחות כקבוצה חדשה באופן אוטומטי; בתוכנית החינמית נשמרות 2 האחרונות, והן נספרות במגבלה של 5 קבוצות ו-50 כרטיסיות.
+
+<Carousel label="סשנים ושמירה אוטומטית" steps={[{ title: 'שמירת סשן' }, { title: 'תצוגת הסשן' }, { title: 'הגדרות ← נתונים' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-save-session-dialog" alt="חלון שמירת סשן ב-TabMerger עם השם Before the trip (לפני הטיול), ערכת נושא בהירה" darkAlt="חלון שמירת סשן ב-TabMerger עם השם Before the trip (לפני הטיול), ערכת נושא כהה" boxes={[{ id: 'session-name' }]}>שמירת הסשן הנוכחי מבקשת שם.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-session-view" alt="הסשן השמור Before the trip עם שלוש קבוצות (Work, ‏Reading list ו-Open tabs, Nov 19) וכפתור שחזור הסשן, ערכת נושא בהירה" darkAlt="הסשן השמור Before the trip עם שלוש קבוצות (Work, ‏Reading list ו-Open tabs, Nov 19) וכפתור שחזור הסשן, ערכת נושא כהה" boxes={[{ id: 'restore-session' }]}>אחרי השמירה, פותחים את הסשן: Before the trip, עם שלוש הקבוצות שלו.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-settings-data" alt="ההגדרות של TabMerger, הלשונית נתונים: שמירה אוטומטית של כרטיסיות פתוחות, גיבויים ולזכור כרטיסיות סגורות, ערכת נושא בהירה" darkAlt="ההגדרות של TabMerger, הלשונית נתונים: שמירה אוטומטית של כרטיסיות פתוחות, גיבויים ולזכור כרטיסיות סגורות, ערכת נושא כהה" boxes={[{ id: 'auto-save-toggle' }]}>הגדרות ← נתונים, שם מפעילים את השמירה האוטומטית.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>חינם ל-Chrome, ל-Edge ול-Firefox. אין צורך בחשבון כדי להתחיל.</InstallCta>
+
+</Section>
+
+<Section id="compare" title="באיזו שיטה כדאי להשתמש?">
+
+<ComparisonTable
+  head={['', 'סימניות לכולן', 'שחזור בהפעלה', 'Ctrl+Shift+T, היסטוריה', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="38rem"
+  rows={[
+    ['כל החלונות בבת אחת', 'לא', 'כן, בהפעלה מחדש', 'אחד בכל פעם', 'כן'],
+    ['נשמר אחרי סגירת חלון', 'כן', 'לא', 'בהיסטוריה', 'כן'],
+    ['חיפוש', 'בסימניות', 'אין', 'בהיסטוריה', 'Ctrl+K, כולל סגורות'],
+    ['עלות', 'חינם', 'חינם', 'חינם', 'חינם; Pro לסנכרון'],
+  ]}
+/>
+
+לא משנה במה עוד תבחרו, כדאי להפעיל את הגדרת ההפעלה. חלון יחיד ששווה לשמור אפשר לשמור בסימניות. תוסף מתאים כשעובדים עם כמה חלונות או כשצריך כרטיסייה סגורה כעבור כמה ימים. עוד בנושא ב[דף ההשוואה](/compare).
+
+</Section>
+
+<Section id="faq" title="שאלות נפוצות">
+
+<Faq items={post.faq} />
+
+
+</Section>

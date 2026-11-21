@@ -1,0 +1,320 @@
+export const post = {
+  slug: 'save-all-open-tabs',
+  title: 'सभी खुले टैब कैसे सेव करें और बाद में वापस पाएँ',
+  seoTitle: 'सभी खुले टैब कैसे सेव करें (Chrome, Edge, Firefox)',
+  description:
+    'Chrome, Edge या Firefox में एक शॉर्टकट से सभी खुले टैब सेव करें, रीस्टार्ट के बाद उन्हें अपने-आप खुलवाएँ और बंद किए गए टैब वापस पाएँ।',
+  shareSummary: 'Chrome, Edge और Firefox में एक शॉर्टकट, स्टार्टअप पर रीस्टोर और बंद टैब वापस पाने के तरीके।',
+  dek: 'खुले हुए हर टैब को सहेजकर रखने के पाँच तरीके, और वह एक बात जो हर तरीका चुपचाप छोड़ देता है।',
+  published: '2026-11-19',
+  updated: '2026-11-19',
+  testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D सिर्फ़ मौजूदा विंडो को सेव करता है।', source: '19 नवंबर 2026 को तीनों में टेस्ट किया गया' },
+    { text: 'Ctrl+Shift+T बंद किए गए टैब और विंडो फिर से खोलता है।', source: 'Chrome, Edge और Firefox के सहायता पेज' },
+    {
+      text: 'एक्सटेंशन Chrome के बंद किए गए सेव ग्रुप की सूची नहीं देख सकते।',
+      source: 'chrome.tabGroups दस्तावेज़',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'Edge 149 से Collections हटा दिया गया है।', source: 'Microsoft सहायता' },
+  ],
+  faq: [
+    {
+      question: 'क्या Ctrl+Shift+D सभी विंडो के टैब सेव करता है?',
+      answer: 'नहीं। यह सिर्फ़ मौजूदा विंडो को बुकमार्क करता है। हर विंडो में इसे दोहराएँ, या ऐसा टूल इस्तेमाल करें जो हर विंडो पढ़ सके।',
+    },
+    {
+      question: 'क्या बिना एक्सटेंशन के सभी खुले टैब सेव किए जा सकते हैं?',
+      answer: 'हाँ: Ctrl+Shift+D और स्टार्टअप सेटिंग, दोनों Chrome, Edge और Firefox में पहले से मौजूद हैं।',
+    },
+    {
+      question: 'रीस्टार्ट के बाद मेरे टैब वापस क्यों नहीं आए?',
+      answer:
+        'स्टार्टअप रीस्टोर वही वापस लाता है जो ब्राउज़र बंद होते समय खुला था। पहले बंद की गई विंडो और प्राइवेट विंडो इसमें शामिल नहीं होतीं। Ctrl+Shift+T या हिस्ट्री आज़माएँ।',
+    },
+    {
+      question: 'TabMerger सेव किए गए टैब कहाँ रखता है?',
+      answer:
+        'आपके डिवाइस पर, ब्राउज़र की लोकल स्टोरेज में। Pro इन्हें डिवाइसों के बीच एंड-टू-एंड एन्क्रिप्शन के साथ सिंक करता है। अक्सर पूछे जाने वाले प्रश्न देखें।',
+      link: { text: 'अक्सर पूछे जाने वाले प्रश्न', href: '/faq' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/chrome-bookmarks-folder.webp', alt: 'Chrome का बुकमार्क मैनेजर, Tab manager research फ़ोल्डर चुना हुआ, उसमें सेव किए गए छह पेज' },
+    { src: '/blog/save-all-open-tabs/edge-bookmarks-folder.webp', alt: 'Edge के Favorites, Tab manager research फ़ोल्डर खुला हुआ, छह पेज और उनके पते' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Chrome सेटिंग्स, On startup (शुरुआत करने पर) में Continue where you left off (वहीं से जारी रखें जहां मैंने छोड़ा था) चुना हुआ' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Edge सेटिंग्स, Start, home, and new tab page में Open tabs from the previous session चुना हुआ' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Firefox सेटिंग्स, Home and startup में Open previous windows and tabs पर सही का निशान' },
+    { src: '/blog/save-all-open-tabs/chrome-history.webp', alt: 'Chrome का History पेज, आज खोले गए छह पेज, By date और By group व्यू के साथ' },
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Edge का History पेज, साइडबार में All, Recently closed और Tabs from other devices' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-light.webp', alt: 'TabMerger में Now Open (अभी खुले हुए): पाँच-पाँच टैब वाली दो ब्राउज़र विंडो, लाइट थीम' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-dark.webp', alt: 'TabMerger में Now Open (अभी खुले हुए): पाँच-पाँच टैब वाली दो ब्राउज़र विंडो, डार्क थीम' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-light.webp', alt: 'TabMerger का ग्रुप मेन्यू, जिसमें Merge with current (वर्तमान के साथ विलय करें) आपकी खुली ब्राउज़र विंडो इस ग्रुप में जोड़ता है, लाइट थीम' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-dark.webp', alt: 'TabMerger का ग्रुप मेन्यू, जिसमें Merge with current (वर्तमान के साथ विलय करें) आपकी खुली ब्राउज़र विंडो इस ग्रुप में जोड़ता है, डार्क थीम' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-light.webp', alt: 'Open tabs, Nov 19 ग्रुप, जिसमें 2 विंडो और 10 टैब हैं, लाइट थीम' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-dark.webp', alt: 'Open tabs, Nov 19 ग्रुप, जिसमें 2 विंडो और 10 टैब हैं, डार्क थीम' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-light.webp', alt: 'TabMerger में Recently closed (हाल ही में बंद किए गए), आज, घंटेवार पट्टी और बंद किए गए तीन टैब, लाइट थीम' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-dark.webp', alt: 'TabMerger में Recently closed (हाल ही में बंद किए गए), आज, घंटेवार पट्टी और बंद किए गए तीन टैब, डार्क थीम' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-light.webp', alt: 'TabMerger में closed: seat की खोज, हाल में बंद किया गया एक टैब दिखाती हुई, लाइट थीम' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-dark.webp', alt: 'TabMerger में closed: seat की खोज, हाल में बंद किया गया एक टैब दिखाती हुई, डार्क थीम' },
+    { src: '/blog/save-all-open-tabs/tm-search-light.webp', alt: 'TabMerger में lisbon की खोज: Now Open या Open tabs, Nov 19 टैग वाले नतीजे, लाइट थीम' },
+    { src: '/blog/save-all-open-tabs/tm-search-dark.webp', alt: 'TabMerger में lisbon की खोज: Now Open या Open tabs, Nov 19 टैग वाले नतीजे, डार्क थीम' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-light.webp', alt: 'TabMerger का Save Session (सत्र सहेजें) डायलॉग, नाम Before the trip, लाइट थीम' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-dark.webp', alt: 'TabMerger का Save Session (सत्र सहेजें) डायलॉग, नाम Before the trip, डार्क थीम' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-light.webp', alt: 'सेव किया गया सत्र Before the trip, तीन ग्रुप (Work, Reading list और Open tabs, Nov 19) और Restore session बटन के साथ, लाइट थीम' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-dark.webp', alt: 'सेव किया गया सत्र Before the trip, तीन ग्रुप (Work, Reading list और Open tabs, Nov 19) और Restore session बटन के साथ, डार्क थीम' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-light.webp', alt: 'TabMerger सेटिंग्स, Data टैब: Auto-save open tabs, Backups और Remember closed tabs, लाइट थीम' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-dark.webp', alt: 'TabMerger सेटिंग्स, Data टैब: Auto-save open tabs, Backups और Remember closed tabs, डार्क थीम' },
+  ],
+  tags: ['tab-management', 'save-tabs', 'restore-closed-tabs', 'bookmarks', 'browser-productivity', 'chrome', 'edge', 'firefox'],
+  // Before publishing: check each title against its page, and replace the Microsoft entry with
+  // the exact Edge help article (restore tabs / startup pages).
+  sources: [
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Microsoft Edge help and learning',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/microsoft-edge',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-19',
+    },
+  ],
+  screenshotsCaptured: '2026-11-19',
+  ogImage: { src: '/blog/save-all-open-tabs/og.png', alt: 'सभी खुले टैब कैसे सेव करें और बाद में वापस पाएँ: Chrome, Edge और Firefox के लिए TabMerger गाइड, दो सेव विंडो वाले ग्रुप के साथ' },
+  toc: [
+    { id: 'quick', label: 'छोटा जवाब' },
+    { id: 'bookmark', label: '1. सभी टैब बुकमार्क करें' },
+    { id: 'startup', label: '2. स्टार्टअप पर फिर से खोलें' },
+    { id: 'closed', label: '3. बंद टैब वापस पाएँ' },
+    { id: 'groups', label: '4. टैब ग्रुप' },
+    { id: 'tabmerger', label: '5. सभी विंडो एक साथ' },
+    { id: 'compare', label: 'कौन-सा तरीका चुनें' },
+    { id: 'faq', label: 'अक्सर पूछे जाने वाले प्रश्न' },
+  ],
+  browserSections: ['bookmark', 'startup', 'closed'],
+  browserFact: {
+    label: 'स्टार्टअप सेटिंग',
+    values: { chrome: 'chrome://settings/onStartup', edge: 'edge://settings/startHomeNTP', firefox: 'about:preferences#home' },
+  },
+}
+
+<QuickAnswer>
+
+मौजूदा विंडो के सभी खुले टैब सेव करने के लिए <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> दबाएँ (Mac पर <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>): सारे टैब एक नए बुकमार्क फ़ोल्डर में सेव हो जाते हैं। यह Chrome, Edge और Firefox में काम करता है। टैब को अपने-आप फिर से खुलवाने के लिए **वहीं से जारी रखें जहां मैंने छोड़ा था** (“Continue where you left off”, Chrome), **Open tabs from the previous session** (Edge) या **Open previous windows and tabs** (Firefox) चालू करें।
+
+</QuickAnswer>
+
+<BrowserSwitcher />
+
+<Section id="bookmark" title="1. एक शॉर्टकट से सभी टैब बुकमार्क करें">
+
+हर बड़ा ब्राउज़र किसी विंडो के टैब को बुकमार्क के एक फ़ोल्डर के रूप में सेव कर सकता है। यह फ़ोल्डर तब तक रहता है जब तक आप इसे मिटा न दें, और अगर आप ब्राउज़र में साइन इन हैं तो सिंक भी होता है।
+
+<BrowserPanels section="bookmark">
+<BrowserPanel browser="chrome">
+
+1. जिस विंडो को रखना है, उसके किसी भी टैब पर क्लिक करें।
+2. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> दबाएँ (Mac पर <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>)।
+3. फ़ोल्डर को नाम दें, उसकी जगह चुनें और सेव करें।
+4. बाद में खोलने के लिए <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> दबाएँ, फ़ोल्डर ढूँढें और उसके सारे बुकमार्क खोलें।
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-bookmarks-folder.webp" alt="Chrome का बुकमार्क मैनेजर, Tab manager research फ़ोल्डर चुना हुआ, उसमें सेव किए गए छह पेज" width={1600} height={524} eager boxes={[{ id: 'folder' }]} source="chrome://bookmarks · Chrome 157.0.8103.79">Ctrl+Shift+D के बाद Chrome का बुकमार्क मैनेजर (“Bookmark Manager”): नए फ़ोल्डर में विंडो के हर टैब का एक बुकमार्क है।</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. जिस विंडो को रखना है, उसके किसी भी टैब पर क्लिक करें।
+2. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> दबाएँ (Mac पर <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>)। Edge टैब को एक नए फ़ोल्डर में फ़ेवरिट के रूप में सेव करता है।
+3. फ़ोल्डर को नाम दें और सेव करें।
+4. बाद में खोलने के लिए <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> से “Favorites” खोलें, फ़ोल्डर ढूँढें और सब खोलें।
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-bookmarks-folder.webp" alt="Edge के Favorites, Tab manager research फ़ोल्डर खुला हुआ, छह पेज और उनके पते" width={1600} height={553} boxes={[{ id: 'folder' }]} source="edge://favorites · Edge 157.0.4341.60">उसी शॉर्टकट के बाद Edge के Favorites: टैब एक नए फ़ोल्डर में फ़ेवरिट के रूप में सेव हो गए हैं।</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. जिस विंडो को रखना है, उसके किसी भी टैब पर क्लिक करें।
+2. सभी टैब बुकमार्क करने के लिए <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> दबाएँ (Mac पर <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>)।
+3. फ़ोल्डर को नाम दें और सेव करें।
+4. बाद में खोलने के लिए <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> से “लाइब्रे‌री” (“Library”) विंडो खोलें और फ़ोल्डर के सारे बुकमार्क खोलें।
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox Library (Ctrl+Shift+O) with the new folder selected. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+इस लेख के ब्राउज़र स्क्रीनशॉट अंग्रेज़ी इंटरफ़ेस में हैं। जहाँ हिंदी नाम अलग है, वहाँ पहली बार अंग्रेज़ी नाम कोष्ठक में दिया गया है।
+
+<Catch>यह *सिर्फ़ मौजूदा विंडो* सेव करता है। तीन विंडो मतलब तीन फ़ोल्डर। बुकमार्क सिर्फ़ पता रखते हैं; स्क्रॉल की जगह और फ़ॉर्म में भरी जानकारी चली जाती है।</Catch>
+
+</Section>
+
+<Section id="startup" title="2. ब्राउज़र को स्टार्टअप पर सब कुछ फिर से खोलने दें">
+
+अगर रीस्टार्ट और अपडेट की वजह से आपके टैब खो जाते हैं, तो ब्राउज़र को सेशन वापस लाने दें।
+
+<BrowserPanels section="startup">
+<BrowserPanel browser="chrome">
+
+Chrome में: **सेटिंग → शुरुआत करने पर → वहीं से जारी रखें जहां मैंने छोड़ा था** (“Settings → On startup → Continue where you left off”)। या एड्रेस बार में `chrome://settings/onStartup` पेस्ट करें।
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Chrome सेटिंग्स, On startup (शुरुआत करने पर) में Continue where you left off (वहीं से जारी रखें जहां मैंने छोड़ा था) चुना हुआ" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">Chrome की On startup (शुरुआत करने पर) सेटिंग, पिछला सेशन फिर से खोलने पर सेट।</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge में: **Settings → Start, home, and new tab page → On startup → Open tabs from the previous session**। या एड्रेस बार में `edge://settings/startHomeNTP` पेस्ट करें।
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Edge सेटिंग्स, Start, home, and new tab page में Open tabs from the previous session चुना हुआ" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">Edge की Start, home, and new tab page सेटिंग्स, पिछला सेशन फिर से खोलने पर सेट।</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox में: **सेटिंग → Home and startup → आरंभन → Open previous windows and tabs** (“Settings → Home and startup → Startup → Open previous windows and tabs”)। या एड्रेस बार में `about:preferences#home` पेस्ट करें।
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Firefox सेटिंग्स, Home and startup में Open previous windows and tabs पर सही का निशान" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Firefox 159 में यह विकल्प Home and startup में है; पुरानी गाइड में General (सामान्य) लिखा मिलता है।</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>यह वही वापस लाता है जो ब्राउज़र के आख़िरी बार बंद होते समय खुला था। पहले बंद की गई विंडो इसमें नहीं आती, और प्राइवेट विंडो कभी वापस नहीं आतीं।</Catch>
+
+</Section>
+
+<Section id="closed" title="3. बंद किए गए टैब वापस पाएँ">
+
+आख़िरी बार बंद किया गया टैब या विंडो फिर से खोलने के लिए <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) दबाएँ; और पीछे जाने के लिए फिर से दबाएँ। इससे पुरानी चीज़ों के लिए <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> से हिस्ट्री खोलें।
+
+<BrowserPanels section="closed">
+<BrowserPanel browser="chrome">
+
+Chrome हाल में बंद किए गए टैब और विंडो ⋮ → इतिहास (“History”) में भी दिखाता है।
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-history.webp" alt="Chrome का History पेज, आज खोले गए छह पेज, By date और By group व्यू के साथ" width={1600} height={640} source="chrome://history · Chrome 157.0.8103.79" className="m-0">Chrome का History पेज; वर्शन 157 में By group व्यू जुड़ा है।</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge में “Recently closed” (हाल में बंद) सूची सीधे History पेज पर है।
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Edge का History पेज, साइडबार में All, Recently closed और Tabs from other devices" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60" className="m-0">Edge का History पेज, साइडबार में Recently closed सूची के साथ।</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox हाल में बंद किए गए टैब और विंडो **इतिहास** (“History”) मेन्यू में, **हाल में बंद टैब** और **हाल में बंद विंडो** के तहत दिखाता है (मेन्यू बार दिखाने के लिए Alt दबाएँ)।
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with recently closed tabs open. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="groups" title="4. टैब ग्रुप: फ़ोकस के लिए अच्छे, सेव करने के लिए सीमित">
+
+- **Chrome** किसी ग्रुप को सेव करके फिर से खोल सकता है, लेकिन एक्सटेंशन बंद किया गया सेव ग्रुप नहीं देख सकते ([tabGroups API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups))।
+- **Firefox** के ग्रुप डिवाइस पर ही रहते हैं और Firefox Sync के साथ दूसरे डिवाइस पर नहीं जाते।
+- **Edge** में Edge 149 से Collections नहीं है।
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
+
+</Section>
+
+<Section id="tabmerger" title="5. TabMerger से हर विंडो के सभी खुले टैब एक साथ सेव करें">
+
+ब्राउज़र के अपने तरीके एक बार में एक विंडो, एक रीस्टार्ट या एक बंद टैब ही संभालते हैं। [TabMerger](/features), Chrome, Edge और Firefox के लिए हमारा मुफ़्त एक्सटेंशन, हर खुली विंडो को **अभी खुले हुए** में दिखाता है और सबको एक ग्रुप में सेव करता है।
+
+<ScreenshotThemeToggle />
+
+1. **समूह जोड़ें** पर क्लिक करें और नाम दें, जैसे “खुले टैब, 19 नवंबर”।
+2. ग्रुप का **⋯** मेन्यू खोलें और **वर्तमान के साथ विलय करें** चुनें, जो आपकी खुली ब्राउज़र विंडो जोड़ता है। (*वर्तमान से बदलें* इसके बजाय ग्रुप की विंडो बदल देता है।)
+3. विंडो जब चाहें बंद करें। ग्रुप में दोनों विंडो और सभी दस टैब बने रहते हैं।
+
+<Carousel label="हर विंडो को एक ग्रुप में सेव करना" steps={[{ title: 'अभी खुले हुए' }, { title: 'ग्रुप मेन्यू' }, { title: 'सेव किया गया ग्रुप' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-now-open" alt="TabMerger में Now Open (अभी खुले हुए): पाँच-पाँच टैब वाली दो ब्राउज़र विंडो, लाइट थीम" darkAlt="TabMerger में Now Open (अभी खुले हुए): पाँच-पाँच टैब वाली दो ब्राउज़र विंडो, डार्क थीम">अभी खुले हुए ब्राउज़र जैसा ही दिखता है: हर खुली विंडो और उसके टैब।</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merge-menu" alt="TabMerger का ग्रुप मेन्यू, जिसमें Merge with current (वर्तमान के साथ विलय करें) आपकी खुली ब्राउज़र विंडो इस ग्रुप में जोड़ता है, लाइट थीम" darkAlt="TabMerger का ग्रुप मेन्यू, जिसमें Merge with current (वर्तमान के साथ विलय करें) आपकी खुली ब्राउज़र विंडो इस ग्रुप में जोड़ता है, डार्क थीम" boxes={[{ id: 'group-menu-button', label: 'ग्रुप मेन्यू' }, { id: 'merge-with-current', label: 'वर्तमान के साथ विलय करें' }]}>समूह जोड़ें के बाद नए ग्रुप का मेन्यू खोलें और वह विकल्प चुनें जो हर खुली विंडो को उसमें कॉपी करता है।</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merged-group" alt="Open tabs, Nov 19 ग्रुप, जिसमें 2 विंडो और 10 टैब हैं, लाइट थीम" darkAlt="Open tabs, Nov 19 ग्रुप, जिसमें 2 विंडो और 10 टैब हैं, डार्क थीम">वर्तमान के साथ विलय करें चुनने के बाद: दोनों विंडो एक ग्रुप में सेव हैं, और बंद होने के बाद भी वहीं रहती हैं।</ThemedScreenshot>
+</Carousel>
+
+### कीबोर्ड पसंद है?
+
+<ComparisonTable
+  head={['शॉर्टकट', 'क्या सेव होता है']}
+  keysColumn={0}
+  rows={[
+    ['Ctrl+Shift+P', 'विंडो के बाकी सभी टैब'],
+    ['Ctrl+Shift+S', 'मौजूदा टैब'],
+    ['Ctrl+Shift+K', 'बाईं ओर के टैब'],
+    ['Ctrl+Shift+U', 'दाईं ओर के टैब'],
+  ]}
+/>
+
+Mac पर <Kbd>⌘</Kbd> इस्तेमाल करें। हर शॉर्टकट पूछता है कि कहाँ सेव करना है; **त्वरित सहेज (नया समूह)** तुरंत एक ग्रुप बना देता है। Firefox में <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> प्राइवेट विंडो खोलता है, इसलिए `about:addons` → “एक्सटेंशन शॉर्टकट प्रबंधित करें” (“Manage Extension Shortcuts”) में कोई दूसरी की चुनें।
+
+### गलती से कुछ बंद हो गया?
+
+**हाल ही में बंद किए गए** आपके बंद किए गए हर टैब और विंडो को दिन के हिसाब से रखता है, और एक पट्टी बताती है कि वह किस घंटे बंद हुआ। मुफ़्त प्लान 2 दिन तक रखता है, Pro 30 दिन तक। <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> खुले, सेव और बंद टैब में खोजता है; सिर्फ़ बंद टैब खोजने के लिए `closed:` से शुरू करें।
+
+<Carousel label="बंद टैब वापस पाना" steps={[{ title: 'हाल ही में बंद किए गए' }, { title: 'closed: खोज' }, { title: 'हर जगह खोज' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-recently-closed" alt="TabMerger में Recently closed (हाल ही में बंद किए गए), आज, घंटेवार पट्टी और बंद किए गए तीन टैब, लाइट थीम" darkAlt="TabMerger में Recently closed (हाल ही में बंद किए गए), आज, घंटेवार पट्टी और बंद किए गए तीन टैब, डार्क थीम" boxes={[{ id: 'hour-strip' }]}>आज बंद किए गए टैब, और वे किस घंटे बंद हुए।</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search-closed" alt="TabMerger में closed: seat की खोज, हाल में बंद किया गया एक टैब दिखाती हुई, लाइट थीम" darkAlt="TabMerger में closed: seat की खोज, हाल में बंद किया गया एक टैब दिखाती हुई, डार्क थीम" boxes={[{ id: 'search-input' }]}>Ctrl+K दबाएँ और सिर्फ़ बंद टैब खोजने के लिए `closed:` से शुरू करें।</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search" alt="TabMerger में lisbon की खोज: Now Open या Open tabs, Nov 19 टैग वाले नतीजे, लाइट थीम" darkAlt="TabMerger में lisbon की खोज: Now Open या Open tabs, Nov 19 टैग वाले नतीजे, डार्क थीम" boxes={[{ id: 'group-tag-1' }]}>बिना प्रीफ़िक्स के खोज खुले और सेव टैब में होती है, और हर नतीजे पर ग्रुप का टैग होता है।</ThemedScreenshot>
+</Carousel>
+
+### स्नैपशॉट और अपने-आप सेव
+
+**वर्तमान सत्र सहेजें** आपके सेव किए गए ग्रुप (खुले टैब नहीं) का नाम वाला स्नैपशॉट बनाता है, जिसे आप एक साथ रीस्टोर कर सकते हैं। **सेटिंग्स → डेटा → खुले टैब ऑटो-सेव करें** आपके खुले टैब को अपने-आप एक नए ग्रुप के रूप में सेव करता है; मुफ़्त प्लान सबसे नए 2 रखता है, और वे 5 ग्रुप और 50 टैब की सीमा में गिने जाते हैं।
+
+<Carousel label="सत्र और ऑटो-सेव" steps={[{ title: 'सत्र सहेजें' }, { title: 'सत्र देखें' }, { title: 'सेटिंग्स → डेटा' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-save-session-dialog" alt="TabMerger का Save Session (सत्र सहेजें) डायलॉग, नाम Before the trip, लाइट थीम" darkAlt="TabMerger का Save Session (सत्र सहेजें) डायलॉग, नाम Before the trip, डार्क थीम" boxes={[{ id: 'session-name' }]}>वर्तमान सत्र सहेजें एक नाम माँगता है।</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-session-view" alt="सेव किया गया सत्र Before the trip, तीन ग्रुप (Work, Reading list और Open tabs, Nov 19) और Restore session बटन के साथ, लाइट थीम" darkAlt="सेव किया गया सत्र Before the trip, तीन ग्रुप (Work, Reading list और Open tabs, Nov 19) और Restore session बटन के साथ, डार्क थीम" boxes={[{ id: 'restore-session' }]}>सेव करने के बाद सत्र खोलें: Before the trip (यात्रा से पहले), अपने तीन ग्रुप के साथ।</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-settings-data" alt="TabMerger सेटिंग्स, Data टैब: Auto-save open tabs, Backups और Remember closed tabs, लाइट थीम" darkAlt="TabMerger सेटिंग्स, Data टैब: Auto-save open tabs, Backups और Remember closed tabs, डार्क थीम" boxes={[{ id: 'auto-save-toggle' }]}>सेटिंग्स → डेटा, जहाँ ऑटो-सेव चालू होता है।</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Chrome, Edge और Firefox के लिए मुफ़्त। शुरू करने के लिए अकाउंट की ज़रूरत नहीं।</InstallCta>
+
+</Section>
+
+<Section id="compare" title="कौन-सा तरीका इस्तेमाल करें?">
+
+<ComparisonTable
+  head={['', 'सभी को बुकमार्क', 'स्टार्टअप रीस्टोर', 'Ctrl+Shift+T, हिस्ट्री', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="38rem"
+  rows={[
+    ['सभी विंडो एक साथ', 'नहीं', 'हाँ, रीस्टार्ट पर', 'एक-एक करके', 'हाँ'],
+    ['विंडो बंद करने के बाद भी बचा रहता है', 'हाँ', 'नहीं', 'हिस्ट्री में', 'हाँ'],
+    ['खोज', 'बुकमार्क', 'नहीं', 'हिस्ट्री', 'Ctrl+K, बंद टैब समेत'],
+    ['कीमत', 'मुफ़्त', 'मुफ़्त', 'मुफ़्त', 'मुफ़्त; सिंक के लिए Pro'],
+  ]}
+/>
+
+आप कुछ भी चुनें, स्टार्टअप सेटिंग चालू रखें। रखने लायक किसी एक विंडो को बुकमार्क कर लें। जब आप कई विंडो के साथ काम करते हों या किसी बंद टैब की कई दिन बाद ज़रूरत हो, तब एक्सटेंशन इस्तेमाल करें। ज़्यादा जानकारी हमारे [तुलना पेज](/compare) पर।
+
+</Section>
+
+<Section id="faq" title="अक्सर पूछे जाने वाले प्रश्न">
+
+<Faq items={post.faq} />
+
+
+</Section>
