@@ -98,9 +98,12 @@ export function Carousel({ label, steps, children }: { label: string; steps: rea
 
   return (
     <section aria-roledescription={t('carousel')} aria-label={label} onKeyDown={onKeyDown} className="relative mb-5">
+      {/* `relative`: the track is the containing block of the slides' absolute bits (sr-only
+          labels), so it clips them; otherwise an off-screen slide's label widens the page (by 9px
+          at 390 in RTL, where the off-screen slides sit to the left). */}
       <div
         ref={track}
-        className="flex snap-x snap-mandatory items-start overflow-x-auto overflow-y-hidden overscroll-x-contain transition-[height] duration-200 ease-out motion-reduce:transition-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="relative flex snap-x snap-mandatory items-start overflow-x-auto overflow-y-hidden overscroll-x-contain transition-[height] duration-200 ease-out motion-reduce:transition-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {slides.map((slide, i) => (
           <div

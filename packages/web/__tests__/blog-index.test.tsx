@@ -4,6 +4,8 @@
  * pager (ends, aria-current, "Page X of Y", RTL arrows), the page/1 redirect and out-of-range 404,
  * and each page's title and canonical.
  */
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
 import { FeaturedPost, Pager, PostRow } from '@/components/blog/BlogListing'
@@ -86,14 +88,17 @@ describe('paging', () => {
 })
 
 describe('featured panel and rows', () => {
-  it('the featured post: kicker, title link, cover from images[0], pills, 4 tags + "+N"', () => {
+  it('the featured post: kicker, title link, its 4:3 cover (light/dark pair), pills, 4 tags + "+N"', () => {
     const { container } = render(<FeaturedPost loaded={loaded} />)
     expect(screen.getByText('Latest guide')).toBeInTheDocument()
     expect(screen.getByRole('heading', { level: 2, name: post.title })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: post.title })).toHaveAttribute('href', '/blog/save-all-open-tabs')
-    const cover = container.querySelector('img')!
-    expect(cover.getAttribute('src')).toContain('chrome-bookmarks-folder.webp')
-    expect(cover).toHaveAttribute('alt', '')
+    // The post's cover (not images[0], a wide bookmarks strip), shown whole in a 4:3 frame.
+    const [light, dark] = [...container.querySelectorAll('img')]
+    expect(light.getAttribute('src')).toContain('tm-save-session-dialog-light.webp')
+    expect(dark.getAttribute('src')).toContain('tm-save-session-dialog-dark.webp')
+    expect(light).toHaveAttribute('alt', '')
+    expect(light.closest('div')).toHaveClass('aspect-[4/3]')
     expect(within(screen.getByRole('list', { name: 'Tested on' })).getAllByRole('listitem')).toHaveLength(3)
     const tags = screen.getByRole('list', { name: 'Topics' })
     expect(within(tags).getAllByRole('link')).toHaveLength(5)
@@ -105,6 +110,16 @@ describe('featured panel and rows', () => {
     expect(screen.getByRole('heading', { level: 3, name: post.title })).toBeInTheDocument()
     expect(screen.getByRole('list', { name: 'Tested on' })).toBeInTheDocument()
     expect(within(screen.getByRole('list', { name: 'Topics' })).getAllByRole('link')).toHaveLength(5)
+  })
+
+  it.each([
+    ['featured panel', () => render(<FeaturedPost loaded={loaded} />), 2],
+    ['list row', () => render(<PostRow loaded={loaded} />), 3],
+  ] as const)('the %s: a 1px border, transparent at rest, primary/50 on hover and focus-within, no divider', (_, mount, level) => {
+    mount()
+    const card = screen.getByRole('heading', { level, name: post.title }).closest('article')!
+    expect(card).toHaveClass('border', 'border-transparent', 'hover:border-primary/50', 'focus-within:border-primary/50')
+    expect(card.className).not.toMatch(/\bborder-(t|b)\b|divide-/)
   })
 })
 
@@ -165,9 +180,25 @@ describe('routes and metadata', () => {
     expect(tagMeta.alternates?.canonical).toBe('/blog/tags/chrome/page/2')
   })
 
-  it('keeps "Blog" as the nav label and uses the new H1', () => {
+  it('keeps "Blog" as the nav label; the H1 and lead are the descriptive header copy', () => {
     expect(en.nav.blog).toBe('Blog')
+    expect(en.blog.indexHeading).toBe('Tab management tips and guides')
+    expect(en.blog.indexLead).toBe(
+      'Practical, tested guides to managing browser tabs: save and restore sessions, organize tabs into groups, recover closed tabs and keep tab overload under control.'
+    )
+    // Later pages keep their "<title>, page N" pattern on the shorter name.
     expect(en.blog.indexTitle).toBe('Tab management guides')
+  })
+
+  it('the meta description is the lead, within 160 characters in every locale', () => {
+    expect(en.blog.metaDescription).toBe(en.blog.indexLead.replace('under control.', 'in check.'))
+    const locales = readdirSync('messages').filter((dir) => existsSync(join('messages', dir, 'blog.json')))
+    expect(locales).toHaveLength(18)
+    for (const locale of locales) {
+      const blog = JSON.parse(readFileSync(join('messages', locale, 'blog.json'), 'utf8')) as { metaDescription: string; indexLead: string }
+      expect(blog.metaDescription.length, locale).toBeLessThanOrEqual(160)
+      if (locale !== 'en') expect(blog.metaDescription, locale).toBe(blog.indexLead)
+    }
   })
 })
 

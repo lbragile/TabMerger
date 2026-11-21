@@ -1,8 +1,9 @@
 {
   "metaTitle": "Zarządzanie kartami: Chrome, Edge, Firefox",
-  "metaDescription": "Poradniki o zapisywaniu, porządkowaniu i odzyskiwaniu kart w Chrome, Edge i Firefoksie, sprawdzone krok po kroku.",
+  "metaDescription": "Praktyczne, sprawdzone poradniki o kartach przeglądarki: zapisuj i przywracaj sesje, grupuj karty, odzyskuj zamknięte karty i panuj nad ich nadmiarem.",
   "indexTitle": "Poradniki zarządzania kartami",
-  "indexLead": "Poradniki o zapisywaniu, porządkowaniu i odzyskiwaniu kart przeglądarki w Chrome, Edge i Firefoksie.",
+  "indexHeading": "Porady i poradniki o zarządzaniu kartami",
+  "indexLead": "Praktyczne, sprawdzone poradniki o kartach przeglądarki: zapisuj i przywracaj sesje, grupuj karty, odzyskuj zamknięte karty i panuj nad ich nadmiarem.",
   "pagedTitle": "{title}, strona {page, number}",
   "latestGuide": "Najnowszy poradnik",
   "readGuideCta": "Czytaj poradnik",
@@ -133,5 +134,19 @@
     "edge": "edge",
     "firefox": "firefox"
   },
-  "scheduled": "Zaplanowano na {date}: jeszcze niepubliczne. Do tego dnia ten podgląd jest ukryty na publicznej stronie."
+  "scheduled": "Zaplanowano na {date}: jeszcze niepubliczne. Do tego dnia ten podgląd jest ukryty na publicznej stronie.",
+  "sortLabel": "Sortuj według",
+  "sortNewest": "Najnowsze",
+  "sortOldest": "Najstarsze",
+  "sortHelpful": "Najbardziej przydatne",
+  "sortShortest": "Najkrótsze",
+  "searchLabel": "Szukaj poradników",
+  "searchPlaceholder": "Szukaj poradników po tytule",
+  "sortButton": "<muted>Sortuj:</muted> {sort}",
+  "noResults": "Żaden tytuł nie zawiera jeszcze „{query}”.",
+  "resultsMatch": "{count, plural, =0 {Żaden poradnik nie pasuje do <q>„{query}”</q>} one {# poradnik pasuje do <q>„{query}”</q>} few {# poradniki pasują do <q>„{query}”</q>} many {# poradników pasuje do <q>„{query}”</q>} other {# poradnika pasuje do <q>„{query}”</q>}}",
+  "searchingAll": "Przeszukiwane: {count, plural, one {# poradnik} few {# poradniki} many {# poradników} other {# poradnika}}",
+  "emptyHint": "Spróbuj krótszego słowa albo przejrzyj temat:",
+  "clearSearch": "Wyczyść wyszukiwanie",
+  "helpfulCount": "{count, plural, =0 {Nikt jeszcze nie uznał tego za przydatne} one {# osoba uznała to za przydatne} few {# osoby uznały to za przydatne} many {# osób uznało to za przydatne} other {# osoby uznały to za przydatne}}"
 }

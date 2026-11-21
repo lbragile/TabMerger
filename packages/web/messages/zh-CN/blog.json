@@ -1,8 +1,9 @@
 {
   "metaTitle": "标签页管理指南：Chrome、Edge、Firefox",
-  "metaDescription": "在 Chrome、Edge 和 Firefox 中保存、整理和找回浏览器标签页的指南，逐步测试。",
+  "metaDescription": "经过实测的浏览器标签页管理实用指南：保存和恢复会话、将标签页分组、找回已关闭的标签页，告别标签页过多的困扰。",
   "indexTitle": "标签页管理指南",
-  "indexLead": "在 Chrome、Edge 和 Firefox 中保存、整理和找回浏览器标签页的指南。",
+  "indexHeading": "标签页管理技巧与指南",
+  "indexLead": "经过实测的浏览器标签页管理实用指南：保存和恢复会话、将标签页分组、找回已关闭的标签页，告别标签页过多的困扰。",
   "pagedTitle": "{title}，第 {page, number} 页",
   "latestGuide": "最新指南",
   "readGuideCta": "阅读指南",
@@ -133,5 +134,19 @@
     "edge": "edge",
     "firefox": "firefox"
   },
-  "scheduled": "计划于 {date} 发布：尚未公开。在此之前，此预览不会出现在正式网站上。"
+  "scheduled": "计划于 {date} 发布：尚未公开。在此之前，此预览不会出现在正式网站上。",
+  "sortLabel": "排序方式",
+  "sortNewest": "最新",
+  "sortOldest": "最早",
+  "sortHelpful": "最有帮助",
+  "sortShortest": "阅读最短",
+  "searchLabel": "搜索指南",
+  "searchPlaceholder": "按标题搜索指南",
+  "sortButton": "<muted>排序：</muted>{sort}",
+  "noResults": "还没有标题包含“{query}”的指南。",
+  "resultsMatch": "{count, plural, =0 {没有与<q>“{query}”</q>匹配的指南} other {# 篇指南与<q>“{query}”</q>匹配}}",
+  "searchingAll": "{count, plural, other {正在搜索全部 # 篇指南}}",
+  "emptyHint": "试试更短的词，或按主题浏览：",
+  "clearSearch": "清除搜索",
+  "helpfulCount": "{count, plural, =0 {还没有人觉得有帮助} other {# 人觉得有帮助}}"
 }

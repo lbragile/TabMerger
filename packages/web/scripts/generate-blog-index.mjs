@@ -25,6 +25,9 @@ export const BLOG_CONTENT_DIR = path.resolve(WEB_ROOT, 'content', 'blog')
 /** The generated module (git-ignored). */
 export const BLOG_INDEX_MODULE = path.resolve(WEB_ROOT, 'generated', 'blog.ts')
 
+/** Where a cover's `/blog/...` paths live. */
+export const PUBLIC_DIR = path.resolve(WEB_ROOT, 'public')
+
 /** A post folder name: the URL slug (same rule as the `blog_posts.slug` check in the database). */
 export const BLOG_SLUG_PATTERN = /^[a-z0-9-]{1,80}$/
 
@@ -110,6 +113,113 @@ function imageSources(block) {
   return [...block.slice(start, end).matchAll(/\bsrc:\s*'([^']+)'/g)].map((m) => m[1])
 }
 
+/** The body of a top-level `key: { … }` object in the post block (braces balanced), or ''. */
+function objectField(block, key) {
+  const start = block.search(new RegExp(`\\b${key}:\\s*\\{`))
+  if (start < 0) return ''
+  let depth = 0
+  for (let i = block.indexOf('{', start); i < block.length; i++) {
+    if (block[i] === '{') depth++
+    else if (block[i] === '}' && --depth === 0) return block.slice(block.indexOf('{', start) + 1, i)
+  }
+  return ''
+}
+
+/**
+ * The optional `cover` of a post, as written (checked by `resolveCover`): `{ src, srcDark?, alt?: '' }`.
+ * Covers are shown whole (no crop, no zoom), so they carry no focus or zoom.
+ */
+export function readCover(block) {
+  const body = objectField(block, 'cover')
+  if (!body) return undefined
+  const extra = [...body.matchAll(/\b([A-Za-z]+):/g)].map((m) => m[1]).filter((key) => !['src', 'srcDark', 'alt'].includes(key))
+  return { src: stringField(body, 'src'), srcDark: stringField(body, 'srcDark'), extra }
+}
+
+/** Card images are 4:3 (every TabMerger capture is 1600×1200); a cover may be off by at most 2%. */
+export const COVER_RATIO = 4 / 3
+export const COVER_RATIO_TOLERANCE = 0.02
+const IMAGE_PATH = /^\/blog\/[a-z0-9-]+\/[a-z0-9/-]+\.(webp|png|jpg)$/
+
+/** Whether a width and height are within 2% of 4:3. */
+export function isCoverRatio(width, height) {
+  return width > 0 && height > 0 && Math.abs(width / height / COVER_RATIO - 1) <= COVER_RATIO_TOLERANCE
+}
+
+/** An image file's pixel size from its header (WebP, PNG or JPEG), or undefined. */
+export function imageSize(file) {
+  const b = fs.readFileSync(file)
+  if (b.length >= 24 && b.readUInt32BE(0) === 0x89504e47) return { width: b.readUInt32BE(16), height: b.readUInt32BE(20) }
+  if (b.length >= 30 && b.toString('ascii', 0, 4) === 'RIFF' && b.toString('ascii', 8, 12) === 'WEBP') {
+    const chunk = b.toString('ascii', 12, 16)
+    if (chunk === 'VP8X') return { width: 1 + b.readUIntLE(24, 3), height: 1 + b.readUIntLE(27, 3) }
+    if (chunk === 'VP8L') {
+      const bits = b.readUInt32LE(21)
+      return { width: (bits & 0x3fff) + 1, height: ((bits >>> 14) & 0x3fff) + 1 }
+    }
+    if (chunk === 'VP8 ') return { width: b.readUInt16LE(26) & 0x3fff, height: b.readUInt16LE(28) & 0x3fff }
+  }
+  if (b[0] === 0xff && b[1] === 0xd8) {
+    for (let i = 2; i + 9 < b.length; ) {
+      if (b[i] !== 0xff) {
+        i++
+        continue
+      }
+      const marker = b[i + 1]
+      if (marker >= 0xc0 && marker <= 0xcf && ![0xc4, 0xc8, 0xcc].includes(marker)) {
+        return { width: b.readUInt16BE(i + 7), height: b.readUInt16BE(i + 5) }
+      }
+      i += 2 + b.readUInt16BE(i + 2)
+    }
+  }
+  return undefined
+}
+
+/** The `-dark` partner of a `-light` capture, when that file exists. */
+function darkSibling(src, exists) {
+  const dark = src.replace(/-light(\.[a-z]+)$/, '-dark$1')
+  return dark !== src && exists(dark) ? dark : undefined
+}
+
+/**
+ * What the blog index card shows for a post, shown whole in a 4:3 frame: its `cover` (checked:
+ * files under public/, each within 2% of 4:3), else the first `images` entry that is 4:3, else
+ * nothing (the card shows the TabMerger mark). A `-light` image with a `-dark` file beside it gets
+ * that as its dark-theme version, like the post's ThemedScreenshot pairs. A wide browser strip is
+ * never used. Throws on a bad cover, failing the build.
+ */
+export function resolveCover(where, { cover, images }, publicDir = PUBLIC_DIR) {
+  const file = (src) => path.join(publicDir, ...src.split('/').filter(Boolean))
+  const exists = (src) => fs.existsSync(file(src))
+  const isFourThree = (src) => {
+    const size = imageSize(file(src))
+    return Boolean(size) && isCoverRatio(size.width, size.height)
+  }
+  if (!cover) {
+    const src = images.find((image) => IMAGE_PATH.test(image) && exists(image) && isFourThree(image))
+    if (!src) return undefined
+    const srcDark = darkSibling(src, exists)
+    return { src, ...(srcDark && isFourThree(srcDark) ? { srcDark } : {}) }
+  }
+  const fail = (message) => {
+    throw new Error(`generate-blog-index: ${where} cover ${message}`)
+  }
+  if (cover.extra?.length) fail(`has unknown field(s) ${cover.extra.join(', ')}: a cover is { src, srcDark?, alt?: '' }, shown whole`)
+  for (const field of ['src', 'srcDark']) {
+    const src = cover[field]
+    if (src === undefined && field === 'srcDark') continue
+    if (typeof src !== 'string' || !IMAGE_PATH.test(src)) fail(`${field} must be a /blog/<slug>/<name>.webp|png|jpg path`)
+    if (!exists(src)) fail(`${field} "${src}" is not a file under public/`)
+    const size = imageSize(file(src))
+    if (!size) fail(`${field} "${src}" has no readable image size`)
+    if (!isCoverRatio(size.width, size.height)) {
+      fail(`${field} "${src}" is ${size.width}×${size.height}; covers are 4:3 (within 2%), e.g. a 1600×1200 TabMerger capture`)
+    }
+  }
+  const srcDark = cover.srcDark ?? darkSibling(cover.src, exists)
+  return { src: cover.src, ...(srcDark && isFourThree(srcDark) ? { srcDark } : {}) }
+}
+
 /**
  * The few `post` fields that sync code needs without loading the MDX (the sitemap's image list,
  * llms.txt's title and summary), read from the source text. lib/blog/posts.ts parses the real
@@ -127,6 +237,7 @@ export function readPostSummary(source) {
     published: stringField(block, 'published') ?? '',
     images: imageSources(block),
     tags,
+    cover: readCover(block),
   }
 }
 
@@ -173,15 +284,15 @@ export function includePlaceholders(env = process.env) {
 
 /**
  * @param {string} [dir]
- * @param {{ placeholders?: boolean }} [options]
+ * @param {{ placeholders?: boolean, publicDir?: string }} [options]
  * @returns {Record<string, Record<string, any>>}
  */
-export function scanBlogContent(dir = BLOG_CONTENT_DIR, { placeholders = includePlaceholders() } = {}) {
+export function scanBlogContent(dir = BLOG_CONTENT_DIR, { placeholders = includePlaceholders(), publicDir = PUBLIC_DIR } = {}) {
   /** @type {Record<string, Record<string, any>>} */
   const posts = {}
   if (!fs.existsSync(dir)) return posts
   if (placeholders && fs.existsSync(path.join(dir, PLACEHOLDERS_DIR))) {
-    for (const [slug, locales] of Object.entries(scanBlogContent(path.join(dir, PLACEHOLDERS_DIR), { placeholders: false }))) {
+    for (const [slug, locales] of Object.entries(scanBlogContent(path.join(dir, PLACEHOLDERS_DIR), { placeholders: false, publicDir }))) {
       for (const entry of Object.values(locales)) {
         entry.placeholder = true
         entry.file = `${PLACEHOLDERS_DIR}/${slug}/${entry.file}`
@@ -203,6 +314,11 @@ export function scanBlogContent(dir = BLOG_CONTENT_DIR, { placeholders = include
     }
     if (!locales.en) {
       throw new Error(`generate-blog-index: content/blog/${entry.name}/ has no en.mdx (English is written first)`)
+    }
+    // A translation without its own cover uses the English one.
+    const englishCover = locales.en.cover
+    for (const summary of Object.values(locales)) {
+      summary.cover = resolveCover(`content/blog/${entry.name}/${summary.file}`, { cover: summary.cover ?? englishCover, images: summary.images }, publicDir)
     }
     Object.defineProperty(locales, BOXES, { value: readBoxes(dir, entry.name), enumerable: false })
     if (posts[entry.name]) throw new Error(`generate-blog-index: "${entry.name}" is both a post and a placeholder`)
@@ -228,6 +344,8 @@ export function renderBlogIndexModule(posts) {
     '  tags: readonly string[]',
     '  /** A shorter title for the previous/next links (`post.navTitle`), if the post has one. */',
     '  navTitle?: string',
+    '  /** The index card image, shown whole at 4:3: `post.cover`, else the first 4:3 `images` entry (`resolveCover`). */',
+    '  cover?: { src: string; srcDark?: string }',
     '  /** A dev-only placeholder (content/blog/_placeholders): `next dev` only, never indexed or listed. */',
     '  placeholder?: boolean',
     '  load: () => Promise<unknown>',
@@ -238,7 +356,7 @@ export function renderBlogIndexModule(posts) {
   ]
   for (const [slug, locales] of Object.entries(posts)) {
     lines.push(`  ${JSON.stringify(slug)}: {`)
-    for (const [locale, { file, words, title, description, published, images, tags, navTitle, placeholder }] of Object.entries(locales)) {
+    for (const [locale, { file, words, title, description, published, images, tags, navTitle, cover, placeholder }] of Object.entries(locales)) {
       lines.push(
         `    ${JSON.stringify(locale)}: {`,
         `      words: ${words},`,
@@ -248,6 +366,7 @@ export function renderBlogIndexModule(posts) {
         `      images: ${JSON.stringify(images)},`,
         `      tags: ${JSON.stringify(tags)},`,
         ...(navTitle ? [`      navTitle: ${JSON.stringify(navTitle)},`] : []),
+        ...(cover ? [`      cover: ${JSON.stringify(cover)},`] : []),
         ...(placeholder ? ['      placeholder: true,'] : []),
         `      load: () => import(${JSON.stringify(`@/content/blog/${file.includes('/') ? file : `${slug}/${file}`}`)}),`,
         '    },'

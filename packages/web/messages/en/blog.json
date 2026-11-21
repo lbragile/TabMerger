@@ -1,8 +1,9 @@
 {
   "metaTitle": "Tab management guides for Chrome, Edge, Firefox",
-  "metaDescription": "Guides to saving, organizing and getting back browser tabs in Chrome, Edge and Firefox, tested step by step.",
+  "metaDescription": "Practical, tested guides to managing browser tabs: save and restore sessions, organize tabs into groups, recover closed tabs and keep tab overload in check.",
   "indexTitle": "Tab management guides",
-  "indexLead": "Guides to saving, organizing and getting back your browser tabs in Chrome, Edge and Firefox.",
+  "indexHeading": "Tab management tips and guides",
+  "indexLead": "Practical, tested guides to managing browser tabs: save and restore sessions, organize tabs into groups, recover closed tabs and keep tab overload under control.",
   "pagedTitle": "{title}, page {page, number}",
   "latestGuide": "Latest guide",
   "readGuideCta": "Read the guide",
@@ -133,5 +134,19 @@
     "edge": "edge",
     "firefox": "firefox"
   },
-  "scheduled": "Scheduled for {date}: not public yet. This preview is hidden on the live site until then."
+  "scheduled": "Scheduled for {date}: not public yet. This preview is hidden on the live site until then.",
+  "sortLabel": "Sort by",
+  "sortNewest": "Newest",
+  "sortOldest": "Oldest",
+  "sortHelpful": "Most helpful",
+  "sortShortest": "Shortest read",
+  "searchLabel": "Search guides",
+  "searchPlaceholder": "Search guides by title",
+  "sortButton": "<muted>Sort:</muted> {sort}",
+  "noResults": "Nothing with “{query}” in the title yet.",
+  "resultsMatch": "{count, plural, =0 {No guides match <q>“{query}”</q>} one {# guide matches <q>“{query}”</q>} other {# guides match <q>“{query}”</q>}}",
+  "searchingAll": "Searching {count, plural, one {# guide} other {all # guides}}",
+  "emptyHint": "Try a shorter word, or browse a topic:",
+  "clearSearch": "Clear search",
+  "helpfulCount": "{count, plural, =0 {No one has marked this helpful yet} one {# person found this helpful} other {# people found this helpful}}"
 }

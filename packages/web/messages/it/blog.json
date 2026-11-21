@@ -1,8 +1,9 @@
 {
   "metaTitle": "Gestione delle schede in Chrome, Edge, Firefox",
-  "metaDescription": "Guide per salvare, organizzare e recuperare le schede del browser in Chrome, Edge e Firefox, testate passo dopo passo.",
+  "metaDescription": "Guide pratiche e testate per gestire le schede: salva e ripristina le sessioni, raggruppa le schede, recupera quelle chiuse e tieni a bada il sovraccarico.",
   "indexTitle": "Guide alla gestione delle schede",
-  "indexLead": "Guide per salvare, organizzare e recuperare le schede del browser in Chrome, Edge e Firefox.",
+  "indexHeading": "Consigli e guide per gestire le schede",
+  "indexLead": "Guide pratiche e testate per gestire le schede: salva e ripristina le sessioni, raggruppa le schede, recupera quelle chiuse e tieni a bada il sovraccarico.",
   "pagedTitle": "{title}, pagina {page, number}",
   "latestGuide": "Guida più recente",
   "readGuideCta": "Leggi la guida",
@@ -133,5 +134,19 @@
     "edge": "edge",
     "firefox": "firefox"
   },
-  "scheduled": "Programmato per il {date}: non ancora pubblico. Questa anteprima resta nascosta sul sito pubblico fino ad allora."
+  "scheduled": "Programmato per il {date}: non ancora pubblico. Questa anteprima resta nascosta sul sito pubblico fino ad allora.",
+  "sortLabel": "Ordina per",
+  "sortNewest": "Più recenti",
+  "sortOldest": "Meno recenti",
+  "sortHelpful": "Più utili",
+  "sortShortest": "Lettura più breve",
+  "searchLabel": "Cerca nelle guide",
+  "searchPlaceholder": "Cerca guide per titolo",
+  "sortButton": "<muted>Ordina:</muted> {sort}",
+  "noResults": "Ancora nessun titolo contiene «{query}».",
+  "resultsMatch": "{count, plural, =0 {Nessuna guida corrisponde a <q>«{query}»</q>} one {# guida corrisponde a <q>«{query}»</q>} other {# guide corrispondono a <q>«{query}»</q>}}",
+  "searchingAll": "Ricerca in {count, plural, one {# guida} other {tutte le # guide}}",
+  "emptyHint": "Prova una parola più corta o sfoglia un argomento:",
+  "clearSearch": "Cancella ricerca",
+  "helpfulCount": "{count, plural, =0 {Nessuno l’ha ancora trovato utile} one {# persona l’ha trovato utile} other {# persone l’hanno trovato utile}}"
 }

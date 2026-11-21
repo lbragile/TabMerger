@@ -1,8 +1,9 @@
 {
   "metaTitle": "Manajemen tab di Chrome, Edge, Firefox",
-  "metaDescription": "Panduan menyimpan, mengatur, dan mengembalikan tab browser di Chrome, Edge, dan Firefox, diuji langkah demi langkah.",
+  "metaDescription": "Panduan praktis yang sudah diuji untuk mengelola tab browser: simpan dan pulihkan sesi, kelompokkan tab, buka lagi tab yang tertutup, atasi tab yang menumpuk.",
   "indexTitle": "Panduan manajemen tab",
-  "indexLead": "Panduan menyimpan, mengatur, dan mengembalikan tab browser di Chrome, Edge, dan Firefox.",
+  "indexHeading": "Tips dan panduan mengelola tab",
+  "indexLead": "Panduan praktis yang sudah diuji untuk mengelola tab browser: simpan dan pulihkan sesi, kelompokkan tab, buka lagi tab yang tertutup, atasi tab yang menumpuk.",
   "pagedTitle": "{title}, halaman {page, number}",
   "latestGuide": "Panduan terbaru",
   "readGuideCta": "Baca panduan",
@@ -133,5 +134,19 @@
     "edge": "edge",
     "firefox": "firefox"
   },
-  "scheduled": "Dijadwalkan untuk {date}: belum publik. Pratinjau ini tersembunyi di situs publik sampai tanggal itu."
+  "scheduled": "Dijadwalkan untuk {date}: belum publik. Pratinjau ini tersembunyi di situs publik sampai tanggal itu.",
+  "sortLabel": "Urutkan",
+  "sortNewest": "Terbaru",
+  "sortOldest": "Terlama",
+  "sortHelpful": "Paling membantu",
+  "sortShortest": "Bacaan terpendek",
+  "searchLabel": "Cari panduan",
+  "searchPlaceholder": "Cari panduan berdasarkan judul",
+  "sortButton": "<muted>Urutan:</muted> {sort}",
+  "noResults": "Belum ada judul yang memuat “{query}”.",
+  "resultsMatch": "{count, plural, =0 {Tidak ada panduan yang cocok dengan <q>“{query}”</q>} other {# panduan cocok dengan <q>“{query}”</q>}}",
+  "searchingAll": "Mencari di {count, plural, other {semua # panduan}}",
+  "emptyHint": "Coba kata yang lebih pendek, atau jelajahi topik:",
+  "clearSearch": "Hapus pencarian",
+  "helpfulCount": "{count, plural, =0 {Belum ada yang menandai ini membantu} other {# orang merasa ini membantu}}"
 }

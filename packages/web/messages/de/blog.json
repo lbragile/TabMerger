@@ -1,8 +1,9 @@
 {
   "metaTitle": "Tab-Verwaltung: Chrome, Edge, Firefox",
-  "metaDescription": "Anleitungen zum Speichern, Ordnen und Wiederherstellen von Browser-Tabs in Chrome, Edge und Firefox, Schritt für Schritt getestet.",
+  "metaDescription": "Erprobte Anleitungen für Browser-Tabs: Sitzungen speichern und wiederherstellen, Tabs gruppieren, geschlossene Tabs zurückholen und die Tab-Flut bändigen.",
   "indexTitle": "Anleitungen zur Tab-Verwaltung",
-  "indexLead": "Anleitungen zum Speichern, Ordnen und Wiederherstellen deiner Browser-Tabs in Chrome, Edge und Firefox.",
+  "indexHeading": "Tipps und Anleitungen zur Tab-Verwaltung",
+  "indexLead": "Erprobte Anleitungen für Browser-Tabs: Sitzungen speichern und wiederherstellen, Tabs gruppieren, geschlossene Tabs zurückholen und die Tab-Flut bändigen.",
   "pagedTitle": "{title}, Seite {page, number}",
   "latestGuide": "Neueste Anleitung",
   "readGuideCta": "Zur Anleitung",
@@ -133,5 +134,19 @@
     "edge": "edge",
     "firefox": "firefox"
   },
-  "scheduled": "Geplant für {date}: noch nicht öffentlich. Diese Vorschau ist auf der Live-Seite bis dahin verborgen."
+  "scheduled": "Geplant für {date}: noch nicht öffentlich. Diese Vorschau ist auf der Live-Seite bis dahin verborgen.",
+  "sortLabel": "Sortieren nach",
+  "sortNewest": "Neueste",
+  "sortOldest": "Älteste",
+  "sortHelpful": "Am hilfreichsten",
+  "sortShortest": "Kürzeste Lesezeit",
+  "searchLabel": "Anleitungen durchsuchen",
+  "searchPlaceholder": "Anleitungen nach Titel durchsuchen",
+  "sortButton": "<muted>Sortierung:</muted> {sort}",
+  "noResults": "Noch nichts mit „{query}“ im Titel.",
+  "resultsMatch": "{count, plural, =0 {Keine Anleitung passt zu <q>„{query}“</q>} one {# Anleitung passt zu <q>„{query}“</q>} other {# Anleitungen passen zu <q>„{query}“</q>}}",
+  "searchingAll": "Suche in {count, plural, one {# Anleitung} other {allen # Anleitungen}}",
+  "emptyHint": "Versuch ein kürzeres Wort oder stöbere in einem Thema:",
+  "clearSearch": "Suche löschen",
+  "helpfulCount": "{count, plural, =0 {Noch niemand fand das hilfreich} one {# Person fand das hilfreich} other {# Personen fanden das hilfreich}}"
 }

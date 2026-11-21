@@ -23,11 +23,76 @@ test.describe('Blog', () => {
 
   test('the index: descriptive H1, topic chips, featured guide and the list', async ({ page }) => {
     await page.goto('/blog')
-    await expect(page.getByRole('heading', { level: 1, name: 'Tab management guides' })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'Tab management tips and guides' })).toBeVisible()
     await expect(page.getByRole('navigation', { name: 'Topics' }).getByRole('link', { name: 'All posts' })).toHaveAttribute('aria-current', 'page')
     await expect(page.getByText('Latest guide')).toBeVisible()
     await expect(page.getByRole('heading', { level: 2, name: 'More guides' })).toBeVisible()
     await expect(page).toHaveTitle(/^Tab management guides for Chrome, Edge, Firefox \| TabMerger$/)
+  })
+
+  test('search: "/" focuses the field, typing narrows the list with highlights, Clear search restores it', async ({ page }) => {
+    await page.goto('/blog')
+    const search = page.getByRole('searchbox', { name: 'Search guides' })
+    await expect(search).toBeVisible()
+    const hint = page.getByRole('search').locator('kbd')
+    await expect(hint).toBeVisible()
+    // The field is in the server HTML; "/" works once the page has hydrated, so retry until then.
+    await expect(async () => {
+      await page.locator('body').click({ position: { x: 2, y: 2 } })
+      await page.keyboard.press('/')
+      await expect(search).toBeFocused({ timeout: 500 })
+    }).toPass()
+    await expect(search).toHaveValue('')
+    await expect(hint).toHaveCount(0)
+    await page.keyboard.type('save')
+    await expect(page).toHaveURL(/\/blog\?q=save$/)
+    const heading = page.locator('#more-guides')
+    await expect(heading).toHaveText(/^\d+ guides? match(es)? “save”$/)
+    await expect(page.getByText('Latest guide')).toHaveCount(0)
+    const titles = page.locator('section[aria-labelledby="more-guides"] article h3')
+    const count = await titles.count()
+    expect(count).toBeGreaterThan(0)
+    for (const title of await titles.allTextContents()) expect(title.toLowerCase()).toContain('save')
+    await expect(titles.first().locator('mark')).toHaveText(/save/i)
+
+    await search.fill('zzzz-no-such-guide')
+    await expect(heading).toHaveText('No guides match “zzzz-no-such-guide”')
+    await expect(page.getByText('Try a shorter word, or browse a topic:')).toBeVisible()
+    await page.getByRole('button', { name: 'Clear search' }).last().click()
+    await expect(page).toHaveURL(/\/blog$/)
+    await expect(search).toHaveValue('')
+    await expect(page.getByText('Latest guide')).toBeVisible()
+    await expect(heading).toHaveText(/^More guides\s*\d+$/)
+  })
+
+  test('sort menu: Oldest flips the order (keyboard), Escape closes it', async ({ page }) => {
+    await page.goto('/blog')
+    const sort = page.getByRole('button', { name: 'Sort: Newest' })
+    const listbox = page.getByRole('listbox', { name: 'Sort by' })
+    // Retry until hydrated (before that the button is inert server HTML).
+    await expect(async () => {
+      await sort.focus()
+      await page.keyboard.press('ArrowDown')
+      await expect(listbox).toBeFocused({ timeout: 500 })
+    }).toPass()
+    await page.keyboard.press('Escape')
+    await expect(listbox).toHaveCount(0)
+    await expect(sort).toBeFocused()
+
+    await page.keyboard.press('Enter')
+    await page.keyboard.press('ArrowDown')
+    await page.keyboard.press('Enter')
+    await expect(page).toHaveURL(/\/blog\?sort=oldest$/)
+    await expect(page.getByRole('button', { name: 'Sort: Oldest' })).toBeFocused()
+    // Publication dates, oldest first (a revised card shows its update date instead: left out).
+    const dates = await page
+      .locator('section[aria-labelledby="more-guides"] article')
+      .evaluateAll((cards) =>
+        cards.filter((card) => !/Updated/.test(card.textContent ?? '')).map((card) => card.querySelector('time')?.getAttribute('datetime') ?? '')
+      )
+    expect(dates.length).toBeGreaterThan(0)
+    expect(dates).toEqual([...dates].sort())
+    await expect(page.getByText('Latest guide')).toHaveCount(0)
   })
 
   test('/blog/page/1 redirects to /blog, and a page past the end is a 404', async ({ page }) => {
@@ -98,9 +163,20 @@ test.describe('Blog', () => {
     await carousel.scrollIntoViewIfNeeded()
     const image = carousel.locator('[data-index="0"] img').first()
     await expect(image).toBeVisible()
+    // Measure only once the slide image has loaded and decoded: until then it has no height.
+    await image.evaluate(async (img: HTMLImageElement) => {
+      if (!img.complete) await new Promise((done) => img.addEventListener('load', done, { once: true }))
+      await img.decode()
+    })
+    await expect.poll(() => image.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true)
     const next = carousel.getByRole('button', { name: /^Next slide/ })
-    const [img, arrow] = await Promise.all([image.boundingBox(), next.boundingBox()])
-    expect(Math.abs(arrow!.y + arrow!.height / 2 - (img!.y + img!.height / 2))).toBeLessThanOrEqual(2)
+    // The arrow layer follows the image through a ResizeObserver, a frame after the image lays out.
+    const offset = async () => {
+      const [img, arrow] = await Promise.all([image.boundingBox(), next.boundingBox()])
+      return Math.abs(arrow!.y + arrow!.height / 2 - (img!.y + img!.height / 2))
+    }
+    await expect.poll(offset).toBeLessThanOrEqual(2)
+    const img = await image.boundingBox()
     const dots = await carousel.locator('[data-carousel-dots]').boundingBox()
     expect(dots!.y).toBeGreaterThanOrEqual(img!.y + img!.height - 1)
     await next.click()
@@ -120,13 +196,20 @@ test.describe('Blog', () => {
     expect(copied).toContain(`/blog/save-all-open-tabs`)
   })
 
-  test('the Hebrew post has no horizontal overflow at 390', async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 800 })
-    await page.goto(`/he${POST}`)
-    await expect(page.locator('html')).toHaveAttribute('dir', 'rtl')
-    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
-    expect(overflow).toBeLessThanOrEqual(0)
-  })
+  for (const locale of ['he', 'ar', 'fa']) {
+    // Regression: off-screen carousel slides (to the left in RTL) once widened the page by 9px.
+    test(`the ${locale} post has no horizontal overflow at 390`, async ({ page }) => {
+      await page.setViewportSize({ width: 390, height: 800 })
+      await page.goto(`/${locale}${POST}`)
+      await expect(page.locator('html')).toHaveAttribute('dir', 'rtl')
+      await page.waitForLoadState('networkidle')
+      const { scrollWidth, clientWidth } = await page.evaluate(() => ({
+        scrollWidth: document.documentElement.scrollWidth,
+        clientWidth: document.documentElement.clientWidth,
+      }))
+      expect(scrollWidth).toBeLessThanOrEqual(clientWidth)
+    })
+  }
 })
 
 test.describe('/download', () => {

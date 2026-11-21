@@ -31,7 +31,7 @@ const PAGES: ReadonlyArray<readonly [path: string, title: string, about: string]
   ['/privacy', 'Privacy', 'What data TabMerger handles and how'],
   ['/terms', 'Terms', 'Terms of service'],
   ['/contact', 'Contact', 'How to reach the maintainer'],
-  [BLOG_PATH, 'Tab management guides', 'Tested guides to saving, organizing and getting back browser tabs in Chrome, Edge and Firefox'],
+  [BLOG_PATH, 'Tab management tips and guides', 'Practical, tested guides to managing browser tabs: save and restore sessions, organize tabs into groups, recover closed tabs and keep tab overload in check'],
 ]
 
 /** Every live blog post's English version, with its title and summary from the post file. */

@@ -1,8 +1,9 @@
 {
   "metaTitle": "Gestion des onglets : Chrome, Edge, Firefox",
-  "metaDescription": "Des guides pour enregistrer, organiser et retrouver les onglets du navigateur dans Chrome, Edge et Firefox, testés étape par étape.",
+  "metaDescription": "Guides pratiques et testés pour gérer vos onglets : enregistrez et restaurez vos sessions, regroupez-les, rouvrez les onglets fermés et évitez la surcharge.",
   "indexTitle": "Guides de gestion des onglets",
-  "indexLead": "Des guides pour enregistrer, organiser et retrouver les onglets de votre navigateur dans Chrome, Edge et Firefox.",
+  "indexHeading": "Astuces et guides pour gérer vos onglets",
+  "indexLead": "Guides pratiques et testés pour gérer vos onglets : enregistrez et restaurez vos sessions, regroupez-les, rouvrez les onglets fermés et évitez la surcharge.",
   "pagedTitle": "{title}, page {page, number}",
   "latestGuide": "Dernier guide",
   "readGuideCta": "Lire le guide",
@@ -133,5 +134,19 @@
     "edge": "edge",
     "firefox": "firefox"
   },
-  "scheduled": "Prévu pour le {date} : pas encore public. Cet aperçu reste masqué sur le site public jusque-là."
+  "scheduled": "Prévu pour le {date} : pas encore public. Cet aperçu reste masqué sur le site public jusque-là.",
+  "sortLabel": "Trier par",
+  "sortNewest": "Plus récents",
+  "sortOldest": "Plus anciens",
+  "sortHelpful": "Plus utiles",
+  "sortShortest": "Lecture la plus courte",
+  "searchLabel": "Rechercher dans les guides",
+  "searchPlaceholder": "Rechercher un guide par titre",
+  "sortButton": "<muted>Tri :</muted> {sort}",
+  "noResults": "Aucun titre ne contient « {query} » pour l’instant.",
+  "resultsMatch": "{count, plural, =0 {Aucun guide ne correspond à <q>« {query} »</q>} one {# guide correspond à <q>« {query} »</q>} other {# guides correspondent à <q>« {query} »</q>}}",
+  "searchingAll": "Recherche parmi {count, plural, one {# guide} other {les # guides}}",
+  "emptyHint": "Essayez un mot plus court ou parcourez un thème :",
+  "clearSearch": "Effacer la recherche",
+  "helpfulCount": "{count, plural, =0 {Personne ne l’a encore trouvé utile} one {# personne l’a trouvé utile} other {# personnes l’ont trouvé utile}}"
 }

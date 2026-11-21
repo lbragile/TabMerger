@@ -1,8 +1,9 @@
 {
   "metaTitle": "Gerenciar abas no Chrome, Edge e Firefox",
-  "metaDescription": "Guias para salvar, organizar e recuperar abas do navegador no Chrome, Edge e Firefox, testados passo a passo.",
+  "metaDescription": "Guias práticos e testados para gerenciar abas: salve e restaure sessões, organize abas em grupos, recupere abas fechadas e controle o excesso de abas.",
   "indexTitle": "Guias de gerenciamento de abas",
-  "indexLead": "Guias para salvar, organizar e recuperar as abas do navegador no Chrome, Edge e Firefox.",
+  "indexHeading": "Dicas e guias para gerenciar abas",
+  "indexLead": "Guias práticos e testados para gerenciar abas: salve e restaure sessões, organize abas em grupos, recupere abas fechadas e controle o excesso de abas.",
   "pagedTitle": "{title}, página {page, number}",
   "latestGuide": "Guia mais recente",
   "readGuideCta": "Ler o guia",
@@ -133,5 +134,19 @@
     "edge": "edge",
     "firefox": "firefox"
   },
-  "scheduled": "Agendado para {date}: ainda não é público. Esta prévia fica oculta no site público até lá."
+  "scheduled": "Agendado para {date}: ainda não é público. Esta prévia fica oculta no site público até lá.",
+  "sortLabel": "Ordenar por",
+  "sortNewest": "Mais recentes",
+  "sortOldest": "Mais antigos",
+  "sortHelpful": "Mais úteis",
+  "sortShortest": "Leitura mais curta",
+  "searchLabel": "Pesquisar guias",
+  "searchPlaceholder": "Pesquisar guias pelo título",
+  "sortButton": "<muted>Ordem:</muted> {sort}",
+  "noResults": "Ainda não há nada com “{query}” no título.",
+  "resultsMatch": "{count, plural, =0 {Nenhum guia corresponde a <q>“{query}”</q>} one {# guia corresponde a <q>“{query}”</q>} other {# guias correspondem a <q>“{query}”</q>}}",
+  "searchingAll": "Pesquisando em {count, plural, one {# guia} other {todos os # guias}}",
+  "emptyHint": "Tente uma palavra mais curta ou navegue por um tema:",
+  "clearSearch": "Limpar pesquisa",
+  "helpfulCount": "{count, plural, =0 {Ninguém marcou como útil ainda} one {# pessoa achou útil} other {# pessoas acharam útil}}"
 }

@@ -1,8 +1,9 @@
 {
   "metaTitle": "Hướng dẫn quản lý tab cho Chrome, Edge, Firefox",
-  "metaDescription": "Hướng dẫn lưu, sắp xếp và lấy lại tab trình duyệt trong Chrome, Edge và Firefox, được kiểm tra từng bước.",
+  "metaDescription": "Hướng dẫn thực tế, đã kiểm chứng để quản lý tab: lưu và khôi phục phiên, sắp xếp tab theo nhóm, mở lại tab đã đóng và kiểm soát tình trạng quá nhiều tab.",
   "indexTitle": "Hướng dẫn quản lý tab",
-  "indexLead": "Hướng dẫn lưu, sắp xếp và lấy lại các tab trình duyệt trong Chrome, Edge và Firefox.",
+  "indexHeading": "Mẹo và hướng dẫn quản lý tab",
+  "indexLead": "Hướng dẫn thực tế, đã kiểm chứng để quản lý tab: lưu và khôi phục phiên, sắp xếp tab theo nhóm, mở lại tab đã đóng và kiểm soát tình trạng quá nhiều tab.",
   "pagedTitle": "{title}, trang {page, number}",
   "latestGuide": "Hướng dẫn mới nhất",
   "readGuideCta": "Đọc hướng dẫn",
@@ -133,5 +134,19 @@
     "edge": "edge",
     "firefox": "firefox"
   },
-  "scheduled": "Đã lên lịch cho {date}: chưa công khai. Bản xem trước này bị ẩn trên trang chính cho đến ngày đó."
+  "scheduled": "Đã lên lịch cho {date}: chưa công khai. Bản xem trước này bị ẩn trên trang chính cho đến ngày đó.",
+  "sortLabel": "Sắp xếp theo",
+  "sortNewest": "Mới nhất",
+  "sortOldest": "Cũ nhất",
+  "sortHelpful": "Hữu ích nhất",
+  "sortShortest": "Đọc nhanh nhất",
+  "searchLabel": "Tìm hướng dẫn",
+  "searchPlaceholder": "Tìm hướng dẫn theo tiêu đề",
+  "sortButton": "<muted>Sắp xếp:</muted> {sort}",
+  "noResults": "Chưa có tiêu đề nào chứa “{query}”.",
+  "resultsMatch": "{count, plural, =0 {Không có hướng dẫn nào khớp với <q>“{query}”</q>} other {# hướng dẫn khớp với <q>“{query}”</q>}}",
+  "searchingAll": "Đang tìm trong {count, plural, other {tất cả # hướng dẫn}}",
+  "emptyHint": "Hãy thử một từ ngắn hơn hoặc xem theo chủ đề:",
+  "clearSearch": "Xóa tìm kiếm",
+  "helpfulCount": "{count, plural, =0 {Chưa ai đánh dấu hữu ích} other {# người thấy hữu ích}}"
 }

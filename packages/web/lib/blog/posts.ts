@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { BLOG_SOURCES as GENERATED_SOURCES } from '@/generated/blog'
 import { DEFAULT_LOCALE, PUBLIC_LOCALES } from '@/i18n/locales'
 import { readMinutes } from '@/lib/blog/readTime'
+import type { CardCover } from '@/lib/blog/cover'
 import { BLOG_TAG_SLUGS, POST_TAGS_MAX, POST_TAGS_MIN, type BlogTag } from '@/lib/blog/tags'
 
 /**
@@ -45,6 +46,7 @@ export function blogPostPath(slug: string): string {
 }
 
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'YYYY-MM-DD')
+const imagePath = z.string().regex(/^\/blog\/[a-z0-9-]+\/[a-z0-9/-]+\.(webp|png|jpg)$/)
 const sitePathOrHttps = z.string().refine((v) => /^\/(?!\/)/.test(v) || /^https:\/\//.test(v), 'a site path or an https URL')
 
 const postSchema = z.object({
@@ -91,6 +93,13 @@ const postSchema = z.object({
       })
     )
     .min(1),
+  /**
+   * The blog index card image, shown whole in a 4:3 frame: a 4:3 capture (within 2%; the
+   * generator checks) that shows what the title is about. `srcDark` is its dark-theme version
+   * (found automatically for a `-light` file with a `-dark` one beside it). Decorative: the card's
+   * title names it. Translations use the English cover. Without one, the first 4:3 `images` entry.
+   */
+  cover: z.object({ src: imagePath, srcDark: imagePath.optional(), alt: z.literal('').optional() }).strict().optional(),
   /** The social preview (1200×630), made once from one of the captures. */
   ogImage: z
     .object({ src: z.string().regex(/^\/blog\/[a-z0-9-]+\/[a-z0-9/-]+\.(webp|png|jpg)$/), alt: z.string().min(1) })
@@ -272,6 +281,16 @@ export function postSummary(slug: string, locale: string = DEFAULT_LOCALE) {
   if (!sources) return undefined
   const { title, description, images } = sources[postContentLocale(slug, locale)]
   return { title, description, images }
+}
+
+/**
+ * The image a post's index card shows, as the generator resolved it (the post's `cover`, else its
+ * first 4:3 capture, with any `-dark` partner); the shown file's, else English. Null: the card
+ * shows the TabMerger mark (never a cropped wide strip).
+ */
+export function cardCover(loaded: Pick<LoadedPost, 'post' | 'contentLocale'>, sources: typeof BLOG_SOURCES = BLOG_SOURCES): CardCover | null {
+  const files = sources[loaded.post.slug]
+  return files?.[loaded.contentLocale]?.cover ?? files?.[DEFAULT_LOCALE]?.cover ?? null
 }
 
 export interface LoadedPost {

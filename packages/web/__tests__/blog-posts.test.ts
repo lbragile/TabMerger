@@ -105,6 +105,7 @@ describe('post files', () => {
       published: f.post.published,
       images: f.post.images.map((i) => i.src),
       tags: f.post.tags,
+      cover: f.post.cover && { src: f.post.cover.src, srcDark: f.post.cover.srcDark, extra: [] },
     })
     const indexed = GENERATED_SOURCES[f.slug][f.locale]
     expect([indexed.title, indexed.description, indexed.published]).toEqual([f.post.title, f.post.description, f.post.published])

@@ -1,8 +1,9 @@
 {
   "metaTitle": "탭 관리 가이드: Chrome, Edge, Firefox",
-  "metaDescription": "Chrome, Edge, Firefox에서 브라우저 탭을 저장, 정리, 복원하는 가이드. 단계별로 테스트했습니다.",
+  "metaDescription": "직접 검증한 브라우저 탭 관리 실전 가이드: 세션 저장과 복원, 탭 그룹 정리, 닫은 탭 복구, 너무 많은 탭 관리까지.",
   "indexTitle": "탭 관리 가이드",
-  "indexLead": "Chrome, Edge, Firefox에서 브라우저 탭을 저장하고 정리하고 되살리는 가이드.",
+  "indexHeading": "탭 관리 팁과 가이드",
+  "indexLead": "직접 검증한 브라우저 탭 관리 실전 가이드: 세션 저장과 복원, 탭 그룹 정리, 닫은 탭 복구, 너무 많은 탭 관리까지.",
   "pagedTitle": "{title}, {page, number}페이지",
   "latestGuide": "최신 가이드",
   "readGuideCta": "가이드 읽기",
@@ -133,5 +134,19 @@
     "edge": "edge",
     "firefox": "firefox"
   },
-  "scheduled": "{date} 공개 예정: 아직 공개되지 않았습니다. 그때까지 이 미리 보기는 공개 사이트에 표시되지 않습니다."
+  "scheduled": "{date} 공개 예정: 아직 공개되지 않았습니다. 그때까지 이 미리 보기는 공개 사이트에 표시되지 않습니다.",
+  "sortLabel": "정렬",
+  "sortNewest": "최신순",
+  "sortOldest": "오래된순",
+  "sortHelpful": "도움이 된 순",
+  "sortShortest": "짧은 글 순",
+  "searchLabel": "가이드 검색",
+  "searchPlaceholder": "제목으로 가이드 검색",
+  "sortButton": "<muted>정렬:</muted> {sort}",
+  "noResults": "아직 제목에 “{query}”이(가) 들어간 가이드가 없습니다.",
+  "resultsMatch": "{count, plural, =0 {<q>“{query}”</q>와(과) 일치하는 가이드가 없습니다} other {<q>“{query}”</q>와(과) 일치하는 가이드 #개}}",
+  "searchingAll": "{count, plural, other {가이드 #개 전체에서 검색 중}}",
+  "emptyHint": "더 짧은 단어로 검색하거나 주제를 둘러보세요:",
+  "clearSearch": "검색 지우기",
+  "helpfulCount": "{count, plural, =0 {아직 도움이 됐다는 사람이 없습니다} other {#명이 도움이 됐다고 했습니다}}"
 }

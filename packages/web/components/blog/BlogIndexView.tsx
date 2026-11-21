@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import { notFound, permanentRedirect } from 'next/navigation'
-import { getTranslations } from 'next-intl/server'
-import { BlogListing, TopicChips } from '@/components/blog/BlogListing'
+import { getMessages, getTranslations } from 'next-intl/server'
+import { FeaturedPost, Pager, PostRow, PostRows, TopicChips, TopicSuggestions } from '@/components/blog/BlogListing'
+import { HelpfulCountsProvider, type ListingMessages } from '@/components/blog/HelpfulCounts'
+import { ListingClient } from '@/components/blog/ListingClient'
 import { JsonLd } from '@/components/seo/JsonLd'
 import { DEFAULT_LOCALE, localizedPath } from '@/i18n/locales'
 import { blogIndexJsonLd } from '@/lib/blog/jsonLd'
@@ -51,6 +53,36 @@ export async function listingMetadata(page: number, tag?: BlogTag): Promise<Meta
   return tag && tagPostCount(tag) < TAG_INDEX_MIN_POSTS ? { ...metadata, robots: { index: false, follow: true } } : metadata
 }
 
+/** The `blog` messages the client listing formats itself (sort, search, counts, pager). */
+const LISTING_MESSAGE_KEYS = [
+  'sortLabel',
+  'sortNewest',
+  'sortOldest',
+  'sortHelpful',
+  'sortShortest',
+  'searchLabel',
+  'searchPlaceholder',
+  'sortButton',
+  'resultsMatch',
+  'searchingAll',
+  'noResults',
+  'emptyHint',
+  'clearSearch',
+  'helpfulCount',
+  'moreGuides',
+  'pagerLabel',
+  'newer',
+  'older',
+  'pageOf',
+  'pageNumber',
+] as const
+
+/** Those messages in the request's language, as raw ICU strings for the browser. */
+async function listingMessages(): Promise<ListingMessages> {
+  const blog = ((await getMessages()) as { blog?: Record<string, unknown> }).blog ?? {}
+  return Object.fromEntries(LISTING_MESSAGE_KEYS.map((key) => [key, String(blog[key] ?? key)]))
+}
+
 /** A listing page: header (H1, lead, topic chips), then featured (index page 1), list and pager. */
 export async function BlogIndexView({ locale, page, tag }: { locale: string; page: number; tag?: BlogTag }) {
   const t = await getTranslations('blog')
@@ -62,6 +94,9 @@ export async function BlogIndexView({ locale, page, tag }: { locale: string; pag
   const label = tag ? t(`tags.${BLOG_TAGS[tag]}`) : ''
   const path = tag ? blogTagPagePath(tag, page) : blogIndexPagePath(page)
   const name = tag ? t('tagTitle', { tag: label }) : t('metaTitle')
+  const featured = !tag && page === 1 && shown.length > 0
+  const hrefFor = (n: number) => (tag ? blogTagPagePath(tag, n) : blogIndexPagePath(n))
+  const rest = featured ? shown.slice(1) : shown
 
   return (
     <div className="container max-w-[70rem] pb-20 pt-10 sm:pt-16">
@@ -85,20 +120,27 @@ export async function BlogIndexView({ locale, page, tag }: { locale: string; pag
       />
       <header className="flex max-w-[44rem] flex-col gap-2.5 sm:gap-3">
         <h1 className="m-0 text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl">
-          {tag ? t('tagTitle', { tag: label }) : t('indexTitle')}
+          {tag ? t('tagTitle', { tag: label }) : t('indexHeading')}
         </h1>
         <p className="m-0 leading-relaxed text-text2 sm:text-lg">
           {tag ? t('tagCount', { count: posts.length }) : t('indexLead')}
         </p>
       </header>
       <TopicChips tags={topTags(5)} current={tag} />
-      <BlogListing
-        posts={shown}
-        page={page}
-        total={total}
-        featured={!tag && page === 1}
-        hrefFor={(n) => (tag ? blogTagPagePath(tag, n) : blogIndexPagePath(n))}
-      />
+      <HelpfulCountsProvider locale={locale} messages={await listingMessages()}>
+        <ListingClient
+          entries={posts.map(({ post, readMinutes }) => ({ slug: post.slug, title: post.title, published: post.published, readMinutes }))}
+          rows={Object.fromEntries(posts.map((loaded) => [loaded.post.slug, <PostRow key={loaded.post.slug} loaded={loaded} />]))}
+          featured={featured ? <FeaturedPost loaded={shown[0]} /> : null}
+          defaultList={rest.length > 0 ? <PostRows posts={rest} /> : null}
+          defaultPager={<Pager page={page} total={total} hrefFor={hrefFor} />}
+          moreCount={tag ? posts.length : Math.max(0, posts.length - 1)}
+          emptyTopics={<TopicSuggestions tags={topTags(4).filter((topic) => topic !== tag).slice(0, 3)} />}
+          basePath={tag ? blogTagPagePath(tag, 1) : BLOG_PATH}
+          pageSize={size}
+          locale={locale}
+        />
+      </HelpfulCountsProvider>
     </div>
   )
 }

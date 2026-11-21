@@ -1,8 +1,9 @@
 {
   "metaTitle": "タブ管理ガイド (Chrome、Edge、Firefox)",
-  "metaDescription": "Chrome、Edge、Firefox でブラウザのタブを保存・整理・復元するためのガイド。手順ごとに検証済み。",
+  "metaDescription": "ブラウザのタブ管理に役立つ、検証済みの実践ガイド。セッションの保存と復元、タブのグループ化、閉じたタブの復元、増えすぎたタブの整理まで。",
   "indexTitle": "タブ管理ガイド",
-  "indexLead": "Chrome、Edge、Firefox でブラウザのタブを保存・整理・復元するためのガイド。",
+  "indexHeading": "タブ管理のコツとガイド",
+  "indexLead": "ブラウザのタブ管理に役立つ、検証済みの実践ガイド。セッションの保存と復元、タブのグループ化、閉じたタブの復元、増えすぎたタブの整理まで。",
   "pagedTitle": "{title} - {page, number} ページ",
   "latestGuide": "最新のガイド",
   "readGuideCta": "ガイドを読む",
@@ -133,5 +134,19 @@
     "edge": "edge",
     "firefox": "firefox"
   },
-  "scheduled": "{date} に公開予定: まだ公開されていません。それまでこのプレビューは公開サイトに表示されません。"
+  "scheduled": "{date} に公開予定: まだ公開されていません。それまでこのプレビューは公開サイトに表示されません。",
+  "sortLabel": "並べ替え",
+  "sortNewest": "新しい順",
+  "sortOldest": "古い順",
+  "sortHelpful": "役に立った順",
+  "sortShortest": "短い順",
+  "searchLabel": "ガイドを検索",
+  "searchPlaceholder": "タイトルでガイドを検索",
+  "sortButton": "<muted>並べ替え:</muted> {sort}",
+  "noResults": "タイトルに「{query}」を含むガイドはまだありません。",
+  "resultsMatch": "{count, plural, =0 {<q>「{query}」</q>に一致するガイドはありません} other {<q>「{query}」</q>に一致するガイド: # 件}}",
+  "searchingAll": "{count, plural, other {全 # 件のガイドを検索中}}",
+  "emptyHint": "短い語句で試すか、トピックから探してください:",
+  "clearSearch": "検索をクリア",
+  "helpfulCount": "{count, plural, =0 {まだ誰も役に立ったと評価していません} other {# 人が役に立ったと評価}}"
 }

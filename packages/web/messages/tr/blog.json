@@ -1,8 +1,9 @@
 {
   "metaTitle": "Sekme yönetimi: Chrome, Edge, Firefox",
-  "metaDescription": "Chrome, Edge ve Firefox’ta sekmeleri kaydetme, düzenleme ve geri getirme rehberleri; adım adım test edildi.",
+  "metaDescription": "Sekmeler için denenmiş, pratik rehberler: oturumları kaydedip geri yükleyin, sekmeleri gruplayın, kapanan sekmeleri geri getirin, sekme yığınını yönetin.",
   "indexTitle": "Sekme yönetimi rehberleri",
-  "indexLead": "Chrome, Edge ve Firefox’ta tarayıcı sekmelerinizi kaydetme, düzenleme ve geri getirme rehberleri.",
+  "indexHeading": "Sekme yönetimi ipuçları ve rehberleri",
+  "indexLead": "Sekmeler için denenmiş, pratik rehberler: oturumları kaydedip geri yükleyin, sekmeleri gruplayın, kapanan sekmeleri geri getirin, sekme yığınını yönetin.",
   "pagedTitle": "{title}, sayfa {page, number}",
   "latestGuide": "En yeni rehber",
   "readGuideCta": "Rehberi okuyun",
@@ -133,5 +134,19 @@
     "edge": "edge",
     "firefox": "firefox"
   },
-  "scheduled": "{date} için planlandı: henüz herkese açık değil. Bu önizleme o tarihe kadar canlı sitede gizli."
+  "scheduled": "{date} için planlandı: henüz herkese açık değil. Bu önizleme o tarihe kadar canlı sitede gizli.",
+  "sortLabel": "Sırala",
+  "sortNewest": "En yeni",
+  "sortOldest": "En eski",
+  "sortHelpful": "En faydalı",
+  "sortShortest": "En kısa okuma",
+  "searchLabel": "Rehberlerde ara",
+  "searchPlaceholder": "Rehberleri başlığa göre arayın",
+  "sortButton": "<muted>Sıralama:</muted> {sort}",
+  "noResults": "Başlığında “{query}” geçen bir rehber henüz yok.",
+  "resultsMatch": "{count, plural, =0 {<q>“{query}”</q> ile eşleşen rehber yok} one {<q>“{query}”</q> ile eşleşen # rehber} other {<q>“{query}”</q> ile eşleşen # rehber}}",
+  "searchingAll": "{count, plural, one {# rehberin} other {# rehberin tümünde}} aranıyor",
+  "emptyHint": "Daha kısa bir kelime deneyin ya da bir konuya göz atın:",
+  "clearSearch": "Aramayı temizle",
+  "helpfulCount": "{count, plural, =0 {Henüz kimse faydalı bulmadı} one {# kişi faydalı buldu} other {# kişi faydalı buldu}}"
 }

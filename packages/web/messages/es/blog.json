@@ -1,8 +1,9 @@
 {
   "metaTitle": "Gestión de pestañas en Chrome, Edge y Firefox",
-  "metaDescription": "Guías para guardar, organizar y recuperar pestañas del navegador en Chrome, Edge y Firefox, probadas paso a paso.",
+  "metaDescription": "Guías prácticas y probadas para gestionar pestañas: guarda y restaura sesiones, agrupa pestañas, recupera las cerradas y evita la sobrecarga de pestañas.",
   "indexTitle": "Guías de gestión de pestañas",
-  "indexLead": "Guías para guardar, organizar y recuperar las pestañas del navegador en Chrome, Edge y Firefox.",
+  "indexHeading": "Consejos y guías para gestionar pestañas",
+  "indexLead": "Guías prácticas y probadas para gestionar pestañas: guarda y restaura sesiones, agrupa pestañas, recupera las cerradas y evita la sobrecarga de pestañas.",
   "pagedTitle": "{title}, página {page, number}",
   "latestGuide": "Guía más reciente",
   "readGuideCta": "Leer la guía",
@@ -133,5 +134,19 @@
     "edge": "edge",
     "firefox": "firefox"
   },
-  "scheduled": "Programado para el {date}: aún no es público. Esta vista previa está oculta en el sitio público hasta entonces."
+  "scheduled": "Programado para el {date}: aún no es público. Esta vista previa está oculta en el sitio público hasta entonces.",
+  "sortLabel": "Ordenar por",
+  "sortNewest": "Más recientes",
+  "sortOldest": "Más antiguas",
+  "sortHelpful": "Más útiles",
+  "sortShortest": "Lectura más corta",
+  "searchLabel": "Buscar guías",
+  "searchPlaceholder": "Buscar guías por título",
+  "sortButton": "<muted>Orden:</muted> {sort}",
+  "noResults": "Todavía no hay nada con «{query}» en el título.",
+  "resultsMatch": "{count, plural, =0 {Ninguna guía coincide con <q>«{query}»</q>} one {# guía coincide con <q>«{query}»</q>} other {# guías coinciden con <q>«{query}»</q>}}",
+  "searchingAll": "Buscando en {count, plural, one {# guía} other {las # guías}}",
+  "emptyHint": "Prueba con una palabra más corta o explora un tema:",
+  "clearSearch": "Borrar búsqueda",
+  "helpfulCount": "{count, plural, =0 {Nadie la ha marcado como útil todavía} one {A # persona le resultó útil} other {A # personas les resultó útil}}"
 }
