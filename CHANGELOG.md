@@ -1,3 +1,12 @@
+# [3.16.0](https://github.com/lbragile/TabMerger/compare/v3.15.0...v3.16.0) (2026-11-21)
+
+
+### Features
+
+* **extension:** store summary and listing copy lead with "tab manager" ([#133](https://github.com/lbragile/TabMerger/issues/133)) ([ed601ef](https://github.com/lbragile/TabMerger/commit/ed601ef1826ca6e10690eda680812fca1e78f048))
+* **web:** database tables for blog Helpful votes ([#132](https://github.com/lbragile/TabMerger/issues/132)) ([bb79b87](https://github.com/lbragile/TabMerger/commit/bb79b87be793aae9a27dcdff8766e67d5cf49dc5))
+* **web:** sharper page titles, descriptions and breadcrumbs for search ([#134](https://github.com/lbragile/TabMerger/issues/134)) ([52f4133](https://github.com/lbragile/TabMerger/commit/52f41336a00dbb35f5b6070b96a49a66be30cdb6))
+
 # [3.15.0](https://github.com/lbragile/TabMerger/compare/v3.14.0...v3.15.0) (2026-11-18)
 
 

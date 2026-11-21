@@ -54,13 +54,17 @@ export function SessionColorPicker({ value, onChange }: SessionColorPickerProps)
         {/* the radios are named for screen readers already: this is for the eyes */}
         <span aria-hidden className="text-xs text-muted-foreground" data-testid="session-color-name">{colorName(focused ?? value)}</span>
       </div>
-      <div role="radiogroup" aria-labelledby={labelId} className="flex flex-wrap items-center gap-2" data-testid="session-color-picker">
+      {/* One row in every shipped locale: the dialog's content is 398px, ten swatches with gap-1.5
+          take 300px, which leaves 98px for Random. px-1 on the chip fits the longest labels
+          ("Случайный", "Ngẫu nhiên") even in wide fonts. The selected swatch's ring (4px) still
+          clears its neighbours by 2px. flex-wrap is only a safety net. */}
+      <div role="radiogroup" aria-labelledby={labelId} className="flex flex-wrap items-center gap-1.5" data-testid="session-color-picker">
         <label className="relative inline-flex cursor-pointer">
           {input(RANDOM_SESSION_COLOR)}
           <span
             aria-hidden
             className={cn(
-              'inline-flex h-6 items-center gap-1 border px-2 text-xs peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring',
+              'inline-flex h-6 items-center gap-1 border px-1 text-xs peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring',
               value === RANDOM_SESSION_COLOR ? 'border-foreground bg-accent font-medium text-foreground ring-1 ring-foreground' : 'border-border text-muted-foreground'
             )}
           >
