@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import robots from '@/app/robots'
 import { DEFAULT_LOCALE, PSEUDO_LOCALE, PUBLIC_LOCALES } from '@/i18n/locales'
 import { SUPPORTED_LOCALES } from '@tabmerger/shared'
+import { postLocales } from '@/lib/blog/posts'
 import sitemap, { ENGLISH_ONLY_PATHS, SITEMAP_PATHS } from '@/app/sitemap'
 import { localizedPath } from '@/i18n/locales'
 import { getMetadataBase } from '@/lib/utils'
@@ -24,11 +25,15 @@ describe('sitemap', () => {
     vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://example.test')
     const entries = sitemap()
     // One entry per page and shipped locale; the English-only legal pages once, in English.
-    const expected = ['/', '/features', '/pricing', '/compare', '/faq', '/changelog', '/privacy', '/terms', '/contact'].flatMap((path) =>
-      (ENGLISH_ONLY_PATHS.has(path) ? [DEFAULT_LOCALE] : SUPPORTED_LOCALES).map(
-        (locale) => new URL(localizedPath(locale, path), getMetadataBase()).href
-      )
-    )
+    const expected = [
+      ...['/', '/features', '/pricing', '/compare', '/faq', '/changelog', '/privacy', '/terms', '/contact', '/blog'].flatMap((path) =>
+        (ENGLISH_ONLY_PATHS.has(path) ? [DEFAULT_LOCALE] : SUPPORTED_LOCALES).map(
+          (locale) => new URL(localizedPath(locale, path), getMetadataBase()).href
+        )
+      ),
+      // Blog posts: only the locales with their own file, whichever exist.
+      ...postLocales('save-all-open-tabs').map((locale) => new URL(localizedPath(locale, '/blog/save-all-open-tabs'), getMetadataBase()).href),
+    ]
     expect(entries.map((entry) => entry.url)).toEqual(expected)
     expect(entries[0].url).toBe('https://example.test/')
     expect(entries.map((entry) => entry.url)).toContain('https://example.test/fr/pricing')

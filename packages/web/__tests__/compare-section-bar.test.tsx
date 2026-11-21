@@ -107,13 +107,13 @@ describe('CompareSectionBar', () => {
 })
 
 describe('NAV_LINKS', () => {
-  it('lists Features, Pricing, Compare, Changelog, FAQ in that order', () => {
-    expect(NAV_LINKS.map((l) => l.label)).toEqual(['features', 'pricing', 'compare', 'changelog', 'faq'])
-    expect(NAV_LINKS.map((l) => l.href)).toEqual(['/features', '/pricing', '/compare', '/changelog', '/faq'])
+  it('lists Features, Pricing, Compare, Blog, Changelog, FAQ in that order', () => {
+    expect(NAV_LINKS.map((l) => l.label)).toEqual(['features', 'pricing', 'compare', 'blog', 'changelog', 'faq'])
+    expect(NAV_LINKS.map((l) => l.href)).toEqual(['/features', '/pricing', '/compare', '/blog', '/changelog', '/faq'])
   })
 
-  it('only Changelog steps out of the bar below xl', () => {
-    expect(NAV_LINKS.filter((l) => l.barFromXl).map((l) => l.label)).toEqual(['changelog'])
+  it('only Blog and Changelog step out of the bar below xl', () => {
+    expect(NAV_LINKS.filter((l) => l.barFromXl).map((l) => l.label)).toEqual(['blog', 'changelog'])
   })
 
   it('the mobile menu still lists every link, Changelog included, in order', async () => {

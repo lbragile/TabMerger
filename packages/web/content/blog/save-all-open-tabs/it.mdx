@@ -1,0 +1,320 @@
+export const post = {
+  slug: 'save-all-open-tabs',
+  title: 'Come salvare tutte le schede aperte e ritrovarle più tardi',
+  seoTitle: 'Salvare tutte le schede aperte (Chrome, Edge, Firefox)',
+  description:
+    'Salva tutte le schede aperte in Chrome, Edge o Firefox con una scorciatoia, falle riaprire dopo un riavvio e recupera le schede che hai chiuso.',
+  shareSummary: 'Una scorciatoia, il ripristino all’avvio e le schede chiuse recuperate in Chrome, Edge e Firefox.',
+  dek: 'Cinque modi per tenere tutte le schede aperte, e cosa ognuno trascura senza dirtelo.',
+  published: '2026-11-19',
+  updated: '2026-11-19',
+  testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D salva solo la finestra attuale.', source: 'Testato in tutti e tre, 19 nov 2026' },
+    { text: 'Ctrl+Shift+T riapre schede e finestre chiuse.', source: 'Pagine di assistenza di Chrome, Edge e Firefox' },
+    {
+      text: 'Le estensioni non vedono i gruppi salvati e chiusi di Chrome.',
+      source: 'Documentazione di chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'Edge non ha più le Raccolte da Edge 149.', source: 'Supporto Microsoft' },
+  ],
+  faq: [
+    {
+      question: 'Ctrl+Shift+D salva le schede di tutte le finestre?',
+      answer: 'No. Aggiunge ai preferiti solo la finestra attuale. Ripetilo in ogni finestra, oppure usa uno strumento che legge tutte le finestre.',
+    },
+    {
+      question: 'Posso salvare tutte le schede aperte senza un’estensione?',
+      answer: 'Sì: con Ctrl+Shift+D e l’impostazione di avvio, entrambe integrate in Chrome, Edge e Firefox.',
+    },
+    {
+      question: 'Perché le mie schede non sono tornate dopo un riavvio?',
+      answer:
+        'All’avvio torna ciò che era aperto quando hai chiuso il browser. Le finestre chiuse prima e quelle private non sono incluse. Prova Ctrl+Shift+T o la cronologia.',
+    },
+    {
+      question: 'Dove conserva TabMerger le schede salvate?',
+      answer:
+        'Sul tuo dispositivo, nella memoria locale del browser. Pro le sincronizza tra dispositivi, con crittografia end-to-end. Vedi le domande frequenti.',
+      link: { text: 'domande frequenti', href: '/faq' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/chrome-bookmarks-folder.webp', alt: 'Gestione preferiti di Chrome con la cartella «Tab manager research» selezionata e sei pagine salvate' },
+    { src: '/blog/save-all-open-tabs/edge-bookmarks-folder.webp', alt: 'Preferiti di Edge con la cartella «Tab manager research» aperta: sei pagine e i loro indirizzi' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: "Impostazioni di Chrome, «On startup» (All'avvio), con «Continue where you left off» (Continua dal punto in cui avevi interrotto) selezionato" },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Impostazioni di Edge, «Start, home, and new tab page», con «Open tabs from the previous session» selezionato' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Impostazioni di Firefox, «Home and startup» (Pagina iniziale e avvio), con «Open previous windows and tabs» (Apri finestre e schede esistenti) selezionato' },
+    { src: '/blog/save-all-open-tabs/chrome-history.webp', alt: 'Cronologia di Chrome con sei pagine visitate oggi e le schede «By date» e «By group»' },
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Cronologia di Edge con «All», «Recently closed» e «Tabs from other devices» nella barra laterale' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-light.webp', alt: 'TabMerger, «Now Open» (Aperte ora), con due finestre del browser da cinque schede ciascuna, tema chiaro' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-dark.webp', alt: 'TabMerger, «Now Open» (Aperte ora), con due finestre del browser da cinque schede ciascuna, tema scuro' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-light.webp', alt: "Menu del gruppo di TabMerger con «Merge with current» (Unisci con l'attuale), che aggiunge a questo gruppo le finestre aperte del browser, tema chiaro" },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-dark.webp', alt: "Menu del gruppo di TabMerger con «Merge with current» (Unisci con l'attuale), che aggiunge a questo gruppo le finestre aperte del browser, tema scuro" },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-light.webp', alt: 'Il gruppo «Open tabs, Nov 19» con 2 finestre e 10 schede, tema chiaro' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-dark.webp', alt: 'Il gruppo «Open tabs, Nov 19» con 2 finestre e 10 schede, tema scuro' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-light.webp', alt: 'TabMerger, «Recently closed» (Chiusi di recente) di oggi, con una striscia oraria e tre schede chiuse, tema chiaro' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-dark.webp', alt: 'TabMerger, «Recently closed» (Chiusi di recente) di oggi, con una striscia oraria e tre schede chiuse, tema scuro' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-light.webp', alt: 'Ricerca in TabMerger di «closed: seat» con una scheda chiusa di recente, tema chiaro' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-dark.webp', alt: 'Ricerca in TabMerger di «closed: seat» con una scheda chiusa di recente, tema scuro' },
+    { src: '/blog/save-all-open-tabs/tm-search-light.webp', alt: 'Ricerca in TabMerger di «lisbon»: risultati con l’etichetta «Now Open» o «Open tabs, Nov 19», tema chiaro' },
+    { src: '/blog/save-all-open-tabs/tm-search-dark.webp', alt: 'Ricerca in TabMerger di «lisbon»: risultati con l’etichetta «Now Open» o «Open tabs, Nov 19», tema scuro' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-light.webp', alt: 'Finestra «Save Session» (Salva sessione) di TabMerger con il nome «Before the trip», tema chiaro' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-dark.webp', alt: 'Finestra «Save Session» (Salva sessione) di TabMerger con il nome «Before the trip», tema scuro' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-light.webp', alt: 'La sessione salvata «Before the trip» con tre gruppi («Work», «Reading list» e «Open tabs, Nov 19») e il pulsante «Restore session» (Ripristina sessione), tema chiaro' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-dark.webp', alt: 'La sessione salvata «Before the trip» con tre gruppi («Work», «Reading list» e «Open tabs, Nov 19») e il pulsante «Restore session» (Ripristina sessione), tema scuro' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-light.webp', alt: 'Impostazioni di TabMerger, scheda «Data» (Dati): «Auto-save open tabs», «Backups» e «Remember closed tabs», tema chiaro' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-dark.webp', alt: 'Impostazioni di TabMerger, scheda «Data» (Dati): «Auto-save open tabs», «Backups» e «Remember closed tabs», tema scuro' },
+  ],
+  tags: ['tab-management', 'save-tabs', 'restore-closed-tabs', 'bookmarks', 'browser-productivity', 'chrome', 'edge', 'firefox'],
+  // Before publishing: check each title against its page, and replace the Microsoft entry with
+  // the exact Edge help article (restore tabs / startup pages).
+  sources: [
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Microsoft Edge help and learning',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/microsoft-edge',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-19',
+    },
+  ],
+  screenshotsCaptured: '2026-11-19',
+  ogImage: { src: '/blog/save-all-open-tabs/og.png', alt: 'Scheda con il titolo «How to save all open tabs and get them back later»: una guida di TabMerger per Chrome, Edge e Firefox, con un gruppo di due finestre salvate' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'bookmark', label: '1. Tutte nei preferiti' },
+    { id: 'startup', label: '2. Riapri all’avvio' },
+    { id: 'closed', label: '3. Recupera le schede chiuse' },
+    { id: 'groups', label: '4. Gruppi di schede' },
+    { id: 'tabmerger', label: '5. Tutte le finestre insieme' },
+    { id: 'compare', label: 'Quale usare' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+  browserSections: ['bookmark', 'startup', 'closed'],
+  browserFact: {
+    label: 'Impostazione di avvio',
+    values: { chrome: 'chrome://settings/onStartup', edge: 'edge://settings/startHomeNTP', firefox: 'about:preferences#home' },
+  },
+}
+
+<QuickAnswer>
+
+Per salvare tutte le schede aperte, premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> su Mac): ogni scheda della finestra attuale diventa un preferito in una nuova cartella. Funziona in Chrome, Edge e Firefox. Per far riaprire le schede da sole, attiva **Continua dal punto in cui avevi interrotto** («Continue where you left off», Chrome), **Open tabs from the previous session** (Edge) o **Apri finestre e schede esistenti** («Open previous windows and tabs», Firefox).
+
+</QuickAnswer>
+
+<BrowserSwitcher />
+
+<Section id="bookmark" title="1. Aggiungi tutte le schede ai preferiti con una scorciatoia">
+
+Tutti i browser principali salvano le schede di una finestra come cartella di preferiti. La cartella resta finché non la elimini e si sincronizza se hai effettuato l’accesso al browser.
+
+Gli screenshot dei browser mostrano l’interfaccia in inglese. Quando il nome italiano è diverso, la prima volta trovi l’inglese tra parentesi.
+
+<BrowserPanels section="bookmark">
+<BrowserPanel browser="chrome">
+
+1. Fai clic su una scheda qualsiasi della finestra che vuoi tenere.
+2. Premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> su Mac).
+3. Dai un nome alla cartella, scegli dove metterla e fai clic su Salva.
+4. Per riaprirle più tardi, premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>, trova la cartella e apri tutti i suoi preferiti.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-bookmarks-folder.webp" alt="Gestione preferiti di Chrome con la cartella «Tab manager research» selezionata e sei pagine salvate" width={1600} height={524} eager boxes={[{ id: 'folder' }]} source="chrome://bookmarks · Chrome 157.0.8103.79">Gestione preferiti di Chrome («Bookmark Manager») dopo Ctrl+Shift+D: la nuova cartella contiene un preferito per ogni scheda della finestra.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Fai clic su una scheda qualsiasi della finestra che vuoi tenere.
+2. Premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> su Mac). Edge salva le schede come preferiti in una nuova cartella.
+3. Dai un nome alla cartella e salvala.
+4. Per riaprirle più tardi, premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> per aprire i **Preferiti** («Favorites»), trova la cartella e aprili tutti.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-bookmarks-folder.webp" alt="Preferiti di Edge con la cartella «Tab manager research» aperta: sei pagine e i loro indirizzi" width={1600} height={553} boxes={[{ id: 'folder' }]} source="edge://favorites · Edge 157.0.4341.60">I Preferiti di Edge dopo la stessa scorciatoia: le schede sono salvate come preferiti in una nuova cartella.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Fai clic su una scheda qualsiasi della finestra che vuoi tenere.
+2. Premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> su Mac) per aggiungere tutte le schede ai segnalibri.
+3. Dai un nome alla cartella e fai clic su Salva.
+4. Per riaprirle più tardi, premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> (**Gestisci segnalibri**, «Manage Bookmarks») e apri tutti i segnalibri della cartella.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox Library (Ctrl+Shift+O) with the new folder selected. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>salva *solo la finestra attuale*. Tre finestre vogliono dire tre cartelle. Inoltre un preferito conserva solo l’indirizzo: la posizione di scorrimento e i dati inseriti nei moduli vanno persi.</Catch>
+
+</Section>
+
+<Section id="startup" title="2. Fai riaprire tutto al browser all’avvio">
+
+Se sono i riavvii e gli aggiornamenti a farti perdere le schede, lascia che sia il browser a ripristinare la sessione.
+
+<BrowserPanels section="startup">
+<BrowserPanel browser="chrome">
+
+In Chrome: **Impostazioni → All'avvio → Continua dal punto in cui avevi interrotto** («Settings → On startup → Continue where you left off»). Oppure incolla `chrome://settings/onStartup` nella barra degli indirizzi.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Impostazioni di Chrome, «On startup» (All'avvio), con «Continue where you left off» (Continua dal punto in cui avevi interrotto) selezionato" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">L’impostazione All'avvio di Chrome, configurata per riaprire l’ultima sessione.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+In Edge: **Impostazioni → Start, home, and new tab page → On startup → Open tabs from the previous session**. Il modo più rapido è incollare `edge://settings/startHomeNTP` nella barra degli indirizzi.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Impostazioni di Edge, «Start, home, and new tab page», con «Open tabs from the previous session» selezionato" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">La pagina «Start, home, and new tab page» di Edge, configurata per riaprire l’ultima sessione.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+In Firefox: **Impostazioni → Pagina iniziale e avvio → Avvio → Apri finestre e schede esistenti** («Settings → Home and startup → Startup → Open previous windows and tabs»). Oppure incolla `about:preferences#home` nella barra degli indirizzi.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Impostazioni di Firefox, «Home and startup» (Pagina iniziale e avvio), con «Open previous windows and tabs» (Apri finestre e schede esistenti) selezionato" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Firefox 159 mette l’opzione in Pagina iniziale e avvio; le guide più vecchie dicono Generale.</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>ripristina ciò che era aperto l’ultima volta che hai chiuso il browser. Una finestra chiusa prima non ne fa parte, e le finestre private non tornano mai.</Catch>
+
+</Section>
+
+<Section id="closed" title="3. Recupera le schede che hai già chiuso">
+
+Premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) per riaprire l’ultima scheda o finestra chiusa; premilo ancora per tornare più indietro. Per qualcosa di più vecchio, apri la cronologia con <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>.
+
+<BrowserPanels section="closed">
+<BrowserPanel browser="chrome">
+
+Chrome elenca anche le schede e le finestre chiuse di recente in ⋮ → **Cronologia** («History»).
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-history.webp" alt="Cronologia di Chrome con sei pagine visitate oggi e le schede «By date» e «By group»" width={1600} height={640} source="chrome://history · Chrome 157.0.8103.79" className="m-0">La pagina Cronologia di Chrome; la versione 157 aggiunge la vista «By group» (per gruppo).</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge mostra le schede chiuse di recente («Recently closed») direttamente nella pagina **Cronologia**.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Cronologia di Edge con «All», «Recently closed» e «Tabs from other devices» nella barra laterale" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60" className="m-0">La pagina Cronologia di Edge, con l’elenco «Recently closed» nella barra laterale.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox elenca le schede e le finestre chiuse di recente nel menu **Cronologia** («History»), in **Schede chiuse di recente** e **Finestre chiuse di recente** (premi Alt per mostrare la barra dei menu).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with recently closed tabs open. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="groups" title="4. Gruppi di schede: utili per concentrarsi, limitati per salvare">
+
+- **Chrome** può salvare un gruppo e riaprirlo, ma le estensioni non vedono un gruppo salvato una volta chiuso ([API tabGroups](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
+- I gruppi di **Firefox** restano sul dispositivo e non viaggiano con Firefox Sync.
+- **Edge** non ha più le Raccolte («Collections») a partire da Edge 149.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
+
+</Section>
+
+<Section id="tabmerger" title="5. Salva tutte le schede aperte di ogni finestra con TabMerger">
+
+Ognuno dei metodi integrati copre una finestra, un riavvio o una scheda chiusa alla volta. [TabMerger](/features), la nostra estensione gratuita per Chrome, Edge e Firefox, elenca tutte le finestre aperte in **Aperte ora** e le salva tutte in un unico gruppo.
+
+<ScreenshotThemeToggle />
+
+1. Fai clic su **Aggiungi gruppo** e dagli un nome, per esempio «Schede aperte, 19 nov» («Open tabs, Nov 19» negli screenshot).
+2. Apri il menu **⋯** del gruppo e scegli **Unisci con l'attuale**, che aggiunge le finestre aperte del browser. (*Sostituisci con l'attuale* invece sostituisce le finestre del gruppo.)
+3. Chiudi le finestre quando vuoi. Il gruppo conserva entrambe le finestre e tutte e dieci le schede.
+
+<Carousel label="Salvare tutte le finestre in un gruppo" steps={[{ title: 'Aperte ora' }, { title: 'Menu del gruppo' }, { title: 'Gruppo salvato' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-now-open" alt="TabMerger, «Now Open» (Aperte ora), con due finestre del browser da cinque schede ciascuna, tema chiaro" darkAlt="TabMerger, «Now Open» (Aperte ora), con due finestre del browser da cinque schede ciascuna, tema scuro">Aperte ora rispecchia il browser: ogni finestra aperta con le sue schede.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merge-menu" alt="Menu del gruppo di TabMerger con «Merge with current» (Unisci con l'attuale), che aggiunge a questo gruppo le finestre aperte del browser, tema chiaro" darkAlt="Menu del gruppo di TabMerger con «Merge with current» (Unisci con l'attuale), che aggiunge a questo gruppo le finestre aperte del browser, tema scuro" boxes={[{ id: 'group-menu-button', label: 'Menu del gruppo' }, { id: 'merge-with-current', label: "Unisci con l'attuale" }]}>Dopo Aggiungi gruppo, apri il menu del nuovo gruppo e scegli l’opzione che ci copia dentro tutte le finestre aperte.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merged-group" alt="Il gruppo «Open tabs, Nov 19» con 2 finestre e 10 schede, tema chiaro" darkAlt="Il gruppo «Open tabs, Nov 19» con 2 finestre e 10 schede, tema scuro">Dopo Unisci con l'attuale: entrambe le finestre sono salvate in un gruppo, che resta anche dopo averle chiuse.</ThemedScreenshot>
+</Carousel>
+
+### Preferisci la tastiera?
+
+<ComparisonTable
+  head={['Scorciatoia', 'Salva']}
+  keysColumn={0}
+  rows={[
+    ['Ctrl+Shift+P', 'Tutte le altre schede della finestra'],
+    ['Ctrl+Shift+S', 'La scheda attuale'],
+    ['Ctrl+Shift+K', 'Le schede a sinistra'],
+    ['Ctrl+Shift+U', 'Le schede a destra'],
+  ]}
+/>
+
+Su Mac usa <Kbd>⌘</Kbd>. Ogni scorciatoia chiede dove salvare; **Salvataggio rapido (nuovo gruppo)** crea subito un gruppo. In Firefox <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> apre una finestra anonima, quindi scegli un altro tasto in `about:addons` → «Manage Extension Shortcuts».
+
+### Hai chiuso qualcosa per sbaglio?
+
+**Chiusi di recente** conserva ogni scheda e finestra che chiudi, divise per giorno, con una striscia che mostra l’ora. Con il piano gratuito restano 2 giorni, con Pro 30. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> cerca tra schede aperte, salvate e chiuse; inizia con `closed:` per cercare solo quelle chiuse.
+
+<Carousel label="Recuperare le schede chiuse" steps={[{ title: 'Chiusi di recente' }, { title: 'Ricerca closed:' }, { title: 'Cerca ovunque' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-recently-closed" alt="TabMerger, «Recently closed» (Chiusi di recente) di oggi, con una striscia oraria e tre schede chiuse, tema chiaro" darkAlt="TabMerger, «Recently closed» (Chiusi di recente) di oggi, con una striscia oraria e tre schede chiuse, tema scuro" boxes={[{ id: 'hour-strip' }]}>Le schede chiuse oggi, con l’ora in cui sono state chiuse.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search-closed" alt="Ricerca in TabMerger di «closed: seat» con una scheda chiusa di recente, tema chiaro" darkAlt="Ricerca in TabMerger di «closed: seat» con una scheda chiusa di recente, tema scuro" boxes={[{ id: 'search-input' }]}>Premi Ctrl+K e inizia con `closed:` per cercare solo le schede chiuse.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search" alt="Ricerca in TabMerger di «lisbon»: risultati con l’etichetta «Now Open» o «Open tabs, Nov 19», tema chiaro" darkAlt="Ricerca in TabMerger di «lisbon»: risultati con l’etichetta «Now Open» o «Open tabs, Nov 19», tema scuro" boxes={[{ id: 'group-tag-1' }]}>Senza il prefisso, la ricerca copre le schede aperte e salvate, con l’etichetta del gruppo.</ThemedScreenshot>
+</Carousel>
+
+### Istantanee e salvataggio automatico
+
+**Salva la sessione attuale** crea un’istantanea con nome dei tuoi gruppi salvati (non delle schede aperte), da ripristinare tutta insieme. **Impostazioni → Dati → Salva automaticamente le schede aperte** salva le schede aperte come nuovo gruppo in automatico; il piano gratuito tiene i 2 più recenti, che contano nei suoi 5 gruppi e 50 schede.
+
+<Carousel label="Sessioni e salvataggio automatico" steps={[{ title: 'Salva sessione' }, { title: 'Vista della sessione' }, { title: 'Impostazioni → Dati' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-save-session-dialog" alt="Finestra «Save Session» (Salva sessione) di TabMerger con il nome «Before the trip», tema chiaro" darkAlt="Finestra «Save Session» (Salva sessione) di TabMerger con il nome «Before the trip», tema scuro" boxes={[{ id: 'session-name' }]}>Salva la sessione attuale chiede un nome.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-session-view" alt="La sessione salvata «Before the trip» con tre gruppi («Work», «Reading list» e «Open tabs, Nov 19») e il pulsante «Restore session» (Ripristina sessione), tema chiaro" darkAlt="La sessione salvata «Before the trip» con tre gruppi («Work», «Reading list» e «Open tabs, Nov 19») e il pulsante «Restore session» (Ripristina sessione), tema scuro" boxes={[{ id: 'restore-session' }]}>Dopo il salvataggio, apri la sessione: «Before the trip», con i suoi tre gruppi.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-settings-data" alt="Impostazioni di TabMerger, scheda «Data» (Dati): «Auto-save open tabs», «Backups» e «Remember closed tabs», tema chiaro" darkAlt="Impostazioni di TabMerger, scheda «Data» (Dati): «Auto-save open tabs», «Backups» e «Remember closed tabs», tema scuro" boxes={[{ id: 'auto-save-toggle' }]}>Impostazioni → Dati, dove si attiva il salvataggio automatico.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Gratis per Chrome, Edge e Firefox. Per iniziare non serve un account.</InstallCta>
+
+</Section>
+
+<Section id="compare" title="Quale metodo usare?">
+
+<ComparisonTable
+  head={['', 'Tutte nei preferiti', 'Ripristino all’avvio', 'Ctrl+Shift+T, cronologia', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="38rem"
+  rows={[
+    ['Tutte le finestre insieme', 'No', 'Sì, al riavvio', 'Una alla volta', 'Sì'],
+    ['Resta dopo aver chiuso una finestra', 'Sì', 'No', 'Nella cronologia', 'Sì'],
+    ['Ricerca', 'Preferiti', 'Nessuna', 'Cronologia', 'Ctrl+K, anche chiuse'],
+    ['Costo', 'Gratis', 'Gratis', 'Gratis', 'Gratis; Pro per la sincronizzazione'],
+  ]}
+/>
+
+Attiva l’impostazione di avvio, qualunque cosa tu scelga. Aggiungi ai preferiti una singola finestra che vale la pena tenere. Usa un’estensione quando lavori con più finestre o ti serve una scheda chiusa giorni dopo. Altri dettagli nella nostra [pagina di confronto](/compare).
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+
+</Section>

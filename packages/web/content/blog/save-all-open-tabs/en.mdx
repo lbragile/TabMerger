@@ -1,0 +1,320 @@
+export const post = {
+  slug: 'save-all-open-tabs',
+  title: 'How to save all open tabs and get them back later',
+  seoTitle: 'How to Save All Open Tabs (Chrome, Edge, Firefox)',
+  description:
+    'Save every open tab in Chrome, Edge or Firefox with one shortcut, make tabs reopen after a restart, and get closed tabs back.',
+  shareSummary: 'One shortcut, startup restore and closed-tab recovery in Chrome, Edge and Firefox.',
+  dek: 'Five ways to keep every tab you have open, and the one thing each of them quietly misses.',
+  published: '2026-11-19',
+  updated: '2026-11-19',
+  testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D saves the current window only.', source: 'Tested in all three, Nov 19, 2026' },
+    { text: 'Ctrl+Shift+T reopens closed tabs and windows.', source: 'Chrome, Edge and Firefox help pages' },
+    {
+      text: 'Extensions can’t list Chrome’s closed saved groups.',
+      source: 'chrome.tabGroups docs',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'Edge Collections is gone from Edge 149.', source: 'Microsoft Support' },
+  ],
+  faq: [
+    {
+      question: 'Does Ctrl+Shift+D save tabs from all windows?',
+      answer: 'No. It bookmarks the current window only. Repeat it per window, or use a tool that reads every window.',
+    },
+    {
+      question: 'Can I save all open tabs without an extension?',
+      answer: 'Yes: Ctrl+Shift+D plus the startup setting, both built into Chrome, Edge and Firefox.',
+    },
+    {
+      question: 'Why didn’t my tabs come back after a restart?',
+      answer:
+        'Startup restore brings back what was open when the browser quit. Earlier-closed and private windows aren’t included. Try Ctrl+Shift+T or History.',
+    },
+    {
+      question: 'Where does TabMerger keep saved tabs?',
+      answer:
+        'On your device, in the browser’s local storage. Pro syncs between devices, end-to-end encrypted. See the FAQ.',
+      link: { text: 'FAQ', href: '/faq' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/chrome-bookmarks-folder.webp', alt: 'Chrome bookmark manager with the folder Tab manager research selected, listing six saved pages' },
+    { src: '/blog/save-all-open-tabs/edge-bookmarks-folder.webp', alt: 'Edge Favorites with the folder Tab manager research open, listing six pages and their addresses' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Chrome Settings, On startup, with Continue where you left off selected' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Edge Settings, Start, home, and new tab page, with Open tabs from the previous session selected' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Firefox Settings, Home and startup, with Open previous windows and tabs checked' },
+    { src: '/blog/save-all-open-tabs/chrome-history.webp', alt: 'Chrome History page listing six pages visited today, with By date and By group tabs' },
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Edge History page with All, Recently closed and Tabs from other devices in the sidebar' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-light.webp', alt: 'TabMerger Now Open listing two browser windows with five tabs each, light theme' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-dark.webp', alt: 'TabMerger Now Open listing two browser windows with five tabs each, dark theme' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-light.webp', alt: 'TabMerger group menu with Merge with current, which adds your open browser windows to this group, light theme' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-dark.webp', alt: 'TabMerger group menu with Merge with current, which adds your open browser windows to this group, dark theme' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-light.webp', alt: 'The group Open tabs, Nov 19 holding 2 windows and 10 tabs, light theme' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-dark.webp', alt: 'The group Open tabs, Nov 19 holding 2 windows and 10 tabs, dark theme' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-light.webp', alt: 'TabMerger Recently closed, today, with an hourly strip and three closed tabs, light theme' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-dark.webp', alt: 'TabMerger Recently closed, today, with an hourly strip and three closed tabs, dark theme' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-light.webp', alt: 'TabMerger search for closed: seat showing one recently closed tab, light theme' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-dark.webp', alt: 'TabMerger search for closed: seat showing one recently closed tab, dark theme' },
+    { src: '/blog/save-all-open-tabs/tm-search-light.webp', alt: 'TabMerger search for lisbon: results tagged Now Open or Open tabs, Nov 19, light theme' },
+    { src: '/blog/save-all-open-tabs/tm-search-dark.webp', alt: 'TabMerger search for lisbon: results tagged Now Open or Open tabs, Nov 19, dark theme' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-light.webp', alt: 'TabMerger Save Session dialog with the name Before the trip, light theme' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-dark.webp', alt: 'TabMerger Save Session dialog with the name Before the trip, dark theme' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-light.webp', alt: 'The saved session Before the trip with three groups (Work, Reading list and Open tabs, Nov 19) and a Restore session button, light theme' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-dark.webp', alt: 'The saved session Before the trip with three groups (Work, Reading list and Open tabs, Nov 19) and a Restore session button, dark theme' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-light.webp', alt: 'TabMerger Settings, Data tab: Auto-save open tabs, Backups and Remember closed tabs, light theme' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-dark.webp', alt: 'TabMerger Settings, Data tab: Auto-save open tabs, Backups and Remember closed tabs, dark theme' },
+  ],
+  tags: ['tab-management', 'save-tabs', 'restore-closed-tabs', 'bookmarks', 'browser-productivity', 'chrome', 'edge', 'firefox'],
+  // Before publishing: check each title against its page, and replace the Microsoft entry with
+  // the exact Edge help article (restore tabs / startup pages).
+  sources: [
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Microsoft Edge help and learning',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/microsoft-edge',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-19',
+    },
+  ],
+  screenshotsCaptured: '2026-11-19',
+  // The index card: saving every open tab as a session (the light/dark pair is found automatically).
+  cover: { src: '/blog/save-all-open-tabs/tm-save-session-dialog-light.webp' },
+  ogImage: { src: '/blog/save-all-open-tabs/og.png', alt: 'How to save all open tabs and get them back later: a TabMerger guide for Chrome, Edge and Firefox, with a group holding two saved windows' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'bookmark', label: '1. Bookmark all tabs' },
+    { id: 'startup', label: '2. Reopen on startup' },
+    { id: 'closed', label: '3. Get closed tabs back' },
+    { id: 'groups', label: '4. Tab groups' },
+    { id: 'tabmerger', label: '5. Every window at once' },
+    { id: 'compare', label: 'Which to use' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['bookmark', 'startup', 'closed'],
+  browserFact: {
+    label: 'Startup setting',
+    values: { chrome: 'chrome://settings/onStartup', edge: 'edge://settings/startHomeNTP', firefox: 'about:preferences#home' },
+  },
+}
+
+<QuickAnswer>
+
+Press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> on a Mac) to bookmark every tab in the current window into a new folder. It works in Chrome, Edge and Firefox. To reopen tabs automatically, turn on **Continue where you left off** (Chrome), **Open tabs from the previous session** (Edge) or **Open previous windows and tabs** (Firefox).
+
+</QuickAnswer>
+
+<BrowserSwitcher />
+
+<Section id="bookmark" title="1. Bookmark all tabs in one keystroke">
+
+Every major browser saves a window’s tabs as a folder of bookmarks. The folder stays until you delete it, and syncs if you’re signed in to the browser.
+
+<BrowserPanels section="bookmark">
+<BrowserPanel browser="chrome">
+
+1. Click any tab in the window you want to keep.
+2. Press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> on a Mac).
+3. Name the folder, choose where it goes, and click Save.
+4. To reopen later, press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>, find the folder and open all of its bookmarks.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-bookmarks-folder.webp" alt="Chrome bookmark manager with the folder Tab manager research selected, listing six saved pages" width={1600} height={524} eager boxes={[{ id: 'folder' }]} source="chrome://bookmarks · Chrome 157.0.8103.79">Chrome’s bookmark manager after Ctrl+Shift+D: the new folder holds one bookmark per tab of the window.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Click any tab in the window you want to keep.
+2. Press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> on a Mac). Edge saves the tabs as favorites in a new folder.
+3. Name the folder and save it.
+4. To reopen later, press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> for Favorites, find the folder and open all of them.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-bookmarks-folder.webp" alt="Edge Favorites with the folder Tab manager research open, listing six pages and their addresses" width={1600} height={553} boxes={[{ id: 'folder' }]} source="edge://favorites · Edge 157.0.4341.60">Edge’s Favorites after the same shortcut: the tabs are saved as favorites in a new folder.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Click any tab in the window you want to keep.
+2. Press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> on a Mac) to bookmark all tabs.
+3. Name the folder and click Save.
+4. To reopen later, press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> to open the Library and open all of the folder’s bookmarks.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox Library (Ctrl+Shift+O) with the new folder selected. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>it saves the *current window only*. Three windows means three folders. Bookmarks also keep only the address; scroll position and form input are gone.</Catch>
+
+</Section>
+
+<Section id="startup" title="2. Make the browser reopen everything on startup">
+
+If restarts and updates are what lose your tabs, let the browser bring the session back.
+
+<BrowserPanels section="startup">
+<BrowserPanel browser="chrome">
+
+In Chrome: **Settings → On startup → Continue where you left off**. Or paste `chrome://settings/onStartup` into the address bar.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Chrome Settings, On startup, with Continue where you left off selected" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">Chrome’s On startup setting, set to reopen the last session.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+In Edge: **Settings → Start, home, and new tab page → On startup → Open tabs from the previous session**. Or paste `edge://settings/startHomeNTP` into the address bar.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Edge Settings, Start, home, and new tab page, with Open tabs from the previous session selected" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">Edge’s Start, home, and new tab page settings, set to reopen the last session.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+In Firefox: **Settings → Home and startup → Startup → Open previous windows and tabs**. Or paste `about:preferences#home` into the address bar.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Firefox Settings, Home and startup, with Open previous windows and tabs checked" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Firefox 159 keeps the option under Home and startup; older guides say General.</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>it restores what was open when the browser last quit. A window you closed earlier isn’t part of that, and private windows never come back.</Catch>
+
+</Section>
+
+<Section id="closed" title="3. Get back tabs you already closed">
+
+Press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) to reopen the last tab or window you closed; press it again to keep going back. For anything older, open History with <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>.
+
+<BrowserPanels section="closed">
+<BrowserPanel browser="chrome">
+
+Chrome also lists recently closed tabs and windows under ⋮ → History.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-history.webp" alt="Chrome History page listing six pages visited today, with By date and By group tabs" width={1600} height={640} source="chrome://history · Chrome 157.0.8103.79" className="m-0">Chrome’s History page; version 157 adds a By group view.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge lists Recently closed right on the History page.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Edge History page with All, Recently closed and Tabs from other devices in the sidebar" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60" className="m-0">Edge’s History page, with its Recently closed list in the sidebar.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox lists recently closed tabs and windows in the History menu (press Alt to show the menu bar).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with recently closed tabs open. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="groups" title="4. Tab groups: good for focus, limited for saving">
+
+- **Chrome** can save a group and reopen it, but extensions can’t see a closed saved group ([tabGroups API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
+- **Firefox** groups stay on the device and don’t travel with Firefox Sync.
+- **Edge** no longer has Collections, starting with Edge 149.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
+
+</Section>
+
+<Section id="tabmerger" title="5. Save every window at once with TabMerger">
+
+The built-in methods each cover one window, one restart, or one closed tab at a time. [TabMerger](/features), our free extension for Chrome, Edge and Firefox, lists every open window under **Now Open** and saves all of them into one group.
+
+<ScreenshotThemeToggle />
+
+1. Click **Add Group** and give it a name, such as “Open tabs, Nov 19”.
+2. Open the group’s **⋯** menu and choose **Merge with current**, which adds your open browser windows. (*Replace with current* swaps the group’s windows instead.)
+3. Close the windows whenever you like. The group keeps both windows and all ten tabs.
+
+<Carousel label="Saving every window into one group" steps={[{ title: 'Now Open' }, { title: 'Merge menu' }, { title: 'Saved group' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-now-open" alt="TabMerger Now Open listing two browser windows with five tabs each, light theme" darkAlt="TabMerger Now Open listing two browser windows with five tabs each, dark theme">Now Open mirrors the browser: every open window and its tabs.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merge-menu" alt="TabMerger group menu with Merge with current, which adds your open browser windows to this group, light theme" darkAlt="TabMerger group menu with Merge with current, which adds your open browser windows to this group, dark theme" boxes={[{ id: 'group-menu-button', label: 'Group menu' }, { id: 'merge-with-current', label: 'Merge with current' }]}>The new group’s menu: this option adds every open window.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merged-group" alt="The group Open tabs, Nov 19 holding 2 windows and 10 tabs, light theme" darkAlt="The group Open tabs, Nov 19 holding 2 windows and 10 tabs, dark theme">After choosing Merge with current: both windows are saved in one group, still there after they close.</ThemedScreenshot>
+</Carousel>
+
+### Prefer the keyboard?
+
+<ComparisonTable
+  head={['Shortcut', 'Saves']}
+  keysColumn={0}
+  rows={[
+    ['Ctrl+Shift+P', 'All other tabs in the window'],
+    ['Ctrl+Shift+S', 'The current tab'],
+    ['Ctrl+Shift+K', 'Tabs to the left'],
+    ['Ctrl+Shift+U', 'Tabs to the right'],
+  ]}
+/>
+
+Use <Kbd>⌘</Kbd> on a Mac. Each asks where to save; **Quick Save (new group)** makes a group on the spot. In Firefox, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> opens a private window, so pick another key under `about:addons` → Manage Extension Shortcuts.
+
+### Closed something by mistake?
+
+**Recently closed** keeps every tab and window you close, by day, with a strip showing the hour. Free keeps 2 days, Pro 30. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> searches open, saved and closed tabs; start with `closed:` for closed tabs only.
+
+<Carousel label="Getting closed tabs back" steps={[{ title: 'Recently closed' }, { title: 'closed: search' }, { title: 'Search everything' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-recently-closed" alt="TabMerger Recently closed, today, with an hourly strip and three closed tabs, light theme" darkAlt="TabMerger Recently closed, today, with an hourly strip and three closed tabs, dark theme" boxes={[{ id: 'hour-strip' }]}>Today’s closed tabs, with the hour they were closed.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search-closed" alt="TabMerger search for closed: seat showing one recently closed tab, light theme" darkAlt="TabMerger search for closed: seat showing one recently closed tab, dark theme" boxes={[{ id: 'search-input' }]}>Press Ctrl+K and start with `closed:` to search closed tabs only.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search" alt="TabMerger search for lisbon: results tagged Now Open or Open tabs, Nov 19, light theme" darkAlt="TabMerger search for lisbon: results tagged Now Open or Open tabs, Nov 19, dark theme" boxes={[{ id: 'group-tag-1' }]}>Without the prefix, search covers open and saved tabs, tagged by group.</ThemedScreenshot>
+</Carousel>
+
+### Snapshots and saving on autopilot
+
+**Save current session** takes a named snapshot of your saved groups (not your open tabs) that you can restore together. **Settings → Data → Auto-save open tabs** saves your open tabs as a new group automatically; Free keeps the newest 2, which count toward its 5 groups and 50 tabs.
+
+<Carousel label="Sessions and auto-save" steps={[{ title: 'Save session' }, { title: 'Session view' }, { title: 'Settings → Data' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-save-session-dialog" alt="TabMerger Save Session dialog with the name Before the trip, light theme" darkAlt="TabMerger Save Session dialog with the name Before the trip, dark theme" boxes={[{ id: 'session-name' }]}>Save current session asks for a name.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-session-view" alt="The saved session Before the trip with three groups (Work, Reading list and Open tabs, Nov 19) and a Restore session button, light theme" darkAlt="The saved session Before the trip with three groups (Work, Reading list and Open tabs, Nov 19) and a Restore session button, dark theme" boxes={[{ id: 'restore-session' }]}>After saving, open the session: Before the trip, with its three groups listed.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-settings-data" alt="TabMerger Settings, Data tab: Auto-save open tabs, Backups and Remember closed tabs, light theme" darkAlt="TabMerger Settings, Data tab: Auto-save open tabs, Backups and Remember closed tabs, dark theme" boxes={[{ id: 'auto-save-toggle' }]}>Settings → Data, where auto-save is turned on.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Free for Chrome, Edge and Firefox. No account needed to start.</InstallCta>
+
+</Section>
+
+<Section id="compare" title="Which method should you use?">
+
+<ComparisonTable
+  head={['', 'Bookmark all', 'Startup restore', 'Ctrl+Shift+T, History', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="38rem"
+  rows={[
+    ['Every window at once', 'No', 'Yes, at restart', 'One at a time', 'Yes'],
+    ['Kept after closing a window', 'Yes', 'No', 'In history', 'Yes'],
+    ['Search', 'Bookmarks', 'None', 'History', 'Ctrl+K, incl. closed'],
+    ['Cost', 'Free', 'Free', 'Free', 'Free; Pro for sync'],
+  ]}
+/>
+
+Turn on the startup setting whatever else you choose. Bookmark a single window worth keeping. Use an extension when you juggle several windows or need a closed tab days later. More on our [comparison page](/compare).
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+
+</Section>

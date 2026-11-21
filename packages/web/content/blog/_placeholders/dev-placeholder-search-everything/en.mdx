@@ -1,0 +1,26 @@
+{/* Placeholder post for local development only (content/blog/_placeholders). Listed only under
+    `next dev`; never in a production or preview build, the sitemap, llms.txt or tag counts. */}
+
+export const post = {
+  slug: 'dev-placeholder-search-everything',
+  title: 'Search every tab you ever saved',
+  seoTitle: 'Placeholder: Search every tab you ever saved',
+  description: 'A placeholder post, so the blog index has a second page locally.',
+  shareSummary: 'Placeholder post for local development only.',
+  dek: 'A placeholder post, so the blog index has a second page locally.',
+  published: '2026-11-01',
+  updated: '2026-11-01',
+  testedOn: ['Chrome 157.0.8103.79'],
+  keyFacts: [],
+  faq: [{ question: 'Is this a real post?', answer: 'No. It exists only in local development.' }],
+  images: [{ src: '/blog/save-all-open-tabs/tm-search-light.webp', alt: 'TabMerger search, light theme' }],
+  cover: { src: '/blog/save-all-open-tabs/tm-search-light.webp' },
+  tags: ['tab-manager', 'browser-productivity', 'chrome'],
+  toc: [{ id: 'placeholder', label: 'Placeholder' }],
+}
+
+<Section id="placeholder" title="Placeholder post (local development only)">
+
+This post exists only under `next dev`, so the blog index has enough posts to show its pager locally. It is never part of a production or preview build, the sitemap, llms.txt or the tag counts. Turn it off with `BLOG_DEV_PLACEHOLDERS=0`.
+
+</Section>

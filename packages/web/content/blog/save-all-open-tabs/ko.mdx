@@ -1,0 +1,316 @@
+export const post = {
+  slug: 'save-all-open-tabs',
+  title: '열린 탭을 모두 저장하고 나중에 다시 여는 방법',
+  seoTitle: '열린 탭 모두 저장하는 방법 (Chrome, Edge, Firefox)',
+  description:
+    'Chrome, Edge, Firefox에서 단축키 하나로 열린 탭을 모두 저장하고, 다시 시작하면 자동으로 열리게 하고, 닫은 탭을 되살리는 방법을 알아봅니다.',
+  shareSummary: '단축키 하나로 저장, 시작할 때 복원, 닫은 탭 되살리기. Chrome, Edge, Firefox 모두 해당.',
+  dek: '열린 탭을 모두 지키는 다섯 가지 방법과, 각 방법이 조용히 놓치는 한 가지.',
+  published: '2026-11-19',
+  updated: '2026-11-19',
+  testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D는 현재 창만 저장합니다.', source: '세 브라우저에서 테스트, 2026년 11월 19일' },
+    { text: 'Ctrl+Shift+T는 닫은 탭과 창을 다시 엽니다.', source: 'Chrome, Edge, Firefox 도움말 페이지' },
+    {
+      text: '확장 프로그램은 Chrome에서 닫은 저장된 그룹 목록을 볼 수 없습니다.',
+      source: 'chrome.tabGroups 문서',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'Edge 컬렉션은 Edge 149부터 사라졌습니다.', source: 'Microsoft 지원' },
+  ],
+  faq: [
+    {
+      question: 'Ctrl+Shift+D로 모든 창의 탭을 저장할 수 있나요?',
+      answer: '아니요. 현재 창만 북마크에 추가합니다. 창마다 반복하거나, 모든 창을 읽을 수 있는 도구를 사용하세요.',
+    },
+    {
+      question: '확장 프로그램 없이 열린 탭을 모두 저장할 수 있나요?',
+      answer: '네. Ctrl+Shift+D와 시작 설정을 함께 쓰면 됩니다. 둘 다 Chrome, Edge, Firefox에 기본으로 들어 있습니다.',
+    },
+    {
+      question: '다시 시작했는데 탭이 돌아오지 않은 이유는 무엇인가요?',
+      answer:
+        '시작할 때 복원되는 것은 브라우저를 종료할 때 열려 있던 탭입니다. 그보다 먼저 닫은 창과 시크릿 창은 포함되지 않습니다. Ctrl+Shift+T나 방문 기록을 이용해 보세요.',
+    },
+    {
+      question: 'TabMerger는 저장한 탭을 어디에 보관하나요?',
+      answer:
+        '사용자 기기에서 브라우저의 로컬 저장소에 보관합니다. Pro에서는 엔드투엔드 암호화로 기기 간에 동기화합니다. 자세한 내용은 자주 묻는 질문을 참고하세요.',
+      link: { text: '자주 묻는 질문', href: '/faq' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/chrome-bookmarks-folder.webp', alt: 'Chrome 북마크 관리자에서 Tab manager research 폴더가 선택되어 있고, 저장된 페이지 6개가 보이는 화면' },
+    { src: '/blog/save-all-open-tabs/edge-bookmarks-folder.webp', alt: 'Edge 즐겨찾기(Favorites)에서 Tab manager research 폴더가 열려 있고, 페이지 6개와 주소가 보이는 화면' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Chrome 설정의 On startup(시작 그룹)에서 Continue where you left off(중단한 위치에서 계속하기)가 선택된 화면' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Edge 설정의 Start, home, and new tab page에서 Open tabs from the previous session이 선택된 화면' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Firefox 설정의 Home and startup(홈 및 시작)에서 Open previous windows and tabs(이전 창 및 탭 열기)가 체크된 화면' },
+    { src: '/blog/save-all-open-tabs/chrome-history.webp', alt: 'Chrome 방문 기록 페이지에 오늘 방문한 페이지 6개와 By date, By group 탭이 보이는 화면' },
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Edge 방문 기록 페이지의 사이드바에 All, Recently closed, Tabs from other devices가 보이는 화면' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-light.webp', alt: 'TabMerger의 현재 열린 탭에 브라우저 창 2개가 각각 탭 5개와 함께 표시된 화면, 라이트 테마' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-dark.webp', alt: 'TabMerger의 현재 열린 탭에 브라우저 창 2개가 각각 탭 5개와 함께 표시된 화면, 다크 테마' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-light.webp', alt: 'TabMerger 그룹 메뉴에서, 열린 브라우저 창을 이 그룹에 추가하는 현재 상태와 합치기 항목이 보이는 화면, 라이트 테마' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-dark.webp', alt: 'TabMerger 그룹 메뉴에서, 열린 브라우저 창을 이 그룹에 추가하는 현재 상태와 합치기 항목이 보이는 화면, 다크 테마' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-light.webp', alt: '창 2개와 탭 10개가 담긴 Open tabs, Nov 19(열린 탭, 11월 19일) 그룹, 라이트 테마' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-dark.webp', alt: '창 2개와 탭 10개가 담긴 Open tabs, Nov 19(열린 탭, 11월 19일) 그룹, 다크 테마' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-light.webp', alt: 'TabMerger의 최근에 닫은 탭에서 오늘 항목, 시간대 막대와 닫은 탭 3개가 보이는 화면, 라이트 테마' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-dark.webp', alt: 'TabMerger의 최근에 닫은 탭에서 오늘 항목, 시간대 막대와 닫은 탭 3개가 보이는 화면, 다크 테마' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-light.webp', alt: 'TabMerger에서 closed: seat를 검색해 최근에 닫은 탭 1개가 표시된 화면, 라이트 테마' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-dark.webp', alt: 'TabMerger에서 closed: seat를 검색해 최근에 닫은 탭 1개가 표시된 화면, 다크 테마' },
+    { src: '/blog/save-all-open-tabs/tm-search-light.webp', alt: 'TabMerger에서 lisbon을 검색한 결과에 현재 열린 탭 또는 Open tabs, Nov 19 라벨이 붙은 화면, 라이트 테마' },
+    { src: '/blog/save-all-open-tabs/tm-search-dark.webp', alt: 'TabMerger에서 lisbon을 검색한 결과에 현재 열린 탭 또는 Open tabs, Nov 19 라벨이 붙은 화면, 다크 테마' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-light.webp', alt: 'TabMerger 세션 저장 대화상자에 Before the trip(여행 전)이라는 이름이 입력된 화면, 라이트 테마' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-dark.webp', alt: 'TabMerger 세션 저장 대화상자에 Before the trip(여행 전)이라는 이름이 입력된 화면, 다크 테마' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-light.webp', alt: '저장된 세션 Before the trip에 그룹 3개(Work, Reading list, Open tabs, Nov 19)와 세션 복원 버튼이 보이는 화면, 라이트 테마' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-dark.webp', alt: '저장된 세션 Before the trip에 그룹 3개(Work, Reading list, Open tabs, Nov 19)와 세션 복원 버튼이 보이는 화면, 다크 테마' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-light.webp', alt: 'TabMerger 설정의 데이터 탭에 열린 탭 자동 저장, 백업, 닫은 탭 기억하기가 보이는 화면, 라이트 테마' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-dark.webp', alt: 'TabMerger 설정의 데이터 탭에 열린 탭 자동 저장, 백업, 닫은 탭 기억하기가 보이는 화면, 다크 테마' },
+  ],
+  tags: ['tab-management', 'save-tabs', 'restore-closed-tabs', 'bookmarks', 'browser-productivity', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Microsoft Edge help and learning',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/microsoft-edge',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-19',
+    },
+  ],
+  screenshotsCaptured: '2026-11-19',
+  ogImage: { src: '/blog/save-all-open-tabs/og.png', alt: '열린 탭을 모두 저장하고 나중에 다시 여는 방법: Chrome, Edge, Firefox용 TabMerger 가이드, 저장된 창 2개가 담긴 그룹 이미지' },
+  toc: [
+    { id: 'quick', label: '간단한 답' },
+    { id: 'bookmark', label: '1. 모든 탭 북마크' },
+    { id: 'startup', label: '2. 시작할 때 다시 열기' },
+    { id: 'closed', label: '3. 닫은 탭 되살리기' },
+    { id: 'groups', label: '4. 탭 그룹' },
+    { id: 'tabmerger', label: '5. 모든 창을 한 번에' },
+    { id: 'compare', label: '무엇을 쓸까' },
+    { id: 'faq', label: '자주 묻는 질문' },
+  ],
+  browserSections: ['bookmark', 'startup', 'closed'],
+  browserFact: {
+    label: '시작 설정',
+    values: { chrome: 'chrome://settings/onStartup', edge: 'edge://settings/startHomeNTP', firefox: 'about:preferences#home' },
+  },
+}
+
+<QuickAnswer>
+
+열린 탭을 모두 저장하려면 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>(Mac에서는 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>)를 누르세요. 현재 창의 모든 탭이 새 북마크 폴더에 저장됩니다. Chrome, Edge, Firefox에서 모두 됩니다. 탭이 자동으로 다시 열리게 하려면 Chrome의 **중단한 위치에서 계속하기**(Continue where you left off), Edge의 **Open tabs from the previous session**, Firefox의 **이전 창 및 탭 열기**(Open previous windows and tabs)를 켜세요.
+
+</QuickAnswer>
+
+<BrowserSwitcher />
+
+<Section id="bookmark" title="1. 키 한 번으로 모든 탭 북마크하기">
+
+주요 브라우저는 모두 한 창의 탭을 북마크 폴더 하나로 저장할 수 있습니다. 폴더는 직접 지울 때까지 남아 있고, 브라우저에 로그인되어 있으면 동기화됩니다.
+
+<BrowserPanels section="bookmark">
+<BrowserPanel browser="chrome">
+
+1. 남겨 둘 창에서 아무 탭이나 클릭합니다.
+2. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>(Mac에서는 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>)를 누릅니다.
+3. 폴더 이름을 정하고 저장 위치를 고른 다음 저장을 클릭합니다.
+4. 나중에 다시 열려면 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>를 누르고, 폴더를 찾아 안의 북마크를 모두 엽니다.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-bookmarks-folder.webp" alt="Chrome 북마크 관리자에서 Tab manager research 폴더가 선택되어 있고, 저장된 페이지 6개가 보이는 화면" width={1600} height={524} eager boxes={[{ id: 'folder' }]} source="chrome://bookmarks · Chrome 157.0.8103.79">Ctrl+Shift+D를 누른 뒤의 Chrome 북마크 관리자(Bookmark Manager). 새 폴더에 창의 탭마다 북마크가 하나씩 들어 있습니다. 이 글의 브라우저 스크린샷은 영어 화면입니다.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. 남겨 둘 창에서 아무 탭이나 클릭합니다.
+2. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>(Mac에서는 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>)를 누릅니다. Edge는 탭을 새 폴더에 즐겨찾기(Favorites)로 저장합니다.
+3. 폴더 이름을 정하고 저장합니다.
+4. 나중에 다시 열려면 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>로 즐겨찾기를 열고, 폴더를 찾아 모두 엽니다.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-bookmarks-folder.webp" alt="Edge 즐겨찾기(Favorites)에서 Tab manager research 폴더가 열려 있고, 페이지 6개와 주소가 보이는 화면" width={1600} height={553} boxes={[{ id: 'folder' }]} source="edge://favorites · Edge 157.0.4341.60">같은 단축키를 누른 뒤의 Edge 즐겨찾기. 탭이 새 폴더에 즐겨찾기로 저장되어 있습니다.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. 남겨 둘 창에서 아무 탭이나 클릭합니다.
+2. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>(Mac에서는 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>)를 눌러 모든 탭을 북마크합니다.
+3. 폴더 이름을 정하고 저장을 클릭합니다.
+4. 나중에 다시 열려면 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>로 "라이브러리"(Library) 창을 열고, 폴더의 북마크를 모두 엽니다.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox Library (Ctrl+Shift+O) with the new folder selected. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>**현재 창만** 저장합니다. 창이 세 개면 폴더도 세 개가 됩니다. 북마크에는 주소만 남기 때문에 스크롤 위치와 양식에 입력한 내용은 사라집니다.</Catch>
+
+</Section>
+
+<Section id="startup" title="2. 시작할 때 모든 탭이 다시 열리게 하기">
+
+다시 시작이나 업데이트 때문에 탭을 잃는다면, 브라우저가 이전 세션을 되살리도록 설정하세요.
+
+<BrowserPanels section="startup">
+<BrowserPanel browser="chrome">
+
+Chrome에서는 **설정 → 시작 그룹 → 중단한 위치에서 계속하기**(Settings → On startup → Continue where you left off)를 선택합니다. 주소창에 `chrome://settings/onStartup`을 붙여 넣어도 됩니다.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Chrome 설정의 On startup(시작 그룹)에서 Continue where you left off(중단한 위치에서 계속하기)가 선택된 화면" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">마지막 세션을 다시 열도록 설정한 Chrome의 시작 그룹.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge에서는 **설정 → Start, home, and new tab page → On startup → Open tabs from the previous session** 순서로 선택합니다. 주소창에 `edge://settings/startHomeNTP`를 붙여 넣어도 됩니다.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Edge 설정의 Start, home, and new tab page에서 Open tabs from the previous session이 선택된 화면" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">마지막 세션을 다시 열도록 설정한 Edge의 Start, home, and new tab page.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox에서는 **설정 → 홈 및 시작 → 시작 페이지 → 이전 창 및 탭 열기**(Settings → Home and startup → Startup → Open previous windows and tabs) 순서로 선택합니다. 주소창에 `about:preferences#home`을 붙여 넣어도 됩니다.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Firefox 설정의 Home and startup(홈 및 시작)에서 Open previous windows and tabs(이전 창 및 탭 열기)가 체크된 화면" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Firefox 159에서는 이 옵션이 Home and startup(홈 및 시작)에 있습니다. 예전 안내에는 일반에 있다고 나옵니다.</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>브라우저를 마지막으로 종료할 때 열려 있던 것만 복원합니다. 그전에 닫은 창은 포함되지 않고, 시크릿 창은 절대 돌아오지 않습니다.</Catch>
+
+</Section>
+
+<Section id="closed" title="3. 이미 닫은 탭 되살리기">
+
+<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>(<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>)를 누르면 마지막으로 닫은 탭이나 창이 다시 열립니다. 계속 누르면 그 전에 닫은 것으로 거슬러 올라갑니다. 더 오래된 것은 <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>로 방문 기록을 열어 찾으세요.
+
+<BrowserPanels section="closed">
+<BrowserPanel browser="chrome">
+
+Chrome은 ⋮ → 방문 기록에서도 최근에 닫은 탭과 창을 보여 줍니다.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-history.webp" alt="Chrome 방문 기록 페이지에 오늘 방문한 페이지 6개와 By date, By group 탭이 보이는 화면" width={1600} height={640} source="chrome://history · Chrome 157.0.8103.79" className="m-0">Chrome 방문 기록 페이지. 157 버전에서 By group 보기가 추가되었습니다.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge는 방문 기록 페이지에 "Recently closed" 목록을 바로 보여 줍니다.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Edge 방문 기록 페이지의 사이드바에 All, Recently closed, Tabs from other devices가 보이는 화면" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60" className="m-0">사이드바에 Recently closed 목록이 있는 Edge 방문 기록 페이지.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox는 **기록**(History) 메뉴의 **최근에 닫은 탭**과 **최근에 닫은 창**에서 닫은 탭과 창을 보여 줍니다(메뉴 막대를 표시하려면 Alt 키를 누르세요).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with recently closed tabs open. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="groups" title="4. 탭 그룹: 집중에는 좋지만 저장에는 한계가 있다">
+
+- **Chrome**은 그룹을 저장했다가 다시 열 수 있지만, 닫은 저장된 그룹은 확장 프로그램이 볼 수 없습니다([tabGroups API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
+- **Firefox** 그룹은 그 기기에만 남고 Firefox Sync로 옮겨 가지 않습니다.
+- **Edge**는 Edge 149부터 컬렉션 기능이 없어졌습니다.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
+
+</Section>
+
+<Section id="tabmerger" title="5. TabMerger로 모든 창을 한 번에 저장하기">
+
+브라우저에 기본으로 있는 방법은 각각 창 하나, 다시 시작 한 번, 또는 닫은 탭 하나씩만 다룹니다. Chrome, Edge, Firefox용 무료 확장 프로그램인 [TabMerger](/features)는 열린 창을 모두 **현재 열린 탭**에 보여 주고, 이를 한 그룹에 모두 저장합니다.
+
+<ScreenshotThemeToggle />
+
+1. **그룹 추가**를 클릭하고 "열린 탭, 11월 19일" 같은 이름을 붙입니다(스크린샷에서는 Open tabs, Nov 19).
+2. 그룹의 **⋯** 메뉴를 열고 **현재 상태와 합치기**를 선택합니다. 열린 브라우저 창이 이 그룹에 추가됩니다. ("현재 상태로 바꾸기"를 선택하면 그룹의 창을 대신 바꿉니다.)
+3. 이제 언제든 창을 닫아도 됩니다. 그룹에는 창 2개와 탭 10개가 모두 남아 있습니다.
+
+<Carousel label="모든 창을 한 그룹에 저장하기" steps={[{ title: '현재 열린 탭' }, { title: '합치기 메뉴' }, { title: '저장된 그룹' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-now-open" alt="TabMerger의 현재 열린 탭에 브라우저 창 2개가 각각 탭 5개와 함께 표시된 화면, 라이트 테마" darkAlt="TabMerger의 현재 열린 탭에 브라우저 창 2개가 각각 탭 5개와 함께 표시된 화면, 다크 테마">현재 열린 탭은 브라우저를 그대로 보여 줍니다. 열린 창과 그 안의 탭이 모두 나옵니다.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merge-menu" alt="TabMerger 그룹 메뉴에서, 열린 브라우저 창을 이 그룹에 추가하는 현재 상태와 합치기 항목이 보이는 화면, 라이트 테마" darkAlt="TabMerger 그룹 메뉴에서, 열린 브라우저 창을 이 그룹에 추가하는 현재 상태와 합치기 항목이 보이는 화면, 다크 테마" boxes={[{ id: 'group-menu-button', label: '그룹 메뉴' }, { id: 'merge-with-current', label: '현재 상태와 합치기' }]}>그룹 추가 후 새 그룹의 메뉴를 열고, 열린 창을 모두 복사해 넣는 항목을 고릅니다.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merged-group" alt="창 2개와 탭 10개가 담긴 Open tabs, Nov 19(열린 탭, 11월 19일) 그룹, 라이트 테마" darkAlt="창 2개와 탭 10개가 담긴 Open tabs, Nov 19(열린 탭, 11월 19일) 그룹, 다크 테마">현재 상태와 합치기를 선택한 뒤의 모습. 두 창이 한 그룹에 저장되어 창을 닫은 뒤에도 남습니다.</ThemedScreenshot>
+</Carousel>
+
+### 키보드가 더 편하다면
+
+<ComparisonTable
+  head={['단축키', '저장 대상']}
+  keysColumn={0}
+  rows={[
+    ['Ctrl+Shift+P', '창의 다른 탭 전부'],
+    ['Ctrl+Shift+S', '현재 탭'],
+    ['Ctrl+Shift+K', '왼쪽 탭'],
+    ['Ctrl+Shift+U', '오른쪽 탭'],
+  ]}
+/>
+
+Mac에서는 <Kbd>⌘</Kbd>를 사용하세요. 단축키마다 저장할 곳을 묻고, **빠른 저장(새 그룹)** 항목을 고르면 바로 그룹이 만들어집니다. Firefox에서는 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd>가 시크릿 창을 여는 키이므로, `about:addons`의 "확장 기능 단축키 관리"(Manage Extension Shortcuts)에서 다른 키를 지정하세요.
+
+### 실수로 닫았다면
+
+**최근에 닫은 탭**은 닫은 탭과 창을 모두 날짜별로 보관하고, 닫은 시간을 보여 주는 막대도 표시합니다. 무료는 2일, Pro는 30일 동안 보관합니다. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>를 누르면 열린 탭, 저장한 탭, 닫은 탭을 함께 검색합니다. 닫은 탭만 찾으려면 `closed:`로 시작하세요.
+
+<Carousel label="닫은 탭 되살리기" steps={[{ title: '최근에 닫은 탭' }, { title: 'closed: 검색' }, { title: '전체 검색' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-recently-closed" alt="TabMerger의 최근에 닫은 탭에서 오늘 항목, 시간대 막대와 닫은 탭 3개가 보이는 화면, 라이트 테마" darkAlt="TabMerger의 최근에 닫은 탭에서 오늘 항목, 시간대 막대와 닫은 탭 3개가 보이는 화면, 다크 테마" boxes={[{ id: 'hour-strip' }]}>오늘 닫은 탭과 닫은 시간.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search-closed" alt="TabMerger에서 closed: seat를 검색해 최근에 닫은 탭 1개가 표시된 화면, 라이트 테마" darkAlt="TabMerger에서 closed: seat를 검색해 최근에 닫은 탭 1개가 표시된 화면, 다크 테마" boxes={[{ id: 'search-input' }]}>Ctrl+K를 누르고 `closed:`로 시작하면 닫은 탭만 검색합니다.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search" alt="TabMerger에서 lisbon을 검색한 결과에 현재 열린 탭 또는 Open tabs, Nov 19 라벨이 붙은 화면, 라이트 테마" darkAlt="TabMerger에서 lisbon을 검색한 결과에 현재 열린 탭 또는 Open tabs, Nov 19 라벨이 붙은 화면, 다크 테마" boxes={[{ id: 'group-tag-1' }]}>접두어가 없으면 열린 탭과 저장한 탭을 검색하고, 결과에 그룹 라벨을 붙입니다.</ThemedScreenshot>
+</Carousel>
+
+### 스냅샷과 자동 저장
+
+**현재 세션 저장**은 저장한 그룹(열린 탭이 아님)을 이름을 붙인 스냅샷으로 남겨 한꺼번에 복원할 수 있게 합니다. **설정 → 데이터 → 열린 탭 자동 저장**을 켜면 열린 탭이 자동으로 새 그룹에 저장됩니다. 무료에서는 최근 2개를 보관하며, 이 그룹은 무료 한도인 그룹 5개와 탭 50개에 포함됩니다.
+
+<Carousel label="세션과 자동 저장" steps={[{ title: '세션 저장' }, { title: '세션 보기' }, { title: '설정 → 데이터' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-save-session-dialog" alt="TabMerger 세션 저장 대화상자에 Before the trip(여행 전)이라는 이름이 입력된 화면, 라이트 테마" darkAlt="TabMerger 세션 저장 대화상자에 Before the trip(여행 전)이라는 이름이 입력된 화면, 다크 테마" boxes={[{ id: 'session-name' }]}>현재 세션 저장은 이름을 묻습니다.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-session-view" alt="저장된 세션 Before the trip에 그룹 3개(Work, Reading list, Open tabs, Nov 19)와 세션 복원 버튼이 보이는 화면, 라이트 테마" darkAlt="저장된 세션 Before the trip에 그룹 3개(Work, Reading list, Open tabs, Nov 19)와 세션 복원 버튼이 보이는 화면, 다크 테마" boxes={[{ id: 'restore-session' }]}>저장한 뒤 세션을 열면 Before the trip과 그 안의 그룹 3개가 보입니다.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-settings-data" alt="TabMerger 설정의 데이터 탭에 열린 탭 자동 저장, 백업, 닫은 탭 기억하기가 보이는 화면, 라이트 테마" darkAlt="TabMerger 설정의 데이터 탭에 열린 탭 자동 저장, 백업, 닫은 탭 기억하기가 보이는 화면, 다크 테마" boxes={[{ id: 'auto-save-toggle' }]}>자동 저장을 켜는 설정 → 데이터 화면.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Chrome, Edge, Firefox에서 무료로 쓸 수 있습니다. 시작할 때 계정이 필요 없습니다.</InstallCta>
+
+</Section>
+
+<Section id="compare" title="어떤 방법을 써야 할까?">
+
+<ComparisonTable
+  head={['', '모두 북마크', '시작할 때 복원', 'Ctrl+Shift+T, 방문 기록', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="38rem"
+  rows={[
+    ['모든 창을 한 번에', '아니요', '예, 다시 시작할 때', '하나씩', '예'],
+    ['창을 닫은 뒤에도 남음', '예', '아니요', '방문 기록에', '예'],
+    ['검색', '북마크', '없음', '방문 기록', 'Ctrl+K, 닫은 탭 포함'],
+    ['비용', '무료', '무료', '무료', '무료, 동기화는 Pro'],
+  ]}
+/>
+
+무엇을 고르든 시작 설정은 켜 두세요. 남겨 둘 만한 창이 하나라면 북마크로 충분합니다. 여러 창을 오가며 쓰거나 며칠 뒤에 닫은 탭이 필요하다면 확장 프로그램을 쓰세요. 자세한 내용은 [비교 페이지](/compare)에 있습니다.
+
+</Section>
+
+<Section id="faq" title="자주 묻는 질문">
+
+<Faq items={post.faq} />
+
+
+</Section>

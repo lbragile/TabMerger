@@ -6,4 +6,5 @@
 - [Lease slots + never-stricter pre-checks](learnings_lease_slots_and_precheck_review.md) — FK to auth.users = SHARE ROW EXCL; cron re-run keeps disabled; RC-only race safety
 - [Deploy-time lock order](learnings_deploy_time_lock_order.md) — lock order follows the OLD live function; 40P01 repro; NOT VALID useless in-file; peek parity
 - [Privilege-revoke review checklist](learnings_privilege_revoke_review.md) — has_table_privilege blind to column grants; grantor rule; views/definer paths; pgTAP 42501 ambiguity
+- [Definer wrapper review](learnings_definer_wrapper_review.md) — wrapper over a definer count needn't be definer; tests can't tell; check totals directly
 - [Public vote table review](learnings_public_vote_table_review.md) — schema/default ACLs, auth.jwt() GUCs, pinning policy cmd+roles, upsert needs UPDATE, auth.users FK lock

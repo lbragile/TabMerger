@@ -1,0 +1,320 @@
+export const post = {
+  slug: 'save-all-open-tabs',
+  title: 'Cách lưu tất cả các tab đang mở và mở lại sau',
+  seoTitle: 'Cách lưu tất cả các tab đang mở (Chrome, Edge, Firefox)',
+  description:
+    'Lưu tất cả các tab đang mở trong Chrome, Edge hoặc Firefox bằng một phím tắt, tự mở lại tab sau khi khởi động lại và lấy lại các tab đã đóng.',
+  shareSummary: 'Một phím tắt, khôi phục khi khởi động và lấy lại tab đã đóng trong Chrome, Edge và Firefox.',
+  dek: 'Năm cách giữ lại mọi tab đang mở, và điều mà mỗi cách lặng lẽ bỏ sót.',
+  published: '2026-11-19',
+  updated: '2026-11-19',
+  testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D chỉ lưu cửa sổ hiện tại.', source: 'Đã kiểm tra trên cả ba, ngày 19/11/2026' },
+    { text: 'Ctrl+Shift+T mở lại các tab và cửa sổ đã đóng.', source: 'Trang trợ giúp của Chrome, Edge và Firefox' },
+    {
+      text: 'Tiện ích không thể liệt kê các nhóm đã lưu của Chrome khi chúng đã đóng.',
+      source: 'Tài liệu chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'Bộ sưu tập đã bị gỡ khỏi Edge từ phiên bản 149.', source: 'Hỗ trợ của Microsoft' },
+  ],
+  faq: [
+    {
+      question: 'Ctrl+Shift+D có lưu tab của tất cả cửa sổ không?',
+      answer: 'Không. Phím tắt này chỉ đánh dấu trang cho cửa sổ hiện tại. Hãy lặp lại cho từng cửa sổ, hoặc dùng một công cụ đọc được mọi cửa sổ.',
+    },
+    {
+      question: 'Có thể lưu tất cả các tab đang mở mà không cần tiện ích không?',
+      answer: 'Có: Ctrl+Shift+D cùng với cài đặt khởi động, cả hai đều có sẵn trong Chrome, Edge và Firefox.',
+    },
+    {
+      question: 'Vì sao tab không mở lại sau khi khởi động lại?',
+      answer:
+        'Tính năng khôi phục khi khởi động chỉ mở lại những gì đang mở lúc trình duyệt đóng. Các cửa sổ đã đóng trước đó và cửa sổ riêng tư không được tính. Hãy thử Ctrl+Shift+T hoặc lịch sử.',
+    },
+    {
+      question: 'TabMerger lưu các tab ở đâu?',
+      answer:
+        'Trên thiết bị của bạn, trong bộ nhớ cục bộ của trình duyệt. Gói Pro đồng bộ giữa các thiết bị, được mã hóa đầu cuối. Xem Câu hỏi thường gặp.',
+      link: { text: 'Câu hỏi thường gặp', href: '/faq' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/chrome-bookmarks-folder.webp', alt: 'Trình quản lý dấu trang của Chrome, thư mục Tab manager research được chọn, liệt kê sáu trang đã lưu' },
+    { src: '/blog/save-all-open-tabs/edge-bookmarks-folder.webp', alt: 'Mục yêu thích của Edge, thư mục Tab manager research đang mở, liệt kê sáu trang và địa chỉ của chúng' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Cài đặt Chrome, mục On startup (Khi khởi động), đã chọn Continue where you left off (Tiếp tục từ nơi bạn đã dừng lại)' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Cài đặt Edge, mục Start, home, and new tab page, đã chọn Open tabs from the previous session' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Cài đặt Firefox, mục Home and startup (Trang chủ và khởi động), đã đánh dấu Open previous windows and tabs (Mở các cửa sổ và thẻ trước đó)' },
+    { src: '/blog/save-all-open-tabs/chrome-history.webp', alt: 'Trang History của Chrome liệt kê sáu trang đã truy cập hôm nay, với chế độ xem By date và By group' },
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Trang History của Edge với All, Recently closed và Tabs from other devices ở thanh bên' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-light.webp', alt: 'Now Open (Đang Mở) trong TabMerger, hai cửa sổ trình duyệt, mỗi cửa sổ năm tab, giao diện sáng' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-dark.webp', alt: 'Now Open (Đang Mở) trong TabMerger, hai cửa sổ trình duyệt, mỗi cửa sổ năm tab, giao diện tối' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-light.webp', alt: 'Menu nhóm của TabMerger với Merge with current (Hợp nhất với phiên hiện tại), thêm các cửa sổ trình duyệt đang mở vào nhóm này, giao diện sáng' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-dark.webp', alt: 'Menu nhóm của TabMerger với Merge with current (Hợp nhất với phiên hiện tại), thêm các cửa sổ trình duyệt đang mở vào nhóm này, giao diện tối' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-light.webp', alt: 'Nhóm Open tabs, Nov 19 chứa 2 cửa sổ và 10 tab, giao diện sáng' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-dark.webp', alt: 'Nhóm Open tabs, Nov 19 chứa 2 cửa sổ và 10 tab, giao diện tối' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-light.webp', alt: 'Recently closed (Đã đóng gần đây) trong TabMerger, hôm nay, với dải theo giờ và ba tab đã đóng, giao diện sáng' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-dark.webp', alt: 'Recently closed (Đã đóng gần đây) trong TabMerger, hôm nay, với dải theo giờ và ba tab đã đóng, giao diện tối' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-light.webp', alt: 'Tìm kiếm closed: seat trong TabMerger hiện một tab vừa đóng, giao diện sáng' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-dark.webp', alt: 'Tìm kiếm closed: seat trong TabMerger hiện một tab vừa đóng, giao diện tối' },
+    { src: '/blog/save-all-open-tabs/tm-search-light.webp', alt: 'Tìm kiếm lisbon trong TabMerger: kết quả gắn nhãn Now Open hoặc Open tabs, Nov 19, giao diện sáng' },
+    { src: '/blog/save-all-open-tabs/tm-search-dark.webp', alt: 'Tìm kiếm lisbon trong TabMerger: kết quả gắn nhãn Now Open hoặc Open tabs, Nov 19, giao diện tối' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-light.webp', alt: 'Hộp thoại Save Session (Lưu Phiên) của TabMerger với tên Before the trip, giao diện sáng' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-dark.webp', alt: 'Hộp thoại Save Session (Lưu Phiên) của TabMerger với tên Before the trip, giao diện tối' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-light.webp', alt: 'Phiên đã lưu Before the trip với ba nhóm (Work, Reading list và Open tabs, Nov 19) và nút Restore session, giao diện sáng' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-dark.webp', alt: 'Phiên đã lưu Before the trip với ba nhóm (Work, Reading list và Open tabs, Nov 19) và nút Restore session, giao diện tối' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-light.webp', alt: 'Cài đặt TabMerger, mục Data: Auto-save open tabs, Backups và Remember closed tabs, giao diện sáng' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-dark.webp', alt: 'Cài đặt TabMerger, mục Data: Auto-save open tabs, Backups và Remember closed tabs, giao diện tối' },
+  ],
+  tags: ['tab-management', 'save-tabs', 'restore-closed-tabs', 'bookmarks', 'browser-productivity', 'chrome', 'edge', 'firefox'],
+  // Before publishing: check each title against its page, and replace the Microsoft entry with
+  // the exact Edge help article (restore tabs / startup pages).
+  sources: [
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Microsoft Edge help and learning',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/microsoft-edge',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-19',
+    },
+  ],
+  screenshotsCaptured: '2026-11-19',
+  ogImage: { src: '/blog/save-all-open-tabs/og.png', alt: 'Cách lưu tất cả các tab đang mở và mở lại sau: hướng dẫn của TabMerger cho Chrome, Edge và Firefox, với một nhóm chứa hai cửa sổ đã lưu' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'bookmark', label: '1. Đánh dấu tất cả tab' },
+    { id: 'startup', label: '2. Mở lại khi khởi động' },
+    { id: 'closed', label: '3. Lấy lại tab đã đóng' },
+    { id: 'groups', label: '4. Nhóm tab' },
+    { id: 'tabmerger', label: '5. Mọi cửa sổ cùng lúc' },
+    { id: 'compare', label: 'Nên dùng cách nào' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+  browserSections: ['bookmark', 'startup', 'closed'],
+  browserFact: {
+    label: 'Cài đặt khởi động',
+    values: { chrome: 'chrome://settings/onStartup', edge: 'edge://settings/startHomeNTP', firefox: 'about:preferences#home' },
+  },
+}
+
+<QuickAnswer>
+
+Để lưu tất cả các tab đang mở trong cửa sổ hiện tại, nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> trên Mac): trình duyệt sẽ lưu chúng thành dấu trang trong một thư mục mới. Cách này dùng được trong Chrome, Edge và Firefox. Để tab tự mở lại, hãy bật **Tiếp tục từ nơi bạn đã dừng lại** (“Continue where you left off”, Chrome), **Open tabs from the previous session** (Edge) hoặc **Mở các cửa sổ và thẻ trước đó** (“Open previous windows and tabs”, Firefox).
+
+</QuickAnswer>
+
+<BrowserSwitcher />
+
+<Section id="bookmark" title="1. Đánh dấu tất cả tab chỉ với một phím tắt">
+
+Mọi trình duyệt lớn đều có thể lưu các tab của một cửa sổ thành một thư mục dấu trang. Thư mục này còn đó cho đến khi bạn xóa, và được đồng bộ nếu bạn đã đăng nhập vào trình duyệt.
+
+<BrowserPanels section="bookmark">
+<BrowserPanel browser="chrome">
+
+1. Nhấp vào một tab bất kỳ trong cửa sổ bạn muốn giữ lại.
+2. Nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> trên Mac).
+3. Đặt tên thư mục, chọn nơi lưu rồi lưu lại.
+4. Để mở lại sau, nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>, tìm thư mục và mở tất cả dấu trang trong đó.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-bookmarks-folder.webp" alt="Trình quản lý dấu trang của Chrome, thư mục Tab manager research được chọn, liệt kê sáu trang đã lưu" width={1600} height={524} eager boxes={[{ id: 'folder' }]} source="chrome://bookmarks · Chrome 157.0.8103.79">Trình quản lý dấu trang (“Bookmark Manager”) của Chrome sau Ctrl+Shift+D: thư mục mới có một dấu trang cho mỗi tab của cửa sổ.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Nhấp vào một tab bất kỳ trong cửa sổ bạn muốn giữ lại.
+2. Nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> trên Mac). Edge lưu các tab thành mục yêu thích trong một thư mục mới.
+3. Đặt tên thư mục rồi lưu.
+4. Để mở lại sau, nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> để mở Mục yêu thích (Favorites), tìm thư mục và mở tất cả.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-bookmarks-folder.webp" alt="Mục yêu thích của Edge, thư mục Tab manager research đang mở, liệt kê sáu trang và địa chỉ của chúng" width={1600} height={553} boxes={[{ id: 'folder' }]} source="edge://favorites · Edge 157.0.4341.60">Mục yêu thích của Edge sau cùng phím tắt đó: các tab được lưu thành mục yêu thích trong một thư mục mới.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Nhấp vào một tab bất kỳ trong cửa sổ bạn muốn giữ lại.
+2. Nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> trên Mac) để đánh dấu tất cả các tab.
+3. Đặt tên thư mục rồi lưu.
+4. Để mở lại sau, nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> để mở Thư viện (Library), rồi mở tất cả dấu trang trong thư mục.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox Library (Ctrl+Shift+O) with the new folder selected. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+Ảnh chụp màn hình trình duyệt trong bài dùng giao diện tiếng Anh. Khi tên tiếng Việt khác, tên tiếng Anh được ghi trong ngoặc ở lần xuất hiện đầu tiên.
+
+<Catch>cách này *chỉ lưu cửa sổ hiện tại*. Ba cửa sổ là ba thư mục. Dấu trang cũng chỉ giữ địa chỉ; vị trí cuộn và nội dung đã nhập vào biểu mẫu sẽ mất.</Catch>
+
+</Section>
+
+<Section id="startup" title="2. Để trình duyệt mở lại mọi thứ khi khởi động">
+
+Nếu tab của bạn biến mất sau khi khởi động lại hoặc cập nhật, hãy để trình duyệt tự khôi phục phiên.
+
+<BrowserPanels section="startup">
+<BrowserPanel browser="chrome">
+
+Trong Chrome: **Cài đặt → Khi khởi động → Tiếp tục từ nơi bạn đã dừng lại** (“Settings → On startup → Continue where you left off”). Hoặc dán `chrome://settings/onStartup` vào thanh địa chỉ.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Cài đặt Chrome, mục On startup (Khi khởi động), đã chọn Continue where you left off (Tiếp tục từ nơi bạn đã dừng lại)" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">Cài đặt On startup (Khi khởi động) của Chrome, đặt để mở lại phiên trước.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Trong Edge: **Cài đặt → Start, home, and new tab page → On startup → Open tabs from the previous session**. Hoặc dán `edge://settings/startHomeNTP` vào thanh địa chỉ.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Cài đặt Edge, mục Start, home, and new tab page, đã chọn Open tabs from the previous session" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">Cài đặt Start, home, and new tab page của Edge, đặt để mở lại phiên trước.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Trong Firefox: **Cài đặt → Trang chủ và khởi động → Khởi động → Mở các cửa sổ và thẻ trước đó** (“Settings → Home and startup → Startup → Open previous windows and tabs”). Hoặc dán `about:preferences#home` vào thanh địa chỉ.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Cài đặt Firefox, mục Home and startup (Trang chủ và khởi động), đã đánh dấu Open previous windows and tabs (Mở các cửa sổ và thẻ trước đó)" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Firefox 159 đặt tùy chọn này trong Home and startup (Trang chủ và khởi động); các hướng dẫn cũ ghi là General (Tổng quát).</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>cài đặt này khôi phục những gì đang mở khi trình duyệt đóng lần cuối. Cửa sổ bạn đóng trước đó không được tính, và cửa sổ riêng tư không bao giờ quay lại.</Catch>
+
+</Section>
+
+<Section id="closed" title="3. Lấy lại các tab bạn đã đóng">
+
+Nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) để mở lại tab hoặc cửa sổ vừa đóng; nhấn tiếp để lùi xa hơn. Với những gì cũ hơn, mở Lịch sử (History) bằng <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>.
+
+<BrowserPanels section="closed">
+<BrowserPanel browser="chrome">
+
+Chrome cũng liệt kê các tab và cửa sổ vừa đóng trong ⋮ → Nhật ký (“History”).
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-history.webp" alt="Trang History của Chrome liệt kê sáu trang đã truy cập hôm nay, với chế độ xem By date và By group" width={1600} height={640} source="chrome://history · Chrome 157.0.8103.79" className="m-0">Trang Lịch sử của Chrome; phiên bản 157 thêm chế độ xem By group.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge hiển thị “Recently closed” (đã đóng gần đây) ngay trên trang Lịch sử.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Trang History của Edge với All, Recently closed và Tabs from other devices ở thanh bên" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60" className="m-0">Trang Lịch sử của Edge, với danh sách Recently closed ở thanh bên.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox liệt kê các tab và cửa sổ vừa đóng trong menu **Lịch sử** (“History”), ở mục **Thẻ mới đóng gần đây** và **Các cửa sổ mới đóng** (nhấn Alt để hiện thanh menu).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with recently closed tabs open. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="groups" title="4. Nhóm tab: tốt để tập trung, hạn chế khi cần lưu">
+
+- **Chrome** có thể lưu một nhóm và mở lại, nhưng tiện ích không thấy được nhóm đã lưu khi nhóm đó đã đóng ([tabGroups API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
+- Nhóm trong **Firefox** chỉ nằm trên thiết bị và không đi theo Firefox Sync.
+- **Edge** không còn Bộ sưu tập, kể từ Edge 149.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
+
+</Section>
+
+<Section id="tabmerger" title="5. Lưu tất cả các tab đang mở của mọi cửa sổ bằng TabMerger">
+
+Mỗi cách có sẵn chỉ xử lý một cửa sổ, một lần khởi động lại hoặc một tab đã đóng mỗi lần. [TabMerger](/features), tiện ích miễn phí của chúng tôi cho Chrome, Edge và Firefox, liệt kê mọi cửa sổ đang mở trong **Đang Mở** và lưu tất cả vào một nhóm.
+
+<ScreenshotThemeToggle />
+
+1. Nhấp **Thêm Nhóm** và đặt tên, ví dụ “Tab đang mở, 19/11”.
+2. Mở menu **⋯** của nhóm và chọn **Hợp nhất với phiên hiện tại** để thêm các cửa sổ trình duyệt đang mở. (*Thay thế bằng phiên hiện tại* thì thay các cửa sổ của nhóm.)
+3. Đóng các cửa sổ bất cứ lúc nào. Nhóm vẫn giữ cả hai cửa sổ và đủ mười tab.
+
+<Carousel label="Lưu mọi cửa sổ vào một nhóm" steps={[{ title: 'Đang Mở' }, { title: 'Menu nhóm' }, { title: 'Nhóm đã lưu' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-now-open" alt="Now Open (Đang Mở) trong TabMerger, hai cửa sổ trình duyệt, mỗi cửa sổ năm tab, giao diện sáng" darkAlt="Now Open (Đang Mở) trong TabMerger, hai cửa sổ trình duyệt, mỗi cửa sổ năm tab, giao diện tối">Đang Mở phản chiếu trình duyệt: mọi cửa sổ đang mở và các tab của chúng.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merge-menu" alt="Menu nhóm của TabMerger với Merge with current (Hợp nhất với phiên hiện tại), thêm các cửa sổ trình duyệt đang mở vào nhóm này, giao diện sáng" darkAlt="Menu nhóm của TabMerger với Merge with current (Hợp nhất với phiên hiện tại), thêm các cửa sổ trình duyệt đang mở vào nhóm này, giao diện tối" boxes={[{ id: 'group-menu-button', label: 'Menu nhóm' }, { id: 'merge-with-current', label: 'Hợp nhất với phiên hiện tại' }]}>Sau khi Thêm Nhóm, mở menu của nhóm mới và chọn tùy chọn sao chép mọi cửa sổ đang mở vào nhóm.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merged-group" alt="Nhóm Open tabs, Nov 19 chứa 2 cửa sổ và 10 tab, giao diện sáng" darkAlt="Nhóm Open tabs, Nov 19 chứa 2 cửa sổ và 10 tab, giao diện tối">Sau khi chọn Hợp nhất với phiên hiện tại: cả hai cửa sổ được lưu trong một nhóm và vẫn còn đó sau khi đóng.</ThemedScreenshot>
+</Carousel>
+
+### Thích dùng bàn phím?
+
+<ComparisonTable
+  head={['Phím tắt', 'Lưu gì']}
+  keysColumn={0}
+  rows={[
+    ['Ctrl+Shift+P', 'Mọi tab khác trong cửa sổ'],
+    ['Ctrl+Shift+S', 'Tab hiện tại'],
+    ['Ctrl+Shift+K', 'Các tab bên trái'],
+    ['Ctrl+Shift+U', 'Các tab bên phải'],
+  ]}
+/>
+
+Trên Mac, dùng <Kbd>⌘</Kbd>. Mỗi phím tắt sẽ hỏi lưu vào đâu; **Lưu Nhanh (nhóm mới)** tạo ngay một nhóm. Trong Firefox, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> mở cửa sổ riêng tư, vì vậy hãy chọn phím khác trong `about:addons` → “Quản lý phím tắt tiện ích mở rộng” (“Manage Extension Shortcuts”).
+
+### Lỡ đóng nhầm?
+
+**Đã đóng gần đây** giữ lại mọi tab và cửa sổ bạn đóng, theo từng ngày, kèm một dải cho biết giờ đóng. Gói Miễn phí giữ 2 ngày, Pro giữ 30 ngày. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> tìm trong các tab đang mở, đã lưu và đã đóng; bắt đầu bằng `closed:` để chỉ tìm tab đã đóng.
+
+<Carousel label="Lấy lại tab đã đóng" steps={[{ title: 'Đã đóng gần đây' }, { title: 'Tìm closed:' }, { title: 'Tìm mọi thứ' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-recently-closed" alt="Recently closed (Đã đóng gần đây) trong TabMerger, hôm nay, với dải theo giờ và ba tab đã đóng, giao diện sáng" darkAlt="Recently closed (Đã đóng gần đây) trong TabMerger, hôm nay, với dải theo giờ và ba tab đã đóng, giao diện tối" boxes={[{ id: 'hour-strip' }]}>Các tab đã đóng hôm nay, kèm giờ đóng.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search-closed" alt="Tìm kiếm closed: seat trong TabMerger hiện một tab vừa đóng, giao diện sáng" darkAlt="Tìm kiếm closed: seat trong TabMerger hiện một tab vừa đóng, giao diện tối" boxes={[{ id: 'search-input' }]}>Nhấn Ctrl+K và bắt đầu bằng `closed:` để chỉ tìm tab đã đóng.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search" alt="Tìm kiếm lisbon trong TabMerger: kết quả gắn nhãn Now Open hoặc Open tabs, Nov 19, giao diện sáng" darkAlt="Tìm kiếm lisbon trong TabMerger: kết quả gắn nhãn Now Open hoặc Open tabs, Nov 19, giao diện tối" boxes={[{ id: 'group-tag-1' }]}>Không có tiền tố, tìm kiếm bao gồm tab đang mở và đã lưu, có gắn nhãn theo nhóm.</ThemedScreenshot>
+</Carousel>
+
+### Ảnh chụp phiên và tự động lưu
+
+**Lưu phiên hiện tại** tạo một bản chụp có tên của các nhóm đã lưu (không phải các tab đang mở) để bạn khôi phục cùng lúc. **Cài đặt → Dữ liệu → Tự động lưu các thẻ đang mở** tự động lưu các tab đang mở thành một nhóm mới; gói Miễn phí giữ 2 nhóm mới nhất, và chúng được tính vào giới hạn 5 nhóm và 50 tab.
+
+<Carousel label="Phiên và tự động lưu" steps={[{ title: 'Lưu phiên' }, { title: 'Xem phiên' }, { title: 'Cài đặt → Dữ liệu' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-save-session-dialog" alt="Hộp thoại Save Session (Lưu Phiên) của TabMerger với tên Before the trip, giao diện sáng" darkAlt="Hộp thoại Save Session (Lưu Phiên) của TabMerger với tên Before the trip, giao diện tối" boxes={[{ id: 'session-name' }]}>Lưu phiên hiện tại sẽ hỏi tên.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-session-view" alt="Phiên đã lưu Before the trip với ba nhóm (Work, Reading list và Open tabs, Nov 19) và nút Restore session, giao diện sáng" darkAlt="Phiên đã lưu Before the trip với ba nhóm (Work, Reading list và Open tabs, Nov 19) và nút Restore session, giao diện tối" boxes={[{ id: 'restore-session' }]}>Sau khi lưu, mở phiên Before the trip (Trước chuyến đi) để xem ba nhóm của nó.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-settings-data" alt="Cài đặt TabMerger, mục Data: Auto-save open tabs, Backups và Remember closed tabs, giao diện sáng" darkAlt="Cài đặt TabMerger, mục Data: Auto-save open tabs, Backups và Remember closed tabs, giao diện tối" boxes={[{ id: 'auto-save-toggle' }]}>Cài đặt → Dữ liệu, nơi bật tự động lưu.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Miễn phí cho Chrome, Edge và Firefox. Không cần tài khoản để bắt đầu.</InstallCta>
+
+</Section>
+
+<Section id="compare" title="Nên dùng cách nào?">
+
+<ComparisonTable
+  head={['', 'Đánh dấu tất cả', 'Khôi phục khi khởi động', 'Ctrl+Shift+T, lịch sử', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="38rem"
+  rows={[
+    ['Mọi cửa sổ cùng lúc', 'Không', 'Có, khi khởi động lại', 'Từng cái một', 'Có'],
+    ['Còn lại sau khi đóng cửa sổ', 'Có', 'Không', 'Trong lịch sử', 'Có'],
+    ['Tìm kiếm', 'Dấu trang', 'Không có', 'Lịch sử', 'Ctrl+K, cả tab đã đóng'],
+    ['Chi phí', 'Miễn phí', 'Miễn phí', 'Miễn phí', 'Miễn phí; Pro để đồng bộ'],
+  ]}
+/>
+
+Dù chọn cách nào, hãy bật cài đặt khởi động. Đánh dấu trang cho một cửa sổ đáng giữ lại. Dùng tiện ích khi bạn làm việc với nhiều cửa sổ hoặc cần lại một tab đã đóng vài ngày sau. Xem thêm tại [trang so sánh](/compare) của chúng tôi.
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+
+</Section>

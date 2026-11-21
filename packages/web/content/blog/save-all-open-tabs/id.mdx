@@ -1,0 +1,320 @@
+export const post = {
+  slug: 'save-all-open-tabs',
+  title: 'Cara menyimpan semua tab yang terbuka dan membukanya lagi nanti',
+  seoTitle: 'Cara Menyimpan Semua Tab Terbuka (Chrome, Edge, Firefox)',
+  description:
+    'Simpan semua tab yang terbuka di Chrome, Edge, atau Firefox dengan satu pintasan, buka lagi otomatis setelah restart, dan kembalikan tab yang ditutup.',
+  shareSummary: 'Satu pintasan, pemulihan saat startup, dan pengembalian tab tertutup di Chrome, Edge, dan Firefox.',
+  dek: 'Lima cara menyimpan semua tab yang Anda buka, dan satu hal yang diam-diam terlewat oleh masing-masing.',
+  published: '2026-11-19',
+  updated: '2026-11-19',
+  testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D hanya menyimpan jendela saat ini.', source: 'Diuji di ketiganya, 19 November 2026' },
+    { text: 'Ctrl+Shift+T membuka lagi tab dan jendela yang ditutup.', source: 'Halaman bantuan Chrome, Edge, dan Firefox' },
+    {
+      text: 'Ekstensi tidak bisa melihat grup tersimpan Chrome yang sudah ditutup.',
+      source: 'Dokumentasi chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'Koleksi sudah tidak ada sejak Edge 149.', source: 'Dukungan Microsoft' },
+  ],
+  faq: [
+    {
+      question: 'Apakah Ctrl+Shift+D menyimpan tab dari semua jendela?',
+      answer: 'Tidak. Pintasan ini hanya mem-bookmark jendela saat ini. Ulangi di setiap jendela, atau gunakan alat yang membaca semua jendela.',
+    },
+    {
+      question: 'Bisakah saya menyimpan semua tab yang terbuka tanpa ekstensi?',
+      answer: 'Bisa: Ctrl+Shift+D dan pengaturan startup, keduanya sudah tersedia di Chrome, Edge, dan Firefox.',
+    },
+    {
+      question: 'Mengapa tab saya tidak kembali setelah restart?',
+      answer:
+        'Pemulihan saat startup mengembalikan apa yang terbuka ketika browser ditutup. Jendela yang ditutup lebih awal dan jendela pribadi tidak ikut. Coba Ctrl+Shift+T atau riwayat.',
+    },
+    {
+      question: 'Di mana TabMerger menyimpan tab?',
+      answer:
+        'Di perangkat Anda, dalam penyimpanan lokal browser. Pro menyinkronkannya antarperangkat dengan enkripsi end-to-end. Lihat FAQ.',
+      link: { text: 'FAQ', href: '/faq' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/chrome-bookmarks-folder.webp', alt: 'Pengelola bookmark Chrome dengan folder Tab manager research dipilih, berisi enam halaman tersimpan' },
+    { src: '/blog/save-all-open-tabs/edge-bookmarks-folder.webp', alt: 'Favorit Edge dengan folder Tab manager research terbuka, berisi enam halaman beserta alamatnya' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Setelan Chrome, On startup (Saat memulai), dengan Continue where you left off (Lanjutkan dari halaman terakhir yang dibuka) dipilih' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Pengaturan Edge, Start, home, and new tab page, dengan Open tabs from the previous session dipilih' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Pengaturan Firefox, Home and startup, dengan Open previous windows and tabs (Buka jendela dan tab sebelumnya) dicentang' },
+    { src: '/blog/save-all-open-tabs/chrome-history.webp', alt: 'Halaman History Chrome berisi enam halaman yang dikunjungi hari ini, dengan tab By date dan By group' },
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Halaman History Edge dengan All, Recently closed, dan Tabs from other devices di bilah samping' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-light.webp', alt: 'Now Open (Sedang Terbuka) di TabMerger berisi dua jendela browser dengan lima tab masing-masing, tema terang' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-dark.webp', alt: 'Now Open (Sedang Terbuka) di TabMerger berisi dua jendela browser dengan lima tab masing-masing, tema gelap' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-light.webp', alt: 'Menu grup TabMerger dengan Merge with current (Gabungkan dengan sesi saat ini), yang menambahkan jendela browser yang terbuka ke grup ini, tema terang' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-dark.webp', alt: 'Menu grup TabMerger dengan Merge with current (Gabungkan dengan sesi saat ini), yang menambahkan jendela browser yang terbuka ke grup ini, tema gelap' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-light.webp', alt: 'Grup Open tabs, Nov 19 berisi 2 jendela dan 10 tab, tema terang' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-dark.webp', alt: 'Grup Open tabs, Nov 19 berisi 2 jendela dan 10 tab, tema gelap' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-light.webp', alt: 'Recently closed (Baru ditutup) di TabMerger, hari ini, dengan strip per jam dan tiga tab yang ditutup, tema terang' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-dark.webp', alt: 'Recently closed (Baru ditutup) di TabMerger, hari ini, dengan strip per jam dan tiga tab yang ditutup, tema gelap' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-light.webp', alt: 'Pencarian TabMerger untuk closed: seat menampilkan satu tab yang baru ditutup, tema terang' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-dark.webp', alt: 'Pencarian TabMerger untuk closed: seat menampilkan satu tab yang baru ditutup, tema gelap' },
+    { src: '/blog/save-all-open-tabs/tm-search-light.webp', alt: 'Pencarian TabMerger untuk lisbon: hasil bertanda Now Open atau Open tabs, Nov 19, tema terang' },
+    { src: '/blog/save-all-open-tabs/tm-search-dark.webp', alt: 'Pencarian TabMerger untuk lisbon: hasil bertanda Now Open atau Open tabs, Nov 19, tema gelap' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-light.webp', alt: 'Dialog Save Session (Simpan Sesi) di TabMerger dengan nama Before the trip, tema terang' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-dark.webp', alt: 'Dialog Save Session (Simpan Sesi) di TabMerger dengan nama Before the trip, tema gelap' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-light.webp', alt: 'Sesi tersimpan Before the trip dengan tiga grup (Work, Reading list, dan Open tabs, Nov 19) serta tombol Restore session, tema terang' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-dark.webp', alt: 'Sesi tersimpan Before the trip dengan tiga grup (Work, Reading list, dan Open tabs, Nov 19) serta tombol Restore session, tema gelap' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-light.webp', alt: 'Pengaturan TabMerger, tab Data: Auto-save open tabs, Backups, dan Remember closed tabs, tema terang' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-dark.webp', alt: 'Pengaturan TabMerger, tab Data: Auto-save open tabs, Backups, dan Remember closed tabs, tema gelap' },
+  ],
+  tags: ['tab-management', 'save-tabs', 'restore-closed-tabs', 'bookmarks', 'browser-productivity', 'chrome', 'edge', 'firefox'],
+  // Before publishing: check each title against its page, and replace the Microsoft entry with
+  // the exact Edge help article (restore tabs / startup pages).
+  sources: [
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Microsoft Edge help and learning',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/microsoft-edge',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-19',
+    },
+  ],
+  screenshotsCaptured: '2026-11-19',
+  ogImage: { src: '/blog/save-all-open-tabs/og.png', alt: 'Cara menyimpan semua tab yang terbuka dan membukanya lagi nanti: panduan TabMerger untuk Chrome, Edge, dan Firefox, dengan grup berisi dua jendela tersimpan' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'bookmark', label: '1. Bookmark semua tab' },
+    { id: 'startup', label: '2. Buka lagi saat startup' },
+    { id: 'closed', label: '3. Kembalikan tab yang ditutup' },
+    { id: 'groups', label: '4. Grup tab' },
+    { id: 'tabmerger', label: '5. Semua jendela sekaligus' },
+    { id: 'compare', label: 'Mana yang dipakai' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['bookmark', 'startup', 'closed'],
+  browserFact: {
+    label: 'Pengaturan startup',
+    values: { chrome: 'chrome://settings/onStartup', edge: 'edge://settings/startHomeNTP', firefox: 'about:preferences#home' },
+  },
+}
+
+<QuickAnswer>
+
+Untuk menyimpan semua tab yang terbuka di jendela saat ini, tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> di Mac). Semua tab masuk ke folder bookmark baru. Cara ini berfungsi di Chrome, Edge, dan Firefox. Agar tab terbuka lagi secara otomatis, aktifkan **Lanjutkan dari halaman terakhir yang dibuka** (“Continue where you left off”, Chrome), **Open tabs from the previous session** (Edge), atau **Buka jendela dan tab sebelumnya** (“Open previous windows and tabs”, Firefox).
+
+</QuickAnswer>
+
+<BrowserSwitcher />
+
+<Section id="bookmark" title="1. Bookmark semua tab dengan satu pintasan">
+
+Setiap browser utama bisa menyimpan tab dalam satu jendela sebagai folder bookmark. Folder itu tetap ada sampai Anda menghapusnya, dan ikut tersinkron jika Anda login ke browser.
+
+<BrowserPanels section="bookmark">
+<BrowserPanel browser="chrome">
+
+1. Klik tab mana saja di jendela yang ingin Anda simpan.
+2. Tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> di Mac).
+3. Beri nama folder, pilih lokasinya, lalu simpan.
+4. Untuk membukanya lagi nanti, tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>, cari foldernya, lalu buka semua bookmark di dalamnya.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-bookmarks-folder.webp" alt="Pengelola bookmark Chrome dengan folder Tab manager research dipilih, berisi enam halaman tersimpan" width={1600} height={524} eager boxes={[{ id: 'folder' }]} source="chrome://bookmarks · Chrome 157.0.8103.79">Pengelola Bookmark Chrome (“Bookmark Manager”) setelah Ctrl+Shift+D: folder baru berisi satu bookmark untuk setiap tab di jendela itu.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Klik tab mana saja di jendela yang ingin Anda simpan.
+2. Tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> di Mac). Edge menyimpan tab sebagai favorit di folder baru.
+3. Beri nama folder, lalu simpan.
+4. Untuk membukanya lagi nanti, tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> untuk membuka Favorit (Favorites), cari foldernya, lalu buka semuanya.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-bookmarks-folder.webp" alt="Favorit Edge dengan folder Tab manager research terbuka, berisi enam halaman beserta alamatnya" width={1600} height={553} boxes={[{ id: 'folder' }]} source="edge://favorites · Edge 157.0.4341.60">Favorit Edge setelah pintasan yang sama: tab tersimpan sebagai favorit di folder baru.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Klik tab mana saja di jendela yang ingin Anda simpan.
+2. Tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> di Mac) untuk mem-bookmark semua tab.
+3. Beri nama folder, lalu simpan.
+4. Untuk membukanya lagi nanti, tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> untuk membuka jendela Pustaka (“Library”), lalu buka semua bookmark di folder itu.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox Library (Ctrl+Shift+O) with the new folder selected. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+Tangkapan layar browser di artikel ini menampilkan antarmuka berbahasa Inggris. Jika nama dalam bahasa Indonesia berbeda, nama bahasa Inggrisnya kami cantumkan dalam tanda kurung saat pertama kali muncul.
+
+<Catch>cara ini *hanya menyimpan jendela saat ini*. Tiga jendela berarti tiga folder. Bookmark juga hanya menyimpan alamat; posisi gulir dan isian formulir hilang.</Catch>
+
+</Section>
+
+<Section id="startup" title="2. Buat browser membuka semuanya lagi saat startup">
+
+Jika tab Anda hilang karena restart dan pembaruan, biarkan browser memulihkan sesinya.
+
+<BrowserPanels section="startup">
+<BrowserPanel browser="chrome">
+
+Di Chrome: **Setelan → Saat memulai → Lanjutkan dari halaman terakhir yang dibuka** (“Settings → On startup → Continue where you left off”). Atau tempel `chrome://settings/onStartup` ke bilah alamat.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Setelan Chrome, On startup (Saat memulai), dengan Continue where you left off (Lanjutkan dari halaman terakhir yang dibuka) dipilih" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">Setelan On startup (Saat memulai) di Chrome, diatur untuk membuka lagi sesi terakhir.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Di Edge: **Pengaturan → Start, home, and new tab page → On startup → Open tabs from the previous session**. Atau tempel `edge://settings/startHomeNTP` ke bilah alamat.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Pengaturan Edge, Start, home, and new tab page, dengan Open tabs from the previous session dipilih" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">Pengaturan Start, home, and new tab page di Edge, diatur untuk membuka lagi sesi terakhir.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Di Firefox: **Pengaturan → Home and startup → Memulai → Buka jendela dan tab sebelumnya** (“Settings → Home and startup → Startup → Open previous windows and tabs”). Atau tempel `about:preferences#home` ke bilah alamat.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Pengaturan Firefox, Home and startup, dengan Open previous windows and tabs (Buka jendela dan tab sebelumnya) dicentang" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Firefox 159 menaruh opsi ini di Home and startup; panduan lama menyebut General (Umum).</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>pengaturan ini memulihkan apa yang terbuka saat browser terakhir ditutup. Jendela yang Anda tutup sebelumnya tidak termasuk, dan jendela pribadi tidak pernah kembali.</Catch>
+
+</Section>
+
+<Section id="closed" title="3. Kembalikan tab yang sudah Anda tutup">
+
+Tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) untuk membuka lagi tab atau jendela terakhir yang Anda tutup; tekan lagi untuk terus mundur. Untuk yang lebih lama, buka riwayat dengan <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>.
+
+<BrowserPanels section="closed">
+<BrowserPanel browser="chrome">
+
+Chrome juga mencantumkan tab dan jendela yang baru ditutup di ⋮ → Histori (“History”).
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-history.webp" alt="Halaman History Chrome berisi enam halaman yang dikunjungi hari ini, dengan tab By date dan By group" width={1600} height={640} source="chrome://history · Chrome 157.0.8103.79" className="m-0">Halaman History Chrome; versi 157 menambahkan tampilan By group.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge menampilkan “Recently closed” (baru ditutup) langsung di halaman History.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Halaman History Edge dengan All, Recently closed, dan Tabs from other devices di bilah samping" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60" className="m-0">Halaman History Edge, dengan daftar Recently closed di bilah samping.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox mencantumkan tab dan jendela yang baru ditutup di menu **Riwayat** (“History”), di bawah **Tab yang Baru Saja Ditutup** dan **Jendela yang Baru Saja Ditutup** (tekan Alt untuk menampilkan bilah menu).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with recently closed tabs open. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="groups" title="4. Grup tab: bagus untuk fokus, terbatas untuk menyimpan">
+
+- **Chrome** bisa menyimpan grup dan membukanya lagi, tetapi ekstensi tidak bisa melihat grup tersimpan yang sudah ditutup ([tabGroups API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
+- Grup di **Firefox** tetap di perangkat dan tidak ikut tersinkron lewat Firefox Sync.
+- **Edge** tidak lagi punya Koleksi, mulai Edge 149.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
+
+</Section>
+
+<Section id="tabmerger" title="5. Simpan semua tab yang terbuka dari setiap jendela dengan TabMerger">
+
+Cara bawaan masing-masing hanya mencakup satu jendela, satu restart, atau satu tab yang ditutup dalam satu waktu. [TabMerger](/features), ekstensi gratis kami untuk Chrome, Edge, dan Firefox, menampilkan setiap jendela yang terbuka di **Sedang Terbuka** dan menyimpan semuanya ke dalam satu grup.
+
+<ScreenshotThemeToggle />
+
+1. Klik **Tambah Grup** dan beri nama, misalnya “Tab terbuka, 19 Nov”.
+2. Buka menu **⋯** grup itu dan pilih **Gabungkan dengan sesi saat ini**, yang menambahkan jendela browser Anda yang terbuka. (*Ganti dengan sesi saat ini* justru mengganti jendela di grup.)
+3. Tutup jendelanya kapan saja. Grup tetap menyimpan kedua jendela dan kesepuluh tab.
+
+<Carousel label="Menyimpan semua jendela ke satu grup" steps={[{ title: 'Sedang Terbuka' }, { title: 'Menu grup' }, { title: 'Grup tersimpan' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-now-open" alt="Now Open (Sedang Terbuka) di TabMerger berisi dua jendela browser dengan lima tab masing-masing, tema terang" darkAlt="Now Open (Sedang Terbuka) di TabMerger berisi dua jendela browser dengan lima tab masing-masing, tema gelap">Sedang Terbuka mencerminkan browser: setiap jendela yang terbuka beserta tabnya.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merge-menu" alt="Menu grup TabMerger dengan Merge with current (Gabungkan dengan sesi saat ini), yang menambahkan jendela browser yang terbuka ke grup ini, tema terang" darkAlt="Menu grup TabMerger dengan Merge with current (Gabungkan dengan sesi saat ini), yang menambahkan jendela browser yang terbuka ke grup ini, tema gelap" boxes={[{ id: 'group-menu-button', label: 'Menu grup' }, { id: 'merge-with-current', label: 'Gabungkan dengan sesi saat ini' }]}>Setelah Tambah Grup, buka menu grup baru dan pilih opsi yang menyalin setiap jendela yang terbuka ke dalamnya.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merged-group" alt="Grup Open tabs, Nov 19 berisi 2 jendela dan 10 tab, tema terang" darkAlt="Grup Open tabs, Nov 19 berisi 2 jendela dan 10 tab, tema gelap">Setelah memilih Gabungkan dengan sesi saat ini: kedua jendela tersimpan dalam satu grup dan tetap ada setelah jendelanya ditutup.</ThemedScreenshot>
+</Carousel>
+
+### Lebih suka keyboard?
+
+<ComparisonTable
+  head={['Pintasan', 'Yang disimpan']}
+  keysColumn={0}
+  rows={[
+    ['Ctrl+Shift+P', 'Semua tab lain di jendela'],
+    ['Ctrl+Shift+S', 'Tab saat ini'],
+    ['Ctrl+Shift+K', 'Tab di sebelah kiri'],
+    ['Ctrl+Shift+U', 'Tab di sebelah kanan'],
+  ]}
+/>
+
+Di Mac, gunakan <Kbd>⌘</Kbd>. Setiap pintasan menanyakan lokasi penyimpanan; **Simpan Cepat (grup baru)** langsung membuat grup. Di Firefox, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> membuka jendela pribadi, jadi pilih tombol lain di `about:addons` → “Kelola Pintasan Ekstensi” (“Manage Extension Shortcuts”).
+
+### Tidak sengaja menutup sesuatu?
+
+**Baru ditutup** menyimpan setiap tab dan jendela yang Anda tutup, dikelompokkan per hari, dengan strip yang menunjukkan jamnya. Paket Gratis menyimpannya 2 hari, Pro 30 hari. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> mencari di tab yang terbuka, tersimpan, dan ditutup; awali dengan `closed:` untuk mencari tab yang ditutup saja.
+
+<Carousel label="Mengembalikan tab yang ditutup" steps={[{ title: 'Baru ditutup' }, { title: 'Pencarian closed:' }, { title: 'Cari semuanya' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-recently-closed" alt="Recently closed (Baru ditutup) di TabMerger, hari ini, dengan strip per jam dan tiga tab yang ditutup, tema terang" darkAlt="Recently closed (Baru ditutup) di TabMerger, hari ini, dengan strip per jam dan tiga tab yang ditutup, tema gelap" boxes={[{ id: 'hour-strip' }]}>Tab yang ditutup hari ini, beserta jam penutupannya.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search-closed" alt="Pencarian TabMerger untuk closed: seat menampilkan satu tab yang baru ditutup, tema terang" darkAlt="Pencarian TabMerger untuk closed: seat menampilkan satu tab yang baru ditutup, tema gelap" boxes={[{ id: 'search-input' }]}>Tekan Ctrl+K dan awali dengan `closed:` untuk mencari tab yang ditutup saja.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search" alt="Pencarian TabMerger untuk lisbon: hasil bertanda Now Open atau Open tabs, Nov 19, tema terang" darkAlt="Pencarian TabMerger untuk lisbon: hasil bertanda Now Open atau Open tabs, Nov 19, tema gelap" boxes={[{ id: 'group-tag-1' }]}>Tanpa awalan, pencarian mencakup tab yang terbuka dan tersimpan, ditandai menurut grup.</ThemedScreenshot>
+</Carousel>
+
+### Snapshot dan simpan otomatis
+
+**Simpan sesi saat ini** membuat snapshot bernama dari grup tersimpan Anda (bukan tab yang terbuka) yang bisa dipulihkan bersama-sama. **Pengaturan → Data → Simpan otomatis tab yang terbuka** menyimpan tab yang terbuka sebagai grup baru secara otomatis; paket Gratis menyimpan 2 yang terbaru, dan keduanya dihitung dalam batas 5 grup dan 50 tab.
+
+<Carousel label="Sesi dan simpan otomatis" steps={[{ title: 'Simpan sesi' }, { title: 'Tampilan sesi' }, { title: 'Pengaturan → Data' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-save-session-dialog" alt="Dialog Save Session (Simpan Sesi) di TabMerger dengan nama Before the trip, tema terang" darkAlt="Dialog Save Session (Simpan Sesi) di TabMerger dengan nama Before the trip, tema gelap" boxes={[{ id: 'session-name' }]}>Simpan sesi saat ini meminta nama.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-session-view" alt="Sesi tersimpan Before the trip dengan tiga grup (Work, Reading list, dan Open tabs, Nov 19) serta tombol Restore session, tema terang" darkAlt="Sesi tersimpan Before the trip dengan tiga grup (Work, Reading list, dan Open tabs, Nov 19) serta tombol Restore session, tema gelap" boxes={[{ id: 'restore-session' }]}>Setelah disimpan, buka sesinya: Before the trip (Sebelum perjalanan), dengan tiga grupnya.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-settings-data" alt="Pengaturan TabMerger, tab Data: Auto-save open tabs, Backups, dan Remember closed tabs, tema terang" darkAlt="Pengaturan TabMerger, tab Data: Auto-save open tabs, Backups, dan Remember closed tabs, tema gelap" boxes={[{ id: 'auto-save-toggle' }]}>Pengaturan → Data, tempat simpan otomatis diaktifkan.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Gratis untuk Chrome, Edge, dan Firefox. Tidak perlu akun untuk mulai.</InstallCta>
+
+</Section>
+
+<Section id="compare" title="Cara mana yang sebaiknya Anda pakai?">
+
+<ComparisonTable
+  head={['', 'Bookmark semua', 'Pemulihan saat startup', 'Ctrl+Shift+T, riwayat', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="38rem"
+  rows={[
+    ['Semua jendela sekaligus', 'Tidak', 'Ya, saat restart', 'Satu per satu', 'Ya'],
+    ['Tetap ada setelah jendela ditutup', 'Ya', 'Tidak', 'Di riwayat', 'Ya'],
+    ['Pencarian', 'Bookmark', 'Tidak ada', 'Riwayat', 'Ctrl+K, termasuk yang ditutup'],
+    ['Biaya', 'Gratis', 'Gratis', 'Gratis', 'Gratis; Pro untuk sinkronisasi'],
+  ]}
+/>
+
+Apa pun pilihan Anda, aktifkan pengaturan startup. Bookmark satu jendela yang layak disimpan. Gunakan ekstensi jika Anda bekerja dengan beberapa jendela atau butuh tab yang ditutup beberapa hari kemudian. Selengkapnya di [halaman perbandingan](/compare) kami.
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+
+</Section>

@@ -1,0 +1,380 @@
+{
+  "chrome-bookmarks-folder": [
+    {
+      "id": "folder",
+      "label": "The Tab manager research bookmark folder",
+      "l": "4.84%",
+      "t": "29.22%",
+      "w": "16.79%",
+      "h": "10.44%"
+    }
+  ],
+  "chrome-history": [
+    {
+      "id": "by-group",
+      "label": "The By group tab",
+      "l": "34.07%",
+      "t": "13.91%",
+      "w": "9.77%",
+      "h": "8.55%"
+    }
+  ],
+  "chrome-startup-setting": [
+    {
+      "id": "startup-option",
+      "label": "Continue where you left off",
+      "l": "29.00%",
+      "t": "38.93%",
+      "w": "19.11%",
+      "h": "7.69%"
+    }
+  ],
+  "edge-bookmarks-folder": [
+    {
+      "id": "folder",
+      "label": "The Tab manager research favorites folder",
+      "l": "5.75%",
+      "t": "37.95%",
+      "w": "21.60%",
+      "h": "13.05%"
+    }
+  ],
+  "edge-history": [
+    {
+      "id": "recently-closed",
+      "label": "Recently closed",
+      "l": "4.84%",
+      "t": "35.52%",
+      "w": "12.99%",
+      "h": "8.95%"
+    }
+  ],
+  "edge-startup-setting": [
+    {
+      "id": "startup-option",
+      "label": "Open tabs from the previous session",
+      "l": "4.65%",
+      "t": "67.13%",
+      "w": "91.83%",
+      "h": "14.31%"
+    }
+  ],
+  "firefox-startup": [
+    {
+      "id": "startup-option",
+      "label": "Open previous windows and tabs",
+      "l": "35.37%",
+      "t": "44.67%",
+      "w": "27.66%",
+      "h": "4.48%"
+    }
+  ],
+  "tm-merge-menu-dark": [
+    {
+      "id": "group-menu-button",
+      "label": "The ⋯ menu",
+      "l": "94.70%",
+      "t": "8.10%",
+      "w": "4.60%",
+      "h": "6.13%"
+    },
+    {
+      "id": "new-group-row",
+      "label": "The new group",
+      "l": "0.83%",
+      "t": "25.52%",
+      "w": "28.60%",
+      "h": "4.80%"
+    },
+    {
+      "id": "merge-with-current",
+      "label": "Merge with current",
+      "l": "64.89%",
+      "t": "28.15%",
+      "w": "33.78%",
+      "h": "9.85%"
+    }
+  ],
+  "tm-merge-menu-light": [
+    {
+      "id": "group-menu-button",
+      "label": "The ⋯ menu",
+      "l": "94.70%",
+      "t": "8.10%",
+      "w": "4.60%",
+      "h": "6.13%"
+    },
+    {
+      "id": "new-group-row",
+      "label": "The new group",
+      "l": "0.83%",
+      "t": "25.52%",
+      "w": "28.60%",
+      "h": "4.80%"
+    },
+    {
+      "id": "merge-with-current",
+      "label": "Merge with current",
+      "l": "64.89%",
+      "t": "28.15%",
+      "w": "33.78%",
+      "h": "9.85%"
+    }
+  ],
+  "tm-merged-group-dark": [
+    {
+      "id": "merged-summary",
+      "label": "Both windows saved in the group",
+      "l": "30.70%",
+      "t": "8.77%",
+      "w": "15.91%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-merged-group-light": [
+    {
+      "id": "merged-summary",
+      "label": "Both windows saved in the group",
+      "l": "30.70%",
+      "t": "8.77%",
+      "w": "15.91%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-now-open-dark": [
+    {
+      "id": "now-open-row",
+      "label": "The Now Open row",
+      "l": "3.33%",
+      "t": "8.02%",
+      "w": "22.85%",
+      "h": "4.80%"
+    },
+    {
+      "id": "now-open-summary",
+      "label": "2 Windows ◆ 10 Tabs",
+      "l": "30.70%",
+      "t": "8.77%",
+      "w": "15.91%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-now-open-light": [
+    {
+      "id": "now-open-row",
+      "label": "The Now Open row",
+      "l": "3.33%",
+      "t": "8.02%",
+      "w": "22.85%",
+      "h": "4.80%"
+    },
+    {
+      "id": "now-open-summary",
+      "label": "2 Windows ◆ 10 Tabs",
+      "l": "30.70%",
+      "t": "8.77%",
+      "w": "15.91%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-recently-closed-dark": [
+    {
+      "id": "hour-strip",
+      "label": "Tabs closed per hour",
+      "l": "30.70%",
+      "t": "16.68%",
+      "w": "68.60%",
+      "h": "12.30%"
+    },
+    {
+      "id": "today-row",
+      "label": "Today, 3 tabs",
+      "l": "0.57%",
+      "t": "65.93%",
+      "w": "28.35%",
+      "h": "7.22%"
+    }
+  ],
+  "tm-recently-closed-light": [
+    {
+      "id": "hour-strip",
+      "label": "Tabs closed per hour",
+      "l": "30.70%",
+      "t": "16.68%",
+      "w": "68.60%",
+      "h": "12.30%"
+    },
+    {
+      "id": "today-row",
+      "label": "Today, 3 tabs",
+      "l": "0.57%",
+      "t": "65.93%",
+      "w": "28.35%",
+      "h": "7.22%"
+    }
+  ],
+  "tm-save-session-dialog-dark": [
+    {
+      "id": "session-name",
+      "label": "Session name",
+      "l": "24.33%",
+      "t": "31.10%",
+      "w": "51.35%",
+      "h": "8.13%"
+    }
+  ],
+  "tm-save-session-dialog-light": [
+    {
+      "id": "session-name",
+      "label": "Session name",
+      "l": "24.33%",
+      "t": "31.10%",
+      "w": "51.35%",
+      "h": "8.13%"
+    }
+  ],
+  "tm-search-closed-dark": [
+    {
+      "id": "search-input",
+      "label": "closed: seat",
+      "l": "21.83%",
+      "t": "0.43%",
+      "w": "56.35%",
+      "h": "10.30%"
+    }
+  ],
+  "tm-search-closed-light": [
+    {
+      "id": "search-input",
+      "label": "closed: seat",
+      "l": "21.83%",
+      "t": "0.43%",
+      "w": "56.35%",
+      "h": "10.30%"
+    }
+  ],
+  "tm-search-dark": [
+    {
+      "id": "group-tag-1",
+      "label": "Group tag: Now Open",
+      "l": "23.33%",
+      "t": "15.10%",
+      "w": "9.19%",
+      "h": "4.47%"
+    },
+    {
+      "id": "group-tag-2",
+      "label": "Group tag: Open tabs, Nov 19",
+      "l": "23.33%",
+      "t": "20.77%",
+      "w": "13.46%",
+      "h": "4.47%"
+    },
+    {
+      "id": "group-tag-3",
+      "label": "Group tag: Now Open",
+      "l": "23.33%",
+      "t": "26.43%",
+      "w": "9.19%",
+      "h": "4.47%"
+    },
+    {
+      "id": "group-tag-4",
+      "label": "Group tag: Open tabs, Nov 19",
+      "l": "23.33%",
+      "t": "32.10%",
+      "w": "13.46%",
+      "h": "4.47%"
+    }
+  ],
+  "tm-search-light": [
+    {
+      "id": "group-tag-1",
+      "label": "Group tag: Now Open",
+      "l": "23.33%",
+      "t": "15.10%",
+      "w": "9.19%",
+      "h": "4.47%"
+    },
+    {
+      "id": "group-tag-2",
+      "label": "Group tag: Open tabs, Nov 19",
+      "l": "23.33%",
+      "t": "20.77%",
+      "w": "13.46%",
+      "h": "4.47%"
+    },
+    {
+      "id": "group-tag-3",
+      "label": "Group tag: Now Open",
+      "l": "23.33%",
+      "t": "26.43%",
+      "w": "9.19%",
+      "h": "4.47%"
+    },
+    {
+      "id": "group-tag-4",
+      "label": "Group tag: Open tabs, Nov 19",
+      "l": "23.33%",
+      "t": "32.10%",
+      "w": "13.46%",
+      "h": "4.47%"
+    }
+  ],
+  "tm-session-view-dark": [
+    {
+      "id": "restore-session",
+      "label": "Restore session",
+      "l": "70.78%",
+      "t": "10.35%",
+      "w": "18.02%",
+      "h": "7.47%"
+    }
+  ],
+  "tm-session-view-light": [
+    {
+      "id": "restore-session",
+      "label": "Restore session",
+      "l": "70.78%",
+      "t": "10.35%",
+      "w": "18.02%",
+      "h": "7.47%"
+    }
+  ],
+  "tm-settings-data-dark": [
+    {
+      "id": "auto-save-toggle",
+      "label": "Auto-save open tabs",
+      "l": "68.58%",
+      "t": "32.10%",
+      "w": "6.10%",
+      "h": "5.47%"
+    },
+    {
+      "id": "remember-closed-toggle",
+      "label": "Remember closed tabs",
+      "l": "68.58%",
+      "t": "79.77%",
+      "w": "6.10%",
+      "h": "5.47%"
+    }
+  ],
+  "tm-settings-data-light": [
+    {
+      "id": "auto-save-toggle",
+      "label": "Auto-save open tabs",
+      "l": "68.58%",
+      "t": "32.10%",
+      "w": "6.10%",
+      "h": "5.47%"
+    },
+    {
+      "id": "remember-closed-toggle",
+      "label": "Remember closed tabs",
+      "l": "68.58%",
+      "t": "79.77%",
+      "w": "6.10%",
+      "h": "5.47%"
+    }
+  ]
+}

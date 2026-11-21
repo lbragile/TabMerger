@@ -28,7 +28,7 @@ export async function Navbar() {
             <div className="container relative flex items-center">
                 {/* The link bar and the account controls show from lg up; below lg the menu button
                     holds them. Width budget from lg to xl (1024-1279px), signed out: logo, four links
-                    (Changelog joins at xl), the GitHub mark alone, the icon-only language button, the
+                    (Blog and Changelog join at xl), the GitHub mark alone, the icon-only language button, the
                     theme toggle and two buttons, with at least 2rem to spare in every language
                     (measured; translated labels and other platforms' fonts are wider than English on
                     Windows). min-w-0 here and on the nav still lets this block shrink rather than push

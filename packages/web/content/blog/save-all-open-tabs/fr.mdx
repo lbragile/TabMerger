@@ -1,0 +1,320 @@
+export const post = {
+  slug: 'save-all-open-tabs',
+  title: 'Comment enregistrer tous les onglets ouverts et les retrouver plus tard',
+  seoTitle: 'Enregistrer tous les onglets ouverts (Chrome, Edge, Firefox)',
+  description:
+    'Enregistrez tous les onglets ouverts dans Chrome, Edge ou Firefox avec un raccourci, rouvrez-les après un redémarrage et récupérez les onglets fermés.',
+  shareSummary: 'Un raccourci, la reprise au démarrage et les onglets fermés retrouvés : Chrome, Edge, Firefox.',
+  dek: 'Cinq façons de garder tous vos onglets ouverts, et ce que chacune laisse passer sans prévenir.',
+  published: '2026-11-19',
+  updated: '2026-11-19',
+  testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D enregistre la fenêtre active seulement.', source: 'Testé dans les trois, 19 nov. 2026' },
+    { text: 'Ctrl+Shift+T rouvre les onglets et fenêtres fermés.', source: 'Pages d’aide de Chrome, Edge et Firefox' },
+    {
+      text: 'Les extensions ne voient pas les groupes enregistrés et fermés de Chrome.',
+      source: 'Documentation chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'Les Collections ont disparu d’Edge depuis Edge 149.', source: 'Support Microsoft' },
+  ],
+  faq: [
+    {
+      question: 'Ctrl+Shift+D enregistre-t-il les onglets de toutes les fenêtres ?',
+      answer: 'Non. Il ajoute aux favoris la fenêtre active uniquement. Répétez-le dans chaque fenêtre, ou utilisez un outil qui lit toutes les fenêtres.',
+    },
+    {
+      question: 'Peut-on enregistrer tous les onglets ouverts sans extension ?',
+      answer: 'Oui : avec Ctrl+Shift+D et le réglage de démarrage, tous deux intégrés à Chrome, Edge et Firefox.',
+    },
+    {
+      question: 'Pourquoi mes onglets ne sont-ils pas revenus après un redémarrage ?',
+      answer:
+        'Au démarrage, le navigateur rouvre ce qui était ouvert quand il a été quitté. Les fenêtres fermées avant et les fenêtres privées n’en font pas partie. Essayez Ctrl+Shift+T ou l’historique.',
+    },
+    {
+      question: 'Où TabMerger conserve-t-il les onglets enregistrés ?',
+      answer:
+        'Sur votre appareil, dans le stockage local du navigateur. Pro les synchronise entre vos appareils, avec un chiffrement de bout en bout. Voir la FAQ.',
+      link: { text: 'FAQ', href: '/faq' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/chrome-bookmarks-folder.webp', alt: 'Gestionnaire de favoris de Chrome avec le dossier « Tab manager research » sélectionné, qui contient six pages enregistrées' },
+    { src: '/blog/save-all-open-tabs/edge-bookmarks-folder.webp', alt: 'Favoris d’Edge avec le dossier « Tab manager research » ouvert : six pages et leurs adresses' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Paramètres de Chrome, « On startup » (Au démarrage), avec « Continue where you left off » (Reprendre où vous avez arrêté) sélectionné' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Paramètres d’Edge, « Start, home, and new tab page », avec « Open tabs from the previous session » sélectionné' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Paramètres de Firefox, « Home and startup » (Accueil et démarrage), avec « Open previous windows and tabs » (Ouvrir les fenêtres et onglets précédents) coché' },
+    { src: '/blog/save-all-open-tabs/chrome-history.webp', alt: 'Historique de Chrome avec six pages visitées aujourd’hui et les onglets « By date » et « By group »' },
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Historique d’Edge avec « All », « Recently closed » et « Tabs from other devices » dans la barre latérale' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-light.webp', alt: 'TabMerger, « Now Open » (Ouverts maintenant), avec deux fenêtres de navigateur de cinq onglets chacune, thème clair' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-dark.webp', alt: 'TabMerger, « Now Open » (Ouverts maintenant), avec deux fenêtres de navigateur de cinq onglets chacune, thème sombre' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-light.webp', alt: 'Menu de groupe de TabMerger avec « Merge with current » (Fusionner avec l’actuel), qui ajoute vos fenêtres de navigateur ouvertes à ce groupe, thème clair' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-dark.webp', alt: 'Menu de groupe de TabMerger avec « Merge with current » (Fusionner avec l’actuel), qui ajoute vos fenêtres de navigateur ouvertes à ce groupe, thème sombre' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-light.webp', alt: 'Le groupe « Open tabs, Nov 19 » avec 2 fenêtres et 10 onglets, thème clair' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-dark.webp', alt: 'Le groupe « Open tabs, Nov 19 » avec 2 fenêtres et 10 onglets, thème sombre' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-light.webp', alt: 'TabMerger, « Recently closed » (Fermés récemment) du jour, avec une bande horaire et trois onglets fermés, thème clair' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-dark.webp', alt: 'TabMerger, « Recently closed » (Fermés récemment) du jour, avec une bande horaire et trois onglets fermés, thème sombre' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-light.webp', alt: 'Recherche TabMerger « closed: seat » qui affiche un onglet récemment fermé, thème clair' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-dark.webp', alt: 'Recherche TabMerger « closed: seat » qui affiche un onglet récemment fermé, thème sombre' },
+    { src: '/blog/save-all-open-tabs/tm-search-light.webp', alt: 'Recherche TabMerger « lisbon » : résultats marqués « Now Open » ou « Open tabs, Nov 19 », thème clair' },
+    { src: '/blog/save-all-open-tabs/tm-search-dark.webp', alt: 'Recherche TabMerger « lisbon » : résultats marqués « Now Open » ou « Open tabs, Nov 19 », thème sombre' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-light.webp', alt: 'Fenêtre « Save Session » (Enregistrer la session) de TabMerger avec le nom « Before the trip », thème clair' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-dark.webp', alt: 'Fenêtre « Save Session » (Enregistrer la session) de TabMerger avec le nom « Before the trip », thème sombre' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-light.webp', alt: 'La session enregistrée « Before the trip » avec trois groupes (« Work », « Reading list » et « Open tabs, Nov 19 ») et un bouton « Restore session » (Restaurer la session), thème clair' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-dark.webp', alt: 'La session enregistrée « Before the trip » avec trois groupes (« Work », « Reading list » et « Open tabs, Nov 19 ») et un bouton « Restore session » (Restaurer la session), thème sombre' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-light.webp', alt: 'Paramètres de TabMerger, onglet « Data » (Données) : « Auto-save open tabs », « Backups » et « Remember closed tabs », thème clair' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-dark.webp', alt: 'Paramètres de TabMerger, onglet « Data » (Données) : « Auto-save open tabs », « Backups » et « Remember closed tabs », thème sombre' },
+  ],
+  tags: ['tab-management', 'save-tabs', 'restore-closed-tabs', 'bookmarks', 'browser-productivity', 'chrome', 'edge', 'firefox'],
+  // Before publishing: check each title against its page, and replace the Microsoft entry with
+  // the exact Edge help article (restore tabs / startup pages).
+  sources: [
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Microsoft Edge help and learning',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/microsoft-edge',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-19',
+    },
+  ],
+  screenshotsCaptured: '2026-11-19',
+  ogImage: { src: '/blog/save-all-open-tabs/og.png', alt: 'Carte titrée « How to save all open tabs and get them back later » : un guide TabMerger pour Chrome, Edge et Firefox, avec un groupe de deux fenêtres enregistrées' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'bookmark', label: '1. Tout mettre en favoris' },
+    { id: 'startup', label: '2. Rouvrir au démarrage' },
+    { id: 'closed', label: '3. Récupérer les onglets fermés' },
+    { id: 'groups', label: '4. Groupes d’onglets' },
+    { id: 'tabmerger', label: '5. Toutes les fenêtres d’un coup' },
+    { id: 'compare', label: 'Quelle méthode choisir' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['bookmark', 'startup', 'closed'],
+  browserFact: {
+    label: 'Réglage de démarrage',
+    values: { chrome: 'chrome://settings/onStartup', edge: 'edge://settings/startHomeNTP', firefox: 'about:preferences#home' },
+  },
+}
+
+<QuickAnswer>
+
+Pour enregistrer tous les onglets ouverts, appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> sur Mac) : chaque onglet de la fenêtre active devient un favori dans un nouveau dossier. Cela fonctionne dans Chrome, Edge et Firefox. Pour que les onglets se rouvrent tout seuls, activez **Reprendre où vous avez arrêté** (« Continue where you left off », Chrome), **Open tabs from the previous session** (Edge) ou **Ouvrir les fenêtres et onglets précédents** (« Open previous windows and tabs », Firefox).
+
+</QuickAnswer>
+
+<BrowserSwitcher />
+
+<Section id="bookmark" title="1. Mettre tous les onglets en favoris d’un seul raccourci">
+
+Tous les grands navigateurs enregistrent les onglets d’une fenêtre sous forme de dossier de favoris. Le dossier reste jusqu’à ce que vous le supprimiez, et il se synchronise si vous êtes connecté au navigateur.
+
+Les captures des navigateurs montrent l’interface en anglais. Quand le libellé français diffère, l’anglais est indiqué entre parenthèses la première fois.
+
+<BrowserPanels section="bookmark">
+<BrowserPanel browser="chrome">
+
+1. Cliquez sur n’importe quel onglet de la fenêtre à conserver.
+2. Appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> sur Mac).
+3. Nommez le dossier, choisissez son emplacement et cliquez sur Enregistrer.
+4. Pour les rouvrir plus tard, appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>, trouvez le dossier et ouvrez tous ses favoris.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-bookmarks-folder.webp" alt="Gestionnaire de favoris de Chrome avec le dossier « Tab manager research » sélectionné, qui contient six pages enregistrées" width={1600} height={524} eager boxes={[{ id: 'folder' }]} source="chrome://bookmarks · Chrome 157.0.8103.79">Le Gestionnaire de favoris de Chrome (« Bookmark Manager ») après Ctrl+Shift+D : le nouveau dossier contient un favori par onglet de la fenêtre.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Cliquez sur n’importe quel onglet de la fenêtre à conserver.
+2. Appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> sur Mac). Edge enregistre les onglets comme favoris dans un nouveau dossier.
+3. Nommez le dossier et enregistrez-le.
+4. Pour les rouvrir plus tard, appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> pour afficher les **Favoris** (« Favorites »), trouvez le dossier et ouvrez-les tous.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-bookmarks-folder.webp" alt="Favoris d’Edge avec le dossier « Tab manager research » ouvert : six pages et leurs adresses" width={1600} height={553} boxes={[{ id: 'folder' }]} source="edge://favorites · Edge 157.0.4341.60">Les Favoris d’Edge après le même raccourci : les onglets sont enregistrés comme favoris dans un nouveau dossier.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Cliquez sur n’importe quel onglet de la fenêtre à conserver.
+2. Appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> sur Mac) pour marquer tous les onglets.
+3. Nommez le dossier et cliquez sur Enregistrer.
+4. Pour les rouvrir plus tard, appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> (**Organiser les marque-pages**, « Manage Bookmarks ») et ouvrez tous les marque-pages du dossier.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox Library (Ctrl+Shift+O) with the new folder selected. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>seule la *fenêtre active* est enregistrée. Trois fenêtres, trois dossiers. Un favori ne garde en outre que l’adresse : la position de défilement et la saisie des formulaires sont perdues.</Catch>
+
+</Section>
+
+<Section id="startup" title="2. Faire tout rouvrir au navigateur au démarrage">
+
+Si ce sont les redémarrages et les mises à jour qui vous font perdre vos onglets, laissez le navigateur restaurer la session.
+
+<BrowserPanels section="startup">
+<BrowserPanel browser="chrome">
+
+Dans Chrome : **Paramètres → Au démarrage → Reprendre où vous avez arrêté** (« Settings → On startup → Continue where you left off »). Ou collez `chrome://settings/onStartup` dans la barre d’adresse.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Paramètres de Chrome, « On startup » (Au démarrage), avec « Continue where you left off » (Reprendre où vous avez arrêté) sélectionné" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">Le réglage Au démarrage de Chrome, réglé pour rouvrir la dernière session.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Dans Edge : **Paramètres → Start, home, and new tab page → On startup → Open tabs from the previous session**. Le plus rapide est de coller `edge://settings/startHomeNTP` dans la barre d’adresse.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Paramètres d’Edge, « Start, home, and new tab page », avec « Open tabs from the previous session » sélectionné" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">La page « Start, home, and new tab page » d’Edge, réglée pour rouvrir la dernière session.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Dans Firefox : **Paramètres → Accueil et démarrage → Démarrage → Ouvrir les fenêtres et onglets précédents** (« Settings → Home and startup → Startup → Open previous windows and tabs »). Ou collez `about:preferences#home` dans la barre d’adresse.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Paramètres de Firefox, « Home and startup » (Accueil et démarrage), avec « Open previous windows and tabs » (Ouvrir les fenêtres et onglets précédents) coché" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Firefox 159 range l’option sous Accueil et démarrage ; les anciens guides parlent de Général.</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>le navigateur restaure ce qui était ouvert la dernière fois qu’il a été quitté. Une fenêtre fermée plus tôt n’en fait pas partie, et les fenêtres privées ne reviennent jamais.</Catch>
+
+</Section>
+
+<Section id="closed" title="3. Récupérer des onglets déjà fermés">
+
+Appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) pour rouvrir le dernier onglet ou la dernière fenêtre fermés ; appuyez de nouveau pour remonter plus loin. Pour quelque chose de plus ancien, ouvrez l’historique avec <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>.
+
+<BrowserPanels section="closed">
+<BrowserPanel browser="chrome">
+
+Chrome liste aussi les onglets et fenêtres récemment fermés sous ⋮ → **Historique** (« History »).
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-history.webp" alt="Historique de Chrome avec six pages visitées aujourd’hui et les onglets « By date » et « By group »" width={1600} height={640} source="chrome://history · Chrome 157.0.8103.79" className="m-0">La page Historique de Chrome ; la version 157 ajoute une vue « By group » (par groupe).</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge affiche les onglets récemment fermés (« Recently closed ») directement sur la page **Historique**.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Historique d’Edge avec « All », « Recently closed » et « Tabs from other devices » dans la barre latérale" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60" className="m-0">La page Historique d’Edge, avec sa liste « Recently closed » dans la barre latérale.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox liste les onglets et fenêtres récemment fermés dans le menu **Historique** (« History »), sous **Onglets récemment fermés** et **Fenêtres récemment fermées** (appuyez sur Alt pour afficher la barre de menus).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with recently closed tabs open. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="groups" title="4. Groupes d’onglets : utiles pour se concentrer, limités pour enregistrer">
+
+- **Chrome** peut enregistrer un groupe et le rouvrir, mais les extensions ne voient pas un groupe enregistré une fois fermé ([API tabGroups](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
+- Les groupes de **Firefox** restent sur l’appareil et ne passent pas par Firefox Sync.
+- **Edge** n’a plus de Collections depuis Edge 149.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
+
+</Section>
+
+<Section id="tabmerger" title="5. Enregistrer tous les onglets ouverts de toutes les fenêtres avec TabMerger">
+
+Les méthodes intégrées couvrent chacune une fenêtre, un redémarrage ou un onglet fermé à la fois. [TabMerger](/features), notre extension gratuite pour Chrome, Edge et Firefox, liste toutes les fenêtres ouvertes sous **Ouverts maintenant** et les enregistre toutes dans un seul groupe.
+
+<ScreenshotThemeToggle />
+
+1. Cliquez sur **Ajouter un groupe** et donnez-lui un nom, par exemple « Onglets ouverts, 19 nov. » (« Open tabs, Nov 19 » sur les captures).
+2. Ouvrez le menu **⋯** du groupe et choisissez **Fusionner avec l’actuel**, qui ajoute vos fenêtres de navigateur ouvertes. (*Remplacer par l’actuel* remplace plutôt les fenêtres du groupe.)
+3. Fermez les fenêtres quand vous voulez. Le groupe garde les deux fenêtres et les dix onglets.
+
+<Carousel label="Enregistrer toutes les fenêtres dans un groupe" steps={[{ title: 'Ouverts maintenant' }, { title: 'Menu du groupe' }, { title: 'Groupe enregistré' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-now-open" alt="TabMerger, « Now Open » (Ouverts maintenant), avec deux fenêtres de navigateur de cinq onglets chacune, thème clair" darkAlt="TabMerger, « Now Open » (Ouverts maintenant), avec deux fenêtres de navigateur de cinq onglets chacune, thème sombre">Ouverts maintenant reflète le navigateur : chaque fenêtre ouverte et ses onglets.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merge-menu" alt="Menu de groupe de TabMerger avec « Merge with current » (Fusionner avec l’actuel), qui ajoute vos fenêtres de navigateur ouvertes à ce groupe, thème clair" darkAlt="Menu de groupe de TabMerger avec « Merge with current » (Fusionner avec l’actuel), qui ajoute vos fenêtres de navigateur ouvertes à ce groupe, thème sombre" boxes={[{ id: 'group-menu-button', label: 'Menu du groupe' }, { id: 'merge-with-current', label: 'Fusionner avec l’actuel' }]}>Après Ajouter un groupe, ouvrez le menu du nouveau groupe et choisissez l’option qui y copie toutes les fenêtres ouvertes.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merged-group" alt="Le groupe « Open tabs, Nov 19 » avec 2 fenêtres et 10 onglets, thème clair" darkAlt="Le groupe « Open tabs, Nov 19 » avec 2 fenêtres et 10 onglets, thème sombre">Après Fusionner avec l’actuel : les deux fenêtres sont enregistrées dans un groupe, toujours là après leur fermeture.</ThemedScreenshot>
+</Carousel>
+
+### Vous préférez le clavier ?
+
+<ComparisonTable
+  head={['Raccourci', 'Enregistre']}
+  keysColumn={0}
+  rows={[
+    ['Ctrl+Shift+P', 'Tous les autres onglets de la fenêtre'],
+    ['Ctrl+Shift+S', 'L’onglet actif'],
+    ['Ctrl+Shift+K', 'Les onglets à gauche'],
+    ['Ctrl+Shift+U', 'Les onglets à droite'],
+  ]}
+/>
+
+Sur Mac, utilisez <Kbd>⌘</Kbd>. Chaque raccourci demande où enregistrer ; **Enregistrement rapide (nouveau groupe)** crée un groupe sur-le-champ. Dans Firefox, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> ouvre une fenêtre privée : choisissez une autre touche dans `about:addons` → « Manage Extension Shortcuts ».
+
+### Fermé par erreur ?
+
+**Fermés récemment** garde chaque onglet et chaque fenêtre que vous fermez, classés par jour, avec une bande qui indique l’heure. L’offre gratuite les garde 2 jours, Pro 30. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> cherche dans les onglets ouverts, enregistrés et fermés ; commencez par `closed:` pour ne chercher que les onglets fermés.
+
+<Carousel label="Retrouver des onglets fermés" steps={[{ title: 'Fermés récemment' }, { title: 'Recherche closed:' }, { title: 'Tout rechercher' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-recently-closed" alt="TabMerger, « Recently closed » (Fermés récemment) du jour, avec une bande horaire et trois onglets fermés, thème clair" darkAlt="TabMerger, « Recently closed » (Fermés récemment) du jour, avec une bande horaire et trois onglets fermés, thème sombre" boxes={[{ id: 'hour-strip' }]}>Les onglets fermés aujourd’hui, avec l’heure de leur fermeture.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search-closed" alt="Recherche TabMerger « closed: seat » qui affiche un onglet récemment fermé, thème clair" darkAlt="Recherche TabMerger « closed: seat » qui affiche un onglet récemment fermé, thème sombre" boxes={[{ id: 'search-input' }]}>Appuyez sur Ctrl+K et commencez par `closed:` pour ne chercher que les onglets fermés.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search" alt="Recherche TabMerger « lisbon » : résultats marqués « Now Open » ou « Open tabs, Nov 19 », thème clair" darkAlt="Recherche TabMerger « lisbon » : résultats marqués « Now Open » ou « Open tabs, Nov 19 », thème sombre" boxes={[{ id: 'group-tag-1' }]}>Sans le préfixe, la recherche couvre les onglets ouverts et enregistrés, marqués par groupe.</ThemedScreenshot>
+</Carousel>
+
+### Instantanés et enregistrement automatique
+
+**Enregistrer la session actuelle** prend un instantané nommé de vos groupes enregistrés (pas de vos onglets ouverts), que vous pouvez restaurer d’un coup. **Paramètres → Données → Enregistrer automatiquement les onglets ouverts** enregistre vos onglets ouverts dans un nouveau groupe, automatiquement ; l’offre gratuite garde les 2 plus récents, qui comptent dans ses 5 groupes et 50 onglets.
+
+<Carousel label="Sessions et enregistrement automatique" steps={[{ title: 'Enregistrer la session' }, { title: 'Vue de la session' }, { title: 'Paramètres → Données' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-save-session-dialog" alt="Fenêtre « Save Session » (Enregistrer la session) de TabMerger avec le nom « Before the trip », thème clair" darkAlt="Fenêtre « Save Session » (Enregistrer la session) de TabMerger avec le nom « Before the trip », thème sombre" boxes={[{ id: 'session-name' }]}>Enregistrer la session actuelle demande un nom.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-session-view" alt="La session enregistrée « Before the trip » avec trois groupes (« Work », « Reading list » et « Open tabs, Nov 19 ») et un bouton « Restore session » (Restaurer la session), thème clair" darkAlt="La session enregistrée « Before the trip » avec trois groupes (« Work », « Reading list » et « Open tabs, Nov 19 ») et un bouton « Restore session » (Restaurer la session), thème sombre" boxes={[{ id: 'restore-session' }]}>Une fois enregistrée, ouvrez la session : « Before the trip », avec ses trois groupes.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-settings-data" alt="Paramètres de TabMerger, onglet « Data » (Données) : « Auto-save open tabs », « Backups » et « Remember closed tabs », thème clair" darkAlt="Paramètres de TabMerger, onglet « Data » (Données) : « Auto-save open tabs », « Backups » et « Remember closed tabs », thème sombre" boxes={[{ id: 'auto-save-toggle' }]}>Paramètres → Données, où l’on active l’enregistrement automatique.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Gratuit pour Chrome, Edge et Firefox. Aucun compte nécessaire pour commencer.</InstallCta>
+
+</Section>
+
+<Section id="compare" title="Quelle méthode choisir ?">
+
+<ComparisonTable
+  head={['', 'Tout en favoris', 'Reprise au démarrage', 'Ctrl+Shift+T, historique', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="38rem"
+  rows={[
+    ['Toutes les fenêtres d’un coup', 'Non', 'Oui, au redémarrage', 'Une à la fois', 'Oui'],
+    ['Conservé après fermeture d’une fenêtre', 'Oui', 'Non', 'Dans l’historique', 'Oui'],
+    ['Recherche', 'Favoris', 'Aucune', 'Historique', 'Ctrl+K, onglets fermés compris'],
+    ['Prix', 'Gratuit', 'Gratuit', 'Gratuit', 'Gratuit ; Pro pour la synchro'],
+  ]}
+/>
+
+Activez le réglage de démarrage, quel que soit votre choix. Mettez en favoris une fenêtre isolée qui en vaut la peine. Passez à une extension quand vous jonglez avec plusieurs fenêtres ou qu’il vous faut un onglet fermé des jours plus tard. Plus de détails sur notre [page de comparaison](/compare).
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+
+</Section>

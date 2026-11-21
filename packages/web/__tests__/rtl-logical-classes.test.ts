@@ -24,6 +24,21 @@ const ROOTS = ['components', 'app']
 /** Deliberate physical classes: `file` (relative to packages/web, forward slashes) and the class. */
 const ALLOWED: { file: string; token: string; reason: string }[] = [
   {
+    file: 'components/blog/FigureOverlays.tsx',
+    token: '-translate-x-1/2',
+    reason: 'centres each marker badge on its box corner, a physical point in the (never mirrored) screenshot',
+  },
+  {
+    file: 'components/blog/FigureLightbox.tsx',
+    token: 'left-0',
+    reason: 'the hover lens and its magnified image are placed with transforms from physical pointer and image coordinates',
+  },
+  {
+    file: 'components/blog/FigureLightbox.tsx',
+    token: 'origin-top-left',
+    reason: 'the magnified image is offset from its physical top-left corner (pointer coordinates)',
+  },
+  {
     file: 'components/ui/dialog.tsx',
     token: 'left-[50%]',
     reason: 'centring (left 50% + translate -50%) is symmetric, and the open/close slide animation is built on it',

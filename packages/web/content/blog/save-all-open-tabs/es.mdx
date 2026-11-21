@@ -1,0 +1,320 @@
+export const post = {
+  slug: 'save-all-open-tabs',
+  title: 'Cómo guardar todas las pestañas abiertas y recuperarlas después',
+  seoTitle: 'Guardar todas las pestañas abiertas (Chrome, Edge, Firefox)',
+  description:
+    'Guarda todas las pestañas abiertas en Chrome, Edge o Firefox con un atajo, haz que se reabran tras reiniciar y recupera las pestañas que cerraste.',
+  shareSummary: 'Un atajo, restaurar al iniciar y recuperar pestañas cerradas en Chrome, Edge y Firefox.',
+  dek: 'Cinco formas de conservar todas tus pestañas abiertas, y lo que cada una pasa por alto sin avisar.',
+  published: '2026-11-19',
+  updated: '2026-11-19',
+  testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D guarda solo la ventana actual.', source: 'Probado en los tres, 19 nov. 2026' },
+    { text: 'Ctrl+Shift+T reabre pestañas y ventanas cerradas.', source: 'Páginas de ayuda de Chrome, Edge y Firefox' },
+    {
+      text: 'Las extensiones no ven los grupos guardados y cerrados de Chrome.',
+      source: 'Documentación de chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'Edge ya no tiene Colecciones desde Edge 149.', source: 'Soporte de Microsoft' },
+  ],
+  faq: [
+    {
+      question: '¿Ctrl+Shift+D guarda las pestañas de todas las ventanas?',
+      answer: 'No. Solo guarda en marcadores la ventana actual. Repítelo en cada ventana o usa una herramienta que lea todas las ventanas.',
+    },
+    {
+      question: '¿Puedo guardar todas las pestañas abiertas sin una extensión?',
+      answer: 'Sí: con Ctrl+Shift+D y el ajuste de inicio, ambos integrados en Chrome, Edge y Firefox.',
+    },
+    {
+      question: '¿Por qué no volvieron mis pestañas después de reiniciar?',
+      answer:
+        'Al iniciar se restaura lo que estaba abierto cuando se cerró el navegador. Las ventanas cerradas antes y las privadas no se incluyen. Prueba Ctrl+Shift+T o el historial.',
+    },
+    {
+      question: '¿Dónde guarda TabMerger tus pestañas?',
+      answer:
+        'En tu dispositivo, en el almacenamiento local del navegador. Pro las sincroniza entre dispositivos con cifrado de extremo a extremo. Consulta las preguntas frecuentes.',
+      link: { text: 'preguntas frecuentes', href: '/faq' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/chrome-bookmarks-folder.webp', alt: 'Administrador de marcadores de Chrome con la carpeta «Tab manager research» seleccionada y seis páginas guardadas' },
+    { src: '/blog/save-all-open-tabs/edge-bookmarks-folder.webp', alt: 'Favoritos de Edge con la carpeta «Tab manager research» abierta: seis páginas y sus direcciones' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Configuración de Chrome, «On startup» (Al iniciar), con «Continue where you left off» (Continuar donde lo dejaste) seleccionado' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Configuración de Edge, «Start, home, and new tab page», con «Open tabs from the previous session» seleccionado' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Ajustes de Firefox, «Home and startup» (Inicio), con «Open previous windows and tabs» (Abrir ventanas y pestañas anteriores) marcado' },
+    { src: '/blog/save-all-open-tabs/chrome-history.webp', alt: 'Historial de Chrome con seis páginas visitadas hoy y las pestañas «By date» y «By group»' },
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Historial de Edge con «All», «Recently closed» y «Tabs from other devices» en la barra lateral' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-light.webp', alt: 'TabMerger, «Now Open» (Abiertas ahora), con dos ventanas del navegador de cinco pestañas cada una, tema claro' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-dark.webp', alt: 'TabMerger, «Now Open» (Abiertas ahora), con dos ventanas del navegador de cinco pestañas cada una, tema oscuro' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-light.webp', alt: 'Menú de grupo de TabMerger con «Merge with current» (Combinar con lo actual), que agrega tus ventanas abiertas del navegador a este grupo, tema claro' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-dark.webp', alt: 'Menú de grupo de TabMerger con «Merge with current» (Combinar con lo actual), que agrega tus ventanas abiertas del navegador a este grupo, tema oscuro' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-light.webp', alt: 'El grupo «Open tabs, Nov 19» con 2 ventanas y 10 pestañas, tema claro' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-dark.webp', alt: 'El grupo «Open tabs, Nov 19» con 2 ventanas y 10 pestañas, tema oscuro' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-light.webp', alt: 'TabMerger, «Recently closed» (Cerrado recientemente) de hoy, con una franja por horas y tres pestañas cerradas, tema claro' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-dark.webp', alt: 'TabMerger, «Recently closed» (Cerrado recientemente) de hoy, con una franja por horas y tres pestañas cerradas, tema oscuro' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-light.webp', alt: 'Búsqueda en TabMerger de «closed: seat» con una pestaña cerrada recientemente, tema claro' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-dark.webp', alt: 'Búsqueda en TabMerger de «closed: seat» con una pestaña cerrada recientemente, tema oscuro' },
+    { src: '/blog/save-all-open-tabs/tm-search-light.webp', alt: 'Búsqueda en TabMerger de «lisbon»: resultados etiquetados «Now Open» u «Open tabs, Nov 19», tema claro' },
+    { src: '/blog/save-all-open-tabs/tm-search-dark.webp', alt: 'Búsqueda en TabMerger de «lisbon»: resultados etiquetados «Now Open» u «Open tabs, Nov 19», tema oscuro' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-light.webp', alt: 'Diálogo «Save Session» (Guardar sesión) de TabMerger con el nombre «Before the trip», tema claro' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-dark.webp', alt: 'Diálogo «Save Session» (Guardar sesión) de TabMerger con el nombre «Before the trip», tema oscuro' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-light.webp', alt: 'La sesión guardada «Before the trip» con tres grupos («Work», «Reading list» y «Open tabs, Nov 19») y el botón «Restore session» (Restaurar sesión), tema claro' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-dark.webp', alt: 'La sesión guardada «Before the trip» con tres grupos («Work», «Reading list» y «Open tabs, Nov 19») y el botón «Restore session» (Restaurar sesión), tema oscuro' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-light.webp', alt: 'Ajustes de TabMerger, pestaña «Data» (Datos): «Auto-save open tabs», «Backups» y «Remember closed tabs», tema claro' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-dark.webp', alt: 'Ajustes de TabMerger, pestaña «Data» (Datos): «Auto-save open tabs», «Backups» y «Remember closed tabs», tema oscuro' },
+  ],
+  tags: ['tab-management', 'save-tabs', 'restore-closed-tabs', 'bookmarks', 'browser-productivity', 'chrome', 'edge', 'firefox'],
+  // Before publishing: check each title against its page, and replace the Microsoft entry with
+  // the exact Edge help article (restore tabs / startup pages).
+  sources: [
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Microsoft Edge help and learning',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/microsoft-edge',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-19',
+    },
+  ],
+  screenshotsCaptured: '2026-11-19',
+  ogImage: { src: '/blog/save-all-open-tabs/og.png', alt: 'Tarjeta con el título «How to save all open tabs and get them back later»: una guía de TabMerger para Chrome, Edge y Firefox, con un grupo de dos ventanas guardadas' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'bookmark', label: '1. Todas a marcadores' },
+    { id: 'startup', label: '2. Reabrir al iniciar' },
+    { id: 'closed', label: '3. Recuperar pestañas cerradas' },
+    { id: 'groups', label: '4. Grupos de pestañas' },
+    { id: 'tabmerger', label: '5. Todas las ventanas a la vez' },
+    { id: 'compare', label: 'Cuál usar' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+  browserSections: ['bookmark', 'startup', 'closed'],
+  browserFact: {
+    label: 'Ajuste de inicio',
+    values: { chrome: 'chrome://settings/onStartup', edge: 'edge://settings/startHomeNTP', firefox: 'about:preferences#home' },
+  },
+}
+
+<QuickAnswer>
+
+Para guardar todas las pestañas abiertas, pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> en Mac): cada pestaña de la ventana actual se guarda como marcador en una carpeta nueva. Funciona en Chrome, Edge y Firefox. Para que las pestañas se reabran solas, activa **Continuar donde lo dejaste** («Continue where you left off», Chrome), **Open tabs from the previous session** (Edge) o **Abrir ventanas y pestañas anteriores** («Open previous windows and tabs», Firefox).
+
+</QuickAnswer>
+
+<BrowserSwitcher />
+
+<Section id="bookmark" title="1. Guarda todas las pestañas en marcadores con un atajo">
+
+Todos los navegadores importantes guardan las pestañas de una ventana como una carpeta de marcadores. La carpeta se queda hasta que la borres y se sincroniza si iniciaste sesión en el navegador.
+
+Las capturas de los navegadores muestran la interfaz en inglés. Cuando el nombre en español es distinto, la primera vez va acompañado del inglés entre paréntesis.
+
+<BrowserPanels section="bookmark">
+<BrowserPanel browser="chrome">
+
+1. Haz clic en cualquier pestaña de la ventana que quieres conservar.
+2. Pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> en Mac).
+3. Ponle nombre a la carpeta, elige dónde va y haz clic en Guardar.
+4. Para reabrirlas más tarde, pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>, busca la carpeta y abre todos sus marcadores.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-bookmarks-folder.webp" alt="Administrador de marcadores de Chrome con la carpeta «Tab manager research» seleccionada y seis páginas guardadas" width={1600} height={524} eager boxes={[{ id: 'folder' }]} source="chrome://bookmarks · Chrome 157.0.8103.79">El Administrador de marcadores de Chrome («Bookmark Manager») después de Ctrl+Shift+D: la carpeta nueva tiene un marcador por cada pestaña de la ventana.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Haz clic en cualquier pestaña de la ventana que quieres conservar.
+2. Pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> en Mac). Edge guarda las pestañas como favoritos en una carpeta nueva.
+3. Ponle nombre a la carpeta y guárdala.
+4. Para reabrirlas más tarde, pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> para ver **Favoritos** («Favorites»), busca la carpeta y ábrelos todos.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-bookmarks-folder.webp" alt="Favoritos de Edge con la carpeta «Tab manager research» abierta: seis páginas y sus direcciones" width={1600} height={553} boxes={[{ id: 'folder' }]} source="edge://favorites · Edge 157.0.4341.60">Favoritos de Edge después del mismo atajo: las pestañas quedan guardadas como favoritos en una carpeta nueva.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Haz clic en cualquier pestaña de la ventana que quieres conservar.
+2. Pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> en Mac) para guardar todas las pestañas en marcadores.
+3. Ponle nombre a la carpeta y haz clic en Guardar.
+4. Para reabrirlas más tarde, pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> (**Administrar marcadores**, «Manage Bookmarks») y abre todos los marcadores de la carpeta.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox Library (Ctrl+Shift+O) with the new folder selected. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>solo guarda *la ventana actual*. Tres ventanas son tres carpetas. Además, un marcador solo conserva la dirección; la posición de desplazamiento y lo escrito en formularios se pierden.</Catch>
+
+</Section>
+
+<Section id="startup" title="2. Haz que el navegador reabra todo al iniciar">
+
+Si los reinicios y las actualizaciones son lo que te hace perder pestañas, deja que el navegador recupere la sesión.
+
+<BrowserPanels section="startup">
+<BrowserPanel browser="chrome">
+
+En Chrome: **Configuración → Al iniciar → Continuar donde lo dejaste** («Settings → On startup → Continue where you left off»). O pega `chrome://settings/onStartup` en la barra de direcciones.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Configuración de Chrome, «On startup» (Al iniciar), con «Continue where you left off» (Continuar donde lo dejaste) seleccionado" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">El ajuste Al iniciar de Chrome, configurado para reabrir la última sesión.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+En Edge: **Configuración → Start, home, and new tab page → On startup → Open tabs from the previous session**. Lo más rápido es pegar `edge://settings/startHomeNTP` en la barra de direcciones.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Configuración de Edge, «Start, home, and new tab page», con «Open tabs from the previous session» seleccionado" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">La sección «Start, home, and new tab page» de Edge, configurada para reabrir la última sesión.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+En Firefox: **Ajustes → Inicio → Abrir ventanas y pestañas anteriores** («Settings → Home and startup → Startup → Open previous windows and tabs»). O pega `about:preferences#home` en la barra de direcciones.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Ajustes de Firefox, «Home and startup» (Inicio), con «Open previous windows and tabs» (Abrir ventanas y pestañas anteriores) marcado" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Firefox 159 tiene la opción en Inicio; las guías antiguas dicen General.</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>restaura lo que estaba abierto la última vez que se cerró el navegador. Una ventana que cerraste antes no entra, y las ventanas privadas nunca vuelven.</Catch>
+
+</Section>
+
+<Section id="closed" title="3. Recupera pestañas que ya cerraste">
+
+Pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) para reabrir la última pestaña o ventana que cerraste; vuelve a pulsarlo para seguir retrocediendo. Para algo más antiguo, abre el historial con <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>.
+
+<BrowserPanels section="closed">
+<BrowserPanel browser="chrome">
+
+Chrome también muestra las pestañas y ventanas cerradas recientemente en ⋮ → **Historial** («History»).
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-history.webp" alt="Historial de Chrome con seis páginas visitadas hoy y las pestañas «By date» y «By group»" width={1600} height={640} source="chrome://history · Chrome 157.0.8103.79" className="m-0">La página Historial de Chrome; la versión 157 añade la vista «By group» (por grupo).</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge muestra las pestañas cerradas recientemente («Recently closed») en la misma página **Historial**.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Historial de Edge con «All», «Recently closed» y «Tabs from other devices» en la barra lateral" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60" className="m-0">La página Historial de Edge, con la lista «Recently closed» en la barra lateral.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox muestra las pestañas y ventanas cerradas recientemente en el menú **Historial** («History»), en **Pestañas cerradas recientemente** y **Ventanas cerradas recientemente** (pulsa Alt para mostrar la barra de menús).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with recently closed tabs open. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="groups" title="4. Grupos de pestañas: buenos para concentrarse, limitados para guardar">
+
+- **Chrome** puede guardar un grupo y volver a abrirlo, pero las extensiones no ven un grupo guardado que está cerrado ([API tabGroups](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
+- Los grupos de **Firefox** se quedan en el dispositivo y no viajan con Firefox Sync.
+- **Edge** ya no tiene Colecciones («Collections») desde Edge 149.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
+
+</Section>
+
+<Section id="tabmerger" title="5. Guarda todas las pestañas abiertas de todas las ventanas con TabMerger">
+
+Cada método integrado cubre una ventana, un reinicio o una pestaña cerrada a la vez. [TabMerger](/features), nuestra extensión gratuita para Chrome, Edge y Firefox, muestra todas las ventanas abiertas en **Abiertas ahora** y las guarda todas en un grupo.
+
+<ScreenshotThemeToggle />
+
+1. Haz clic en **Agregar grupo** y ponle un nombre, como «Pestañas abiertas, 19 nov.» (en las capturas, «Open tabs, Nov 19»).
+2. Abre el menú **⋯** del grupo y elige **Combinar con lo actual**, que agrega tus ventanas abiertas. (*Reemplazar con lo actual* sustituye las ventanas del grupo).
+3. Cierra las ventanas cuando quieras. El grupo conserva las dos ventanas y las diez pestañas.
+
+<Carousel label="Guardar todas las ventanas en un grupo" steps={[{ title: 'Abiertas ahora' }, { title: 'Menú del grupo' }, { title: 'Grupo guardado' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-now-open" alt="TabMerger, «Now Open» (Abiertas ahora), con dos ventanas del navegador de cinco pestañas cada una, tema claro" darkAlt="TabMerger, «Now Open» (Abiertas ahora), con dos ventanas del navegador de cinco pestañas cada una, tema oscuro">Abiertas ahora refleja el navegador: cada ventana abierta con sus pestañas.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merge-menu" alt="Menú de grupo de TabMerger con «Merge with current» (Combinar con lo actual), que agrega tus ventanas abiertas del navegador a este grupo, tema claro" darkAlt="Menú de grupo de TabMerger con «Merge with current» (Combinar con lo actual), que agrega tus ventanas abiertas del navegador a este grupo, tema oscuro" boxes={[{ id: 'group-menu-button', label: 'Menú del grupo' }, { id: 'merge-with-current', label: 'Combinar con lo actual' }]}>Después de Agregar grupo, abre el menú del grupo nuevo y elige la opción que copia en él todas las ventanas abiertas.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merged-group" alt="El grupo «Open tabs, Nov 19» con 2 ventanas y 10 pestañas, tema claro" darkAlt="El grupo «Open tabs, Nov 19» con 2 ventanas y 10 pestañas, tema oscuro">Después de Combinar con lo actual: las dos ventanas quedan guardadas en un grupo, aunque se cierren.</ThemedScreenshot>
+</Carousel>
+
+### ¿Prefieres el teclado?
+
+<ComparisonTable
+  head={['Atajo', 'Guarda']}
+  keysColumn={0}
+  rows={[
+    ['Ctrl+Shift+P', 'Todas las demás pestañas de la ventana'],
+    ['Ctrl+Shift+S', 'La pestaña actual'],
+    ['Ctrl+Shift+K', 'Las pestañas a la izquierda'],
+    ['Ctrl+Shift+U', 'Las pestañas a la derecha'],
+  ]}
+/>
+
+En Mac, usa <Kbd>⌘</Kbd>. Cada atajo pregunta dónde guardar; **Guardado rápido (grupo nuevo)** crea un grupo al momento. En Firefox, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> abre una ventana privada, así que elige otra tecla en `about:addons` → «Manage Extension Shortcuts».
+
+### ¿Cerraste algo sin querer?
+
+**Cerrado recientemente** guarda cada pestaña y ventana que cierras, por día, con una franja que muestra la hora. El plan gratuito las guarda 2 días; Pro, 30. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> busca en pestañas abiertas, guardadas y cerradas; empieza con `closed:` para buscar solo las cerradas.
+
+<Carousel label="Recuperar pestañas cerradas" steps={[{ title: 'Cerrado recientemente' }, { title: 'Búsqueda closed:' }, { title: 'Buscar en todo' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-recently-closed" alt="TabMerger, «Recently closed» (Cerrado recientemente) de hoy, con una franja por horas y tres pestañas cerradas, tema claro" darkAlt="TabMerger, «Recently closed» (Cerrado recientemente) de hoy, con una franja por horas y tres pestañas cerradas, tema oscuro" boxes={[{ id: 'hour-strip' }]}>Las pestañas cerradas hoy, con la hora en que se cerraron.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search-closed" alt="Búsqueda en TabMerger de «closed: seat» con una pestaña cerrada recientemente, tema claro" darkAlt="Búsqueda en TabMerger de «closed: seat» con una pestaña cerrada recientemente, tema oscuro" boxes={[{ id: 'search-input' }]}>Pulsa Ctrl+K y empieza con `closed:` para buscar solo pestañas cerradas.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search" alt="Búsqueda en TabMerger de «lisbon»: resultados etiquetados «Now Open» u «Open tabs, Nov 19», tema claro" darkAlt="Búsqueda en TabMerger de «lisbon»: resultados etiquetados «Now Open» u «Open tabs, Nov 19», tema oscuro" boxes={[{ id: 'group-tag-1' }]}>Sin el prefijo, la búsqueda cubre pestañas abiertas y guardadas, etiquetadas por grupo.</ThemedScreenshot>
+</Carousel>
+
+### Instantáneas y guardado automático
+
+**Guardar sesión actual** crea una instantánea con nombre de tus grupos guardados (no de tus pestañas abiertas) que puedes restaurar de una vez. **Ajustes → Datos → Guardar pestañas abiertas automáticamente** guarda tus pestañas abiertas como un grupo nuevo de forma automática; el plan gratuito conserva los 2 más recientes, que cuentan para sus 5 grupos y 50 pestañas.
+
+<Carousel label="Sesiones y guardado automático" steps={[{ title: 'Guardar sesión' }, { title: 'Vista de la sesión' }, { title: 'Ajustes → Datos' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-save-session-dialog" alt="Diálogo «Save Session» (Guardar sesión) de TabMerger con el nombre «Before the trip», tema claro" darkAlt="Diálogo «Save Session» (Guardar sesión) de TabMerger con el nombre «Before the trip», tema oscuro" boxes={[{ id: 'session-name' }]}>Guardar sesión actual te pide un nombre.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-session-view" alt="La sesión guardada «Before the trip» con tres grupos («Work», «Reading list» y «Open tabs, Nov 19») y el botón «Restore session» (Restaurar sesión), tema claro" darkAlt="La sesión guardada «Before the trip» con tres grupos («Work», «Reading list» y «Open tabs, Nov 19») y el botón «Restore session» (Restaurar sesión), tema oscuro" boxes={[{ id: 'restore-session' }]}>Después de guardar, abre la sesión: «Before the trip», con sus tres grupos.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-settings-data" alt="Ajustes de TabMerger, pestaña «Data» (Datos): «Auto-save open tabs», «Backups» y «Remember closed tabs», tema claro" darkAlt="Ajustes de TabMerger, pestaña «Data» (Datos): «Auto-save open tabs», «Backups» y «Remember closed tabs», tema oscuro" boxes={[{ id: 'auto-save-toggle' }]}>Ajustes → Datos, donde se activa el guardado automático.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Gratis para Chrome, Edge y Firefox. No necesitas cuenta para empezar.</InstallCta>
+
+</Section>
+
+<Section id="compare" title="¿Qué método te conviene?">
+
+<ComparisonTable
+  head={['', 'Todas a marcadores', 'Restaurar al iniciar', 'Ctrl+Shift+T, historial', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="38rem"
+  rows={[
+    ['Todas las ventanas a la vez', 'No', 'Sí, al reiniciar', 'Una a una', 'Sí'],
+    ['Se conserva al cerrar una ventana', 'Sí', 'No', 'En el historial', 'Sí'],
+    ['Búsqueda', 'Marcadores', 'Ninguna', 'Historial', 'Ctrl+K, incluso cerradas'],
+    ['Precio', 'Gratis', 'Gratis', 'Gratis', 'Gratis; Pro para sincronizar'],
+  ]}
+/>
+
+Activa el ajuste de inicio elijas lo que elijas. Guarda en marcadores una ventana suelta que valga la pena. Usa una extensión cuando manejas varias ventanas o necesitas una pestaña cerrada días después. Más en nuestra [página de comparación](/compare).
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+
+</Section>

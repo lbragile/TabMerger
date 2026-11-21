@@ -2,7 +2,7 @@
 
 This is the per-table reference: columns, RLS, indexes and E2E encryption. For the day-to-day workflow (local stack, migrations, sync, queries) see [DATABASE.md](DATABASE.md).
 
-The migrations in `supabase/migrations/` (`001`–`031`) are the source of truth. This doc is a snapshot of their end state, so read the SQL before relying on it for anything security-relevant.
+The migrations in `supabase/migrations/` (`001`–`032`) are the source of truth. This doc is a snapshot of their end state, so read the SQL before relying on it for anything security-relevant.
 
 ## Migration history
 
@@ -39,6 +39,7 @@ The migrations in `supabase/migrations/` (`001`–`031`) are the source of truth
 | 029 | `029_ai_credit_purchases_carried_from_month.sql` | `ai_credit_purchases.carried_from_month` (which packs were carried with lowered credits); its own file so each transaction takes one ACCESS EXCLUSIVE lock |
 | 030 | `030_ai_billing_period_credits.sql` | Credits reset per paid billing period: `subscriptions.ai_period_start`/`ai_period_end`, `ai_allowance_month()`, `ai_credit_cap()`, `ai_grant_credit_pack()`, triggers `subscriptions_keep_ai_period` and `subscriptions_carry_ai_packs`; the freeze uses the old period; `ai_settle_credits` stops at the cap |
 | 031 | `031_blog_post_votes.sql` | Helpful votes on blog posts: `blog_posts` (slug PK, seeded with `save-all-open-tabs`, read-only for the API roles) and `blog_post_votes` (one row per post and account; read, add and remove your own; no update), and `blog_helpful_count(p_slug)` for anon and authenticated. See the `blog_posts` / `blog_post_votes` section below. |
+| 032 | `032_blog_helpful_counts.sql` | `blog_helpful_counts()`: every blog post's Helpful count in one call (for the blog index), each taken from `blog_helpful_count(slug)`; for anon and authenticated. See the `blog_posts` / `blog_post_votes` section below. |
 
 > **Local ≠ hosted.** `supabase db reset` proves only that the migrations apply locally. It does not show that the hosted project has them: 009 and 010 once sat unapplied on Cloud until someone ran `supabase db push` by hand. Check `supabase migration list --linked` against **each** hosted project (preview and production, see [ARCHITECTURE.md § Environments](ARCHITECTURE.md#environments)).
 
@@ -311,6 +312,7 @@ Helpful votes on blog posts (031). Signed-in accounts only, one vote per account
 **RLS (all `to authenticated`):** `blog_post_votes_select_own` and `blog_post_votes_delete_own` (`auth.uid() = user_id`); `blog_post_votes_insert_own` (`auth.uid() = user_id` and the JWT's `is_anonymous` is not true, so an anonymous Supabase session can't vote if anonymous sign-ins are ever enabled). No update policy: a vote is added or removed, never edited. **Privileges:** `authenticated` holds `SELECT`, `INSERT`, `DELETE`; `anon` holds none (an anon insert is `42501`). **Index:** `blog_post_votes_user_id_idx (user_id)`, for the account-delete cascade (the PK covers lookups by post). The migration runs with `lock_timeout = 5s`, because creating the FK locks `auth.users`.
 
 - `blog_helpful_count(p_slug text) returns bigint`: the number of votes on a post, 0 for an unknown slug. `stable`, `security definer` with an empty `search_path`, because RLS hides other accounts' votes from the caller; it returns the count only, never who voted. Executable by `anon`, `authenticated` and `service_role` (not PUBLIC). The page calls it via `rpc` after hydration so the post stays static.
+- `blog_helpful_counts() returns table (slug text, helpful bigint)` (032): one row per `blog_posts` row, ordered by slug (`collate "C"`), 0 for a post with no votes; the blog index reads every count with one `rpc('blog_helpful_counts')`. Each count is `blog_helpful_count(slug)`, so the two can't disagree (change the counting rule there). No arguments, so the result is bounded by `blog_posts` and the caller has no say in its size. `stable`, `security invoker` with an empty `search_path`: it reads `blog_posts` as the caller, so any future `blog_posts` policy (hiding drafts, say) applies to it, and only the inner `blog_helpful_count` is a definer. Returns slugs and counts only, never who voted. Executable by `anon`, `authenticated` and `service_role` (not PUBLIC). Its body is a string, so Postgres records no dependency on `blog_helpful_count`: drop or rewrite `blog_helpful_counts` before dropping that.
 - An insert with `on conflict do nothing` for an existing vote adds no row and raises nothing, so a client may use it as an idempotent "vote". `on conflict do update` is refused (`42501`, no `UPDATE` privilege).
 
 ## Grants (migration 010)

@@ -1,0 +1,316 @@
+export const post = {
+  slug: 'save-all-open-tabs',
+  title: '如何保存所有打开的标签页，并在之后恢复',
+  seoTitle: '如何保存所有打开的标签页（Chrome、Edge、Firefox）',
+  description:
+    '本文介绍如何在 Chrome、Edge 或 Firefox 中用一个快捷键保存所有打开的标签页，让标签页在重启后自动重新打开，以及找回已关闭的标签页。',
+  shareSummary: '一个快捷键保存、启动时恢复、找回已关闭的标签页，适用于 Chrome、Edge 和 Firefox。',
+  dek: '保留所有打开标签页的五种方法，以及每种方法悄悄漏掉的那一点。',
+  published: '2026-11-19',
+  updated: '2026-11-19',
+  testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D 只保存当前窗口。', source: '已在三款浏览器中测试，2026 年 11 月 19 日' },
+    { text: 'Ctrl+Shift+T 可重新打开已关闭的标签页和窗口。', source: 'Chrome、Edge 和 Firefox 帮助页面' },
+    {
+      text: '扩展程序无法列出 Chrome 中已关闭的已保存分组。',
+      source: 'chrome.tabGroups 文档',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'Edge 从 149 版起已移除集锦功能。', source: 'Microsoft 支持' },
+  ],
+  faq: [
+    {
+      question: 'Ctrl+Shift+D 会保存所有窗口的标签页吗？',
+      answer: '不会。它只把当前窗口加入书签。你可以在每个窗口中重复操作，或者使用能读取所有窗口的工具。',
+    },
+    {
+      question: '不装扩展程序，能保存所有打开的标签页吗？',
+      answer: '可以：用 Ctrl+Shift+D，再加上启动设置，两者都是 Chrome、Edge 和 Firefox 自带的。',
+    },
+    {
+      question: '为什么重启后我的标签页没有回来？',
+      answer:
+        '启动时恢复的是浏览器退出时打开着的内容。更早关闭的窗口和隐私窗口不在其中。试试 Ctrl+Shift+T 或历史记录。',
+    },
+    {
+      question: 'TabMerger 把保存的标签页存在哪里？',
+      answer:
+        '存在你的设备上，即浏览器的本地存储中。Pro 版会在设备之间同步，并采用端到端加密。详见常见问题。',
+      link: { text: '常见问题', href: '/faq' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/chrome-bookmarks-folder.webp', alt: 'Chrome 书签管理器，选中了文件夹 Tab manager research，其中列出六个已保存的网页' },
+    { src: '/blog/save-all-open-tabs/edge-bookmarks-folder.webp', alt: 'Edge 收藏夹（Favorites），打开了文件夹 Tab manager research，列出六个网页及其地址' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Chrome 设置中的 On startup（启动时），已选中 Continue where you left off（继续浏览上次打开的网页）' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Edge 设置中的 Start, home, and new tab page，已选中 Open tabs from the previous session' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Firefox 设置中的 Home and startup（主页与启动），已勾选 Open previous windows and tabs（打开先前的窗口和标签页）' },
+    { src: '/blog/save-all-open-tabs/chrome-history.webp', alt: 'Chrome 历史记录页面，列出今天访问的六个网页，并有 By date 和 By group 两个标签' },
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Edge 历史记录页面，侧边栏中有 All、Recently closed 和 Tabs from other devices' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-light.webp', alt: 'TabMerger 的“当前打开”，列出两个浏览器窗口，每个有五个标签页，浅色主题' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-dark.webp', alt: 'TabMerger 的“当前打开”，列出两个浏览器窗口，每个有五个标签页，深色主题' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-light.webp', alt: 'TabMerger 分组菜单中的“与当前合并”，它会把打开的浏览器窗口添加到此分组，浅色主题' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-dark.webp', alt: 'TabMerger 分组菜单中的“与当前合并”，它会把打开的浏览器窗口添加到此分组，深色主题' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-light.webp', alt: '分组 Open tabs, Nov 19（打开的标签页，11 月 19 日）包含 2 个窗口和 10 个标签页，浅色主题' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-dark.webp', alt: '分组 Open tabs, Nov 19（打开的标签页，11 月 19 日）包含 2 个窗口和 10 个标签页，深色主题' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-light.webp', alt: 'TabMerger 的“最近关闭”中的今天，带有按小时显示的条和三个已关闭的标签页，浅色主题' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-dark.webp', alt: 'TabMerger 的“最近关闭”中的今天，带有按小时显示的条和三个已关闭的标签页，深色主题' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-light.webp', alt: '在 TabMerger 中搜索 closed: seat，显示一个最近关闭的标签页，浅色主题' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-dark.webp', alt: '在 TabMerger 中搜索 closed: seat，显示一个最近关闭的标签页，深色主题' },
+    { src: '/blog/save-all-open-tabs/tm-search-light.webp', alt: '在 TabMerger 中搜索 lisbon，结果标有“当前打开”或 Open tabs, Nov 19，浅色主题' },
+    { src: '/blog/save-all-open-tabs/tm-search-dark.webp', alt: '在 TabMerger 中搜索 lisbon，结果标有“当前打开”或 Open tabs, Nov 19，深色主题' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-light.webp', alt: 'TabMerger 的“保存会话”对话框，名称为 Before the trip（出发之前），浅色主题' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-dark.webp', alt: 'TabMerger 的“保存会话”对话框，名称为 Before the trip（出发之前），深色主题' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-light.webp', alt: '已保存的会话 Before the trip，包含三个分组（Work、Reading list 和 Open tabs, Nov 19）以及“恢复会话”按钮，浅色主题' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-dark.webp', alt: '已保存的会话 Before the trip，包含三个分组（Work、Reading list 和 Open tabs, Nov 19）以及“恢复会话”按钮，深色主题' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-light.webp', alt: 'TabMerger 设置的“数据”标签：自动保存已打开的标签页、备份和记住关闭的标签页，浅色主题' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-dark.webp', alt: 'TabMerger 设置的“数据”标签：自动保存已打开的标签页、备份和记住关闭的标签页，深色主题' },
+  ],
+  tags: ['tab-management', 'save-tabs', 'restore-closed-tabs', 'bookmarks', 'browser-productivity', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Microsoft Edge help and learning',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/microsoft-edge',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-19',
+    },
+  ],
+  screenshotsCaptured: '2026-11-19',
+  ogImage: { src: '/blog/save-all-open-tabs/og.png', alt: '如何保存所有打开的标签页，并在之后恢复：适用于 Chrome、Edge 和 Firefox 的 TabMerger 指南，图中是一个保存了两个窗口的分组' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'bookmark', label: '1. 为所有标签页添加书签' },
+    { id: 'startup', label: '2. 启动时重新打开' },
+    { id: 'closed', label: '3. 找回已关闭的标签页' },
+    { id: 'groups', label: '4. 标签页分组' },
+    { id: 'tabmerger', label: '5. 一次保存所有窗口' },
+    { id: 'compare', label: '该用哪种方法' },
+    { id: 'faq', label: '常见问题' },
+  ],
+  browserSections: ['bookmark', 'startup', 'closed'],
+  browserFact: {
+    label: '启动设置',
+    values: { chrome: 'chrome://settings/onStartup', edge: 'edge://settings/startHomeNTP', firefox: 'about:preferences#home' },
+  },
+}
+
+<QuickAnswer>
+
+要保存所有打开的标签页，请按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>（Mac 上按 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>），当前窗口中的每个标签页都会存入一个新的书签文件夹。这在 Chrome、Edge 和 Firefox 中都适用。如果想让标签页自动重新打开，请开启 Chrome 的“继续浏览上次打开的网页”（Continue where you left off）、Edge 的“Open tabs from the previous session”或 Firefox 的“打开先前的窗口和标签页”（Open previous windows and tabs）。
+
+</QuickAnswer>
+
+<BrowserSwitcher />
+
+<Section id="bookmark" title="1. 一个快捷键为所有标签页添加书签">
+
+各大浏览器都能把一个窗口的标签页保存为一个书签文件夹。文件夹会一直保留，直到你删除它；如果你在浏览器中登录了账号，它还会同步。
+
+<BrowserPanels section="bookmark">
+<BrowserPanel browser="chrome">
+
+1. 在想保留的窗口中点击任意一个标签页。
+2. 按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>（Mac 上按 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>）。
+3. 为文件夹命名，选择保存位置，然后点击“保存”。
+4. 以后要重新打开时，按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>，找到该文件夹并打开其中的全部书签。
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-bookmarks-folder.webp" alt="Chrome 书签管理器，选中了文件夹 Tab manager research，其中列出六个已保存的网页" width={1600} height={524} eager boxes={[{ id: 'folder' }]} source="chrome://bookmarks · Chrome 157.0.8103.79">按下 Ctrl+Shift+D 后的 Chrome 书签管理器（Bookmark Manager）：新文件夹中，窗口里的每个标签页各对应一个书签。本文的浏览器截图均为英文界面。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. 在想保留的窗口中点击任意一个标签页。
+2. 按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>（Mac 上按 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>）。Edge 会把这些标签页作为收藏（Favorites）存入一个新文件夹。
+3. 为文件夹命名并保存。
+4. 以后要重新打开时，按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> 打开收藏夹，找到该文件夹并全部打开。
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-bookmarks-folder.webp" alt="Edge 收藏夹（Favorites），打开了文件夹 Tab manager research，列出六个网页及其地址" width={1600} height={553} boxes={[{ id: 'folder' }]} source="edge://favorites · Edge 157.0.4341.60">按下同一快捷键后的 Edge 收藏夹：标签页已作为收藏存入新文件夹。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. 在想保留的窗口中点击任意一个标签页。
+2. 按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>（Mac 上按 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>），为所有标签页添加书签。
+3. 为文件夹命名，然后点击“保存”。
+4. 以后要重新打开时，按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> 打开“我的足迹”（Library）窗口，再打开该文件夹中的全部书签。
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox Library (Ctrl+Shift+O) with the new folder selected. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>它**只保存当前窗口**。三个窗口就是三个文件夹。书签也只保留网址，滚动位置和表单中填写的内容都会丢失。</Catch>
+
+</Section>
+
+<Section id="startup" title="2. 让浏览器在启动时重新打开所有内容">
+
+如果重启和更新总让你丢失标签页，就让浏览器恢复上次的会话。
+
+<BrowserPanels section="startup">
+<BrowserPanel browser="chrome">
+
+在 Chrome 中：**设置 → 启动时 → 继续浏览上次打开的网页**（Settings → On startup → Continue where you left off）。也可以把 `chrome://settings/onStartup` 粘贴到地址栏。
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Chrome 设置中的 On startup（启动时），已选中 Continue where you left off（继续浏览上次打开的网页）" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">Chrome 的“启动时”设置，已设为重新打开上次的会话。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+在 Edge 中：**设置 →“Start, home, and new tab page”→“On startup”→“Open tabs from the previous session”**。也可以把 `edge://settings/startHomeNTP` 粘贴到地址栏。
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Edge 设置中的 Start, home, and new tab page，已选中 Open tabs from the previous session" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">Edge 的 Start, home, and new tab page 设置，已设为重新打开上次的会话。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+在 Firefox 中：**设置 → 主页与启动 → 启动 → 打开先前的窗口和标签页**（Settings → Home and startup → Startup → Open previous windows and tabs）。也可以把 `about:preferences#home` 粘贴到地址栏。
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Firefox 设置中的 Home and startup（主页与启动），已勾选 Open previous windows and tabs（打开先前的窗口和标签页）" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Firefox 159 把这个选项放在 Home and startup（主页与启动）下；较早的教程说它在“常规”中。</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>它恢复的是浏览器上次退出时打开着的内容。更早关闭的窗口不在其中，隐私窗口也永远不会恢复。</Catch>
+
+</Section>
+
+<Section id="closed" title="3. 找回已经关闭的标签页">
+
+按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>（<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>）可重新打开最近关闭的标签页或窗口；再按一次就继续往前找。更早的内容，可以按 <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> 打开历史记录查找。
+
+<BrowserPanels section="closed">
+<BrowserPanel browser="chrome">
+
+Chrome 还会在 ⋮ →“历史记录”下列出最近关闭的标签页和窗口。
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-history.webp" alt="Chrome 历史记录页面，列出今天访问的六个网页，并有 By date 和 By group 两个标签" width={1600} height={640} source="chrome://history · Chrome 157.0.8103.79" className="m-0">Chrome 的历史记录页面；157 版新增了 By group 视图。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge 直接在历史记录页面中列出“Recently closed”。
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Edge 历史记录页面，侧边栏中有 All、Recently closed 和 Tabs from other devices" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60" className="m-0">Edge 的历史记录页面，侧边栏中有 Recently closed 列表。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox 在“历史”（History）菜单的“最近关闭的标签页”和“最近关闭的窗口”中列出它们（按 Alt 键可显示菜单栏）。
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with recently closed tabs open. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="groups" title="4. 标签页分组：适合专注，不适合保存">
+
+- **Chrome** 可以保存分组并重新打开，但扩展程序看不到已关闭的已保存分组（[tabGroups API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)）。
+- **Firefox** 的分组只留在本机，不会随 Firefox Sync 同步。
+- **Edge** 从 149 版起不再提供集锦。
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
+
+</Section>
+
+<Section id="tabmerger" title="5. 用 TabMerger 一次保存所有窗口">
+
+浏览器自带的方法，每次只能处理一个窗口、一次重启或一个已关闭的标签页。[TabMerger](/features) 是我们为 Chrome、Edge 和 Firefox 开发的免费扩展程序，它会在 **当前打开** 中列出所有打开的窗口，并把它们全部保存到一个分组中。
+
+<ScreenshotThemeToggle />
+
+1. 点击 **添加分组**，并为它命名，例如“打开的标签页 11 月 19 日”（截图中为 Open tabs, Nov 19）。
+2. 打开该分组的 **⋯** 菜单，选择 **与当前合并**，即可把打开的浏览器窗口添加到这个分组。（“替换为当前”则会用打开的窗口替换分组中原有的窗口。）
+3. 之后随时可以关闭这些窗口。分组会保留两个窗口和全部十个标签页。
+
+<Carousel label="把所有窗口保存到一个分组" steps={[{ title: '当前打开' }, { title: '合并菜单' }, { title: '已保存的分组' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-now-open" alt="TabMerger 的“当前打开”，列出两个浏览器窗口，每个有五个标签页，浅色主题" darkAlt="TabMerger 的“当前打开”，列出两个浏览器窗口，每个有五个标签页，深色主题">“当前打开”与浏览器保持一致：显示每个打开的窗口及其标签页。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merge-menu" alt="TabMerger 分组菜单中的“与当前合并”，它会把打开的浏览器窗口添加到此分组，浅色主题" darkAlt="TabMerger 分组菜单中的“与当前合并”，它会把打开的浏览器窗口添加到此分组，深色主题" boxes={[{ id: 'group-menu-button', label: '分组菜单' }, { id: 'merge-with-current', label: '与当前合并' }]}>点击“添加分组”后，打开新分组的菜单，选择把所有打开的窗口复制进来的选项。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merged-group" alt="分组 Open tabs, Nov 19（打开的标签页，11 月 19 日）包含 2 个窗口和 10 个标签页，浅色主题" darkAlt="分组 Open tabs, Nov 19（打开的标签页，11 月 19 日）包含 2 个窗口和 10 个标签页，深色主题">选择“与当前合并”之后：两个窗口都保存在同一个分组中，关闭窗口后依然保留。</ThemedScreenshot>
+</Carousel>
+
+### 更喜欢用键盘？
+
+<ComparisonTable
+  head={['快捷键', '保存的内容']}
+  keysColumn={0}
+  rows={[
+    ['Ctrl+Shift+P', '窗口中的其他所有标签页'],
+    ['Ctrl+Shift+S', '当前标签页'],
+    ['Ctrl+Shift+K', '左侧的标签页'],
+    ['Ctrl+Shift+U', '右侧的标签页'],
+  ]}
+/>
+
+在 Mac 上用 <Kbd>⌘</Kbd>。每个快捷键都会询问保存到哪里；选择 **快速保存（新分组）** 会当场新建一个分组。在 Firefox 中，<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> 会打开隐私窗口，所以请在 `about:addons` 的“管理扩展快捷键”（Manage Extension Shortcuts）中另选一个按键。
+
+### 不小心关掉了？
+
+**最近关闭** 会按天保存你关闭的每个标签页和窗口，并用一条时间条显示关闭的时间。免费版保留 2 天，Pro 版保留 30 天。<Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> 可以搜索打开的、已保存的和已关闭的标签页；只想搜索已关闭的标签页时，以 `closed:` 开头。
+
+<Carousel label="找回已关闭的标签页" steps={[{ title: '最近关闭' }, { title: 'closed: 搜索' }, { title: '全部搜索' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-recently-closed" alt="TabMerger 的“最近关闭”中的今天，带有按小时显示的条和三个已关闭的标签页，浅色主题" darkAlt="TabMerger 的“最近关闭”中的今天，带有按小时显示的条和三个已关闭的标签页，深色主题" boxes={[{ id: 'hour-strip' }]}>今天关闭的标签页，以及关闭时的时间。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search-closed" alt="在 TabMerger 中搜索 closed: seat，显示一个最近关闭的标签页，浅色主题" darkAlt="在 TabMerger 中搜索 closed: seat，显示一个最近关闭的标签页，深色主题" boxes={[{ id: 'search-input' }]}>按 Ctrl+K 并以 `closed:` 开头，就只搜索已关闭的标签页。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search" alt="在 TabMerger 中搜索 lisbon，结果标有“当前打开”或 Open tabs, Nov 19，浅色主题" darkAlt="在 TabMerger 中搜索 lisbon，结果标有“当前打开”或 Open tabs, Nov 19，深色主题" boxes={[{ id: 'group-tag-1' }]}>不加前缀时，搜索范围是打开的和已保存的标签页，并标出所属分组。</ThemedScreenshot>
+</Carousel>
+
+### 快照与自动保存
+
+**保存当前会话** 会为你已保存的分组（不是打开的标签页）拍一个带名称的快照，之后可以一起恢复。**设置 → 数据 → 自动保存已打开的标签页** 会自动把打开的标签页保存为一个新分组；免费版保留最新的 2 个，它们计入免费版 5 个分组和 50 个标签页的上限。
+
+<Carousel label="会话与自动保存" steps={[{ title: '保存会话' }, { title: '会话视图' }, { title: '设置 → 数据' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-save-session-dialog" alt="TabMerger 的“保存会话”对话框，名称为 Before the trip（出发之前），浅色主题" darkAlt="TabMerger 的“保存会话”对话框，名称为 Before the trip（出发之前），深色主题" boxes={[{ id: 'session-name' }]}>“保存当前会话”会要求输入名称。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-session-view" alt="已保存的会话 Before the trip，包含三个分组（Work、Reading list 和 Open tabs, Nov 19）以及“恢复会话”按钮，浅色主题" darkAlt="已保存的会话 Before the trip，包含三个分组（Work、Reading list 和 Open tabs, Nov 19）以及“恢复会话”按钮，深色主题" boxes={[{ id: 'restore-session' }]}>保存后打开会话：Before the trip 及其中的三个分组。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-settings-data" alt="TabMerger 设置的“数据”标签：自动保存已打开的标签页、备份和记住关闭的标签页，浅色主题" darkAlt="TabMerger 设置的“数据”标签：自动保存已打开的标签页、备份和记住关闭的标签页，深色主题" boxes={[{ id: 'auto-save-toggle' }]}>在“设置 → 数据”中开启自动保存。</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>免费用于 Chrome、Edge 和 Firefox。无需账号即可开始使用。</InstallCta>
+
+</Section>
+
+<Section id="compare" title="该用哪种方法？">
+
+<ComparisonTable
+  head={['', '全部加入书签', '启动时恢复', 'Ctrl+Shift+T、历史记录', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="38rem"
+  rows={[
+    ['一次保存所有窗口', '否', '是，重启时', '一次一个', '是'],
+    ['关闭窗口后仍保留', '是', '否', '在历史记录中', '是'],
+    ['搜索', '书签', '无', '历史记录', 'Ctrl+K，含已关闭'],
+    ['费用', '免费', '免费', '免费', '免费；同步需 Pro'],
+  ]}
+/>
+
+无论还选了什么，都建议开启启动设置。只想留住一个窗口时，用书签就够了。如果你同时用好几个窗口，或者几天后还需要某个已关闭的标签页，就用扩展程序。更多内容见我们的[对比页面](/compare)。
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+
+</Section>

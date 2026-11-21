@@ -1,0 +1,320 @@
+export const post = {
+  slug: 'save-all-open-tabs',
+  title: 'Como salvar todas as abas abertas e recuperá-las depois',
+  seoTitle: 'Salvar todas as abas abertas (Chrome, Edge, Firefox)',
+  description:
+    'Salve todas as abas abertas no Chrome, Edge ou Firefox com um atalho, faça com que reabram depois de reiniciar e recupere as abas que você fechou.',
+  shareSummary: 'Um atalho, restauração ao iniciar e recuperação de abas fechadas no Chrome, Edge e Firefox.',
+  dek: 'Cinco jeitos de manter todas as abas abertas, e o que cada um deixa passar sem avisar.',
+  published: '2026-11-19',
+  updated: '2026-11-19',
+  testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D salva só a janela atual.', source: 'Testado nos três, 19 nov. 2026' },
+    { text: 'Ctrl+Shift+T reabre abas e janelas fechadas.', source: 'Páginas de ajuda do Chrome, Edge e Firefox' },
+    {
+      text: 'Extensões não enxergam os grupos salvos e fechados do Chrome.',
+      source: 'Documentação de chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'O Edge não tem mais Coleções desde o Edge 149.', source: 'Suporte da Microsoft' },
+  ],
+  faq: [
+    {
+      question: 'O Ctrl+Shift+D salva as abas de todas as janelas?',
+      answer: 'Não. Ele adiciona aos favoritos só a janela atual. Repita em cada janela ou use uma ferramenta que leia todas as janelas.',
+    },
+    {
+      question: 'Dá para salvar todas as abas abertas sem extensão?',
+      answer: 'Sim: com Ctrl+Shift+D e a configuração de inicialização, ambos nativos do Chrome, Edge e Firefox.',
+    },
+    {
+      question: 'Por que minhas abas não voltaram depois de reiniciar?',
+      answer:
+        'A restauração ao iniciar traz de volta o que estava aberto quando o navegador foi fechado. Janelas fechadas antes e janelas privadas não entram. Tente Ctrl+Shift+T ou o histórico.',
+    },
+    {
+      question: 'Onde o TabMerger guarda as abas salvas?',
+      answer:
+        'No seu dispositivo, no armazenamento local do navegador. O Pro sincroniza entre dispositivos, com criptografia de ponta a ponta. Veja as perguntas frequentes.',
+      link: { text: 'perguntas frequentes', href: '/faq' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/chrome-bookmarks-folder.webp', alt: 'Gerenciador de favoritos do Chrome com a pasta “Tab manager research” selecionada e seis páginas salvas' },
+    { src: '/blog/save-all-open-tabs/edge-bookmarks-folder.webp', alt: 'Favoritos do Edge com a pasta “Tab manager research” aberta: seis páginas e seus endereços' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Configurações do Chrome, “On startup” (Inicialização), com “Continue where you left off” (Continuar de onde você parou) selecionado' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Configurações do Edge, “Start, home, and new tab page”, com “Open tabs from the previous session” selecionado' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Configurações do Firefox, “Home and startup” (Página inicial e início), com “Open previous windows and tabs” (Abrir janelas e abas anteriores) marcado' },
+    { src: '/blog/save-all-open-tabs/chrome-history.webp', alt: 'Histórico do Chrome com seis páginas visitadas hoje e as abas “By date” e “By group”' },
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Histórico do Edge com “All”, “Recently closed” e “Tabs from other devices” na barra lateral' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-light.webp', alt: 'TabMerger, “Now Open” (Abertas agora), com duas janelas do navegador de cinco abas cada, tema claro' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-dark.webp', alt: 'TabMerger, “Now Open” (Abertas agora), com duas janelas do navegador de cinco abas cada, tema escuro' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-light.webp', alt: 'Menu de grupo do TabMerger com “Merge with current” (Mesclar com as atuais), que adiciona suas janelas abertas do navegador a este grupo, tema claro' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-dark.webp', alt: 'Menu de grupo do TabMerger com “Merge with current” (Mesclar com as atuais), que adiciona suas janelas abertas do navegador a este grupo, tema escuro' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-light.webp', alt: 'O grupo “Open tabs, Nov 19” com 2 janelas e 10 abas, tema claro' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-dark.webp', alt: 'O grupo “Open tabs, Nov 19” com 2 janelas e 10 abas, tema escuro' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-light.webp', alt: 'TabMerger, “Recently closed” (Fechadas recentemente) de hoje, com uma faixa por hora e três abas fechadas, tema claro' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-dark.webp', alt: 'TabMerger, “Recently closed” (Fechadas recentemente) de hoje, com uma faixa por hora e três abas fechadas, tema escuro' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-light.webp', alt: 'Busca do TabMerger por “closed: seat” mostrando uma aba fechada recentemente, tema claro' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-dark.webp', alt: 'Busca do TabMerger por “closed: seat” mostrando uma aba fechada recentemente, tema escuro' },
+    { src: '/blog/save-all-open-tabs/tm-search-light.webp', alt: 'Busca do TabMerger por “lisbon”: resultados marcados com “Now Open” ou “Open tabs, Nov 19”, tema claro' },
+    { src: '/blog/save-all-open-tabs/tm-search-dark.webp', alt: 'Busca do TabMerger por “lisbon”: resultados marcados com “Now Open” ou “Open tabs, Nov 19”, tema escuro' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-light.webp', alt: 'Caixa de diálogo “Save Session” (Salvar sessão) do TabMerger com o nome “Before the trip”, tema claro' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-dark.webp', alt: 'Caixa de diálogo “Save Session” (Salvar sessão) do TabMerger com o nome “Before the trip”, tema escuro' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-light.webp', alt: 'A sessão salva “Before the trip” com três grupos (“Work”, “Reading list” e “Open tabs, Nov 19”) e o botão “Restore session” (Restaurar sessão), tema claro' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-dark.webp', alt: 'A sessão salva “Before the trip” com três grupos (“Work”, “Reading list” e “Open tabs, Nov 19”) e o botão “Restore session” (Restaurar sessão), tema escuro' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-light.webp', alt: 'Configurações do TabMerger, aba “Data” (Dados): “Auto-save open tabs”, “Backups” e “Remember closed tabs”, tema claro' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-dark.webp', alt: 'Configurações do TabMerger, aba “Data” (Dados): “Auto-save open tabs”, “Backups” e “Remember closed tabs”, tema escuro' },
+  ],
+  tags: ['tab-management', 'save-tabs', 'restore-closed-tabs', 'bookmarks', 'browser-productivity', 'chrome', 'edge', 'firefox'],
+  // Before publishing: check each title against its page, and replace the Microsoft entry with
+  // the exact Edge help article (restore tabs / startup pages).
+  sources: [
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Microsoft Edge help and learning',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/microsoft-edge',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-19',
+    },
+  ],
+  screenshotsCaptured: '2026-11-19',
+  ogImage: { src: '/blog/save-all-open-tabs/og.png', alt: 'Cartão com o título “How to save all open tabs and get them back later”: um guia do TabMerger para Chrome, Edge e Firefox, com um grupo de duas janelas salvas' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'bookmark', label: '1. Tudo nos favoritos' },
+    { id: 'startup', label: '2. Reabrir ao iniciar' },
+    { id: 'closed', label: '3. Recuperar abas fechadas' },
+    { id: 'groups', label: '4. Grupos de abas' },
+    { id: 'tabmerger', label: '5. Todas as janelas de uma vez' },
+    { id: 'compare', label: 'Qual usar' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+  browserSections: ['bookmark', 'startup', 'closed'],
+  browserFact: {
+    label: 'Configuração de inicialização',
+    values: { chrome: 'chrome://settings/onStartup', edge: 'edge://settings/startHomeNTP', firefox: 'about:preferences#home' },
+  },
+}
+
+<QuickAnswer>
+
+Para salvar todas as abas abertas, pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> no Mac): cada aba da janela atual vira um favorito em uma pasta nova. Funciona no Chrome, Edge e Firefox. Para as abas reabrirem sozinhas, ative **Continuar de onde você parou** (“Continue where you left off”, Chrome), **Open tabs from the previous session** (Edge) ou **Abrir janelas e abas anteriores** (“Open previous windows and tabs”, Firefox).
+
+</QuickAnswer>
+
+<BrowserSwitcher />
+
+<Section id="bookmark" title="1. Adicione todas as abas aos favoritos com um atalho">
+
+Todos os principais navegadores salvam as abas de uma janela como uma pasta de favoritos. A pasta fica lá até você apagá-la e é sincronizada se você estiver conectado ao navegador.
+
+As capturas dos navegadores mostram a interface em inglês. Quando o nome em português é diferente, o inglês aparece entre parênteses na primeira vez.
+
+<BrowserPanels section="bookmark">
+<BrowserPanel browser="chrome">
+
+1. Clique em qualquer aba da janela que você quer guardar.
+2. Pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> no Mac).
+3. Dê um nome à pasta, escolha onde ela fica e clique em Salvar.
+4. Para reabrir depois, pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>, encontre a pasta e abra todos os favoritos dela.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-bookmarks-folder.webp" alt="Gerenciador de favoritos do Chrome com a pasta “Tab manager research” selecionada e seis páginas salvas" width={1600} height={524} eager boxes={[{ id: 'folder' }]} source="chrome://bookmarks · Chrome 157.0.8103.79">O Gerenciador de favoritos do Chrome (“Bookmark Manager”) depois do Ctrl+Shift+D: a pasta nova tem um favorito para cada aba da janela.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Clique em qualquer aba da janela que você quer guardar.
+2. Pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> no Mac). O Edge salva as abas como favoritos em uma pasta nova.
+3. Dê um nome à pasta e salve.
+4. Para reabrir depois, pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> para abrir os **Favoritos** (“Favorites”), encontre a pasta e abra todos eles.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-bookmarks-folder.webp" alt="Favoritos do Edge com a pasta “Tab manager research” aberta: seis páginas e seus endereços" width={1600} height={553} boxes={[{ id: 'folder' }]} source="edge://favorites · Edge 157.0.4341.60">Os Favoritos do Edge depois do mesmo atalho: as abas ficam salvas como favoritos em uma pasta nova.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Clique em qualquer aba da janela que você quer guardar.
+2. Pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> no Mac) para adicionar todas as abas aos favoritos.
+3. Dê um nome à pasta e clique em Salvar.
+4. Para reabrir depois, pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> (**Gerenciar favoritos**, “Manage Bookmarks”) e abra todos os favoritos da pasta.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox Library (Ctrl+Shift+O) with the new folder selected. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>salva *só a janela atual*. Três janelas são três pastas. Além disso, um favorito guarda só o endereço; a posição de rolagem e o que foi digitado em formulários se perdem.</Catch>
+
+</Section>
+
+<Section id="startup" title="2. Faça o navegador reabrir tudo ao iniciar">
+
+Se são as reinicializações e atualizações que fazem você perder as abas, deixe o navegador restaurar a sessão.
+
+<BrowserPanels section="startup">
+<BrowserPanel browser="chrome">
+
+No Chrome: **Configurações → Inicialização → Continuar de onde você parou** (“Settings → On startup → Continue where you left off”). Ou cole `chrome://settings/onStartup` na barra de endereços.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Configurações do Chrome, “On startup” (Inicialização), com “Continue where you left off” (Continuar de onde você parou) selecionado" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">A configuração Inicialização do Chrome, definida para reabrir a última sessão.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+No Edge: **Configurações → Start, home, and new tab page → On startup → Open tabs from the previous session**. O jeito mais rápido é colar `edge://settings/startHomeNTP` na barra de endereços.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Configurações do Edge, “Start, home, and new tab page”, com “Open tabs from the previous session” selecionado" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">A página “Start, home, and new tab page” do Edge, definida para reabrir a última sessão.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+No Firefox: **Configurações → Página inicial e início → Iniciar → Abrir janelas e abas anteriores** (“Settings → Home and startup → Startup → Open previous windows and tabs”). Ou cole `about:preferences#home` na barra de endereços.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Configurações do Firefox, “Home and startup” (Página inicial e início), com “Open previous windows and tabs” (Abrir janelas e abas anteriores) marcado" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">O Firefox 159 coloca a opção em Página inicial e início; guias mais antigos falam em Geral.</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>ela restaura o que estava aberto da última vez que o navegador foi fechado. Uma janela que você fechou antes não entra, e janelas privadas nunca voltam.</Catch>
+
+</Section>
+
+<Section id="closed" title="3. Recupere abas que você já fechou">
+
+Pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) para reabrir a última aba ou janela fechada; pressione de novo para continuar voltando. Para algo mais antigo, abra o histórico com <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>.
+
+<BrowserPanels section="closed">
+<BrowserPanel browser="chrome">
+
+O Chrome também lista abas e janelas fechadas recentemente em ⋮ → **Histórico** (“History”).
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-history.webp" alt="Histórico do Chrome com seis páginas visitadas hoje e as abas “By date” e “By group”" width={1600} height={640} source="chrome://history · Chrome 157.0.8103.79" className="m-0">A página Histórico do Chrome; a versão 157 adiciona a visualização “By group” (por grupo).</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+O Edge mostra as abas fechadas recentemente (“Recently closed”) direto na página **Histórico**.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Histórico do Edge com “All”, “Recently closed” e “Tabs from other devices” na barra lateral" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60" className="m-0">A página Histórico do Edge, com a lista “Recently closed” na barra lateral.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+O Firefox lista abas e janelas fechadas recentemente no menu **Histórico** (“History”), em **Abas fechadas recentemente** e **Janelas fechadas recentemente** (pressione Alt para mostrar a barra de menus).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with recently closed tabs open. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="groups" title="4. Grupos de abas: bons para foco, limitados para salvar">
+
+- O **Chrome** consegue salvar um grupo e reabri-lo, mas as extensões não enxergam um grupo salvo depois que ele é fechado ([API tabGroups](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
+- Os grupos do **Firefox** ficam no dispositivo e não vão junto com o Firefox Sync.
+- O **Edge** não tem mais Coleções (“Collections”) desde o Edge 149.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
+
+</Section>
+
+<Section id="tabmerger" title="5. Salve todas as abas abertas de todas as janelas com o TabMerger">
+
+Cada método nativo cobre uma janela, uma reinicialização ou uma aba fechada por vez. O [TabMerger](/features), nossa extensão gratuita para Chrome, Edge e Firefox, lista todas as janelas abertas em **Abertas agora** e salva todas elas em um grupo.
+
+<ScreenshotThemeToggle />
+
+1. Clique em **Adicionar grupo** e dê um nome a ele, como “Abas abertas, 19 nov.” (“Open tabs, Nov 19” nas capturas).
+2. Abra o menu **⋯** do grupo e escolha **Mesclar com as atuais**, que adiciona suas janelas abertas do navegador. (*Substituir pelas atuais* troca as janelas do grupo.)
+3. Feche as janelas quando quiser. O grupo mantém as duas janelas e todas as dez abas.
+
+<Carousel label="Salvar todas as janelas em um grupo" steps={[{ title: 'Abertas agora' }, { title: 'Menu do grupo' }, { title: 'Grupo salvo' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-now-open" alt="TabMerger, “Now Open” (Abertas agora), com duas janelas do navegador de cinco abas cada, tema claro" darkAlt="TabMerger, “Now Open” (Abertas agora), com duas janelas do navegador de cinco abas cada, tema escuro">Abertas agora espelha o navegador: cada janela aberta e suas abas.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merge-menu" alt="Menu de grupo do TabMerger com “Merge with current” (Mesclar com as atuais), que adiciona suas janelas abertas do navegador a este grupo, tema claro" darkAlt="Menu de grupo do TabMerger com “Merge with current” (Mesclar com as atuais), que adiciona suas janelas abertas do navegador a este grupo, tema escuro" boxes={[{ id: 'group-menu-button', label: 'Menu do grupo' }, { id: 'merge-with-current', label: 'Mesclar com as atuais' }]}>Depois de Adicionar grupo, abra o menu do grupo novo e escolha a opção que copia para ele todas as janelas abertas.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merged-group" alt="O grupo “Open tabs, Nov 19” com 2 janelas e 10 abas, tema claro" darkAlt="O grupo “Open tabs, Nov 19” com 2 janelas e 10 abas, tema escuro">Depois de Mesclar com as atuais: as duas janelas ficam salvas em um grupo, mesmo depois de fechadas.</ThemedScreenshot>
+</Carousel>
+
+### Prefere o teclado?
+
+<ComparisonTable
+  head={['Atalho', 'Salva']}
+  keysColumn={0}
+  rows={[
+    ['Ctrl+Shift+P', 'Todas as outras abas da janela'],
+    ['Ctrl+Shift+S', 'A aba atual'],
+    ['Ctrl+Shift+K', 'As abas à esquerda'],
+    ['Ctrl+Shift+U', 'As abas à direita'],
+  ]}
+/>
+
+No Mac, use <Kbd>⌘</Kbd>. Cada atalho pergunta onde salvar; **Salvar rápido (novo grupo)** cria um grupo na hora. No Firefox, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> abre uma janela privativa, então escolha outra tecla em `about:addons` → “Manage Extension Shortcuts”.
+
+### Fechou algo sem querer?
+
+**Fechadas recentemente** guarda cada aba e janela que você fecha, por dia, com uma faixa que mostra a hora. No plano grátis ficam 2 dias; no Pro, 30. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> busca em abas abertas, salvas e fechadas; comece com `closed:` para buscar só as fechadas.
+
+<Carousel label="Recuperar abas fechadas" steps={[{ title: 'Fechadas recentemente' }, { title: 'Busca closed:' }, { title: 'Buscar em tudo' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-recently-closed" alt="TabMerger, “Recently closed” (Fechadas recentemente) de hoje, com uma faixa por hora e três abas fechadas, tema claro" darkAlt="TabMerger, “Recently closed” (Fechadas recentemente) de hoje, com uma faixa por hora e três abas fechadas, tema escuro" boxes={[{ id: 'hour-strip' }]}>As abas fechadas hoje, com a hora em que foram fechadas.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search-closed" alt="Busca do TabMerger por “closed: seat” mostrando uma aba fechada recentemente, tema claro" darkAlt="Busca do TabMerger por “closed: seat” mostrando uma aba fechada recentemente, tema escuro" boxes={[{ id: 'search-input' }]}>Pressione Ctrl+K e comece com `closed:` para buscar só abas fechadas.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search" alt="Busca do TabMerger por “lisbon”: resultados marcados com “Now Open” ou “Open tabs, Nov 19”, tema claro" darkAlt="Busca do TabMerger por “lisbon”: resultados marcados com “Now Open” ou “Open tabs, Nov 19”, tema escuro" boxes={[{ id: 'group-tag-1' }]}>Sem o prefixo, a busca cobre abas abertas e salvas, marcadas pelo grupo.</ThemedScreenshot>
+</Carousel>
+
+### Snapshots e salvamento automático
+
+**Salvar sessão atual** tira um snapshot com nome dos seus grupos salvos (não das abas abertas), que você pode restaurar de uma vez. **Configurações → Dados → Salvar abas abertas automaticamente** salva suas abas abertas como um grupo novo, sozinho; o plano grátis mantém os 2 mais recentes, que contam nos seus 5 grupos e 50 abas.
+
+<Carousel label="Sessões e salvamento automático" steps={[{ title: 'Salvar sessão' }, { title: 'Visualizar sessão' }, { title: 'Configurações → Dados' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-save-session-dialog" alt="Caixa de diálogo “Save Session” (Salvar sessão) do TabMerger com o nome “Before the trip”, tema claro" darkAlt="Caixa de diálogo “Save Session” (Salvar sessão) do TabMerger com o nome “Before the trip”, tema escuro" boxes={[{ id: 'session-name' }]}>Salvar sessão atual pede um nome.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-session-view" alt="A sessão salva “Before the trip” com três grupos (“Work”, “Reading list” e “Open tabs, Nov 19”) e o botão “Restore session” (Restaurar sessão), tema claro" darkAlt="A sessão salva “Before the trip” com três grupos (“Work”, “Reading list” e “Open tabs, Nov 19”) e o botão “Restore session” (Restaurar sessão), tema escuro" boxes={[{ id: 'restore-session' }]}>Depois de salvar, abra a sessão: “Before the trip”, com seus três grupos.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-settings-data" alt="Configurações do TabMerger, aba “Data” (Dados): “Auto-save open tabs”, “Backups” e “Remember closed tabs”, tema claro" darkAlt="Configurações do TabMerger, aba “Data” (Dados): “Auto-save open tabs”, “Backups” e “Remember closed tabs”, tema escuro" boxes={[{ id: 'auto-save-toggle' }]}>Configurações → Dados, onde o salvamento automático é ativado.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Grátis para Chrome, Edge e Firefox. Não precisa de conta para começar.</InstallCta>
+
+</Section>
+
+<Section id="compare" title="Qual método usar?">
+
+<ComparisonTable
+  head={['', 'Tudo nos favoritos', 'Restauração ao iniciar', 'Ctrl+Shift+T, histórico', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="38rem"
+  rows={[
+    ['Todas as janelas de uma vez', 'Não', 'Sim, ao reiniciar', 'Uma por vez', 'Sim'],
+    ['Fica salvo depois de fechar uma janela', 'Sim', 'Não', 'No histórico', 'Sim'],
+    ['Busca', 'Favoritos', 'Nenhuma', 'Histórico', 'Ctrl+K, inclusive fechadas'],
+    ['Preço', 'Grátis', 'Grátis', 'Grátis', 'Grátis; Pro para sincronizar'],
+  ]}
+/>
+
+Ative a configuração de inicialização, seja qual for sua escolha. Adicione aos favoritos uma janela avulsa que valha a pena. Use uma extensão quando você trabalha com várias janelas ou precisa de uma aba fechada dias depois. Mais na nossa [página de comparação](/compare).
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+
+</Section>

@@ -1,0 +1,320 @@
+export const post = {
+  slug: 'save-all-open-tabs',
+  title: 'Как сохранить все открытые вкладки и вернуть их позже',
+  seoTitle: 'Как сохранить все открытые вкладки (Chrome, Edge, Firefox)',
+  description:
+    'Как сохранить все открытые вкладки в Chrome, Edge или Firefox одним сочетанием клавиш, открывать их после перезапуска и вернуть закрытые.',
+  shareSummary: 'Одно сочетание, восстановление при запуске и возврат закрытых вкладок в Chrome, Edge и Firefox.',
+  dek: 'Пять способов сохранить все открытые вкладки и то, что каждый из них незаметно упускает.',
+  published: '2026-11-19',
+  updated: '2026-11-19',
+  testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D сохраняет только текущее окно.', source: 'Проверено во всех трёх, 19 ноября 2026 г.' },
+    { text: 'Ctrl+Shift+T снова открывает закрытые вкладки и окна.', source: 'Справка Chrome, Edge и Firefox' },
+    {
+      text: 'Расширения не видят закрытые сохранённые группы Chrome.',
+      source: 'Документация chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'В Edge 149 больше нет «Коллекций».', source: 'Поддержка Microsoft' },
+  ],
+  faq: [
+    {
+      question: 'Сохраняет ли Ctrl+Shift+D вкладки из всех окон?',
+      answer: 'Нет. Сочетание добавляет в закладки только текущее окно. Повторите его в каждом окне или используйте инструмент, который видит все окна.',
+    },
+    {
+      question: 'Можно ли сохранить все открытые вкладки без расширения?',
+      answer: 'Да: Ctrl+Shift+D и настройка запуска, обе встроены в Chrome, Edge и Firefox.',
+    },
+    {
+      question: 'Почему вкладки не вернулись после перезапуска?',
+      answer:
+        'Восстановление при запуске возвращает то, что было открыто, когда браузер закрылся. Окна, закрытые раньше, и приватные окна не возвращаются. Попробуйте Ctrl+Shift+T или историю.',
+    },
+    {
+      question: 'Где TabMerger хранит сохранённые вкладки?',
+      answer:
+        'На вашем устройстве, в локальном хранилище браузера. Pro синхронизирует их между устройствами со сквозным шифрованием. Подробнее в разделе «Частые вопросы».',
+      link: { text: 'Частые вопросы', href: '/faq' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/chrome-bookmarks-folder.webp', alt: 'Менеджер закладок Chrome: выбрана папка Tab manager research с шестью сохранёнными страницами' },
+    { src: '/blog/save-all-open-tabs/edge-bookmarks-folder.webp', alt: 'Избранное Edge: открыта папка Tab manager research, в ней шесть страниц и их адреса' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Настройки Chrome, раздел On startup (Запуск Chrome), выбран вариант Continue where you left off (Ранее открытые вкладки)' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Настройки Edge, раздел Start, home, and new tab page, выбран вариант Open tabs from the previous session' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Настройки Firefox, раздел Home and startup (Домашняя страница и запуск), отмечен пункт Open previous windows and tabs (Открывать предыдущие окна и вкладки)' },
+    { src: '/blog/save-all-open-tabs/chrome-history.webp', alt: 'Страница истории Chrome: шесть страниц, открытых сегодня, и вкладки By date и By group' },
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Страница истории Edge с пунктами All, Recently closed и Tabs from other devices на боковой панели' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-light.webp', alt: 'TabMerger, раздел Now Open («Сейчас открыто»): два окна браузера по пять вкладок, светлая тема' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-dark.webp', alt: 'TabMerger, раздел Now Open («Сейчас открыто»): два окна браузера по пять вкладок, тёмная тема' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-light.webp', alt: 'Меню группы TabMerger с пунктом Merge with current («Объединить с текущими»), который добавляет открытые окна браузера в группу, светлая тема' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-dark.webp', alt: 'Меню группы TabMerger с пунктом Merge with current («Объединить с текущими»), который добавляет открытые окна браузера в группу, тёмная тема' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-light.webp', alt: 'Группа Open tabs, Nov 19 с 2 окнами и 10 вкладками, светлая тема' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-dark.webp', alt: 'Группа Open tabs, Nov 19 с 2 окнами и 10 вкладками, тёмная тема' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-light.webp', alt: 'TabMerger, раздел Recently closed («Недавно закрытые») за сегодня: почасовая шкала и три закрытые вкладки, светлая тема' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-dark.webp', alt: 'TabMerger, раздел Recently closed («Недавно закрытые») за сегодня: почасовая шкала и три закрытые вкладки, тёмная тема' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-light.webp', alt: 'Поиск TabMerger по запросу closed: seat находит одну недавно закрытую вкладку, светлая тема' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-dark.webp', alt: 'Поиск TabMerger по запросу closed: seat находит одну недавно закрытую вкладку, тёмная тема' },
+    { src: '/blog/save-all-open-tabs/tm-search-light.webp', alt: 'Поиск TabMerger по запросу lisbon: результаты с метками Now Open или Open tabs, Nov 19, светлая тема' },
+    { src: '/blog/save-all-open-tabs/tm-search-dark.webp', alt: 'Поиск TabMerger по запросу lisbon: результаты с метками Now Open или Open tabs, Nov 19, тёмная тема' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-light.webp', alt: 'Окно Save Session («Сохранить сеанс») в TabMerger с названием Before the trip, светлая тема' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-dark.webp', alt: 'Окно Save Session («Сохранить сеанс») в TabMerger с названием Before the trip, тёмная тема' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-light.webp', alt: 'Сохранённый сеанс Before the trip с тремя группами (Work, Reading list и Open tabs, Nov 19) и кнопкой Restore session, светлая тема' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-dark.webp', alt: 'Сохранённый сеанс Before the trip с тремя группами (Work, Reading list и Open tabs, Nov 19) и кнопкой Restore session, тёмная тема' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-light.webp', alt: 'Настройки TabMerger, вкладка Data: Auto-save open tabs, Backups и Remember closed tabs, светлая тема' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-dark.webp', alt: 'Настройки TabMerger, вкладка Data: Auto-save open tabs, Backups и Remember closed tabs, тёмная тема' },
+  ],
+  tags: ['tab-management', 'save-tabs', 'restore-closed-tabs', 'bookmarks', 'browser-productivity', 'chrome', 'edge', 'firefox'],
+  // Before publishing: check each title against its page, and replace the Microsoft entry with
+  // the exact Edge help article (restore tabs / startup pages).
+  sources: [
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Microsoft Edge help and learning',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/microsoft-edge',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-19',
+    },
+  ],
+  screenshotsCaptured: '2026-11-19',
+  ogImage: { src: '/blog/save-all-open-tabs/og.png', alt: 'Как сохранить все открытые вкладки и вернуть их позже: руководство TabMerger для Chrome, Edge и Firefox с группой из двух сохранённых окон' },
+  toc: [
+    { id: 'quick', label: 'Короткий ответ' },
+    { id: 'bookmark', label: '1. Все вкладки в закладки' },
+    { id: 'startup', label: '2. Открытие при запуске' },
+    { id: 'closed', label: '3. Возврат закрытых вкладок' },
+    { id: 'groups', label: '4. Группы вкладок' },
+    { id: 'tabmerger', label: '5. Все окна сразу' },
+    { id: 'compare', label: 'Что выбрать' },
+    { id: 'faq', label: 'Частые вопросы' },
+  ],
+  browserSections: ['bookmark', 'startup', 'closed'],
+  browserFact: {
+    label: 'Настройка запуска',
+    values: { chrome: 'chrome://settings/onStartup', edge: 'edge://settings/startHomeNTP', firefox: 'about:preferences#home' },
+  },
+}
+
+<QuickAnswer>
+
+Чтобы сохранить все открытые вкладки текущего окна, нажмите <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> на Mac): браузер добавит их в новую папку закладок. Это работает в Chrome, Edge и Firefox. Чтобы вкладки открывались сами после перезапуска, включите **Ранее открытые вкладки** (Continue where you left off) в Chrome, **Open tabs from the previous session** в Edge или **Открывать предыдущие окна и вкладки** (Open previous windows and tabs) в Firefox.
+
+</QuickAnswer>
+
+<BrowserSwitcher />
+
+<Section id="bookmark" title="1. Все вкладки в закладки одним нажатием">
+
+Любой крупный браузер умеет сохранить вкладки окна как папку закладок. Папка остаётся, пока вы её не удалите, и синхронизируется, если вы вошли в аккаунт браузера.
+
+<BrowserPanels section="bookmark">
+<BrowserPanel browser="chrome">
+
+1. Щёлкните любую вкладку в окне, которое хотите сохранить.
+2. Нажмите <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> на Mac).
+3. Назовите папку, выберите, куда её поместить, и сохраните.
+4. Чтобы открыть вкладки позже, нажмите <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>, найдите папку и откройте все закладки из неё.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-bookmarks-folder.webp" alt="Менеджер закладок Chrome: выбрана папка Tab manager research с шестью сохранёнными страницами" width={1600} height={524} eager boxes={[{ id: 'folder' }]} source="chrome://bookmarks · Chrome 157.0.8103.79">Менеджер закладок Chrome (Bookmark Manager) после Ctrl+Shift+D: в новой папке по одной закладке на каждую вкладку окна.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Щёлкните любую вкладку в окне, которое хотите сохранить.
+2. Нажмите <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> на Mac). Edge сохранит вкладки в избранное, в новую папку.
+3. Назовите папку и сохраните её.
+4. Чтобы открыть вкладки позже, нажмите <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>: откроется избранное. Найдите папку и откройте все страницы из неё.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-bookmarks-folder.webp" alt="Избранное Edge: открыта папка Tab manager research, в ней шесть страниц и их адреса" width={1600} height={553} boxes={[{ id: 'folder' }]} source="edge://favorites · Edge 157.0.4341.60">Избранное Edge после того же сочетания: вкладки сохранены в новую папку.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Щёлкните любую вкладку в окне, которое хотите сохранить.
+2. Нажмите <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> на Mac), чтобы добавить в закладки все вкладки.
+3. Назовите папку и сохраните её.
+4. Чтобы открыть вкладки позже, нажмите <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>: откроется окно «Библиотека» (Library), где можно открыть все закладки из папки.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox Library (Ctrl+Shift+O) with the new folder selected. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+Скриншоты браузеров сделаны в английском интерфейсе, поэтому рядом с названиями настроек мы приводим и английские.
+
+<Catch>сохраняется *только текущее окно*. Три окна означают три папки. Кроме того, закладка хранит только адрес: положение прокрутки и введённый в формы текст теряются.</Catch>
+
+</Section>
+
+<Section id="startup" title="2. Пусть браузер открывает всё заново при запуске">
+
+Если вкладки пропадают после перезапусков и обновлений, пусть браузер сам восстанавливает сеанс.
+
+<BrowserPanels section="startup">
+<BrowserPanel browser="chrome">
+
+В Chrome: **Настройки → Запуск Chrome → Ранее открытые вкладки** (Settings → On startup → Continue where you left off). Или вставьте `chrome://settings/onStartup` в адресную строку.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Настройки Chrome, раздел On startup (Запуск Chrome), выбран вариант Continue where you left off (Ранее открытые вкладки)" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">Раздел «Запуск Chrome» настроен так, чтобы открывать последний сеанс.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+В Edge: **Параметры → Start, home, and new tab page → On startup → Open tabs from the previous session**. Или вставьте `edge://settings/startHomeNTP` в адресную строку.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Настройки Edge, раздел Start, home, and new tab page, выбран вариант Open tabs from the previous session" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">Раздел «Start, home, and new tab page» в Edge настроен так, чтобы открывать последний сеанс.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+В Firefox: **Настройки → Домашняя страница и запуск → Запуск → Открывать предыдущие окна и вкладки** (Settings → Home and startup → Startup → Open previous windows and tabs). Или вставьте `about:preferences#home` в адресную строку.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Настройки Firefox, раздел Home and startup (Домашняя страница и запуск), отмечен пункт Open previous windows and tabs (Открывать предыдущие окна и вкладки)" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">В Firefox 159 этот пункт находится в разделе «Home and startup» («Домашняя страница и запуск»); в старых инструкциях указан раздел «General» («Основные»).</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>браузер восстанавливает то, что было открыто при последнем закрытии. Окно, закрытое раньше, в это не входит, а приватные окна не возвращаются никогда.</Catch>
+
+</Section>
+
+<Section id="closed" title="3. Как вернуть уже закрытые вкладки">
+
+Нажмите <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>), чтобы снова открыть последнюю закрытую вкладку или окно; нажимайте ещё раз, чтобы идти дальше назад. Всё, что закрыто раньше, ищите в истории: <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>.
+
+<BrowserPanels section="closed">
+<BrowserPanel browser="chrome">
+
+Chrome также показывает недавно закрытые вкладки и окна в меню ⋮ → История (History).
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-history.webp" alt="Страница истории Chrome: шесть страниц, открытых сегодня, и вкладки By date и By group" width={1600} height={640} source="chrome://history · Chrome 157.0.8103.79" className="m-0">Страница истории Chrome; в версии 157 появился режим «By group».</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+В Edge список «Recently closed» (недавно закрытые) есть прямо на странице истории.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Страница истории Edge с пунктами All, Recently closed и Tabs from other devices на боковой панели" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60" className="m-0">Страница истории Edge со списком «Recently closed» на боковой панели.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox показывает недавно закрытые вкладки и окна в меню «Журнал» (History), в пунктах «Недавно закрытые вкладки» и «Недавно закрытые окна». Чтобы показать строку меню, нажмите Alt.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with recently closed tabs open. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="groups" title="4. Группы вкладок: хороши для работы, но не для сохранения">
+
+- **Chrome** умеет сохранить группу и открыть её снова, но расширения не видят закрытую сохранённую группу ([tabGroups API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
+- Группы в **Firefox** остаются на устройстве и не переносятся через Firefox Sync.
+- В **Edge** больше нет «Коллекций», начиная с Edge 149.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
+
+</Section>
+
+<Section id="tabmerger" title="5. Сохранить все открытые вкладки из всех окон с TabMerger">
+
+Встроенные способы работают с одним окном, одним перезапуском или одной закрытой вкладкой за раз. [TabMerger](/features), наше бесплатное расширение для Chrome, Edge и Firefox, показывает все открытые окна в разделе **Сейчас открыто** и сохраняет их в одну группу.
+
+<ScreenshotThemeToggle />
+
+1. Нажмите **Добавить группу** и задайте название, например «Открытые вкладки, 19 ноября».
+2. Откройте меню группы **⋯** и выберите **Объединить с текущими**: в группу добавятся открытые окна браузера. (*Заменить текущими* вместо этого заменяет окна группы.)
+3. Закрывайте окна когда угодно. В группе останутся оба окна и все десять вкладок.
+
+<Carousel label="Как сохранить все окна в одну группу" steps={[{ title: 'Сейчас открыто' }, { title: 'Меню группы' }, { title: 'Сохранённая группа' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-now-open" alt="TabMerger, раздел Now Open («Сейчас открыто»): два окна браузера по пять вкладок, светлая тема" darkAlt="TabMerger, раздел Now Open («Сейчас открыто»): два окна браузера по пять вкладок, тёмная тема">«Сейчас открыто» повторяет браузер: все открытые окна и их вкладки.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merge-menu" alt="Меню группы TabMerger с пунктом Merge with current («Объединить с текущими»), который добавляет открытые окна браузера в группу, светлая тема" darkAlt="Меню группы TabMerger с пунктом Merge with current («Объединить с текущими»), который добавляет открытые окна браузера в группу, тёмная тема" boxes={[{ id: 'group-menu-button', label: 'Меню группы' }, { id: 'merge-with-current', label: 'Объединить с текущими' }]}>После «Добавить группу» откройте меню новой группы и выберите пункт, который копирует в неё все открытые окна.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merged-group" alt="Группа Open tabs, Nov 19 с 2 окнами и 10 вкладками, светлая тема" darkAlt="Группа Open tabs, Nov 19 с 2 окнами и 10 вкладками, тёмная тема">После «Объединить с текущими» оба окна сохранены в одной группе и остаются в ней, когда окна закрыты.</ThemedScreenshot>
+</Carousel>
+
+### Удобнее с клавиатуры?
+
+<ComparisonTable
+  head={['Сочетание', 'Что сохраняет']}
+  keysColumn={0}
+  rows={[
+    ['Ctrl+Shift+P', 'Все остальные вкладки окна'],
+    ['Ctrl+Shift+S', 'Текущую вкладку'],
+    ['Ctrl+Shift+K', 'Вкладки слева'],
+    ['Ctrl+Shift+U', 'Вкладки справа'],
+  ]}
+/>
+
+На Mac используйте <Kbd>⌘</Kbd>. Каждое сочетание спрашивает, куда сохранить; **Быстрое сохранение (новая группа)** сразу создаёт группу. В Firefox <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> открывает приватное окно, поэтому назначьте другое сочетание в `about:addons` → «Управление горячими клавишами расширений» (Manage Extension Shortcuts).
+
+### Закрыли что-то по ошибке?
+
+**Недавно закрытые** хранит каждую закрытую вкладку и окно по дням, а шкала показывает час закрытия. В бесплатном тарифе они хранятся 2 дня, в Pro 30. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> ищет среди открытых, сохранённых и закрытых вкладок; начните запрос с `closed:`, чтобы искать только среди закрытых.
+
+<Carousel label="Как вернуть закрытые вкладки" steps={[{ title: 'Недавно закрытые' }, { title: 'Поиск closed:' }, { title: 'Поиск по всему' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-recently-closed" alt="TabMerger, раздел Recently closed («Недавно закрытые») за сегодня: почасовая шкала и три закрытые вкладки, светлая тема" darkAlt="TabMerger, раздел Recently closed («Недавно закрытые») за сегодня: почасовая шкала и три закрытые вкладки, тёмная тема" boxes={[{ id: 'hour-strip' }]}>Вкладки, закрытые сегодня, и час, когда их закрыли.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search-closed" alt="Поиск TabMerger по запросу closed: seat находит одну недавно закрытую вкладку, светлая тема" darkAlt="Поиск TabMerger по запросу closed: seat находит одну недавно закрытую вкладку, тёмная тема" boxes={[{ id: 'search-input' }]}>Нажмите Ctrl+K и начните с `closed:`, чтобы искать только закрытые вкладки.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search" alt="Поиск TabMerger по запросу lisbon: результаты с метками Now Open или Open tabs, Nov 19, светлая тема" darkAlt="Поиск TabMerger по запросу lisbon: результаты с метками Now Open или Open tabs, Nov 19, тёмная тема" boxes={[{ id: 'group-tag-1' }]}>Без префикса поиск идёт по открытым и сохранённым вкладкам, у каждой метка группы.</ThemedScreenshot>
+</Carousel>
+
+### Снимки и автосохранение
+
+**Сохранить текущий сеанс** делает именованный снимок сохранённых групп (а не открытых вкладок), который можно восстановить целиком. **Настройки → Данные → Автосохранение открытых вкладок** само сохраняет открытые вкладки в новую группу; в бесплатном тарифе хранятся 2 последние, и они входят в лимит 5 групп и 50 вкладок.
+
+<Carousel label="Сеансы и автосохранение" steps={[{ title: 'Сохранить сеанс' }, { title: 'Просмотр сеанса' }, { title: 'Настройки → Данные' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-save-session-dialog" alt="Окно Save Session («Сохранить сеанс») в TabMerger с названием Before the trip, светлая тема" darkAlt="Окно Save Session («Сохранить сеанс») в TabMerger с названием Before the trip, тёмная тема" boxes={[{ id: 'session-name' }]}>«Сохранить текущий сеанс» просит указать название.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-session-view" alt="Сохранённый сеанс Before the trip с тремя группами (Work, Reading list и Open tabs, Nov 19) и кнопкой Restore session, светлая тема" darkAlt="Сохранённый сеанс Before the trip с тремя группами (Work, Reading list и Open tabs, Nov 19) и кнопкой Restore session, тёмная тема" boxes={[{ id: 'restore-session' }]}>После сохранения откройте сеанс Before the trip («Перед поездкой»): в нём три группы.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-settings-data" alt="Настройки TabMerger, вкладка Data: Auto-save open tabs, Backups и Remember closed tabs, светлая тема" darkAlt="Настройки TabMerger, вкладка Data: Auto-save open tabs, Backups и Remember closed tabs, тёмная тема" boxes={[{ id: 'auto-save-toggle' }]}>Настройки → Данные: здесь включается автосохранение.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Бесплатно для Chrome, Edge и Firefox. Для начала аккаунт не нужен.</InstallCta>
+
+</Section>
+
+<Section id="compare" title="Какой способ выбрать?">
+
+<ComparisonTable
+  head={['', 'Закладки на все', 'Восстановление при запуске', 'Ctrl+Shift+T, история', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="38rem"
+  rows={[
+    ['Все окна сразу', 'Нет', 'Да, при перезапуске', 'По одному', 'Да'],
+    ['Остаётся после закрытия окна', 'Да', 'Нет', 'В истории', 'Да'],
+    ['Поиск', 'По закладкам', 'Нет', 'По истории', 'Ctrl+K, включая закрытые'],
+    ['Цена', 'Бесплатно', 'Бесплатно', 'Бесплатно', 'Бесплатно; Pro для синхронизации'],
+  ]}
+/>
+
+Что бы вы ни выбрали, включите настройку запуска. Отдельное окно, которое стоит сохранить, добавьте в закладки. Расширение пригодится, если вы работаете с несколькими окнами или закрытая вкладка нужна через несколько дней. Подробнее на нашей [странице сравнения](/compare).
+
+</Section>
+
+<Section id="faq" title="Частые вопросы">
+
+<Faq items={post.faq} />
+
+
+</Section>

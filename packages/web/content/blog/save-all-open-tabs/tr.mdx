@@ -1,0 +1,320 @@
+export const post = {
+  slug: 'save-all-open-tabs',
+  title: 'Tüm açık sekmeleri kaydetme ve daha sonra geri getirme',
+  seoTitle: 'Tüm Açık Sekmeleri Kaydetme (Chrome, Edge, Firefox)',
+  description:
+    'Chrome, Edge veya Firefox’ta tüm açık sekmeleri tek kısayolla kaydedin, yeniden başlatınca otomatik açılmasını sağlayın ve kapatılanları geri getirin.',
+  shareSummary: 'Chrome, Edge ve Firefox’ta tek kısayol, başlangıçta geri yükleme ve kapatılan sekmeleri kurtarma.',
+  dek: 'Açık her sekmeyi saklamanın beş yolu ve her birinin sessizce kaçırdığı tek şey.',
+  published: '2026-11-19',
+  updated: '2026-11-19',
+  testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D yalnızca geçerli pencereyi kaydeder.', source: '19 Kasım 2026’da üçünde de test edildi' },
+    { text: 'Ctrl+Shift+T kapatılan sekmeleri ve pencereleri yeniden açar.', source: 'Chrome, Edge ve Firefox yardım sayfaları' },
+    {
+      text: 'Uzantılar Chrome’un kapatılmış kayıtlı gruplarını listeleyemez.',
+      source: 'chrome.tabGroups belgeleri',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'Koleksiyonlar, Edge 149 ile birlikte kaldırıldı.', source: 'Microsoft Destek' },
+  ],
+  faq: [
+    {
+      question: 'Ctrl+Shift+D tüm pencerelerdeki sekmeleri kaydeder mi?',
+      answer: 'Hayır. Yalnızca geçerli pencereyi yer işaretlerine ekler. Her pencerede tekrarlayın ya da tüm pencereleri okuyan bir araç kullanın.',
+    },
+    {
+      question: 'Tüm açık sekmeleri uzantı olmadan kaydedebilir miyim?',
+      answer: 'Evet: Ctrl+Shift+D ve başlangıç ayarı. İkisi de Chrome, Edge ve Firefox’ta yerleşik olarak bulunur.',
+    },
+    {
+      question: 'Sekmelerim yeniden başlattıktan sonra neden geri gelmedi?',
+      answer:
+        'Başlangıçta geri yükleme, tarayıcı kapandığında açık olanları geri getirir. Daha önce kapatılan pencereler ve gizli pencereler buna dahil değildir. Ctrl+Shift+T’yi veya geçmişi deneyin.',
+    },
+    {
+      question: 'TabMerger kayıtlı sekmeleri nerede saklar?',
+      answer:
+        'Cihazınızda, tarayıcının yerel depolama alanında. Pro, sekmeleri cihazlar arasında uçtan uca şifreli olarak eşitler. Ayrıntılar için SSS’ye bakın.',
+      link: { text: 'SSS', href: '/faq' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/chrome-bookmarks-folder.webp', alt: 'Chrome yer işareti yöneticisi: Tab manager research klasörü seçili, kayıtlı altı sayfa listeleniyor' },
+    { src: '/blog/save-all-open-tabs/edge-bookmarks-folder.webp', alt: 'Edge Favoriler: Tab manager research klasörü açık, altı sayfa ve adresleri listeleniyor' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Chrome ayarları, On startup (Başlangıçta) bölümünde Continue where you left off (Kaldığım yerden devam et) seçili' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Edge ayarları, Start, home, and new tab page bölümünde Open tabs from the previous session seçili' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Firefox ayarları, Home and startup (Giriş sayfası ve başlangıç) bölümünde Open previous windows and tabs (Önceki pencereleri ve sekmeleri aç) işaretli' },
+    { src: '/blog/save-all-open-tabs/chrome-history.webp', alt: 'Chrome Geçmiş sayfası: bugün ziyaret edilen altı sayfa, By date ve By group sekmeleri' },
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Edge Geçmiş sayfası, kenar çubuğunda All, Recently closed ve Tabs from other devices' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-light.webp', alt: 'TabMerger Now Open (Şu An Açık): beşer sekmeli iki tarayıcı penceresi, açık tema' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-dark.webp', alt: 'TabMerger Now Open (Şu An Açık): beşer sekmeli iki tarayıcı penceresi, koyu tema' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-light.webp', alt: 'TabMerger grup menüsünde Merge with current (Mevcutla birleştir), açık tarayıcı pencerelerinizi bu gruba ekler, açık tema' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-dark.webp', alt: 'TabMerger grup menüsünde Merge with current (Mevcutla birleştir), açık tarayıcı pencerelerinizi bu gruba ekler, koyu tema' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-light.webp', alt: 'Open tabs, Nov 19 grubu: 2 pencere ve 10 sekme, açık tema' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-dark.webp', alt: 'Open tabs, Nov 19 grubu: 2 pencere ve 10 sekme, koyu tema' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-light.webp', alt: 'TabMerger Recently closed (Son kapatılanlar), bugün: saatlik şerit ve kapatılan üç sekme, açık tema' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-dark.webp', alt: 'TabMerger Recently closed (Son kapatılanlar), bugün: saatlik şerit ve kapatılan üç sekme, koyu tema' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-light.webp', alt: 'TabMerger’da closed: seat araması, son kapatılan bir sekmeyi gösteriyor, açık tema' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-dark.webp', alt: 'TabMerger’da closed: seat araması, son kapatılan bir sekmeyi gösteriyor, koyu tema' },
+    { src: '/blog/save-all-open-tabs/tm-search-light.webp', alt: 'TabMerger’da lisbon araması: Now Open veya Open tabs, Nov 19 etiketli sonuçlar, açık tema' },
+    { src: '/blog/save-all-open-tabs/tm-search-dark.webp', alt: 'TabMerger’da lisbon araması: Now Open veya Open tabs, Nov 19 etiketli sonuçlar, koyu tema' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-light.webp', alt: 'TabMerger Save Session (Oturumu Kaydet) penceresi, ad olarak Before the trip yazılmış, açık tema' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-dark.webp', alt: 'TabMerger Save Session (Oturumu Kaydet) penceresi, ad olarak Before the trip yazılmış, koyu tema' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-light.webp', alt: 'Before the trip adlı kayıtlı oturum: üç grup (Work, Reading list ve Open tabs, Nov 19) ve Restore session düğmesi, açık tema' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-dark.webp', alt: 'Before the trip adlı kayıtlı oturum: üç grup (Work, Reading list ve Open tabs, Nov 19) ve Restore session düğmesi, koyu tema' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-light.webp', alt: 'TabMerger ayarları, Data sekmesi: Auto-save open tabs, Backups ve Remember closed tabs, açık tema' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-dark.webp', alt: 'TabMerger ayarları, Data sekmesi: Auto-save open tabs, Backups ve Remember closed tabs, koyu tema' },
+  ],
+  tags: ['tab-management', 'save-tabs', 'restore-closed-tabs', 'bookmarks', 'browser-productivity', 'chrome', 'edge', 'firefox'],
+  // Before publishing: check each title against its page, and replace the Microsoft entry with
+  // the exact Edge help article (restore tabs / startup pages).
+  sources: [
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Microsoft Edge help and learning',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/microsoft-edge',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-19',
+    },
+  ],
+  screenshotsCaptured: '2026-11-19',
+  ogImage: { src: '/blog/save-all-open-tabs/og.png', alt: 'Tüm açık sekmeleri kaydetme ve daha sonra geri getirme: Chrome, Edge ve Firefox için TabMerger rehberi, kayıtlı iki pencereli bir grupla' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'bookmark', label: '1. Tüm sekmeleri yer işaretine ekleme' },
+    { id: 'startup', label: '2. Başlangıçta yeniden açma' },
+    { id: 'closed', label: '3. Kapatılan sekmeler' },
+    { id: 'groups', label: '4. Sekme grupları' },
+    { id: 'tabmerger', label: '5. Tüm pencereler tek seferde' },
+    { id: 'compare', label: 'Hangisini seçmeli' },
+    { id: 'faq', label: 'SSS' },
+  ],
+  browserSections: ['bookmark', 'startup', 'closed'],
+  browserFact: {
+    label: 'Başlangıç ayarı',
+    values: { chrome: 'chrome://settings/onStartup', edge: 'edge://settings/startHomeNTP', firefox: 'about:preferences#home' },
+  },
+}
+
+<QuickAnswer>
+
+Geçerli penceredeki tüm açık sekmeleri kaydetmek için <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> tuşlarına basın (Mac’te <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>): sekmeler yeni bir yer işareti klasörüne eklenir. Bu yöntem Chrome, Edge ve Firefox’ta çalışır. Sekmelerin otomatik olarak yeniden açılması için Chrome’da **Kaldığım yerden devam et** (Continue where you left off), Edge’de **Open tabs from the previous session**, Firefox’ta ise **Önceki pencereleri ve sekmeleri aç** (Open previous windows and tabs) seçeneğini açın.
+
+</QuickAnswer>
+
+<BrowserSwitcher />
+
+<Section id="bookmark" title="1. Tüm sekmeleri tek kısayolla yer işaretine ekleyin">
+
+Her büyük tarayıcı, bir penceredeki sekmeleri bir yer işareti klasörü olarak kaydedebilir. Klasör siz silene kadar kalır ve tarayıcıda oturum açtıysanız eşitlenir.
+
+<BrowserPanels section="bookmark">
+<BrowserPanel browser="chrome">
+
+1. Saklamak istediğiniz penceredeki herhangi bir sekmeye tıklayın.
+2. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> tuşlarına basın (Mac’te <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>).
+3. Klasöre bir ad verin, nereye kaydedileceğini seçin ve kaydedin.
+4. Daha sonra yeniden açmak için <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> tuşlarına basın, klasörü bulun ve içindeki tüm yer işaretlerini açın.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-bookmarks-folder.webp" alt="Chrome yer işareti yöneticisi: Tab manager research klasörü seçili, kayıtlı altı sayfa listeleniyor" width={1600} height={524} eager boxes={[{ id: 'folder' }]} source="chrome://bookmarks · Chrome 157.0.8103.79">Ctrl+Shift+D’den sonra Chrome’un Yer İşareti Yöneticisi (Bookmark Manager): yeni klasörde penceredeki her sekme için bir yer işareti var.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Saklamak istediğiniz penceredeki herhangi bir sekmeye tıklayın.
+2. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> tuşlarına basın (Mac’te <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>). Edge sekmeleri yeni bir klasörde favori olarak kaydeder.
+3. Klasöre bir ad verin ve kaydedin.
+4. Daha sonra yeniden açmak için Favoriler’i (Favorites) açan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> tuşlarına basın, klasörü bulun ve hepsini açın.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-bookmarks-folder.webp" alt="Edge Favoriler: Tab manager research klasörü açık, altı sayfa ve adresleri listeleniyor" width={1600} height={553} boxes={[{ id: 'folder' }]} source="edge://favorites · Edge 157.0.4341.60">Aynı kısayoldan sonra Edge Favoriler: sekmeler yeni bir klasörde favori olarak kaydedildi.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Saklamak istediğiniz penceredeki herhangi bir sekmeye tıklayın.
+2. Tüm sekmeleri yer işaretlerine eklemek için <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> tuşlarına basın (Mac’te <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>).
+3. Klasöre bir ad verin ve kaydedin.
+4. Daha sonra yeniden açmak için <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> ile Arşiv penceresini (Library) açın ve klasördeki tüm yer işaretlerini açın.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox Library (Ctrl+Shift+O) with the new folder selected. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+Tarayıcı ekran görüntüleri İngilizce arayüzü gösterir. Türkçe adı farklı olan ayarlarda İngilizce adı, ilk geçtiği yerde parantez içinde veriyoruz.
+
+<Catch>bu yöntem *yalnızca geçerli pencereyi* kaydeder. Üç pencere, üç klasör demektir. Yer işaretleri ayrıca yalnızca adresi tutar; kaydırma konumu ve formlara girdiğiniz bilgiler kaybolur.</Catch>
+
+</Section>
+
+<Section id="startup" title="2. Tarayıcının başlangıçta her şeyi yeniden açmasını sağlayın">
+
+Sekmeleriniz yeniden başlatmalar ve güncellemeler yüzünden kayboluyorsa oturumu tarayıcı geri getirsin.
+
+<BrowserPanels section="startup">
+<BrowserPanel browser="chrome">
+
+Chrome’da: **Ayarlar → Başlangıçta → Kaldığım yerden devam et** (Settings → On startup → Continue where you left off). Ya da adres çubuğuna `chrome://settings/onStartup` yapıştırın.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Chrome ayarları, On startup (Başlangıçta) bölümünde Continue where you left off (Kaldığım yerden devam et) seçili" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">Chrome’un On startup (Başlangıçta) ayarı, son oturumu yeniden açacak şekilde ayarlanmış.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge’de: **Ayarlar → Start, home, and new tab page → On startup → Open tabs from the previous session**. Ya da adres çubuğuna `edge://settings/startHomeNTP` yapıştırın.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Edge ayarları, Start, home, and new tab page bölümünde Open tabs from the previous session seçili" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">Edge’in Start, home, and new tab page ayarları, son oturumu yeniden açacak şekilde ayarlanmış.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox’ta: **Ayarlar → Giriş sayfası ve başlangıç → Başlangıç → Önceki pencereleri ve sekmeleri aç** (Settings → Home and startup → Startup → Open previous windows and tabs). Ya da adres çubuğuna `about:preferences#home` yapıştırın.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Firefox ayarları, Home and startup (Giriş sayfası ve başlangıç) bölümünde Open previous windows and tabs (Önceki pencereleri ve sekmeleri aç) işaretli" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Firefox 159 bu seçeneği Home and startup (Giriş sayfası ve başlangıç) altında tutar; eski rehberlerde General (Genel) yazar.</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>bu ayar, tarayıcı son kapandığında açık olanları geri yükler. Daha önce kapattığınız bir pencere buna dahil değildir, gizli pencereler ise hiç geri gelmez.</Catch>
+
+</Section>
+
+<Section id="closed" title="3. Kapattığınız sekmeleri geri getirin">
+
+Kapattığınız son sekmeyi veya pencereyi yeniden açmak için <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) tuşlarına basın; daha geriye gitmek için yeniden basın. Daha eski sekmeler için <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> ile Geçmiş’i (History) açın.
+
+<BrowserPanels section="closed">
+<BrowserPanel browser="chrome">
+
+Chrome, son kapatılan sekmeleri ve pencereleri ⋮ → Geçmiş altında da listeler.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-history.webp" alt="Chrome Geçmiş sayfası: bugün ziyaret edilen altı sayfa, By date ve By group sekmeleri" width={1600} height={640} source="chrome://history · Chrome 157.0.8103.79" className="m-0">Chrome’un Geçmiş sayfası; 157 sürümüyle By group görünümü geldi.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge, “Recently closed” (son kapatılanlar) listesini doğrudan Geçmiş sayfasında gösterir.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Edge Geçmiş sayfası, kenar çubuğunda All, Recently closed ve Tabs from other devices" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60" className="m-0">Edge’in Geçmiş sayfası, kenar çubuğunda Recently closed listesiyle.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox, son kapatılan sekmeleri ve pencereleri **Geçmiş** menüsünde, **Son kapatılan sekmeler** ve **Son kapatılan pencereler** altında listeler (menü çubuğunu göstermek için Alt tuşuna basın).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with recently closed tabs open. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="groups" title="4. Sekme grupları: odaklanmak için iyi, kaydetmek için sınırlı">
+
+- **Chrome** bir grubu kaydedip yeniden açabilir, ancak uzantılar kapatılmış kayıtlı bir grubu göremez ([tabGroups API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
+- **Firefox** grupları cihazda kalır ve Firefox Sync ile taşınmaz.
+- **Edge**’de Edge 149’dan itibaren Koleksiyonlar yok.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
+
+</Section>
+
+<Section id="tabmerger" title="5. TabMerger ile tüm açık sekmeleri tek seferde kaydedin">
+
+Yerleşik yöntemlerin her biri aynı anda yalnızca bir pencereyi, bir yeniden başlatmayı veya kapatılan bir sekmeyi kapsar. Chrome, Edge ve Firefox için ücretsiz uzantımız [TabMerger](/features), açık her pencereyi **Şu An Açık** altında listeler ve hepsini tek bir gruba kaydeder.
+
+<ScreenshotThemeToggle />
+
+1. **Grup Ekle**’ye tıklayın ve gruba “Açık sekmeler, 19 Kasım” gibi bir ad verin.
+2. Grubun **⋯** menüsünü açın ve açık tarayıcı pencerelerinizi gruba ekleyen **Mevcutla birleştir**’i seçin. (*Mevcutla değiştir* ise grubun pencerelerini değiştirir.)
+3. Pencereleri istediğiniz zaman kapatın. Grup iki pencereyi ve on sekmenin hepsini saklar.
+
+<Carousel label="Tüm pencereleri tek gruba kaydetme" steps={[{ title: 'Şu An Açık' }, { title: 'Grup menüsü' }, { title: 'Kayıtlı grup' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-now-open" alt="TabMerger Now Open (Şu An Açık): beşer sekmeli iki tarayıcı penceresi, açık tema" darkAlt="TabMerger Now Open (Şu An Açık): beşer sekmeli iki tarayıcı penceresi, koyu tema">Şu An Açık tarayıcıyı yansıtır: açık her pencere ve sekmeleri.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merge-menu" alt="TabMerger grup menüsünde Merge with current (Mevcutla birleştir), açık tarayıcı pencerelerinizi bu gruba ekler, açık tema" darkAlt="TabMerger grup menüsünde Merge with current (Mevcutla birleştir), açık tarayıcı pencerelerinizi bu gruba ekler, koyu tema" boxes={[{ id: 'group-menu-button', label: 'Grup menüsü' }, { id: 'merge-with-current', label: 'Mevcutla birleştir' }]}>Grup Ekle’den sonra yeni grubun menüsünü açın ve açık tüm pencereleri gruba kopyalayan seçeneği seçin.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merged-group" alt="Open tabs, Nov 19 grubu: 2 pencere ve 10 sekme, açık tema" darkAlt="Open tabs, Nov 19 grubu: 2 pencere ve 10 sekme, koyu tema">Mevcutla birleştir’den sonra: iki pencere tek grupta kaydedildi ve pencereler kapandıktan sonra da orada.</ThemedScreenshot>
+</Carousel>
+
+### Klavyeyi mi tercih ediyorsunuz?
+
+<ComparisonTable
+  head={['Kısayol', 'Kaydettikleri']}
+  keysColumn={0}
+  rows={[
+    ['Ctrl+Shift+P', 'Penceredeki diğer tüm sekmeler'],
+    ['Ctrl+Shift+S', 'Geçerli sekme'],
+    ['Ctrl+Shift+K', 'Soldaki sekmeler'],
+    ['Ctrl+Shift+U', 'Sağdaki sekmeler'],
+  ]}
+/>
+
+Mac’te <Kbd>⌘</Kbd> kullanın. Her kısayol nereye kaydedileceğini sorar; **Hızlı Kayıt (yeni grup)** hemen bir grup oluşturur. Firefox’ta <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> gizli pencere açar, bu yüzden `about:addons` → “Uzantı kısayollarını yönet” (Manage Extension Shortcuts) altında başka bir tuş seçin.
+
+### Yanlışlıkla bir şey mi kapattınız?
+
+**Son kapatılanlar**, kapattığınız her sekmeyi ve pencereyi gün gün saklar; bir şerit kapatıldıkları saati gösterir. Ücretsiz plan 2 gün, Pro 30 gün saklar. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> açık, kayıtlı ve kapatılan sekmelerde arar; yalnızca kapatılan sekmelerde aramak için `closed:` ile başlayın.
+
+<Carousel label="Kapatılan sekmeleri geri getirme" steps={[{ title: 'Son kapatılanlar' }, { title: 'closed: araması' }, { title: 'Her şeyde arama' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-recently-closed" alt="TabMerger Recently closed (Son kapatılanlar), bugün: saatlik şerit ve kapatılan üç sekme, açık tema" darkAlt="TabMerger Recently closed (Son kapatılanlar), bugün: saatlik şerit ve kapatılan üç sekme, koyu tema" boxes={[{ id: 'hour-strip' }]}>Bugün kapatılan sekmeler ve kapatıldıkları saat.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search-closed" alt="TabMerger’da closed: seat araması, son kapatılan bir sekmeyi gösteriyor, açık tema" darkAlt="TabMerger’da closed: seat araması, son kapatılan bir sekmeyi gösteriyor, koyu tema" boxes={[{ id: 'search-input' }]}>Yalnızca kapatılan sekmelerde aramak için Ctrl+K’ye basın ve `closed:` ile başlayın.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search" alt="TabMerger’da lisbon araması: Now Open veya Open tabs, Nov 19 etiketli sonuçlar, açık tema" darkAlt="TabMerger’da lisbon araması: Now Open veya Open tabs, Nov 19 etiketli sonuçlar, koyu tema" boxes={[{ id: 'group-tag-1' }]}>Önek olmadan arama açık ve kayıtlı sekmeleri kapsar; sonuçlar gruba göre etiketlenir.</ThemedScreenshot>
+</Carousel>
+
+### Anlık görüntüler ve otomatik kayıt
+
+**Mevcut oturumu kaydet**, kayıtlı gruplarınızın (açık sekmelerinizin değil) adlandırılmış bir anlık görüntüsünü alır; bu grupları birlikte geri yükleyebilirsiniz. **Ayarlar → Veri → Açık sekmeleri otomatik kaydet**, açık sekmelerinizi otomatik olarak yeni bir grup halinde kaydeder; Ücretsiz plan en yeni 2 tanesini tutar ve bunlar 5 grup ve 50 sekme sınırına dahildir.
+
+<Carousel label="Oturumlar ve otomatik kayıt" steps={[{ title: 'Oturumu kaydet' }, { title: 'Oturum görünümü' }, { title: 'Ayarlar → Veri' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-save-session-dialog" alt="TabMerger Save Session (Oturumu Kaydet) penceresi, ad olarak Before the trip yazılmış, açık tema" darkAlt="TabMerger Save Session (Oturumu Kaydet) penceresi, ad olarak Before the trip yazılmış, koyu tema" boxes={[{ id: 'session-name' }]}>Mevcut oturumu kaydet bir ad ister.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-session-view" alt="Before the trip adlı kayıtlı oturum: üç grup (Work, Reading list ve Open tabs, Nov 19) ve Restore session düğmesi, açık tema" darkAlt="Before the trip adlı kayıtlı oturum: üç grup (Work, Reading list ve Open tabs, Nov 19) ve Restore session düğmesi, koyu tema" boxes={[{ id: 'restore-session' }]}>Kaydettikten sonra oturumu açın: Before the trip (Yolculuktan önce) ve üç grubu listelenir.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-settings-data" alt="TabMerger ayarları, Data sekmesi: Auto-save open tabs, Backups ve Remember closed tabs, açık tema" darkAlt="TabMerger ayarları, Data sekmesi: Auto-save open tabs, Backups ve Remember closed tabs, koyu tema" boxes={[{ id: 'auto-save-toggle' }]}>Ayarlar → Veri: otomatik kayıt burada açılır.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Chrome, Edge ve Firefox için ücretsiz. Başlamak için hesap gerekmez.</InstallCta>
+
+</Section>
+
+<Section id="compare" title="Hangi yöntemi kullanmalısınız?">
+
+<ComparisonTable
+  head={['', 'Tümünü yer işaretine ekleme', 'Başlangıçta geri yükleme', 'Ctrl+Shift+T, geçmiş', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="38rem"
+  rows={[
+    ['Tüm pencereler tek seferde', 'Hayır', 'Evet, yeniden başlatmada', 'Tek tek', 'Evet'],
+    ['Pencere kapandıktan sonra kalır', 'Evet', 'Hayır', 'Geçmişte', 'Evet'],
+    ['Arama', 'Yer işaretleri', 'Yok', 'Geçmiş', 'Ctrl+K, kapatılanlar dahil'],
+    ['Ücret', 'Ücretsiz', 'Ücretsiz', 'Ücretsiz', 'Ücretsiz; eşitleme için Pro'],
+  ]}
+/>
+
+Hangisini seçerseniz seçin, başlangıç ayarını açın. Saklamaya değer tek bir pencereyi yer işaretlerine ekleyin. Birkaç pencereyle çalışıyorsanız ya da kapattığınız bir sekmeye günler sonra ihtiyaç duyuyorsanız bir uzantı kullanın. Daha fazlası [karşılaştırma sayfamızda](/compare).
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+
+</Section>

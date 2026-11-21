@@ -1,0 +1,320 @@
+export const post = {
+  slug: 'save-all-open-tabs',
+  title: 'Jak zapisać wszystkie otwarte karty i odzyskać je później',
+  seoTitle: 'Jak zapisać wszystkie otwarte karty (Chrome, Edge, Firefox)',
+  description:
+    'Zapisz wszystkie otwarte karty w Chrome, Edge lub Firefoksie jednym skrótem, przywracaj je po ponownym uruchomieniu i odzyskuj zamknięte karty.',
+  shareSummary: 'Jeden skrót, przywracanie przy starcie i odzyskiwanie zamkniętych kart w Chrome, Edge i Firefoksie.',
+  dek: 'Pięć sposobów na zachowanie wszystkich otwartych kart i to, co każdy z nich po cichu pomija.',
+  published: '2026-11-19',
+  updated: '2026-11-19',
+  testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D zapisuje tylko bieżące okno.', source: 'Sprawdzone we wszystkich trzech, 19 lis 2026' },
+    { text: 'Ctrl+Shift+T przywraca zamknięte karty i okna.', source: 'Strony pomocy Chrome, Edge i Firefoksa' },
+    {
+      text: 'Rozszerzenia nie widzą zamkniętych zapisanych grup w Chrome.',
+      source: 'Dokumentacja chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'Od Edge 149 nie ma już Kolekcji.', source: 'Pomoc techniczna Microsoft' },
+  ],
+  faq: [
+    {
+      question: 'Czy Ctrl+Shift+D zapisuje karty ze wszystkich okien?',
+      answer: 'Nie. Dodaje do zakładek tylko bieżące okno. Powtórz to w każdym oknie albo użyj narzędzia, które odczytuje wszystkie okna.',
+    },
+    {
+      question: 'Czy da się zapisać wszystkie otwarte karty bez rozszerzenia?',
+      answer: 'Tak: Ctrl+Shift+D i ustawienie uruchamiania, oba wbudowane w Chrome, Edge i Firefoksa.',
+    },
+    {
+      question: 'Dlaczego moje karty nie wróciły po ponownym uruchomieniu?',
+      answer:
+        'Przywracanie przy starcie otwiera to, co było otwarte w chwili zamknięcia przeglądarki. Okna zamknięte wcześniej i okna prywatne się do tego nie liczą. Spróbuj Ctrl+Shift+T albo historii.',
+    },
+    {
+      question: 'Gdzie TabMerger przechowuje zapisane karty?',
+      answer:
+        'Na Twoim urządzeniu, w lokalnej pamięci przeglądarki. Pro synchronizuje je między urządzeniami z szyfrowaniem end-to-end. Zobacz FAQ.',
+      link: { text: 'FAQ', href: '/faq' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/chrome-bookmarks-folder.webp', alt: 'Menedżer zakładek Chrome z zaznaczonym folderem „Tab manager research” i sześcioma zapisanymi stronami' },
+    { src: '/blog/save-all-open-tabs/edge-bookmarks-folder.webp', alt: 'Ulubione w Edge z otwartym folderem „Tab manager research”: sześć stron i ich adresy' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Ustawienia Chrome, „On startup” (Po uruchomieniu), z zaznaczoną opcją „Continue where you left off” (Kontynuuj od tego samego miejsca)' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Ustawienia Edge, „Start, home, and new tab page”, z zaznaczoną opcją „Open tabs from the previous session”' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Ustawienia Firefoksa, „Home and startup” (Strona startowa i uruchamianie), z zaznaczoną opcją „Open previous windows and tabs” (Otwieraj poprzednie okna i karty)' },
+    { src: '/blog/save-all-open-tabs/chrome-history.webp', alt: 'Historia w Chrome z sześcioma stronami odwiedzonymi dzisiaj i kartami „By date” oraz „By group”' },
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Historia w Edge z pozycjami „All”, „Recently closed” i „Tabs from other devices” na pasku bocznym' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-light.webp', alt: 'TabMerger, „Now Open” (Teraz Otwarte), z dwoma oknami przeglądarki po pięć kart, jasny motyw' },
+    { src: '/blog/save-all-open-tabs/tm-now-open-dark.webp', alt: 'TabMerger, „Now Open” (Teraz Otwarte), z dwoma oknami przeglądarki po pięć kart, ciemny motyw' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-light.webp', alt: 'Menu grupy w TabMergerze z opcją „Merge with current” (Scal z bieżącą sesją), która dodaje otwarte okna przeglądarki do tej grupy, jasny motyw' },
+    { src: '/blog/save-all-open-tabs/tm-merge-menu-dark.webp', alt: 'Menu grupy w TabMergerze z opcją „Merge with current” (Scal z bieżącą sesją), która dodaje otwarte okna przeglądarki do tej grupy, ciemny motyw' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-light.webp', alt: 'Grupa „Open tabs, Nov 19” z 2 oknami i 10 kartami, jasny motyw' },
+    { src: '/blog/save-all-open-tabs/tm-merged-group-dark.webp', alt: 'Grupa „Open tabs, Nov 19” z 2 oknami i 10 kartami, ciemny motyw' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-light.webp', alt: 'TabMerger, „Recently closed” (Ostatnio zamknięte) z dzisiaj, z paskiem godzin i trzema zamkniętymi kartami, jasny motyw' },
+    { src: '/blog/save-all-open-tabs/tm-recently-closed-dark.webp', alt: 'TabMerger, „Recently closed” (Ostatnio zamknięte) z dzisiaj, z paskiem godzin i trzema zamkniętymi kartami, ciemny motyw' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-light.webp', alt: 'Wyszukiwanie w TabMergerze „closed: seat” z jedną ostatnio zamkniętą kartą, jasny motyw' },
+    { src: '/blog/save-all-open-tabs/tm-search-closed-dark.webp', alt: 'Wyszukiwanie w TabMergerze „closed: seat” z jedną ostatnio zamkniętą kartą, ciemny motyw' },
+    { src: '/blog/save-all-open-tabs/tm-search-light.webp', alt: 'Wyszukiwanie w TabMergerze „lisbon”: wyniki oznaczone „Now Open” lub „Open tabs, Nov 19”, jasny motyw' },
+    { src: '/blog/save-all-open-tabs/tm-search-dark.webp', alt: 'Wyszukiwanie w TabMergerze „lisbon”: wyniki oznaczone „Now Open” lub „Open tabs, Nov 19”, ciemny motyw' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-light.webp', alt: 'Okno „Save Session” (Zapisz Sesję) w TabMergerze z nazwą „Before the trip”, jasny motyw' },
+    { src: '/blog/save-all-open-tabs/tm-save-session-dialog-dark.webp', alt: 'Okno „Save Session” (Zapisz Sesję) w TabMergerze z nazwą „Before the trip”, ciemny motyw' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-light.webp', alt: 'Zapisana sesja „Before the trip” z trzema grupami („Work”, „Reading list” i „Open tabs, Nov 19”) i przyciskiem „Restore session” (Przywróć sesję), jasny motyw' },
+    { src: '/blog/save-all-open-tabs/tm-session-view-dark.webp', alt: 'Zapisana sesja „Before the trip” z trzema grupami („Work”, „Reading list” i „Open tabs, Nov 19”) i przyciskiem „Restore session” (Przywróć sesję), ciemny motyw' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-light.webp', alt: 'Ustawienia TabMergera, karta „Data” (Dane): „Auto-save open tabs”, „Backups” i „Remember closed tabs”, jasny motyw' },
+    { src: '/blog/save-all-open-tabs/tm-settings-data-dark.webp', alt: 'Ustawienia TabMergera, karta „Data” (Dane): „Auto-save open tabs”, „Backups” i „Remember closed tabs”, ciemny motyw' },
+  ],
+  tags: ['tab-management', 'save-tabs', 'restore-closed-tabs', 'bookmarks', 'browser-productivity', 'chrome', 'edge', 'firefox'],
+  // Before publishing: check each title against its page, and replace the Microsoft entry with
+  // the exact Edge help article (restore tabs / startup pages).
+  sources: [
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'Microsoft Edge help and learning',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/microsoft-edge',
+      checked: '2026-11-19',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-19',
+    },
+  ],
+  screenshotsCaptured: '2026-11-19',
+  ogImage: { src: '/blog/save-all-open-tabs/og.png', alt: 'Karta z tytułem „How to save all open tabs and get them back later”: poradnik TabMergera dla Chrome, Edge i Firefoksa, z grupą dwóch zapisanych okien' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'bookmark', label: '1. Wszystkie do zakładek' },
+    { id: 'startup', label: '2. Otwieranie przy starcie' },
+    { id: 'closed', label: '3. Odzyskiwanie zamkniętych kart' },
+    { id: 'groups', label: '4. Grupy kart' },
+    { id: 'tabmerger', label: '5. Wszystkie okna naraz' },
+    { id: 'compare', label: 'Co wybrać' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['bookmark', 'startup', 'closed'],
+  browserFact: {
+    label: 'Ustawienie uruchamiania',
+    values: { chrome: 'chrome://settings/onStartup', edge: 'edge://settings/startHomeNTP', firefox: 'about:preferences#home' },
+  },
+}
+
+<QuickAnswer>
+
+Aby zapisać wszystkie otwarte karty, naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> na Macu): każda karta z bieżącego okna trafi jako zakładka do nowego folderu. Działa to w Chrome, Edge i Firefoksie. Żeby karty otwierały się same, włącz **Kontynuuj od tego samego miejsca** („Continue where you left off”, Chrome), **Open tabs from the previous session** (Edge) lub **Otwieraj poprzednie okna i karty** („Open previous windows and tabs”, Firefox).
+
+</QuickAnswer>
+
+<BrowserSwitcher />
+
+<Section id="bookmark" title="1. Dodaj wszystkie karty do zakładek jednym skrótem">
+
+Każda popularna przeglądarka zapisuje karty z okna jako folder zakładek. Folder zostaje, dopóki go nie usuniesz, i synchronizuje się, jeśli logujesz się w przeglądarce.
+
+Zrzuty ekranu przeglądarek pokazują angielski interfejs. Jeśli polska nazwa jest inna, przy pierwszym użyciu podajemy angielską w nawiasie.
+
+<BrowserPanels section="bookmark">
+<BrowserPanel browser="chrome">
+
+1. Kliknij dowolną kartę w oknie, które chcesz zachować.
+2. Naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> na Macu).
+3. Nazwij folder, wybierz, gdzie ma się znaleźć, i kliknij Zapisz.
+4. Aby później otworzyć karty ponownie, naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>, znajdź folder i otwórz wszystkie jego zakładki.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-bookmarks-folder.webp" alt="Menedżer zakładek Chrome z zaznaczonym folderem „Tab manager research” i sześcioma zapisanymi stronami" width={1600} height={524} eager boxes={[{ id: 'folder' }]} source="chrome://bookmarks · Chrome 157.0.8103.79">Menedżer zakładek Chrome („Bookmark Manager”) po Ctrl+Shift+D: nowy folder zawiera po jednej zakładce na każdą kartę z okna.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Kliknij dowolną kartę w oknie, które chcesz zachować.
+2. Naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> na Macu). Edge zapisuje karty jako ulubione w nowym folderze.
+3. Nazwij folder i zapisz go.
+4. Aby później otworzyć je ponownie, naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>, żeby wyświetlić **Ulubione** („Favorites”), znajdź folder i otwórz wszystkie strony.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-bookmarks-folder.webp" alt="Ulubione w Edge z otwartym folderem „Tab manager research”: sześć stron i ich adresy" width={1600} height={553} boxes={[{ id: 'folder' }]} source="edge://favorites · Edge 157.0.4341.60">Ulubione w Edge po tym samym skrócie: karty są zapisane jako ulubione w nowym folderze.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Kliknij dowolną kartę w oknie, które chcesz zachować.
+2. Naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> na Macu), aby dodać wszystkie karty do zakładek.
+3. Nazwij folder i kliknij Zapisz.
+4. Aby później otworzyć je ponownie, naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> (**Zarządzaj zakładkami**, „Manage Bookmarks”) i otwórz wszystkie zakładki z folderu.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox Library (Ctrl+Shift+O) with the new folder selected. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>zapisuje się *tylko bieżące okno*. Trzy okna to trzy foldery. Zakładka zachowuje też tylko adres: pozycja przewinięcia i wpisane w formularze dane przepadają.</Catch>
+
+</Section>
+
+<Section id="startup" title="2. Niech przeglądarka otwiera wszystko przy starcie">
+
+Jeśli karty znikają przez ponowne uruchomienia i aktualizacje, pozwól przeglądarce przywrócić sesję.
+
+<BrowserPanels section="startup">
+<BrowserPanel browser="chrome">
+
+W Chrome: **Ustawienia → Po uruchomieniu → Kontynuuj od tego samego miejsca** („Settings → On startup → Continue where you left off”). Możesz też wkleić `chrome://settings/onStartup` w pasek adresu.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Ustawienia Chrome, „On startup” (Po uruchomieniu), z zaznaczoną opcją „Continue where you left off” (Kontynuuj od tego samego miejsca)" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">Ustawienie Po uruchomieniu w Chrome, ustawione na przywracanie ostatniej sesji.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+W Edge: **Ustawienia → Start, home, and new tab page → On startup → Open tabs from the previous session**. Najszybciej jest wkleić `edge://settings/startHomeNTP` w pasek adresu.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Ustawienia Edge, „Start, home, and new tab page”, z zaznaczoną opcją „Open tabs from the previous session”" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">Strona „Start, home, and new tab page” w Edge, ustawiona na przywracanie ostatniej sesji.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+W Firefoksie: **Ustawienia → Strona startowa i uruchamianie → Uruchamianie → Otwieraj poprzednie okna i karty** („Settings → Home and startup → Startup → Open previous windows and tabs”). Możesz też wkleić `about:preferences#home` w pasek adresu.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Ustawienia Firefoksa, „Home and startup” (Strona startowa i uruchamianie), z zaznaczoną opcją „Open previous windows and tabs” (Otwieraj poprzednie okna i karty)" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Firefox 159 trzyma tę opcję w sekcji Strona startowa i uruchamianie; starsze poradniki wskazują Ogólne.</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>przywraca się to, co było otwarte przy ostatnim zamknięciu przeglądarki. Okno zamknięte wcześniej się do tego nie liczy, a okna prywatne nigdy nie wracają.</Catch>
+
+</Section>
+
+<Section id="closed" title="3. Odzyskaj już zamknięte karty">
+
+Naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>), aby ponownie otworzyć ostatnio zamkniętą kartę lub okno; naciskaj dalej, aby cofać się wstecz. Starsze rzeczy znajdziesz w historii, otwieranej skrótem <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>.
+
+<BrowserPanels section="closed">
+<BrowserPanel browser="chrome">
+
+Chrome pokazuje też ostatnio zamknięte karty i okna w ⋮ → **Historia** („History”).
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-history.webp" alt="Historia w Chrome z sześcioma stronami odwiedzonymi dzisiaj i kartami „By date” oraz „By group”" width={1600} height={640} source="chrome://history · Chrome 157.0.8103.79" className="m-0">Strona Historia w Chrome; wersja 157 dodaje widok „By group” (według grup).</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge pokazuje ostatnio zamknięte karty („Recently closed”) bezpośrednio na stronie **Historia**.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Historia w Edge z pozycjami „All”, „Recently closed” i „Tabs from other devices” na pasku bocznym" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60" className="m-0">Strona Historia w Edge z listą „Recently closed” na pasku bocznym.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox pokazuje ostatnio zamknięte karty i okna w menu **Historia** („History”), w pozycjach **Ostatnio zamknięte karty** i **Ostatnio zamknięte okna** (naciśnij Alt, aby wyświetlić pasek menu).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with recently closed tabs open. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="groups" title="4. Grupy kart: dobre do skupienia, słabe do zapisywania">
+
+- **Chrome** potrafi zapisać grupę i otworzyć ją ponownie, ale rozszerzenia nie widzą zapisanej grupy, gdy jest zamknięta ([API tabGroups](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
+- Grupy w **Firefoksie** zostają na urządzeniu i nie są przenoszone przez Firefox Sync.
+- **Edge** od wersji 149 nie ma już Kolekcji („Collections”).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
+
+</Section>
+
+<Section id="tabmerger" title="5. Zapisz wszystkie otwarte karty ze wszystkich okien w TabMergerze">
+
+Każda z wbudowanych metod obejmuje jedno okno, jedno ponowne uruchomienie albo jedną zamkniętą kartę naraz. [TabMerger](/features), nasze darmowe rozszerzenie do Chrome, Edge i Firefoksa, pokazuje wszystkie otwarte okna w sekcji **Teraz Otwarte** i zapisuje je wszystkie w jednej grupie.
+
+<ScreenshotThemeToggle />
+
+1. Kliknij **Dodaj Grupę** i nadaj jej nazwę, na przykład „Otwarte karty, 19 lis” (na zrzutach ekranu „Open tabs, Nov 19”).
+2. Otwórz menu **⋯** grupy i wybierz **Scal z bieżącą sesją**, co dodaje Twoje otwarte okna przeglądarki. (*Zastąp bieżącą sesją* zamiast tego podmienia okna w grupie).
+3. Zamknij okna, kiedy chcesz. Grupa zachowa oba okna i wszystkie dziesięć kart.
+
+<Carousel label="Zapisywanie wszystkich okien w jednej grupie" steps={[{ title: 'Teraz Otwarte' }, { title: 'Menu grupy' }, { title: 'Zapisana grupa' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-now-open" alt="TabMerger, „Now Open” (Teraz Otwarte), z dwoma oknami przeglądarki po pięć kart, jasny motyw" darkAlt="TabMerger, „Now Open” (Teraz Otwarte), z dwoma oknami przeglądarki po pięć kart, ciemny motyw">Teraz Otwarte odzwierciedla przeglądarkę: każde otwarte okno i jego karty.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merge-menu" alt="Menu grupy w TabMergerze z opcją „Merge with current” (Scal z bieżącą sesją), która dodaje otwarte okna przeglądarki do tej grupy, jasny motyw" darkAlt="Menu grupy w TabMergerze z opcją „Merge with current” (Scal z bieżącą sesją), która dodaje otwarte okna przeglądarki do tej grupy, ciemny motyw" boxes={[{ id: 'group-menu-button', label: 'Menu grupy' }, { id: 'merge-with-current', label: 'Scal z bieżącą sesją' }]}>Po kliknięciu Dodaj Grupę otwórz menu nowej grupy i wybierz opcję, która kopiuje do niej wszystkie otwarte okna.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-merged-group" alt="Grupa „Open tabs, Nov 19” z 2 oknami i 10 kartami, jasny motyw" darkAlt="Grupa „Open tabs, Nov 19” z 2 oknami i 10 kartami, ciemny motyw">Po wybraniu Scal z bieżącą sesją: oba okna są zapisane w jednej grupie i zostają w niej po zamknięciu.</ThemedScreenshot>
+</Carousel>
+
+### Wolisz klawiaturę?
+
+<ComparisonTable
+  head={['Skrót', 'Zapisuje']}
+  keysColumn={0}
+  rows={[
+    ['Ctrl+Shift+P', 'Wszystkie pozostałe karty w oknie'],
+    ['Ctrl+Shift+S', 'Bieżącą kartę'],
+    ['Ctrl+Shift+K', 'Karty po lewej'],
+    ['Ctrl+Shift+U', 'Karty po prawej'],
+  ]}
+/>
+
+Na Macu użyj <Kbd>⌘</Kbd>. Każdy skrót pyta, gdzie zapisać; **Szybki Zapis (nowa grupa)** od razu tworzy grupę. W Firefoksie <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> otwiera okno prywatne, więc wybierz inny klawisz w `about:addons` → „Manage Extension Shortcuts”.
+
+### Coś zamknięte przez pomyłkę?
+
+**Ostatnio zamknięte** przechowuje każdą zamkniętą kartę i każde okno, według dni, z paskiem pokazującym godzinę. W darmowym planie przez 2 dni, w Pro przez 30. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> przeszukuje karty otwarte, zapisane i zamknięte; zacznij od `closed:`, aby szukać tylko wśród zamkniętych.
+
+<Carousel label="Odzyskiwanie zamkniętych kart" steps={[{ title: 'Ostatnio zamknięte' }, { title: 'Wyszukiwanie closed:' }, { title: 'Szukaj wszędzie' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-recently-closed" alt="TabMerger, „Recently closed” (Ostatnio zamknięte) z dzisiaj, z paskiem godzin i trzema zamkniętymi kartami, jasny motyw" darkAlt="TabMerger, „Recently closed” (Ostatnio zamknięte) z dzisiaj, z paskiem godzin i trzema zamkniętymi kartami, ciemny motyw" boxes={[{ id: 'hour-strip' }]}>Karty zamknięte dzisiaj, z godziną zamknięcia.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search-closed" alt="Wyszukiwanie w TabMergerze „closed: seat” z jedną ostatnio zamkniętą kartą, jasny motyw" darkAlt="Wyszukiwanie w TabMergerze „closed: seat” z jedną ostatnio zamkniętą kartą, ciemny motyw" boxes={[{ id: 'search-input' }]}>Naciśnij Ctrl+K i zacznij od `closed:`, aby szukać tylko zamkniętych kart.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-search" alt="Wyszukiwanie w TabMergerze „lisbon”: wyniki oznaczone „Now Open” lub „Open tabs, Nov 19”, jasny motyw" darkAlt="Wyszukiwanie w TabMergerze „lisbon”: wyniki oznaczone „Now Open” lub „Open tabs, Nov 19”, ciemny motyw" boxes={[{ id: 'group-tag-1' }]}>Bez prefiksu wyszukiwanie obejmuje karty otwarte i zapisane, oznaczone nazwą grupy.</ThemedScreenshot>
+</Carousel>
+
+### Migawki i automatyczne zapisywanie
+
+**Zapisz bieżącą sesję** tworzy nazwaną migawkę Twoich zapisanych grup (nie otwartych kart), którą możesz przywrócić w całości. **Ustawienia → Dane → Autozapis otwartych kart** sam zapisuje Twoje otwarte karty jako nową grupę; w darmowym planie zostają 2 najnowsze, wliczane do limitu 5 grup i 50 kart.
+
+<Carousel label="Sesje i autozapis" steps={[{ title: 'Zapisz Sesję' }, { title: 'Widok sesji' }, { title: 'Ustawienia → Dane' }]}>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-save-session-dialog" alt="Okno „Save Session” (Zapisz Sesję) w TabMergerze z nazwą „Before the trip”, jasny motyw" darkAlt="Okno „Save Session” (Zapisz Sesję) w TabMergerze z nazwą „Before the trip”, ciemny motyw" boxes={[{ id: 'session-name' }]}>Zapisz bieżącą sesję prosi o nazwę.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-session-view" alt="Zapisana sesja „Before the trip” z trzema grupami („Work”, „Reading list” i „Open tabs, Nov 19”) i przyciskiem „Restore session” (Przywróć sesję), jasny motyw" darkAlt="Zapisana sesja „Before the trip” z trzema grupami („Work”, „Reading list” i „Open tabs, Nov 19”) i przyciskiem „Restore session” (Przywróć sesję), ciemny motyw" boxes={[{ id: 'restore-session' }]}>Po zapisaniu otwórz sesję: „Before the trip” z jej trzema grupami.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/save-all-open-tabs/tm-settings-data" alt="Ustawienia TabMergera, karta „Data” (Dane): „Auto-save open tabs”, „Backups” i „Remember closed tabs”, jasny motyw" darkAlt="Ustawienia TabMergera, karta „Data” (Dane): „Auto-save open tabs”, „Backups” i „Remember closed tabs”, ciemny motyw" boxes={[{ id: 'auto-save-toggle' }]}>Ustawienia → Dane, gdzie włącza się autozapis.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Za darmo dla Chrome, Edge i Firefoksa. Na start nie potrzebujesz konta.</InstallCta>
+
+</Section>
+
+<Section id="compare" title="Którą metodę wybrać?">
+
+<ComparisonTable
+  head={['', 'Wszystkie do zakładek', 'Przywracanie przy starcie', 'Ctrl+Shift+T, historia', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="38rem"
+  rows={[
+    ['Wszystkie okna naraz', 'Nie', 'Tak, przy ponownym uruchomieniu', 'Po jednym', 'Tak'],
+    ['Zostaje po zamknięciu okna', 'Tak', 'Nie', 'W historii', 'Tak'],
+    ['Wyszukiwanie', 'Zakładki', 'Brak', 'Historia', 'Ctrl+K, także zamknięte'],
+    ['Koszt', 'Za darmo', 'Za darmo', 'Za darmo', 'Za darmo; Pro do synchronizacji'],
+  ]}
+/>
+
+Włącz ustawienie uruchamiania niezależnie od tego, co wybierzesz. Pojedyncze okno, które warto zachować, dodaj do zakładek. Po rozszerzenie sięgnij, gdy żonglujesz kilkoma oknami albo potrzebujesz zamkniętej karty jeszcze po kilku dniach. Więcej na naszej [stronie porównania](/compare).
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+
+</Section>

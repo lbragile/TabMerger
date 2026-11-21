@@ -7,11 +7,14 @@ import {
   type AiAvailability,
 } from '@tabmerger/shared'
 import { AI_AVAILABILITY } from '@/lib/aiFlag'
+import { BLOG_PATH, blogPostPath, indexableSlugs, postSummary } from '@/lib/blog/posts'
 import { GITHUB_REPO_URL } from '@/lib/github'
 import { getMetadataBase } from '@/lib/utils'
 
 // Static: built once, like robots.txt and the sitemap, which it sits beside.
 export const dynamic = 'force-static'
+// Rebuilt hourly, so a scheduled blog post is listed within an hour of its date.
+export const revalidate = 3600
 
 /**
  * Pages worth pointing an AI crawler at, with one line on each. The same public marketing pages
@@ -28,7 +31,16 @@ const PAGES: ReadonlyArray<readonly [path: string, title: string, about: string]
   ['/privacy', 'Privacy', 'What data TabMerger handles and how'],
   ['/terms', 'Terms', 'Terms of service'],
   ['/contact', 'Contact', 'How to reach the maintainer'],
+  [BLOG_PATH, 'Tab management tips and guides', 'Practical, tested guides to managing browser tabs: save and restore sessions, organize tabs into groups, recover closed tabs and keep tab overload in check'],
 ]
+
+/** Every live blog post's English version, with its title and summary from the post file. */
+function blogPosts(): ReadonlyArray<readonly [path: string, title: string, about: string]> {
+  return indexableSlugs().flatMap((slug) => {
+    const summary = postSummary(slug)
+    return summary ? [[blogPostPath(slug), summary.title, summary.description] as const] : []
+  })
+}
 
 /**
  * Pro AI's feature lines from `PRICING_TIERS` as one list, without "Everything in Pro", billing
@@ -102,7 +114,9 @@ const INSTALL: ReadonlyArray<readonly [store: string, url: string, browsers: str
  */
 export function buildLlmsTxt(origin: string, ai: AiAvailability = AI_AVAILABILITY): string {
   const base = origin.replace(/\/+$/, '')
-  const links = PAGES.map(([path, title, about]) => `- [${title}](${base}${path === '/' ? '/' : path}): ${about}`)
+  const link = ([path, title, about]: readonly [string, string, string]) => `- [${title}](${base}${path === '/' ? '/' : path}): ${about}`
+  const links = PAGES.map(link)
+  const posts = blogPosts().map(link)
   return [
     '# TabMerger',
     '',
@@ -119,6 +133,10 @@ export function buildLlmsTxt(origin: string, ai: AiAvailability = AI_AVAILABILIT
     '## Pages',
     '',
     ...links,
+    '',
+    '## Blog',
+    '',
+    ...posts,
     '',
     '## Source',
     '',

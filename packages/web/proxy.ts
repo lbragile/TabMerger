@@ -181,6 +181,7 @@ export function legacyHostRedirect(request: NextRequest): URL | null {
  * - `/auth/*`: sign-in, sign-up and password pages (unprefixed, default locale).
  * - `/firefox-beta/*`: rewritten to the Blob store (the matcher skips it too).
  * - `/sentry-test`, `/sentry-tunnel`: diagnostics and Sentry's tunnel route.
+ * - `/download`: the short install link (a redirect by browser, app/download/route.ts).
  * - `/_next/*`, `/_vercel/*`: framework and Vercel assets.
  */
 export const NON_LOCALIZED_PREFIXES: readonly string[] = [
@@ -189,6 +190,7 @@ export const NON_LOCALIZED_PREFIXES: readonly string[] = [
   '/firefox-beta',
   '/sentry-test',
   '/sentry-tunnel',
+  '/download',
   '/_next',
   '/_vercel',
 ]

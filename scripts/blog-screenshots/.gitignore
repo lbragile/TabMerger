@@ -1,0 +1,3 @@
+# Raw PNG captures and Playwright output: only the converted WebP files are kept.
+.raw/
+tm/results/
