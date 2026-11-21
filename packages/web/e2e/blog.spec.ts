@@ -221,7 +221,9 @@ test.describe('/download', () => {
   }
   // Production store links aren't used locally: assert the browser-specific target pattern.
   const TARGET = {
-    edge: /microsoftedge\.microsoft\.com|\/beta|edge/i,
+    // Production: Edge Add-ons. Elsewhere there is no Edge beta, so Edge gets the Chrome BETA item
+    // (lib/storeLinks.ts BETA_STORE_LINKS).
+    edge: /microsoftedge\.microsoft\.com|chromewebstore\.google\.com\/detail\/tabmerger-beta\//i,
     firefox: /addons\.mozilla\.org|\/beta|firefox/i,
     chrome: /chromewebstore\.google\.com|chrome\.google\.com|\/beta|chrome/i,
   }
