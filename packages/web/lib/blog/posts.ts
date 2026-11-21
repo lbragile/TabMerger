@@ -230,10 +230,11 @@ export function adjacentPosts(
 }
 
 /**
- * The tags used by the most live posts (the blog index's topic chips): by number of posts, then in
- * vocabulary order; at most `limit`.
+ * The tags used by live posts, most-used first (by number of posts, then in vocabulary order). The
+ * blog index's topic chips show all of them; pass `limit` for a shorter list (the empty-search
+ * suggestions).
  */
-export function topTags(limit = 5, now: Date = new Date()): BlogTag[] {
+export function topTags(limit = Number.POSITIVE_INFINITY, now: Date = new Date()): BlogTag[] {
   const counts = new Map<BlogTag, number>()
   for (const slug of publishedSlugs(now)) {
     for (const tag of BLOG_SOURCES[slug][DEFAULT_LOCALE]?.tags ?? []) {
