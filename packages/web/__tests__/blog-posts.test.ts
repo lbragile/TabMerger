@@ -18,7 +18,9 @@ import {
   postContentLocale,
   postLocales,
   postSummary,
+  publishedSlugs,
   shownDate,
+  topTags,
   utcToday,
   type Post,
 } from '@/lib/blog/posts'
@@ -225,5 +227,27 @@ describe('share hashtags', () => {
     const first = english('save-all-open-tabs')
     const label = (enMessages as unknown as { blog: { tags: Record<string, string> } }).blog.tags[BLOG_TAGS[first.tags[0]]]
     expect(hashtagWord(label)).toBe('TabManagement')
+  })
+})
+
+describe('topic chips (topTags)', () => {
+  const usedTags = () => new Set(publishedSlugs().flatMap((slug) => GENERATED_SOURCES[slug]?.en?.tags ?? []))
+
+  it('lists every tag used by a live post by default, each once', () => {
+    const tags = topTags()
+    expect(new Set(tags).size).toBe(tags.length)
+    expect(new Set(tags)).toEqual(usedTags())
+    // More than the old cap of five, so the index really shows them all.
+    expect(tags.length).toBeGreaterThan(5)
+  })
+
+  it('orders by number of posts, then vocabulary order, and honours a limit', () => {
+    const tags = topTags()
+    const count = (tag: string) => publishedSlugs().filter((slug) => GENERATED_SOURCES[slug]?.en?.tags.includes(tag)).length
+    for (let i = 1; i < tags.length; i++) {
+      const [a, b] = [tags[i - 1], tags[i]]
+      expect(count(a) > count(b) || (count(a) === count(b) && BLOG_TAG_SLUGS.indexOf(a) < BLOG_TAG_SLUGS.indexOf(b))).toBe(true)
+    }
+    expect(topTags(3)).toEqual(tags.slice(0, 3))
   })
 })

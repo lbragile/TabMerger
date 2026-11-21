@@ -126,7 +126,7 @@ export async function BlogIndexView({ locale, page, tag }: { locale: string; pag
           {tag ? t('tagCount', { count: posts.length }) : t('indexLead')}
         </p>
       </header>
-      <TopicChips tags={topTags(5)} current={tag} />
+      <TopicChips tags={topTags()} current={tag} />
       <HelpfulCountsProvider locale={locale} messages={await listingMessages()}>
         <ListingClient
           entries={posts.map(({ post, readMinutes }) => ({ slug: post.slug, title: post.title, published: post.published, readMinutes }))}
