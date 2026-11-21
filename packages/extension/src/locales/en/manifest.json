@@ -1,5 +1,5 @@
 {
-  "extDescription": "Save open tabs into named, color-coded groups and restore them anytime. Works offline, with optional encrypted sync (Pro).",
+  "extDescription": "Tab manager: save all open tabs into named groups, restore closed tabs and sessions. Works offline; end-to-end encrypted sync (Pro).",
   "commandActivate": "Activate the extension",
   "commandSaveCurrentTab": "Save the current tab to TabMerger",
   "commandSaveTabsLeft": "Save tabs to the left of TabMerger",

@@ -1,5 +1,5 @@
 {
-  "extDescription": "Zapisuj karty w nazwanych grupach z kolorami i przywracaj, gdy chcesz. Działa offline, opcjonalna szyfrowana synchronizacja (Pro).",
+  "extDescription": "Menedżer kart: zapisuj otwarte karty w grupach, przywracaj zamknięte karty i sesje. Działa offline; szyfrowana synchronizacja (Pro).",
   "commandActivate": "Aktywuj rozszerzenie",
   "commandSaveCurrentTab": "Zapisz bieżącą kartę w TabMerger",
   "commandSaveTabsLeft": "Zapisz karty po lewej w TabMerger",

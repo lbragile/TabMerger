@@ -1,6 +1,6 @@
 # Firefox Add-ons Listings — TabMerger
 
-> Last Updated: 2026-10-20
+> Last Updated: 2026-11-19
 >
 > **State of the stable add-on:** the public AMO listing is still the v2 build (`2.0.0`). The
 > first v3 stable release is planned as `v3.1.0` and is not yet released. The listing copy,
@@ -37,9 +37,26 @@ unrelated add-on. This was restored to the live listing's real GUID in `wxt.conf
 
 ## Listing copy (stable)
 
-- **Name:** TabMerger. **Summary** (AMO limit 250 characters): reuse the Chrome short description
-  from `CHROMEWEBSTORE.md` (122 characters): "Save open tabs into named, color-coded groups and
-  restore them anytime. Works offline, with optional encrypted sync (Pro)."
+- **Name:** TabMerger (a search-friendly name is an open owner decision, see "Name for search" in
+  `CHROMEWEBSTORE.md`). **Summary** (AMO limit 250 characters). AMO uses the manifest
+  `description` (the 132-character Chrome summary, `src/locales/<lng>/manifest.json`) unless the
+  summary is edited in the Developer Hub. Recommended English summary for the Developer Hub
+  (2026-11-19, **not entered yet**; 236 characters, counted with JavaScript `.length`):
+
+  > Tab manager for Firefox: save all your open tabs, from every window, into named groups, and
+  > restore closed tabs and windows from Recently closed. Search everything, keep saved sessions.
+  > Works offline; end-to-end encrypted sync with Pro.
+
+  Every claim matches the product as described in `CHROMEWEBSTORE.md`'s summary comment.
+- **Categories** (AMO allows up to two; the extension list was read from
+  `addons.mozilla.org/api/v5/addons/categories/` on 2026-11-19): **Tabs** (primary) and
+  **Bookmarks** (it replaces bookmarking tabs for later and imports bookmarks exports). Don't
+  use "Other".
+- **Tags:** AMO tags are picked from a predefined list in the Developer Hub (Edit Product Page →
+  Basic Information); free-text tags can't be added, and the current list and its maximum count
+  were not readable outside the Developer Hub on 2026-11-19. Pick these when the list offers
+  them, in this order: `tabs`, `tab`, `productivity`, `bookmarks`, `search`, `privacy`. Skip any
+  that are missing rather than choosing a loosely related tag.
 - **Description:** reuse the Chrome "Detailed Description" from `CHROMEWEBSTORE.md` with these
   Firefox adjustments: keyboard shortcuts are rebound at `about:addons` (gear menu, "Manage
   Extension Shortcuts"); restoring saved browser tab groups depends on the browser exposing the

@@ -1,5 +1,5 @@
 {
-  "extDescription": "Salva le schede in gruppi con nome e colore e ripristinale quando vuoi. Funziona offline, sincronizzazione cifrata opzionale (Pro).",
+  "extDescription": "Gestore di schede: salva le schede aperte in gruppi, ripristina schede chiuse e sessioni. Offline; sincronizzazione cifrata (Pro).",
   "commandActivate": "Attiva l'estensione",
   "commandSaveCurrentTab": "Salva la scheda corrente in TabMerger",
   "commandSaveTabsLeft": "Salva le schede a sinistra in TabMerger",
