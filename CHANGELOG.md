@@ -1,3 +1,10 @@
+## [3.16.1](https://github.com/lbragile/TabMerger/compare/v3.16.0...v3.16.1) (2026-11-21)
+
+
+### Bug Fixes
+
+* **extension:** keep the Save session colour row on one line in every language ([#135](https://github.com/lbragile/TabMerger/issues/135)) ([e1350bb](https://github.com/lbragile/TabMerger/commit/e1350bbe50af1ababbea0a7f17523a9afb365255))
+
 # [3.16.0](https://github.com/lbragile/TabMerger/compare/v3.15.0...v3.16.0) (2026-11-21)
 
 
