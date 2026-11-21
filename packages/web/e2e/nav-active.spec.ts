@@ -16,7 +16,7 @@ test.describe('active nav link', () => {
   const currentHrefs = (page: Page) =>
     bar(page).locator('a').evaluateAll((as) => as.filter((a) => a.getAttribute('aria-current') === 'page').map((a) => a.getAttribute('href')))
 
-  for (const path of ['/pricing', '/features', '/faq']) {
+  for (const path of ['/pricing', '/features', '/blog', '/faq']) {
     test(`1280: on ${path} only that header link is current`, async ({ page }) => {
       await page.setViewportSize({ width: 1280, height: 800 })
       await page.goto(path)
@@ -36,7 +36,7 @@ test.describe('active nav link', () => {
   test('on the home page no header link is current', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 })
     await page.goto('/')
-    await expect(bar(page).locator('a')).toHaveCount(5)
+    await expect(bar(page).locator('a')).toHaveCount(6)
     expect(await currentHrefs(page)).toEqual([])
   })
 

@@ -275,11 +275,11 @@ test.describe('compare page', () => {
       })
     }
 
-    test('1280: Changelog is in the bar, after Compare', async ({ page }) => {
+    test('1280: Blog and Changelog are in the bar, after Compare', async ({ page }) => {
       await page.setViewportSize({ width: 1280, height: 800 })
       await page.goto('/compare')
       const hrefs = await page.locator('header nav').first().locator('a').evaluateAll((as) => as.map((a) => a.getAttribute('href')))
-      expect(hrefs).toEqual(['/features', '/pricing', '/compare', '/changelog', '/faq'])
+      expect(hrefs).toEqual(['/features', '/pricing', '/compare', '/blog', '/changelog', '/faq'])
     })
 
     test('the mobile menu lists Changelog', async ({ page }) => {
