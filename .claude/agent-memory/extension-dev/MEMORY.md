@@ -142,6 +142,7 @@
 - [/api/track + og-preview as CORS simple requests](learnings_track_cors_simple_request.md) — SIMPLE_JSON_CONTENT_TYPE (text/plain) skips the preflight; any extra header brings it back
 - [Auto-save open tabs](learnings_auto_save_open_tabs.md) — marker in the blob, promotion in writeGroupsState (pending + normalised), copies drop it, tier rules, e2e outDir build
 - [Store-listing _locales build hook](learnings_store_locales_build_hook.md) — `manifest` namespace -> build:publicAssets; vi.mock("vite") + computed import for wxt.config tests
+- [Store-search listing copy](learnings_store_search_listing.md) — Chrome 5-repeat rule + keyword count, Edge search terms, AMO categories API; heredoc eats backslashes
 - [Section views (mainView) + accordion](learnings_section_views_mainview.md) — read-only views, status line, focus on close, arrow guard, current-bg contrast, mock gotchas
 - [Tooltip portal + contrast](learnings_tooltip_portal_contrast.md) — no portal = inherited row opacity + ScrollArea scrollbar on top; --tooltip tokens 5.67:1 light
 - [Recently closed engine](learnings_recently_closed_engine.md) — closeTabs({record}) + lint ban, quiet marks, meta row, getDb promise/VersionError, 60 s delete, un-pin grace
@@ -152,3 +153,4 @@
 - [Session upload keys + passes](learnings_session_upload_keys_and_passes.md) — uploadedKey re-insert/resume, per-pass token, deleted ids in the delete tx, token check
 - [Session view window brackets](learnings_session_view_brackets.md) — sticky header/tile/fade z-layers, one offset token, color-mix theme tokens, --view-primary (3.04:1 primary), flex accname spaces
 - [Store-search listing copy](learnings_store_search_listing.md) — Chrome 5-repeat rule + keyword count, Edge search terms, AMO categories API; heredoc eats backslashes
+- [Blog screenshot boxes](learnings_blog_screenshot_boxes.md) — DOM-measured annotation boxes; Edge web components hide roles; Radix menus aria-hide the popup

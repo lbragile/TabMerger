@@ -67,3 +67,7 @@
 - [Disclosure menu Escape/focus](learnings/disclosure-menu-escape-focus.md) — aria-controls only while open, Escape scoped to focus in the menu, close() refocuses toggle, Enter-presses-toggle test trap
 - [Active nav link](learnings/active-nav-link.md) — NavLink + isNavLinkActive, teal active class + AA tint table, --radius 0, multi-class not.toHaveClass trap, no font-medium
 - [Compare page picker + SSR](learnings/compare-page-picker-and-ssr.md) — breakpoint default without JS (data-chosen auto + useSyncExternalStore), Radix Select placeholder-not-children trap, two-branch custom variant, t.rich tag for <time>
+- [Blog MDX on Turbopack](learnings/blog-mdx-turbopack.md) — plugins by name/absolute path with default export only, failing plugins, stable heading ids, generated/blog.ts post index
+- [Blog client/test gotchas](learnings/blog-client-test-gotchas.md) — user-event clipboard stub, jsdom matchMedia, refs-in-render, copy-then-open activation, raw-key guard, RTL hashtags
+- [Windows shell edit scripts](learnings/windows-shell-edit-scripts.md) — heredoc/`-c` scripts eat regex backslashes; write scripts to a scratch file, check with cat -A
+- [Localized browser UI labels](learnings/localized-browser-ui-labels.md) — official sources for Chrome (support.google.com hl=), Firefox (mozilla-l10n .ftl keys) and Edge strings; missing ftl key = English; de-style gloss convention; bdi/← and no U+200E/U+200F in post fields for RTL
