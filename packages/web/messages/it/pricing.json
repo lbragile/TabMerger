@@ -65,8 +65,8 @@
   "cancelAnytime": "Annulla in qualsiasi momento dal tuo account: nessun vincolo, nessuna domanda.",
   "keepAccess": "Mantieni l'accesso fino alla fine del periodo di fatturazione.",
   "page": {
-    "metaTitle": "Prezzi",
-    "metaDescription": "Prezzi semplici e trasparenti. Inizia gratis, passa a un piano superiore quando ti serve di più.",
+    "metaTitle": "Piani e prezzi: gratis, Pro e Pro AI",
+    "metaDescription": "Inizia gratis con fino a {groups} gruppi e {tabs} schede, senza account. Pro aggiunge gruppi e schede illimitati, sincronizzazione crittografata end-to-end e backup. Disdici quando vuoi.",
     "title": "Prezzi semplici e trasparenti",
     "lead": "Inizia gratis. Passa a un piano superiore quando sei pronto per qualcosa in più.",
     "moreQuestions": "Hai altre domande? Consulta le <link>FAQ</link>."

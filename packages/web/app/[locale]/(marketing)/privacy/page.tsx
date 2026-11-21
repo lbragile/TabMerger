@@ -1,5 +1,6 @@
 import { useLocale } from 'next-intl'
 import { pageMetadata } from '@/lib/seo'
+import { PageBreadcrumbJsonLd } from '@/components/seo/PageBreadcrumbJsonLd'
 import { DEFAULT_LOCALE, localeDirection } from '@/i18n/locales'
 import { Link } from '@/i18n/navigation'
 import { LegalToc } from '@/components/legal-toc'
@@ -10,11 +11,14 @@ import { CookieSettingsButton } from '@/components/consent/CookieSettingsButton'
 // English only, under every locale: this is the binding text, so it is not translated (and not
 // in the message catalog). Its canonical is the English URL and only English is listed as an
 // alternate; the rest of the page (navbar, footer) follows the visitor's language.
+const PAGE_NAME = 'Privacy Policy'
+
 export function generateMetadata() {
   return pageMetadata({
     path: '/privacy',
-    title: 'Privacy Policy',
-    description: 'How TabMerger collects, uses, and protects your data.',
+    title: PAGE_NAME,
+    description:
+      'What TabMerger collects and why, how synced tabs are end-to-end encrypted, which services process data and how to delete it. We never sell your data.',
     englishOnly: true,
   })
 }
@@ -40,9 +44,10 @@ export default function PrivacyPage() {
   const dir = localeDirection(locale) === 'rtl' ? 'ltr' : undefined
   return (
     <div className="container py-16 max-w-5xl" lang={lang} dir={dir}>
+      <PageBreadcrumbJsonLd path="/privacy" name={PAGE_NAME} englishOnly />
       {/* Header — brand-soft callout, distinct from Terms' neutral treatment */}
       <div className="mb-11 rounded-none bg-accent border border-primary/20 px-8 py-7">
-        <h1 className="text-[34px] font-semibold tracking-tight mb-2.5">Privacy, in plain English</h1>
+        <h1 className="text-[34px] font-semibold tracking-tight mb-2.5">Privacy Policy, in plain English</h1>
         <p className="max-w-xl text-[15.5px] text-text2 leading-relaxed">
           TabMerger is an indie product. We collect only what we need to operate the service, we
           never sell it, and you can delete all of it at any time. Questions?{' '}

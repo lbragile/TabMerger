@@ -23,7 +23,7 @@ describe('/faq page', () => {
     async () => {
       const { default: FaqPage } = await import('@/app/[locale]/(marketing)/faq/page')
       render(<FaqPage />)
-      expect(screen.getByRole('heading', { name: 'Frequently asked' })).toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: 'Frequently asked questions' })).toBeInTheDocument()
       expect(screen.getByText(SAMPLE_QUESTION)).toBeInTheDocument()
     },
     // ponytail: dynamic import + first render is slow under v8 coverage instrumentation, default 5s is too tight

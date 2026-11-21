@@ -197,8 +197,6 @@ function planOffers(ai: AiAvailability) {
 export function homeJsonLd(description: string, base: URL = getMetadataBase(), ai: AiAvailability = AI_AVAILABILITY) {
   const origin = base.origin
   const organizationId = `${origin}/#organization`
-  const storeListings = [STORE_LISTING_URL.CHROME_STABLE, STORE_LISTING_URL.FIREFOX_STABLE, STORE_LISTING_URL.EDGE_STABLE]
-  const currentImage = `${origin}/opengraph-image.png`
   return {
     '@context': 'https://schema.org',
     '@graph': [
@@ -208,7 +206,7 @@ export function homeJsonLd(description: string, base: URL = getMetadataBase(), a
         name: SITE_NAME,
         url: `${origin}/`,
         logo: `${origin}/icon.png`,
-        sameAs: [GITHUB_REPO_URL, ...storeListings],
+        sameAs: [GITHUB_REPO_URL, ...STABLE_STORE_LISTINGS],
       },
       {
         '@type': 'WebSite',
@@ -218,22 +216,47 @@ export function homeJsonLd(description: string, base: URL = getMetadataBase(), a
         description,
         publisher: { '@id': organizationId },
       },
-      {
-        '@type': 'SoftwareApplication',
-        name: SITE_NAME,
-        description,
-        url: `${origin}/`,
-        image: currentImage,
-        screenshot: currentImage,
-        applicationCategory: 'BrowserApplication',
-        operatingSystem: 'Chrome, Brave, Edge, Firefox',
-        installUrl: STORE_LISTING_URL.CHROME_STABLE,
-        sameAs: [...storeListings, GITHUB_REPO_URL],
-        offers: planOffers(ai),
-        publisher: { '@id': organizationId },
-      },
+      softwareApplicationNode(description, base, ai),
     ],
   }
+}
+
+/** The stable store listings, Chrome first (the default install). */
+const STABLE_STORE_LISTINGS = [STORE_LISTING_URL.CHROME_STABLE, STORE_LISTING_URL.FIREFOX_STABLE, STORE_LISTING_URL.EDGE_STABLE]
+
+/**
+ * The extension as a SoftwareApplication, shared by the homepage and /pricing. Both pages describe
+ * the same thing, so the node carries one `@id` (`<origin>/#software`) wherever it appears.
+ */
+function softwareApplicationNode(description: string, base: URL, ai: AiAvailability) {
+  const origin = base.origin
+  const currentImage = `${origin}/opengraph-image.png`
+  return {
+    '@type': 'SoftwareApplication',
+    '@id': `${origin}/#software`,
+    name: SITE_NAME,
+    description,
+    url: `${origin}/`,
+    image: currentImage,
+    screenshot: currentImage,
+    applicationCategory: 'BrowserApplication',
+    operatingSystem: 'Chrome, Brave, Edge, Firefox',
+    installUrl: STORE_LISTING_URL.CHROME_STABLE,
+    sameAs: [...STABLE_STORE_LISTINGS, GITHUB_REPO_URL],
+    offers: planOffers(ai),
+    publisher: { '@id': `${origin}/#organization` },
+  }
+}
+
+/**
+ * The /pricing page's structured data: the extension with one Offer per plan on sale, the same
+ * node (and `@id`) as on the homepage. Every price is one the pricing table shows, because both
+ * come from `PRICING_TIERS`; Pro AI is offered only while it can be bought (see `planOffers`),
+ * while the page shows it as "Coming soon" otherwise. `description` is the site description, the
+ * same one the homepage gives the extension.
+ */
+export function pricingJsonLd(description: string, base: URL = getMetadataBase(), ai: AiAvailability = AI_AVAILABILITY) {
+  return { '@context': 'https://schema.org', ...softwareApplicationNode(description, base, ai) }
 }
 
 /**
@@ -260,4 +283,54 @@ export function faqJsonLd(items: ReadonlyArray<Pick<FaqItem, 'question' | 'answe
  */
 export function serializeJsonLd(data: unknown): string {
   return JSON.stringify(data).replace(/</g, '\\u003c')
+}
+
+/** One step of a breadcrumb trail: the visible name and the page's path (with any locale prefix). */
+export interface BreadcrumbStep {
+  name: string
+  path: string
+}
+
+/**
+ * BreadcrumbList structured data for a page below the homepage, e.g. Home › Blog › post. The steps
+ * must be the trail the page shows (or would show), in order, starting at the homepage. Paths are
+ * resolved against the deployment's origin, so the items are absolute URLs as schema.org expects.
+ */
+export function breadcrumbJsonLd(steps: ReadonlyArray<BreadcrumbStep>, base: URL = getMetadataBase()) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: steps.map(({ name, path }, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name,
+      item: new URL(path, base).href,
+    })),
+  }
+}
+
+interface PageBreadcrumbInput {
+  /** The page's path without a locale prefix ("/pricing"). */
+  path: string
+  /** The page's short name, as the navbar or footer labels it ("Pricing"). */
+  name: string
+  locale: AppLocale
+  /** English-only pages (Privacy, Terms): the trail uses the English URLs, like their canonical. */
+  englishOnly?: boolean
+}
+
+/**
+ * The two-step trail of a top-level page: the homepage (named after the site), then the page.
+ * Both URLs carry the page's locale prefix, so the trail stays inside the language of the URL
+ * that was crawled; an English-only page points at the English URLs, as its canonical does.
+ */
+export function pageBreadcrumbJsonLd({ path, name, locale, englishOnly = false }: PageBreadcrumbInput, base: URL = getMetadataBase()) {
+  const urlLocale = englishOnly ? DEFAULT_LOCALE : locale
+  return breadcrumbJsonLd(
+    [
+      { name: SITE_NAME, path: localizedPath(urlLocale, '/') },
+      { name, path: localizedPath(urlLocale, path) },
+    ],
+    base
+  )
 }

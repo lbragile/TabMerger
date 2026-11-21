@@ -1,5 +1,5 @@
 {
-  "extDescription": "開いているタブを名前と色で分けたグループに保存し、いつでも復元できます。オフラインで動作し、暗号化同期 (Pro) も利用できます。",
+  "extDescription": "タブ管理ツール：開いているタブをすべて名前付きグループに保存し、閉じたタブやセッションを復元。オフラインで動作し、エンドツーエンド暗号化同期 (Pro) にも対応。",
   "commandActivate": "拡張機能を有効にする",
   "commandSaveCurrentTab": "現在のタブをTabMergerに保存",
   "commandSaveTabsLeft": "左側のタブをTabMergerに保存",

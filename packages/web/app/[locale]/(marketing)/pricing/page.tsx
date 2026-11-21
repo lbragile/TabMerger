@@ -1,22 +1,36 @@
 import { Suspense } from 'react'
-import { pageMetadata } from '@/lib/seo'
+import { FREE_TIER_LIMITS } from '@tabmerger/shared'
+import { pageMetadata, pricingJsonLd } from '@/lib/seo'
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { PricingTableForVisitor } from '@/components/pricing/PricingTableForVisitor'
 import { CheckoutCanceledTracker } from '@/components/pricing/CheckoutCanceledTracker'
 import { getStoreLinks } from '@/lib/storeLinks'
 import { getVisitorBrowser } from '@/lib/visitorBrowser'
+import { JsonLd } from '@/components/seo/JsonLd'
+import { PageBreadcrumbJsonLd } from '@/components/seo/PageBreadcrumbJsonLd'
 
 export async function generateMetadata() {
   const t = await getTranslations('pricing.page')
-  return pageMetadata({ path: '/pricing', title: t('metaTitle'), description: t('metaDescription') })
+  return pageMetadata({
+    path: '/pricing',
+    title: t('metaTitle'),
+    description: t('metaDescription', { groups: FREE_TIER_LIMITS.groups, tabs: FREE_TIER_LIMITS.tabs }),
+  })
 }
 
 export default async function PricingPage() {
-  const t = await getTranslations('pricing.page')
+  const [t, nav, meta] = await Promise.all([
+    getTranslations('pricing.page'),
+    getTranslations('nav'),
+    getTranslations('metadata'),
+  ])
 
   return (
     <div className="py-16">
+      {/* The plans on sale, at the prices the table below shows (both read PRICING_TIERS). */}
+      <JsonLd data={pricingJsonLd(meta('siteDescription'))} />
+      <PageBreadcrumbJsonLd path="/pricing" name={nav('pricing')} />
       {/* Counts a checkout Stripe sent back via cancel_url, then strips the marker from the URL. */}
       <Suspense fallback={null}>
         <CheckoutCanceledTracker />

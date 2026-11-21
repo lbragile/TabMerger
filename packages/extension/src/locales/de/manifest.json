@@ -1,5 +1,5 @@
 {
-  "extDescription": "Tabs in benannten, farbigen Gruppen speichern und jederzeit wiederherstellen. Offline nutzbar; verschlüsselter Sync optional (Pro).",
+  "extDescription": "Tab-Manager: alle Tabs in Gruppen speichern, geschlossene Tabs und Sitzungen wiederherstellen. Offline; verschlüsselter Sync (Pro).",
   "commandActivate": "Erweiterung aktivieren",
   "commandSaveCurrentTab": "Aktuellen Tab in TabMerger speichern",
   "commandSaveTabsLeft": "Tabs links davon in TabMerger speichern",

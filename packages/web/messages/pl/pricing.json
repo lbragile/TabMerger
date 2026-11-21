@@ -65,8 +65,8 @@
   "cancelAnytime": "Zrezygnuj w dowolnej chwili na swoim koncie — bez zobowiązań i zbędnych pytań.",
   "keepAccess": "Dostęp zachowasz do końca okresu rozliczeniowego.",
   "page": {
-    "metaTitle": "Cennik",
-    "metaDescription": "Prosty, przejrzysty cennik. Zacznij za darmo, przejdź na wyższy plan, gdy potrzebujesz więcej.",
+    "metaTitle": "Plany i ceny: darmowy, Pro i Pro AI",
+    "metaDescription": "Zacznij za darmo: do {groups} grup i {tabs} kart, bez konta. Pro znosi limity i dodaje synchronizację szyfrowaną end-to-end oraz kopie zapasowe. Zrezygnujesz w każdej chwili.",
     "title": "Prosty, przejrzysty cennik",
     "lead": "Zacznij za darmo. Przejdź na wyższy plan, gdy będziesz gotowy na więcej.",
     "moreQuestions": "Masz więcej pytań? Zajrzyj do <link>FAQ</link>."

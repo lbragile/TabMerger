@@ -40,3 +40,7 @@ metadata:
   `begin; create extension if not exists pgtap with schema extensions; \i <migration> \i <test>`
   and let psql end (the session's open transaction rolls back). The test's own `begin;` only
   warns. This proves the draft migration and its tests together before the migration is written.
+  A migration with its own `begin;`/`commit;` (027 onward) must be included with those two lines
+  stripped (`sed '/^begin;$/d;/^commit;$/d'`), or its `commit;` persists the draft. Afterwards
+  confirm with `to_regclass(...)` that nothing was left behind. This also lets the pgTAP file run
+  before migration-reviewer has cleared a local apply.

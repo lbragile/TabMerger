@@ -28,7 +28,7 @@ describe('FAQ', () => {
 
   it('renders the heading, subtext, and contact support link', () => {
     render(<FAQ />)
-    expect(screen.getByRole('heading', { name: 'Frequently asked' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Frequently asked questions' })).toBeInTheDocument()
     expect(
       screen.getByText('Still unsure about something? We answer email in under a day.')
     ).toBeInTheDocument()

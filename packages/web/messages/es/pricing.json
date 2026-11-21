@@ -65,8 +65,8 @@
   "cancelAnytime": "Cancela cuando quieras desde tu cuenta: sin compromisos ni preguntas.",
   "keepAccess": "Conservas el acceso hasta el final de tu periodo de facturación.",
   "page": {
-    "metaTitle": "Precios",
-    "metaDescription": "Precios simples y transparentes. Empieza gratis y mejora cuando necesites más.",
+    "metaTitle": "Planes y precios: gratis, Pro y Pro AI",
+    "metaDescription": "Empieza gratis con hasta {groups} grupos y {tabs} pestañas, sin cuenta. Pro añade grupos y pestañas ilimitados, sincronización cifrada de extremo a extremo y copias de seguridad. Cancela cuando quieras.",
     "title": "Precios simples y transparentes",
     "lead": "Empieza gratis. Mejora cuando necesites más.",
     "moreQuestions": "¿Tienes más preguntas? Consulta las <link>preguntas frecuentes</link>."

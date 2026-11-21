@@ -51,7 +51,7 @@ describe('PrivacyPage', () => {
 
   it('uses the bg-accent callout header style', () => {
     render(<PrivacyPage />)
-    const heading = screen.getByRole('heading', { name: 'Privacy, in plain English' })
+    const heading = screen.getByRole('heading', { name: 'Privacy Policy, in plain English' })
     const header = heading.closest('div')
     expect(header?.className).toContain('bg-accent')
   })

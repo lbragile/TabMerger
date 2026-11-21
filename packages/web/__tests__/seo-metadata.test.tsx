@@ -11,12 +11,23 @@ import type { Metadata } from 'next'
 import { createTranslator } from 'next-intl'
 import { FREE_TIER_LIMITS, PRICING_TIERS, STORE_LISTING_URL, SUPPORTED_LOCALES, getPricingTier } from '@tabmerger/shared'
 import { DEFAULT_LOCALE, PSEUDO_LOCALE, localizedPath } from '@/i18n/locales'
-import { NOINDEX, PRO_AI_BYOK_OFFER_NAME, faqJsonLd, homeJsonLd, pageMetadata, serializeJsonLd } from '@/lib/seo'
+import {
+  NOINDEX,
+  PRO_AI_BYOK_OFFER_NAME,
+  breadcrumbJsonLd,
+  faqJsonLd,
+  homeJsonLd,
+  pageBreadcrumbJsonLd,
+  pageMetadata,
+  pricingJsonLd,
+  serializeJsonLd,
+} from '@/lib/seo'
 import { FAQ_KEYS, faqItems } from '@/lib/faq'
 import { GITHUB_REPO_URL } from '@/lib/github'
 import { AI_AVAILABILITY } from '@/lib/aiFlag'
 import en from '@/messages/en'
 import { JsonLd } from '@/components/seo/JsonLd'
+import { PageBreadcrumbJsonLd } from '@/components/seo/PageBreadcrumbJsonLd'
 import { isPreviewDeployment } from '@/lib/deployment'
 
 vi.mock('@sentry/nextjs', () => ({ withSentryConfig: (config: unknown) => config }))
@@ -98,14 +109,29 @@ describe('pageMetadata', async () => {
 })
 
 /** Indexable public pages: their path, module and expected own title. */
-const PAGES: [path: string, load: () => Promise<{ generateMetadata: () => Metadata | Promise<Metadata> }>, title: string][] = [
-  ['/features', () => import('@/app/[locale]/(marketing)/features/page'), 'Features'],
-  ['/pricing', () => import('@/app/[locale]/(marketing)/pricing/page'), 'Pricing'],
-  ['/faq', () => import('@/app/[locale]/(marketing)/faq/page'), 'FAQ'],
-  ['/changelog', () => import('@/app/[locale]/(marketing)/changelog/page'), 'Changelog'],
+type MetadataModule = { generateMetadata: () => Metadata | Promise<Metadata> }
+const PAGES: [path: string, load: () => Promise<MetadataModule>, title: string][] = [
+  ['/features', () => import('@/app/[locale]/(marketing)/features/page'), en.featuresPage.metaTitle],
+  ['/pricing', () => import('@/app/[locale]/(marketing)/pricing/page'), en.pricing.page.metaTitle],
+  ['/faq', () => import('@/app/[locale]/(marketing)/faq/page'), en.faq.metaTitle],
+  ['/changelog', () => import('@/app/[locale]/(marketing)/changelog/page'), en.changelog.metaTitle],
   ['/privacy', () => import('@/app/[locale]/(marketing)/privacy/page'), 'Privacy Policy'],
   ['/terms', () => import('@/app/[locale]/(marketing)/terms/page'), 'Terms of Service'],
-  ['/contact', () => import('@/app/[locale]/(marketing)/contact/layout'), 'Contact'],
+  ['/contact', () => import('@/app/[locale]/(marketing)/contact/layout'), en.contact.metaTitle],
+]
+
+/** The document title a page shows in search results: its own title plus the template's brand. */
+async function documentTitle(load: () => Promise<MetadataModule>): Promise<string> {
+  const { title } = await (await load()).generateMetadata()
+  if (typeof title === 'string') return `${title} | TabMerger`
+  return (title as { absolute: string }).absolute
+}
+
+/** Every indexable page, including the homepage and /compare (both with an absolute title). */
+const ALL_PAGES: [path: string, load: () => Promise<MetadataModule>][] = [
+  ['/', () => import('@/app/[locale]/(marketing)/page')],
+  ['/compare', () => import('@/app/[locale]/(marketing)/compare/page')],
+  ...PAGES.map(([path, load]): [string, () => Promise<MetadataModule>] => [path, load]),
 ]
 
 describe('indexable pages', () => {
@@ -135,6 +161,29 @@ describe('indexable pages', () => {
   it('page descriptions are all different', async () => {
     const descriptions = await Promise.all(PAGES.map(async ([, load]) => (await (await load()).generateMetadata()).description))
     expect(new Set(descriptions).size).toBe(PAGES.length)
+  })
+
+  // Search results cut titles at about 60 characters and descriptions at about 160. The legal
+  // pages keep their short, exact names, so titles have a ceiling only.
+  it.each(ALL_PAGES)('%s has a unique English title of at most 60 characters and a 120-160 character description', async (path, load) => {
+    const title = await documentTitle(load)
+    expect(title.length).toBeLessThanOrEqual(60)
+    const { description } = await (await load()).generateMetadata()
+    expect(description!.length).toBeGreaterThanOrEqual(120)
+    expect(description!.length).toBeLessThanOrEqual(160)
+    const others = await Promise.all(ALL_PAGES.filter(([p]) => p !== path).map(([, l]) => documentTitle(l)))
+    expect(others).not.toContain(title)
+  })
+
+  it('the homepage title leads with what people search for and names the browsers', () => {
+    expect(HOME_TITLE).toMatch(/^Tab manager for Chrome, Edge and Firefox/)
+    expect(SITE_DESCRIPTION).toMatch(/Chrome, Edge and Firefox/)
+  })
+
+  it('fills the pricing description with the free plan limits from FREE_TIER_LIMITS', async () => {
+    const { description } = await (await import('@/app/[locale]/(marketing)/pricing/page')).generateMetadata()
+    expect(description).toContain(`up to ${FREE_TIER_LIMITS.groups} groups and ${FREE_TIER_LIMITS.tabs} tabs`)
+    expect(description).not.toMatch(/[{}]/)
   })
 })
 
@@ -233,6 +282,84 @@ describe('homepage JSON-LD', () => {
     const scripts = container.querySelectorAll('script[type="application/ld+json"]')
     expect(scripts).toHaveLength(1)
     expect(scripts[0].innerHTML).toBe('{"a":"\\u003cb>"}')
+  })
+})
+
+describe('pricing JSON-LD', () => {
+  const base = new URL('https://example.test')
+
+  it('is the homepage SoftwareApplication node, with the same @id and the same offers', () => {
+    const home = homeJsonLd(SITE_DESCRIPTION, base)['@graph'].find((node) => node['@type'] === 'SoftwareApplication')
+    const { ['@context']: context, ...node } = pricingJsonLd(SITE_DESCRIPTION, base)
+    expect(context).toBe('https://schema.org')
+    expect(node['@id']).toBe('https://example.test/#software')
+    expect(node).toEqual(home)
+  })
+
+  it('offers each plan on sale at its PRICING_TIERS monthly price', () => {
+    const { offers } = pricingJsonLd(SITE_DESCRIPTION, base, { managed: false, byok: false, any: false })
+    expect(offers.map((o) => [o.name, o.price])).toEqual([
+      ['Free', '0'],
+      ['Pro', String(getPricingTier('pro').monthlyPrice)],
+    ])
+  })
+})
+
+describe('breadcrumb JSON-LD', () => {
+  const base = new URL('https://example.test')
+
+  it('numbers the steps from 1 and resolves each path to an absolute URL', () => {
+    expect(
+      breadcrumbJsonLd(
+        [
+          { name: 'Home', path: '/' },
+          { name: 'Blog', path: '/blog' },
+          { name: 'A post', path: '/blog/a-post' },
+        ],
+        base
+      )
+    ).toEqual({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://example.test/' },
+        { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://example.test/blog' },
+        { '@type': 'ListItem', position: 3, name: 'A post', item: 'https://example.test/blog/a-post' },
+      ],
+    })
+  })
+
+  it('keeps a locale prefix in the path, and ignores any path on the base URL', () => {
+    const data = breadcrumbJsonLd([{ name: 'Tarifs', path: '/fr/pricing' }], new URL('https://example.test/some/where'))
+    expect(data.itemListElement[0].item).toBe('https://example.test/fr/pricing')
+  })
+
+  it('a top-level page is TabMerger, then the page, unprefixed in English', () => {
+    const data = pageBreadcrumbJsonLd({ path: '/pricing', name: 'Pricing', locale: 'en' }, base)
+    expect(data.itemListElement).toEqual([
+      { '@type': 'ListItem', position: 1, name: 'TabMerger', item: 'https://example.test/' },
+      { '@type': 'ListItem', position: 2, name: 'Pricing', item: 'https://example.test/pricing' },
+    ])
+  })
+
+  it('keeps the trail in the page language, homepage included', () => {
+    const items = pageBreadcrumbJsonLd({ path: '/faq', name: 'FAQ', locale: 'fr' }, base).itemListElement
+    expect(items.map((i) => i.item)).toEqual(['https://example.test/fr', 'https://example.test/fr/faq'])
+  })
+
+  it('points an English-only page at the English URLs, as its canonical does', () => {
+    const items = pageBreadcrumbJsonLd({ path: '/privacy', name: 'Privacy Policy', locale: 'fr', englishOnly: true }, base).itemListElement
+    expect(items.map((i) => i.item)).toEqual(['https://example.test/', 'https://example.test/privacy'])
+  })
+
+  it('PageBreadcrumbJsonLd renders the trail for the request locale', () => {
+    const { container } = render(<PageBreadcrumbJsonLd path="/changelog" name="Changelog" />)
+    const scripts = container.querySelectorAll('script[type="application/ld+json"]')
+    expect(scripts).toHaveLength(1)
+    const data = JSON.parse(scripts[0].innerHTML)
+    expect(data['@type']).toBe('BreadcrumbList')
+    expect(data.itemListElement.map((i: { name: string }) => i.name)).toEqual(['TabMerger', 'Changelog'])
+    expect(new URL(data.itemListElement[1].item).pathname).toBe('/changelog')
   })
 })
 

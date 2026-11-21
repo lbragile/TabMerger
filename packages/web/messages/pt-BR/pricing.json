@@ -65,8 +65,8 @@
   "cancelAnytime": "Cancele quando quiser pela sua conta — sem fidelidade, sem perguntas.",
   "keepAccess": "Você mantém o acesso até o fim do período de cobrança.",
   "page": {
-    "metaTitle": "Preços",
-    "metaDescription": "Preços simples e transparentes. Comece de graça e faça upgrade quando precisar de mais.",
+    "metaTitle": "Planos e preços: Grátis, Pro e Pro AI",
+    "metaDescription": "Comece grátis com até {groups} grupos e {tabs} abas, sem conta. O Pro adiciona grupos e abas ilimitados, sincronização com criptografia de ponta a ponta e backups. Cancele quando quiser.",
     "title": "Preços simples e transparentes",
     "lead": "Comece de graça. Faça upgrade quando estiver pronto para mais.",
     "moreQuestions": "Tem mais dúvidas? Veja as <link>perguntas frequentes</link>."

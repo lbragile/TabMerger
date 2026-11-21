@@ -6,17 +6,26 @@ import { test, expect, type Page } from '@playwright/test'
  * because the origin comes from metadataBase, which depends on the server's environment.
  */
 const PAGES = [
-  { path: '/', title: 'TabMerger — Organize your tabs. Reclaim your focus.' },
-  { path: '/features', title: 'Features | TabMerger' },
-  { path: '/pricing', title: 'Pricing | TabMerger' },
-  { path: '/faq', title: 'FAQ | TabMerger' },
-  { path: '/changelog', title: 'Changelog | TabMerger' },
-  { path: '/privacy', title: 'Privacy Policy | TabMerger' },
-  { path: '/terms', title: 'Terms of Service | TabMerger' },
-  { path: '/contact', title: 'Contact | TabMerger' },
+  { path: '/', title: 'Tab manager for Chrome, Edge and Firefox | TabMerger' },
+  { path: '/features', title: 'Save and organize browser tabs: all features | TabMerger', crumb: 'Features' },
+  { path: '/pricing', title: 'Plans and pricing: Free, Pro and Pro AI | TabMerger', crumb: 'Pricing' },
+  { path: '/compare', title: 'TabMerger vs OneTab, Session Buddy, Toby, Workona & more', crumb: 'Compare' },
+  { path: '/faq', title: 'FAQ: free plan, sync, privacy and browsers | TabMerger', crumb: 'FAQ' },
+  { path: '/changelog', title: 'Changelog: release notes and new features | TabMerger', crumb: 'Changelog' },
+  { path: '/privacy', title: 'Privacy Policy | TabMerger', crumb: 'Privacy Policy' },
+  { path: '/terms', title: 'Terms of Service | TabMerger', crumb: 'Terms of Service' },
+  { path: '/contact', title: 'Contact support: bugs, billing and feedback | TabMerger', crumb: 'Contact' },
 ]
 
 const meta = (page: Page, attr: 'name' | 'property', key: string) => page.locator(`meta[${attr}="${key}"]`)
+
+type JsonLdNode = Record<string, unknown> & { '@type': string }
+
+/** Every JSON-LD script on the page, parsed (each must be valid JSON). */
+async function jsonLd(page: Page): Promise<JsonLdNode[]> {
+  const texts = await page.locator('script[type="application/ld+json"]').allTextContents()
+  return texts.map((text) => JSON.parse(text) as JsonLdNode)
+}
 
 test.describe('SEO metadata', () => {
   // Public pages: the same head signed in or out.
@@ -60,6 +69,22 @@ test.describe('SEO metadata', () => {
     })
   }
 
+  for (const { path, crumb } of PAGES.filter((p) => p.crumb)) {
+    test(`${path} has a BreadcrumbList ending at its canonical URL`, async ({ page }) => {
+      await page.goto(path)
+      const trails = (await jsonLd(page)).filter((node) => node['@type'] === 'BreadcrumbList')
+      expect(trails).toHaveLength(1)
+      const items = trails[0].itemListElement as { position: number; name: string; item: string }[]
+      expect(items.map((i) => [i.position, i.name])).toEqual([
+        [1, 'TabMerger'],
+        [2, crumb],
+      ])
+      expect(new URL(items[0].item).pathname).toBe('/')
+      const canonical = (await page.locator('link[rel="canonical"]').getAttribute('href'))!
+      expect(new URL(items[1].item).href).toBe(new URL(canonical).href)
+    })
+  }
+
   test('the homepage has one JSON-LD script that parses', async ({ page }) => {
     await page.goto('/')
     const scripts = page.locator('script[type="application/ld+json"]')
@@ -72,14 +97,25 @@ test.describe('SEO metadata', () => {
     expect(app.screenshot).toMatch(/\/opengraph-image\.png$/)
   })
 
+  test('the pricing page offers the plans at the prices it shows', async ({ page }) => {
+    await page.goto('/pricing')
+    const apps = (await jsonLd(page)).filter((node) => node['@type'] === 'SoftwareApplication')
+    expect(apps).toHaveLength(1)
+    const offers = apps[0].offers as { name: string; price: string; priceCurrency: string }[]
+    expect(offers[0]).toMatchObject({ name: 'Free', price: '0', priceCurrency: 'USD' })
+    // Every paid monthly price in the structured data is on the page, as "$<price>".
+    for (const { price } of offers.filter((o) => o.price !== '0')) {
+      await expect(page.getByText(`$${price}`, { exact: false }).first()).toBeAttached()
+    }
+  })
+
   test('the FAQ page has FAQPage JSON-LD matching its visible questions', async ({ page }) => {
     await page.goto('/faq')
-    const scripts = page.locator('script[type="application/ld+json"]')
-    await expect(scripts).toHaveCount(1)
-    const data = JSON.parse((await scripts.textContent())!)
-    expect(data['@type']).toBe('FAQPage')
-    expect(data.mainEntity.length).toBeGreaterThan(0)
-    for (const { name } of data.mainEntity as { name: string }[]) {
+    const faqs = (await jsonLd(page)).filter((node) => node['@type'] === 'FAQPage')
+    expect(faqs).toHaveLength(1)
+    const mainEntity = faqs[0].mainEntity as { name: string }[]
+    expect(mainEntity.length).toBeGreaterThan(0)
+    for (const { name } of mainEntity) {
       await expect(page.getByText(name, { exact: true }).first()).toBeVisible()
     }
   })

@@ -152,3 +152,4 @@
 - [Session upload keys + passes](learnings_session_upload_keys_and_passes.md) — uploadedKey re-insert/resume, per-pass token, deleted ids in the delete tx, token check
 - [Session view window brackets](learnings_session_view_brackets.md) — sticky header/tile/fade z-layers, one offset token, color-mix theme tokens, --view-primary (3.04:1 primary), flex accname spaces
 - [One-row fit across locales](learnings_one_row_fit_across_locales.md) — offsetTop probe per locale, Arial/Verdana font proxies, Save session Color row 398px budget
+- [Store-search listing copy](learnings_store_search_listing.md) — Chrome 5-repeat rule + keyword count, Edge search terms, AMO categories API; heredoc eats backslashes

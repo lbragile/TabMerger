@@ -354,7 +354,7 @@ describe('CompetitorPicker (inside the table)', () => {
 describe('/compare page', () => {
   it('renders the heading, the hero lead with the competitor count, a <time> stamp and the table', async () => {
     render(await ComparePage())
-    expect(screen.getByRole('heading', { level: 1, name: 'How TabMerger compares' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { level: 1, name: 'How TabMerger compares with other tab managers' })).toBeInTheDocument()
     expect(document.body.textContent).toContain('TabMerger and 9 other tab managers')
     const times = document.querySelectorAll('time[datetime="2026-11-05"]')
     expect(times.length).toBeGreaterThan(0)

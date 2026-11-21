@@ -1,6 +1,6 @@
 # Chrome Web Store Listing — TabMerger
 
-> Last Updated: 2026-11-17
+> Last Updated: 2026-11-19
 >
 > This file tracks everything filled into the Chrome Developer Dashboard for **both** TabMerger
 > Chrome Web Store items — see [Two listings](#two-listings) below. Manifest facts here are
@@ -35,6 +35,11 @@ Everything else in this file was derived from the repository. These items cannot
       optional): Arabic, German, Spanish, Persian, French, Hebrew, Hindi, Indonesian, Italian,
       Japanese, Korean, Polish, Portuguese (Brazil), Russian, Turkish, Vietnamese and Chinese
       (Simplified). Summaries come from the package (see [Localized listings](#localized-listings)).
+- [ ] **Search rewrite (2026-11-19), not yet in the dashboards:** paste the updated stable
+      Detailed Description (new opening, see the comment under it) into Chrome and Edge, and the
+      Firefox summary and tags from `FIREFOXADDONS.md` into AMO; enter the seven Edge search terms
+      under [Edge Add-ons search terms](#edge-add-ons-search-terms). The new summaries ship in the
+      package itself with the next upload. Decide on [Name for search](#name-for-search-owner-decision).
 - [ ] **Existing-user note:** the description tells v2 users that v3 does not import their v2
       data. Delete that paragraph if you would rather not say so.
 
@@ -67,20 +72,35 @@ TabMerger
 
 **Short Description** [REQUIRED] (max 132 characters)
 
-122 characters, the stable manifest `description` (`__MSG_extDescription__`, English text in
-`src/locales/en/manifest.json`; the other languages are listed under
+132 characters (the limit), the stable manifest `description` (`__MSG_extDescription__`, English
+text in `src/locales/en/manifest.json`; the other languages are listed under
 [Localized listings](#localized-listings)):
 
-> Save open tabs into named, color-coded groups and restore them anytime. Works offline, with optional encrypted sync (Pro).
+> Tab manager: save all open tabs into named groups, restore closed tabs and sessions. Works offline; end-to-end encrypted sync (Pro).
 
 <!-- The dashboard summary is read from the manifest `description`, so change it in
      src/locales/<lng>/manifest.json (every language), not only here. BETA builds use their own
-     literal description string and are unaffected. -->
+     literal description string and are unaffected.
+     Rewritten 2026-11-19 for store search: it leads with "Tab manager", the phrase people search
+     for, because the Chrome Web Store has no keyword field and ranks on the name, this summary and
+     the detailed description. Each claim checked against the code that day: "save all open tabs"
+     (save-all command and menu), "restore closed tabs" (the Recently closed section, 3.14.0),
+     "sessions" (saved sessions, snapshots of saved groups), "Works offline" (IndexedDB, no account
+     needed) and "end-to-end encrypted sync (Pro)" (sync needs a paid plan; content is encrypted on
+     the device). The new summary reaches the dashboard with the next package upload. -->
 
-**Detailed Description** [REQUIRED] (about 4,300 characters, limit 16,000)
+**Detailed Description** [REQUIRED] (about 8,000 characters, limit 16,000; Edge allows 10,000)
 
-TabMerger saves the tabs you have open into named, color-coded groups, so you can close them,
-clear your browser, and bring them back later: a single tab, one window, or a whole group.
+TabMerger is a tab manager for Chrome, Edge and Firefox. Save all your open tabs, from one window
+or every window, into named, color-coded groups, close them, and bring them back later: one tab,
+one window or a whole group. Closed something by mistake? Restore closed tabs and windows from
+Recently closed. Search everything you have saved, have open or recently closed, and keep
+snapshots of your groups as saved sessions to restore later.
+
+It is for anyone who keeps too many tabs open: research, work projects, reading lists, shopping,
+or a browser you need to clear without losing anything. It works offline and without an account,
+keeping your data in your browser; Pro adds end-to-end encrypted sync between your devices. Coming
+from another tool? Import a OneTab export or your bookmarks.
 
 WHAT YOU CAN DO
 - Save the current tab, all tabs, the tabs to the left or right of it, or all other tabs. Use the
@@ -89,39 +109,40 @@ WHAT YOU CAN DO
 - Organize tabs into windows inside groups. Name each group, give it a color (12 presets or any
   custom color), star it to keep it at the top, or archive it.
 - Restore one tab, one window or a whole group. Saved browser tab groups are recreated, and
-  private windows reopen as private windows when you have allowed TabMerger in Incognito.
+  private windows reopen as private windows when you have allowed the extension in Incognito.
 - Reorder by drag and drop, or with a keyboard-only move mode, across tabs, windows and groups.
 - See a "Now Open" view that always mirrors the tabs open in your browser right now.
-- Search every tab and group, saved or open right now (Ctrl/Cmd+K), for the text as you type it
+- Search every tab and group, saved, open right now or recently closed (Ctrl/Cmd+K), for the
+  text as you type it
   (any case), best matches first. The text that matched is
   highlighted in titles, addresses, window, group and tab-group names, and tabs that do not match
   are hidden or faded, whichever you choose in Settings. The search stays until you clear it.
 - Add notes to tabs, windows and groups, give tabs a custom title, and set reminders that show a
   notification at the time you choose.
 - Set URL rules that send matching tabs to a group automatically, and clean up duplicate tabs.
-- Take saved sessions (snapshots of your groups) and restore them later.
-- Look inside an archived group or a saved session before you bring it back: click it in the
+- Save sessions (snapshots of your groups), give each one a colour (or let the extension pick
+  one) so they are easy to tell apart, and restore them later.
+- Look inside an archived group or a saved snapshot before you bring it back: click it in the
   sidebar to see its windows and tabs, read-only, open any tab from there, then restore it with
-  one click. The Recently closed, Auto-saved, Archived and Sessions sections open one at a time.
+  one click. The sidebar's bottom sections open one at a time.
 - Recently closed: the tabs and windows you close stay in the sidebar's "Recently closed"
   section, one row per day (Free keeps your last 2 days with closed tabs, Pro your last 30 days). Open a day to see when you closed
   things (a bar per hour; click one to list only that hour) and to reopen a tab, restore a
   whole window, save it into a group, or remove it, each with Undo. Stored only on this device;
   private windows are never recorded, and you can turn it off or clear it in Settings.
-- Give each saved session a colour (or let TabMerger pick one) so sessions are easy to tell apart.
-- Auto-save open tabs: TabMerger saves the tabs you have open into a new group in the
+- Auto-save open tabs: the extension saves the tabs you have open into a new group in the
   "Auto-saved" section, on a schedule (every 15 minutes up to daily) or when you open more tabs
   than a number you pick. Tabs you already saved are skipped and private windows are never
   saved. Keep an auto-save to make it a normal group. Free keeps the newest 2 auto-saves (they
   count toward the free limits); Pro keeps them all and turns auto-save on by default.
-- Use TabMerger in 18 languages (English, German, Spanish, French, Italian, Russian, Korean,
+- Use it in 18 languages (English, German, Spanish, French, Italian, Russian, Korean,
   Turkish, Indonesian, Polish, Vietnamese, Hindi, Japanese, Brazilian Portuguese, Simplified
   Chinese, Arabic, Hebrew and Persian, with right-to-left layouts for the last three): it follows
   your browser's language, or search for one in the header or in Settings.
 - Undo and redo changes, and switch between light and dark themes.
 - When the browser has downloaded a new version, a small banner offers "Restart to update" (or
   dismiss it for that version). Settings also has a "Check for updates" button.
-- Get a guided tour the first time you open TabMerger: seven short chapters in plain language,
+- Get a guided tour the first time you open the popup: seven short chapters in plain language,
   each with a header saying what it covers. Most steps let you try things yourself (make a
   group, color it, pin it, drag tabs and groups around, save a tab, reopen a window, remove a
   repeated tab, select items, search, undo and redo, switch the theme), with a ring on the
@@ -133,11 +154,11 @@ WHAT YOU CAN DO
   (bookmarklets, for example) are left out, and the import tells you how many were skipped.
 
 FREE, PRO AND PRO AI
-TabMerger works fully without an account. The free plan keeps everything in your browser and
+No account is needed. The free plan keeps everything in your browser and
 allows up to 5 groups, 50 saved tabs, 3 URL rules and 3 saved sessions.
 
 Pro is a paid subscription bought on the TabMerger website (not inside the extension). It removes
-those limits and adds optional cloud sync of your groups and sessions between devices, automatic
+those limits and adds optional cloud sync of everything you save between devices, automatic
 backups (an encrypted snapshot of your saved groups, taken on a schedule you choose, that you can
 restore from Settings, including on a new or reinstalled browser once you sign in and unlock
 encryption; you can also have each backup saved as a file in your Downloads folder), a
@@ -149,7 +170,7 @@ Pro AI is a paid plan that includes everything in Pro and adds AI help for organ
 - Auto-group: sort loose tabs into suggested groups.
 - Name suggestions for groups and windows.
 - Describe a group or window in a short note.
-- Session suggestions: proposes sessions worth saving from your groups.
+- Session suggestions: proposes snapshots worth saving from your groups.
 - Workspace cleanup: suggests merges, renames, archives and a new order, which you review before
   anything changes.
 - Tab previews with a short AI summary.
@@ -164,13 +185,13 @@ PRIVACY
 - Synced content (tab URLs and titles, group and window names, notes, sessions) is encrypted on
   your device with a passphrase only you know before it is uploaded. We store ciphertext and
   cannot read it. If you lose the passphrase, we cannot recover that data.
-- TabMerger does not read or change the pages you visit and does not ask for access to any
+- The extension does not read or change the pages you visit and does not ask for access to any
   website.
 - Page images in tab previews are off by default. When you turn them on, hovering a tab sends
   that tab's address to TabMerger's preview service to fetch an image.
-- AI features (Pro AI only): when you use one, and once a day for session suggestions (which you
-  can turn off in Settings), the titles and addresses of the tabs involved are sent through
-  TabMerger's server to the AI provider (Anthropic when TabMerger handles setup, or the provider
+- AI features (Pro AI only): when you use one, and once a day for the automatic suggestions
+  above (which you can turn off in Settings), the titles and addresses of the tabs involved are
+  sent through TabMerger's server to the AI provider (Anthropic when TabMerger handles setup, or the provider
   of your own key). Page content is never sent. See the privacy policy for details.
 - The extension sends a small number of anonymous usage events (for example "group created",
   without any URLs or titles) to help us understand which features are used. See the privacy
@@ -187,6 +208,27 @@ Questions or feedback? Use the support links on this listing.
      on 2026-11-04 for 3.11.0, the first release with the AI flags on in publish.yml; features
      match the pricing card, and the once-a-day session suggestion is the only AI request the
      user does not start. This text was pasted into the stable listing on 2026-11-04. -->
+
+<!-- Search rewrite, 2026-11-19. NOT YET PASTED: copy the whole description above into the
+     stable item's Store listing tab (and Edge Partner Center; Firefox per FIREFOXADDONS.md).
+     Changed: the two opening paragraphs (what it is, the main jobs, who it is for), the search
+     bullet now names recently closed tabs (the Ctrl/Cmd+K overlay lists them), the two session
+     bullets became one, and a few "TabMerger" / "session" mentions became "the extension" /
+     "snapshot" to keep repeats down. Every claim was re-checked against the code that day: all
+     open windows can be saved into one group (Duplicate on Now Open, Merge with current,
+     Auto-save), Recently closed exists (lib/recentlyClosed*.ts), OneTab and bookmarks imports
+     exist (parseOneTabs, parseBookmarksHtml in lib/importExport.ts).
+
+     Keyword counts across the whole description (Chrome's spam policy: no keyword more than
+     about 5 times; counted with a script over the text between "Detailed Description" and
+     "Questions or feedback?", comments excluded, case-insensitive, singular and plural):
+       tab manager 1 | save (all/your/open) tabs 2 | tab groups 2 | session/sessions 5 |
+       restore closed tabs 1 | closed tabs 2 | recently closed 5 | OneTab 2 | bookmarks 2 |
+       import 5 | encrypted/encryption 5 | sync 4 | search 5 | offline 1 | Chrome 2 | Edge 1 |
+       Firefox 1 | TabMerger 7 (the product's own name; the rest are the menu label "Save to
+       TabMerger", the website, and the privacy lines naming TabMerger's servers, which stay
+       explicit). Generic words the product is about (tab, group, window) are not counted.
+     Recount after any edit: session, recently closed, import, encrypted and search are at 5. -->
 
 **Category** [REQUIRED]
 Productivity
@@ -211,29 +253,63 @@ dashboard after the upload; until then a language shows the English detailed des
 
 | Language | `_locales` code | Summary (characters, max 132) |
 |---|---|---|
-| English (default) | `en` | 122 |
-| Arabic | `ar` | 123 |
+| English (default) | `en` | 132 |
+| Arabic | `ar` | 131 |
 | German | `de` | 131 |
-| Spanish | `es` | 131 |
-| Persian | `fa` | 126 |
-| French | `fr` | 128 |
-| Hebrew | `he` | 120 |
-| Hindi | `hi` | 127 |
-| Indonesian | `id` | 129 |
-| Italian | `it` | 131 |
-| Japanese | `ja` | 66 |
-| Korean | `ko` | 77 |
-| Polish | `pl` | 130 |
-| Portuguese (Brazil) | `pt_BR` | 129 |
-| Russian | `ru` | 130 |
-| Turkish | `tr` | 131 |
-| Vietnamese | `vi` | 125 |
-| Chinese (Simplified) | `zh_CN` | 46 |
+| Spanish | `es` | 130 |
+| Persian | `fa` | 128 |
+| French | `fr` | 132 |
+| Hebrew | `he` | 131 |
+| Hindi | `hi` | 124 |
+| Indonesian | `id` | 126 |
+| Italian | `it` | 130 |
+| Japanese | `ja` | 82 |
+| Korean | `ko` | 86 |
+| Polish | `pl` | 132 |
+| Portuguese (Brazil) | `pt_BR` | 131 |
+| Russian | `ru` | 131 |
+| Turkish | `tr` | 132 |
+| Vietnamese | `vi` | 131 |
+| Chinese (Simplified) | `zh_CN` | 58 |
+
+Counts are JavaScript string lengths (UTF-16 code units), the same measure the unit test uses.
+Since 2026-11-19 every summary opens with that language's usual search phrase for a tab manager
+(`Tab-Manager`, `Gestor de pestañas`, `Gestionnaire d’onglets`, `Менеджер вкладок`, `タブ管理ツール`,
+`탭 관리자`, `标签页管理器` and so on) and then names saving open tabs into groups, restoring closed
+tabs and sessions, offline use and encrypted sync (Pro), using the popup's own words for
+"sessions" and "recently closed" in that language.
 
 Every code is on Chrome's supported locale list; only `pt-BR` and `zh-CN` change (hyphen to
 underscore). The unit test `src/__tests__/unit/scripts/manifestLocales.test.ts` fails on a summary
 over 132 characters, a missing or extra key, or an empty message. Firefox (AMO) and Edge Add-ons
 read the same `_locales` folders.
+
+### Name for search (owner decision)
+
+The name is the strongest search signal on all three stores, and "TabMerger" alone says nothing
+to someone searching for a tab manager. **Not changed**: the manifest `name` stays `TabMerger`
+until the owner decides. One recommended option, within Chrome's policy (a short descriptor, no
+superlatives, no keyword list, no other products' names; manifest `name` max 75 characters):
+
+> TabMerger: Tab Manager & Session Saver
+
+38 characters. If chosen, it ripples into:
+
+- `getExtensionName()` in `wxt.config.ts` (stable branch), and a `short_name: "TabMerger"` so the
+  toolbar tooltip and narrow surfaces keep the short name.
+- BETA and DEV names (`TabMerger BETA`, `TabMerger DEV`): decide whether they keep the short form
+  (recommended: yes, they are not searched for). `src/lib/releaseChannel.ts` documents the BETA
+  name.
+- Tests that assert the name: `src/__tests__/unit/scripts/manifestLocales.test.ts`
+  (`production.name`, `beta.name`); no e2e spec read the manifest name on 2026-11-19.
+- This file ("Extension Name", the Two listings table, the comment under the name), and
+  `FIREFOXADDONS.md`. AMO and Edge take the name from the manifest, so both listings change with
+  the next upload; the AMO listing name can also be edited in the Developer Hub.
+- The website, where it names the store item: `packages/web/lib/comparison.ts`, the SEO metadata
+  and structured data (`packages/web/lib/seo.ts`, `__tests__/seo-metadata.test.tsx`), and any
+  "Add to Chrome" copy. The brand on the site stays "TabMerger"; only store references change.
+- Optionally a localized name (`__MSG_extName__` in each `src/locales/<lng>/manifest.json`), so
+  the descriptor reads in each language; that adds one key per catalog and a name length check.
 
 ---
 
@@ -312,6 +388,28 @@ differences worth knowing before uploading:
 
 The listing text and images cannot be changed through the publish API; they are entered by hand.
 The description must be between 250 and 10,000 characters (the stable description above fits).
+
+### Edge Add-ons search terms
+
+Partner Center (Store listings → the language → Search terms) takes up to 7 optional search
+terms, each at most 30 characters, at most 21 words in all, set per language. They are not shown
+on the listing. Chrome has no such field. **Not entered yet** (2026-11-19). English:
+
+| # | Term | Characters | Words |
+|---|------|-----------|-------|
+| 1 | tab manager | 11 | 2 |
+| 2 | save all tabs | 13 | 3 |
+| 3 | session manager | 15 | 2 |
+| 4 | tab groups | 10 | 2 |
+| 5 | restore closed tabs | 19 | 3 |
+| 6 | tab organizer | 13 | 2 |
+| 7 | save tabs for later | 19 | 4 |
+| | **Total** | | **18 of 21** |
+
+Each term describes something the extension does today (saving all open tabs into groups,
+saved sessions, the Recently closed section). Decision: no other products' names as search
+terms (the OneTab import is named in the description, where it states a feature). The other 17 languages may get their own terms later; their
+summaries' opening phrases (see [Localized listings](#localized-listings)) are good first picks.
 
 ### Screenshot Notes
 
@@ -792,6 +890,7 @@ with the real semver string carried in `version_name`.
 | Both | next release | — | not tagged yet | 2026-11-07 | Draft (in code, not released): "Auto-save open tabs". The background worker saves the open tabs into a new group, shown in a new "Auto-saved" sidebar section, on a schedule (`chrome.alarms`, every 15 minutes to daily) and/or when the number of open tabs passes a threshold (`tabs.onCreated` / `tabs.onRemoved`); tabs already saved are skipped, private windows never saved, an optional notification (`notifications`). Settings → Data gets an "Auto-save open tabs" card. Free: off by default, newest 2 auto-saves kept, counted toward the free limits. Pro / Pro AI: on by default, all kept. **No manifest change and no new permission**: `tabs`, `alarms` and `notifications` are already granted (checked against `wxt.config.ts`), so no re-approval prompt. Privacy tab: no new tick; auto-saved groups are ordinary saved groups (stored locally, uploaded end-to-end encrypted only for Pro sync, already covered by "Web history"). Description: new bullet under "What you can do". Screenshots: the sidebar gains an "Auto-saved" section header above "Archived", so screenshots showing the sidebar footer area need refreshing |
 | Both | next release | — | not tagged yet | 2026-11-08 | Draft (in code, not released): localized store text. The manifest gains `default_locale: "en"`, its `description` becomes `__MSG_extDescription__` and the five command descriptions `__MSG_command…__`, resolved from `_locales/<code>/messages.json` for all 18 UI languages (`ar`, `de`, `en`, `es`, `fa`, `fr`, `he`, `hi`, `id`, `it`, `ja`, `ko`, `pl`, `pt_BR`, `ru`, `tr`, `vi`, `zh_CN`), generated at build time from `src/locales/<lng>/manifest.json`. The `name` stays a literal and BETA keeps its literal description. No new permission and no new data. The English summary is unchanged; after the upload, enter each language's detailed description in the dashboard (see [Localized listings](#localized-listings)). Screenshots: none affected; per-language screenshots optional |
 | Both | next release | — | not tagged yet | 2026-11-13 | Draft (in code, not released): clicking an archived group or a saved session in the sidebar shows it read-only in the main panel (header with Restore, a ⋯ menu with Delete and ✕ to go back; tabs open on click; no editing, drag and drop or AI actions there). The bottom sidebar sections (Auto-saved, Archived, Sessions) become an accordion: opening one closes the others. The current sidebar row is now the only one in bold. **No manifest change and no new permission**; no new data is stored or sent, so the privacy tab is unchanged. Description: new bullet under "What you can do". Screenshots: `open-popup-light/dark.jpg` shows the Archived and Sessions sections and the group names in the sidebar (now regular weight except the current one), so refresh it at the next upload; a screenshot of an archived group or session view would be worth adding |
+| Both | next release | — | not tagged yet | 2026-11-19 | Draft (in the package, not released): store-search text. The manifest `description` (summary) in all 18 languages now opens with that language's phrase for a tab manager and names saving all open tabs into groups, restoring closed tabs and sessions, offline use and encrypted sync (Pro); the English text is above, the counts under [Localized listings](#localized-listings). No manifest structure change, no new permission, no new data. By hand after the upload: paste the new detailed-description opening (Chrome, Edge), enter the Edge search terms and the AMO summary, categories and tags. The `name` is unchanged (see [Name for search](#name-for-search-owner-decision)). Screenshots: none affected |
 <!-- Status options: Draft | Submitted | In Review | Published | Rejected | Superseded -->
 
 Betas 1–3 predate the store-version offset, so their manifest version is the plain
