@@ -26,6 +26,17 @@ export function placeholdersEnabled(env: { NODE_ENV?: string; BLOG_DEV_PLACEHOLD
   return env.NODE_ENV === 'development' && env.BLOG_DEV_PLACEHOLDERS !== '0'
 }
 
+/**
+ * Scheduled posts (a `published` date still ahead) are listed like live ones, flagged "Scheduled
+ * for <date>", only under `next dev` (NODE_ENV "development"), and not with BLOG_DEV_SCHEDULED=0:
+ * the blog index, its pages, the tag pages, the topic chips and the previous/next links. Production
+ * and preview never list them, and the sitemap, llms.txt and tag indexability
+ * (`indexableSlugs`, `tagPostCount`) ignore this in every mode.
+ */
+export function scheduledPreviewEnabled(env: { NODE_ENV?: string; BLOG_DEV_SCHEDULED?: string } = process.env): boolean {
+  return env.NODE_ENV === 'development' && env.BLOG_DEV_SCHEDULED !== '0'
+}
+
 /** The generated post list without the placeholder posts. */
 export function withoutPlaceholders<T extends Record<string, Record<string, { placeholder?: boolean }>>>(sources: T): T {
   return Object.fromEntries(Object.entries(sources).filter(([, locales]) => !locales[DEFAULT_LOCALE]?.placeholder)) as T
@@ -196,6 +207,31 @@ export function publishedSlugs(now: Date = new Date()): string[] {
   })
 }
 
+/**
+ * True when `href` is a link to a known post that isn't live yet: `/blog/<slug>` (no locale prefix,
+ * as posts write their links), optionally followed by `#anchor` or `?query`. Posts may link to a
+ * post scheduled for a later date; on production that page is a 404 until then, so `PostLink`
+ * shows such a link as plain text (preview and local development keep it, the page exists there).
+ */
+export function isScheduledPostLink(
+  href: string,
+  now: Date = new Date(),
+  sources: Record<string, Record<string, { published: string }>> = BLOG_SOURCES
+): boolean {
+  const match = /^\/blog\/([a-z0-9-]{1,80})\/?(?:[#?].*)?$/.exec(href)
+  if (!match || !Object.hasOwn(sources, match[1])) return false
+  const published = sources[match[1]][DEFAULT_LOCALE]?.published
+  return Boolean(published) && published > utcToday(now)
+}
+
+/**
+ * The posts the blog index and tag pages list: the live ones, plus the scheduled ones when
+ * `includeScheduled` (by default under `next dev` only: `scheduledPreviewEnabled`).
+ */
+export function listedSlugs(now: Date = new Date(), includeScheduled: boolean = scheduledPreviewEnabled()): string[] {
+  return includeScheduled ? BLOG_SLUGS.filter((slug) => Boolean(BLOG_SOURCES[slug][DEFAULT_LOCALE]?.published)) : publishedSlugs(now)
+}
+
 /** A neighbouring post for the "More posts" links: its slug and its title in the page's language. */
 export interface AdjacentPost {
   slug: string
@@ -203,20 +239,22 @@ export interface AdjacentPost {
 }
 
 /**
- * The live posts just older and just newer than `slug`, by `published` date, over the same list
- * the blog index shows (scheduled posts never appear). Titles come from the page locale's file,
- * else English; nothing is imported. `sources` is the generated index (a fixture in tests).
+ * The posts just older and just newer than `slug`, by `published` date, over the same list the
+ * blog index shows: live posts, plus scheduled ones under `next dev` (`includeScheduled`). Titles
+ * come from the page locale's file, else English; nothing is imported. `sources` is the generated
+ * index (a fixture in tests).
  */
 export function adjacentPosts(
   slug: string,
   locale: string,
   now: Date = new Date(),
-  sources: Record<string, Record<string, { title: string; published: string; navTitle?: string }>> = BLOG_SOURCES
+  sources: Record<string, Record<string, { title: string; published: string; navTitle?: string }>> = BLOG_SOURCES,
+  includeScheduled: boolean = scheduledPreviewEnabled()
 ): { older?: AdjacentPost; newer?: AdjacentPost } {
   const today = utcToday(now)
   const live = Object.keys(sources)
     .map((s) => ({ slug: s, published: sources[s][DEFAULT_LOCALE]?.published ?? '' }))
-    .filter((p) => p.published && p.published <= today)
+    .filter((p) => p.published && (includeScheduled || p.published <= today))
     .sort((a, b) => a.published.localeCompare(b.published) || a.slug.localeCompare(b.slug))
   const at = live.findIndex((p) => p.slug === slug)
   if (at < 0) return {}
@@ -230,18 +268,27 @@ export function adjacentPosts(
 }
 
 /**
- * The tags used by live posts, most-used first (by number of posts, then in vocabulary order). The
- * blog index's topic chips show all of them; pass `limit` for a shorter list (the empty-search
- * suggestions).
+ * How many listed posts (live, plus scheduled under `next dev`: `listedSlugs`) carry each tag that
+ * is in use, from their English files. The one count behind the topic chips, the all-topics page
+ * and the tag pages' "N guides" (`tagPostCount` is the separate, live-only count for indexability).
  */
-export function topTags(limit = Number.POSITIVE_INFINITY, now: Date = new Date()): BlogTag[] {
+export function listedTagCounts(now: Date = new Date(), includeScheduled: boolean = scheduledPreviewEnabled()): Map<BlogTag, number> {
   const counts = new Map<BlogTag, number>()
-  for (const slug of publishedSlugs(now)) {
+  for (const slug of listedSlugs(now, includeScheduled)) {
     for (const tag of BLOG_SOURCES[slug][DEFAULT_LOCALE]?.tags ?? []) {
       if ((BLOG_TAG_SLUGS as readonly string[]).includes(tag)) counts.set(tag as BlogTag, (counts.get(tag as BlogTag) ?? 0) + 1)
     }
   }
-  return [...counts.entries()]
+  return counts
+}
+
+/**
+ * The tags used by the listed posts, most-used first (by number of posts, then in vocabulary
+ * order); pass `limit` for a shorter list (the empty-search suggestions). Pages that show labels
+ * order ties by label instead (`byRelevance` in lib/blog/tagOrder.ts).
+ */
+export function topTags(limit = Number.POSITIVE_INFINITY, now: Date = new Date(), includeScheduled: boolean = scheduledPreviewEnabled()): BlogTag[] {
+  return [...listedTagCounts(now, includeScheduled).entries()]
     .sort((a, b) => b[1] - a[1] || BLOG_TAG_SLUGS.indexOf(a[0]) - BLOG_TAG_SLUGS.indexOf(b[0]))
     .slice(0, limit)
     .map(([tag]) => tag)
@@ -320,9 +367,12 @@ export async function loadPost(slug: string, locale: string): Promise<LoadedPost
   }
 }
 
-/** Every live post as a page in `locale` shows it, newest first (scheduled ones left out). */
-export async function loadAllPosts(locale: string, now: Date = new Date()): Promise<LoadedPost[]> {
-  const posts = await Promise.all(publishedSlugs(now).map((slug) => loadPost(slug, locale)))
+/**
+ * Every listed post as a page in `locale` shows it, newest first: the live ones, plus the scheduled
+ * ones under `next dev` (`includeScheduled`; the cards flag them).
+ */
+export async function loadAllPosts(locale: string, now: Date = new Date(), includeScheduled: boolean = scheduledPreviewEnabled()): Promise<LoadedPost[]> {
+  const posts = await Promise.all(listedSlugs(now, includeScheduled).map((slug) => loadPost(slug, locale)))
   return posts
     .filter((p): p is LoadedPost => p !== null)
     .sort((a, b) => b.post.published.localeCompare(a.post.published))

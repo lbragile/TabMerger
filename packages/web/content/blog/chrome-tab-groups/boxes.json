@@ -1,0 +1,220 @@
+{
+  "chrome-tab-groups-setting": [
+    {
+      "id": "tab-groups-setting",
+      "label": "Show tab groups in bookmarks bar",
+      "l": "29.00%",
+      "t": "84.01%",
+      "w": "19.87%",
+      "h": "5.96%"
+    },
+    {
+      "id": "auto-pin",
+      "label": "Automatically pin new tab groups",
+      "l": "29.00%",
+      "t": "92.45%",
+      "w": "42.46%",
+      "h": "5.96%"
+    }
+  ],
+  "tm-now-open-groups-dark": [
+    {
+      "id": "group-badge-1",
+      "label": "Chrome tab group badge: Sprint",
+      "l": "88.63%",
+      "t": "21.77%",
+      "w": "5.79%",
+      "h": "5.13%"
+    },
+    {
+      "id": "group-badge-2",
+      "label": "Chrome tab group badge: Sprint",
+      "l": "88.63%",
+      "t": "25.77%",
+      "w": "5.79%",
+      "h": "5.13%"
+    },
+    {
+      "id": "group-badge-3",
+      "label": "Chrome tab group badge: Sprint",
+      "l": "88.63%",
+      "t": "29.77%",
+      "w": "5.79%",
+      "h": "5.13%"
+    },
+    {
+      "id": "group-badge-4",
+      "label": "Chrome tab group badge: Thesis",
+      "l": "88.53%",
+      "t": "33.77%",
+      "w": "5.89%",
+      "h": "5.13%"
+    },
+    {
+      "id": "group-badge-5",
+      "label": "Chrome tab group badge: Thesis",
+      "l": "88.53%",
+      "t": "37.77%",
+      "w": "5.89%",
+      "h": "5.13%"
+    },
+    {
+      "id": "group-badge-6",
+      "label": "Chrome tab group badge: Thesis",
+      "l": "88.53%",
+      "t": "41.77%",
+      "w": "5.89%",
+      "h": "5.13%"
+    }
+  ],
+  "tm-now-open-groups-light": [
+    {
+      "id": "group-badge-1",
+      "label": "Chrome tab group badge: Sprint",
+      "l": "88.63%",
+      "t": "21.77%",
+      "w": "5.79%",
+      "h": "5.13%"
+    },
+    {
+      "id": "group-badge-2",
+      "label": "Chrome tab group badge: Sprint",
+      "l": "88.63%",
+      "t": "25.77%",
+      "w": "5.79%",
+      "h": "5.13%"
+    },
+    {
+      "id": "group-badge-3",
+      "label": "Chrome tab group badge: Sprint",
+      "l": "88.63%",
+      "t": "29.77%",
+      "w": "5.79%",
+      "h": "5.13%"
+    },
+    {
+      "id": "group-badge-4",
+      "label": "Chrome tab group badge: Thesis",
+      "l": "88.53%",
+      "t": "33.77%",
+      "w": "5.89%",
+      "h": "5.13%"
+    },
+    {
+      "id": "group-badge-5",
+      "label": "Chrome tab group badge: Thesis",
+      "l": "88.53%",
+      "t": "37.77%",
+      "w": "5.89%",
+      "h": "5.13%"
+    },
+    {
+      "id": "group-badge-6",
+      "label": "Chrome tab group badge: Thesis",
+      "l": "88.53%",
+      "t": "41.77%",
+      "w": "5.89%",
+      "h": "5.13%"
+    }
+  ],
+  "tm-saved-groups-dark": [
+    {
+      "id": "group-badge-1",
+      "label": "Chrome tab group badge: Sprint",
+      "l": "88.63%",
+      "t": "21.77%",
+      "w": "5.79%",
+      "h": "5.13%"
+    },
+    {
+      "id": "group-badge-2",
+      "label": "Chrome tab group badge: Sprint",
+      "l": "88.63%",
+      "t": "25.77%",
+      "w": "5.79%",
+      "h": "5.13%"
+    },
+    {
+      "id": "group-badge-3",
+      "label": "Chrome tab group badge: Sprint",
+      "l": "88.63%",
+      "t": "29.77%",
+      "w": "5.79%",
+      "h": "5.13%"
+    },
+    {
+      "id": "group-badge-4",
+      "label": "Chrome tab group badge: Thesis",
+      "l": "88.53%",
+      "t": "33.77%",
+      "w": "5.89%",
+      "h": "5.13%"
+    },
+    {
+      "id": "group-badge-5",
+      "label": "Chrome tab group badge: Thesis",
+      "l": "88.53%",
+      "t": "37.77%",
+      "w": "5.89%",
+      "h": "5.13%"
+    },
+    {
+      "id": "group-badge-6",
+      "label": "Chrome tab group badge: Thesis",
+      "l": "88.53%",
+      "t": "41.77%",
+      "w": "5.89%",
+      "h": "5.13%"
+    }
+  ],
+  "tm-saved-groups-light": [
+    {
+      "id": "group-badge-1",
+      "label": "Chrome tab group badge: Sprint",
+      "l": "88.63%",
+      "t": "21.77%",
+      "w": "5.79%",
+      "h": "5.13%"
+    },
+    {
+      "id": "group-badge-2",
+      "label": "Chrome tab group badge: Sprint",
+      "l": "88.63%",
+      "t": "25.77%",
+      "w": "5.79%",
+      "h": "5.13%"
+    },
+    {
+      "id": "group-badge-3",
+      "label": "Chrome tab group badge: Sprint",
+      "l": "88.63%",
+      "t": "29.77%",
+      "w": "5.79%",
+      "h": "5.13%"
+    },
+    {
+      "id": "group-badge-4",
+      "label": "Chrome tab group badge: Thesis",
+      "l": "88.53%",
+      "t": "33.77%",
+      "w": "5.89%",
+      "h": "5.13%"
+    },
+    {
+      "id": "group-badge-5",
+      "label": "Chrome tab group badge: Thesis",
+      "l": "88.53%",
+      "t": "37.77%",
+      "w": "5.89%",
+      "h": "5.13%"
+    },
+    {
+      "id": "group-badge-6",
+      "label": "Chrome tab group badge: Thesis",
+      "l": "88.53%",
+      "t": "41.77%",
+      "w": "5.89%",
+      "h": "5.13%"
+    }
+  ]
+}

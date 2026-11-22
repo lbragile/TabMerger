@@ -1,0 +1,174 @@
+export const post = {
+  slug: 'never-lose-a-tab-again',
+  title: 'Never lose a tab again: auto-save and Recently closed',
+  navTitle: 'Never lose a tab again',
+  seoTitle: 'Auto-Save Your Open Tabs Automatically with TabMerger',
+  description:
+    'Save your open tabs automatically, on a schedule or when they pass a number, and get back any tab or window you closed. How TabMerger’s auto-save and Recently closed work, and why.',
+  shareSummary: 'Your open tabs, saved on a schedule, and every closed window one search away.',
+  dek: 'You shouldn’t have to remember to save. Set it once, and every open tab has a copy.',
+  published: '2026-12-13',
+  updated: '2026-12-13',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Auto-save runs every 15 minutes to daily, or when open tabs pass 20 to 100.', source: 'TabMerger 3.16.1' },
+    { text: 'Tabs already saved in a group are skipped; private windows are never saved.', source: 'TabMerger 3.16.1' },
+    { text: 'Free keeps the newest 2 auto-saves; Pro keeps them all.', source: 'TabMerger pricing', href: '/pricing' },
+    { text: 'Recently closed keeps your last 2 days on Free, 30 days on Pro.', source: 'TabMerger pricing', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'How do I save my open tabs automatically?',
+      answer:
+        'In TabMerger, open Settings → Data and turn on Auto-save open tabs. Pick a schedule (every 15 minutes to daily), a number of open tabs that triggers a save, or both. Each run saves your open tabs as a new group.',
+    },
+    {
+      question: 'Will auto-save fill TabMerger with duplicates?',
+      answer:
+        'No. Tabs whose address is already saved in any group are skipped, and a page open in several tabs is saved once. When everything is already saved, the run saves nothing.',
+    },
+    {
+      question: 'Does auto-save need TabMerger to be open?',
+      answer: 'No. It runs in the extension’s background while your browser is open, and checks for a missed save when the browser starts.',
+    },
+    {
+      question: 'How do I get back a window I closed?',
+      answer:
+        'Press Ctrl+K in TabMerger and type closed: to list recently closed tabs and windows, or open Recently closed in the sidebar. Picking a closed window restores the whole window.',
+    },
+    {
+      question: 'What does Free keep, and what does Pro add?',
+      answer:
+        'Free keeps the newest 2 auto-saves (keep one as a group to hold on to it) and your last 2 days of closed tabs. Pro keeps every auto-save, 30 days of closed tabs, and adds encrypted automatic backups and your other devices’ open tabs.',
+    },
+  ],
+  images: [
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-light.webp', alt: 'TabMerger Settings, Data: Auto-save open tabs on, every hour and when open tabs pass 50, with Auto-save now, light theme' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-dark.webp', alt: 'TabMerger Settings, Data: Auto-save open tabs on, every hour and when open tabs pass 50, with Auto-save now, dark theme' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp', alt: 'An Auto-saved group with two windows and seven tabs, and a Keep as group button, light theme' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-dark.webp', alt: 'An Auto-saved group with two windows and seven tabs, and a Keep as group button, dark theme' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-light.webp', alt: 'TabMerger search for closed: listing a closed window with 3 tabs, closed today, light theme' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-dark.webp', alt: 'TabMerger search for closed: listing a closed window with 3 tabs, closed today, dark theme' },
+  ],
+  tags: ['tabmerger-guides', 'save-tabs', 'restore-closed-tabs', 'session-management'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp' },
+  ogImage: { src: '/blog/never-lose-a-tab-again/og.png', alt: 'Never lose a tab again: an Auto-saved group in TabMerger with a Keep as group button' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'problem', label: 'How tabs get lost' },
+    { id: 'why', label: 'Why auto-save works this way' },
+    { id: 'steps', label: 'Turn it on' },
+    { id: 'closed', label: 'Recently closed' },
+    { id: 'benefit', label: 'What it saves you' },
+    { id: 'habits', label: 'Good habits' },
+    { id: 'plans', label: 'Free vs Pro' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Turn on **Settings → Data → Auto-save open tabs** in [TabMerger](/features) and pick a schedule, a tab count, or both. From then on, your open tabs are saved as a new group automatically, skipping anything already saved. Closed something by mistake? <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> and `closed:` finds every tab and window you closed recently, and reopens a whole window in one click.
+
+</QuickAnswer>
+
+<InstallCta>A copy of every open tab, saved for you on a schedule. Free for Chrome, Edge and Firefox.</InstallCta>
+
+<Section id="problem" title="How tabs actually get lost">
+
+It rarely happens in one dramatic crash. More often it’s small: you close the wrong window, the one with the thirty tabs from this morning’s research. An update restarts the browser and only one of three windows comes back. You tidy up on Friday and on Monday need the page you closed. By then the tab is somewhere in History, between hundreds of other pages, if you can remember what it was called.
+
+Saving by hand solves it, on the days you remember. Auto-save is for the other days.
+
+For getting tabs back after a crash or forced restart, with each browser’s own tools, see [how to get your tabs back after a crash](/blog/restore-tabs-after-crash). This guide is about making sure you always have a copy.
+
+</Section>
+
+<Section id="why" title="Why auto-save works the way it does">
+
+Each rule in TabMerger’s auto-save is there to keep the copy useful, not just present:
+
+- **It saves into a new group**, named after the time (“Auto-saved Nov 21, 8:28 PM”), with whole windows and tab order kept. Nothing you saved before is changed. Each new auto-save gets a different colour from the last one, so they are easy to tell apart.
+- **Two triggers, because tabs pile up in two ways.** A **schedule** (every 15 or 30 minutes, every hour, 2 or 4 hours, or daily) covers steady work. A **tab count** (20, 30, 50, 75 or 100 open tabs) covers the research burst that outgrows any schedule.
+- **A burst saves once.** The count trigger fires when you go above it, then waits until you are back at or below it, and at least 10 minutes, before it can fire again. Opening ten tabs in a row doesn’t make ten groups.
+- **No duplicates.** A tab whose address is already in any of your groups is skipped, and a page open in several tabs is saved once. If everything is already saved, the run saves nothing and tells you so.
+- **Private stays private.** Private windows are never saved. TabMerger’s own pages are left out; pinned tabs and browser pages stay in.
+- **It doesn’t need you.** Auto-save runs in the extension’s background while the browser is open, and checks whether a save is due when the browser starts. An optional notification tells you after each run; the status line in Settings shows the last result.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Auto-save in TabMerger" steps={[{ title: 'Settings' }, { title: 'Auto-saved group' }]}>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-save-settings" alt="TabMerger Settings, Data: Auto-save open tabs on, every hour and when open tabs pass 50, with Auto-save now, light theme" darkAlt="TabMerger Settings, Data: Auto-save open tabs on, every hour and when open tabs pass 50, with Auto-save now, dark theme" boxes={[{ id: 'schedule', label: 'How often to save' }, { id: 'threshold', label: 'The open-tab trigger' }, { id: 'run-now', label: 'Save right now' }]} source="TabMerger 3.16.1">Every hour, and whenever open tabs pass 50.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-saved" alt="An Auto-saved group with two windows and seven tabs, and a Keep as group button, light theme" darkAlt="An Auto-saved group with two windows and seven tabs, and a Keep as group button, dark theme" boxes={[{ id: 'keep', label: 'Keep as group' }]} source="TabMerger 3.16.1">The result: both open windows, saved as a group. Keep it to hold on to it for good.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="steps" title="Turn it on in four steps">
+
+1. Open TabMerger, then **Settings** (account menu) → **Data**.
+2. Switch on **Auto-save open tabs**. (On Pro it is already on, every hour.)
+3. Pick a **Schedule**, a **When open tabs pass** count, or both. Switch on **Show a notification** if you’d like a heads-up after each save.
+4. Press **Auto-save now** once to see the result: a new group under **Auto-saved** in the sidebar.
+
+Found an auto-save you want to keep for good? Open it and press **Keep as group**: it moves to your groups and is never removed automatically.
+
+</Section>
+
+<Section id="closed" title="Recently closed: the other half of the net">
+
+Auto-save covers what is open; **Recently closed** covers what you just closed. Every tab and window you close is kept by day, on this device only, and private windows are never recorded.
+
+- Open **Recently closed** in the sidebar to browse by day, or press <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> and start with `closed:` to search them.
+- A closed **window** is listed as one entry (“Window · 3 tabs”): pick it and the whole window comes back.
+- <Kbd>Ctrl</Kbd>-click (<Kbd>⌘</Kbd>-click on a Mac) or middle-click a result to reopen it in the background.
+
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-closed-window" alt="TabMerger search for closed: listing a closed window with 3 tabs, closed today, light theme" darkAlt="TabMerger search for closed: listing a closed window with 3 tabs, closed today, dark theme" boxes={[{ id: 'search-input', label: 'The closed: filter' }, { id: 'closed-window', label: 'A whole closed window' }]} source="TabMerger 3.16.1">A window closed by mistake, one search away.</ThemedScreenshot>
+
+More search tricks are in [search all your tabs with TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+
+</Section>
+
+<Section id="benefit" title="What it saves you">
+
+The worst case shrinks from “those tabs are gone” to “I lose what I opened since the last save”. With an hourly schedule, a bad restart costs you at most an hour of new tabs; a window you closed yourself is in Recently closed. Getting either back is one search instead of an afternoon in History.
+
+</Section>
+
+<Section id="habits" title="Good habits">
+
+- **Match the schedule to your pace.** Every hour suits most days; every 15 minutes suits heavy research.
+- **Add a tab count if you open tabs in bursts.** 50 is a good start.
+- **Keep, then clean.** When an auto-save holds something worth keeping, press **Keep as group** and rename it; delete the rest.
+- **Still save on purpose.** Auto-save is the net, not the plan: keep named groups for real projects (see [a daily tab workflow](/blog/tabmerger-daily-workflow)).
+
+</Section>
+
+<Section id="plans" title="Free vs Pro">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Auto-save open tabs', 'Off until you turn it on; newest 2 kept', 'On by default; all kept'],
+    ['Auto-saves and plan limits', 'Count toward 5 groups and 50 tabs', 'No limits'],
+    ['Recently closed', 'Your last 2 days', 'Your last 30 days'],
+    ['Automatic encrypted backups of your groups', 'No', 'Hourly to weekly, newest 10 kept'],
+    ['Open tabs of your other devices', 'No', 'Settings → Devices'],
+  ]}
+/>
+
+On Free, each new auto-save replaces the oldest once there are 2; **Keep as group** takes one out of the rotation. Near the 50-tab limit, an auto-save saves the tabs that fit and says so. Backups and your devices’ tabs are stored in your account, encrypted end to end, and our server refuses to store them for an account without Pro. Details on the [pricing page](/pricing).
+
+<InstallCta>Set it once, and stop worrying about closed windows. Free for Chrome, Edge and Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

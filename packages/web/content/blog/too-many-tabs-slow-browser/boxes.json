@@ -1,0 +1,22 @@
+{
+  "tm-close-all-menu-dark": [
+    {
+      "id": "close-all",
+      "label": "Close all windows",
+      "l": "0.20%",
+      "t": "44.59%",
+      "w": "27.85%",
+      "h": "12.23%"
+    }
+  ],
+  "tm-close-all-menu-light": [
+    {
+      "id": "close-all",
+      "label": "Close all windows",
+      "l": "0.20%",
+      "t": "44.59%",
+      "w": "27.85%",
+      "h": "12.23%"
+    }
+  ]
+}

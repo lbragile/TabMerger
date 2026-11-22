@@ -1,0 +1,162 @@
+export const post = {
+  slug: 'tabs-vs-bookmarks',
+  title: 'Tabs vs bookmarks: what to keep open and what to save',
+  navTitle: 'Tabs vs bookmarks',
+  seoTitle: 'Tabs vs Bookmarks: When to Keep a Tab Open or Save It',
+  description:
+    'Should you bookmark it or leave the tab open? A quick decision table for reading, project work and reference pages, plus the middle ground: saved tab groups you can search and reopen in one click.',
+  shareSummary: 'Bookmark it or leave it open? A decision table, and the saved-group middle ground.',
+  dek: 'Open tabs are for today. Bookmarks are for years. Everything in between belongs in a saved group.',
+  published: '2026-11-28',
+  updated: '2026-11-28',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D bookmarks every tab in the window, in all three browsers.', source: 'Chrome and Edge help; Firefox 159 keyset' },
+    { text: 'TabMerger groups keep whole windows, with a note, and reopen them in one click.', source: 'TabMerger 3.16.1' },
+    { text: 'TabMerger’s Ctrl+K searches open, saved and recently closed tabs at once.', source: 'TabMerger 3.16.1' },
+    { text: 'Free keeps 5 groups and 50 tabs; Pro is unlimited and synced.', source: 'TabMerger pricing', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Should I bookmark or leave tabs open?',
+      answer:
+        'Leave open only what you need today. Save work in progress as a TabMerger group so it reopens as a window, and bookmark pages you’ll want for months or years.',
+    },
+    {
+      question: 'Do open tabs slow down my browser?',
+      answer: 'Each open page uses memory. Saving tabs you aren’t using and closing them is the simplest fix; see our guide to too many tabs and a slow browser.',
+      link: { text: 'too many tabs and a slow browser', href: '/blog/too-many-tabs-slow-browser' },
+    },
+    {
+      question: 'What’s the difference between a bookmark and a saved tab group?',
+      answer:
+        'A bookmark is one page in a folder. A TabMerger group keeps whole windows of tabs, with a name, colour and note, and reopens them all at once.',
+    },
+    {
+      question: 'Can I turn bookmarks into tab groups?',
+      answer: 'Yes. Export your bookmarks as an HTML file and import it in TabMerger’s Settings → Data: each top-level folder becomes a group.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-light.webp', alt: 'TabMerger group Read this week with four saved tabs and a group note, light theme' },
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-dark.webp', alt: 'TabMerger group Read this week with four saved tabs and a group note, dark theme' },
+  ],
+  tags: ['tab-management', 'bookmarks', 'save-tabs', 'tab-manager', 'browser-productivity'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-light.webp' },
+  ogImage: { src: '/blog/tabs-vs-bookmarks/og.png', alt: 'Tabs vs bookmarks: a TabMerger guide, with a saved group of tabs to read this week' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'decide', label: 'The decision table' },
+    { id: 'tabs', label: 'When to keep tabs open' },
+    { id: 'bookmarks', label: 'When to bookmark' },
+    { id: 'middle', label: 'The middle ground' },
+    { id: 'tabmerger', label: 'Do it in TabMerger' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Keep a tab open only if you’ll use it **today**. Bookmark it if you’ll want it in **months or years**. For everything in between (a project you’ll pick up next week, a reading list, research in progress) save the tabs as a **group** in [TabMerger](/features): the whole window is kept, searchable with <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>, and back on screen in one click.
+
+</QuickAnswer>
+
+<InstallCta>Save today’s tabs as a group in one click. Free for Chrome, Edge and Firefox.</InstallCta>
+
+<Section id="decide" title="Should I bookmark it or leave the tab open?">
+
+Ask one question: **when will I need this again?**
+
+<ComparisonTable
+  head={['You need it…', 'Best home', 'Why']}
+  rowHeaders
+  highlight={1}
+  minWidth="34rem"
+  rows={[
+    ['In the next few hours', 'An open tab', 'You’re actively using it'],
+    ['Later this week, with other tabs', 'A TabMerger group', 'The whole set comes back as a window, in one click'],
+    ['To read when you have time', 'A TabMerger group with a note', 'One “read later” list you can search'],
+    ['For a project that pauses and resumes', 'A TabMerger group', 'Keeps windows apart, reopens exactly as saved'],
+    ['As a reference for months or years', 'A bookmark', 'Synced by your browser, organised in folders'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabs" title="When should a tab stay open?">
+
+Open tabs are your desk: what you’re working on right now. They’re instant to reach and they keep their place, scroll position and anything you typed. That’s also their cost: every open page uses memory, and past a couple of dozen the titles shrink to icons and the tab you want gets lost.
+
+Keep a tab open if you’ll come back to it before the end of the day. Anything else is clutter; our [too-many-tabs routine](/blog/manage-too-many-tabs) shows how to clear it in minutes.
+
+</Section>
+
+<Section id="bookmarks" title="When is a bookmark the right call?">
+
+Bookmarks are your filing cabinet: one page, kept for as long as you like, in folders, and synced by your browser when you’re signed in.
+
+- <Kbd>Ctrl</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>D</Kbd> on a Mac) bookmarks the current tab.
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> bookmarks every tab in the window into a new folder, in Chrome, Edge and Firefox.
+
+<Catch>bookmarks save one window at a time, keep only the address, and don’t tell you which pages belonged together. They’re great for a reference library, clumsy for work in progress.</Catch>
+
+</Section>
+
+<Section id="middle" title="What about everything in between?">
+
+Most tabs aren’t “today” or “forever”. They’re next week’s project, the articles you mean to read, the comparison you’re halfway through. That middle ground is exactly what a tab manager is for, and why [saving all your open tabs](/blog/save-all-open-tabs) as a group beats both leaving them open and bookmarking them one folder at a time:
+
+- **Whole windows, not single pages.** The set stays together, in the windows you had.
+- **Named, coloured and annotated,** so “that research from Tuesday” is easy to spot.
+- **Searchable** alongside your open and recently closed tabs.
+- **One click to reopen** everything, then close it again when you’re done.
+
+Researching? [Organising tabs for research](/blog/organize-tabs-for-research) adds notes and reminders to this.
+
+</Section>
+
+<Section id="tabmerger" title="Do it in TabMerger">
+
+[TabMerger](/features) turns the middle ground into a two-click habit:
+
+1. Click **Add Group** and name it, say “Read this week”.
+2. Open the group’s **⋯** menu and choose **Merge with current**: every open window is saved into it.
+3. Add a note from the group’s **⋯** menu, then close the windows. Your desk is clear and nothing is lost.
+4. When it’s time, open the group and reopen the tabs; <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> finds any one of them in a keystroke.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-vs-bookmarks/tm-read-later-group" alt="TabMerger group Read this week with four saved tabs and a group note, light theme" darkAlt="TabMerger group Read this week with four saved tabs and a group note, dark theme" boxes={[{ id: 'group-note', label: 'Its note' }, { id: 'group-row', label: 'The group' }]} source="TabMerger 3.16.1">A reading list as a group, with a note to future you.</ThemedScreenshot>
+
+Already have years of bookmarks? Export them as HTML and import the file under **Settings → Data**: each top-level folder becomes a TabMerger group. Free holds 5 groups and 50 tabs; [Pro](/pricing) removes the limits and syncs your groups between computers, end-to-end encrypted.
+
+<InstallCta>Free for Chrome, Edge and Firefox. No account needed to start.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

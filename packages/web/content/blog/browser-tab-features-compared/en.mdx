@@ -1,0 +1,183 @@
+export const post = {
+  slug: 'browser-tab-features-compared',
+  title: 'Chrome vs Edge vs Firefox: built-in tab features compared',
+  navTitle: 'Tab features: Chrome, Edge, Firefox',
+  seoTitle: 'Chrome vs Edge vs Firefox Tab Features (2026 Comparison)',
+  description:
+    'Tab groups, tab search, vertical tabs, split view, sleeping tabs and duplicate closing: which built-in tab features Chrome 157, Edge 158 and Firefox 159 have, and how TabMerger adds the same layer to all three.',
+  shareSummary: 'Which tab features Chrome, Edge and Firefox have built in, side by side.',
+  dek: 'Every browser solves part of the tab problem. Here’s which part, and how to get the rest in all three.',
+  published: '2026-12-05',
+  updated: '2026-12-05',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'All three have tab groups, tab search, vertical tabs and split view.', source: 'Their help pages and UI text, Nov 21, 2026' },
+    { text: 'Only Firefox 159 has a built-in Close Duplicate Tabs.', source: 'Firefox 159 menu text' },
+    {
+      text: 'Chrome syncs tab groups through your Google Account.',
+      source: 'Chrome Help',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'TabMerger adds one search, auto-save and encrypted sync to all three.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Which browser has the best tab features?',
+      answer:
+        'Each leads somewhere: Chrome on saved, synced tab groups, Edge on sleeping tabs that are on by default, Firefox on closing duplicates. TabMerger gives all three the same groups, search, auto-save and sync.',
+    },
+    {
+      question: 'Do Chrome, Edge and Firefox all have tab groups?',
+      answer: 'Yes. All three let you group tabs with a name and colour; Chrome and Firefox can also close a group and reopen it later.',
+    },
+    {
+      question: 'Can I use the same tab manager in Chrome, Edge and Firefox?',
+      answer: 'Yes. TabMerger works in all three, and Pro syncs your groups between them, end-to-end encrypted.',
+    },
+    {
+      question: 'Which browser closes duplicate tabs?',
+      answer: 'Firefox, from any tab’s right-click menu. In Chrome and Edge, TabMerger’s Deduplicate tabs does it across every window.',
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'TabMerger search open and empty, listing the filters group:, window:, tag: and closed:, light theme' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'TabMerger search open and empty, listing the filters group:, window:, tag: and closed:, dark theme' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Chrome Settings, Performance, with the Memory Saver switch' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Edge Settings, Performance, with Automatically put tabs to sleep on and set to 15 minutes' },
+  ],
+  tags: ['cross-browser', 'comparison', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    { title: 'Chrome keyboard shortcuts', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/157179', checked: '2026-11-21' },
+    { title: 'Personalize Chrome performance', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/12929150', checked: '2026-11-21' },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp' },
+  ogImage: { src: '/blog/browser-tab-features-compared/og.png', alt: 'Chrome vs Edge vs Firefox: built-in tab features compared. A TabMerger guide, with TabMerger’s search filters' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'matrix', label: 'The feature matrix' },
+    { id: 'turn-on', label: 'Settings worth turning on' },
+    { id: 'tabmerger', label: 'One layer for all three' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['turn-on'],
+  browserFact: {
+    label: 'Memory setting',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Settings → System and performance → Performance',
+      firefox: 'Right-click a tab → Unload Tab',
+    },
+  },
+}
+
+<QuickAnswer>
+
+All three browsers now have **tab groups, tab search, vertical tabs and split view**. Chrome leads on saving and syncing groups, Edge puts idle tabs to sleep by default, and Firefox is the only one that closes duplicate tabs on its own. None of them searches your saved and closed tabs, auto-saves your windows or works across browsers, and that’s the layer [TabMerger](/features) adds, identically, to Chrome, Edge and Firefox.
+
+</QuickAnswer>
+
+<InstallCta>The same groups, search and sync in Chrome, Edge and Firefox. Free.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="matrix" title="Which tab features does each browser have?">
+
+Checked in Chrome 157, Edge 158 and Firefox 159 against each browser’s help pages and its own interface text, Nov 21, 2026. “Not listed” means we found no sign of it in the help pages or the browser’s text, not proof it’s missing.
+
+<ComparisonTable
+  head={['Feature', 'Chrome 157', 'Edge 158', 'Firefox 159', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="52rem"
+  rows={[
+    ['Tab groups', 'Yes', 'Yes', 'Yes', 'Named, colour-coded groups across windows'],
+    ['Close a group, reopen it later', 'Yes (⋮ → Tab groups)', 'Close group (reopen not listed)', 'Yes (Save and close group)', 'Every group stays saved'],
+    ['Groups on other devices', 'Yes, via Google Account', 'Not listed', 'Not in Sync settings', 'Pro, end-to-end encrypted'],
+    ['Search tabs', 'Open tabs (Ctrl+Shift+A, @tabs)', 'Search tabs (no key listed)', 'List all tabs (Ctrl+Shift+A)', 'Open, saved and closed (Ctrl+K)'],
+    ['Vertical tabs', 'Yes', 'Yes', 'Yes', 'Not applicable'],
+    ['Split view', 'Yes', 'Yes', 'Yes', 'Not applicable'],
+    ['Free memory from idle tabs', 'Memory Saver (off by default)', 'Sleeping tabs (on by default)', 'Unload Tab, by hand', 'Save, then close every window in one click'],
+    ['Close duplicate tabs', 'Not listed', 'Not listed', 'Close Duplicate Tabs', 'Deduplicate tabs across all windows'],
+    ['Reopen a closed window', 'Ctrl+Shift+T', 'Not listed', 'Ctrl+Shift+N', 'Recently closed: 2 days Free, 30 Pro'],
+    ['Save open tabs on a schedule', 'Not listed', 'Not listed', 'Not listed', 'Auto-save on a schedule or a tab count'],
+    ['Export tabs', 'Via bookmarks (HTML)', 'Via favorites (HTML)', 'Via bookmarks (HTML)', 'JSON, open and saved tabs together'],
+  ]}
+/>
+
+Edge’s Collections, its old way to save sets of pages, is gone: Microsoft retired it in Edge 149. See [what to use instead of Edge Collections](/blog/edge-collections-replacement).
+
+</Section>
+
+<Section id="turn-on" title="Which built-in settings are worth turning on?">
+
+<BrowserPanels section="turn-on">
+<BrowserPanel browser="chrome">
+
+1. **Memory Saver**: Settings → Performance (`chrome://settings/performance`). It’s off in a fresh profile.
+2. **Vertical tabs**, if you keep many open: right-click the tab strip and choose **Show Tabs Vertically**, or Settings → Appearance → Tab position.
+3. **Tab Search**: <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>, or type `@tabs` in the address bar.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Chrome Settings, Performance, with the Memory Saver switch" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">Chrome’s Memory Saver, off in a fresh Chrome 157 profile.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. **Sleeping tabs** are on already: adjust the delay under Settings → System and performance → Performance.
+2. Edge 158 also has **vertical tabs** and **Search tabs** (both in its interface text); Microsoft’s shortcut list gives Search tabs no key.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Edge Settings, Performance, with Automatically put tabs to sleep on and set to 15 minutes" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Edge’s sleeping tabs, on by default: inactive tabs sleep after 15 minutes.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. **Vertical tabs**: right-click the sidebar and choose **Turn on Vertical Tabs**.
+2. **Close Duplicate Tabs** and **Unload Tab** are on every tab’s right-click menu.
+3. **List all tabs**: <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox tab right-click menu with Close Duplicate Tabs and Unload Tab. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+All the keys are in our [tab keyboard shortcuts reference](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="tabmerger" title="Get the missing layer in every browser">
+
+The matrix has one empty row for every browser: none of them keeps your tabs organised **beyond** the browser’s own window, or across browsers. [TabMerger](/features) does, the same way in Chrome, Edge and Firefox:
+
+1. **Now Open** shows every window you have open; **Merge with current** saves them all into a named group in one click.
+2. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> searches open, saved and recently closed tabs at once, with `group:`, `window:`, `tag:` and `closed:` filters.
+3. **Auto-save** keeps a fresh copy of your tabs on a schedule; **Deduplicate tabs** clears repeats from every window.
+4. On [Pro](/pricing), your groups sync between all your browsers, end-to-end encrypted.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="TabMerger search open and empty, listing the filters group:, window:, tag: and closed:, light theme" darkAlt="TabMerger search open and empty, listing the filters group:, window:, tag: and closed:, dark theme" boxes={[{ id: 'search-input', label: 'Search' }]} source="TabMerger 3.16.1">One search for every tab, in every browser TabMerger runs in.</ThemedScreenshot>
+
+For a side-by-side with other extensions, see [the best tab manager extensions](/blog/best-tab-manager-extensions).
+
+<InstallCta>Free for Chrome, Edge and Firefox. No account needed to start.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

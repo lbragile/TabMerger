@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'One shortcut, startup restore and closed-tab recovery in Chrome, Edge and Firefox.',
   dek: 'Five ways to keep every tab you have open, and the one thing each of them quietly misses.',
   published: '2026-11-19',
-  updated: '2026-11-19',
+  updated: '2026-11-21',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D saves the current window only.', source: 'Tested in all three, Nov 19, 2026' },
@@ -119,9 +119,11 @@ export const post = {
 
 <QuickAnswer>
 
-Press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> on a Mac) to bookmark every tab in the current window into a new folder. It works in Chrome, Edge and Firefox. To reopen tabs automatically, turn on **Continue where you left off** (Chrome), **Open tabs from the previous session** (Edge) or **Open previous windows and tabs** (Firefox).
+Press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> on a Mac) to bookmark every tab in the current window into a new folder. It works in Chrome, Edge and Firefox. To reopen tabs automatically, turn on **Continue where you left off** (Chrome), **Open tabs from the previous session** (Edge) or **Open previous windows and tabs** (Firefox). To save **every window at once**, and search the tabs later, use [TabMerger](/features): one click saves all your open windows into a named group.
 
 </QuickAnswer>
+
+<InstallCta>Save every open window in one click. Free for Chrome, Edge and Firefox.</InstallCta>
 
 <BrowserSwitcher />
 
@@ -200,7 +202,7 @@ In Firefox: **Settings → Home and startup → Startup → Open previous window
 
 <Section id="closed" title="3. Get back tabs you already closed">
 
-Press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) to reopen the last tab or window you closed; press it again to keep going back. For anything older, open History with <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>.
+Press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) to reopen the last tab or window you closed; press it again to keep going back. For anything older, open History with <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>. If the whole browser crashed or quit, follow [how to restore tabs after a crash](/blog/restore-tabs-after-crash).
 
 <BrowserPanels section="closed">
 <BrowserPanel browser="chrome">
@@ -232,7 +234,9 @@ Firefox lists recently closed tabs and windows in the History menu (press Alt to
 
 - **Chrome** can save a group and reopen it, but extensions can’t see a closed saved group ([tabGroups API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
 - **Firefox** groups stay on the device and don’t travel with Firefox Sync.
-- **Edge** no longer has Collections, starting with Edge 149.
+- **Edge** no longer has Collections, starting with Edge 149 ([what to use instead](/blog/edge-collections-replacement)).
+
+How saving, reopening and syncing groups works, step by step, is in our [guide to Chrome tab groups](/blog/chrome-tab-groups).
 
 {/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
 
@@ -267,7 +271,7 @@ The built-in methods each cover one window, one restart, or one closed tab at a 
   ]}
 />
 
-Use <Kbd>⌘</Kbd> on a Mac. Each asks where to save; **Quick Save (new group)** makes a group on the spot. In Firefox, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> opens a private window, so pick another key under `about:addons` → Manage Extension Shortcuts.
+Use <Kbd>⌘</Kbd> on a Mac. Each asks where to save; **Quick Save (new group)** makes a group on the spot. In Firefox, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> opens a private window, so pick another key under `about:addons` → Manage Extension Shortcuts. Edge keeps <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd>, <Kbd>U</Kbd> and <Kbd>P</Kbd> for its own commands, so give those three their own keys at `edge://extensions/shortcuts`; our [tab keyboard shortcuts reference](/blog/tab-keyboard-shortcuts) shows how.
 
 ### Closed something by mistake?
 
@@ -308,7 +312,7 @@ Use <Kbd>⌘</Kbd> on a Mac. Each asks where to save; **Quick Save (new group)**
   ]}
 />
 
-Turn on the startup setting whatever else you choose. Bookmark a single window worth keeping. Use an extension when you juggle several windows or need a closed tab days later. More on our [comparison page](/compare).
+Turn on the startup setting whatever else you choose. Bookmark a single window worth keeping. For several windows, or a closed tab from days ago, TabMerger does it in one click, and can [export everything to a file](/blog/export-open-tabs) too. More on our [comparison page](/compare) and in [the best tab manager extensions compared](/blog/best-tab-manager-extensions).
 
 </Section>
 

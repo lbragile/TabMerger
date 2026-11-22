@@ -8,7 +8,8 @@ import { JsonLd } from '@/components/seo/JsonLd'
 import { DEFAULT_LOCALE, localizedPath } from '@/i18n/locales'
 import { blogIndexJsonLd } from '@/lib/blog/jsonLd'
 import { blogIndexPagePath, blogPageSize, blogTagPagePath, pageCount, pageItems, parsePageParam } from '@/lib/blog/paging'
-import { BLOG_PATH, blogPostPath, loadAllPosts, tagPostCount, topTags, type LoadedPost } from '@/lib/blog/posts'
+import { BLOG_PATH, blogPostPath, isPublished, listedTagCounts, loadAllPosts, tagPostCount, topTags, type LoadedPost } from '@/lib/blog/posts'
+import { byRelevance, type TagEntry } from '@/lib/blog/tagOrder'
 import { BLOG_TAGS, TAG_INDEX_MIN_POSTS, type BlogTag } from '@/lib/blog/tags'
 import { breadcrumbJsonLd, pageMetadata, SITE_NAME } from '@/lib/seo'
 
@@ -18,10 +19,36 @@ import { breadcrumbJsonLd, pageMetadata, SITE_NAME } from '@/lib/seo'
  * paginate alike. Like the posts, they are English-only for now (canonical on the English URL).
  */
 
-/** The live posts a listing shows, newest first: all of them, or those carrying `tag`. */
+/**
+ * The posts a listing shows, newest first: all of them, or those carrying `tag`. Live posts, plus
+ * scheduled ones (flagged on their cards) under `next dev` only (`loadAllPosts`). The noindex rule
+ * below still counts live posts only (`tagPostCount`).
+ */
 async function listingPosts(locale: string, tag?: BlogTag): Promise<LoadedPost[]> {
   const posts = await loadAllPosts(locale)
   return tag ? posts.filter(({ post }) => post.tags.includes(tag)) : posts
+}
+
+/**
+ * The index's order: the newest LIVE post first (page 1 features it), then every other post newest
+ * first. Only `next dev` lists scheduled posts, and they are never featured: they keep their order
+ * at the top of the list, flagged. Without a live post nothing moves (and nothing is featured).
+ */
+export function indexOrder(posts: readonly LoadedPost[], now: Date = new Date()): LoadedPost[] {
+  const latest = posts.findIndex(({ post }) => isPublished(post, now))
+  return latest <= 0 ? [...posts] : [posts[latest], ...posts.slice(0, latest), ...posts.slice(latest + 1)]
+}
+
+/**
+ * Every tag in use with its label in the request's language and its post count, by relevance
+ * (most posts first, then alphabetically): the topic chips' order and the all-topics page's list.
+ */
+export async function relevantTags(locale: string): Promise<TagEntry[]> {
+  const t = await getTranslations('blog')
+  return byRelevance(
+    [...listedTagCounts().entries()].map(([tag, count]) => ({ tag, count, label: t(`tags.${BLOG_TAGS[tag]}`) })),
+    locale
+  )
 }
 
 /**
@@ -87,14 +114,19 @@ async function listingMessages(): Promise<ListingMessages> {
 export async function BlogIndexView({ locale, page, tag }: { locale: string; page: number; tag?: BlogTag }) {
   const t = await getTranslations('blog')
   const nav = await getTranslations('nav')
-  const posts = await listingPosts(locale, tag)
+  const listed = await listingPosts(locale, tag)
+  // Tag pages have no featured panel, so they keep plain newest-first order.
+  const posts = tag ? listed : indexOrder(listed)
   const size = blogPageSize()
   const total = pageCount(posts.length, size)
   const shown = pageItems(posts, page, size)
   const label = tag ? t(`tags.${BLOG_TAGS[tag]}`) : ''
   const path = tag ? blogTagPagePath(tag, page) : blogIndexPagePath(page)
   const name = tag ? t('tagTitle', { tag: label }) : t('metaTitle')
-  const featured = !tag && page === 1 && shown.length > 0
+  // The featured panel is the newest live post (first in `indexOrder`); a scheduled one (dev only)
+  // is never featured, so with no live post there is no panel.
+  const hasFeatured = !tag && posts.length > 0 && isPublished(posts[0].post)
+  const featured = hasFeatured && page === 1
   const hrefFor = (n: number) => (tag ? blogTagPagePath(tag, n) : blogIndexPagePath(n))
   const rest = featured ? shown.slice(1) : shown
 
@@ -126,7 +158,7 @@ export async function BlogIndexView({ locale, page, tag }: { locale: string; pag
           {tag ? t('tagCount', { count: posts.length }) : t('indexLead')}
         </p>
       </header>
-      <TopicChips tags={topTags()} current={tag} />
+      <TopicChips tags={(await relevantTags(locale)).map((entry) => entry.tag)} current={tag} />
       <HelpfulCountsProvider locale={locale} messages={await listingMessages()}>
         <ListingClient
           entries={posts.map(({ post, readMinutes }) => ({ slug: post.slug, title: post.title, published: post.published, readMinutes }))}
@@ -134,7 +166,7 @@ export async function BlogIndexView({ locale, page, tag }: { locale: string; pag
           featured={featured ? <FeaturedPost loaded={shown[0]} /> : null}
           defaultList={rest.length > 0 ? <PostRows posts={rest} /> : null}
           defaultPager={<Pager page={page} total={total} hrefFor={hrefFor} />}
-          moreCount={tag ? posts.length : Math.max(0, posts.length - 1)}
+          moreCount={hasFeatured ? posts.length - 1 : posts.length}
           emptyTopics={<TopicSuggestions tags={topTags(4).filter((topic) => topic !== tag).slice(0, 3)} />}
           basePath={tag ? blogTagPagePath(tag, 1) : BLOG_PATH}
           pageSize={size}

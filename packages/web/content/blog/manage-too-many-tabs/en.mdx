@@ -1,0 +1,244 @@
+export const post = {
+  slug: 'manage-too-many-tabs',
+  title: 'Too many tabs? A four-step routine that works in any browser',
+  seoTitle: 'Too Many Tabs? How to Manage Them in Any Browser',
+  description:
+    'Too many tabs open? A four-step routine for Chrome, Edge and Firefox, and how TabMerger saves every window in one click so you can close them without losing a thing.',
+  shareSummary: 'Close, group, save, schedule: a tab routine for Chrome, Edge and Firefox.',
+  dek: 'Close what’s done, group what’s active, save the rest in one click, and let auto-save keep it that way.',
+  published: '2026-11-21',
+  updated: '2026-11-21',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Chrome’s Memory Saver was off in a fresh Chrome 157 profile.', source: 'chrome://settings/performance, Nov 20, 2026' },
+    { text: 'Edge 158 puts inactive tabs to sleep, after 15 minutes by default.', source: 'edge://settings, Nov 20, 2026' },
+    {
+      text: 'Ctrl+Shift+A searches open tabs in Chrome and Firefox.',
+      source: 'Chrome Help; Firefox 159 keyset',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Firefox’s tab menu has Close Duplicate Tabs.', source: 'Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'How many tabs is too many?',
+      answer:
+        'There’s no fixed number. It’s too many when you can’t read the tab titles, can’t find a tab without hunting, or the browser starts warning about performance.',
+    },
+    {
+      question: 'How do I stop having too many tabs?',
+      answer:
+        'Close finished tabs daily, group the ones for today’s task, save the rest somewhere you can search, and do a short weekly sweep.',
+    },
+    {
+      question: 'Do open tabs slow down my computer?',
+      answer:
+        'They can, because each open page uses memory. Chrome’s Memory Saver and Edge’s sleeping tabs free memory from tabs you aren’t using; they reload when you return.',
+    },
+    {
+      question: 'Is it safe to close tabs I might need later?',
+      answer:
+        'Yes, if you save them first: a bookmark folder, a session manager or TabMerger keeps the address so you can reopen it. See our guide to saving all open tabs.',
+      link: { text: 'saving all open tabs', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp', alt: 'TabMerger Now Open listing three browser windows with 18 tabs, light theme' },
+    { src: '/blog/manage-too-many-tabs/tm-now-open-dark.webp', alt: 'TabMerger Now Open listing three browser windows with 18 tabs, dark theme' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-light.webp', alt: 'TabMerger Settings, Data: Auto-save open tabs on, with When open tabs pass set to 30 open tabs, light theme' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-dark.webp', alt: 'TabMerger Settings, Data: Auto-save open tabs on, with When open tabs pass set to 30 open tabs, dark theme' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Chrome Settings, Performance, with the Memory Saver switch' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Edge Settings, Performance, with Automatically put tabs to sleep on and set to 15 minutes' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'save-tabs', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp' },
+  ogImage: { src: '/blog/manage-too-many-tabs/og.png', alt: 'Too many tabs? A four-step routine that works in any browser: a TabMerger guide, with three browser windows listed in one place' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'how-many', label: 'How many is too many?' },
+    { id: 'close', label: '1. Close' },
+    { id: 'group', label: '2. Group' },
+    { id: 'save', label: '3. Save' },
+    { id: 'schedule', label: '4. Schedule a sweep' },
+    { id: 'memory', label: 'Let the browser help' },
+    { id: 'tabmerger', label: 'Do it in TabMerger' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['close', 'memory'],
+  browserFact: {
+    label: 'Memory setting',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Settings → System and performance → Performance',
+      firefox: 'Right-click a tab → Unload Tab',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Run four steps, in this order: **close** every tab you’ve finished with, **group** the tabs for the task in front of you, **save** the “maybe later” tabs somewhere you can search, and **schedule** a ten-minute sweep once a week. It works in Chrome, Edge and Firefox. The step that clears the most is saving, and [TabMerger](/features) makes it one click: every open window saved into a named group you can search and reopen any time.
+
+</QuickAnswer>
+
+<InstallCta>Save every open window in one click, then close them with nothing lost. Free for Chrome, Edge and Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="how-many" title="How many tabs is too many?">
+
+There’s no magic number, and we won’t invent one. Tabs become a problem when they stop doing their job, which is holding things you’ll come back to soon. Watch for these signs:
+
+- The tab strip shows icons only, so you can’t read titles any more.
+- You open a page and find it was already open, twice.
+- You keep tabs open “just in case”, because closing them feels like losing them.
+- The browser warns you. Chrome shows **Performance issue alerts** that suggest deactivating tabs when it detects poor performance.
+
+The last one is the browser’s problem, and it has fixes (below). The first three are a filing problem, and that’s what the routine fixes.
+
+</Section>
+
+<Section id="close" title="1. Close what you’ve finished with">
+
+Start with the cheapest win. Close tabs whose job is done: the search you already answered, the article you already read, the checkout page.
+
+- <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> (<Kbd>⌘</Kbd>+<Kbd>W</Kbd> on a Mac) closes the current tab in all three browsers.
+- Closed one too many? <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> reopens it. More in our [tab keyboard shortcuts](/blog/tab-keyboard-shortcuts) reference.
+
+<BrowserPanels section="close">
+<BrowserPanel browser="chrome">
+
+Press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> on a Mac) to open **Tab Search**: a list of every open tab, with a close button on each row. Close the ones you’re done with straight from the list.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge’s keyboard shortcut list has no key for searching open tabs, so work along the tab strip: click a tab you’re done with and press <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd>.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> lists all your tabs, so you can find and close the ones you’re done with.
+- Right-click any tab and choose **Close Duplicate Tabs** to clear repeats in one go.
+
+TabMerger clears repeats across **every** window at once; see [how to close duplicate tabs](/blog/close-duplicate-tabs).
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>closing is only safe for tabs you’re sure about. Anything you hesitate over goes to step 3, not to the bin.</Catch>
+
+</Section>
+
+<Section id="group" title="2. Group the tabs for today’s task">
+
+Tab groups give a set of tabs a name and a colour, and collapse them to a single label. Chrome, Edge and Firefox all have them: right-click a tab and add it to a new group.
+
+Keep one group per task you’re actually working on today, and collapse the ones you aren’t looking at. A collapsed group takes the space of one tab. How groups save, sync and reopen differs by browser; our [guide to Chrome tab groups](/blog/chrome-tab-groups) covers the details and the limits.
+
+</Section>
+
+<Section id="save" title="3. Save the “maybe later” tabs">
+
+This is the step that actually shrinks the tab strip. A tab you might need next week doesn’t need to be open; it needs to be findable.
+
+- **Bookmark the window.** <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> saves every tab in the current window into a new bookmark folder. Our guide to [saving all open tabs](/blog/save-all-open-tabs) walks through it per browser.
+- **Use a session manager.** It saves whole windows, with names, and restores them in one click. See [what a browser session manager does](/blog/browser-session-manager) and how it differs from bookmarks.
+- **Read later.** If it’s an article, a read-later list beats a tab. Not sure which home a page needs? Our [tabs vs bookmarks guide](/blog/tabs-vs-bookmarks) has a decision table.
+
+Then close what you saved. That’s the whole trick: saving is what makes closing safe.
+
+</Section>
+
+<Section id="schedule" title="4. Put a weekly sweep on the calendar">
+
+Tabs creep back. A short, regular sweep keeps the count down without willpower:
+
+1. Once a week, open your saved folders or groups.
+2. Delete what you no longer need. If you haven’t opened it in a month, you probably won’t.
+3. Close the windows you saved during the week.
+
+If you research for a living (students, analysts, developers reading docs), keep one saved group per project and sweep it when the project ends, not before.
+
+</Section>
+
+<Section id="memory" title="Let the browser free the memory">
+
+Browsers can stop idle tabs using memory without closing them. The tab stays in the strip and reloads when you click it.
+
+<BrowserPanels section="memory">
+<BrowserPanel browser="chrome">
+
+Turn on **Memory Saver**: **Settings → Performance**, or paste `chrome://settings/performance` into the address bar.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Chrome Settings, Performance, with the Memory Saver switch" width={1600} height={524} eager boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">Chrome’s Memory Saver, off in a fresh Chrome 157 profile.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Check **Automatically put tabs to sleep** under **Settings → System and performance → Performance**, and pick how long a tab waits before it sleeps.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Edge Settings, Performance, with Automatically put tabs to sleep on and set to 15 minutes" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Edge’s sleeping tabs, on by default: inactive tabs sleep after 15 minutes.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Right-click a tab and choose **Unload Tab** to free its memory by hand.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>this helps the computer, not you. Fifty sleeping tabs are still fifty tabs to scan. Use it alongside the routine, not instead of it.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="Do it in TabMerger">
+
+[TabMerger](/features), our free extension for Chrome, Edge and Firefox, turns steps 3 and 4 into a couple of clicks. **Now Open** shows every open window and its tabs in one place, so you see the whole pile at once. Save them all into a named group with **Merge with current**, close the windows, and find any tab again in a keystroke with <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>, whether it’s open, saved or recently closed. A slow computer is often the first sign of too many tabs; [here’s how saving and closing frees the memory](/blog/too-many-tabs-slow-browser).
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-now-open" alt="TabMerger Now Open listing three browser windows with 18 tabs, light theme" darkAlt="TabMerger Now Open listing three browser windows with 18 tabs, dark theme" boxes={[{ id: 'now-open-summary', label: 'Windows and tabs open' }]} source="TabMerger 3.16.1">Now Open: three windows and 18 tabs, before the sort.</ThemedScreenshot>
+
+For the weekly sweep, **Settings → Data → Auto-save open tabs** can save your open tabs as a new group on a schedule, or as soon as you pass 20, 30, 50, 75 or 100 open tabs. Free keeps the newest 2 auto-saves, and they count toward its 5 groups and 50 tabs; Pro keeps them all. For a routine that keeps the pile from coming back, see [a daily tab workflow with TabMerger](/blog/tabmerger-daily-workflow).
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-auto-save-threshold" alt="TabMerger Settings, Data: Auto-save open tabs on, with When open tabs pass set to 30 open tabs, light theme" darkAlt="TabMerger Settings, Data: Auto-save open tabs on, with When open tabs pass set to 30 open tabs, dark theme" boxes={[{ id: 'threshold', label: 'When open tabs pass' }]} source="TabMerger 3.16.1">Auto-save set to kick in once more than 30 tabs are open.</ThemedScreenshot>
+
+Saved tabs also get an amber dot once they pass the age you pick (7, 14, 30 or 60 days), and a group’s **⋯** menu has **Deduplicate tabs**.
+
+<InstallCta>Free for Chrome, Edge and Firefox. No account needed to start.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

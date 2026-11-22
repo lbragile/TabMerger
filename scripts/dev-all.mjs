@@ -8,6 +8,10 @@
 //      forwarding webhooks to the local web app. Stripe is skipped with a hint when its CLI isn't
 //      installed; the web app still runs, but local checkouts won't update the plan.
 //
+//   2b. [db] registers the blog's posts in local Supabase (packages/web/scripts/sync-blog-posts.mjs,
+//      with the local-only token from supabase/seed.sql), so their Helpful buttons work. A failure
+//      only warns.
+//
 // Ctrl+C stops web, ext and stripe. Supabase keeps running so the next start is instant and its
 // data stays put; `pnpm exec supabase stop` stops it.
 //
@@ -28,6 +32,27 @@ const SUPABASE_RETRY_MS = 5_000
 
 const COLORS = { dev: 90, db: 32, web: 36, ext: 35, stripe: 33 }
 const LABEL_WIDTH = Math.max(...Object.keys(COLORS).map((name) => name.length))
+
+/**
+ * The dev-only token `sync_blog_posts` accepts on a local database (its hash is in
+ * supabase/seed.sql). Not a secret: it only works against the local stack.
+ */
+export const LOCAL_BLOG_SYNC_TOKEN = 'tabmerger-local-blog-sync'
+
+/**
+ * The blog sync run after local Supabase is up: paths relative to the repo root (where `pnpm
+ * dev:all` runs), reading the web app's .env.local for the local URL and key. The token comes from
+ * the environment when set, else the local one.
+ *
+ * @param {Record<string, string | undefined>} env
+ */
+export function blogSyncStep(env) {
+  return {
+    command: 'node',
+    args: ['packages/web/scripts/sync-blog-posts.mjs', '--env-file', 'packages/web/.env.local'],
+    env: { BLOG_SYNC_TOKEN: env.BLOG_SYNC_TOKEN || LOCAL_BLOG_SYNC_TOKEN },
+  }
+}
 
 /** The long-running processes, started once the database is up. */
 export const PROCESSES = [
@@ -113,7 +138,7 @@ let stopping = false
  *
  * @returns {Promise<{ code: number, output: string }>}
  */
-function run(name, command, args, { quietOnSuccess = false } = {}) {
+function run(name, command, args, { quietOnSuccess = false, env = {} } = {}) {
   return new Promise((resolve) => {
     const lines = []
     const child = spawn(...spawnArgs(command, args, IS_WINDOWS), {
@@ -121,7 +146,7 @@ function run(name, command, args, { quietOnSuccess = false } = {}) {
       shell: IS_WINDOWS,
       // Its own process group, so stopping it also stops what it started (POSIX).
       detached: !IS_WINDOWS,
-      env: { ...process.env, FORCE_COLOR: '1' },
+      env: { ...process.env, FORCE_COLOR: '1', ...env },
     })
     running.add(child)
     for (const stream of [child.stdout, child.stderr]) {
@@ -212,6 +237,12 @@ async function main() {
   if (stopping) return
   if (supabaseCode !== 0) throw new Error(`supabase start failed (exit code ${supabaseCode}).`)
   log('db', 'Supabase is up: Studio at http://localhost:54323')
+
+  // Register the blog's posts so their Helpful buttons work locally. Never blocks the dev servers.
+  const sync = blogSyncStep(process.env)
+  const { code: syncCode } = await run('db', sync.command, sync.args, { quietOnSuccess: true, env: sync.env })
+  if (stopping) return
+  if (syncCode !== 0) log('db', '[33mblog post sync failed (Helpful votes may not work locally); continuing[0m')
 
   const started = []
   for (const proc of PROCESSES) {

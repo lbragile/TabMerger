@@ -1,0 +1,141 @@
+export const post = {
+  slug: 'share-a-set-of-tabs',
+  title: 'How to share a set of tabs with someone',
+  navTitle: 'Share a set of tabs',
+  seoTitle: 'How to Share Multiple Tabs at Once (Chrome, Edge, Firefox)',
+  description:
+    'Send a teammate or friend a whole set of tabs: copy the links, share a bookmarks file, or create an end-to-end encrypted TabMerger share link they can open in one click, no account needed.',
+  shareSummary: 'Share a whole set of tabs: links, a bookmarks file, or an encrypted one-click link.',
+  dek: 'Twelve links pasted into a chat is a chore for both of you. One link to the whole set isn’t.',
+  published: '2026-12-10',
+  updated: '2026-12-10',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'A TabMerger share link opens a read-only page; no account needed to view it.', source: 'TabMerger share page' },
+    { text: 'The decryption key stays in the link’s #fragment, which browsers never send to the server.', source: 'TabMerger source', href: 'https://github.com/lbragile/TabMerger' },
+    { text: 'Creating share links needs Pro.', source: 'TabMerger pricing', href: '/pricing' },
+    { text: 'Firefox 159 can copy every link in a tab group.', source: 'Firefox 159 menu text' },
+  ],
+  faq: [
+    {
+      question: 'How do I share multiple tabs at once?',
+      answer:
+        'With TabMerger Pro, select the groups and press Share: one encrypted link opens all of them on a read-only page. Built in, you can bookmark the tabs and send the exported bookmarks file, or in Firefox copy all the links in a tab group.',
+    },
+    {
+      question: 'Does the other person need TabMerger?',
+      answer: 'No. A share link opens in any browser, and they can open one tab, one window or everything. With TabMerger installed they can then save the tabs as their own group.',
+    },
+    {
+      question: 'Can TabMerger read the tabs I share?',
+      answer: 'No. The tabs are encrypted in your browser before upload, and the key is only in the link’s #fragment, which never reaches the server.',
+    },
+    {
+      question: 'Is sharing free?',
+      answer: 'Creating share links is part of Pro. Copying links and sharing a bookmarks or JSON file are free.',
+    },
+  ],
+  images: [
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp', alt: 'TabMerger with the groups Work and Reading list selected and the selection bar showing Star, Unstar, Share and Delete, light theme' },
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-dark.webp', alt: 'TabMerger with the groups Work and Reading list selected and the selection bar showing Star, Unstar, Share and Delete, dark theme' },
+    { src: '/blog/share-a-set-of-tabs/share-page-light.webp', alt: 'TabMerger’s shared-groups page, read-only, listing two groups with Open window and Open all tabs buttons, light theme' },
+    { src: '/blog/share-a-set-of-tabs/share-page-dark.webp', alt: 'TabMerger’s shared-groups page, read-only, listing two groups with Open window and Open all tabs buttons, dark theme' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'bookmarks', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Import Chrome bookmarks & settings (export section)', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/96816', checked: '2026-11-21' },
+    {
+      title: 'TabMerger source code (sharing)',
+      publisher: 'GitHub',
+      url: 'https://github.com/lbragile/TabMerger',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp' },
+  ogImage: { src: '/blog/share-a-set-of-tabs/og.png', alt: 'How to share a set of tabs with someone: a TabMerger guide, with two groups selected for sharing' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'manual', label: 'Without an extension' },
+    { id: 'tabmerger', label: 'One encrypted link' },
+    { id: 'what-they-see', label: 'What they see' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['manual'],
+  browserFact: {
+    label: 'Copy or export links',
+    values: { chrome: 'Bookmark Manager → Export bookmarks', edge: 'Favorites → Export favorites', firefox: 'Tab group → Copy links in group' },
+  },
+}
+
+<QuickAnswer>
+
+The one-click way is a [TabMerger](/features) share link: select your groups, press **Share**, and paste the link. Whoever opens it sees every tab on a read-only page and can open one tab, a window or everything, no account needed, and the tabs are **end-to-end encrypted**, so even TabMerger can’t read them. Without an extension, bookmark the tabs and send the exported bookmarks file, or in Firefox copy all the links in a tab group.
+
+</QuickAnswer>
+
+<InstallCta>Share a whole set of tabs with one encrypted link. Free to start; sharing is part of Pro.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="manual" title="How do I share tabs without an extension?">
+
+<BrowserPanels section="manual">
+<BrowserPanel browser="chrome">
+
+1. Press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> to bookmark the window’s tabs into a new folder.
+2. Open **⋮ → Bookmarks and lists → Bookmark Manager**, then **⋮ (More) → Export bookmarks**.
+3. Send the HTML file. The other person imports it into their browser (or into TabMerger).
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> to add the window’s tabs to favorites, in a new folder.
+2. Open Favorites (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>) and choose **Export favorites**.
+3. Send the HTML file.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Put the tabs in a tab group (drag one tab onto another).
+2. Right-click the group’s label and choose **Copy links in group**.
+3. Paste the links into a message or document.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>a bookmarks file exports *all* your bookmarks, and pasted links arrive as a wall of addresses the other person has to open one by one.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="How do I share tabs with one link?">
+
+1. In TabMerger, save the tabs into a group (**Merge with current** saves every open window).
+2. **Ctrl-click** (<Kbd>⌘</Kbd>-click on a Mac) each group you want to share in the sidebar.
+3. Press **Share** in the selection bar. The link is copied to your clipboard; paste it anywhere.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/tm-selection-share" alt="TabMerger with the groups Work and Reading list selected and the selection bar showing Star, Unstar, Share and Delete, light theme" darkAlt="TabMerger with the groups Work and Reading list selected and the selection bar showing Star, Unstar, Share and Delete, dark theme" boxes={[{ id: 'share', label: 'Share' }]} source="TabMerger 3.16.1">Two groups selected; Share creates one link for both (shown here on a Free account, where the button is off).</ThemedScreenshot>
+
+How it stays private: TabMerger generates a fresh key in your browser, encrypts the groups with it, and uploads only the encrypted copy. The key goes into the link after the `#`, a part of the address browsers never send to a server, so only people with the full link can read the tabs. Creating links is part of [Pro](/pricing).
+
+</Section>
+
+<Section id="what-they-see" title="What does the other person see?">
+
+A read-only page with each group and window, the number of tabs, and buttons to **Open all tabs** in a window, **Open window** for a whole group, or open single tabs. They don’t need an account, or TabMerger. If they do use TabMerger, they can open the tabs and save them as their own group with **Merge with current**.
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/share-page" width={1600} height={1115} alt="TabMerger’s shared-groups page, read-only, listing two groups with Open window and Open all tabs buttons, light theme" darkAlt="TabMerger’s shared-groups page, read-only, listing two groups with Open window and Open all tabs buttons, dark theme" source="tabmerger.com/share/demo">The share page, from TabMerger’s public demo link.</ThemedScreenshot>
+
+Prefer a file? TabMerger’s [Export JSON](/blog/export-open-tabs) works on Free, and [moving tabs to another computer](/blog/move-tabs-between-computers) covers your own devices.
+
+<InstallCta>Free for Chrome, Edge and Firefox. No account needed to start.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

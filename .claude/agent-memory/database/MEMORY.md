@@ -16,3 +16,5 @@
 - [Deploy-time lock order (027)](learnings_deploy_time_lock_order.md) — lock tables up front in the OLD live function's order; CREATE TRIGGER = SHARE ROW EXCLUSIVE; two-session deadlock recipe
 - [Public aggregate RPC (032)](learnings_public_aggregate_rpc.md) — invoker outer fn calls per-key definer fn; pin shape; full-join test; `grant to current_user` segfaults
 - [Signed-in, once vote table (031)](learnings_signed_in_vote_table_pattern.md) — PK+FK do the rule; exact grants; do-nothing upsert needs INSERT only; is_anonymous; policy cmd+roles pins; lock_timeout
+- [Token-gated definer RPC (035)](learnings_token_gated_definer_rpc.md) — hash in non-exposed schema, built-in sha256, token before input checks, one generic 42501, grace-period deletes
+- [Dry run without Docker](learnings_scratch_pg_pgtap_shim.md) — throwaway initdb cluster + Supabase stand-ins + pgTAP shim; oidvector/except gotchas; what it cannot prove

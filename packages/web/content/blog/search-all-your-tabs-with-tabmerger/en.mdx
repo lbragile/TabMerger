@@ -1,0 +1,175 @@
+export const post = {
+  slug: 'search-all-your-tabs-with-tabmerger',
+  title: 'Search all your tabs with TabMerger: Ctrl+K and its filters',
+  navTitle: 'Search all your tabs',
+  seoTitle: 'Search Open, Saved and Closed Tabs at Once with TabMerger',
+  description:
+    'One search box for every tab you have: open, saved in groups, or closed this week. How TabMerger’s Ctrl+K search works, every filter (group:, window:, tag:, closed:) and why it matches the way it does.',
+  shareSummary: 'Open, saved and closed tabs in one search box, with filters that narrow it in a keystroke.',
+  dek: 'Open, saved or closed an hour ago: type a few letters and it’s there, highlighted.',
+  published: '2026-12-14',
+  updated: '2026-12-14',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Ctrl+K (⌘+K on a Mac) searches open, saved and recently closed tabs together.', source: 'TabMerger 3.16.1' },
+    { text: 'Filters: group:, window:, tag: (Chrome tab group label) and closed:.', source: 'TabMerger 3.16.1' },
+    { text: 'Matches are exact runs of letters, never fuzzy, so every result has a highlight.', source: 'TabMerger 3.16.1 source' },
+    { text: 'Search and every filter are free.', source: 'TabMerger pricing', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'How do I search all my tabs at once?',
+      answer:
+        'Open TabMerger and press Ctrl+K (⌘+K on a Mac), then type part of a page title or address. Results cover your open tabs, every saved group and, below them, tabs you closed recently.',
+    },
+    {
+      question: 'How do I search only one group?',
+      answer:
+        'Type group: and pick the group from the list; TabMerger fills in group:"Name". Then add your words after it, for example group:"Thesis sources" wiki.',
+    },
+    {
+      question: 'Can I search tabs I already closed?',
+      answer: 'Yes. Start the search with closed: to list only recently closed tabs and windows. Pick one to reopen it; Ctrl-click or middle-click reopens it in the background.',
+    },
+    {
+      question: 'Why doesn’t search find a page when I make a typo?',
+      answer:
+        'TabMerger matches the letters exactly as typed (ignoring case), never letters scattered across a title. That keeps results predictable: every result has a highlighted match, and every highlight is a real match.',
+    },
+    {
+      question: 'Is search free?',
+      answer: 'Yes, search and all its filters are on the Free plan. Pro keeps 30 days of closed tabs to search instead of 2.',
+    },
+  ],
+  images: [
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-light.webp', alt: 'TabMerger search opened with Ctrl+K, listing example searches for react, group:, window:, tag: and closed:, light theme' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-dark.webp', alt: 'TabMerger search opened with Ctrl+K, listing example searches for react, group:, window:, tag: and closed:, dark theme' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-light.webp', alt: 'TabMerger search for docs: four results from Now Open and Reading list, with docs highlighted in each address, light theme' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-dark.webp', alt: 'TabMerger search for docs: four results from Now Open and Reading list, with docs highlighted in each address, dark theme' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-light.webp', alt: 'TabMerger search with window: typed, listing the windows Window, Papers and Tools to pick from, light theme' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-dark.webp', alt: 'TabMerger search with window: typed, listing the windows Window, Papers and Tools to pick from, dark theme' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp', alt: 'The Thesis sources group while searching it for wiki, with the one match highlighted and the other tabs faded, light theme' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-dark.webp', alt: 'The Thesis sources group while searching it for wiki, with the one match highlighted and the other tabs faded, dark theme' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'browser-tips'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-light.webp' },
+  ogImage: { src: '/blog/search-all-your-tabs-with-tabmerger/og.png', alt: 'Search all your tabs with TabMerger: results for docs from open and saved tabs' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'problem', label: 'Where was that tab?' },
+    { id: 'why', label: 'Why search works this way' },
+    { id: 'steps', label: 'Search step by step' },
+    { id: 'filters', label: 'Every filter' },
+    { id: 'panel', label: 'After the search' },
+    { id: 'benefit', label: 'What it saves you' },
+    { id: 'habits', label: 'Good habits' },
+    { id: 'plans', label: 'Free vs Pro' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Open [TabMerger](/features) and press <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> on a Mac). Type a few letters of a title or address: results come from your open tabs, every saved group and, below them, tabs you closed recently, each tagged with where it lives. Narrow it with `group:`, `window:`, `tag:` or `closed:`, then press <Kbd>Enter</Kbd> to jump straight to the tab.
+
+</QuickAnswer>
+
+<InstallCta>Every tab you have, one search away. Free for Chrome, Edge and Firefox.</InstallCta>
+
+<Section id="problem" title="“Where was that tab?”">
+
+You know the page exists. You had it open on Tuesday, next to the pull request. Was it in the work window or the reading one? Did you save it into a group, or close it? The browser’s own tab search only sees what is open in that browser right now; History sees everything you ever visited, with no idea what you kept on purpose.
+
+What you want is one box that knows all of it: what’s open, what you saved, and what you closed this week. That box is <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> in TabMerger. (For the browsers’ built-in tab search, see [how to find one tab among hundreds](/blog/find-a-tab-among-hundreds).)
+
+</Section>
+
+<Section id="why" title="Why TabMerger search works the way it does">
+
+- **Everything in one list.** Open tabs, saved groups and recently closed tabs answer the same question (“where is it?”), so they come back together. Each result carries a badge with its group, and its Chrome tab group label when it has one.
+- **Exact, not fuzzy.** A result is a tab whose title or address contains your letters as one run, ignoring case. Letters scattered across a title never count. That is deliberate: every result has a highlight, and every highlight is the real match, so you can trust what you see.
+- **Best match first.** An exact match ranks above a title that starts with your text, then a word that starts with it, then a match anywhere. The list shows the top 12, so the right tab is near the top.
+- **Pick, don’t spell.** Typing `group:`, `window:` or `tag:` opens a list of your groups, windows or labels to pick from. TabMerger fills in the quoted name, so long names with spaces just work.
+- **Closed tabs stay out of the way.** Up to 3 recently closed tabs appear under the saved results; start with `closed:` to see only closed tabs.
+- **The keyboard is enough.** <Kbd>↑</Kbd> <Kbd>↓</Kbd> to move, <Kbd>Enter</Kbd> to open, <Kbd>Esc</Kbd> or <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> to close. Closing leaves what you typed alone, so you can come back to it.
+
+</Section>
+
+<Section id="steps" title="Search step by step">
+
+1. Open TabMerger and press <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> on a Mac), or click the search box at the top.
+2. With nothing typed, the box suggests searches to try. Click one to start from it.
+3. Type a few letters of the title or address, such as `docs`. Matches are highlighted.
+4. Press <Kbd>Enter</Kbd> on a tab: TabMerger opens its group and puts the focus on that tab. On a closed tab, <Kbd>Enter</Kbd> reopens it.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Searching in TabMerger" steps={[{ title: 'Ctrl+K' }, { title: 'Results' }, { title: 'window:' }]}>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-examples" alt="TabMerger search opened with Ctrl+K, listing example searches for react, group:, window:, tag: and closed:, light theme" darkAlt="TabMerger search opened with Ctrl+K, listing example searches for react, group:, window:, tag: and closed:, dark theme" boxes={[{ id: 'search-input', label: 'The search box' }, { id: 'examples', label: 'Suggested searches' }]} source="TabMerger 3.16.1">An empty search suggests where to start.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-results" alt="TabMerger search for docs: four results from Now Open and Reading list, with docs highlighted in each address, light theme" darkAlt="TabMerger search for docs: four results from Now Open and Reading list, with docs highlighted in each address, dark theme" boxes={[{ id: 'search-input', label: 'docs' }]} source="TabMerger 3.16.1">Open and saved tabs in one list, each tagged with its group.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker" alt="TabMerger search with window: typed, listing the windows Window, Papers and Tools to pick from, light theme" darkAlt="TabMerger search with window: typed, listing the windows Window, Papers and Tools to pick from, dark theme" boxes={[{ id: 'search-input', label: 'The window: filter' }, { id: 'pick-window', label: 'Your named windows' }]} source="TabMerger 3.16.1">Type window: and pick; no need to spell the name.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="filters" title="Every filter, with examples">
+
+<ComparisonTable
+  head={['Filter', 'Finds', 'Example']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['(plain words)', 'Tabs whose title or address contains them, and groups by name', 'pull request'],
+    ['group:', 'Tabs in one group', 'group:"Thesis sources" wiki'],
+    ['window:', 'Tabs in one window (name it from its ⋯ menu)', 'window:"Papers"'],
+    ['tag:', 'Tabs in a Chrome tab group with that label', 'tag:"Sprint"'],
+    ['closed:', 'Only recently closed tabs and windows', 'closed: seat'],
+  ]}
+/>
+
+Filters combine with words and with each other. Use quotes when you add words after a filter: without them, the filter takes the rest of the line, so `group:Work pull` looks for a group called “Work pull”. Picking from the list adds the quotes for you.
+
+</Section>
+
+<Section id="panel" title="After the search: hide or dim the rest">
+
+Close the search with <Kbd>Esc</Kbd> and it keeps working in the main view. The sidebar shows how many matches each group has (“1 found”), and inside a group the tabs that don’t match are **hidden** by default. Prefer to keep your bearings? In **Settings → General**, set **Tabs that do not match a search** to **Dim**: every tab stays in place, faded, with the matches highlighted. **Clear search** ends it.
+
+While tabs are hidden, dragging to reorder is paused (“Clear the search to move items”): with rows out of sight, where a dropped tab should land would be a guess.
+
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-dim" alt="The Thesis sources group while searching it for wiki, with the one match highlighted and the other tabs faded, light theme" darkAlt="The Thesis sources group while searching it for wiki, with the one match highlighted and the other tabs faded, dark theme" boxes={[{ id: 'match', label: 'The match' }]} source="TabMerger 3.16.1">Dim mode: the match stands out, everything else stays where it was.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="What it saves you">
+
+Scanning windows of 16-pixel icons and scrolling History becomes a few keystrokes. It works the same however many tabs you keep: a group you saved months ago is as close as the tab you opened a minute ago. That is what makes it safe to close windows: anything you saved is one search away.
+
+</Section>
+
+<Section id="habits" title="Good habits">
+
+- **Search the address, not only the title.** `github.com/your-org` or `localhost:3000` finds pages whose titles all look alike.
+- **Name windows you search often.** “Papers”, “PRs”, “Docs”: then `window:` gets you there.
+- **Start with `closed:`** when you know you closed it; the list is shorter and only has what you need.
+- **Pair search with groups.** The better your groups (see [a daily tab workflow](/blog/tabmerger-daily-workflow)), the more a `group:` filter narrows things down.
+
+</Section>
+
+<Section id="plans" title="Free vs Pro">
+
+Search, every filter, the pickers and Hide or Dim are all on the Free plan, without an account. The one difference is how far back closed tabs go: Free keeps your last 2 days of closed tabs, Pro your last 30 days. And with Pro’s unlimited groups and tabs, there is simply more to find. See the [pricing page](/pricing).
+
+<InstallCta>Find any tab you’ve kept in a keystroke. Free for Chrome, Edge and Firefox.</InstallCta>
+
+For keyboard-first use beyond search, see [tab keyboard shortcuts](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

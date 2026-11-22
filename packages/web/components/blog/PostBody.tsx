@@ -3,7 +3,8 @@ import { useTranslations } from 'next-intl'
 import { CopyLinkButton } from '@/components/blog/CopyLinkButton'
 import { Link } from '@/i18n/navigation'
 import { cn, getMetadataBase } from '@/lib/utils'
-import type { Post } from '@/lib/blog/posts'
+import { isScheduledPostLink, type Post } from '@/lib/blog/posts'
+import { isProductionDeployment } from '@/lib/deployment'
 
 /**
  * The building blocks a post's MDX may use (registered in mdx-components.tsx), plus the styled
@@ -189,7 +190,8 @@ export function Faq({ items }: { items: Post['faq'] }) {
 /**
  * A link in a post: a site path goes through the locale-aware Link, anything else is a plain
  * anchor (rehype-external-links has already given body links their new-tab attributes). Every
- * link but an in-page `#anchor` is followed by a copy button for its absolute URL.
+ * link but an in-page `#anchor` is followed by a copy button for its absolute URL. On production,
+ * a link to a post that isn't live yet is plain text (`isScheduledPostLink`).
  */
 export function PostLink({ href = '', children, className, ...rest }: ComponentProps<'a'>) {
   // In-page anchors (the heading "#" links) keep only their own classes and get no copy button.
@@ -200,8 +202,11 @@ export function PostLink({ href = '', children, className, ...rest }: ComponentP
       </a>
     )
   }
-  const classes = cn('text-primary underline underline-offset-[0.18em] hover:text-primary/80', className)
   const internal = href.startsWith('/') && !href.startsWith('//')
+  // A link to a post scheduled for a later date: its page is a 404 on production until then, so
+  // the words stay but the link doesn't (preview and local development link it, the page exists).
+  if (internal && isProductionDeployment() && isScheduledPostLink(href)) return <>{children}</>
+  const classes = cn('text-primary underline underline-offset-[0.18em] hover:text-primary/80', className)
   const absolute = new URL(href, getMetadataBase()).href
   return (
     <span className="group/link">

@@ -1,0 +1,62 @@
+{
+  "tm-search-filters-dark": [
+    {
+      "id": "search-input",
+      "label": "Search box",
+      "l": "21.83%",
+      "t": "0.43%",
+      "w": "56.35%",
+      "h": "10.30%"
+    }
+  ],
+  "tm-search-filters-light": [
+    {
+      "id": "search-input",
+      "label": "Search box",
+      "l": "21.83%",
+      "t": "0.43%",
+      "w": "56.35%",
+      "h": "10.30%"
+    }
+  ],
+  "tm-search-group-filter-dark": [
+    {
+      "id": "search-input",
+      "label": "group:\"Work\" pull",
+      "l": "21.83%",
+      "t": "0.43%",
+      "w": "56.35%",
+      "h": "10.30%"
+    }
+  ],
+  "tm-search-group-filter-light": [
+    {
+      "id": "search-input",
+      "label": "group:\"Work\" pull",
+      "l": "21.83%",
+      "t": "0.43%",
+      "w": "56.35%",
+      "h": "10.30%"
+    }
+  ],
+  "tm-search-tag-filter-dark": [
+    {
+      "id": "search-input",
+      "label": "tag:Sprint",
+      "l": "21.83%",
+      "t": "0.43%",
+      "w": "56.35%",
+      "h": "10.30%"
+    }
+  ],
+  "tm-search-tag-filter-light": [
+    {
+      "id": "search-input",
+      "label": "tag:Sprint",
+      "l": "21.83%",
+      "t": "0.43%",
+      "w": "56.35%",
+      "h": "10.30%"
+    }
+  ]
+}

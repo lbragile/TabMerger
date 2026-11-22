@@ -7,8 +7,9 @@ import { SearchHighlight } from '@/components/blog/SearchHighlight'
 import { TagChips } from '@/components/blog/TagChips'
 import { TestedOn } from '@/components/blog/TestedOn'
 import { Link } from '@/i18n/navigation'
-import { BLOG_PATH, blogPostPath, cardCover, isRevised, shownDate, type LoadedPost } from '@/lib/blog/posts'
-import { BLOG_TAGS, blogTagPath, type BlogTag } from '@/lib/blog/tags'
+import { BLOG_PATH, blogPostPath, cardCover, isPublished, isRevised, shownDate, type LoadedPost, type Post } from '@/lib/blog/posts'
+import { BLOG_TAGS, BLOG_TAGS_INDEX_PATH, blogTagPath, type BlogTag } from '@/lib/blog/tags'
+import { visibleChips } from '@/lib/blog/tagOrder'
 import { cn } from '@/lib/utils'
 
 /**
@@ -48,6 +49,22 @@ function PostMeta({ loaded, className }: { loaded: LoadedPost; className?: strin
 }
 
 /**
+ * "Scheduled for <date>" on the card of a post that isn't live yet. Such cards are listed only
+ * under `next dev` (`scheduledPreviewEnabled`), so this never shows on preview or production.
+ */
+function ScheduledFlag({ post }: { post: Pick<Post, 'published'> }) {
+  const t = useTranslations('blog')
+  const format = useFormatter()
+  if (isPublished(post)) return null
+  const date = format.dateTime(new Date(`${post.published}T00:00:00Z`), { dateStyle: 'long', timeZone: 'UTC' })
+  return (
+    <p className="m-0 self-start border border-secondary/40 bg-accent px-2 py-0.5 text-[0.8125rem] font-semibold text-accent-foreground dark:border-secondary/30 dark:bg-secondary/10 dark:text-secondary">
+      {t('scheduledCard', { date })}
+    </p>
+  )
+}
+
+/**
  * The card image, 4:3, shown whole: the post's cover (or its first 4:3 capture), following the theme
  * when it has a dark version; decorative (the title names the card).
  */
@@ -59,9 +76,14 @@ function Cover({ loaded, eager, sizes, className }: { loaded: LoadedPost; eager?
   )
 }
 
-/** "All posts" and the most-used tags; the current one (index or tag) is marked. */
+/**
+ * "All posts" and the most relevant tags (most posts first: `tags` comes ordered), at most
+ * `TOPIC_CHIP_LIMIT` of them plus the current tag when it falls outside those, then "See all
+ * topics" (the all-topics page) when some are left out. The current one (index or tag) is marked.
+ */
 export function TopicChips({ tags, current }: { tags: readonly BlogTag[]; current?: BlogTag }) {
   const t = useTranslations('blog')
+  const { shown, hidden } = visibleChips(tags, current)
   const chip = (active: boolean) =>
     cn(
       'inline-flex min-h-11 shrink-0 items-center whitespace-nowrap border px-3.5 font-mono text-[0.8125rem] no-underline transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:text-sm',
@@ -75,7 +97,7 @@ export function TopicChips({ tags, current }: { tags: readonly BlogTag[]; curren
             {t('allPosts')}
           </Link>
         </li>
-        {tags.map((tag) => (
+        {shown.map((tag) => (
           <li key={tag}>
             <Link href={blogTagPath(tag)} dir="auto" aria-current={current === tag ? 'page' : undefined} className={chip(current === tag)}>
               {'#'}
@@ -83,6 +105,14 @@ export function TopicChips({ tags, current }: { tags: readonly BlogTag[]; curren
             </Link>
           </li>
         ))}
+        {hidden > 0 && (
+          <li>
+            <Link href={BLOG_TAGS_INDEX_PATH} className={cn(chip(false), 'gap-1.5 border-dashed font-sans font-semibold text-foreground')}>
+              {t('seeAllTopics')}
+              <ArrowRight aria-hidden="true" className="size-4 rtl:-scale-x-100" />
+            </Link>
+          </li>
+        )}
       </ul>
     </nav>
   )
@@ -111,6 +141,7 @@ export function FeaturedPost({ loaded }: { loaded: LoadedPost }) {
       />
       <div className="flex min-w-0 flex-col gap-3.5 lg:col-span-5 lg:gap-4 lg:pe-2">
         <span className="font-mono text-xs uppercase tracking-[0.08em] text-primary sm:text-[0.8125rem]">{t('latestGuide')}</span>
+        <ScheduledFlag post={post} />
         <h2 id={`post-${post.slug}`} lang={lang} className="m-0 text-2xl font-bold leading-tight tracking-tight lg:text-[2rem]">
           <Link href={blogPostPath(post.slug)} className={STRETCHED}>
             <SearchHighlight text={post.title} />
@@ -151,6 +182,7 @@ export function PostRow({ loaded }: { loaded: LoadedPost }) {
     >
       <Cover loaded={loaded} sizes="(min-width: 64rem) 28rem, (min-width: 56rem) 50vw, 100vw" />
       <div className="flex min-w-0 flex-col gap-2">
+        <ScheduledFlag post={post} />
         <h3 id={`post-${post.slug}`} lang={lang} className="m-0 line-clamp-2 text-lg font-semibold leading-snug sm:text-[1.375rem]">
           <Link href={blogPostPath(post.slug)} className={STRETCHED}>
             <SearchHighlight text={post.title} />

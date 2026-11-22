@@ -2,7 +2,7 @@
 
 This is the per-table reference: columns, RLS, indexes and E2E encryption. For the day-to-day workflow (local stack, migrations, sync, queries) see [DATABASE.md](DATABASE.md).
 
-The migrations in `supabase/migrations/` (`001`–`032`) are the source of truth. This doc is a snapshot of their end state, so read the SQL before relying on it for anything security-relevant.
+The migrations in `supabase/migrations/` (`001`–`032`, then `035`) are the source of truth. This doc is a snapshot of their end state, so read the SQL before relying on it for anything security-relevant.
 
 ## Migration history
 
@@ -40,6 +40,7 @@ The migrations in `supabase/migrations/` (`001`–`032`) are the source of truth
 | 030 | `030_ai_billing_period_credits.sql` | Credits reset per paid billing period: `subscriptions.ai_period_start`/`ai_period_end`, `ai_allowance_month()`, `ai_credit_cap()`, `ai_grant_credit_pack()`, triggers `subscriptions_keep_ai_period` and `subscriptions_carry_ai_packs`; the freeze uses the old period; `ai_settle_credits` stops at the cap |
 | 031 | `031_blog_post_votes.sql` | Helpful votes on blog posts: `blog_posts` (slug PK, seeded with `save-all-open-tabs`, read-only for the API roles) and `blog_post_votes` (one row per post and account; read, add and remove your own; no update), and `blog_helpful_count(p_slug)` for anon and authenticated. See the `blog_posts` / `blog_post_votes` section below. |
 | 032 | `032_blog_helpful_counts.sql` | `blog_helpful_counts()`: every blog post's Helpful count in one call (for the blog index), each taken from `blog_helpful_count(slug)`; for anon and authenticated. See the `blog_posts` / `blog_post_votes` section below. |
+| 035 | `035_blog_posts_deploy_sync.sql` | Blog posts come from a deploy sync instead of a migration per post: `blog_posts.missing_since`, `private.blog_sync_settings` (SHA-256 of the sync token, not reachable through the API) and `sync_blog_posts(p_slugs, p_token)`, which each web deploy calls with every slug it ships; posts unlisted for 30 days are deleted with their votes. `blog_helpful_counts()` now hides missing posts. 033 and 034 (per-post inserts) were never applied anywhere and were removed. See the `blog_posts` / `blog_post_votes` section below. |
 
 > **Local ≠ hosted.** `supabase db reset` proves only that the migrations apply locally. It does not show that the hosted project has them: 009 and 010 once sat unapplied on Cloud until someone ran `supabase db push` by hand. Check `supabase migration list --linked` against **each** hosted project (preview and production, see [ARCHITECTURE.md § Environments](ARCHITECTURE.md#environments)).
 
@@ -291,14 +292,15 @@ All four functions are `security definer` with an empty `search_path`, and only 
 
 Helpful votes on blog posts (031). Signed-in accounts only, one vote per account per post; voting is not a paid feature, so free accounts vote too. The browser client writes `blog_post_votes` directly (no API route), so the rule lives in the database. Slugs stay English in every locale, so all locales share one count.
 
-`blog_posts`: one row per post that accepts votes. A new post adds its row in its own migration.
+`blog_posts`: one row per post that accepts votes. Since 035 the rows come from the web deploy sync (`sync_blog_posts()`, below), not from a migration per post.
 
 | Column | Type | Constraints |
 |---|---|---|
 | `slug` | `text` | PK, `check (char_length(slug) <= 80 and slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$')` (`blog_posts_slug_check`): words of lowercase letters and digits joined by single hyphens |
 | `created_at` | `timestamptz` | not null, default `now()` |
+| `missing_since` | `timestamptz` | nullable (035). When a deploy sync last stopped listing the post; `null` = listed. Deleted (votes cascade) once older than 30 days |
 
-**RLS:** `blog_posts_select_all` (`using (true)`, anon and authenticated), the only policy. `anon`/`authenticated` hold `SELECT` only, so only a migration or the service role adds a post.
+**RLS:** `blog_posts_select_all` (`using (true)`, anon and authenticated), the only policy. `anon`/`authenticated` hold `SELECT` only, so only a migration, the service role or `sync_blog_posts()` (a definer, gated by its token) adds, marks or deletes a post.
 
 `blog_post_votes`:
 
@@ -312,8 +314,38 @@ Helpful votes on blog posts (031). Signed-in accounts only, one vote per account
 **RLS (all `to authenticated`):** `blog_post_votes_select_own` and `blog_post_votes_delete_own` (`auth.uid() = user_id`); `blog_post_votes_insert_own` (`auth.uid() = user_id` and the JWT's `is_anonymous` is not true, so an anonymous Supabase session can't vote if anonymous sign-ins are ever enabled). No update policy: a vote is added or removed, never edited. **Privileges:** `authenticated` holds `SELECT`, `INSERT`, `DELETE`; `anon` holds none (an anon insert is `42501`). **Index:** `blog_post_votes_user_id_idx (user_id)`, for the account-delete cascade (the PK covers lookups by post). The migration runs with `lock_timeout = 5s`, because creating the FK locks `auth.users`.
 
 - `blog_helpful_count(p_slug text) returns bigint`: the number of votes on a post, 0 for an unknown slug. `stable`, `security definer` with an empty `search_path`, because RLS hides other accounts' votes from the caller; it returns the count only, never who voted. Executable by `anon`, `authenticated` and `service_role` (not PUBLIC). The page calls it via `rpc` after hydration so the post stays static.
-- `blog_helpful_counts() returns table (slug text, helpful bigint)` (032): one row per `blog_posts` row, ordered by slug (`collate "C"`), 0 for a post with no votes; the blog index reads every count with one `rpc('blog_helpful_counts')`. Each count is `blog_helpful_count(slug)`, so the two can't disagree (change the counting rule there). No arguments, so the result is bounded by `blog_posts` and the caller has no say in its size. `stable`, `security invoker` with an empty `search_path`: it reads `blog_posts` as the caller, so any future `blog_posts` policy (hiding drafts, say) applies to it, and only the inner `blog_helpful_count` is a definer. Returns slugs and counts only, never who voted. Executable by `anon`, `authenticated` and `service_role` (not PUBLIC). Its body is a string, so Postgres records no dependency on `blog_helpful_count`: drop or rewrite `blog_helpful_counts` before dropping that.
+- `blog_helpful_counts() returns table (slug text, helpful bigint)` (032, 035): one row per listed `blog_posts` row (`missing_since is null`; since 035 a post that left the site drops off at once, not after 30 days), ordered by slug (`collate "C"`), 0 for a post with no votes; the blog index reads every count with one `rpc('blog_helpful_counts')`. Each count is `blog_helpful_count(slug)`, so the two can't disagree (change the counting rule there). No arguments, so the result is bounded by `blog_posts` and the caller has no say in its size. `stable`, `security invoker` with an empty `search_path`: it reads `blog_posts` as the caller, so any future `blog_posts` policy (hiding drafts, say) applies to it, and only the inner `blog_helpful_count` is a definer. Returns slugs and counts only, never who voted. Executable by `anon`, `authenticated` and `service_role` (not PUBLIC). Its body is a string, so Postgres records no dependency on `blog_helpful_count`: drop or rewrite `blog_helpful_counts` before dropping that.
 - An insert with `on conflict do nothing` for an existing vote adds no row and raises nothing, so a client may use it as an idempotent "vote". `on conflict do update` is refused (`42501`, no `UPDATE` privilege).
+
+#### Blog deploy sync (035)
+
+- `sync_blog_posts(p_slugs text[], p_token text) returns jsonb`: `{"added": n, "missing": n, "deleted": n}`. Each web deploy job calls it (POST `/rest/v1/rpc/sync_blog_posts` with the anon key; GET runs read-only and fails) with every slug in the build. `volatile`, `security definer` with an empty `search_path`, plpgsql. Executable by `anon`, `authenticated` and `service_role` (not PUBLIC): the token is the gate.
+  1. **Token:** refused unless `private.blog_sync_settings` holds a hash and `pg_catalog.sha256(convert_to(p_token, 'UTF8'))` equals it. No row, a null hash, a null, wrong or over-256-byte token: all the same `not authorized` (`42501`), checked before anything else, so a caller without the token learns nothing about the input rules.
+  2. **Input** (whole call refused, `22023`): `p_slugs` null, empty, not one-dimensional, over 1000 entries, or any entry null, over 80 characters or not matching `^[a-z0-9]+(-[a-z0-9]+)*$`. Duplicates collapse.
+  3. A transaction-scoped advisory lock serialises concurrent syncs.
+  4. Inserts new slugs (`on conflict do nothing`), clears `missing_since` on listed slugs, sets `missing_since = now()` on unlisted rows that have none, then deletes rows with `missing_since < now() - interval '30 days'` (031's FK cascade deletes their votes). Listed rows are cleared before the delete, so a listed post is never deleted. The grace period means a bad deploy (partial list, a branch preview built without newer posts) only marks posts; the next good deploy clears them.
+  - Returns `added` = rows inserted, `missing` = rows still marked missing after the call (a repeat call reports the same number), `deleted` = rows deleted. All in the caller's one transaction.
+- `private.blog_sync_settings`: one row (`id boolean` PK, `check (id)`), `token_sha256 bytea` (null or 32 bytes), `updated_at`. Schema `private` is not in the API's exposed schemas, and `anon`, `authenticated`, `service_role` and PUBLIC hold no `USAGE` on it and no privilege on the table; RLS on, no policies. Only `sync_blog_posts()` (owned by the migration role) reads it; no foreign keys. A plain table rather than Vault: it holds a hash, not a secret the database must read back. The migration stores no hash: each project's is set once by hand (below); `supabase/seed.sql` stores the hash of the dev-only token `tabmerger-local-blog-sync` for the local stack only.
+- Bodies are strings, so Postgres records no dependency of `sync_blog_posts` or `blog_helpful_counts` on `missing_since` or the settings table: rewrite or drop the functions before dropping either.
+
+**Pre-flight, on each hosted project before applying 035:** `select nspname, nspowner::regrole, nspacl from pg_namespace where nspname = 'private';` should return no row. If it returns one, don't apply 035 as it is: the migration would reuse that schema and revoke every API role's access to it. Check what's in it and who owns it first (`select relname from pg_class where relnamespace = 'private'::regnamespace;`), then either confirm it's empty and owned by `postgres`, or move the settings table to another schema in a new migration.
+
+**Setting the token on a hosted project** (once per project; use a different token for preview and production, and store it as the deploy job's secret). Generate the token and its hash locally, so the token itself never reaches the database or its query logs:
+
+```bash
+TOKEN=$(openssl rand -hex 32)          # the deploy secret
+printf %s "$TOKEN" | sha256sum         # its SHA-256 (64 hex chars); printf, not echo, so no newline is hashed
+```
+
+Then run in that project's SQL editor (the editor runs as `postgres`, which owns the table):
+
+```sql
+insert into private.blog_sync_settings (id, token_sha256)
+values (true, decode('<64-hex-sha256-of-the-token>', 'hex'))
+on conflict (id) do update set token_sha256 = excluded.token_sha256, updated_at = now();
+```
+
+Rotating is the same statement with a new token. `update private.blog_sync_settings set token_sha256 = null, updated_at = now();` turns the sync off (every call refused).
 
 ## Grants (migration 010)
 

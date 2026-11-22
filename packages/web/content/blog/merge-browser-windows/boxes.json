@@ -1,0 +1,62 @@
+{
+  "tm-one-window-dark": [
+    {
+      "id": "summary",
+      "label": "1 Window ◆ 9 Tabs",
+      "l": "30.70%",
+      "t": "8.77%",
+      "w": "14.47%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-one-window-light": [
+    {
+      "id": "summary",
+      "label": "1 Window ◆ 9 Tabs",
+      "l": "30.70%",
+      "t": "8.77%",
+      "w": "14.47%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-open-all-menu-dark": [
+    {
+      "id": "open-all",
+      "label": "Open all in new window",
+      "l": "0.20%",
+      "t": "46.76%",
+      "w": "27.85%",
+      "h": "12.23%"
+    }
+  ],
+  "tm-open-all-menu-light": [
+    {
+      "id": "open-all",
+      "label": "Open all in new window",
+      "l": "0.20%",
+      "t": "46.76%",
+      "w": "27.85%",
+      "h": "12.23%"
+    }
+  ],
+  "tm-three-windows-dark": [
+    {
+      "id": "summary",
+      "label": "3 Windows ◆ 9 Tabs",
+      "l": "30.70%",
+      "t": "8.77%",
+      "w": "15.11%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-three-windows-light": [
+    {
+      "id": "summary",
+      "label": "3 Windows ◆ 9 Tabs",
+      "l": "30.70%",
+      "t": "8.77%",
+      "w": "15.11%",
+      "h": "4.80%"
+    }
+  ]
+}

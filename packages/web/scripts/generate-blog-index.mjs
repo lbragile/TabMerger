@@ -9,6 +9,9 @@
  * before `tsc` in the `type-check` script, like scripts/generate-changelog.mjs. The output is
  * git-ignored (`packages/web/generated/`).
  *
+ * `scanBlogContent` is also the slug list scripts/sync-blog-posts.mjs registers in the database
+ * (`blog_posts`, for Helpful votes) after each deploy, so a new post needs no migration.
+ *
  *   node scripts/generate-blog-index.mjs
  *
  * Plain JavaScript with Node built-ins only, so next.config.ts, Vitest and the CLI can all load it.

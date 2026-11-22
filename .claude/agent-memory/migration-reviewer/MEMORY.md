@@ -8,3 +8,4 @@
 - [Privilege-revoke review checklist](learnings_privilege_revoke_review.md) — has_table_privilege blind to column grants; grantor rule; views/definer paths; pgTAP 42501 ambiguity
 - [Definer wrapper review](learnings_definer_wrapper_review.md) — wrapper over a definer count needn't be definer; tests can't tell; check totals directly
 - [Public vote table review](learnings_public_vote_table_review.md) — schema/default ACLs, auth.jwt() GUCs, pinning policy cmd+roles, upsert needs UPDATE, auth.users FK lock
+- [Token-gated deploy sync](learnings_token_gated_deploy_sync.md) — hashed-token definer RPC; grace period only covers transient lists; seed dev token; private schema; hosted 3s timeout

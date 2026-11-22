@@ -4,6 +4,9 @@
  * - a post whose `published` date is still ahead is left out of the index, tag pages and their
  *   counts, the sitemap and llms.txt; its page is a 404 on production and shows the banner on
  *   preview and local development
+ * - under `next dev` only (and not with BLOG_DEV_SCHEDULED=0) the index, tag pages, topic chips and
+ *   previous/next links list it, its card flagged "Scheduled for <date>"; tag counts, noindex, the
+ *   sitemap and llms.txt still leave it out
  * - a tag page is noindex until 3 posts carry the tag, 404 for a tag outside the vocabulary and is
  *   in the sitemap only when indexable
  * - a locale WITH its own file is canonical on its own URL and listed in hreflang and the sitemap;
@@ -63,6 +66,7 @@ vi.mock('@/components/blog/PostSources', () => ({ PostSources: () => null }))
 import sitemap from '@/app/sitemap'
 import { buildLlmsTxt } from '@/app/llms.txt/route'
 import BlogIndexPage from '@/app/[locale]/(marketing)/blog/page'
+import { indexOrder } from '@/components/blog/BlogIndexView'
 import BlogPostPage, { generateMetadata as postMetadata } from '@/app/[locale]/(marketing)/blog/[slug]/page'
 import BlogTagPage, { generateMetadata as tagMetadata } from '@/app/[locale]/(marketing)/blog/tags/[tag]/page'
 import {
@@ -71,7 +75,9 @@ import {
   loadPost,
   postLocales,
   publishedSlugs,
+  scheduledPreviewEnabled,
   tagPostCount,
+  topTags,
 } from '@/lib/blog/posts'
 import { blogPostMetadata } from '@/lib/blog/metadata'
 import { blogIndexJsonLd, blogPostingJsonLd } from '@/lib/blog/jsonLd'
@@ -163,6 +169,109 @@ describe('scheduled posts are not public', () => {
   it('an unknown slug is a 404 with no metadata', async () => {
     await expect(BlogPostPage({ params: Promise.resolve({ locale: 'en', slug: 'nope' }) })).rejects.toThrow(/404/)
     expect(await postMetadata({ params: Promise.resolve({ locale: 'en', slug: 'nope' }) })).toEqual({})
+  })
+})
+
+describe('scheduled posts under next dev', () => {
+  const tagParams = (tag: string) => ({ params: Promise.resolve({ locale: 'en', tag }) })
+  const indexLinks = async () => {
+    const { container } = render(await BlogIndexPage({ params: Promise.resolve({ locale: 'en' }) }))
+    return [...container.querySelectorAll('a')].map((a) => a.getAttribute('href'))
+  }
+
+  it('the gate is next dev only, with BLOG_DEV_SCHEDULED=0 as the opt-out', () => {
+    expect(scheduledPreviewEnabled({ NODE_ENV: 'development' })).toBe(true)
+    expect(scheduledPreviewEnabled({ NODE_ENV: 'development', BLOG_DEV_SCHEDULED: '1' })).toBe(true)
+    expect(scheduledPreviewEnabled({ NODE_ENV: 'development', BLOG_DEV_SCHEDULED: '0' })).toBe(false)
+    expect(scheduledPreviewEnabled({ NODE_ENV: 'production' })).toBe(false)
+    expect(scheduledPreviewEnabled({ NODE_ENV: 'test' })).toBe(false)
+    expect(scheduledPreviewEnabled({})).toBe(false)
+  })
+
+  it('lists them on the index, flagged "Scheduled for <date>", and live cards carry no flag', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    const links = await indexLinks()
+    expect(links).toContain('/blog/scheduled-d')
+    expect(links).toContain('/blog/live-a')
+    expect(screen.getAllByText(/^Scheduled for /)).toHaveLength(1)
+    expect(screen.getByText('Scheduled for December 25, 2026')).toBeInTheDocument()
+    expect((await loadAllPosts('en')).map((p) => p.post.slug)).toEqual(['scheduled-d', 'live-c', 'live-b', 'live-a'])
+  })
+
+  it('features the newest LIVE post, and lists the scheduled one first under More guides', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    const { container } = render(await BlogIndexPage({ params: Promise.resolve({ locale: 'en' }) }))
+    const cards = [...container.querySelectorAll('article[aria-labelledby^="post-"]')]
+    expect(cards.map((c) => c.getAttribute('aria-labelledby'))).toEqual(['post-live-c', 'post-scheduled-d', 'post-live-b', 'post-live-a'])
+    // The first card is the featured panel: the live post, no flag.
+    expect(cards[0]).toHaveTextContent('Latest guide')
+    expect(cards[0]).not.toHaveTextContent('Scheduled for')
+    expect(cards[1]).toHaveTextContent('Scheduled for December 25, 2026')
+    expect(cards[1]).not.toHaveTextContent('Latest guide')
+    expect(screen.getByRole('heading', { name: /^More guides/ })).toHaveTextContent('3')
+  })
+
+  it('features nothing when every listed post is scheduled', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.setSystemTime(new Date('2026-10-01T12:00:00Z'))
+    const { container } = render(await BlogIndexPage({ params: Promise.resolve({ locale: 'en' }) }))
+    expect(screen.queryByText('Latest guide')).toBeNull()
+    const cards = [...container.querySelectorAll('article[aria-labelledby^="post-"]')]
+    expect(cards.map((c) => c.getAttribute('aria-labelledby'))).toEqual(['post-scheduled-d', 'post-live-c', 'post-live-b', 'post-live-a'])
+    expect(screen.getAllByText(/^Scheduled for /)).toHaveLength(4)
+    expect(screen.getByRole('heading', { name: /^More guides/ })).toHaveTextContent('4')
+  })
+
+  it('indexOrder moves the newest live post first and keeps the rest in order', () => {
+    const p = (slug: string, published: string) => ({ post: { slug, published } }) as never
+    const now = new Date('2026-11-20T12:00:00Z')
+    const order = (posts: never[]) => indexOrder(posts, now).map((x: { post: { slug: string } }) => x.post.slug)
+    expect(order([p('s2', '2026-12-02'), p('s1', '2026-12-01'), p('l2', '2026-11-19'), p('l1', '2026-11-01')])).toEqual(['l2', 's2', 's1', 'l1'])
+    expect(order([p('l2', '2026-11-19'), p('l1', '2026-11-01')])).toEqual(['l2', 'l1'])
+    expect(order([p('s1', '2026-12-01')])).toEqual(['s1'])
+    expect(order([])).toEqual([])
+  })
+
+  it('lists them on tag pages and in the topic chips, but tag counts and noindex stay live-only', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    const { container } = render(await BlogTagPage(tagParams('firefox')))
+    expect(container.textContent).toContain('Scheduled D')
+    expect(screen.getByText('Scheduled for December 25, 2026')).toBeInTheDocument()
+    expect(topTags()).toContain('firefox')
+    expect(tagPostCount('firefox')).toBe(0)
+    expect((await tagMetadata(tagParams('firefox'))).robots).toEqual({ index: false, follow: true })
+  })
+
+  it('include them in the previous/next links', () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    expect(adjacentPosts('live-c', 'en').newer).toEqual({ slug: 'scheduled-d', title: 'Scheduled D' })
+    expect(adjacentPosts('scheduled-d', 'en')).toEqual({ older: { slug: 'live-c', title: 'Live C' }, newer: undefined })
+  })
+
+  it('never put them in the sitemap or llms.txt', () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    expect(sitemap().some((entry) => entry.url.includes('scheduled-d'))).toBe(false)
+    expect(buildLlmsTxt('https://tabmerger.com')).not.toContain('scheduled-d')
+  })
+
+  it('stay unlisted with BLOG_DEV_SCHEDULED=0', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+    vi.stubEnv('BLOG_DEV_SCHEDULED', '0')
+    expect(await indexLinks()).not.toContain('/blog/scheduled-d')
+    expect(screen.queryByText(/^Scheduled for /)).toBeNull()
+  })
+
+  it.each([
+    ['production', 'production'],
+    ['production', 'preview'],
+    ['test', ''],
+  ])('stay unlisted on a %s build (deployment "%s")', async (nodeEnv, deployEnv) => {
+    vi.stubEnv('NODE_ENV', nodeEnv)
+    vi.stubEnv('DEPLOY_ENV', deployEnv)
+    expect(await indexLinks()).not.toContain('/blog/scheduled-d')
+    expect(screen.queryByText(/^Scheduled for /)).toBeNull()
+    expect(topTags()).not.toContain('firefox')
+    expect(adjacentPosts('live-c', 'en').newer).toBeUndefined()
   })
 })
 

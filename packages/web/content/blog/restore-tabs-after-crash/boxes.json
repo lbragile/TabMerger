@@ -1,0 +1,42 @@
+{
+  "tm-auto-save-schedule-dark": [
+    {
+      "id": "schedule",
+      "label": "Schedule",
+      "l": "25.95%",
+      "t": "42.60%",
+      "w": "47.10%",
+      "h": "6.80%"
+    }
+  ],
+  "tm-auto-save-schedule-light": [
+    {
+      "id": "schedule",
+      "label": "Schedule",
+      "l": "25.95%",
+      "t": "42.60%",
+      "w": "47.10%",
+      "h": "6.80%"
+    }
+  ],
+  "tm-recently-closed-dark": [
+    {
+      "id": "today-row",
+      "label": "Today, 3 tabs",
+      "l": "0.57%",
+      "t": "65.93%",
+      "w": "28.35%",
+      "h": "7.22%"
+    }
+  ],
+  "tm-recently-closed-light": [
+    {
+      "id": "today-row",
+      "label": "Today, 3 tabs",
+      "l": "0.57%",
+      "t": "65.93%",
+      "w": "28.35%",
+      "h": "7.22%"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "tm-now-open-dark": [
+    {
+      "id": "now-open-summary",
+      "label": "2 Windows ◆ 6 Tabs",
+      "l": "30.70%",
+      "t": "8.77%",
+      "w": "15.11%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-now-open-light": [
+    {
+      "id": "now-open-summary",
+      "label": "2 Windows ◆ 6 Tabs",
+      "l": "30.70%",
+      "t": "8.77%",
+      "w": "15.11%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-workspace-dark": [
+    {
+      "id": "groups",
+      "label": "Your groups",
+      "l": "0.83%",
+      "t": "13.85%",
+      "w": "28.60%",
+      "h": "22.30%"
+    },
+    {
+      "id": "session",
+      "label": "A saved session",
+      "l": "0.57%",
+      "t": "86.35%",
+      "w": "9.59%",
+      "h": "4.63%"
+    }
+  ],
+  "tm-workspace-light": [
+    {
+      "id": "groups",
+      "label": "Your groups",
+      "l": "0.83%",
+      "t": "13.85%",
+      "w": "28.60%",
+      "h": "22.30%"
+    },
+    {
+      "id": "session",
+      "label": "A saved session",
+      "l": "0.57%",
+      "t": "86.35%",
+      "w": "9.59%",
+      "h": "4.63%"
+    }
+  ]
+}

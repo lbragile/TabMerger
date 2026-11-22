@@ -1,0 +1,164 @@
+export const post = {
+  slug: 'edge-collections-replacement',
+  title: 'Edge Collections is gone: what to use instead',
+  navTitle: 'Edge Collections replacement',
+  seoTitle: 'Edge Collections Removed? The Best Replacement (and How to Move)',
+  description:
+    'Microsoft removed Collections from Edge starting with version 149. Here’s what happened to your collections, how to get them out, and how to bring them into TabMerger as named groups.',
+  shareSummary: 'Edge Collections was retired in Edge 149. Where your pages went, and what to use now.',
+  dek: 'Your saved pages aren’t lost. Here’s where they went, and a better home for them.',
+  published: '2026-12-06',
+  updated: '2026-12-06',
+  testedOn: ['Edge 158.0.4370.33', 'Chrome 157.0.8103.80'],
+  keyFacts: [
+    {
+      text: 'Collections is no longer available from Edge 149, released June 4, 2026.',
+      source: 'Microsoft Support',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'From Edge 145 you could no longer add pages to Collections.', source: 'Microsoft Support' },
+    {
+      text: 'Move to Favorites keeps the pages’ addresses, not images or notes.',
+      source: 'Microsoft Support',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'TabMerger turns each favorites folder into a named group.', source: 'Tested in TabMerger 3.16.1, Nov 21, 2026' },
+  ],
+  faq: [
+    {
+      question: 'Has Microsoft removed Edge Collections?',
+      answer:
+        'Yes. Microsoft’s support page says Collections is no longer available starting with Edge 149, released June 4, 2026; from Edge 145 you could no longer add new pages.',
+    },
+    {
+      question: 'Where did my collections go?',
+      answer:
+        'Microsoft offered Move to Favorites, which turns each collection into a favorites folder (pages only). Personal accounts can also see saved collections at bing.com/saves; work or school accounts could export them.',
+    },
+    {
+      question: 'What’s the best replacement for Edge Collections?',
+      answer:
+        'TabMerger: named, colour-coded groups of tabs you can search, annotate with notes and reminders, and sync end-to-end encrypted on Pro. It also works in Chrome and Firefox.',
+    },
+    {
+      question: 'Can I import my collections into TabMerger?',
+      answer: 'Yes. Export your favorites as an HTML file and import it under Settings → Data: each top-level folder becomes a TabMerger group.',
+    },
+  ],
+  images: [
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-light.webp', alt: 'TabMerger dialog asking Import 2 groups? for the file favorites_edge.html, light theme' },
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-dark.webp', alt: 'TabMerger dialog asking Import 2 groups? for the file favorites_edge.html, dark theme' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-light.webp', alt: 'TabMerger sidebar with the groups Trip to Lisbon and Thesis reading, imported from favorites folders, light theme' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-dark.webp', alt: 'TabMerger sidebar with the groups Trip to Lisbon and Thesis reading, imported from favorites folders, dark theme' },
+  ],
+  tags: ['edge', 'bookmarks', 'save-tabs', 'tab-manager'],
+  sources: [
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'EdgeCollectionsEnabled policy (obsolete)',
+      publisher: 'Microsoft Learn',
+      url: 'https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies/EdgeCollectionsEnabled',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/edge-collections-replacement/tm-imported-groups-light.webp' },
+  ogImage: { src: '/blog/edge-collections-replacement/og.png', alt: 'Edge Collections is gone: what to use instead. A TabMerger guide, with favorites folders imported as groups' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'what-happened', label: 'What happened' },
+    { id: 'where', label: 'Where your pages are' },
+    { id: 'move', label: 'Move them to TabMerger' },
+    { id: 'why', label: 'Why TabMerger' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Yes, it’s gone: Microsoft says **Collections is no longer available starting with Edge 149** (released June 4, 2026). Your pages weren’t deleted: **Move to Favorites** turned each collection into a favorites folder. The best new home is [TabMerger](/features): export your favorites as HTML, import the file, and every folder becomes a named, searchable group, with notes, reminders and encrypted sync, in Edge, Chrome and Firefox.
+
+</QuickAnswer>
+
+<InstallCta>Bring your old collections back as named, searchable groups. Free for Edge, Chrome and Firefox.</InstallCta>
+
+<Section id="what-happened" title="Has Microsoft really removed Edge Collections?">
+
+Yes, in stages, according to Microsoft’s own pages:
+
+<ComparisonTable
+  head={['Edge version', 'What changed']}
+  rowHeaders
+  rows={[
+    ['145', 'You could no longer add pages to Collections; existing ones stayed visible'],
+    ['149 (June 4, 2026)', 'Collections is no longer available'],
+    ['153', 'The admin policy for Collections became obsolete “because the Collections feature was removed”'],
+  ]}
+/>
+
+Microsoft’s reason, in its words: it is “retiring Collections in Edge, to better simplify our offerings.”
+
+</Section>
+
+<Section id="where" title="Where did my collections go?">
+
+During the retirement, Edge showed two options in the Collections pane:
+
+- **Move to Favorites** (recommended by Microsoft): each collection became a folder in your favorites. Only saved web pages moved; images and notes didn’t.
+- **Export your data**: for work or school accounts only.
+
+Personal Microsoft accounts can also find previously saved collections at `bing.com/saves`. So check your favorites first (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>): your collections are probably there as folders.
+
+</Section>
+
+<Section id="move" title="How do I move my collections into TabMerger?">
+
+Two minutes, and every former collection becomes a group:
+
+1. In Edge, open Favorites (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>) and choose **Export favorites**. Save the HTML file.
+2. Open TabMerger → **Settings → Data** → **Import file**, and choose that file.
+3. Confirm. Each top-level folder becomes a group with the folder’s name; folders nested deeper are folded into their parent’s group.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Importing exported favorites" steps={[{ title: 'Confirm' }, { title: 'Your groups' }]}>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-import-confirm" alt="TabMerger dialog asking Import 2 groups? for the file favorites_edge.html, light theme" darkAlt="TabMerger dialog asking Import 2 groups? for the file favorites_edge.html, dark theme" boxes={[{ id: 'import-confirm', label: 'Import' }]} source="TabMerger 3.16.1">TabMerger counts the folders it found and asks first.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-imported-groups" alt="TabMerger sidebar with the groups Trip to Lisbon and Thesis reading, imported from favorites folders, light theme" darkAlt="TabMerger sidebar with the groups Trip to Lisbon and Thesis reading, imported from favorites folders, dark theme" boxes={[{ id: 'imported', label: 'Groups named after folders' }]} source="TabMerger 3.16.1">Each folder is now a group with the same name and pages.</ThemedScreenshot>
+</Carousel>
+
+Your other favorites folders come along too; delete the groups you don’t need. Free holds 5 groups and 50 tabs, and an import that would go past that is stopped before anything is added; [Pro](/pricing) has no limit.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Edge Favorites page menu with Export favorites. */}
+
+</Section>
+
+<Section id="why" title="Why is TabMerger a better home than Collections was?">
+
+- **Whole sets of tabs, in one click.** **Merge with current** saves every open window into a named group.
+- **Notes and reminders on any tab,** to replace the notes Collections couldn’t move: right-click a tab and choose **Add note** or **Remind me…**.
+- **One search** for open, saved and recently closed tabs: <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+- **Cross-browser.** The same groups in Edge, Chrome and Firefox, synced end-to-end encrypted on Pro.
+- **Yours to keep.** Export everything to JSON any time; nothing depends on one company keeping a feature alive.
+
+New to tab managers? [What a browser session manager does](/blog/browser-session-manager) and [the best tab manager extensions](/blog/best-tab-manager-extensions) cover the field.
+
+<InstallCta>Free for Edge, Chrome and Firefox. No account needed to start.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

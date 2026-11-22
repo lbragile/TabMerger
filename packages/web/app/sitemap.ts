@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next'
 import { getMetadataBase } from '@/lib/utils'
 import { DEFAULT_LOCALE, PUBLIC_LOCALES, localizedPath } from '@/i18n/locales'
 import { BLOG_PATH, blogPostPath, indexableSlugs, postLocales, postSummary, tagPostCount } from '@/lib/blog/posts'
-import { BLOG_TAG_SLUGS, TAG_INDEX_MIN_POSTS } from '@/lib/blog/tags'
+import { BLOG_TAG_SLUGS, BLOG_TAGS_INDEX_PATH, TAG_INDEX_MIN_POSTS } from '@/lib/blog/tags'
 import { POSTS_PER_PAGE, blogIndexPagePath, blogTagPagePath, laterPages } from '@/lib/blog/paging'
 
 // ponytail: static list of marketing pages — no CMS/DB-backed routes to
@@ -68,5 +68,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const tags = BLOG_TAG_SLUGS.filter((tag) => tagPostCount(tag) >= TAG_INDEX_MIN_POSTS).flatMap((tag) =>
     [1, ...laterPages(tagPostCount(tag), POSTS_PER_PAGE)].map((n) => englishOnly(blogTagPagePath(tag, n), 0.4))
   )
-  return [...pages, ...blogPages, ...posts, ...tags]
+  // The all-topics page, once any live post carries a tag.
+  const topics = BLOG_TAG_SLUGS.some((tag) => tagPostCount(tag) > 0) ? [englishOnly(BLOG_TAGS_INDEX_PATH, 0.4)] : []
+  return [...pages, ...blogPages, ...posts, ...topics, ...tags]
 }

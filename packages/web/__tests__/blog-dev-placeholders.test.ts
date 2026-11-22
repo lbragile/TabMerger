@@ -1,13 +1,24 @@
 /**
- * Dev-only placeholder posts (content/blog/_placeholders). The generator lists them, flagged, in
+ * Dev-only placeholder posts (content/blog/_placeholders; none are checked in now, so the generator tests use a temporary folder). The generator lists them, flagged, in
  * every mode but a production build (so `next dev`, Vitest and type-check write the same file),
  * and leaves them out of a production build entirely. At runtime they count only under `next dev`
  * without BLOG_DEV_PLACEHOLDERS=0, and they are never indexable.
  */
-import { describe, expect, it } from 'vitest'
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import { afterAll, describe, expect, it } from 'vitest'
 import { BLOG_SOURCES as GENERATED } from '@/generated/blog'
-import { BLOG_CONTENT_DIR, includePlaceholders, renderBlogIndexModule, scanBlogContent } from '@/scripts/generate-blog-index.mjs'
+import { includePlaceholders, renderBlogIndexModule, scanBlogContent } from '@/scripts/generate-blog-index.mjs'
 import { BLOG_SLUGS, BLOG_SOURCES, indexableSlugs, isPlaceholder, placeholdersEnabled, withoutPlaceholders } from '@/lib/blog/posts'
+
+/** A throwaway content folder with two placeholder posts: the real ones were removed from the repo. */
+const FIXTURE_DIR = mkdtempSync(join(tmpdir(), 'blog-placeholders-'))
+for (const slug of ['dev-placeholder-a', 'dev-placeholder-b']) {
+  mkdirSync(join(FIXTURE_DIR, '_placeholders', slug), { recursive: true })
+  writeFileSync(join(FIXTURE_DIR, '_placeholders', slug, 'en.mdx'), 'export const post = {}\n')
+}
+afterAll(() => rmSync(FIXTURE_DIR, { recursive: true, force: true }))
 
 const placeholderSlugs = (posts: unknown) =>
   Object.entries(posts as Record<string, Record<string, { placeholder?: boolean }>>)
@@ -16,7 +27,7 @@ const placeholderSlugs = (posts: unknown) =>
 
 describe('the generator', () => {
   it.each([{ NODE_ENV: 'development' }, { NODE_ENV: 'test' }, {}])('lists the placeholders, flagged, for %o', (env) => {
-    const posts = scanBlogContent(BLOG_CONTENT_DIR, { placeholders: includePlaceholders(env as NodeJS.ProcessEnv) })
+    const posts = scanBlogContent(FIXTURE_DIR, { placeholders: includePlaceholders(env as NodeJS.ProcessEnv) })
     const slugs = placeholderSlugs(posts)
     expect(slugs.length).toBeGreaterThanOrEqual(2)
     const source = renderBlogIndexModule(posts)
@@ -25,7 +36,7 @@ describe('the generator', () => {
   })
 
   it('leaves them out of a production build: no entry, no import', () => {
-    const posts = scanBlogContent(BLOG_CONTENT_DIR, { placeholders: includePlaceholders({ NODE_ENV: 'production' } as NodeJS.ProcessEnv) })
+    const posts = scanBlogContent(FIXTURE_DIR, { placeholders: includePlaceholders({ NODE_ENV: 'production' } as NodeJS.ProcessEnv) })
     expect(placeholderSlugs(posts)).toEqual([])
     const source = renderBlogIndexModule(posts)
     expect(source).not.toContain('@/content/blog/_placeholders')
@@ -45,8 +56,7 @@ describe('at runtime', () => {
     expect(placeholdersEnabled(env)).toBe(expected)
   })
 
-  it('the generated file has them, the test run filters them out', () => {
-    expect(placeholderSlugs(GENERATED).length).toBeGreaterThanOrEqual(2)
+  it('the generated file has none now, and the test run filters any out', () => {
     expect(placeholderSlugs(BLOG_SOURCES)).toEqual([])
     expect(BLOG_SLUGS.some((slug) => slug.startsWith('dev-placeholder-'))).toBe(false)
     expect(Object.keys(withoutPlaceholders(GENERATED))).toEqual(Object.keys(BLOG_SOURCES))

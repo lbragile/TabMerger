@@ -33,6 +33,14 @@ export const KNOWN_ISSUES: KnownIssue[] = [
     workaround: 'When reporting a bug, give the version shown in TabMerger’s Settings instead.',
   },
   {
+    id: 'edge-save-shortcuts-not-set',
+    area: 'Extension',
+    title: 'In Edge, three of the four save shortcuts start unset',
+    details:
+      'After installing TabMerger in Edge, edge://extensions/shortcuts shows Ctrl+Shift+S for “Save the current tab”, but “Save all other tabs”, “Save tabs to the left” and “Save tabs to the right” say “Not set”. Edge already uses Ctrl+Shift+P, Ctrl+Shift+K and Ctrl+Shift+U for its own commands, so those keys do Edge’s action instead.',
+    workaround: 'Open edge://extensions/shortcuts and pick your own keys for the three commands.',
+  },
+  {
     id: 'change-lost-if-popup-closes-instantly',
     area: 'Extension',
     title: 'A change made the instant before the popup closes may not be saved',

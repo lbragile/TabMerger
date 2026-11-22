@@ -13,9 +13,14 @@ export const BLOG_TAGS = {
   'session-management': 'sessionManagement',
   'browser-productivity': 'browserProductivity',
   'browser-tips': 'browserTips',
+  'cross-browser': 'crossBrowser',
   chrome: 'chrome',
   edge: 'edge',
   firefox: 'firefox',
+  comparison: 'comparison',
+  research: 'research',
+  developers: 'developers',
+  'tabmerger-guides': 'tabmergerGuides',
 } as const satisfies Record<string, string>
 
 export type BlogTag = keyof typeof BLOG_TAGS
@@ -35,6 +40,9 @@ export const TAG_INDEX_MIN_POSTS = 3
 export function isBlogTag(value: unknown): value is BlogTag {
   return typeof value === 'string' && Object.hasOwn(BLOG_TAGS, value)
 }
+
+/** Path of the all-topics page (every tag, with its post count), without a locale prefix. */
+export const BLOG_TAGS_INDEX_PATH = '/blog/tags'
 
 /** Path of a tag's page, without a locale prefix. */
 export function blogTagPath(tag: BlogTag): string {

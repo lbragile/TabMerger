@@ -7,7 +7,10 @@ import {
   type AiAvailability,
 } from '@tabmerger/shared'
 import { AI_AVAILABILITY } from '@/lib/aiFlag'
-import { BLOG_PATH, blogPostPath, indexableSlugs, postSummary } from '@/lib/blog/posts'
+import { BLOG_PATH, blogPostPath, indexableSlugs, postSummary, tagPostCount } from '@/lib/blog/posts'
+import { POSTS_PER_PAGE, blogIndexPagePath, blogTagPagePath, laterPages } from '@/lib/blog/paging'
+import { BLOG_TAGS, BLOG_TAG_SLUGS, BLOG_TAGS_INDEX_PATH, TAG_INDEX_MIN_POSTS } from '@/lib/blog/tags'
+import blogMessages from '@/messages/en/blog.json'
 import { GITHUB_REPO_URL } from '@/lib/github'
 import { getMetadataBase } from '@/lib/utils'
 
@@ -34,12 +37,33 @@ const PAGES: ReadonlyArray<readonly [path: string, title: string, about: string]
   [BLOG_PATH, 'Tab management tips and guides', 'Practical, tested guides to managing browser tabs: save and restore sessions, organize tabs into groups, recover closed tabs and keep tab overload in check'],
 ]
 
-/** Every live blog post's English version, with its title and summary from the post file. */
+/**
+ * Every live blog post's English version, with its title and summary from the post file, then the
+ * all-topics page once there is a live post (the sitemap lists it on the same condition).
+ */
 function blogPosts(): ReadonlyArray<readonly [path: string, title: string, about: string]> {
-  return indexableSlugs().flatMap((slug) => {
+  const posts = indexableSlugs().flatMap((slug) => {
     const summary = postSummary(slug)
     return summary ? [[blogPostPath(slug), summary.title, summary.description] as const] : []
   })
+  if (posts.length === 0) return posts
+  // Later pages of the index, the all-topics page and every indexable tag page (all of its pages):
+  // the same blog listing pages the sitemap lists, so the two never disagree.
+  const indexPages = laterPages(indexableSlugs().length, POSTS_PER_PAGE).map(
+    (n) => [blogIndexPagePath(n), `Tab management guides, page ${n}`, 'More guides, newest first'] as const
+  )
+  const tagPages = BLOG_TAG_SLUGS.filter((tag) => tagPostCount(tag) >= TAG_INDEX_MIN_POSTS).flatMap((tag) => {
+    const label = (blogMessages.tags as Record<string, string>)[BLOG_TAGS[tag]].replace(/-/g, ' ')
+    return [1, ...laterPages(tagPostCount(tag), POSTS_PER_PAGE)].map(
+      (n) => [blogTagPagePath(tag, n), n > 1 ? `Guides about ${label}, page ${n}` : `Guides about ${label}`, `Every guide tagged ${label}`] as const
+    )
+  })
+  return [
+    ...posts,
+    ...indexPages,
+    [BLOG_TAGS_INDEX_PATH, 'All blog topics', 'Every topic in the blog, with the number of articles on each'] as const,
+    ...tagPages,
+  ]
 }
 
 /**

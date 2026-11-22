@@ -1,0 +1,32 @@
+{
+  "edge-extension-shortcuts": [
+    {
+      "id": "save-current-tab",
+      "label": "Save the current tab: Ctrl+Shift+S",
+      "l": "6.47%",
+      "t": "44.53%",
+      "w": "22.17%",
+      "h": "4.01%"
+    }
+  ],
+  "tm-search-dark": [
+    {
+      "id": "search-input",
+      "label": "Search box",
+      "l": "21.83%",
+      "t": "0.43%",
+      "w": "56.35%",
+      "h": "10.30%"
+    }
+  ],
+  "tm-search-light": [
+    {
+      "id": "search-input",
+      "label": "Search box",
+      "l": "21.83%",
+      "t": "0.43%",
+      "w": "56.35%",
+      "h": "10.30%"
+    }
+  ]
+}

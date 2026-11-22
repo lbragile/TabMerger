@@ -1,0 +1,58 @@
+{
+  "tm-reminder-dark": [
+    {
+      "id": "remind-in",
+      "label": "Remind me in…",
+      "l": "36.45%",
+      "t": "30.77%",
+      "w": "56.60%",
+      "h": "4.63%"
+    }
+  ],
+  "tm-reminder-light": [
+    {
+      "id": "remind-in",
+      "label": "Remind me in…",
+      "l": "36.45%",
+      "t": "30.77%",
+      "w": "56.60%",
+      "h": "4.63%"
+    }
+  ],
+  "tm-tab-menu-dark": [
+    {
+      "id": "add-note",
+      "label": "Add note",
+      "l": "32.95%",
+      "t": "36.93%",
+      "w": "24.35%",
+      "h": "6.80%"
+    },
+    {
+      "id": "remind-me",
+      "label": "Remind me…",
+      "l": "32.95%",
+      "t": "41.60%",
+      "w": "24.35%",
+      "h": "6.80%"
+    }
+  ],
+  "tm-tab-menu-light": [
+    {
+      "id": "add-note",
+      "label": "Add note",
+      "l": "32.95%",
+      "t": "36.93%",
+      "w": "24.35%",
+      "h": "6.80%"
+    },
+    {
+      "id": "remind-me",
+      "label": "Remind me…",
+      "l": "32.95%",
+      "t": "41.60%",
+      "w": "24.35%",
+      "h": "6.80%"
+    }
+  ]
+}

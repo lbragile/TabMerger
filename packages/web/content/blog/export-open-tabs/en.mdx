@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'export-open-tabs',
+  title: 'How to export your open tabs',
+  navTitle: 'Export your open tabs',
+  seoTitle: 'How to Export Open Tabs in Chrome, Edge and Firefox',
+  description:
+    'Export every open tab, title and address, to a file you keep: TabMerger’s one-click JSON export (open tabs and saved groups together), or the browser’s bookmark export, step by step.',
+  shareSummary: 'Export every open tab to a file in one click, and import it back anywhere.',
+  dek: 'A file you own beats a session you hope survives. One click in TabMerger, a few in the browser.',
+  published: '2026-12-02',
+  updated: '2026-12-02',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger’s Export JSON saves your open tabs and every saved group in one file.', source: 'Tested in TabMerger 3.16.1, Nov 21, 2026' },
+    { text: 'TabMerger imports JSON, bookmarks HTML and OneTab text files.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome exports bookmarks from the Bookmark Manager’s menu.',
+      source: 'Chrome Help',
+      href: 'https://support.google.com/chrome/answer/96816',
+    },
+    { text: 'Ctrl+Shift+D bookmarks every tab in the window, in all three browsers.', source: 'Chrome and Edge help; Firefox 159 keyset' },
+  ],
+  faq: [
+    {
+      question: 'How do I copy all tab URLs?',
+      answer:
+        'The quickest complete copy is TabMerger’s Settings → Data → Export JSON: one file with the title and address of every open tab and every saved group. Built in, bookmark the window’s tabs (Ctrl+Shift+D) and export your bookmarks as HTML.',
+    },
+    {
+      question: 'Can I export tabs from every window at once?',
+      answer: 'Yes, with TabMerger: Now Open covers every open window, and Export JSON includes it. The bookmark route works one window at a time.',
+    },
+    {
+      question: 'How do I import the file again?',
+      answer: 'In TabMerger, Settings → Data → Import file: it reads TabMerger JSON, bookmarks HTML and OneTab text files, and adds them as groups.',
+    },
+    {
+      question: 'Is the export private?',
+      answer: 'Yes. The file is made in your browser and saved to your computer; nothing is uploaded. Keep it somewhere safe, since it lists your pages.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: 'TabMerger Settings, Data, with the Export JSON and Import file buttons under Import & export, light theme' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: 'TabMerger Settings, Data, with the Export JSON and Import file buttons under Import & export, dark theme' },
+  ],
+  tags: ['save-tabs', 'bookmarks', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Import Chrome bookmarks & settings (export section)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/export-open-tabs/tm-settings-export-light.webp' },
+  ogImage: { src: '/blog/export-open-tabs/og.png', alt: 'How to export your open tabs: a TabMerger guide, with the Export JSON button' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'tabmerger', label: 'Export in one click' },
+    { id: 'inside', label: 'What’s in the file' },
+    { id: 'builtin', label: 'The bookmark route' },
+    { id: 'import', label: 'Bring it back' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Export bookmarks',
+    values: { chrome: 'Bookmark Manager → ⋮ → Export bookmarks', edge: 'Favorites → Export favorites', firefox: 'Library → Export Bookmarks to HTML…' },
+  },
+}
+
+<QuickAnswer>
+
+Open [TabMerger](/features), go to **Settings → Data** and press **Export JSON**. One click saves a file with the title and address of **every open tab in every window**, plus every group you’ve saved. Built in, you can bookmark a window’s tabs with <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> and export your bookmarks as an HTML file, one window at a time.
+
+</QuickAnswer>
+
+<InstallCta>Export every open tab, from every window, in one click. Free for Chrome, Edge and Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="How do I export all my open tabs in one click?">
+
+1. Open TabMerger and click the account icon → **Settings**.
+2. Open the **Data** tab.
+3. Under **Import & export**, press **Export JSON**. The file downloads straight away, named like `tabmerger-backup-2026-11-21.json`.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="TabMerger Settings, Data, with the Export JSON and Import file buttons under Import & export, light theme" darkAlt="TabMerger Settings, Data, with the Export JSON and Import file buttons under Import & export, dark theme" boxes={[{ id: 'export-json', label: 'Export JSON' }, { id: 'import-file', label: 'Import file' }]} source="TabMerger 3.16.1">Settings → Data: one button out, one button back in.</ThemedScreenshot>
+
+It’s on every plan, Free included, and the file is created in your browser: nothing is uploaded.
+
+</Section>
+
+<Section id="inside" title="What’s in the exported file?">
+
+A JSON list of your groups. **Now Open**, your currently open windows and tabs, comes first, followed by each saved group. From a real export:
+
+<ComparisonTable
+  head={['Field', 'Example from the export']}
+  rows={[
+    [<code>name</code>, '“Now Open”, “Work”, “Reading list”'],
+    [<code>windows[]</code>, 'One entry per window, each with its tabs'],
+    [<code>tabs[].title</code>, '“Spaced repetition - Wikipedia”'],
+    [<code>tabs[].url</code>, <code>https://en.wikipedia.org/wiki/Spaced_repetition</code>],
+    [<code>color</code>, <code>rgba(59, 130, 246, 1)</code>],
+  ]}
+/>
+
+JSON is plain text, so any script or text editor can read it: pull out the addresses, turn them into a Markdown list, or keep the file as a backup.
+
+</Section>
+
+<Section id="builtin" title="How do I export tabs without an extension?">
+
+Browsers don’t export open tabs directly, but they do export bookmarks. So bookmark the tabs first, then export:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. In each window, press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> on a Mac) and save the tabs into a new folder.
+2. Open **⋮ → Bookmarks and lists → Bookmark Manager**.
+3. At the top, open **⋮ (More) → Export bookmarks**. Chrome saves every bookmark as an HTML file.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. In each window, press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> to add all tabs to favorites, in a new folder.
+2. Press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> to open Favorites.
+3. Choose **Export favorites** from the page’s menu and save the HTML file.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. In each window, press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> to bookmark all tabs into a new folder.
+2. Press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> to open the Library.
+3. Choose **Export Bookmarks to HTML…** and save the file.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>it’s one window at a time, it exports *all* your bookmarks rather than just those tabs, and the file has no idea which tabs were open together.</Catch>
+
+</Section>
+
+<Section id="import" title="How do I bring the tabs back?">
+
+In TabMerger, **Settings → Data → Import file** reads all three kinds of file and adds them as groups next to the ones you have:
+
+- **TabMerger JSON**, from Export JSON, with your groups and windows as they were.
+- **Bookmarks HTML**, from any browser: each top-level folder becomes a group.
+- **OneTab text**: each OneTab list becomes a group. See our [OneTab alternatives guide](/blog/onetab-alternatives).
+
+That makes an export the simplest way to [move tabs to another computer](/blog/move-tabs-between-computers) without an account. Want it automatic? [Pro](/pricing) keeps the newest 10 automatic backups and syncs your groups between devices, end-to-end encrypted. To save tabs for later without a file at all, see [how to save all open tabs](/blog/save-all-open-tabs); to send a set to someone else, see [how to share a set of tabs](/blog/share-a-set-of-tabs).
+
+<InstallCta>Free for Chrome, Edge and Firefox. No account needed to start.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,197 @@
+export const post = {
+  slug: 'browser-session-manager',
+  title: 'What is a browser session manager, and do you need one?',
+  navTitle: 'What is a session manager?',
+  seoTitle: 'Session Manager Extensions Explained: Sessions vs Bookmarks',
+  description:
+    'What a tab session is, what a session manager extension does that bookmarks and History don’t, what to look for in one, and when the browser alone is enough.',
+  shareSummary: 'Tab sessions, session managers and bookmarks: what each one saves, and when you need which.',
+  dek: 'Your browser already keeps one session. A session manager keeps as many as you like, with names.',
+  published: '2026-11-25',
+  updated: '2026-11-25',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Extensions can list at most 25 recently closed tabs and windows.',
+      source: 'chrome.sessions docs',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+    },
+    { text: 'Session Buddy stores data on the device and has no sync.', source: 'Session Buddy’s store listing, Nov 20, 2026' },
+    { text: 'Tab Session Manager auto-saves on window close and on a timer.', source: 'Its store listing, Nov 20, 2026' },
+    { text: 'Startup restore keeps only the last session.', source: 'Chrome, Edge and Firefox settings' },
+  ],
+  faq: [
+    {
+      question: 'What is a tab session?',
+      answer:
+        'The windows and tabs you have open at one moment, in order. The browser keeps the current one so it can reopen it after a restart; a session manager saves it under a name.',
+    },
+    {
+      question: 'What’s the difference between a session manager and bookmarks?',
+      answer:
+        'Bookmarks save single pages in folders. A session manager saves whole windows, keeps their structure and can do it automatically, then reopens them as windows.',
+    },
+    {
+      question: 'Do I need a session manager extension?',
+      answer:
+        'Not if you work in one window and the startup setting is on. You do if you juggle several projects, lose tabs to crashes, or want yesterday’s windows back.',
+    },
+    {
+      question: 'Are session managers private?',
+      answer:
+        'It depends where they keep data. Some store everything on your device; synced ones send it to a server, so check whether it’s end-to-end encrypted.',
+    },
+  ],
+  images: [
+    { src: '/blog/browser-session-manager/tm-save-session-light.webp', alt: 'TabMerger Save Session dialog with the name Friday wrap-up, light theme' },
+    { src: '/blog/browser-session-manager/tm-save-session-dark.webp', alt: 'TabMerger Save Session dialog with the name Friday wrap-up, dark theme' },
+    { src: '/blog/browser-session-manager/tm-session-view-light.webp', alt: 'The saved session Friday wrap-up listing its groups, with a Restore session button, light theme' },
+    { src: '/blog/browser-session-manager/tm-session-view-dark.webp', alt: 'The saved session Friday wrap-up listing its groups, with a Restore session button, dark theme' },
+  ],
+  tags: ['session-management', 'tab-manager', 'save-tabs', 'comparison'],
+  sources: [
+    {
+      title: 'chrome.sessions API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'sessions (WebExtensions API)',
+      publisher: 'MDN Web Docs',
+      url: 'https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Session Buddy',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/session-buddy-tab-bookmar/edacconmaakjimmfgnblocblbcdcpbko',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tab Session Manager',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/tab-session-manager/iaiomicjabeggjcfkbimgmglanimpnae',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tabs Outliner',
+      publisher: 'tabsoutliner.com',
+      url: 'https://tabsoutliner.com/',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/browser-session-manager/tm-session-view-light.webp' },
+  ogImage: { src: '/blog/browser-session-manager/og.png', alt: 'What is a browser session manager, and do you need one? A TabMerger guide, with a saved session and its Restore button' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'session', label: 'What is a tab session?' },
+    { id: 'vs', label: 'Sessions vs bookmarks' },
+    { id: 'need', label: 'Do you need one?' },
+    { id: 'look-for', label: 'What to look for' },
+    { id: 'examples', label: 'Examples' },
+    { id: 'tabmerger', label: 'Sessions in TabMerger' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+A **session** is the set of windows and tabs you have open at one moment. Your browser keeps the current one so it can reopen it after a restart. A **session manager** is an extension that saves sessions under names, often automatically, and reopens them as windows later. Bookmarks save pages; a session manager saves the whole workspace. [TabMerger](/features) does both jobs in one: every open window saved into named groups in one click, named sessions you can restore together, auto-save on a schedule, and end-to-end encrypted sync on Pro.
+
+</QuickAnswer>
+
+<InstallCta>Save every window as a named group, and whole sessions in one click. Free for Chrome, Edge and Firefox.</InstallCta>
+
+<Section id="session" title="What is a tab session?">
+
+Everything that’s open right now: each window, its tabs in order, and which tab is active. Browsers track this all the time, for two jobs:
+
+- **Startup restore.** With the browser’s “previous session” startup option turned on, it reopens the last session when it starts. Where that option lives in each browser is in [how to restore tabs after a crash](/blog/restore-tabs-after-crash#prevent).
+- **Recently closed.** <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> walks back through tabs and windows you closed.
+
+Both keep only the *latest* state. Last Tuesday’s windows aren’t a session the browser can give you back; they’re just lines in History. That gap is what session managers fill. If you’ve already lost tabs, start with [how to restore tabs after a crash](/blog/restore-tabs-after-crash).
+
+</Section>
+
+<Section id="vs" title="Session manager vs bookmarks vs History">
+
+<ComparisonTable
+  head={['', 'Bookmarks', 'History', 'Session manager']}
+  rowHeaders
+  highlight={3}
+  minWidth="36rem"
+  rows={[
+    ['Saves', 'Pages you pick', 'Every page you visit', 'Whole windows and their tabs'],
+    ['Keeps windows apart', 'One folder per save', 'No', 'Yes'],
+    ['Saves automatically', 'No', 'Yes, page by page', 'Usually, on a timer or on close'],
+    ['Reopens', 'A folder at a time', 'A page at a time', 'Windows, in one click'],
+    ['Built in', 'Yes', 'Yes', 'No, an extension'],
+  ]}
+/>
+
+Bookmarks win for pages you’ll keep for years. A session manager wins for work in progress: the twelve tabs of a half-finished task that you want back exactly as a window, not filed one by one. More in [tabs vs bookmarks](/blog/tabs-vs-bookmarks).
+
+</Section>
+
+<Section id="need" title="Do you need one?">
+
+Probably not if you work in one window, keep under a couple of dozen tabs and have the startup setting on. The [too-many-tabs routine](/blog/manage-too-many-tabs) and a bookmark folder now and then cover you.
+
+You probably do if any of these sound familiar:
+
+- You switch between projects and want each one’s windows back intact.
+- A crash, update or forced restart has cost you tabs before.
+- You want to close everything at the end of the day without losing it.
+- You need tabs from days ago, not just from the last session.
+
+</Section>
+
+<Section id="look-for" title="What should a good session manager do?">
+
+- **Save automatically**, not only when you remember to: on a timer, when a window closes, or both.
+- **Keep the structure**: windows, tab order, and ideally tab groups.
+- **Restore flexibly**: the whole session, one window, or one tab.
+- **Search** across saved sessions, so a tab from last week is findable.
+- **Export** to a file you can read elsewhere, so you’re never locked in. (TabMerger exports JSON in one click: [here’s what’s in it](/blog/export-open-tabs).)
+- **Be clear about where data lives.** Local-only is private but dies with the profile; synced is safer from data loss, and should be end-to-end encrypted.
+
+One technical note: the extension API browsers provide for closed tabs is small. `chrome.sessions` returns at most 25 recently closed entries (`MAX_SESSION_RESULTS`). Session managers that go further keep their own records.
+
+</Section>
+
+<Section id="examples" title="Which session managers are there?">
+
+A few established ones, described from their own store listings and sites (checked Nov 20, 2026):
+
+- **Session Buddy** (Chrome) saves and restores sessions and keeps a history of past sessions for crash recovery. Data stays on the device; its listing says there’s no sync. Free.
+- **Tab Session Manager** (Chrome, Firefox, Edge) saves sessions with names and tags, auto-saves when a window closes and on a timer, and offers cloud sync. Free.
+- **Tabs Outliner** (Chrome) keeps open and saved windows in one tree with notes and crash recovery. Free, with a one-time Pro upgrade.
+
+For a side-by-side of nine tools on price, sync and encryption, see [the best tab manager extensions compared](/blog/best-tab-manager-extensions) or our [comparison page](/compare).
+
+</Section>
+
+<Section id="tabmerger" title="How sessions work in TabMerger">
+
+[TabMerger](/features), our free extension for Chrome, Edge and Firefox, is a tab manager with sessions built in. Your open tabs are saved into named **groups**; **Save current session** then takes a named snapshot of those saved groups that you can restore together later. Free keeps 3 sessions in the browser; Pro keeps unlimited sessions and syncs them between devices, end-to-end encrypted.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Saving and restoring a session" steps={[{ title: 'Save session' }, { title: 'Session view' }]}>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-save-session" alt="TabMerger Save Session dialog with the name Friday wrap-up, light theme" darkAlt="TabMerger Save Session dialog with the name Friday wrap-up, dark theme" boxes={[{ id: 'session-name', label: 'Session name' }]} source="TabMerger 3.16.1">Save current session asks for a name.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-session-view" alt="The saved session Friday wrap-up listing its groups, with a Restore session button, light theme" darkAlt="The saved session Friday wrap-up listing its groups, with a Restore session button, dark theme" boxes={[{ id: 'restore-session', label: 'Restore session' }]} source="TabMerger 3.16.1">The saved session lists its groups; Restore session brings them all back.</ThemedScreenshot>
+</Carousel>
+
+For the automatic side, **Settings → Data → Auto-save open tabs** saves your open tabs as a new group on a schedule or once you pass a tab count. Exports are plain JSON. To make a session your morning routine, see [start your workday with saved tabs](/blog/start-your-workday-with-saved-tabs).
+
+<InstallCta>Free for Chrome, Edge and Firefox. No account needed to start.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

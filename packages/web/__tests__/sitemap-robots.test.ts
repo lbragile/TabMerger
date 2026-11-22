@@ -23,7 +23,11 @@ describe('sitemap', () => {
 
   it('uses the metadataBase origin and no build-time lastModified', () => {
     vi.stubEnv('NEXT_PUBLIC_APP_URL', 'https://example.test')
+    // A fixed day, so posts scheduled after it (and tag pages they would fill) aren't listed yet.
+    vi.useFakeTimers({ toFake: ['Date'] })
+    vi.setSystemTime(new Date('2026-11-20T12:00:00Z'))
     const entries = sitemap()
+    vi.useRealTimers()
     // One entry per page and shipped locale; the English-only legal pages once, in English.
     const expected = [
       ...['/', '/features', '/pricing', '/compare', '/faq', '/changelog', '/privacy', '/terms', '/contact', '/blog'].flatMap((path) =>
@@ -33,6 +37,8 @@ describe('sitemap', () => {
       ),
       // Blog posts: only the locales with their own file, whichever exist.
       ...postLocales('save-all-open-tabs').map((locale) => new URL(localizedPath(locale, '/blog/save-all-open-tabs'), getMetadataBase()).href),
+      // The all-topics page (English only, like the blog index).
+      new URL('/blog/tags', getMetadataBase()).href,
     ]
     expect(entries.map((entry) => entry.url)).toEqual(expected)
     expect(entries[0].url).toBe('https://example.test/')

@@ -1,0 +1,274 @@
+export const post = {
+  slug: 'tab-keyboard-shortcuts',
+  title: 'Tab keyboard shortcuts for Chrome, Edge and Firefox',
+  seoTitle: 'Chrome Tab Shortcuts (and Edge, Firefox): Full Reference',
+  description:
+    'Every tab shortcut worth learning in Chrome, Edge and Firefox: switch tabs, reopen closed tabs and windows, search tabs and bookmark them all, on Windows and Mac.',
+  shareSummary: 'Switch, reopen, search and save tabs from the keyboard in Chrome, Edge and Firefox.',
+  dek: 'One table for all three browsers, the Mac differences, and how to set extension shortcuts that actually stick.',
+  published: '2026-11-22',
+  updated: '2026-11-22',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+T reopens the last closed tab in all three.', source: 'Chrome and Edge help; Firefox 159 keyset' },
+    { text: 'Firefox reopens a closed window with Ctrl+Shift+N.', source: 'Firefox 159 keyset' },
+    {
+      text: 'Chrome’s Ctrl+9 jumps to the last tab, not the ninth.',
+      source: 'Chrome Help',
+      href: 'https://support.google.com/chrome/answer/157179',
+    },
+    { text: 'Edge keeps Ctrl+Shift+K, U and P for its own commands.', source: 'Microsoft Support' },
+  ],
+  faq: [
+    {
+      question: 'How do I switch tabs with the keyboard?',
+      answer:
+        'Ctrl+Tab moves to the next tab and Ctrl+Shift+Tab to the previous one in Chrome, Edge and Firefox. Ctrl+1 to Ctrl+8 jump to a tab by position; Ctrl+9 goes to the last tab.',
+    },
+    {
+      question: 'How do I reopen a closed tab?',
+      answer:
+        'Press Ctrl+Shift+T (⌘+Shift+T on a Mac). Press it again to keep going back. In Chrome it also brings back closed windows; in Firefox, Ctrl+Shift+N reopens a closed window.',
+    },
+    {
+      question: 'Can I search my open tabs?',
+      answer: 'Yes. Ctrl+Shift+A opens Tab Search in Chrome and lists all tabs in Firefox. In Chrome you can also type @tabs in the address bar.',
+    },
+    {
+      question: 'Why doesn’t an extension’s shortcut work?',
+      answer:
+        'The browser leaves a suggested shortcut unset when it clashes with one of its own. Check chrome://extensions/shortcuts or edge://extensions/shortcuts and pick another key.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp', alt: 'Edge extension keyboard shortcuts page for TabMerger: Save the current tab set to Ctrl+Shift+S, the other commands Not set' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp', alt: 'TabMerger search open with the query docs, listing matching open and saved tabs, light theme' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-dark.webp', alt: 'TabMerger search open with the query docs, listing matching open and saved tabs, dark theme' },
+  ],
+  tags: ['browser-tips', 'cross-browser', 'chrome', 'edge', 'firefox', 'tab-management'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-20',
+      note: 'Firefox entries were read from Firefox 159.0.1’s own key definitions; this page blocked our automated check.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp' },
+  ogImage: { src: '/blog/tab-keyboard-shortcuts/og.png', alt: 'Tab keyboard shortcuts for Chrome, Edge and Firefox: a TabMerger guide, with TabMerger’s search open' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'table', label: 'Shortcuts by browser' },
+    { id: 'reopen', label: 'Reopening closed tabs' },
+    { id: 'extensions', label: 'Extension shortcuts' },
+    { id: 'tabmerger', label: 'TabMerger’s keys' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['table', 'reopen', 'extensions'],
+  browserFact: {
+    label: 'Extension shortcuts',
+    values: { chrome: 'chrome://extensions/shortcuts', edge: 'edge://extensions/shortcuts', firefox: 'about:addons' },
+  },
+}
+
+<QuickAnswer>
+
+<Kbd>Ctrl</Kbd>+<Kbd>Tab</Kbd> and <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Tab</Kbd> switch to the next and previous tab, <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> jump to a tab by position, <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> closes it and <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> brings it back. These work the same in Chrome, Edge and Firefox on Windows and Linux; on a Mac, use <Kbd>⌘</Kbd> instead of <Kbd>Ctrl</Kbd>. Add [TabMerger](/features) and two more keys do the heavy lifting: save tabs straight from the keyboard, and <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> to find any tab, open, saved or closed.
+
+</QuickAnswer>
+
+<InstallCta>Save tabs without lifting your hands from the keyboard. Free for Chrome, Edge and Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="table" title="Which tab shortcuts does your browser have?">
+
+Windows and Linux first, then what changes on a Mac. Each entry is from the browser’s own help page, or for Firefox, from the key definitions inside Firefox 159.0.1 itself.
+
+<BrowserPanels section="table">
+<BrowserPanel browser="chrome">
+
+<ComparisonTable
+  head={['Action', 'Shortcut']}
+  rowHeaders
+  rows={[
+    ['New tab', 'Ctrl+T'],
+    ['Close tab', 'Ctrl+W'],
+    ['Reopen closed tabs and windows', 'Ctrl+Shift+T'],
+    ['Next tab', 'Ctrl+Tab or Ctrl+PgDn'],
+    ['Previous tab', 'Ctrl+Shift+Tab or Ctrl+PgUp'],
+    ['Tab 1 to 8', 'Ctrl+1 … Ctrl+8'],
+    ['Last tab', 'Ctrl+9'],
+    ['Search open tabs', 'Ctrl+Shift+A'],
+    ['Bookmark all tabs', 'Ctrl+Shift+D'],
+    ['History', 'Ctrl+H'],
+    ['Close window', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+You can also search open tabs from the address bar: type `@tabs` and press <Kbd>Tab</Kbd>. To search saved and closed tabs too, see [how to find one tab among hundreds](/blog/find-a-tab-among-hundreds).
+
+**On a Mac**, use <Kbd>⌘</Kbd> where the table says <Kbd>Ctrl</Kbd>, with these exceptions from Chrome’s help page: next and previous tab are <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>→</Kbd> and <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>←</Kbd>, History is <Kbd>⌘</Kbd>+<Kbd>Y</Kbd>, and the bookmark manager is <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>B</Kbd>.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+<ComparisonTable
+  head={['Action', 'Shortcut']}
+  rowHeaders
+  rows={[
+    ['New tab', 'Ctrl+T'],
+    ['Close tab', 'Ctrl+W'],
+    ['Reopen the last closed tab', 'Ctrl+Shift+T'],
+    ['Next tab', 'Ctrl+Tab or Ctrl+PgDn'],
+    ['Previous tab', 'Ctrl+Shift+Tab or Ctrl+PgUp'],
+    ['Tab 1 to 8', 'Ctrl+1 … Ctrl+8'],
+    ['Last tab', 'Ctrl+9'],
+    ['Bookmark all tabs (as favorites)', 'Ctrl+Shift+D'],
+    ['History', 'Ctrl+H'],
+    ['Close window', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+Edge’s shortcut list has no key for searching open tabs or reopening a closed window.
+
+**On a Mac**, use <Kbd>⌘</Kbd> where the table says <Kbd>Ctrl</Kbd>; History is <Kbd>⌘</Kbd>+<Kbd>Y</Kbd>. Microsoft lists next and previous tab as <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↓</Kbd> and <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↑</Kbd>.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+<ComparisonTable
+  head={['Action', 'Shortcut']}
+  rowHeaders
+  rows={[
+    ['New tab', 'Ctrl+T'],
+    ['Close tab', 'Ctrl+W'],
+    ['Reopen closed tab', 'Ctrl+Shift+T'],
+    ['Reopen closed window', 'Ctrl+Shift+N'],
+    ['Next tab', 'Ctrl+Tab or Ctrl+PgDn'],
+    ['Previous tab', 'Ctrl+Shift+Tab or Ctrl+PgUp'],
+    ['Tab 1 to 8', 'Ctrl+1 … Ctrl+8'],
+    ['Last tab', 'Ctrl+9'],
+    ['List all tabs', 'Ctrl+Shift+A'],
+    ['Bookmark all tabs', 'Ctrl+Shift+D'],
+    ['History sidebar', 'Ctrl+H'],
+    ['History library', 'Ctrl+Shift+H'],
+    ['Close window', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+**On a Mac**, Firefox defines these with the platform’s main modifier, so press <Kbd>⌘</Kbd> where the table says <Kbd>Ctrl</Kbd>.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="reopen" title="How do I reopen a tab I closed by mistake?">
+
+Press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> on a Mac). Each press goes one step further back. What “back” includes depends on the browser:
+
+<BrowserPanels section="reopen">
+<BrowserPanel browser="chrome">
+
+Chrome reopens tabs *and* windows, in the order they were closed, so keep pressing until the window you lost is back.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge documents <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> as reopening the last closed tab. For a closed window, open History (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) and look under **Recently closed**.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox keeps separate lists: <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> for tabs and <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> for windows. In Firefox 159 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> is wired to a command named “restore last closed tab, window or session”, so it can also bring back the previous session.
+
+</BrowserPanel>
+</BrowserPanels>
+
+The list only goes back so far. For a whole lost session, see [how to restore tabs after a crash](/blog/restore-tabs-after-crash). To stop losing them in the first place, [save all your open tabs](/blog/save-all-open-tabs) before you close anything big.
+
+</Section>
+
+<Section id="extensions" title="How do I set shortcuts for extensions?">
+
+Extensions can suggest shortcuts, but the browser has the final say: a suggested key that clashes with one of the browser’s own is left **Not set**, without a warning. Open your browser’s shortcuts page, click the pencil next to a command and press the keys you want.
+
+<BrowserPanels section="extensions">
+<BrowserPanel browser="chrome">
+
+Paste `chrome://extensions/shortcuts` into the address bar. Each command also has a scope menu: **In Chrome**, or **Global** to make it work when Chrome isn’t focused.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Paste `edge://extensions/shortcuts` into the address bar.
+
+Edge keeps <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd> (duplicate tab), <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>U</Kbd> (Read Aloud) and <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> (print with the system dialog) for itself, so an extension command that suggests one of them starts as **Not set** in Edge 158. TabMerger’s save commands are an example: click the pencil, press the keys you want, and they work.
+
+<AnnotatedFigure src="/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp" alt="Edge extension keyboard shortcuts page for TabMerger: Save the current tab set to Ctrl+Shift+S, the other commands Not set" width={1600} height={1364} boxes={[{ id: 'save-current-tab' }]} source="edge://extensions/shortcuts · Edge 158.0.4370.33">TabMerger in a fresh Edge 158 profile: Save the current tab is ready on Ctrl+Shift+S; pick keys for the other three here.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Open `about:addons`, click the gear menu and choose **Manage Extension Shortcuts**. Note that <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> opens a private window in Firefox, so pick another key for anything that suggests it.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>the shortcuts page doesn’t warn you. If a shortcut “does nothing”, check it first.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger’s keys">
+
+[TabMerger](/features), our free extension for Chrome, Edge and Firefox, saves tabs straight from the keyboard, without opening it. It suggests four save commands, and you can change any of them on your browser’s shortcuts page (above):
+
+<ComparisonTable
+  head={['Suggested key', 'Saves']}
+  keysColumn={0}
+  rows={[
+    ['Ctrl+Shift+S', 'The current tab'],
+    ['Ctrl+Shift+P', 'All other tabs in the window'],
+    ['Ctrl+Shift+K', 'Tabs to the left'],
+    ['Ctrl+Shift+U', 'Tabs to the right'],
+  ]}
+/>
+
+Inside the popup, <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd>) searches open, saved and recently closed tabs in one list.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tab-keyboard-shortcuts/tm-search" alt="TabMerger search open with the query docs, listing matching open and saved tabs, light theme" darkAlt="TabMerger search open with the query docs, listing matching open and saved tabs, dark theme" boxes={[{ id: 'search-input', label: 'Search' }]} source="TabMerger 3.16.1">Ctrl+K, then type: results come from open and saved tabs alike.</ThemedScreenshot>
+
+<InstallCta>Free for Chrome, Edge and Firefox. No account needed to start.</InstallCta>
+
+More habits that keep the tab count down are in our [guide to managing too many tabs](/blog/manage-too-many-tabs), and what each browser offers beyond shortcuts is in [Chrome vs Edge vs Firefox tab features](/blog/browser-tab-features-compared).
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>
