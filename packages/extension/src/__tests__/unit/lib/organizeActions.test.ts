@@ -166,6 +166,20 @@ describe('applyOrganizeActions', () => {
     expect(mergedInto).toEqual({ a: 'b' })
   })
 
+  it('merges with dedupOnMerge ("Auto-deduplicate on merge"): the target keeps its tabs, the source drops its repeats and emptied windows', () => {
+    const state = seed()
+    byId(state, 'b').windows = [win('b-w', [tab('x'), tab('b1')])]
+    byId(state, 'a').windows = [win('a-w', [tab('x'), tab('a1')]), win('a-dupes', [tab('b1')])]
+    const merge: OrganizeAction[] = [{ type: 'merge', sourceGroupId: 'a', targetGroupId: 'b' }]
+    const on = byId(applyOrganizeActions(state, merge, NOW, { dedupOnMerge: true }).state, 'b')
+    expect(on.windows.map((w) => [w.name, w.tabs.map((t) => t.title)])).toEqual([
+      ['b-w', ['x', 'b1']],
+      ['a-w', ['a1']]
+    ])
+    const off = byId(applyOrganizeActions(state, merge, NOW).state, 'b')
+    expect(off.windows.map((w) => w.tabs.map((t) => t.title))).toEqual([['x', 'b1'], ['x', 'a1'], ['b1']])
+  })
+
   it('renames and stamps the group for sync', () => {
     const { state: next } = applyOrganizeActions(seed(), [{ type: 'rename', groupId: 'c', newName: '  Reading  list ' }], NOW)
     expect(byId(next, 'c')).toMatchObject({ name: 'Reading list', updatedAt: NOW, pendingSync: true })

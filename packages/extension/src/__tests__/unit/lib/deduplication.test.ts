@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { findDuplicateTabs } from '@/lib/deduplication'
+import { dedupeMergedWindows, findDuplicateTabs } from '@/lib/deduplication'
 import type { Tab } from '@tabmerger/shared'
 
 function makeTab(id: number, url: string, title = 'Tab'): Tab {
@@ -78,5 +78,47 @@ describe('findDuplicateTabs — tabs without a string url', () => {
     const odd = (url: unknown) => ({ id: 0, title: 'T', url }) as unknown as Tab
     const result = findDuplicateTabs(windows([odd(undefined), makeTab(0, 'https://a.com'), odd(42), odd(null)]))
     expect(result.map(({ tabIndex }) => tabIndex)).toEqual([2, 3])
+  })
+})
+
+describe('dedupeMergedWindows', () => {
+  it('returns both lists untouched (same objects) when nothing repeats', () => {
+    const kept = windows([makeTab(0, 'https://a.com')])
+    const added = windows([makeTab(0, 'https://b.com')])
+    const result = dedupeMergedWindows(kept, added)
+    expect(result.kept).toBe(kept)
+    expect(result.added).toBe(added)
+  })
+
+  it("keeps the group's own tab and drops the incoming copy, matching URLs the way Deduplicate does", () => {
+    const own = { ...makeTab(0, 'https://A.com/'), note: 'mine' }
+    const kept = windows([own, makeTab(0, 'https://b.com')])
+    const added = windows([makeTab(7, 'https://a.com'), makeTab(8, 'https://c.com')])
+    const result = dedupeMergedWindows(kept, added)
+    expect(result.kept[0]).toBe(kept[0])
+    expect(result.kept[0].tabs[0]).toBe(own)
+    expect(result.added.map((w) => w.tabs.map((t) => t.url))).toEqual([['https://c.com']])
+  })
+
+  it('also removes repeats inside each side, first in reading order kept', () => {
+    const kept = windows([makeTab(0, 'https://a.com'), makeTab(0, 'https://a.com')], [makeTab(0, 'https://b.com')])
+    const added = windows([makeTab(0, 'https://c.com'), makeTab(0, 'https://c.com'), makeTab(0, 'https://b.com')])
+    const result = dedupeMergedWindows(kept, added)
+    expect(result.kept.map((w) => w.tabs.map((t) => t.url))).toEqual([['https://a.com'], ['https://b.com']])
+    expect(result.added.map((w) => w.tabs.map((t) => t.url))).toEqual([['https://c.com']])
+  })
+
+  it('drops a window that only held duplicates, keeps one that was already empty, and keeps window fields', () => {
+    const kept = [{ tabs: [] as Tab[], name: 'empty' }, { tabs: [makeTab(0, 'https://a.com')], name: 'own' }]
+    const added = [{ tabs: [makeTab(0, 'https://a.com')], name: 'all dupes' }, { tabs: [makeTab(0, 'https://a.com'), makeTab(0, 'https://d.com')], name: 'mixed', starred: true }]
+    const result = dedupeMergedWindows(kept, added)
+    expect(result.kept.map((w) => w.name)).toEqual(['empty', 'own'])
+    expect(result.added).toEqual([{ tabs: [makeTab(0, 'https://d.com')], name: 'mixed', starred: true }])
+  })
+
+  it('works on one list alone (Unite windows)', () => {
+    const result = dedupeMergedWindows(windows([makeTab(0, 'https://a.com'), makeTab(0, 'https://b.com'), makeTab(0, 'https://a.com')]))
+    expect(result.kept.map((w) => w.tabs.map((t) => t.url))).toEqual([['https://a.com', 'https://b.com']])
+    expect(result.added).toEqual([])
   })
 })
