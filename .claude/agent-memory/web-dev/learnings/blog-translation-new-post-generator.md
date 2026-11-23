@@ -38,3 +38,5 @@ Shell-quoted `node -e` edits of regex-heavy scripts break (see [[windows-shell-e
 edit scratch scripts with Edit/Write.
 
 Related: [[blog-translation-sync-script]], [[localized-browser-ui-labels]].
+
+**Check the template before writing any locale:** fill it with the English text and diff the result against `en.mdx`. If they're byte-identical, every structural field (dates, images, props, links) is right by construction.

@@ -65,3 +65,11 @@ A 15 KB MDX body in a Bash heredoc failed ("unexpected EOF while looking for mat
 - Fact-token checks must not assume a space after a number: ko writes "3개", ja "3 つ", zh "3 个", fa "۳". Match a standalone digit (`(^|[^0-9.])3(?![0-9.])`, after digit normalisation) inside the relevant section, not the substring `'3 '`.
 - `shareSummary` (≤100) is the field most likely to overflow in tr and id; check it before anything else.
 - Working-tree `.mdx` files are CRLF (`core.autocrlf=true`, LF in the index). Normalise `\r\n` before splitting on `\n}\n`, and write new files with CRLF to match their neighbours.
+
+## Product terms inside comparison posts
+
+- **Firefox "containers"** isn't "container" everywhere. Take the word from `browser/browser/tabContextMenu.ftl` `tab-context-open-in-new-container-tab`: de Umgebung, he מגירה, zh-CN 身份标签页, vi ngăn chứa, id kontainer, fa کانتینر. `hi-IN` lacks the key, so Hindi keeps "containers".
+- **Recently closed has two catalog strings.** `recentlyClosed.section.title` is the sidebar label, and `search.recentlyClosed` is the search overlay heading. They differ in de, es, it and ko. Use the sidebar string unless the post shows the search overlay.
+- **Table cells and verdict words** ("Not stated", Yes/No, "end-to-end encrypted", prices per month) already exist in `messages/<loc>/compare.json`, `blog.json` and `pricing.json`. Reuse those strings so the blog and /compare agree.
+- **`ComparisonTable` cells are single-quoted strings,** so they can't hold `<bdi>`. RTL price cells like "$3.99/شهر" follow the site's own price format with no isolation, and no invisible bidi mark may go in a cell.
+- **Don't bold a localized label where English has none.** The bold-count parity check against English fails if you do.
