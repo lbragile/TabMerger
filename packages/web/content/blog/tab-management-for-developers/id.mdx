@@ -1,0 +1,145 @@
+export const post = {
+  slug: 'tab-management-for-developers',
+  title: 'Manajemen tab untuk developer: satu proyek, satu grup',
+  navTitle: 'Manajemen tab untuk developer',
+  seoTitle: 'Manajemen Tab untuk Developer: Proyek, Dokumentasi, dan Aturan URL',
+  description:
+    'Dokumentasi, pull request, localhost, dan dashboard: cara mengatur tab untuk developer dengan satu grup TabMerger per proyek, aturan URL yang menyimpan tab secara otomatis, dan pencarian yang menemukan halaman dokumentasi mana pun dengan satu pintasan.',
+  shareSummary: 'Satu grup per proyek, aturan URL yang memilah tab untuk Anda, dan dokumentasi dalam satu pintasan.',
+  dek: 'Browser Anda adalah separuh IDE Anda. Beri struktur yang sama: satu grup per proyek, terisi dengan sendirinya.',
+  published: '2026-12-08',
+  updated: '2026-12-08',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Aturan URL menyalin tab baru yang cocok ke sebuah grup, dengan * sebagai wildcard.', source: 'TabMerger 3.16.1' },
+    { text: 'Aturan mencocokkan alamat tanpa http:// atau https://, jadi localhost:3000/* bisa dipakai.', source: 'Kode sumber TabMerger 3.16.1' },
+    { text: 'Paket Gratis punya 3 aturan URL; Pro tanpa batas.', source: 'Harga TabMerger', href: '/pricing' },
+    { text: 'Ctrl+K memfilter dengan group:, window:, tag:, dan closed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Bagaimana sebaiknya developer mengatur tab browser?',
+      answer:
+        'Satu grup TabMerger per proyek atau tiket, aturan URL yang otomatis menyimpan tab baru ke grup yang tepat, dan pencarian Ctrl+K untuk melompat ke halaman dokumentasi mana pun. Simpan lalu tutup tab sebuah proyek saat Anda berganti tugas.',
+    },
+    {
+      question: 'Bisakah tab dipilah ke grup secara otomatis berdasarkan URL?',
+      answer:
+        'Bisa, dengan aturan URL TabMerger: pola seperti github.com/your-org/* mengirim setiap tab baru yang cocok ke sebuah grup. Tabnya tetap terbuka; salinannya disimpan di grup. Paket Gratis punya 3 aturan, Pro tanpa batas.',
+    },
+    {
+      question: 'Apakah bisa dipakai untuk localhost?',
+      answer: 'Bisa. Aturan mengabaikan bagian http:// atau https://, jadi pola seperti localhost:3000/* cocok dengan halaman-halaman dev server Anda.',
+    },
+    {
+      question: 'Bagaimana cara cepat menemukan tab dokumentasi?',
+      answer: 'Tekan Ctrl+K di TabMerger lalu ketik sebagian judul atau alamatnya; tambahkan group:"Docs" untuk mencari di satu grup saja.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp', alt: 'Dialog URL Rules (Aturan URL) di TabMerger dengan aturan github.com/lbragile/* yang mengirim tab ke grup Work, tema terang' },
+    { src: '/blog/tab-management-for-developers/tm-url-rules-dark.webp', alt: 'Dialog URL Rules (Aturan URL) di TabMerger dengan aturan github.com/lbragile/* yang mengirim tab ke grup Work, tema gelap' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-light.webp', alt: 'Grup Work dengan tab Issues yang baru dibuka, ditambahkan oleh aturan URL, tema terang' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-dark.webp', alt: 'Grup Work dengan tab Issues yang baru dibuka, ditambahkan oleh aturan URL, tema gelap' },
+  ],
+  tags: ['developers', 'tab-management', 'tab-manager', 'browser-productivity'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp' },
+  ogImage: { src: '/blog/tab-management-for-developers/og.png', alt: 'Manajemen tab untuk developer: panduan TabMerger, dengan aturan URL yang menyimpan tab GitHub ke sebuah grup' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'setup', label: 'Satu proyek, satu grup' },
+    { id: 'rules', label: 'Simpan tab secara otomatis' },
+    { id: 'find', label: 'Temukan dokumentasi dengan cepat' },
+    { id: 'switch', label: 'Berganti proyek dengan rapi' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Beri setiap proyek grup [TabMerger](/features)-nya sendiri, lalu biarkan **Aturan URL** (URL rules) yang memilah: pola seperti `github.com/your-org/*` atau `localhost:3000/*` otomatis mengirim setiap tab baru yang cocok ke grup yang tepat. Temukan halaman dokumentasi mana pun dengan <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>, dan saat berganti tugas, simpan jendela proyek itu lalu tutup. Tidak ada yang hilang, tidak perlu mengubek-ubek.
+
+</QuickAnswer>
+
+<InstallCta>Satu grup per proyek, diisi untuk Anda oleh aturan URL. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+<Section id="setup" title="Bagaimana sebaiknya developer mengatur tab?">
+
+Sama seperti mengatur kode: per proyek. Proyek pada umumnya punya empat jenis tab:
+
+<ComparisonTable
+  head={['Jenis', 'Contoh', 'Tempatnya']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['Pekerjaan berjalan', 'Pull request, issue, tiket', 'Grup proyek, di jendelanya sendiri'],
+    ['Dokumentasi dan referensi', 'Dokumentasi API, MDN, spesifikasi', 'Jendela “Docs” di grup proyek'],
+    ['Lokal dan staging', 'localhost, preview deploy', 'Terbuka selama berjalan; disimpan oleh aturan URL'],
+    ['Dashboard', 'CI, log, monitoring', 'Jendela yang disematkan, atau grup proyek'],
+  ]}
+/>
+
+Di TabMerger, satu grup bisa berisi beberapa jendela, jadi satu grup proyek bisa memisahkan “PRs”, “Docs”, dan “Local”. Ganti nama jendela dari menu **⋯**-nya, dan tambahkan catatan grup berisi nama branch atau nomor tiket.
+
+</Section>
+
+<Section id="rules" title="Bagaimana cara menyimpan tab ke grup yang tepat secara otomatis?">
+
+**Aturan URL** di TabMerger mengawasi tab Anda. Saat sebuah tab membuka atau selesai memuat alamat yang cocok dengan sebuah aturan, salinannya disimpan ke grup aturan itu; tabnya sendiri tetap terbuka.
+
+1. Buka **Pengaturan → Umum** (Settings → General), cari **Aturan URL**, lalu tekan **Kelola** (Manage).
+2. Tekan **Tambah aturan** (Add rule), ketik pola, lalu pilih grupnya. `*` adalah wildcard; aturan pertama yang cocok yang berlaku.
+3. Tekan **Simpan** (Save).
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Aturan URL sedang bekerja" steps={[{ title: 'Aturannya' }, { title: 'Hasilnya' }]}>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-url-rules" alt="Dialog URL Rules (Aturan URL) di TabMerger dengan aturan github.com/lbragile/* yang mengirim tab ke grup Work, tema terang" darkAlt="Dialog URL Rules (Aturan URL) di TabMerger dengan aturan github.com/lbragile/* yang mengirim tab ke grup Work, tema gelap" boxes={[{ id: 'rule', label: 'Polanya' }]} source="TabMerger 3.16.1">Satu aturan: semua yang ada di bawah github.com/lbragile/ masuk ke Work.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-rule-result" alt="Grup Work dengan tab Issues yang baru dibuka, ditambahkan oleh aturan URL, tema terang" darkAlt="Grup Work dengan tab Issues yang baru dibuka, ditambahkan oleh aturan URL, tema gelap" boxes={[{ id: 'new-tab', label: 'Ditambahkan oleh aturan' }]} source="TabMerger 3.16.1">Membuka halaman Issues repo itu langsung menyimpannya ke Work dengan sendirinya.</ThemedScreenshot>
+</Carousel>
+
+Pola yang bekerja dengan baik:
+
+- `github.com/your-org/*` untuk setiap repo, PR, dan issue sebuah proyek
+- `localhost:3000/*` untuk dev server Anda (aturan mengabaikan `http://` dan `https://`)
+- `docs.your-framework.dev/*` untuk dokumentasi yang terus Anda buka lagi
+
+Paket Gratis mencakup 3 aturan; [Pro](/pricing) tanpa batas. Semua opsi pola, dan urutan aturan, ada di [mengurutkan tab otomatis dengan aturan URL](/blog/auto-sort-tabs-with-url-rules).
+
+</Section>
+
+<Section id="find" title="Bagaimana menemukan halaman dokumentasi dengan satu pintasan?">
+
+Tekan <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> di TabMerger lalu ketik beberapa huruf dari judul atau alamatnya. Hasilnya mencakup tab yang terbuka, tersimpan, dan baru saja ditutup. Persempit dengan filter: `group:"Docs" fetch`, `window:"Local"`, atau `closed:` untuk halaman yang Anda tutup sejam lalu. Selengkapnya di [cara menemukan satu tab di antara ratusan](/blog/find-a-tab-among-hundreds).
+
+Menu grup juga punya **Urutkan berdasarkan URL** (Sort by URL), praktis untuk jendela dokumentasi yang panjang, dan **Hapus tab duplikat** (Deduplicate tabs) untuk lima salinan issue yang sama.
+
+</Section>
+
+<Section id="switch" title="Bagaimana berganti proyek tanpa kehilangan konteks?">
+
+1. Di grup proyek itu, pilih **Gabungkan dengan sesi saat ini** (Merge with current) untuk menyimpan jendela-jendela yang terbuka. **Ganti dengan sesi saat ini** (Replace with current) justru menimpa salinan yang tersimpan.
+2. Tutup jendelanya.
+3. Saat kembali mengerjakannya, buka lagi grupnya: setiap PR, dokumen, dan dashboard, persis di tempat Anda meninggalkannya.
+
+<InstallCta>Gratis untuk Chrome, Edge, dan Firefox. Tidak perlu akun untuk mulai.</InstallCta>
+
+Untuk alur kerja yang mengutamakan keyboard, lihat [pintasan keyboard untuk tab](/blog/tab-keyboard-shortcuts); untuk rutinitas umumnya, [mengelola terlalu banyak tab](/blog/manage-too-many-tabs).
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

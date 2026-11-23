@@ -1,0 +1,145 @@
+export const post = {
+  slug: 'tab-management-for-developers',
+  title: '开发者标签页管理：一个项目，一个分组',
+  navTitle: '开发者标签页管理',
+  seoTitle: '程序员的浏览器标签页管理：项目、文档与网址规则',
+  description:
+    '文档、拉取请求、localhost 和仪表盘：为开发者准备的标签页管理方法。每个项目一个 TabMerger 分组，用网址规则自动归类标签页，再用搜索一键找到任意文档页面。',
+  shareSummary: '每个项目一个分组，网址规则帮你自动归类标签页，文档一键即达。',
+  dek: '浏览器就是你的半个 IDE。给它同样的结构：每个项目一个分组，自动归类。',
+  published: '2026-12-08',
+  updated: '2026-12-08',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '网址规则会把匹配的新标签页复制到分组中，* 可作通配符。', source: 'TabMerger 3.16.1' },
+    { text: '规则匹配的是去掉 http:// 或 https:// 的地址，所以 localhost:3000/* 也能用。', source: 'TabMerger 3.16.1 源代码' },
+    { text: '免费版有 3 条网址规则；Pro 版不限数量。', source: 'TabMerger 价格', href: '/pricing' },
+    { text: 'Ctrl+K 可按 group:、window:、tag: 和 closed: 筛选。', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: '开发者应该如何整理浏览器标签页？',
+      answer:
+        '每个项目或工单建一个 TabMerger 分组，用网址规则把新标签页自动归入正确的分组，再用 Ctrl+K 搜索跳转到任意文档页面。切换任务时，把项目的标签页保存后关闭。',
+    },
+    {
+      question: '能按网址自动把标签页归入分组吗？',
+      answer:
+        '可以，用 TabMerger 的网址规则：像 github.com/your-org/* 这样的模式会把每个匹配的新标签页发送到一个分组。标签页本身仍然打开，分组里会保存一份副本。免费版有 3 条规则，Pro 版不限数量。',
+    },
+    {
+      question: '支持 localhost 吗？',
+      answer: '支持。规则会忽略 http:// 或 https:// 部分，所以像 localhost:3000/* 这样的模式可以匹配你的开发服务器页面。',
+    },
+    {
+      question: '怎样快速找到文档标签页？',
+      answer: '在 TabMerger 中按 Ctrl+K，输入标题或地址的一部分；加上 group:"Docs" 就只在一个分组里搜索。',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp', alt: 'TabMerger 的“URL Rules”（网址规则）对话框，规则 github.com/lbragile/* 会把标签页发送到“Work”分组，浅色主题' },
+    { src: '/blog/tab-management-for-developers/tm-url-rules-dark.webp', alt: 'TabMerger 的“URL Rules”（网址规则）对话框，规则 github.com/lbragile/* 会把标签页发送到“Work”分组，深色主题' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-light.webp', alt: '“Work”分组中多了一个刚打开的“Issues”标签页，由网址规则添加，浅色主题' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-dark.webp', alt: '“Work”分组中多了一个刚打开的“Issues”标签页，由网址规则添加，深色主题' },
+  ],
+  tags: ['developers', 'tab-management', 'tab-manager', 'browser-productivity'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp' },
+  ogImage: { src: '/blog/tab-management-for-developers/og.png', alt: '开发者标签页管理：TabMerger 指南，图中一条网址规则把 GitHub 标签页归入分组' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'setup', label: '一个项目，一个分组' },
+    { id: 'rules', label: '自动归类标签页' },
+    { id: 'find', label: '快速找到文档' },
+    { id: 'switch', label: '干净利落地切换项目' },
+    { id: 'faq', label: '常见问题' },
+  ],
+}
+
+<QuickAnswer>
+
+给每个项目建一个独立的 [TabMerger](/features) 分组，然后让**网址规则**（URL rules）来归类：像 `github.com/your-org/*` 或 `localhost:3000/*` 这样的模式，会把每个匹配的新标签页自动发送到正确的分组。用 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> 找到任意文档页面；切换任务时，把项目的窗口保存后关掉。什么都不会丢，也不用到处翻找。
+
+</QuickAnswer>
+
+<InstallCta>每个项目一个分组，由网址规则替你归类。适用于 Chrome、Edge 和 Firefox，免费。</InstallCta>
+
+<Section id="setup" title="开发者应该怎样整理标签页？">
+
+就像整理代码一样：按项目来。一个典型项目有四类标签页：
+
+<ComparisonTable
+  head={['类型', '示例', '放在哪里']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['进行中的工作', '拉取请求、issue、工单', '项目分组里的专属窗口'],
+    ['文档与参考资料', 'API 文档、MDN、规范', '项目分组里的“Docs”窗口'],
+    ['本地与预发布环境', 'localhost、预览部署', '运行时保持打开；由网址规则保存'],
+    ['仪表盘', 'CI、日志、监控', '固定的窗口，或项目分组'],
+  ]}
+/>
+
+在 TabMerger 中，一个分组可以包含多个窗口，所以同一个项目分组可以把“PRs”“Docs”和“Local”分开。在窗口的 **⋯** 菜单中可以重命名窗口，还可以给分组添加一条备注，写上分支名或工单号。
+
+</Section>
+
+<Section id="rules" title="怎样把标签页自动归入正确的分组？">
+
+TabMerger 的**网址规则**会留意你的标签页。当某个标签页打开或加载完成一个与规则匹配的地址时，就会在该规则的分组中保存一份副本；标签页本身仍然打开。
+
+1. 打开**设置 → 通用**（Settings → General），找到**网址规则**，点击**管理**（Manage）。
+2. 点击**添加规则**（Add rule），输入模式并选择分组。`*` 是通配符；第一条匹配的规则生效。
+3. 点击**保存**（Save）。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="网址规则的实际效果" steps={[{ title: '规则' }, { title: '结果' }]}>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-url-rules" alt="TabMerger 的“URL Rules”（网址规则）对话框，规则 github.com/lbragile/* 会把标签页发送到“Work”分组，浅色主题" darkAlt="TabMerger 的“URL Rules”（网址规则）对话框，规则 github.com/lbragile/* 会把标签页发送到“Work”分组，深色主题" boxes={[{ id: 'rule', label: '模式' }]} source="TabMerger 3.16.1">一条规则：github.com/lbragile/ 下的所有页面都进入“Work”。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-rule-result" alt="“Work”分组中多了一个刚打开的“Issues”标签页，由网址规则添加，浅色主题" darkAlt="“Work”分组中多了一个刚打开的“Issues”标签页，由网址规则添加，深色主题" boxes={[{ id: 'new-tab', label: '由规则添加' }]} source="TabMerger 3.16.1">打开仓库的“Issues”页面后，它自动归入了“Work”。</ThemedScreenshot>
+</Carousel>
+
+好用的模式：
+
+- `github.com/your-org/*`：项目的所有仓库、PR 和 issue
+- `localhost:3000/*`：你的开发服务器（规则会忽略 `http://` 和 `https://`）
+- `docs.your-framework.dev/*`：你反复打开的文档
+
+免费版包含 3 条规则；[Pro](/pricing) 版不限数量。所有模式选项和规则顺序，请看[用网址规则自动整理标签页](/blog/auto-sort-tabs-with-url-rules)。
+
+</Section>
+
+<Section id="find" title="怎样一键找到文档页面？">
+
+在 TabMerger 中按 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>，输入标题或地址里的几个字母。结果涵盖打开的、已保存的和最近关闭的标签页。可以用筛选条件缩小范围：`group:"Docs" fetch`、`window:"Local"`，或者用 `closed:` 找一小时前关掉的页面。详见[如何在数百个标签页中找到一个](/blog/find-a-tab-among-hundreds)。
+
+分组菜单里还有**按网址排序**（Sort by URL），适合很长的文档窗口；还有**去除重复标签页**（Deduplicate tabs），对付同一个 issue 开了五份的情况。
+
+</Section>
+
+<Section id="switch" title="怎样切换项目又不丢失上下文？">
+
+1. 在项目的分组中选择**与当前合并**（Merge with current），保存它打开的窗口。若要覆盖已保存的副本，则用**替换为当前**（Replace with current）。
+2. 关闭这些窗口。
+3. 回到这个项目时，重新打开分组：每个 PR、文档和仪表盘都还在原处。
+
+<InstallCta>适用于 Chrome、Edge 和 Firefox，免费。无需账号即可开始使用。</InstallCta>
+
+偏爱键盘操作，请看[标签页键盘快捷键](/blog/tab-keyboard-shortcuts)；通用的整理方法，请看[标签页太多怎么办](/blog/manage-too-many-tabs)。
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

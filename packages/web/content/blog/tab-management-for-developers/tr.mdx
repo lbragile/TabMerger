@@ -1,0 +1,145 @@
+export const post = {
+  slug: 'tab-management-for-developers',
+  title: 'Geliştiriciler için sekme yönetimi: bir proje, bir grup',
+  navTitle: 'Geliştiriciler için sekme yönetimi',
+  seoTitle: 'Geliştiriciler İçin Sekme Yönetimi: Projeler, Dokümanlar ve URL Kuralları',
+  description:
+    'Dokümantasyon, pull request\'ler, localhost ve panolar: geliştiriciler için bir sekme düzeni. Her proje için bir TabMerger grubu, sekmeleri otomatik olarak yerleştiren URL kuralları ve her doküman sayfasını tek kısayolla bulan arama.',
+  shareSummary: 'Proje başına bir grup, sekmeleri sizin için yerleştiren URL kuralları ve tek kısayolla dokümanlar.',
+  dek: 'Tarayıcınız IDE\'nizin yarısı. Ona da aynı yapıyı verin: her proje için kendiliğinden dolan bir grup.',
+  published: '2026-12-08',
+  updated: '2026-12-08',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'URL kuralları eşleşen yeni sekmeleri bir gruba kopyalar; * joker karakterdir.', source: 'TabMerger 3.16.1' },
+    { text: 'Kurallar adresi http:// veya https:// olmadan eşleştirir, bu yüzden localhost:3000/* çalışır.', source: 'TabMerger 3.16.1 kaynak kodu' },
+    { text: 'Ücretsiz planda 3 URL kuralı vardır; Pro\'da sınır yoktur.', source: 'TabMerger fiyatlandırması', href: '/pricing' },
+    { text: 'Ctrl+K; group:, window:, tag: ve closed: ile filtreler.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Geliştiriciler tarayıcı sekmelerini nasıl düzenlemeli?',
+      answer:
+        'Her proje ya da iş kaydı için bir TabMerger grubu, yeni sekmeleri otomatik olarak doğru gruba yerleştiren URL kuralları ve herhangi bir doküman sayfasına atlamak için Ctrl+K araması. Görev değiştirirken projenin sekmelerini kaydedip kapatın.',
+    },
+    {
+      question: 'Sekmeler URL\'ye göre gruplara otomatik olarak ayrılabilir mi?',
+      answer:
+        'Evet, TabMerger\'ın URL kurallarıyla: github.com/your-org/* gibi bir kalıp, eşleşen her yeni sekmeyi bir gruba gönderir. Sekme açık kalır; grupta bir kopyası kaydedilir. Ücretsiz planda 3 kural, Pro\'da sınırsız kural vardır.',
+    },
+    {
+      question: 'localhost ile çalışır mı?',
+      answer: 'Evet. Kurallar http:// veya https:// kısmını yok sayar, bu yüzden localhost:3000/* gibi bir kalıp geliştirme sunucunuzun sayfalarıyla eşleşir.',
+    },
+    {
+      question: 'Bir doküman sekmesini nasıl hızlıca bulurum?',
+      answer: 'TabMerger\'da Ctrl+K\'ye basıp başlığın ya da adresin bir kısmını yazın; yalnızca bir grupta aramak için group:"Docs" ekleyin.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp', alt: 'Sekmeleri “Work” grubuna gönderen github.com/lbragile/* kuralıyla TabMerger “URL Rules” (URL Kuralları) penceresi, açık tema' },
+    { src: '/blog/tab-management-for-developers/tm-url-rules-dark.webp', alt: 'Sekmeleri “Work” grubuna gönderen github.com/lbragile/* kuralıyla TabMerger “URL Rules” (URL Kuralları) penceresi, koyu tema' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-light.webp', alt: 'URL kuralının eklediği, yeni açılan “Issues” sekmesiyle “Work” grubu, açık tema' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-dark.webp', alt: 'URL kuralının eklediği, yeni açılan “Issues” sekmesiyle “Work” grubu, koyu tema' },
+  ],
+  tags: ['developers', 'tab-management', 'tab-manager', 'browser-productivity'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp' },
+  ogImage: { src: '/blog/tab-management-for-developers/og.png', alt: 'Geliştiriciler için sekme yönetimi: GitHub sekmelerini bir gruba yerleştiren bir URL kuralıyla bir TabMerger rehberi' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'setup', label: 'Bir proje, bir grup' },
+    { id: 'rules', label: 'Sekmeleri otomatik yerleştirin' },
+    { id: 'find', label: 'Her dokümanı hızla bulun' },
+    { id: 'switch', label: 'Projeler arasında temiz geçiş' },
+    { id: 'faq', label: 'SSS' },
+  ],
+}
+
+<QuickAnswer>
+
+Her projeye kendi [TabMerger](/features) grubunu verin, yerleştirme işini de **URL kuralları** (URL rules) yapsın: `github.com/your-org/*` ya da `localhost:3000/*` gibi bir kalıp, eşleşen her yeni sekmeyi otomatik olarak doğru gruba gönderir. Herhangi bir doküman sayfasını <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> ile bulun; görev değiştirdiğinizde projenin pencerelerini kaydedip kapatın. Hiçbir şey kaybolmaz, hiçbir şeyi aramanız gerekmez.
+
+</QuickAnswer>
+
+<InstallCta>Proje başına bir grup, URL kuralları sizin yerinize doldurur. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+<Section id="setup" title="Bir geliştirici sekmelerini nasıl düzenlemeli?">
+
+Kodu düzenlediğiniz gibi: projeye göre. Tipik bir projede dört tür sekme olur:
+
+<ComparisonTable
+  head={['Tür', 'Örnekler', 'Nereye gider']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['Devam eden iş', 'Pull request\'ler, issue\'lar, iş kaydı', 'Projenin grubu, kendi penceresinde'],
+    ['Dokümanlar ve başvuru', 'API dokümanları, MDN, bir spesifikasyon', 'Proje grubunda bir “Docs” penceresi'],
+    ['Yerel ve staging', 'localhost, önizleme dağıtımları', 'Çalışırken açık; bir URL kuralıyla kaydedilir'],
+    ['Panolar', 'CI, loglar, izleme', 'Sabitlenmiş bir pencere ya da proje grubu'],
+  ]}
+/>
+
+TabMerger'da bir grup birden fazla pencere tutabilir; böylece tek bir proje grubu “PRs”, “Docs” ve “Local” pencerelerini ayrı tutar. Bir pencereyi **⋯** menüsünden yeniden adlandırın ve gruba dal ya da iş kaydı numarasını içeren bir not ekleyin.
+
+</Section>
+
+<Section id="rules" title="Sekmeleri doğru gruba otomatik olarak nasıl yerleştiririm?">
+
+TabMerger'daki **URL kuralları** sekmelerinizi izler. Bir sekme bir kuralla eşleşen bir adresi açtığında ya da yüklemeyi bitirdiğinde, o kuralın grubuna bir kopyası kaydedilir; sekmenin kendisi açık kalır.
+
+1. **Ayarlar → Genel** (Settings → General) bölümünü açın, **URL kuralları** satırını bulun ve **Yönet** (Manage) düğmesine basın.
+2. **Kural ekle** (Add rule) düğmesine basın, bir kalıp yazın ve grubu seçin. `*` joker karakterdir; eşleşen ilk kural geçerli olur.
+3. **Kaydet** (Save) düğmesine basın.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="İş başında bir URL kuralı" steps={[{ title: 'Kural' }, { title: 'Sonuç' }]}>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-url-rules" alt="Sekmeleri “Work” grubuna gönderen github.com/lbragile/* kuralıyla TabMerger “URL Rules” (URL Kuralları) penceresi, açık tema" darkAlt="Sekmeleri “Work” grubuna gönderen github.com/lbragile/* kuralıyla TabMerger “URL Rules” (URL Kuralları) penceresi, koyu tema" boxes={[{ id: 'rule', label: 'Kalıp' }]} source="TabMerger 3.16.1">Tek kural: github.com/lbragile/ altındaki her şey “Work” grubuna gider.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-rule-result" alt="URL kuralının eklediği, yeni açılan “Issues” sekmesiyle “Work” grubu, açık tema" darkAlt="URL kuralının eklediği, yeni açılan “Issues” sekmesiyle “Work” grubu, koyu tema" boxes={[{ id: 'new-tab', label: 'Kuralın eklediği' }]} source="TabMerger 3.16.1">Deponun “Issues” sayfasını açmak, onu kendiliğinden “Work” grubuna yerleştirdi.</ThemedScreenshot>
+</Carousel>
+
+İşe yarayan kalıplar:
+
+- `github.com/your-org/*`: bir projenin tüm depoları, PR'ları ve issue'ları için
+- `localhost:3000/*`: geliştirme sunucunuz için (kurallar `http://` ve `https://` kısmını yok sayar)
+- `docs.your-framework.dev/*`: sürekli yeniden açtığınız dokümanlar için
+
+Ücretsiz planda 3 kural vardır; [Pro](/pricing)'da sınır yoktur. Tüm kalıp seçenekleri ve kural sırası [URL kurallarıyla sekmeleri otomatik sıralama](/blog/auto-sort-tabs-with-url-rules) rehberinde.
+
+</Section>
+
+<Section id="find" title="Bir doküman sayfasını tek kısayolla nasıl bulurum?">
+
+TabMerger'da <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> tuşlarına basın ve başlıktan ya da adresten birkaç harf yazın. Sonuçlar açık, kayıtlı ve yakın zamanda kapatılmış sekmeleri kapsar. Filtrelerle daraltın: `group:"Docs" fetch`, `window:"Local"` ya da bir saat önce kapattığınız sayfa için `closed:`. Ayrıntılar [yüzlerce sekme arasında tek bir sekmeyi bulma](/blog/find-a-tab-among-hundreds) rehberinde.
+
+Grup menülerinde ayrıca uzun bir doküman penceresi için kullanışlı **URL'ye göre sırala** (Sort by URL) ve aynı issue'nun beş kopyası için **Yinelenen sekmeleri kaldır** (Deduplicate tabs) bulunur.
+
+</Section>
+
+<Section id="switch" title="Bağlamı kaybetmeden projeler arasında nasıl geçiş yaparım?">
+
+1. Projenin grubunda, açık pencereleri kaydetmek için **Mevcutla birleştir** (Merge with current) seçeneğini seçin. **Mevcutla değiştir** (Replace with current) ise kayıtlı kopyanın üzerine yazar.
+2. Pencereleri kapatın.
+3. Projeye döndüğünüzde grubu yeniden açın: her PR, doküman ve pano bıraktığınız yerde.
+
+<InstallCta>Chrome, Edge ve Firefox için ücretsiz. Başlamak için hesap gerekmez.</InstallCta>
+
+Klavyeyle çalışmak için [sekme klavye kısayolları](/blog/tab-keyboard-shortcuts) rehberine, genel düzen için [çok fazla sekmeyi yönetme](/blog/manage-too-many-tabs) rehberine bakın.
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

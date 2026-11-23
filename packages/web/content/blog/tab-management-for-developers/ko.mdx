@@ -1,0 +1,145 @@
+export const post = {
+  slug: 'tab-management-for-developers',
+  title: '개발자를 위한 탭 관리: 프로젝트 하나에 그룹 하나',
+  navTitle: '개발자를 위한 탭 관리',
+  seoTitle: '개발자를 위한 탭 관리법: 프로젝트, 문서, URL 규칙',
+  description:
+    '문서, 풀 리퀘스트, localhost, 대시보드까지. 프로젝트마다 TabMerger 그룹을 하나씩 두고, URL 규칙으로 탭을 자동 분류하고, 어떤 문서 페이지든 단축키 한 번으로 찾는 개발자용 탭 정리법입니다.',
+  shareSummary: '프로젝트마다 그룹 하나, 탭을 알아서 분류하는 URL 규칙, 단축키 한 번으로 찾는 문서.',
+  dek: '브라우저는 IDE의 절반입니다. 같은 구조를 주세요. 프로젝트마다 그룹 하나, 분류는 자동으로.',
+  published: '2026-12-08',
+  updated: '2026-12-08',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'URL 규칙은 일치하는 새 탭을 그룹에 복사하며, *를 와일드카드로 씁니다.', source: 'TabMerger 3.16.1' },
+    { text: '규칙은 http://나 https://를 뺀 주소와 비교하므로 localhost:3000/*도 작동합니다.', source: 'TabMerger 3.16.1 소스 코드' },
+    { text: '무료 플랜은 URL 규칙 3개, Pro는 제한이 없습니다.', source: 'TabMerger 요금제', href: '/pricing' },
+    { text: 'Ctrl+K에서 group:, window:, tag:, closed:로 필터링할 수 있습니다.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: '개발자는 브라우저 탭을 어떻게 정리해야 하나요?',
+      answer:
+        '프로젝트나 티켓마다 TabMerger 그룹을 하나씩 두고, URL 규칙으로 새 탭을 알맞은 그룹에 자동 분류하고, Ctrl+K 검색으로 어떤 문서 페이지로든 바로 이동하세요. 작업을 바꿀 때는 프로젝트의 탭을 저장한 뒤 닫으면 됩니다.',
+    },
+    {
+      question: 'URL에 따라 탭을 그룹으로 자동 분류할 수 있나요?',
+      answer:
+        '네, TabMerger의 URL 규칙으로 가능합니다. github.com/your-org/* 같은 패턴은 일치하는 새 탭을 모두 그룹으로 보냅니다. 탭은 열린 채로 있고, 그룹에는 사본이 저장됩니다. 무료 플랜은 규칙 3개, Pro는 무제한입니다.',
+    },
+    {
+      question: 'localhost에서도 되나요?',
+      answer: '네. 규칙은 http://나 https:// 부분을 무시하므로 localhost:3000/* 같은 패턴이 개발 서버의 페이지와 일치합니다.',
+    },
+    {
+      question: '문서 탭을 빨리 찾으려면 어떻게 하나요?',
+      answer: 'TabMerger에서 Ctrl+K를 누르고 제목이나 주소의 일부를 입력하세요. group:"Docs"를 붙이면 한 그룹 안에서만 검색합니다.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp', alt: 'TabMerger의 URL Rules(URL 규칙) 대화상자, github.com/lbragile/* 규칙이 탭을 Work 그룹으로 보내도록 설정된 화면, 라이트 테마' },
+    { src: '/blog/tab-management-for-developers/tm-url-rules-dark.webp', alt: 'TabMerger의 URL Rules(URL 규칙) 대화상자, github.com/lbragile/* 규칙이 탭을 Work 그룹으로 보내도록 설정된 화면, 다크 테마' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-light.webp', alt: 'URL 규칙이 새로 연 Issues 탭을 추가한 Work 그룹, 라이트 테마' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-dark.webp', alt: 'URL 규칙이 새로 연 Issues 탭을 추가한 Work 그룹, 다크 테마' },
+  ],
+  tags: ['developers', 'tab-management', 'tab-manager', 'browser-productivity'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp' },
+  ogImage: { src: '/blog/tab-management-for-developers/og.png', alt: '개발자를 위한 탭 관리: GitHub 탭을 그룹으로 분류하는 URL 규칙을 보여 주는 TabMerger 가이드' },
+  toc: [
+    { id: 'quick', label: '간단한 답' },
+    { id: 'setup', label: '프로젝트 하나에 그룹 하나' },
+    { id: 'rules', label: '탭 자동 분류' },
+    { id: 'find', label: '문서 빨리 찾기' },
+    { id: 'switch', label: '깔끔하게 프로젝트 전환' },
+    { id: 'faq', label: '자주 묻는 질문' },
+  ],
+}
+
+<QuickAnswer>
+
+프로젝트마다 [TabMerger](/features) 그룹을 하나씩 만들고, 분류는 **URL 규칙**(URL rules)에 맡기세요. `github.com/your-org/*`나 `localhost:3000/*` 같은 패턴이 일치하는 새 탭을 자동으로 알맞은 그룹에 보냅니다. 문서 페이지는 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>로 찾고, 작업을 바꿀 때는 프로젝트의 창을 저장한 뒤 닫으세요. 잃어버리는 것도, 뒤질 것도 없습니다.
+
+</QuickAnswer>
+
+<InstallCta>프로젝트마다 그룹 하나, URL 규칙이 알아서 채워 줍니다. Chrome, Edge, Firefox용 무료 확장 프로그램입니다.</InstallCta>
+
+<Section id="setup" title="개발자는 탭을 어떻게 정리해야 할까?">
+
+코드를 정리하듯 프로젝트별로 정리하세요. 일반적인 프로젝트에는 네 종류의 탭이 있습니다.
+
+<ComparisonTable
+  head={['종류', '예시', '두는 곳']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['진행 중인 작업', '풀 리퀘스트, 이슈, 티켓', '프로젝트 그룹의 전용 창'],
+    ['문서와 레퍼런스', 'API 문서, MDN, 스펙', '프로젝트 그룹 안의 ‘Docs’ 창'],
+    ['로컬과 스테이징', 'localhost, 프리뷰 배포', '실행 중에는 열어 두고, URL 규칙으로 저장'],
+    ['대시보드', 'CI, 로그, 모니터링', '고정한 창 또는 프로젝트 그룹'],
+  ]}
+/>
+
+TabMerger에서는 그룹 하나에 창을 여러 개 담을 수 있어서, 프로젝트 그룹 하나로 ‘PRs’, ‘Docs’, ‘Local’을 나눠 둘 수 있습니다. 창 이름은 **⋯** 메뉴에서 바꾸고, 그룹에는 브랜치나 티켓 번호를 메모로 남겨 두세요.
+
+</Section>
+
+<Section id="rules" title="탭을 알맞은 그룹에 자동으로 분류하려면?">
+
+TabMerger의 **URL 규칙**은 탭을 지켜봅니다. 탭이 규칙과 일치하는 주소를 열거나 불러오기를 마치면 그 규칙의 그룹에 사본이 저장됩니다. 탭 자체는 열린 채로 남습니다.
+
+1. **설정 → 일반**(Settings → General)을 열고 **URL 규칙**에서 **관리**(Manage)를 누릅니다.
+2. **규칙 추가**(Add rule)를 누르고 패턴을 입력한 뒤 그룹을 고릅니다. `*`는 와일드카드이며, 처음으로 일치하는 규칙이 적용됩니다.
+3. **저장**(Save)을 누릅니다.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="URL 규칙이 작동하는 모습" steps={[{ title: '규칙' }, { title: '결과' }]}>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-url-rules" alt="TabMerger의 URL Rules(URL 규칙) 대화상자, github.com/lbragile/* 규칙이 탭을 Work 그룹으로 보내도록 설정된 화면, 라이트 테마" darkAlt="TabMerger의 URL Rules(URL 규칙) 대화상자, github.com/lbragile/* 규칙이 탭을 Work 그룹으로 보내도록 설정된 화면, 다크 테마" boxes={[{ id: 'rule', label: '패턴' }]} source="TabMerger 3.16.1">규칙 하나: github.com/lbragile/ 아래의 모든 페이지는 Work로 갑니다.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-rule-result" alt="URL 규칙이 새로 연 Issues 탭을 추가한 Work 그룹, 라이트 테마" darkAlt="URL 규칙이 새로 연 Issues 탭을 추가한 Work 그룹, 다크 테마" boxes={[{ id: 'new-tab', label: '규칙이 추가한 탭' }]} source="TabMerger 3.16.1">저장소의 Issues 페이지를 열자 알아서 Work에 분류되었습니다.</ThemedScreenshot>
+</Carousel>
+
+쓰기 좋은 패턴:
+
+- `github.com/your-org/*`: 프로젝트의 모든 저장소, PR, 이슈
+- `localhost:3000/*`: 개발 서버(규칙은 `http://`와 `https://`를 무시합니다)
+- `docs.your-framework.dev/*`: 자꾸 다시 여는 문서
+
+무료 플랜에는 규칙 3개가 포함되고, [Pro](/pricing)는 제한이 없습니다. 패턴 옵션과 규칙 순서는 [URL 규칙으로 탭 자동 정렬하기](/blog/auto-sort-tabs-with-url-rules)에 모두 정리해 두었습니다.
+
+</Section>
+
+<Section id="find" title="문서 페이지를 단축키 한 번으로 찾으려면?">
+
+TabMerger에서 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>를 누르고 제목이나 주소의 몇 글자를 입력하세요. 열린 탭, 저장한 탭, 최근에 닫은 탭이 모두 검색됩니다. `group:"Docs" fetch`, `window:"Local"`, 또는 한 시간 전에 닫은 페이지라면 `closed:` 같은 필터로 범위를 좁힐 수 있습니다. 자세한 내용은 [수백 개의 탭 중에서 하나 찾기](/blog/find-a-tab-among-hundreds)를 참고하세요.
+
+그룹 메뉴에는 긴 문서 창에 편리한 **URL순 정렬**(Sort by URL)과, 같은 이슈가 다섯 개씩 열려 있을 때 쓰는 **중복 탭 제거**(Deduplicate tabs)도 있습니다.
+
+</Section>
+
+<Section id="switch" title="맥락을 잃지 않고 프로젝트를 바꾸려면?">
+
+1. 프로젝트 그룹에서 **현재 상태와 합치기**(Merge with current)를 골라 열린 창을 저장합니다. 저장된 사본을 덮어쓰려면 **현재 상태로 바꾸기**(Replace with current)를 쓰세요.
+2. 창을 닫습니다.
+3. 다시 그 작업으로 돌아오면 그룹을 다시 여세요. PR, 문서, 대시보드가 모두 두고 간 그대로 있습니다.
+
+<InstallCta>Chrome, Edge, Firefox용 무료. 계정 없이 바로 시작할 수 있습니다.</InstallCta>
+
+키보드 위주로 작업한다면 [탭 단축키 모음](/blog/tab-keyboard-shortcuts)을, 전반적인 정리 습관은 [탭이 너무 많을 때 정리하는 법](/blog/manage-too-many-tabs)을 참고하세요.
+
+</Section>
+
+<Section id="faq" title="자주 묻는 질문">
+
+<Faq items={post.faq} />
+
+</Section>

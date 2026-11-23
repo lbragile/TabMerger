@@ -1,0 +1,145 @@
+export const post = {
+  slug: 'tab-management-for-developers',
+  title: 'إدارة علامات التبويب للمطورين: مشروع واحد، مجموعة واحدة',
+  navTitle: 'إدارة علامات التبويب للمطورين',
+  seoTitle: 'إدارة علامات التبويب للمطورين: المشاريع والتوثيق وقواعد URL',
+  description:
+    'التوثيق وطلبات الدمج وlocalhost ولوحات المتابعة: طريقة لتنظيم علامات التبويب للمطورين، بمجموعة واحدة في TabMerger لكل مشروع، وقواعد URL تفرز علامات التبويب تلقائيًا، وبحث يجد أي صفحة توثيق بضغطة مفتاح.',
+  shareSummary: 'مجموعة لكل مشروع، وقواعد URL تفرز علامات التبويب عنك، والتوثيق بضغطة مفتاح.',
+  dek: 'متصفحك نصف بيئة التطوير لديك. امنحه البنية نفسها: مجموعة لكل مشروع، تُفرز إليها علامات التبويب تلقائيًا.',
+  published: '2026-12-08',
+  updated: '2026-12-08',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'تنسخ قواعد URL علامات التبويب الجديدة المطابقة إلى مجموعة، مع استخدام * كحرف بدل.', source: 'TabMerger 3.16.1' },
+    { text: 'تطابق القواعد العنوان دون http:// أو https://، لذا يعمل النمط localhost:3000/*.', source: 'الشيفرة المصدرية لـ TabMerger 3.16.1' },
+    { text: 'في الخطة المجانية 3 قواعد URL، وخطة Pro بلا حد.', source: 'أسعار TabMerger', href: '/pricing' },
+    { text: 'يرشّح Ctrl+K النتائج حسب group: وwindow: وtag: وclosed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'كيف ينبغي للمطورين تنظيم علامات التبويب في المتصفح؟',
+      answer:
+        'مجموعة واحدة في TabMerger لكل مشروع أو تذكرة، وقواعد URL تفرز علامات التبويب الجديدة إلى المجموعة الصحيحة تلقائيًا، والبحث عبر Ctrl+K للانتقال إلى أي صفحة توثيق. وعند الانتقال إلى مهمة أخرى، احفظ علامات تبويب المشروع ثم أغلقها.',
+    },
+    {
+      question: 'هل يمكن فرز علامات التبويب في مجموعات تلقائيًا حسب URL؟',
+      answer:
+        'نعم، باستخدام قواعد URL في TabMerger: نمط مثل github.com/your-org/* يرسل كل علامة تبويب جديدة مطابقة إلى مجموعة. تبقى علامة التبويب مفتوحة، وتُحفظ نسخة منها في المجموعة. في الخطة المجانية 3 قواعد، وفي Pro عدد غير محدود.',
+    },
+    {
+      question: 'هل يعمل ذلك مع localhost؟',
+      answer: 'نعم. تتجاهل القواعد الجزء http:// أو https://، لذا يطابق نمط مثل localhost:3000/* صفحات خادم التطوير لديك.',
+    },
+    {
+      question: 'كيف أجد علامة تبويب التوثيق بسرعة؟',
+      answer: 'اضغط Ctrl+K في TabMerger واكتب جزءًا من العنوان أو الرابط، وأضف group:"Docs" للبحث في مجموعة واحدة فقط.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp', alt: 'مربع حوار URL Rules (قواعد URL) في TabMerger مع القاعدة github.com/lbragile/* التي ترسل علامات التبويب إلى مجموعة Work، المظهر الفاتح' },
+    { src: '/blog/tab-management-for-developers/tm-url-rules-dark.webp', alt: 'مربع حوار URL Rules (قواعد URL) في TabMerger مع القاعدة github.com/lbragile/* التي ترسل علامات التبويب إلى مجموعة Work، المظهر الداكن' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-light.webp', alt: 'مجموعة Work وفيها علامة التبويب Issues التي فُتحت للتو وأضافتها قاعدة URL، المظهر الفاتح' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-dark.webp', alt: 'مجموعة Work وفيها علامة التبويب Issues التي فُتحت للتو وأضافتها قاعدة URL، المظهر الداكن' },
+  ],
+  tags: ['developers', 'tab-management', 'tab-manager', 'browser-productivity'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp' },
+  ogImage: { src: '/blog/tab-management-for-developers/og.png', alt: 'إدارة علامات التبويب للمطورين: دليل من TabMerger، مع قاعدة URL تفرز علامات تبويب GitHub إلى مجموعة' },
+  toc: [
+    { id: 'quick', label: 'إجابة سريعة' },
+    { id: 'setup', label: 'مشروع واحد، مجموعة واحدة' },
+    { id: 'rules', label: 'فرز علامات التبويب تلقائيًا' },
+    { id: 'find', label: 'الوصول إلى أي توثيق بسرعة' },
+    { id: 'switch', label: 'التنقل بين المشاريع بسلاسة' },
+    { id: 'faq', label: 'الأسئلة الشائعة' },
+  ],
+}
+
+<QuickAnswer>
+
+خصّص لكل مشروع مجموعته الخاصة في [TabMerger](/features)، ثم دع **قواعد URL** (<bdi dir="ltr">URL rules</bdi>) تتولى الفرز: نمط مثل `github.com/your-org/*` أو `localhost:3000/*` يرسل كل علامة تبويب جديدة مطابقة إلى المجموعة الصحيحة تلقائيًا. اعثر على أي صفحة توثيق بالاختصار <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi>، وعند الانتقال إلى مهمة أخرى احفظ نوافذ المشروع ثم أغلقها. لا يضيع شيء، ولا داعي للبحث في الركام.
+
+</QuickAnswer>
+
+<InstallCta>مجموعة لكل مشروع، تملؤها قواعد URL نيابةً عنك. مجانية لـ Chrome وEdge وFirefox.</InstallCta>
+
+<Section id="setup" title="كيف ينبغي للمطوّر تنظيم علامات التبويب؟">
+
+كما تنظّم الشيفرة: حسب المشروع. في المشروع المعتاد أربعة أنواع من علامات التبويب:
+
+<ComparisonTable
+  head={['النوع', 'أمثلة', 'أين توضع']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['العمل الجاري', 'طلبات الدمج والمشكلات والتذكرة', 'مجموعة المشروع، في نافذة خاصة بها'],
+    ['التوثيق والمراجع', 'توثيق API وMDN ومواصفة', 'نافذة “Docs” في مجموعة المشروع'],
+    ['البيئة المحلية وبيئة الاختبار', 'localhost وعمليات النشر التجريبية', 'مفتوحة أثناء التشغيل؛ تحفظها قاعدة URL'],
+    ['لوحات المتابعة', 'CI والسجلات والمراقبة', 'نافذة مثبّتة، أو مجموعة المشروع'],
+  ]}
+/>
+
+في TabMerger يمكن أن تضم المجموعة عدة نوافذ، لذا تستطيع مجموعة المشروع الواحدة أن تُبقي “PRs” و“Docs” و“Local” منفصلة. أعد تسمية النافذة من قائمة **⋯** الخاصة بها، وأضف إلى المجموعة ملاحظة باسم الفرع أو رقم التذكرة.
+
+</Section>
+
+<Section id="rules" title="كيف أفرز علامات التبويب إلى المجموعة الصحيحة تلقائيًا؟">
+
+تراقب **قواعد URL** في TabMerger علامات التبويب لديك. عندما تفتح علامة تبويب عنوانًا يطابق قاعدة، أو تنتهي من تحميله، تُحفظ نسخة منها في مجموعة تلك القاعدة، وتبقى علامة التبويب نفسها مفتوحة.
+
+1. افتح **الإعدادات ← عام** (<bdi dir="ltr">Settings → General</bdi>)، وابحث عن **قواعد URL** واضغط **إدارة** (<bdi dir="ltr">Manage</bdi>).
+2. اضغط **إضافة قاعدة** (<bdi dir="ltr">Add rule</bdi>)، واكتب نمطًا واختر المجموعة. الرمز `*` حرف بدل، وتُطبَّق أول قاعدة مطابقة.
+3. اضغط **حفظ** (<bdi dir="ltr">Save</bdi>).
+
+<ScreenshotThemeToggle />
+
+<Carousel label="قاعدة URL أثناء العمل" steps={[{ title: 'القاعدة' }, { title: 'النتيجة' }]}>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-url-rules" alt="مربع حوار URL Rules (قواعد URL) في TabMerger مع القاعدة github.com/lbragile/* التي ترسل علامات التبويب إلى مجموعة Work، المظهر الفاتح" darkAlt="مربع حوار URL Rules (قواعد URL) في TabMerger مع القاعدة github.com/lbragile/* التي ترسل علامات التبويب إلى مجموعة Work، المظهر الداكن" boxes={[{ id: 'rule', label: 'النمط' }]} source="TabMerger 3.16.1">قاعدة واحدة: كل ما يقع تحت <bdi dir="ltr">github.com/lbragile/</bdi> يذهب إلى <bdi dir="ltr">Work</bdi>.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-rule-result" alt="مجموعة Work وفيها علامة التبويب Issues التي فُتحت للتو وأضافتها قاعدة URL، المظهر الفاتح" darkAlt="مجموعة Work وفيها علامة التبويب Issues التي فُتحت للتو وأضافتها قاعدة URL، المظهر الداكن" boxes={[{ id: 'new-tab', label: 'أضافتها القاعدة' }]} source="TabMerger 3.16.1">عند فتح صفحة <bdi dir="ltr">Issues</bdi> في المستودع، فُرزت وحدها إلى <bdi dir="ltr">Work</bdi>.</ThemedScreenshot>
+</Carousel>
+
+أنماط تعمل جيدًا:
+
+- `github.com/your-org/*` لكل مستودعات المشروع وطلبات الدمج والمشكلات فيه
+- `localhost:3000/*` لخادم التطوير لديك (تتجاهل القواعد `http://` و`https://`)
+- `docs.your-framework.dev/*` للتوثيق الذي تعود لفتحه مرارًا
+
+تتضمن الخطة المجانية 3 قواعد، وخطة [Pro](/pricing) بلا حد. كل خيارات الأنماط وترتيب القواعد في دليل [فرز علامات التبويب تلقائيًا بقواعد URL](/blog/auto-sort-tabs-with-url-rules).
+
+</Section>
+
+<Section id="find" title="كيف أجد صفحة توثيق بضغطة مفتاح؟">
+
+اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> في TabMerger واكتب بضعة أحرف من العنوان أو الرابط. تشمل النتائج علامات التبويب المفتوحة والمحفوظة والمغلقة مؤخرًا. ضيّق النتائج بالمرشحات: `group:"Docs" fetch` أو `window:"Local"` أو `closed:` للصفحة التي أغلقتها قبل ساعة. المزيد في [كيف تجد علامة تبويب واحدة بين المئات](/blog/find-a-tab-among-hundreds).
+
+وفي قوائم المجموعات أيضًا **ترتيب حسب URL** (<bdi dir="ltr">Sort by URL</bdi>)، وهو مفيد لنافذة توثيق طويلة، و**إزالة علامات التبويب المكررة** (<bdi dir="ltr">Deduplicate tabs</bdi>) للنسخ الخمس من المشكلة نفسها.
+
+</Section>
+
+<Section id="switch" title="كيف أنتقل بين المشاريع دون أن أفقد السياق؟">
+
+1. في مجموعة المشروع، اختر **دمج مع الحالية** (<bdi dir="ltr">Merge with current</bdi>) لحفظ نوافذه المفتوحة. أما **استبدال بالحالية** (<bdi dir="ltr">Replace with current</bdi>) فيستبدل النسخة المحفوظة.
+2. أغلق النوافذ.
+3. عند العودة إليه، أعد فتح المجموعة: كل طلب دمج وكل مستند وكل لوحة متابعة في مكانه كما تركته.
+
+<InstallCta>مجانية لـ Chrome وEdge وFirefox. لا تحتاج إلى حساب للبدء.</InstallCta>
+
+لسير عمل يعتمد على لوحة المفاتيح، راجع [اختصارات لوحة المفاتيح لعلامات التبويب](/blog/tab-keyboard-shortcuts)؛ وللروتين العام، [كيف تتعامل مع كثرة علامات التبويب](/blog/manage-too-many-tabs).
+
+</Section>
+
+<Section id="faq" title="الأسئلة الشائعة">
+
+<Faq items={post.faq} />
+
+</Section>

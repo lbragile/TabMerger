@@ -42,3 +42,16 @@ Related: [[blog-translation-sync-script]], [[localized-browser-ui-labels]].
 **Check the template before writing any locale:** fill it with the English text and diff the result against `en.mdx`. If they're byte-identical, every structural field (dates, images, props, links) is right by construction.
 
 **Alt comparison:** figure alts in JSX attributes contain `&quot;`; decode entities before comparing them with `post.images` alts, or a correct file fails the check.
+
+Run the template check again just before writing into the repo, to confirm en.mdx didn't change while the locales were being drafted.
+
+**Verifier pitfalls:**
+- A CJK stray-bold regex like `/**[^*
+]+[。、，]**/` spans from one bold's closing `**` to the next one's opening. Match pairs with `/**([^*
+]+?)**/g` and test whether the content ends in punctuation.
+- A caption regex of `([^<]*)` misses RTL captions that contain `<bdi>`; use `(.*?)</ThemedScreenshot>`.
+- Converting `"…"` to typographic quotes for JSX attributes must skip code spans (it paired quotes across `` `group:"Docs"` `` and `` `window:"Local"` ``). Convert only alt and caption keys, or protect backtick spans first.
+
+**Search-syntax examples pin the example names:** when the body uses `group:"Docs"` or `window:"Local"`, keep those group and window names in English in every locale, or the prose contradicts the code.
+
+**RTL marks:** a ComparisonTable cell (single-quoted string) can't hold U+200F, so reword it ("API ו-MDN" instead of "API, ‏MDN"). A caption that ends a Latin run with a neutral character (`github.com/lbragile/`) needs `<bdi dir="ltr">`.

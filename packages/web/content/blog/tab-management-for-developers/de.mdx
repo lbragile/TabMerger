@@ -1,0 +1,145 @@
+export const post = {
+  slug: 'tab-management-for-developers',
+  title: 'Tab-Management für Entwickler: ein Projekt, eine Gruppe',
+  navTitle: 'Tab-Management für Entwickler',
+  seoTitle: 'Tab-Management für Entwickler: Projekte, Doku und URL-Regeln',
+  description:
+    'Doku, Pull Requests, localhost und Dashboards: ein Tab-Setup für Entwickler mit einer TabMerger-Gruppe pro Projekt, URL-Regeln, die Tabs automatisch einsortieren, und einer Suche, die jede Doku-Seite mit einem Tastendruck findet.',
+  shareSummary: 'Eine Gruppe pro Projekt, URL-Regeln, die Tabs einsortieren, und Doku auf Tastendruck.',
+  dek: 'Dein Browser ist die halbe IDE. Gib ihm dieselbe Struktur: eine Gruppe pro Projekt, die sich von selbst füllt.',
+  published: '2026-12-08',
+  updated: '2026-12-08',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'URL-Regeln kopieren passende neue Tabs in eine Gruppe, mit * als Platzhalter.', source: 'TabMerger 3.16.1' },
+    { text: 'Regeln prüfen die Adresse ohne http:// oder https://, deshalb funktioniert localhost:3000/*.', source: 'Quellcode von TabMerger 3.16.1' },
+    { text: 'Kostenlos gibt es 3 URL-Regeln, mit Pro unbegrenzt viele.', source: 'TabMerger-Preise', href: '/pricing' },
+    { text: 'Ctrl+K filtert nach group:, window:, tag: und closed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Wie sollten Entwickler ihre Browser-Tabs organisieren?',
+      answer:
+        'Eine TabMerger-Gruppe pro Projekt oder Ticket, URL-Regeln, die neue Tabs automatisch in die richtige Gruppe einsortieren, und die Suche mit Ctrl+K, um zu jeder Doku-Seite zu springen. Speichere und schließ die Tabs eines Projekts, wenn du die Aufgabe wechselst.',
+    },
+    {
+      question: 'Lassen sich Tabs automatisch nach URL in Gruppen sortieren?',
+      answer:
+        'Ja, mit den URL-Regeln von TabMerger: Ein Muster wie github.com/your-org/* schickt jeden passenden neuen Tab in eine Gruppe. Der Tab bleibt offen, eine Kopie wird in der Gruppe gespeichert. Kostenlos gibt es 3 Regeln, mit Pro unbegrenzt viele.',
+    },
+    {
+      question: 'Funktioniert das mit localhost?',
+      answer: 'Ja. Regeln ignorieren den Teil http:// oder https://, daher passt ein Muster wie localhost:3000/* auf die Seiten deines Dev-Servers.',
+    },
+    {
+      question: 'Wie finde ich einen Doku-Tab schnell?',
+      answer: 'Drück in TabMerger Ctrl+K und tipp einen Teil des Titels oder der Adresse; mit group:"Docs" durchsuchst du nur eine Gruppe.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp', alt: 'TabMerger-Dialog „URL Rules“ (URL-Regeln) mit der Regel github.com/lbragile/*, die Tabs in die Gruppe „Work“ schickt, helles Design' },
+    { src: '/blog/tab-management-for-developers/tm-url-rules-dark.webp', alt: 'TabMerger-Dialog „URL Rules“ (URL-Regeln) mit der Regel github.com/lbragile/*, die Tabs in die Gruppe „Work“ schickt, dunkles Design' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-light.webp', alt: 'Die Gruppe „Work“ mit dem neu geöffneten Tab „Issues“, den die URL-Regel hinzugefügt hat, helles Design' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-dark.webp', alt: 'Die Gruppe „Work“ mit dem neu geöffneten Tab „Issues“, den die URL-Regel hinzugefügt hat, dunkles Design' },
+  ],
+  tags: ['developers', 'tab-management', 'tab-manager', 'browser-productivity'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp' },
+  ogImage: { src: '/blog/tab-management-for-developers/og.png', alt: 'Titelkarte „Tab management for developers“: eine TabMerger-Anleitung, mit einer URL-Regel, die GitHub-Tabs in eine Gruppe einsortiert' },
+  toc: [
+    { id: 'quick', label: 'Kurze Antwort' },
+    { id: 'setup', label: 'Ein Projekt, eine Gruppe' },
+    { id: 'rules', label: 'Tabs automatisch einsortieren' },
+    { id: 'find', label: 'Jede Doku schnell finden' },
+    { id: 'switch', label: 'Sauber das Projekt wechseln' },
+    { id: 'faq', label: 'Häufige Fragen' },
+  ],
+}
+
+<QuickAnswer>
+
+Gib jedem Projekt eine eigene [TabMerger](/features)-Gruppe und überlass das Einsortieren den **URL-Regeln** (URL rules): Ein Muster wie `github.com/your-org/*` oder `localhost:3000/*` schickt jeden passenden neuen Tab automatisch in die richtige Gruppe. Jede Doku-Seite findest du mit <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>, und wenn du die Aufgabe wechselst, speicherst du die Fenster des Projekts und schließt sie. Nichts geht verloren, nichts muss gesucht werden.
+
+</QuickAnswer>
+
+<InstallCta>Eine Gruppe pro Projekt, automatisch befüllt von URL-Regeln. Kostenlos für Chrome, Edge und Firefox.</InstallCta>
+
+<Section id="setup" title="Wie sollte ein Entwickler seine Tabs organisieren?">
+
+Genauso wie Code: nach Projekt. Ein typisches Projekt hat vier Arten von Tabs:
+
+<ComparisonTable
+  head={['Art', 'Beispiele', 'Wohin damit']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['Laufende Arbeit', 'Pull Requests, Issues, das Ticket', 'Die Gruppe des Projekts, in einem eigenen Fenster'],
+    ['Doku und Referenz', 'API-Doku, MDN, eine Spezifikation', 'Ein Fenster „Docs“ in der Projektgruppe'],
+    ['Lokal und Staging', 'localhost, Preview-Deployments', 'Offen, solange es läuft; per URL-Regel gespeichert'],
+    ['Dashboards', 'CI, Logs, Monitoring', 'Ein angeheftetes Fenster oder die Projektgruppe'],
+  ]}
+/>
+
+In TabMerger kann eine Gruppe mehrere Fenster enthalten, sodass eine Projektgruppe „PRs“, „Docs“ und „Local“ auseinanderhält. Benenne ein Fenster über sein **⋯**-Menü um und gib der Gruppe eine Notiz mit dem Branch oder der Ticketnummer.
+
+</Section>
+
+<Section id="rules" title="Wie sortiere ich Tabs automatisch in die richtige Gruppe ein?">
+
+Die **URL-Regeln** von TabMerger behalten deine Tabs im Blick. Wenn ein Tab eine Adresse öffnet oder fertig lädt, die zu einer Regel passt, wird eine Kopie in der Gruppe dieser Regel gespeichert; der Tab selbst bleibt offen.
+
+1. Öffne **Einstellungen → Allgemein** (Settings → General), such **URL-Regeln** und klick auf **Verwalten** (Manage).
+2. Klick auf **Regel hinzufügen** (Add rule), gib ein Muster ein und wähle die Gruppe. `*` ist ein Platzhalter; die erste passende Regel gewinnt.
+3. Klick auf **Speichern** (Save).
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Eine URL-Regel in Aktion" steps={[{ title: 'Die Regel' }, { title: 'Das Ergebnis' }]}>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-url-rules" alt="TabMerger-Dialog „URL Rules“ (URL-Regeln) mit der Regel github.com/lbragile/*, die Tabs in die Gruppe „Work“ schickt, helles Design" darkAlt="TabMerger-Dialog „URL Rules“ (URL-Regeln) mit der Regel github.com/lbragile/*, die Tabs in die Gruppe „Work“ schickt, dunkles Design" boxes={[{ id: 'rule', label: 'Das Muster' }]} source="TabMerger 3.16.1">Eine Regel: Alles unter github.com/lbragile/ kommt in „Work“.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-rule-result" alt="Die Gruppe „Work“ mit dem neu geöffneten Tab „Issues“, den die URL-Regel hinzugefügt hat, helles Design" darkAlt="Die Gruppe „Work“ mit dem neu geöffneten Tab „Issues“, den die URL-Regel hinzugefügt hat, dunkles Design" boxes={[{ id: 'new-tab', label: 'Von der Regel hinzugefügt' }]} source="TabMerger 3.16.1">Die Seite „Issues“ des Repos landete beim Öffnen von selbst in „Work“.</ThemedScreenshot>
+</Carousel>
+
+Muster, die sich bewähren:
+
+- `github.com/your-org/*` für jedes Repo, jeden PR und jedes Issue eines Projekts
+- `localhost:3000/*` für deinen Dev-Server (Regeln ignorieren `http://` und `https://`)
+- `docs.your-framework.dev/*` für die Doku, die du immer wieder öffnest
+
+Kostenlos sind 3 Regeln enthalten; [Pro](/pricing) hat kein Limit. Alle Optionen für Muster und die Reihenfolge der Regeln findest du unter [Tabs mit URL-Regeln automatisch sortieren](/blog/auto-sort-tabs-with-url-rules).
+
+</Section>
+
+<Section id="find" title="Wie finde ich eine Doku-Seite mit einem Tastendruck?">
+
+Drück in TabMerger <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> und tipp ein paar Buchstaben aus dem Titel oder der Adresse. Die Treffer umfassen offene, gespeicherte und kürzlich geschlossene Tabs. Grenz sie mit Filtern ein: `group:"Docs" fetch`, `window:"Local"` oder `closed:` für die Seite, die du vor einer Stunde geschlossen hast. Mehr dazu unter [einen Tab unter Hunderten finden](/blog/find-a-tab-among-hundreds).
+
+Die Gruppenmenüs haben außerdem **Nach URL sortieren** (Sort by URL), praktisch für ein langes Doku-Fenster, und **Doppelte Tabs entfernen** (Deduplicate tabs) für die fünf Kopien desselben Issues.
+
+</Section>
+
+<Section id="switch" title="Wie wechsle ich das Projekt, ohne den Kontext zu verlieren?">
+
+1. Wähle in der Gruppe des Projekts **Mit aktueller zusammenführen** (Merge with current), um die offenen Fenster zu speichern. **Durch aktuelle ersetzen** (Replace with current) überschreibt stattdessen die gespeicherte Kopie.
+2. Schließ die Fenster.
+3. Wenn du wieder daran arbeitest, öffne die Gruppe erneut: jeder PR, jede Doku und jedes Dashboard, genau da, wo du aufgehört hast.
+
+<InstallCta>Kostenlos für Chrome, Edge und Firefox. Zum Start ist kein Konto nötig.</InstallCta>
+
+Für Arbeitsabläufe per Tastatur siehe [Tastenkürzel für Tabs](/blog/tab-keyboard-shortcuts); für die allgemeine Routine [zu viele Tabs in den Griff bekommen](/blog/manage-too-many-tabs).
+
+</Section>
+
+<Section id="faq" title="Häufige Fragen">
+
+<Faq items={post.faq} />
+
+</Section>

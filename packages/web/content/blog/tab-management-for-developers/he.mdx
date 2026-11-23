@@ -1,0 +1,145 @@
+export const post = {
+  slug: 'tab-management-for-developers',
+  title: 'ניהול כרטיסיות למפתחים: פרויקט אחד, קבוצה אחת',
+  navTitle: 'ניהול כרטיסיות למפתחים',
+  seoTitle: 'ניהול כרטיסיות למפתחים: פרויקטים, תיעוד וכללי URL',
+  description:
+    'תיעוד, פול ריקווסטים, localhost ודשבורדים: שיטה לסדר כרטיסיות למפתחים, עם קבוצה אחת ב-TabMerger לכל פרויקט, כללי URL שממיינים כרטיסיות אוטומטית, וחיפוש שמוצא כל דף תיעוד בהקשה אחת.',
+  shareSummary: 'קבוצה לכל פרויקט, כללי URL שממיינים בשבילכם את הכרטיסיות, ותיעוד בהקשה אחת.',
+  dek: 'הדפדפן הוא חצי מסביבת הפיתוח שלכם. תנו לו את אותו המבנה: קבוצה לכל פרויקט, שמתמלאת מעצמה.',
+  published: '2026-12-08',
+  updated: '2026-12-08',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'כללי URL מעתיקים כרטיסיות חדשות שתואמות לקבוצה, כש-* משמש כתו כללי.', source: 'TabMerger 3.16.1' },
+    { text: 'הכללים בודקים את הכתובת בלי http:// או https://, ולכן localhost:3000/* עובד.', source: 'קוד המקור של TabMerger 3.16.1' },
+    { text: 'בתוכנית החינמית יש 3 כללי URL; ב-Pro אין הגבלה.', source: 'המחירים של TabMerger', href: '/pricing' },
+    { text: 'Ctrl+K מסנן לפי group:, window:, tag: ו-closed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'איך כדאי למפתחים לסדר את כרטיסיות הדפדפן?',
+      answer:
+        'קבוצה אחת ב-TabMerger לכל פרויקט או טיקט, כללי URL שממיינים כרטיסיות חדשות לקבוצה הנכונה אוטומטית, וחיפוש עם Ctrl+K כדי לקפוץ לכל דף תיעוד. כשעוברים למשימה אחרת, שומרים את הכרטיסיות של הפרויקט וסוגרים אותן.',
+    },
+    {
+      question: 'אפשר למיין כרטיסיות לקבוצות אוטומטית לפי URL?',
+      answer:
+        'כן, עם כללי ה-URL של TabMerger: תבנית כמו github.com/your-org/* שולחת לקבוצה כל כרטיסייה חדשה שתואמת לה. הכרטיסייה נשארת פתוחה, ועותק שלה נשמר בקבוצה. בתוכנית החינמית יש 3 כללים, ב-Pro ללא הגבלה.',
+    },
+    {
+      question: 'זה עובד עם localhost?',
+      answer: 'כן. הכללים מתעלמים מהחלק http:// או https://, ולכן תבנית כמו localhost:3000/* תואמת לדפים של שרת הפיתוח שלכם.',
+    },
+    {
+      question: 'איך מוצאים מהר כרטיסייה של תיעוד?',
+      answer: 'לוחצים Ctrl+K ב-TabMerger ומקלידים חלק מהכותרת או מהכתובת; מוסיפים group:"Docs" כדי לחפש בקבוצה אחת בלבד.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp', alt: 'חלון הדו-שיח URL Rules (כללי URL) ב-TabMerger עם הכלל github.com/lbragile/* ששולח כרטיסיות לקבוצה Work, ערכת נושא בהירה' },
+    { src: '/blog/tab-management-for-developers/tm-url-rules-dark.webp', alt: 'חלון הדו-שיח URL Rules (כללי URL) ב-TabMerger עם הכלל github.com/lbragile/* ששולח כרטיסיות לקבוצה Work, ערכת נושא כהה' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-light.webp', alt: 'הקבוצה Work עם הכרטיסייה Issues שנפתחה עכשיו ונוספה על ידי כלל ה-URL, ערכת נושא בהירה' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-dark.webp', alt: 'הקבוצה Work עם הכרטיסייה Issues שנפתחה עכשיו ונוספה על ידי כלל ה-URL, ערכת נושא כהה' },
+  ],
+  tags: ['developers', 'tab-management', 'tab-manager', 'browser-productivity'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp' },
+  ogImage: { src: '/blog/tab-management-for-developers/og.png', alt: 'ניהול כרטיסיות למפתחים: מדריך של TabMerger, עם כלל URL שממיין כרטיסיות GitHub לקבוצה' },
+  toc: [
+    { id: 'quick', label: 'תשובה קצרה' },
+    { id: 'setup', label: 'פרויקט אחד, קבוצה אחת' },
+    { id: 'rules', label: 'מיון כרטיסיות אוטומטי' },
+    { id: 'find', label: 'למצוא כל תיעוד מהר' },
+    { id: 'switch', label: 'מעבר נקי בין פרויקטים' },
+    { id: 'faq', label: 'שאלות נפוצות' },
+  ],
+}
+
+<QuickAnswer>
+
+תנו לכל פרויקט קבוצה משלו ב-[TabMerger](/features), ותנו ל**כללי URL** (<bdi dir="ltr">URL rules</bdi>) לעשות את המיון: תבנית כמו `github.com/your-org/*` או `localhost:3000/*` שולחת כל כרטיסייה חדשה שתואמת לה לקבוצה הנכונה, אוטומטית. כל דף תיעוד נמצא עם <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi>, וכשעוברים למשימה אחרת, שומרים את החלונות של הפרויקט וסוגרים אותם. שום דבר לא הולך לאיבוד, ואין צורך לחפור.
+
+</QuickAnswer>
+
+<InstallCta>קבוצה לכל פרויקט, שכללי URL ממלאים בשבילכם. חינם ל-Chrome, ל-Edge ול-Firefox.</InstallCta>
+
+<Section id="setup" title="איך מפתחים צריכים לסדר כרטיסיות?">
+
+כמו שמסדרים קוד: לפי פרויקט. בפרויקט טיפוסי יש ארבעה סוגים של כרטיסיות:
+
+<ComparisonTable
+  head={['סוג', 'דוגמאות', 'לאן זה הולך']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['עבודה שבתהליך', 'פול ריקווסטים, issues, הטיקט', 'הקבוצה של הפרויקט, בחלון משלה'],
+    ['תיעוד וחומרי עזר', 'תיעוד API ו-MDN, מפרט', 'חלון “Docs” בקבוצת הפרויקט'],
+    ['סביבה מקומית ו-staging', 'localhost, פריסות תצוגה מקדימה', 'פתוחות בזמן הריצה; נשמרות בכלל URL'],
+    ['דשבורדים', 'CI, לוגים, ניטור', 'חלון מוצמד, או קבוצת הפרויקט'],
+  ]}
+/>
+
+ב-TabMerger קבוצה יכולה להכיל כמה חלונות, כך שקבוצת פרויקט אחת יכולה להחזיק את “PRs”, ‏“Docs” ו-“Local” בנפרד. משנים שם של חלון מתפריט ה-**⋯** שלו, ומוסיפים לקבוצה הערה עם שם הבראנץ' או מספר הטיקט.
+
+</Section>
+
+<Section id="rules" title="איך ממיינים כרטיסיות לקבוצה הנכונה אוטומטית?">
+
+**כללי URL** ב-TabMerger עוקבים אחרי הכרטיסיות שלכם. כשכרטיסייה פותחת כתובת שתואמת לכלל, או מסיימת לטעון אותה, עותק שלה נשמר בקבוצה של אותו כלל; הכרטיסייה עצמה נשארת פתוחה.
+
+1. פותחים את **הגדרות ← כללי** (<bdi dir="ltr">Settings → General</bdi>), מוצאים את **כללי URL** ולוחצים על **ניהול** (<bdi dir="ltr">Manage</bdi>).
+2. לוחצים על **הוספת כלל** (<bdi dir="ltr">Add rule</bdi>), מקלידים תבנית ובוחרים את הקבוצה. `*` הוא תו כללי; הכלל הראשון שתואם הוא שקובע.
+3. לוחצים על **שמירה** (<bdi dir="ltr">Save</bdi>).
+
+<ScreenshotThemeToggle />
+
+<Carousel label="כלל URL בפעולה" steps={[{ title: 'הכלל' }, { title: 'התוצאה' }]}>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-url-rules" alt="חלון הדו-שיח URL Rules (כללי URL) ב-TabMerger עם הכלל github.com/lbragile/* ששולח כרטיסיות לקבוצה Work, ערכת נושא בהירה" darkAlt="חלון הדו-שיח URL Rules (כללי URL) ב-TabMerger עם הכלל github.com/lbragile/* ששולח כרטיסיות לקבוצה Work, ערכת נושא כהה" boxes={[{ id: 'rule', label: 'התבנית' }]} source="TabMerger 3.16.1">כלל אחד: כל מה שמתחת ל-<bdi dir="ltr">github.com/lbragile/</bdi> הולך ל-<bdi dir="ltr">Work</bdi>.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-rule-result" alt="הקבוצה Work עם הכרטיסייה Issues שנפתחה עכשיו ונוספה על ידי כלל ה-URL, ערכת נושא בהירה" darkAlt="הקבוצה Work עם הכרטיסייה Issues שנפתחה עכשיו ונוספה על ידי כלל ה-URL, ערכת נושא כהה" boxes={[{ id: 'new-tab', label: 'נוספה על ידי הכלל' }]} source="TabMerger 3.16.1">כשנפתח דף ה-<bdi dir="ltr">Issues</bdi> של המאגר, הוא מוין לבד ל-<bdi dir="ltr">Work</bdi>.</ThemedScreenshot>
+</Carousel>
+
+תבניות שעובדות טוב:
+
+- `github.com/your-org/*` לכל המאגרים, ה-PR וה-issues של פרויקט
+- `localhost:3000/*` לשרת הפיתוח שלכם (הכללים מתעלמים מ-`http://` ומ-`https://`)
+- `docs.your-framework.dev/*` לתיעוד שאתם פותחים שוב ושוב
+
+בתוכנית החינמית יש 3 כללים; ב-[Pro](/pricing) אין הגבלה. כל אפשרויות התבניות וסדר הכללים מוסברים במדריך [מיון כרטיסיות אוטומטי עם כללי URL](/blog/auto-sort-tabs-with-url-rules).
+
+</Section>
+
+<Section id="find" title="איך מוצאים דף תיעוד בהקשה אחת?">
+
+לוחצים <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> ב-TabMerger ומקלידים כמה אותיות מהכותרת או מהכתובת. התוצאות כוללות כרטיסיות פתוחות, שמורות ואחרונות שנסגרו. מצמצמים עם מסננים: `group:"Docs" fetch`, ‏`window:"Local"`, או `closed:` לדף שסגרתם לפני שעה. עוד במדריך [איך מוצאים כרטיסייה אחת מתוך מאות](/blog/find-a-tab-among-hundreds).
+
+בתפריטי הקבוצות יש גם **מיון לפי URL** (<bdi dir="ltr">Sort by URL</bdi>), שימושי לחלון תיעוד ארוך, ו**הסרת כרטיסיות כפולות** (<bdi dir="ltr">Deduplicate tabs</bdi>) לחמשת העותקים של אותו issue.
+
+</Section>
+
+<Section id="switch" title="איך עוברים בין פרויקטים בלי לאבד את ההקשר?">
+
+1. בקבוצה של הפרויקט בוחרים **מיזוג עם הנוכחיים** (<bdi dir="ltr">Merge with current</bdi>) כדי לשמור את החלונות הפתוחים שלו. **החלפה בנוכחיים** (<bdi dir="ltr">Replace with current</bdi>) דורסת במקום זאת את העותק השמור.
+2. סוגרים את החלונות.
+3. כשחוזרים לפרויקט, פותחים שוב את הקבוצה: כל PR, כל מסמך וכל דשבורד, בדיוק איפה שהשארתם אותם.
+
+<InstallCta>חינם ל-Chrome, ל-Edge ול-Firefox. לא צריך חשבון כדי להתחיל.</InstallCta>
+
+לעבודה שמתחילה מהמקלדת, ראו [קיצורי מקלדת לכרטיסיות](/blog/tab-keyboard-shortcuts); לשגרה הכללית, [מה עושים עם יותר מדי כרטיסיות](/blog/manage-too-many-tabs).
+
+</Section>
+
+<Section id="faq" title="שאלות נפוצות">
+
+<Faq items={post.faq} />
+
+</Section>

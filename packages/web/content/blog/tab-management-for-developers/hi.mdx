@@ -1,0 +1,145 @@
+export const post = {
+  slug: 'tab-management-for-developers',
+  title: 'डेवलपर्स के लिए टैब मैनेजमेंट: एक प्रोजेक्ट, एक ग्रुप',
+  navTitle: 'डेवलपर्स के लिए टैब मैनेजमेंट',
+  seoTitle: 'डेवलपर्स के लिए टैब मैनेजमेंट: प्रोजेक्ट, डॉक्स और URL नियम',
+  description:
+    'डॉक्स, पुल रिक्वेस्ट, localhost और डैशबोर्ड: डेवलपर्स के लिए टैब संभालने का तरीका, जिसमें हर प्रोजेक्ट का एक TabMerger ग्रुप है, URL नियम टैब को अपने-आप सही जगह रखते हैं, और सर्च किसी भी डॉक्स पेज को एक शॉर्टकट में ढूँढ देता है।',
+  shareSummary: 'हर प्रोजेक्ट का एक ग्रुप, टैब को अपने-आप सही जगह रखने वाले URL नियम, और एक शॉर्टकट में डॉक्स।',
+  dek: 'आपका ब्राउज़र आधा IDE है। उसे भी वही ढाँचा दीजिए: हर प्रोजेक्ट का एक ग्रुप, जो अपने-आप भरता है।',
+  published: '2026-12-08',
+  updated: '2026-12-08',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'URL नियम मेल खाने वाले नए टैब को एक ग्रुप में कॉपी करते हैं, और * वाइल्डकार्ड का काम करता है।', source: 'TabMerger 3.16.1' },
+    { text: 'नियम पते को http:// या https:// के बिना मिलाते हैं, इसलिए localhost:3000/* काम करता है।', source: 'TabMerger 3.16.1 का सोर्स कोड' },
+    { text: 'मुफ़्त प्लान में 3 URL नियम हैं; Pro में कोई सीमा नहीं।', source: 'TabMerger की कीमतें', href: '/pricing' },
+    { text: 'Ctrl+K से group:, window:, tag: और closed: के हिसाब से फ़िल्टर होता है।', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'डेवलपर्स को ब्राउज़र टैब कैसे व्यवस्थित करने चाहिए?',
+      answer:
+        'हर प्रोजेक्ट या टिकट के लिए एक TabMerger ग्रुप, URL नियम जो नए टैब को अपने-आप सही ग्रुप में रखते हैं, और किसी भी डॉक्स पेज पर पहुँचने के लिए Ctrl+K सर्च। काम बदलते समय प्रोजेक्ट के टैब सेव करके बंद कर दें।',
+    },
+    {
+      question: 'क्या टैब URL के हिसाब से अपने-आप ग्रुप में बँट सकते हैं?',
+      answer:
+        'हाँ, TabMerger के URL नियमों से: github.com/your-org/* जैसा पैटर्न मेल खाने वाले हर नए टैब को एक ग्रुप में भेजता है। टैब खुला रहता है; उसकी एक कॉपी ग्रुप में सेव हो जाती है। मुफ़्त प्लान में 3 नियम हैं, Pro में असीमित।',
+    },
+    {
+      question: 'क्या यह localhost के साथ काम करता है?',
+      answer: 'हाँ। नियम http:// या https:// वाले हिस्से को अनदेखा करते हैं, इसलिए localhost:3000/* जैसा पैटर्न आपके डेव सर्वर के पेजों से मेल खाता है।',
+    },
+    {
+      question: 'डॉक्स वाला टैब जल्दी कैसे ढूँढें?',
+      answer: 'TabMerger में Ctrl+K दबाएँ और टाइटल या पते का कुछ हिस्सा टाइप करें; सिर्फ़ एक ग्रुप में खोजने के लिए group:"Docs" जोड़ें।',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp', alt: 'TabMerger का URL Rules (URL नियम) डायलॉग, जिसमें github.com/lbragile/* नियम टैब को Work ग्रुप में भेजता है, लाइट थीम' },
+    { src: '/blog/tab-management-for-developers/tm-url-rules-dark.webp', alt: 'TabMerger का URL Rules (URL नियम) डायलॉग, जिसमें github.com/lbragile/* नियम टैब को Work ग्रुप में भेजता है, डार्क थीम' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-light.webp', alt: 'Work ग्रुप, जिसमें URL नियम ने अभी खोला गया Issues टैब जोड़ा है, लाइट थीम' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-dark.webp', alt: 'Work ग्रुप, जिसमें URL नियम ने अभी खोला गया Issues टैब जोड़ा है, डार्क थीम' },
+  ],
+  tags: ['developers', 'tab-management', 'tab-manager', 'browser-productivity'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp' },
+  ogImage: { src: '/blog/tab-management-for-developers/og.png', alt: 'डेवलपर्स के लिए टैब मैनेजमेंट: TabMerger की गाइड, जिसमें एक URL नियम GitHub टैब को एक ग्रुप में रखता है' },
+  toc: [
+    { id: 'quick', label: 'छोटा जवाब' },
+    { id: 'setup', label: 'एक प्रोजेक्ट, एक ग्रुप' },
+    { id: 'rules', label: 'टैब अपने-आप सही जगह' },
+    { id: 'find', label: 'कोई भी डॉक्स फटाफट' },
+    { id: 'switch', label: 'प्रोजेक्ट आसानी से बदलें' },
+    { id: 'faq', label: 'अक्सर पूछे जाने वाले प्रश्न' },
+  ],
+}
+
+<QuickAnswer>
+
+हर प्रोजेक्ट को उसका अपना [TabMerger](/features) ग्रुप दें, और टैब छाँटने का काम **URL नियम** (URL rules) पर छोड़ दें: `github.com/your-org/*` या `localhost:3000/*` जैसा पैटर्न मेल खाने वाले हर नए टैब को अपने-आप सही ग्रुप में भेज देता है। कोई भी डॉक्स पेज <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> से ढूँढें, और काम बदलते समय प्रोजेक्ट की विंडो सेव करके बंद कर दें। न कुछ खोता है, न कुछ खंगालना पड़ता है।
+
+</QuickAnswer>
+
+<InstallCta>हर प्रोजेक्ट का एक ग्रुप, जिसे URL नियम आपके लिए भरते हैं। Chrome, Edge और Firefox के लिए मुफ़्त।</InstallCta>
+
+<Section id="setup" title="एक डेवलपर को टैब कैसे व्यवस्थित करने चाहिए?">
+
+ठीक वैसे ही जैसे आप कोड व्यवस्थित करते हैं: प्रोजेक्ट के हिसाब से। एक आम प्रोजेक्ट में चार तरह के टैब होते हैं:
+
+<ComparisonTable
+  head={['किस्म', 'उदाहरण', 'कहाँ रखें']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['चालू काम', 'पुल रिक्वेस्ट, issues, टिकट', 'प्रोजेक्ट का ग्रुप, उसकी अपनी विंडो में'],
+    ['डॉक्स और रेफ़रेंस', 'API डॉक्स, MDN, कोई स्पेक', 'प्रोजेक्ट ग्रुप में एक “Docs” विंडो'],
+    ['लोकल और स्टेजिंग', 'localhost, प्रीव्यू डिप्लॉय', 'चलने तक खुले; URL नियम से सेव'],
+    ['डैशबोर्ड', 'CI, लॉग, मॉनिटरिंग', 'एक पिन की हुई विंडो, या प्रोजेक्ट ग्रुप'],
+  ]}
+/>
+
+TabMerger में एक ग्रुप में कई विंडो हो सकती हैं, इसलिए एक ही प्रोजेक्ट ग्रुप “PRs”, “Docs” और “Local” को अलग-अलग रख सकता है। किसी विंडो का नाम उसके **⋯** मेन्यू से बदलें, और ग्रुप में ब्रांच या टिकट नंबर वाला नोट जोड़ें।
+
+</Section>
+
+<Section id="rules" title="टैब को अपने-आप सही ग्रुप में कैसे रखें?">
+
+TabMerger के **URL नियम** आपके टैब पर नज़र रखते हैं। जब कोई टैब किसी नियम से मेल खाने वाला पता खोलता है या उसे लोड कर लेता है, तो उसकी एक कॉपी उस नियम के ग्रुप में सेव हो जाती है; टैब खुद खुला रहता है।
+
+1. **सेटिंग्स → सामान्य** (Settings → General) खोलें, **URL नियम** ढूँढें और **प्रबंधित करें** (Manage) दबाएँ।
+2. **नियम जोड़ें** (Add rule) दबाएँ, एक पैटर्न टाइप करें और ग्रुप चुनें। `*` वाइल्डकार्ड है; जो नियम सबसे पहले मेल खाता है, वही लागू होता है।
+3. **सहेजें** (Save) दबाएँ।
+
+<ScreenshotThemeToggle />
+
+<Carousel label="काम करता हुआ URL नियम" steps={[{ title: 'नियम' }, { title: 'नतीजा' }]}>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-url-rules" alt="TabMerger का URL Rules (URL नियम) डायलॉग, जिसमें github.com/lbragile/* नियम टैब को Work ग्रुप में भेजता है, लाइट थीम" darkAlt="TabMerger का URL Rules (URL नियम) डायलॉग, जिसमें github.com/lbragile/* नियम टैब को Work ग्रुप में भेजता है, डार्क थीम" boxes={[{ id: 'rule', label: 'पैटर्न' }]} source="TabMerger 3.16.1">एक नियम: github.com/lbragile/ के नीचे का सब कुछ Work में जाता है।</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-rule-result" alt="Work ग्रुप, जिसमें URL नियम ने अभी खोला गया Issues टैब जोड़ा है, लाइट थीम" darkAlt="Work ग्रुप, जिसमें URL नियम ने अभी खोला गया Issues टैब जोड़ा है, डार्क थीम" boxes={[{ id: 'new-tab', label: 'नियम ने जोड़ा' }]} source="TabMerger 3.16.1">रिपो का Issues पेज खोलते ही वह अपने-आप Work में सेव हो गया।</ThemedScreenshot>
+</Carousel>
+
+अच्छे काम करने वाले पैटर्न:
+
+- `github.com/your-org/*` किसी प्रोजेक्ट के हर रिपो, PR और issue के लिए
+- `localhost:3000/*` आपके डेव सर्वर के लिए (नियम `http://` और `https://` को अनदेखा करते हैं)
+- `docs.your-framework.dev/*` उन डॉक्स के लिए जिन्हें आप बार-बार खोलते हैं
+
+मुफ़्त प्लान में 3 नियम मिलते हैं; [Pro](/pricing) में कोई सीमा नहीं। पैटर्न के सारे विकल्प और नियमों का क्रम [URL नियमों से टैब अपने-आप छाँटें](/blog/auto-sort-tabs-with-url-rules) में है।
+
+</Section>
+
+<Section id="find" title="डॉक्स पेज एक शॉर्टकट में कैसे ढूँढें?">
+
+TabMerger में <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> दबाएँ और टाइटल या पते के कुछ अक्षर टाइप करें। नतीजों में खुले, सेव किए गए और हाल ही में बंद किए गए टैब आते हैं। फ़िल्टर से दायरा छोटा करें: `group:"Docs" fetch`, `window:"Local"`, या घंटे भर पहले बंद किए पेज के लिए `closed:`। ज़्यादा जानकारी [सैकड़ों टैब में से एक टैब कैसे ढूँढें](/blog/find-a-tab-among-hundreds) में।
+
+ग्रुप मेन्यू में **URL के अनुसार क्रमबद्ध करें** (Sort by URL) भी है, जो लंबी डॉक्स विंडो के लिए काम का है, और एक ही issue की पाँच कॉपियों के लिए **डुप्लिकेट टैब हटाएं** (Deduplicate tabs)।
+
+</Section>
+
+<Section id="switch" title="कॉन्टेक्स्ट खोए बिना प्रोजेक्ट कैसे बदलें?">
+
+1. प्रोजेक्ट के ग्रुप में उसकी खुली विंडो सेव करने के लिए **वर्तमान के साथ विलय करें** (Merge with current) चुनें। **वर्तमान से बदलें** (Replace with current) इसके बजाय सेव की गई कॉपी को ओवरराइट कर देता है।
+2. विंडो बंद कर दें।
+3. जब दोबारा उस पर लौटें, ग्रुप फिर से खोलें: हर PR, डॉक और डैशबोर्ड वहीं मिलेगा जहाँ आपने छोड़ा था।
+
+<InstallCta>Chrome, Edge और Firefox के लिए मुफ़्त। शुरू करने के लिए अकाउंट ज़रूरी नहीं।</InstallCta>
+
+कीबोर्ड से काम करना पसंद है तो [टैब के कीबोर्ड शॉर्टकट](/blog/tab-keyboard-shortcuts) देखें; आम रूटीन के लिए [बहुत सारे टैब कैसे संभालें](/blog/manage-too-many-tabs)।
+
+</Section>
+
+<Section id="faq" title="अक्सर पूछे जाने वाले प्रश्न">
+
+<Faq items={post.faq} />
+
+</Section>
