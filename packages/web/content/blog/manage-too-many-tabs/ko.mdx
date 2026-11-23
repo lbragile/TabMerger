@@ -1,0 +1,246 @@
+export const post = {
+  slug: 'manage-too-many-tabs',
+  title: '탭이 너무 많을 때: 어떤 브라우저에서나 통하는 4단계 정리법',
+  seoTitle: '탭이 너무 많을 때 정리하는 법 (Chrome, Edge, Firefox)',
+  description:
+    '탭이 너무 많이 열려 있나요? Chrome, Edge, Firefox에서 쓰는 4단계 정리법과, TabMerger로 모든 창을 한 번의 클릭으로 저장해 아무것도 잃지 않고 닫는 방법을 소개합니다.',
+  shareSummary: '닫기, 묶기, 저장하기, 일정 잡기: Chrome, Edge, Firefox를 위한 탭 정리 습관.',
+  dek: '끝난 탭은 닫고, 진행 중인 탭은 그룹으로 묶고, 나머지는 한 번의 클릭으로 저장한 뒤 자동 저장이 그 상태를 유지하게 하세요.',
+  published: '2026-11-21',
+  updated: '2026-11-21',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '새 Chrome 157 프로필에서는 Chrome의 메모리 절약 모드가 꺼져 있었습니다.', source: 'chrome://settings/performance, 2026년 11월 20일' },
+    { text: 'Edge 158은 비활성 탭을 절전 모드로 전환하며, 기본값은 15분 후입니다.', source: 'edge://settings, 2026년 11월 20일' },
+    {
+      text: 'Chrome과 Firefox에서 Ctrl+Shift+A는 열린 탭을 검색합니다.',
+      source: 'Chrome 고객센터, Firefox 159 단축키',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Firefox의 탭 메뉴에는 ‘중복 탭 닫기’가 있습니다.', source: 'Firefox 159' },
+  ],
+  faq: [
+    {
+      question: '탭이 몇 개부터 너무 많은 건가요?',
+      answer:
+        '정해진 숫자는 없습니다. 탭 제목을 읽을 수 없거나, 한참 찾아야 탭을 찾을 수 있거나, 브라우저가 성능 경고를 보내기 시작하면 너무 많은 것입니다.',
+    },
+    {
+      question: '탭을 너무 많이 여는 습관은 어떻게 고치나요?',
+      answer:
+        '끝난 탭은 매일 닫고, 오늘 할 일의 탭은 그룹으로 묶고, 나머지는 검색할 수 있는 곳에 저장한 뒤, 일주일에 한 번 짧게 정리하세요.',
+    },
+    {
+      question: '열린 탭 때문에 컴퓨터가 느려지나요?',
+      answer:
+        '그럴 수 있습니다. 열린 페이지마다 메모리를 쓰기 때문입니다. Chrome의 메모리 절약 모드와 Edge의 절전 탭은 쓰지 않는 탭의 메모리를 비워 주고, 탭으로 돌아오면 다시 불러옵니다.',
+    },
+    {
+      question: '나중에 필요할지도 모르는 탭을 닫아도 괜찮을까요?',
+      answer:
+        '네, 먼저 저장해 두면 괜찮습니다. 북마크 폴더, 세션 관리자, TabMerger 모두 주소를 보관하므로 다시 열 수 있습니다. 열린 탭을 모두 저장하는 방법 가이드를 참고하세요.',
+      link: { text: '열린 탭을 모두 저장하는 방법', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp', alt: 'TabMerger의 Now Open(현재 열린 탭)에 브라우저 창 3개와 탭 18개가 표시된 화면, 라이트 테마' },
+    { src: '/blog/manage-too-many-tabs/tm-now-open-dark.webp', alt: 'TabMerger의 Now Open(현재 열린 탭)에 브라우저 창 3개와 탭 18개가 표시된 화면, 다크 테마' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-light.webp', alt: 'TabMerger 설정의 Data(데이터) 탭: Auto-save open tabs(열린 탭 자동 저장)가 켜져 있고 When open tabs pass(열린 탭이 다음 수를 넘으면)가 30 open tabs로 설정된 화면, 라이트 테마' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-dark.webp', alt: 'TabMerger 설정의 Data(데이터) 탭: Auto-save open tabs(열린 탭 자동 저장)가 켜져 있고 When open tabs pass(열린 탭이 다음 수를 넘으면)가 30 open tabs로 설정된 화면, 다크 테마' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Chrome 설정의 Performance(성능) 화면과 Memory Saver(메모리 절약 모드) 스위치' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Edge 설정의 Performance 화면: Automatically put tabs to sleep이 켜져 있고 15분으로 설정됨' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'save-tabs', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp' },
+  ogImage: { src: '/blog/manage-too-many-tabs/og.png', alt: '탭이 너무 많을 때: 어떤 브라우저에서나 통하는 4단계 정리법. 브라우저 창 3개가 한곳에 모인 TabMerger 가이드' },
+  toc: [
+    { id: 'quick', label: '간단한 답' },
+    { id: 'how-many', label: '몇 개부터 너무 많을까?' },
+    { id: 'close', label: '1. 닫기' },
+    { id: 'group', label: '2. 묶기' },
+    { id: 'save', label: '3. 저장하기' },
+    { id: 'schedule', label: '4. 정리 일정 잡기' },
+    { id: 'memory', label: '브라우저의 도움 받기' },
+    { id: 'tabmerger', label: 'TabMerger로 하기' },
+    { id: 'faq', label: '자주 묻는 질문' },
+  ],
+  browserSections: ['close', 'memory'],
+  browserFact: {
+    label: '메모리 설정',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: '설정 → System and performance → Performance',
+      firefox: '탭을 마우스 오른쪽 버튼으로 클릭 → 탭 언로드',
+    },
+  },
+}
+
+<QuickAnswer>
+
+네 단계를 이 순서대로 진행하세요. 다 쓴 탭은 모두 **닫고**, 지금 하고 있는 일의 탭은 그룹으로 **묶고**, ‘나중에 볼지도 모르는’ 탭은 검색할 수 있는 곳에 **저장하고**, 일주일에 한 번 10분 정리를 **일정에 넣으세요**. Chrome, Edge, Firefox 모두에서 통합니다. 가장 많이 비워 주는 단계는 저장이고, [TabMerger](/features)를 쓰면 클릭 한 번이면 됩니다. 열린 창이 모두 이름 붙은 그룹에 저장되어 언제든 검색하고 다시 열 수 있습니다.
+
+</QuickAnswer>
+
+<InstallCta>열린 창을 클릭 한 번으로 모두 저장하고, 아무것도 잃지 않고 닫으세요. Chrome, Edge, Firefox용 무료 확장 프로그램입니다.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="how-many" title="탭이 몇 개부터 너무 많은 걸까?">
+
+마법의 숫자는 없고, 저희가 지어내지도 않겠습니다. 탭이 문제가 되는 건 제 역할, 즉 곧 다시 볼 것을 곁에 두는 역할을 못 하게 될 때입니다. 다음 신호를 살펴보세요.
+
+- 탭 표시줄에 아이콘만 보여서 제목을 더는 읽을 수 없다.
+- 페이지를 열었더니 이미 열려 있었다. 그것도 두 번이나.
+- 닫으면 잃어버리는 것 같아서 ‘혹시 몰라’ 탭을 열어 둔다.
+- 브라우저가 경고한다. Chrome은 성능 저하를 감지하면 탭을 비활성화하라고 권하는 **성능 문제 알림**(Performance issue alerts)을 표시합니다.
+
+마지막 신호는 브라우저의 문제이고, 해결책이 있습니다(아래 참고). 처음 세 가지는 정리의 문제이고, 이 정리법이 바로 그 문제를 해결합니다.
+
+브라우저 스크린샷은 영어 화면입니다. 한국어 이름이 다를 때는 처음 나올 때 영어 이름을 괄호 안에 적었습니다.
+
+</Section>
+
+<Section id="close" title="1. 다 쓴 탭은 닫기">
+
+가장 쉬운 것부터 시작하세요. 할 일을 마친 탭을 닫습니다. 이미 답을 찾은 검색, 다 읽은 기사, 결제 페이지 같은 것들입니다.
+
+- <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd>(Mac에서는 <Kbd>⌘</Kbd>+<Kbd>W</Kbd>)를 누르면 세 브라우저 모두에서 현재 탭이 닫힙니다.
+- 하나 더 닫아 버렸다면 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>로 다시 열 수 있습니다. 자세한 내용은 [탭 키보드 단축키](/blog/tab-keyboard-shortcuts) 정리를 참고하세요.
+
+<BrowserPanels section="close">
+<BrowserPanel browser="chrome">
+
+<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>(Mac에서는 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>)를 누르면 **탭 검색**(Tab Search)이 열립니다. 열린 탭이 모두 목록으로 나오고 줄마다 닫기 버튼이 있습니다. 다 쓴 탭은 목록에서 바로 닫으세요.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge의 키보드 단축키 목록에는 열린 탭을 검색하는 키가 없으므로, 탭 표시줄을 따라가며 정리하세요. 다 쓴 탭을 클릭하고 <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd>를 누르면 됩니다.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>를 누르면 모든 탭이 목록으로 나오므로, 다 쓴 탭을 찾아 닫을 수 있습니다.
+- 아무 탭이나 마우스 오른쪽 버튼으로 클릭하고 **중복 탭 닫기**(Close Duplicate Tabs)를 선택하면 중복된 탭을 한 번에 정리할 수 있습니다.
+
+TabMerger는 **모든** 창의 중복 탭을 한꺼번에 정리합니다. [중복 탭을 닫는 방법](/blog/close-duplicate-tabs)을 참고하세요.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>닫아도 안전한 건 확신이 있는 탭뿐입니다. 망설여지는 탭은 휴지통이 아니라 3단계로 보내세요.</Catch>
+
+</Section>
+
+<Section id="group" title="2. 오늘 할 일의 탭을 그룹으로 묶기">
+
+탭 그룹은 여러 탭에 이름과 색을 붙이고, 하나의 라벨로 접을 수 있게 해 줍니다. Chrome, Edge, Firefox 모두 지원합니다. 탭을 마우스 오른쪽 버튼으로 클릭하고 새 그룹에 추가하세요.
+
+오늘 실제로 하고 있는 일마다 그룹을 하나씩 두고, 보고 있지 않은 그룹은 접어 두세요. 접힌 그룹은 탭 하나만큼의 공간만 차지합니다. 그룹을 저장하고 동기화하고 다시 여는 방식은 브라우저마다 다릅니다. 자세한 내용과 한계는 [Chrome 탭 그룹 가이드](/blog/chrome-tab-groups)에서 다룹니다.
+
+</Section>
+
+<Section id="save" title="3. ‘나중에 볼지도 모르는’ 탭 저장하기">
+
+탭 표시줄을 실제로 줄여 주는 단계가 바로 이것입니다. 다음 주에 필요할지도 모르는 탭은 열려 있을 필요가 없습니다. 찾을 수 있기만 하면 됩니다.
+
+- **창을 북마크하세요.** <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>를 누르면 현재 창의 모든 탭이 새 북마크 폴더에 저장됩니다. 브라우저별 방법은 [열린 탭을 모두 저장하는 방법](/blog/save-all-open-tabs) 가이드에서 설명합니다.
+- **세션 관리자를 쓰세요.** 창 전체를 이름과 함께 저장하고 클릭 한 번으로 복원합니다. [브라우저 세션 관리자가 하는 일](/blog/browser-session-manager)과 북마크와의 차이를 알아보세요.
+- **나중에 읽으세요.** 기사라면 탭보다 읽기 목록이 낫습니다. 페이지를 어디에 둘지 모르겠다면 [탭과 북마크 비교 가이드](/blog/tabs-vs-bookmarks)의 결정표를 참고하세요.
+
+그런 다음 저장한 것을 닫으세요. 요령은 이게 전부입니다. 저장해 두었기 때문에 안심하고 닫을 수 있습니다.
+
+</Section>
+
+<Section id="schedule" title="4. 매주 정리 시간을 달력에 넣기">
+
+탭은 다시 늘어납니다. 짧고 규칙적인 정리를 하면 의지력에 기대지 않고도 탭 수를 낮게 유지할 수 있습니다.
+
+1. 일주일에 한 번, 저장한 폴더나 그룹을 엽니다.
+2. 더는 필요 없는 것은 삭제합니다. 한 달 동안 열지 않았다면 앞으로도 열지 않을 가능성이 큽니다.
+3. 그 주에 저장한 창을 닫습니다.
+
+조사가 일인 사람(학생, 분석가, 문서를 읽는 개발자)이라면 프로젝트마다 저장한 그룹을 하나씩 두고, 프로젝트가 끝났을 때 정리하세요. 그 전에는 정리하지 않아도 됩니다.
+
+</Section>
+
+<Section id="memory" title="메모리는 브라우저가 비우게 하기">
+
+브라우저는 쓰지 않는 탭을 닫지 않고도 메모리를 쓰지 않게 만들 수 있습니다. 탭은 탭 표시줄에 그대로 있고, 클릭하면 다시 불러옵니다.
+
+<BrowserPanels section="memory">
+<BrowserPanel browser="chrome">
+
+**메모리 절약 모드**(Memory Saver)를 켜세요. **설정 → 성능**(Settings → Performance)으로 가거나 주소창에 `chrome://settings/performance`를 붙여 넣으면 됩니다.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Chrome 설정의 Performance(성능) 화면과 Memory Saver(메모리 절약 모드) 스위치" width={1600} height={524} eager boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">새 Chrome 157 프로필에서 꺼져 있던 Chrome의 Memory Saver(메모리 절약 모드).</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+**설정 → System and performance → Performance**에서 **Automatically put tabs to sleep**을 켜고, 탭이 절전 모드로 들어가기까지 기다릴 시간을 고르세요.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Edge 설정의 Performance 화면: Automatically put tabs to sleep이 켜져 있고 15분으로 설정됨" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">기본으로 켜져 있는 Edge의 절전 탭: 비활성 탭은 15분 후 절전 모드로 들어갑니다.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+탭을 마우스 오른쪽 버튼으로 클릭하고 **탭 언로드**(Unload Tab)를 선택하면 그 탭의 메모리를 직접 비울 수 있습니다.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>이 기능은 컴퓨터를 돕지, 여러분을 돕지는 않습니다. 절전 중인 탭 50개도 여전히 훑어봐야 할 탭 50개입니다. 정리법 대신이 아니라 정리법과 함께 쓰세요.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger로 하기">
+
+Chrome, Edge, Firefox용 무료 확장 프로그램 [TabMerger](/features)를 쓰면 3단계와 4단계가 클릭 몇 번으로 끝납니다. **현재 열린 탭**에는 열린 창과 그 탭이 모두 한곳에 표시되므로 쌓인 탭 전체를 한눈에 볼 수 있습니다. **현재 상태와 합치기**로 모두 이름 붙은 그룹에 저장하고 창을 닫은 뒤, 열려 있든 저장되어 있든 최근에 닫았든 어떤 탭이든 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>로 다시 찾을 수 있습니다. 컴퓨터가 느려지는 것은 탭이 너무 많다는 첫 신호인 경우가 많습니다. [저장하고 닫으면 메모리가 어떻게 비워지는지](/blog/too-many-tabs-slow-browser) 알아보세요.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-now-open" alt="TabMerger의 Now Open(현재 열린 탭)에 브라우저 창 3개와 탭 18개가 표시된 화면, 라이트 테마" darkAlt="TabMerger의 Now Open(현재 열린 탭)에 브라우저 창 3개와 탭 18개가 표시된 화면, 다크 테마" boxes={[{ id: 'now-open-summary', label: '열린 창과 탭' }]} source="TabMerger 3.16.1">정리하기 전의 Now Open(현재 열린 탭): 창 3개와 탭 18개.</ThemedScreenshot>
+
+매주 정리에는 **설정 → 데이터 → 열린 탭 자동 저장**을 쓰세요. 열린 탭을 정해진 일정에 따라, 또는 열린 탭이 20, 30, 50, 75, 100개를 넘는 즉시 새 그룹으로 저장합니다. 무료 플랜은 최신 자동 저장 2개를 보관하며, 이는 그룹 5개와 탭 50개 한도에 포함됩니다. Pro는 모두 보관합니다. 탭이 다시 쌓이지 않게 하는 습관은 [TabMerger로 매일 탭을 관리하는 방법](/blog/tabmerger-daily-workflow)을 참고하세요.
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-auto-save-threshold" alt="TabMerger 설정의 Data(데이터) 탭: Auto-save open tabs(열린 탭 자동 저장)가 켜져 있고 When open tabs pass(열린 탭이 다음 수를 넘으면)가 30 open tabs로 설정된 화면, 라이트 테마" darkAlt="TabMerger 설정의 Data(데이터) 탭: Auto-save open tabs(열린 탭 자동 저장)가 켜져 있고 When open tabs pass(열린 탭이 다음 수를 넘으면)가 30 open tabs로 설정된 화면, 다크 테마" boxes={[{ id: 'threshold', label: '열린 탭이 다음 수를 넘으면' }]} source="TabMerger 3.16.1">열린 탭이 30개를 넘으면 작동하도록 설정한 Auto-save open tabs(열린 탭 자동 저장).</ThemedScreenshot>
+
+저장된 탭은 직접 고른 기간(7, 14, 30, 60일)이 지나면 호박색 점이 붙고, 그룹의 **⋯** 메뉴에는 **중복 탭 제거**가 있습니다.
+
+<InstallCta>Chrome, Edge, Firefox용 무료. 계정 없이 바로 시작할 수 있습니다.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="자주 묻는 질문">
+
+<Faq items={post.faq} />
+
+</Section>

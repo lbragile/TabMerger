@@ -1,0 +1,246 @@
+export const post = {
+  slug: 'manage-too-many-tabs',
+  title: 'יותר מדי כרטיסיות פתוחות? שגרה של ארבעה צעדים שעובדת בכל דפדפן',
+  seoTitle: 'יותר מדי כרטיסיות פתוחות? איך לעשות סדר בכל דפדפן',
+  description:
+    'יותר מדי כרטיסיות פתוחות? שגרה של ארבעה צעדים ל-Chrome, ל-Edge ול-Firefox, ואיך TabMerger שומר את כל החלונות בלחיצה אחת כדי שאפשר יהיה לסגור אותם בלי לאבד כלום.',
+  shareSummary: 'לסגור, לקבץ, לשמור, לתזמן: שגרת כרטיסיות ל-Chrome, ל-Edge ול-Firefox.',
+  dek: 'סוגרים את מה שגמרנו איתו, מקבצים את מה שבעבודה, שומרים את השאר בלחיצה אחת ונותנים לשמירה האוטומטית לשמור על הסדר.',
+  published: '2026-11-21',
+  updated: '2026-11-21',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'מצב חיסכון בזיכרון של Chrome היה כבוי בפרופיל חדש של Chrome 157.', source: 'chrome://settings/performance, 20 בנובמבר 2026' },
+    { text: 'Edge 158 מעביר כרטיסיות לא פעילות למצב שינה, כברירת מחדל אחרי 15 דקות.', source: 'edge://settings, 20 בנובמבר 2026' },
+    {
+      text: 'ב-Chrome וב-Firefox הקיצור Ctrl+Shift+A מחפש בכרטיסיות הפתוחות.',
+      source: 'העזרה של Chrome; קיצורי המקשים של Firefox 159',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'בתפריט הלשונית של Firefox יש את האפשרות "סגירת לשוניות כפולות".', source: 'Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'כמה כרטיסיות זה יותר מדי?',
+      answer:
+        'אין מספר קבוע. זה יותר מדי כשכבר אי אפשר לקרוא את שמות הכרטיסיות, כשלא מוצאים כרטיסייה בלי לחפש, או כשהדפדפן מתחיל להתריע על בעיות בביצועים.',
+    },
+    {
+      question: 'איך מפסיקים לצבור יותר מדי כרטיסיות?',
+      answer:
+        'סוגרים כל יום כרטיסיות שסיימנו איתן, מקבצים את אלה של המשימה של היום, שומרים את השאר במקום שאפשר לחפש בו, ועושים סבב ניקוי קצר פעם בשבוע.',
+    },
+    {
+      question: 'האם כרטיסיות פתוחות מאטות את המחשב?',
+      answer:
+        'הן יכולות, כי כל דף פתוח צורך זיכרון. מצב חיסכון בזיכרון של Chrome והכרטיסיות הרדומות של Edge משחררים זיכרון של כרטיסיות שלא משתמשים בהן; הן נטענות מחדש כשחוזרים אליהן.',
+    },
+    {
+      question: 'האם בטוח לסגור כרטיסיות שאולי אצטרך בהמשך?',
+      answer:
+        'כן, אם שומרים אותן קודם: תיקיית סימניות, מנהל סשנים או TabMerger שומרים את הכתובת כדי שאפשר יהיה לפתוח אותה שוב. כדאי לקרוא את המדריך שלנו לשמירת כל הכרטיסיות הפתוחות.',
+      link: { text: 'לשמירת כל הכרטיסיות הפתוחות', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp', alt: 'הקטע Now Open (פתוח עכשיו) ב-TabMerger עם שלושה חלונות דפדפן ו-18 כרטיסיות, ערכת נושא בהירה' },
+    { src: '/blog/manage-too-many-tabs/tm-now-open-dark.webp', alt: 'הקטע Now Open (פתוח עכשיו) ב-TabMerger עם שלושה חלונות דפדפן ו-18 כרטיסיות, ערכת נושא כהה' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-light.webp', alt: 'ההגדרות של TabMerger, הכרטיסייה Data (נתונים): האפשרות Auto-save open tabs (שמירה אוטומטית של כרטיסיות פתוחות) מופעלת, ו-When open tabs pass (כשמספר הכרטיסיות הפתוחות עובר את) מוגדר ל-30 open tabs, ערכת נושא בהירה' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-dark.webp', alt: 'ההגדרות של TabMerger, הכרטיסייה Data (נתונים): האפשרות Auto-save open tabs (שמירה אוטומטית של כרטיסיות פתוחות) מופעלת, ו-When open tabs pass (כשמספר הכרטיסיות הפתוחות עובר את) מוגדר ל-30 open tabs, ערכת נושא כהה' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'ההגדרות של Chrome בקטע Performance (ביצועים), עם המתג Memory Saver (מצב חיסכון בזיכרון)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'ההגדרות של Edge בקטע Performance, כשהאפשרות Automatically put tabs to sleep מופעלת ומוגדרת ל-15 דקות' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'save-tabs', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp' },
+  ogImage: { src: '/blog/manage-too-many-tabs/og.png', alt: 'יותר מדי כרטיסיות פתוחות? שגרה של ארבעה צעדים שעובדת בכל דפדפן: מדריך של TabMerger, עם שלושה חלונות דפדפן במקום אחד' },
+  toc: [
+    { id: 'quick', label: 'תשובה קצרה' },
+    { id: 'how-many', label: 'כמה זה יותר מדי?' },
+    { id: 'close', label: '1. לסגור' },
+    { id: 'group', label: '2. לקבץ' },
+    { id: 'save', label: '3. לשמור' },
+    { id: 'schedule', label: '4. לתזמן סבב ניקוי' },
+    { id: 'memory', label: 'לתת לדפדפן לעזור' },
+    { id: 'tabmerger', label: 'לעשות את זה ב-TabMerger' },
+    { id: 'faq', label: 'שאלות נפוצות' },
+  ],
+  browserSections: ['close', 'memory'],
+  browserFact: {
+    label: 'הגדרת זיכרון',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'הגדרות ← System and performance → Performance',
+      firefox: 'לחיצה ימנית על כרטיסייה ← ביטול טעינת לשונית',
+    },
+  },
+}
+
+<QuickAnswer>
+
+ארבעה צעדים, בסדר הזה: **סוגרים** כל כרטיסייה שסיימתם איתה, **מקבצים** את הכרטיסיות של המשימה שלפניכם, **שומרים** את כרטיסיות ה"אולי אחר כך" במקום שאפשר לחפש בו, ו**קובעים** סבב ניקוי של עשר דקות פעם בשבוע. זה עובד ב-Chrome, ב-Edge וב-Firefox. הצעד שמפנה הכי הרבה מקום הוא השמירה, ו-[TabMerger](/features) הופך אותה ללחיצה אחת: כל החלונות הפתוחים נשמרים בקבוצה עם שם, שאפשר לחפש בה ולפתוח אותה שוב מתי שרוצים.
+
+</QuickAnswer>
+
+<InstallCta>שומרים את כל החלונות הפתוחים בלחיצה אחת, ואז סוגרים אותם בלי לאבד כלום. חינם ל-Chrome, ל-Edge ול-Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="how-many" title="כמה כרטיסיות זה יותר מדי?">
+
+אין מספר קסם, ואנחנו לא נמציא אחד. כרטיסיות הופכות לבעיה כשהן מפסיקות לעשות את התפקיד שלהן, כלומר להחזיק דברים שתחזרו אליהם בקרוב. שימו לב לסימנים האלה:
+
+- בשורת הכרטיסיות רואים רק סמלים, ואי אפשר לקרוא את השמות.
+- פותחים דף ומגלים שהוא כבר היה פתוח, ופעמיים.
+- משאירים כרטיסיות פתוחות "ליתר ביטחון", כי לסגור אותן מרגיש כמו לאבד אותן.
+- הדפדפן מזהיר. כש-Chrome מזהה ביצועים חלשים הוא מציג **התראות על בעיות בביצועים** (<bdi dir="ltr">Performance issue alerts</bdi>) שמציעות להשבית כרטיסיות.
+
+הסימן האחרון הוא בעיה של הדפדפן, ויש לה פתרונות (בהמשך). שלושת הראשונים הם בעיה של סידור, ואת זה השגרה פותרת.
+
+צילומי המסך של הדפדפנים מציגים את הממשק באנגלית; כשהשם בעברית שונה, השם באנגלית מופיע בסוגריים בפעם הראשונה.
+
+</Section>
+
+<Section id="close" title="1. סוגרים את מה שסיימתם איתו">
+
+מתחילים מהניצחון הקל ביותר. סוגרים כרטיסיות שסיימו את התפקיד שלהן: החיפוש שכבר מצאתם לו תשובה, המאמר שכבר קראתם, דף התשלום.
+
+- <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>W</Kbd></bdi> (או <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>W</Kbd></bdi> ב-Mac) סוגר את הכרטיסייה הנוכחית בכל שלושת הדפדפנים.
+- סגרתם אחת יותר מדי? <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> פותח אותה שוב. עוד במדריך [קיצורי המקשים לכרטיסיות](/blog/tab-keyboard-shortcuts) שלנו.
+
+<BrowserPanels section="close">
+<BrowserPanel browser="chrome">
+
+לוחצים על <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi> (או <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi> ב-Mac) כדי לפתוח את **החיפוש בכרטיסיות** (<bdi dir="ltr">Tab Search</bdi>): רשימה של כל הכרטיסיות הפתוחות, עם כפתור סגירה בכל שורה. סוגרים את אלה שסיימתם איתן ישירות מהרשימה.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+ברשימת קיצורי המקשים של Edge אין מקש לחיפוש בכרטיסיות הפתוחות, אז עוברים לאורך שורת הכרטיסיות: לוחצים על כרטיסייה שסיימתם איתה ואז על <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>W</Kbd></bdi>.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi> מציג רשימה של כל הכרטיסיות, כדי למצוא ולסגור את אלה שסיימתם איתן.
+- לוחצים לחיצה ימנית על כרטיסייה כלשהי ובוחרים **סגירת לשוניות כפולות** (<bdi dir="ltr">Close Duplicate Tabs</bdi>) כדי לנקות כפילויות בבת אחת.
+
+TabMerger מנקה כפילויות ב**כל** החלונות בבת אחת; ראו [איך סוגרים כרטיסיות כפולות](/blog/close-duplicate-tabs).
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>סגירה בטוחה רק בכרטיסיות שאתם בטוחים לגביהן. כל מה שאתם מהססים לגביו עובר לצעד 3, לא לפח.</Catch>
+
+</Section>
+
+<Section id="group" title="2. מקבצים את הכרטיסיות של המשימה של היום">
+
+קבוצות כרטיסיות נותנות לכמה כרטיסיות שם וצבע, ומכווצות אותן לתווית אחת. יש אותן ב-Chrome, ב-Edge וב-Firefox: לוחצים לחיצה ימנית על כרטיסייה ומוסיפים אותה לקבוצה חדשה.
+
+שומרים קבוצה אחת לכל משימה שאתם באמת עובדים עליה היום, ומכווצים את אלה שאתם לא מסתכלים עליהן. קבוצה מכווצת תופסת מקום של כרטיסייה אחת. האופן שבו קבוצות נשמרות, מסתנכרנות ונפתחות שוב שונה מדפדפן לדפדפן; [המדריך שלנו לקבוצות כרטיסיות ב-Chrome](/blog/chrome-tab-groups) מפרט את הפרטים ואת המגבלות.
+
+</Section>
+
+<Section id="save" title="3. שומרים את כרטיסיות ה“אולי אחר כך”">
+
+זה הצעד שבאמת מקצר את שורת הכרטיסיות. כרטיסייה שאולי תצטרכו בשבוע הבא לא צריכה להיות פתוחה; היא צריכה להיות קלה למציאה.
+
+- **מוסיפים את החלון לסימניות.** <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> שומר את כל הכרטיסיות בחלון הנוכחי בתיקיית סימניות חדשה. המדריך שלנו [לשמירת כל הכרטיסיות הפתוחות](/blog/save-all-open-tabs) מסביר את זה לכל דפדפן.
+- **משתמשים במנהל סשנים.** הוא שומר חלונות שלמים, עם שמות, ומשחזר אותם בלחיצה אחת. כדאי לקרוא [מה מנהל סשנים של דפדפן עושה](/blog/browser-session-manager) ובמה הוא שונה מסימניות.
+- **קוראים אחר כך.** אם זה מאמר, רשימת קריאה עדיפה על כרטיסייה. לא בטוחים איפה דף צריך להיות? ב[מדריך כרטיסיות מול סימניות](/blog/tabs-vs-bookmarks) שלנו יש טבלה שעוזרת להחליט.
+
+ואז סוגרים את מה ששמרתם. זה כל הטריק: השמירה היא מה שהופך את הסגירה לבטוחה.
+
+</Section>
+
+<Section id="schedule" title="4. קובעים ביומן סבב ניקוי שבועי">
+
+כרטיסיות חוזרות להצטבר. סבב קצר וקבוע שומר על מספר נמוך בלי צורך בכוח רצון:
+
+1. פעם בשבוע, פותחים את התיקיות או הקבוצות ששמרתם.
+2. מוחקים את מה שכבר לא צריך. אם לא פתחתם משהו כבר חודש, כנראה שגם לא תפתחו.
+3. סוגרים את החלונות ששמרתם במהלך השבוע.
+
+אם מחקר הוא חלק מהעבודה שלכם (סטודנטים, אנליסטים, מפתחים שקוראים תיעוד), שומרים קבוצה אחת לכל פרויקט ומנקים אותה כשהפרויקט מסתיים, לא לפני.
+
+</Section>
+
+<Section id="memory" title="נותנים לדפדפן לפנות את הזיכרון">
+
+דפדפנים יכולים למנוע מכרטיסיות לא פעילות לצרוך זיכרון בלי לסגור אותן. הכרטיסייה נשארת בשורה ונטענת מחדש כשלוחצים עליה.
+
+<BrowserPanels section="memory">
+<BrowserPanel browser="chrome">
+
+מפעילים את **מצב חיסכון בזיכרון** (<bdi dir="ltr">Memory Saver</bdi>): **הגדרות ← ביצועים** (<bdi dir="ltr">Settings → Performance</bdi>), או מדביקים את `chrome://settings/performance` בשורת הכתובת.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="ההגדרות של Chrome בקטע Performance (ביצועים), עם המתג Memory Saver (מצב חיסכון בזיכרון)" width={1600} height={524} eager boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">ההגדרה <bdi dir="ltr">Memory Saver</bdi> (מצב חיסכון בזיכרון) ב-Chrome, כבויה בפרופיל חדש של Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+מסמנים את <bdi dir="ltr">**Automatically put tabs to sleep**</bdi> תחת **הגדרות** ← <bdi dir="ltr">**System and performance → Performance**</bdi>, ובוחרים כמה זמן כרטיסייה מחכה לפני שהיא נרדמת.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="ההגדרות של Edge בקטע Performance, כשהאפשרות Automatically put tabs to sleep מופעלת ומוגדרת ל-15 דקות" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">הכרטיסיות הרדומות של Edge מופעלות כברירת מחדל: כרטיסיות לא פעילות נרדמות אחרי 15 דקות.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+לוחצים לחיצה ימנית על כרטיסייה ובוחרים **ביטול טעינת לשונית** (<bdi dir="ltr">Unload Tab</bdi>) כדי לשחרר את הזיכרון שלה ידנית.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>זה עוזר למחשב, לא לכם. חמישים כרטיסיות רדומות הן עדיין חמישים כרטיסיות לעבור עליהן. משתמשים בזה לצד השגרה, לא במקומה.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="עושים את זה ב-TabMerger">
+
+[TabMerger](/features), התוסף החינמי שלנו ל-Chrome, ל-Edge ול-Firefox, הופך את צעדים 3 ו-4 לכמה לחיצות. **פתוח עכשיו** מציג את כל החלונות הפתוחים ואת הכרטיסיות שלהם במקום אחד, כך שרואים את כל הערימה בבת אחת. שומרים את כולן בקבוצה עם שם בעזרת **מיזוג עם הנוכחיים**, סוגרים את החלונות, ומוצאים כל כרטיסייה מחדש בהקשה על <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi>, בין שהיא פתוחה, שמורה או נסגרה לאחרונה. מחשב איטי הוא לעיתים קרובות הסימן הראשון ליותר מדי כרטיסיות; [כך שמירה וסגירה מפנות את הזיכרון](/blog/too-many-tabs-slow-browser).
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-now-open" alt="הקטע Now Open (פתוח עכשיו) ב-TabMerger עם שלושה חלונות דפדפן ו-18 כרטיסיות, ערכת נושא בהירה" darkAlt="הקטע Now Open (פתוח עכשיו) ב-TabMerger עם שלושה חלונות דפדפן ו-18 כרטיסיות, ערכת נושא כהה" boxes={[{ id: 'now-open-summary', label: 'חלונות וכרטיסיות פתוחים' }]} source="TabMerger 3.16.1"><bdi dir="ltr">Now Open</bdi> (פתוח עכשיו): שלושה חלונות ו-18 כרטיסיות, לפני הסידור.</ThemedScreenshot>
+
+לסבב הניקוי השבועי, **הגדרות ← נתונים ← שמירה אוטומטית של כרטיסיות פתוחות** יכולה לשמור את הכרטיסיות הפתוחות כקבוצה חדשה לפי לוח זמנים, או ברגע שעוברים 20, 30, 50, 75 או 100 כרטיסיות פתוחות. בתוכנית החינמית נשמרות 2 השמירות האוטומטיות החדשות ביותר, והן נספרות במסגרת 5 הקבוצות ו-50 הכרטיסיות שלה; Pro שומרת את כולן. לשגרה שלא נותנת לערימה לחזור, ראו [שגרת כרטיסיות יומית עם TabMerger](/blog/tabmerger-daily-workflow).
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-auto-save-threshold" alt="ההגדרות של TabMerger, הכרטיסייה Data (נתונים): האפשרות Auto-save open tabs (שמירה אוטומטית של כרטיסיות פתוחות) מופעלת, ו-When open tabs pass (כשמספר הכרטיסיות הפתוחות עובר את) מוגדר ל-30 open tabs, ערכת נושא בהירה" darkAlt="ההגדרות של TabMerger, הכרטיסייה Data (נתונים): האפשרות Auto-save open tabs (שמירה אוטומטית של כרטיסיות פתוחות) מופעלת, ו-When open tabs pass (כשמספר הכרטיסיות הפתוחות עובר את) מוגדר ל-30 open tabs, ערכת נושא כהה" boxes={[{ id: 'threshold', label: 'כשמספר הכרטיסיות הפתוחות עובר את' }]} source="TabMerger 3.16.1"><bdi dir="ltr">Auto-save open tabs</bdi> (שמירה אוטומטית של כרטיסיות פתוחות), מוגדרת לפעול ברגע שיש יותר מ-30 כרטיסיות פתוחות.</ThemedScreenshot>
+
+כרטיסיות שמורות גם מקבלות נקודה בצבע ענבר כשהן עוברות את הגיל שבחרתם (7, 14, 30 או 60 ימים), ובתפריט **⋯** של קבוצה יש **הסרת כרטיסיות כפולות**.
+
+<InstallCta>חינם ל-Chrome, ל-Edge ול-Firefox. לא צריך חשבון כדי להתחיל.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="שאלות נפוצות">
+
+<Faq items={post.faq} />
+
+</Section>

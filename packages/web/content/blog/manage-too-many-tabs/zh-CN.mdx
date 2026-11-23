@@ -1,0 +1,246 @@
+export const post = {
+  slug: 'manage-too-many-tabs',
+  title: '标签页太多？适用于任何浏览器的四步整理法',
+  seoTitle: '浏览器标签页太多怎么办？四步整理法（Chrome、Edge、Firefox）',
+  description:
+    '打开的标签页太多？这里有适用于 Chrome、Edge 和 Firefox 的四步整理法，以及如何用 TabMerger 一键保存所有窗口，放心关闭而不丢任何东西。',
+  shareSummary: '关闭、分组、保存、定期清理：适用于 Chrome、Edge 和 Firefox 的标签页整理法。',
+  dek: '用完的关掉，正在用的分组，其余的一键保存，再让自动保存帮你保持整洁。',
+  published: '2026-11-21',
+  updated: '2026-11-21',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '在全新的 Chrome 157 配置文件中，Chrome 的省内存模式是关闭的。', source: 'chrome://settings/performance，2026 年 11 月 20 日' },
+    { text: 'Edge 158 会让闲置的标签页进入睡眠，默认在 15 分钟后。', source: 'edge://settings，2026 年 11 月 20 日' },
+    {
+      text: '在 Chrome 和 Firefox 中，Ctrl+Shift+A 可以搜索已打开的标签页。',
+      source: 'Chrome 帮助；Firefox 159 快捷键',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Firefox 的标签页菜单里有“关闭重复标签页”。', source: 'Firefox 159' },
+  ],
+  faq: [
+    {
+      question: '多少个标签页算太多？',
+      answer:
+        '没有固定的数字。当你看不清标签页标题、不翻找就找不到某个标签页，或者浏览器开始提示性能问题时，就是太多了。',
+    },
+    {
+      question: '怎样才能不再开太多标签页？',
+      answer:
+        '每天关闭用完的标签页，把今天任务的标签页分组，其余的保存到可以搜索的地方，并且每周做一次简短的清理。',
+    },
+    {
+      question: '打开的标签页会让电脑变慢吗？',
+      answer:
+        '有可能，因为每个打开的网页都会占用内存。Chrome 的省内存模式和 Edge 的睡眠标签页会释放你没在用的标签页所占的内存；回到这些标签页时，它们会重新加载。',
+    },
+    {
+      question: '关闭以后可能还会用到的标签页安全吗？',
+      answer:
+        '安全，只要先保存：书签文件夹、会话管理器或 TabMerger 都会保留网址，方便你重新打开。请参阅我们的保存所有已打开的标签页指南。',
+      link: { text: '保存所有已打开的标签页', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp', alt: 'TabMerger 的“Now Open”（当前打开），列出三个浏览器窗口共 18 个标签页，浅色主题' },
+    { src: '/blog/manage-too-many-tabs/tm-now-open-dark.webp', alt: 'TabMerger 的“Now Open”（当前打开），列出三个浏览器窗口共 18 个标签页，深色主题' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-light.webp', alt: 'TabMerger 设置的“Data”（数据）选项卡：“Auto-save open tabs”（自动保存已打开的标签页）已开启，“When open tabs pass”（当打开的标签页超过）设为“30 open tabs”，浅色主题' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-dark.webp', alt: 'TabMerger 设置的“Data”（数据）选项卡：“Auto-save open tabs”（自动保存已打开的标签页）已开启，“When open tabs pass”（当打开的标签页超过）设为“30 open tabs”，深色主题' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Chrome 设置中的“Performance”（性能）页面，带有“Memory Saver”（省内存模式）开关' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Edge 设置中的“Performance”页面，“Automatically put tabs to sleep”已开启并设为 15 分钟' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'save-tabs', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp' },
+  ogImage: { src: '/blog/manage-too-many-tabs/og.png', alt: '标签页太多？适用于任何浏览器的四步整理法：TabMerger 指南，图中三个浏览器窗口集中在一处' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'how-many', label: '多少算太多？' },
+    { id: 'close', label: '1. 关闭' },
+    { id: 'group', label: '2. 分组' },
+    { id: 'save', label: '3. 保存' },
+    { id: 'schedule', label: '4. 定期清理' },
+    { id: 'memory', label: '让浏览器帮忙' },
+    { id: 'tabmerger', label: '用 TabMerger 完成' },
+    { id: 'faq', label: '常见问题' },
+  ],
+  browserSections: ['close', 'memory'],
+  browserFact: {
+    label: '内存设置',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: '设置 → System and performance → Performance',
+      firefox: '右键点击标签页 → 卸载标签页',
+    },
+  },
+}
+
+<QuickAnswer>
+
+按这个顺序做四步：**关闭**所有用完的标签页，把手头任务的标签页**分组**，把“以后可能要看”的标签页**保存**到可以搜索的地方，再**安排**每周一次十分钟的清理。这套方法适用于 Chrome、Edge 和 Firefox。腾出空间最多的是保存这一步，而 [TabMerger](/features) 只需一键：所有打开的窗口都会保存到一个有名字的分组里，随时可以搜索、重新打开。
+
+</QuickAnswer>
+
+<InstallCta>一键保存所有打开的窗口，然后放心关闭，什么都不会丢。适用于 Chrome、Edge 和 Firefox，免费。</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="how-many" title="多少个标签页算太多？">
+
+没有什么神奇的数字，我们也不会编一个出来。标签页的用处是放着你很快就会回来看的东西，一旦做不到这一点，它就成了问题。留意这些信号：
+
+- 标签栏只剩图标，标题已经看不清了。
+- 打开一个网页，才发现它早就开着，而且开了两次。
+- 你“以防万一”地留着标签页，因为关掉它们感觉像弄丢了。
+- 浏览器开始提醒你。Chrome 在检测到性能不佳时，会显示建议停用标签页的**性能问题提醒**（Performance issue alerts）。
+
+最后一个是浏览器的问题，有办法解决（见下文）。前三个是整理的问题，这正是这套方法要解决的。
+
+浏览器截图显示的是英文界面。中文名称不同时，首次出现会在括号里注明英文名称。
+
+</Section>
+
+<Section id="close" title="1. 关闭用完的标签页">
+
+从最容易的地方开始。关掉已经完成任务的标签页：已经找到答案的搜索、读完的文章、结账页面。
+
+- <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd>（Mac 上为 <Kbd>⌘</Kbd>+<Kbd>W</Kbd>）在三款浏览器中都会关闭当前标签页。
+- 多关了一个？<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> 可以重新打开。更多内容见我们的[标签页快捷键](/blog/tab-keyboard-shortcuts)汇总。
+
+<BrowserPanels section="close">
+<BrowserPanel browser="chrome">
+
+按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>（Mac 上为 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>）打开**标签页搜索**（Tab Search）：它会列出所有已打开的标签页，每一行都有关闭按钮。直接在列表里关掉用完的标签页。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge 的键盘快捷键列表里没有搜索已打开标签页的按键，所以就沿着标签栏逐个处理：点击用完的标签页，然后按 <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd>。
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> 会列出你的所有标签页，方便你找到并关闭用完的那些。
+- 右键点击任意标签页，选择**关闭重复标签页**（Close Duplicate Tabs），一次清掉重复的标签页。
+
+TabMerger 可以同时清理**所有**窗口中的重复标签页；请参阅[如何关闭重复标签页](/blog/close-duplicate-tabs)。
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>只有确定不再需要的标签页，关掉才安全。犹豫不决的，放到第 3 步，而不是丢进回收站。</Catch>
+
+</Section>
+
+<Section id="group" title="2. 把今天任务的标签页分组">
+
+标签页分组可以给一组标签页起名字、配颜色，并折叠成一个标签。Chrome、Edge 和 Firefox 都有这个功能：右键点击标签页，把它添加到新分组。
+
+今天真正在做的每项任务各留一个分组，暂时不看的分组就折叠起来。折叠后的分组只占一个标签页的位置。分组如何保存、同步和重新打开，各浏览器不尽相同；我们的 [Chrome 标签页分组指南](/blog/chrome-tab-groups)介绍了具体细节和限制。
+
+</Section>
+
+<Section id="save" title="3. 保存“以后可能要看”的标签页">
+
+真正能让标签栏变短的是这一步。下周可能用到的标签页不必一直开着，只要能找到就行。
+
+- **把窗口加入书签**。<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> 会把当前窗口的所有标签页保存到一个新的书签文件夹。我们的[保存所有已打开的标签页](/blog/save-all-open-tabs)指南按浏览器逐一讲解。
+- **使用会话管理器**。它能连同名称一起保存整个窗口，并一键恢复。看看[浏览器会话管理器能做什么](/blog/browser-session-manager)，以及它和书签有什么不同。
+- **稍后阅读**。如果是文章，放进稍后阅读列表比开着标签页更好。不确定某个网页该放哪儿？我们的[标签页与书签对比指南](/blog/tabs-vs-bookmarks)里有一张决策表。
+
+然后关掉你保存过的内容。诀窍就这么简单：先保存，关闭才安全。
+
+</Section>
+
+<Section id="schedule" title="4. 在日历上安排每周清理">
+
+标签页总会越积越多。定期做一次简短的清理，不靠意志力也能把数量控制住：
+
+1. 每周一次，打开你保存的文件夹或分组。
+2. 删掉不再需要的内容。一个月都没打开过的，多半以后也不会打开。
+3. 关掉这一周里保存过的窗口。
+
+如果你的工作就是做研究（学生、分析师、需要查阅文档的开发者），就为每个项目保留一个已保存的分组，等项目结束再清理，不要提前。
+
+</Section>
+
+<Section id="memory" title="让浏览器释放内存">
+
+浏览器可以在不关闭标签页的情况下，让闲置的标签页不再占用内存。标签页仍留在标签栏里，点击时重新加载。
+
+<BrowserPanels section="memory">
+<BrowserPanel browser="chrome">
+
+开启**省内存模式**（Memory Saver）：进入**设置 → 性能**（Settings → Performance），或在地址栏中粘贴 `chrome://settings/performance`。
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Chrome 设置中的“Performance”（性能）页面，带有“Memory Saver”（省内存模式）开关" width={1600} height={524} eager boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">Chrome 的“Memory Saver”（省内存模式），在全新的 Chrome 157 配置文件中处于关闭状态。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+在**设置 → System and performance → Performance** 下勾选 **Automatically put tabs to sleep**，并选择标签页闲置多久后进入睡眠。
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Edge 设置中的“Performance”页面，“Automatically put tabs to sleep”已开启并设为 15 分钟" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Edge 的睡眠标签页默认开启：闲置的标签页在 15 分钟后进入睡眠。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+右键点击标签页，选择**卸载标签页**（Unload Tab），手动释放它占用的内存。
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>这帮的是电脑，不是你。五十个睡眠中的标签页，依然是五十个要逐一查看的标签页。把它和整理方法一起用，而不是用它代替整理。</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="用 TabMerger 完成">
+
+[TabMerger](/features) 是我们为 Chrome、Edge 和 Firefox 推出的免费扩展程序，能把第 3 步和第 4 步变成点几下鼠标的事。**当前打开**会把所有打开的窗口及其标签页集中显示在一处，让你一眼看清全部。用**与当前合并**把它们全部保存到一个有名字的分组，关掉窗口，之后无论标签页是开着的、已保存的还是刚关闭的，按 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> 都能马上找到。电脑变慢往往是标签页太多的第一个信号；[看看保存并关闭如何释放内存](/blog/too-many-tabs-slow-browser)。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-now-open" alt="TabMerger 的“Now Open”（当前打开），列出三个浏览器窗口共 18 个标签页，浅色主题" darkAlt="TabMerger 的“Now Open”（当前打开），列出三个浏览器窗口共 18 个标签页，深色主题" boxes={[{ id: 'now-open-summary', label: '打开的窗口和标签页' }]} source="TabMerger 3.16.1">“Now Open”（当前打开）：整理前的三个窗口和 18 个标签页。</ThemedScreenshot>
+
+做每周清理时，**设置 → 数据 → 自动保存已打开的标签页**可以按计划把打开的标签页保存为新分组，也可以在打开的标签页超过 20、30、50、75 或 100 个时立即保存。免费版保留最新的 2 次自动保存，它们计入免费版 5 个分组和 50 个标签页的上限；Pro 会全部保留。想养成不让标签页再堆起来的习惯，请看[用 TabMerger 管理每天的标签页](/blog/tabmerger-daily-workflow)。
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-auto-save-threshold" alt="TabMerger 设置的“Data”（数据）选项卡：“Auto-save open tabs”（自动保存已打开的标签页）已开启，“When open tabs pass”（当打开的标签页超过）设为“30 open tabs”，浅色主题" darkAlt="TabMerger 设置的“Data”（数据）选项卡：“Auto-save open tabs”（自动保存已打开的标签页）已开启，“When open tabs pass”（当打开的标签页超过）设为“30 open tabs”，深色主题" boxes={[{ id: 'threshold', label: '当打开的标签页超过' }]} source="TabMerger 3.16.1">“Auto-save open tabs”（自动保存已打开的标签页）设为在打开超过 30 个标签页时启动。</ThemedScreenshot>
+
+已保存的标签页超过你选定的时长（7、14、30 或 60 天）后，还会出现一个琥珀色圆点；分组的 **⋯** 菜单里还有**去除重复标签页**。
+
+<InstallCta>适用于 Chrome、Edge 和 Firefox，免费。无需账号即可开始使用。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

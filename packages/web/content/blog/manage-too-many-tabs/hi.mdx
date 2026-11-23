@@ -1,0 +1,246 @@
+export const post = {
+  slug: 'manage-too-many-tabs',
+  title: 'बहुत सारे टैब खुले हैं? चार कदम का तरीका जो हर ब्राउज़र में काम करता है',
+  seoTitle: 'बहुत सारे टैब खुले हैं? किसी भी ब्राउज़र में टैब कैसे संभालें',
+  description:
+    'बहुत सारे टैब खुले हैं? Chrome, Edge और Firefox के लिए चार कदम का तरीका, और TabMerger कैसे हर विंडो को एक क्लिक में सेव करता है ताकि आप बिना कुछ खोए उन्हें बंद कर सकें।',
+  shareSummary: 'बंद करें, ग्रुप करें, सेव करें, समय तय करें: Chrome, Edge और Firefox के लिए टैब का तरीका।',
+  dek: 'जो काम पूरा हो गया उसे बंद करें, जो चल रहा है उसे ग्रुप करें, बाकी को एक क्लिक में सेव करें और ऑटो-सेव को यह व्यवस्था बनाए रखने दें।',
+  published: '2026-11-21',
+  updated: '2026-11-21',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'नई Chrome 157 प्रोफ़ाइल में Chrome का मेमोरी सेवर बंद था।', source: 'chrome://settings/performance, 20 नवंबर 2026' },
+    { text: 'Edge 158 इनऐक्टिव टैब को स्लीप में डाल देता है, डिफ़ॉल्ट रूप से 15 मिनट बाद।', source: 'edge://settings, 20 नवंबर 2026' },
+    {
+      text: 'Chrome और Firefox में Ctrl+Shift+A खुले टैब में खोजता है।',
+      source: 'Chrome सहायता; Firefox 159 के शॉर्टकट',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Firefox के टैब मेन्यू में Close Duplicate Tabs है।', source: 'Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'कितने टैब बहुत ज़्यादा होते हैं?',
+      answer:
+        'कोई तय संख्या नहीं है। टैब तब ज़्यादा हैं जब आप उनके टाइटल नहीं पढ़ पाते, किसी टैब को ढूँढे बिना नहीं पा सकते, या ब्राउज़र परफ़ॉर्मेंस को लेकर चेतावनी देने लगता है।',
+    },
+    {
+      question: 'बहुत सारे टैब खोलने की आदत कैसे छोड़ें?',
+      answer:
+        'पूरे हो चुके टैब हर दिन बंद करें, आज के काम वाले टैब का ग्रुप बनाएँ, बाकी को ऐसी जगह सेव करें जहाँ खोज सकें, और हफ़्ते में एक बार थोड़ी देर सफ़ाई करें।',
+    },
+    {
+      question: 'क्या खुले टैब कंप्यूटर को धीमा करते हैं?',
+      answer:
+        'कर सकते हैं, क्योंकि हर खुला पेज मेमोरी इस्तेमाल करता है। Chrome का मेमोरी सेवर और Edge के स्लीपिंग टैब उन टैब की मेमोरी खाली कर देते हैं जिन्हें आप इस्तेमाल नहीं कर रहे; वापस आने पर वे फिर से लोड हो जाते हैं।',
+    },
+    {
+      question: 'क्या उन टैब को बंद करना सुरक्षित है जिनकी बाद में ज़रूरत पड़ सकती है?',
+      answer:
+        'हाँ, अगर आप पहले उन्हें सेव कर लें: बुकमार्क फ़ोल्डर, सेशन मैनेजर या TabMerger पता संभालकर रखते हैं ताकि आप उसे फिर से खोल सकें। सभी खुले टैब सेव करने की हमारी गाइड देखें।',
+      link: { text: 'सभी खुले टैब सेव करने', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp', alt: 'TabMerger में Now Open (अभी खुले हुए): तीन ब्राउज़र विंडो और 18 टैब, लाइट थीम' },
+    { src: '/blog/manage-too-many-tabs/tm-now-open-dark.webp', alt: 'TabMerger में Now Open (अभी खुले हुए): तीन ब्राउज़र विंडो और 18 टैब, डार्क थीम' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-light.webp', alt: 'TabMerger की सेटिंग्स, Data (डेटा) टैब: Auto-save open tabs (खुले टैब ऑटो-सेव करें) चालू, और When open tabs pass (जब खुले टैब इससे ज़्यादा हों) 30 open tabs पर सेट, लाइट थीम' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-dark.webp', alt: 'TabMerger की सेटिंग्स, Data (डेटा) टैब: Auto-save open tabs (खुले टैब ऑटो-सेव करें) चालू, और When open tabs pass (जब खुले टैब इससे ज़्यादा हों) 30 open tabs पर सेट, डार्क थीम' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Chrome की सेटिंग, Performance (परफ़ॉर्मेंस), Memory Saver (मेमोरी सेवर) स्विच के साथ' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Edge की Settings, Performance: Automatically put tabs to sleep चालू और 15 मिनट पर सेट' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'save-tabs', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp' },
+  ogImage: { src: '/blog/manage-too-many-tabs/og.png', alt: 'बहुत सारे टैब खुले हैं? चार कदम का तरीका जो हर ब्राउज़र में काम करता है: TabMerger की गाइड, तीन ब्राउज़र विंडो एक ही जगह पर' },
+  toc: [
+    { id: 'quick', label: 'छोटा जवाब' },
+    { id: 'how-many', label: 'कितने टैब ज़्यादा हैं?' },
+    { id: 'close', label: '1. बंद करें' },
+    { id: 'group', label: '2. ग्रुप करें' },
+    { id: 'save', label: '3. सेव करें' },
+    { id: 'schedule', label: '4. सफ़ाई का समय तय करें' },
+    { id: 'memory', label: 'ब्राउज़र से मदद लें' },
+    { id: 'tabmerger', label: 'TabMerger में करें' },
+    { id: 'faq', label: 'अक्सर पूछे जाने वाले प्रश्न' },
+  ],
+  browserSections: ['close', 'memory'],
+  browserFact: {
+    label: 'मेमोरी सेटिंग',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Settings → System and performance → Performance',
+      firefox: 'टैब पर राइट-क्लिक करें → Unload Tab',
+    },
+  },
+}
+
+<QuickAnswer>
+
+ये चार कदम इसी क्रम में अपनाएँ: जिन टैब का काम पूरा हो गया है उन्हें **बंद करें**, सामने वाले काम के टैब का **ग्रुप बनाएँ**, “शायद बाद में” वाले टैब को ऐसी जगह **सेव करें** जहाँ आप खोज सकें, और हफ़्ते में एक बार दस मिनट की सफ़ाई का **समय तय करें**। यह Chrome, Edge और Firefox में काम करता है। सबसे ज़्यादा जगह सेव करने से खाली होती है, और [TabMerger](/features) इसे एक क्लिक का काम बना देता है: हर खुली विंडो एक नाम वाले ग्रुप में सेव हो जाती है, जिसे आप कभी भी खोज सकते हैं और फिर से खोल सकते हैं।
+
+</QuickAnswer>
+
+<InstallCta>हर खुली विंडो एक क्लिक में सेव करें, फिर बिना कुछ खोए उन्हें बंद करें। Chrome, Edge और Firefox के लिए मुफ़्त।</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="how-many" title="कितने टैब बहुत ज़्यादा होते हैं?">
+
+कोई जादुई संख्या नहीं है, और हम अपनी तरफ़ से कोई संख्या नहीं गढ़ेंगे। टैब तब समस्या बनते हैं जब वे अपना काम करना बंद कर देते हैं, यानी उन चीज़ों को पास रखना जिन पर आप जल्द लौटेंगे। इन संकेतों पर ध्यान दें:
+
+- टैब बार में सिर्फ़ आइकॉन दिखते हैं, इसलिए टाइटल पढ़ना मुमकिन नहीं रहा।
+- आप कोई पेज खोलते हैं और पता चलता है कि वह पहले से खुला था, वह भी दो बार।
+- आप टैब “कहीं ज़रूरत पड़ जाए” सोचकर खुले छोड़ देते हैं, क्योंकि उन्हें बंद करना उन्हें खो देने जैसा लगता है।
+- ब्राउज़र चेतावनी देता है। खराब परफ़ॉर्मेंस का पता चलने पर Chrome **परफ़ॉर्मेंस से जुड़ी समस्याओं की सूचनाएं** (Performance issue alerts) दिखाता है, जो टैब को इनऐक्टिव करने का सुझाव देती हैं।
+
+आखिरी संकेत ब्राउज़र की समस्या है, और इसके उपाय हैं (नीचे देखें)। पहले तीन व्यवस्था की समस्या हैं, और यही तरीका उन्हें ठीक करता है।
+
+ब्राउज़र के स्क्रीनशॉट में अंग्रेज़ी इंटरफ़ेस दिखता है। जहाँ हिंदी नाम अलग है, वहाँ पहली बार अंग्रेज़ी नाम कोष्ठक में दिया गया है। Firefox के जिन विकल्पों का आधिकारिक हिंदी नाम नहीं है, वे अंग्रेज़ी में ही हैं।
+
+</Section>
+
+<Section id="close" title="1. जिनका काम हो गया, उन्हें बंद करें">
+
+सबसे आसान जीत से शुरुआत करें। उन टैब को बंद करें जिनका काम पूरा हो चुका है: वह खोज जिसका जवाब मिल गया, वह लेख जो पढ़ लिया, चेकआउट पेज।
+
+- <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> (Mac पर <Kbd>⌘</Kbd>+<Kbd>W</Kbd>) तीनों ब्राउज़र में मौजूदा टैब बंद करता है।
+- गलती से एक ज़्यादा बंद हो गया? <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> उसे फिर से खोल देता है। ज़्यादा जानकारी हमारी [टैब कीबोर्ड शॉर्टकट](/blog/tab-keyboard-shortcuts) सूची में है।
+
+<BrowserPanels section="close">
+<BrowserPanel browser="chrome">
+
+**टैब सर्च** (Tab Search) खोलने के लिए <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (Mac पर <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) दबाएँ: इसमें सभी खुले टैब की सूची होती है, और हर लाइन पर बंद करने का बटन होता है। जिन टैब का काम हो गया, उन्हें सीधे सूची से बंद करें।
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge की कीबोर्ड शॉर्टकट सूची में खुले टैब खोजने के लिए कोई की नहीं है, इसलिए टैब बार पर एक-एक करके आगे बढ़ें: जिस टैब का काम हो गया उस पर क्लिक करें और <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> दबाएँ।
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> आपके सभी टैब की सूची दिखाता है, ताकि आप पूरे हो चुके टैब ढूँढकर बंद कर सकें।
+- किसी भी टैब पर राइट-क्लिक करें और दोहराए गए टैब एक बार में हटाने के लिए **Close Duplicate Tabs** चुनें।
+
+TabMerger **सभी** विंडो में दोहराए गए टैब एक साथ हटाता है; देखें [डुप्लिकेट टैब कैसे बंद करें](/blog/close-duplicate-tabs)।
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>बंद करना सिर्फ़ उन टैब के लिए सुरक्षित है जिनके बारे में आप पक्के हैं। जिस पर भी आप हिचकिचाएँ, वह कदम 3 में जाए, कूड़ेदान में नहीं।</Catch>
+
+</Section>
+
+<Section id="group" title="2. आज के काम के टैब का ग्रुप बनाएँ">
+
+टैब ग्रुप कुछ टैब को एक नाम और रंग देते हैं, और उन्हें समेटकर एक ही लेबल बना देते हैं। Chrome, Edge और Firefox, तीनों में यह सुविधा है: किसी टैब पर राइट-क्लिक करें और उसे नए ग्रुप में जोड़ें।
+
+आज जिन कामों पर आप सच में लगे हैं, हर काम के लिए एक ग्रुप रखें, और जिन्हें आप नहीं देख रहे उन्हें समेट दें। समेटा हुआ ग्रुप एक टैब जितनी जगह लेता है। ग्रुप कैसे सेव, सिंक और फिर से खुलते हैं, यह हर ब्राउज़र में अलग है; हमारी [Chrome टैब ग्रुप गाइड](/blog/chrome-tab-groups) में इसकी बारीकियाँ और सीमाएँ बताई गई हैं।
+
+</Section>
+
+<Section id="save" title="3. “शायद बाद में” वाले टैब सेव करें">
+
+यही वह कदम है जो टैब बार को सच में छोटा करता है। जिस टैब की अगले हफ़्ते शायद ज़रूरत पड़े, उसे खुला रखने की ज़रूरत नहीं; बस उसे ढूँढ पाना ज़रूरी है।
+
+- **विंडो को बुकमार्क करें।** <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> मौजूदा विंडो के हर टैब को एक नए बुकमार्क फ़ोल्डर में सेव करता है। हमारी [सभी खुले टैब सेव करने](/blog/save-all-open-tabs) की गाइड हर ब्राउज़र के लिए यह तरीका बताती है।
+- **सेशन मैनेजर इस्तेमाल करें।** यह पूरी विंडो को नाम के साथ सेव करता है और एक क्लिक में वापस खोल देता है। देखें कि [ब्राउज़र सेशन मैनेजर क्या करता है](/blog/browser-session-manager) और यह बुकमार्क से कैसे अलग है।
+- **बाद में पढ़ें।** अगर यह कोई लेख है, तो टैब से बेहतर है उसे बाद में पढ़ने की सूची में रखना। समझ नहीं आ रहा कि पेज कहाँ रखें? हमारी [टैब बनाम बुकमार्क गाइड](/blog/tabs-vs-bookmarks) में फ़ैसला करने के लिए एक टेबल है।
+
+फिर जो सेव किया है उसे बंद कर दें। पूरी तरकीब यही है: सेव करने से ही बंद करना सुरक्षित बनता है।
+
+</Section>
+
+<Section id="schedule" title="4. हर हफ़्ते की सफ़ाई कैलेंडर में डालें">
+
+टैब फिर से जमा होने लगते हैं। छोटी, नियमित सफ़ाई बिना इच्छाशक्ति के भी उनकी संख्या कम रखती है:
+
+1. हफ़्ते में एक बार, अपने सेव किए फ़ोल्डर या ग्रुप खोलें।
+2. जिसकी अब ज़रूरत नहीं, उसे मिटा दें। अगर किसी चीज़ को एक महीने से नहीं खोला, तो शायद आगे भी नहीं खोलेंगे।
+3. हफ़्ते भर में सेव की गई विंडो बंद करें।
+
+अगर रिसर्च आपका काम है (छात्र, एनालिस्ट, डॉक्यूमेंटेशन पढ़ने वाले डेवलपर), तो हर प्रोजेक्ट के लिए एक सेव किया हुआ ग्रुप रखें और प्रोजेक्ट खत्म होने पर ही उसकी सफ़ाई करें, उससे पहले नहीं।
+
+</Section>
+
+<Section id="memory" title="ब्राउज़र को मेमोरी खाली करने दें">
+
+ब्राउज़र बेकार पड़े टैब को बंद किए बिना उन्हें मेमोरी इस्तेमाल करने से रोक सकते हैं। टैब टैब बार में बना रहता है और क्लिक करने पर फिर से लोड होता है।
+
+<BrowserPanels section="memory">
+<BrowserPanel browser="chrome">
+
+**मेमोरी सेवर** (Memory Saver) चालू करें: **सेटिंग → परफ़ॉर्मेंस** (Settings → Performance) पर जाएँ, या एड्रेस बार में `chrome://settings/performance` चिपकाएँ।
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Chrome की सेटिंग, Performance (परफ़ॉर्मेंस), Memory Saver (मेमोरी सेवर) स्विच के साथ" width={1600} height={524} eager boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">Chrome का Memory Saver (मेमोरी सेवर), नई Chrome 157 प्रोफ़ाइल में बंद।</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+**Settings → System and performance → Performance** में **Automatically put tabs to sleep** चालू करें, और चुनें कि कोई टैब स्लीप में जाने से पहले कितनी देर रुके।
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Edge की Settings, Performance: Automatically put tabs to sleep चालू और 15 मिनट पर सेट" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Edge के स्लीपिंग टैब डिफ़ॉल्ट रूप से चालू रहते हैं: इनऐक्टिव टैब 15 मिनट बाद स्लीप में चले जाते हैं।</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+किसी टैब पर राइट-क्लिक करें और उसकी मेमोरी खुद खाली करने के लिए **Unload Tab** चुनें।
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>इससे कंप्यूटर को मदद मिलती है, आपको नहीं। पचास सोते हुए टैब अब भी पचास टैब ही हैं जिन्हें आपको देखना है। इसे इस तरीके के साथ इस्तेमाल करें, इसकी जगह नहीं।</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger में करें">
+
+[TabMerger](/features), Chrome, Edge और Firefox के लिए हमारा मुफ़्त एक्सटेंशन, कदम 3 और 4 को कुछ क्लिक का काम बना देता है। **अभी खुले हुए** हर खुली विंडो और उसके टैब एक ही जगह दिखाता है, ताकि आप पूरा ढेर एक साथ देख सकें। **वर्तमान के साथ विलय करें** से सबको एक नाम वाले ग्रुप में सेव करें, विंडो बंद करें, और कोई भी टैब, चाहे वह खुला हो, सेव हो या हाल ही में बंद हुआ हो, <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> से फिर ढूँढ लें। धीमा कंप्यूटर अक्सर बहुत सारे टैब का पहला संकेत होता है; [देखें कि सेव करके बंद करने से मेमोरी कैसे खाली होती है](/blog/too-many-tabs-slow-browser)।
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-now-open" alt="TabMerger में Now Open (अभी खुले हुए): तीन ब्राउज़र विंडो और 18 टैब, लाइट थीम" darkAlt="TabMerger में Now Open (अभी खुले हुए): तीन ब्राउज़र विंडो और 18 टैब, डार्क थीम" boxes={[{ id: 'now-open-summary', label: 'खुली विंडो और टैब' }]} source="TabMerger 3.16.1">Now Open (अभी खुले हुए): छँटाई से पहले तीन विंडो और 18 टैब।</ThemedScreenshot>
+
+हर हफ़्ते की सफ़ाई के लिए, **सेटिंग्स → डेटा → खुले टैब ऑटो-सेव करें** आपके खुले टैब को तय समय पर, या जैसे ही आप 20, 30, 50, 75 या 100 खुले टैब पार करें, एक नए ग्रुप के रूप में सेव कर सकता है। मुफ़्त प्लान सबसे नए 2 ऑटो-सेव रखता है, और वे उसके 5 ग्रुप और 50 टैब में गिने जाते हैं; Pro सब रखता है। ऐसे तरीके के लिए जो ढेर को वापस न आने दे, देखें [TabMerger के साथ रोज़ का टैब वर्कफ़्लो](/blog/tabmerger-daily-workflow)।
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-auto-save-threshold" alt="TabMerger की सेटिंग्स, Data (डेटा) टैब: Auto-save open tabs (खुले टैब ऑटो-सेव करें) चालू, और When open tabs pass (जब खुले टैब इससे ज़्यादा हों) 30 open tabs पर सेट, लाइट थीम" darkAlt="TabMerger की सेटिंग्स, Data (डेटा) टैब: Auto-save open tabs (खुले टैब ऑटो-सेव करें) चालू, और When open tabs pass (जब खुले टैब इससे ज़्यादा हों) 30 open tabs पर सेट, डार्क थीम" boxes={[{ id: 'threshold', label: 'जब खुले टैब इससे ज़्यादा हों' }]} source="TabMerger 3.16.1">Auto-save open tabs (खुले टैब ऑटो-सेव करें), 30 से ज़्यादा टैब खुलते ही चालू होने के लिए सेट।</ThemedScreenshot>
+
+सेव किए गए टैब पर, आपकी चुनी हुई उम्र (7, 14, 30 या 60 दिन) पार होते ही एक एम्बर रंग का बिंदु भी लग जाता है, और किसी ग्रुप के **⋯** मेन्यू में **डुप्लिकेट टैब हटाएं** विकल्प है।
+
+<InstallCta>Chrome, Edge और Firefox के लिए मुफ़्त। शुरू करने के लिए किसी अकाउंट की ज़रूरत नहीं।</InstallCta>
+
+</Section>
+
+<Section id="faq" title="अक्सर पूछे जाने वाले प्रश्न">
+
+<Faq items={post.faq} />
+
+</Section>

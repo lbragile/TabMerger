@@ -1,0 +1,246 @@
+export const post = {
+  slug: 'manage-too-many-tabs',
+  title: 'Muitas abas abertas? Uma rotina de quatro passos que funciona em qualquer navegador',
+  seoTitle: 'Muitas abas abertas? Como organizar em qualquer navegador',
+  description:
+    'Muitas abas abertas? Uma rotina de quatro passos para Chrome, Edge e Firefox, e como o TabMerger salva todas as janelas com um clique para você fechá-las sem perder nada.',
+  shareSummary: 'Fechar, agrupar, salvar e agendar: uma rotina de abas para Chrome, Edge e Firefox.',
+  dek: 'Feche o que já terminou, agrupe o que está em andamento, salve o resto com um clique e deixe o salvamento automático manter tudo assim.',
+  published: '2026-11-21',
+  updated: '2026-11-21',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'A Economia de memória do Chrome estava desativada em um perfil novo do Chrome 157.', source: 'chrome://settings/performance, 20 nov. 2026' },
+    { text: 'O Edge 158 coloca as abas inativas em suspensão, depois de 15 minutos por padrão.', source: 'edge://settings, 20 nov. 2026' },
+    {
+      text: 'Ctrl+Shift+A pesquisa as abas abertas no Chrome e no Firefox.',
+      source: 'Ajuda do Chrome; atalhos do Firefox 159',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'O menu da aba do Firefox tem “Fechar abas duplicadas”.', source: 'Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Quantas abas são abas demais?',
+      answer:
+        'Não existe um número fixo. São demais quando você não consegue ler os títulos das abas, não acha uma aba sem procurar muito ou o navegador começa a avisar sobre problemas de desempenho.',
+    },
+    {
+      question: 'Como parar de ter tantas abas abertas?',
+      answer:
+        'Feche todo dia as abas que já terminou, agrupe as da tarefa do dia, salve o resto em um lugar onde você possa pesquisar e faça uma revisão rápida toda semana.',
+    },
+    {
+      question: 'Abas abertas deixam o computador lento?',
+      answer:
+        'Podem deixar, porque cada página aberta usa memória. A Economia de memória do Chrome e as abas em suspensão do Edge liberam a memória das abas que você não está usando; elas recarregam quando você volta.',
+    },
+    {
+      question: 'É seguro fechar abas de que talvez eu precise depois?',
+      answer:
+        'Sim, se você salvar antes: uma pasta de favoritos, um gerenciador de sessões ou o TabMerger guarda o endereço para você reabrir. Veja nosso guia para salvar todas as abas abertas.',
+      link: { text: 'salvar todas as abas abertas', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp', alt: 'TabMerger, “Now Open” (Abertas agora), com três janelas do navegador e 18 abas, tema claro' },
+    { src: '/blog/manage-too-many-tabs/tm-now-open-dark.webp', alt: 'TabMerger, “Now Open” (Abertas agora), com três janelas do navegador e 18 abas, tema escuro' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-light.webp', alt: 'Configurações do TabMerger, aba “Data” (Dados): “Auto-save open tabs” (Salvar abas abertas automaticamente) ativado, com “When open tabs pass” (Quando as abas abertas passarem de) em “30 open tabs”, tema claro' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-dark.webp', alt: 'Configurações do TabMerger, aba “Data” (Dados): “Auto-save open tabs” (Salvar abas abertas automaticamente) ativado, com “When open tabs pass” (Quando as abas abertas passarem de) em “30 open tabs”, tema escuro' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Configurações do Chrome, “Performance” (Desempenho), com a chave “Memory Saver” (Economia de memória)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Configurações do Edge, “Performance”, com “Automatically put tabs to sleep” ativado e definido em 15 minutos' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'save-tabs', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp' },
+  ogImage: { src: '/blog/manage-too-many-tabs/og.png', alt: 'Cartão com o título “Too many tabs? A four-step routine that works in any browser”: um guia do TabMerger, com três janelas do navegador reunidas em um só lugar' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'how-many', label: 'Quantas são demais?' },
+    { id: 'close', label: '1. Feche' },
+    { id: 'group', label: '2. Agrupe' },
+    { id: 'save', label: '3. Salve' },
+    { id: 'schedule', label: '4. Agende uma revisão' },
+    { id: 'memory', label: 'Deixe o navegador ajudar' },
+    { id: 'tabmerger', label: 'Faça no TabMerger' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+  browserSections: ['close', 'memory'],
+  browserFact: {
+    label: 'Configuração de memória',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Configurações → System and performance → Performance',
+      firefox: 'Clique com o botão direito em uma aba → Descarregar aba',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Siga quatro passos, nesta ordem: **feche** todas as abas que você já terminou de usar, **agrupe** as abas da tarefa que está à sua frente, **salve** as de “talvez depois” em um lugar onde você possa pesquisar e **agende** uma revisão de dez minutos uma vez por semana. Funciona no Chrome, no Edge e no Firefox. O passo que mais libera espaço é salvar, e o [TabMerger](/features) faz isso com um clique: todas as janelas abertas vão para um grupo com nome, que você pode pesquisar e reabrir quando quiser.
+
+</QuickAnswer>
+
+<InstallCta>Salve todas as janelas abertas com um clique e feche tudo sem perder nada. Grátis para Chrome, Edge e Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="how-many" title="Quantas abas são abas demais?">
+
+Não existe um número mágico, e não vamos inventar um. As abas viram um problema quando param de fazer o trabalho delas, que é guardar o que você vai retomar em breve. Fique de olho nestes sinais:
+
+- A barra de abas só mostra ícones e você não consegue mais ler os títulos.
+- Você abre uma página e descobre que ela já estava aberta, duas vezes.
+- Você deixa abas abertas “só por garantia”, porque fechá-las parece perdê-las.
+- O navegador avisa. O Chrome mostra **Alertas de problemas de desempenho** (“Performance issue alerts”) que sugerem desativar abas quando detecta um desempenho ruim.
+
+O último é um problema do navegador, e tem solução (mais abaixo). Os três primeiros são um problema de organização, e é isso que a rotina resolve.
+
+As capturas de tela dos navegadores mostram a interface em inglês. Quando o nome em português é diferente, o inglês aparece entre parênteses na primeira vez.
+
+</Section>
+
+<Section id="close" title="1. Feche o que você já terminou">
+
+Comece pelo ganho mais fácil. Feche as abas que já cumpriram seu papel: a pesquisa que você já respondeu, o artigo que já leu, a página de pagamento.
+
+- <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> (<Kbd>⌘</Kbd>+<Kbd>W</Kbd> no Mac) fecha a aba atual nos três navegadores.
+- Fechou uma a mais? <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> reabre. Veja mais na nossa lista de [atalhos de teclado para abas](/blog/tab-keyboard-shortcuts).
+
+<BrowserPanels section="close">
+<BrowserPanel browser="chrome">
+
+Pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> no Mac) para abrir a **Pesquisa em todas as guias** (“Tab Search”): uma lista de todas as abas abertas, com um botão de fechar em cada linha. Feche as que você já terminou direto da lista.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+A lista de atalhos de teclado do Edge não tem uma tecla para pesquisar as abas abertas, então percorra a barra de abas: clique em uma aba que você já terminou e pressione <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd>.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> lista todas as suas abas, para você encontrar e fechar as que já terminou.
+- Clique com o botão direito em qualquer aba e escolha **Fechar abas duplicadas** (“Close Duplicate Tabs”) para eliminar as repetidas de uma vez.
+
+O TabMerger remove as repetidas em **todas** as janelas ao mesmo tempo; veja [como fechar abas duplicadas](/blog/close-duplicate-tabs).
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>fechar só é seguro para as abas sobre as quais você tem certeza. Tudo o que deixar dúvida vai para o passo 3, não para a lixeira.</Catch>
+
+</Section>
+
+<Section id="group" title="2. Agrupe as abas da tarefa de hoje">
+
+Os grupos de abas dão a um conjunto de abas um nome e uma cor, e se recolhem em um único rótulo. Chrome, Edge e Firefox têm grupos: clique com o botão direito em uma aba e adicione-a a um novo grupo.
+
+Mantenha um grupo para cada tarefa em que você está realmente trabalhando hoje e recolha os que não está olhando. Um grupo recolhido ocupa o espaço de uma aba. O jeito como os grupos são salvos, sincronizados e reabertos muda de navegador para navegador; nosso [guia dos grupos de abas do Chrome](/blog/chrome-tab-groups) explica os detalhes e os limites.
+
+</Section>
+
+<Section id="save" title="3. Salve as abas de “talvez depois”">
+
+Este é o passo que realmente encolhe a barra de abas. Uma aba de que você talvez precise na semana que vem não precisa ficar aberta; ela precisa ser fácil de encontrar.
+
+- **Adicione a janela aos favoritos.** <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> salva todas as abas da janela atual em uma nova pasta de favoritos. Nosso guia para [salvar todas as abas abertas](/blog/save-all-open-tabs) mostra como fazer em cada navegador.
+- **Use um gerenciador de sessões.** Ele salva janelas inteiras, com nome, e as restaura com um clique. Veja [o que faz um gerenciador de sessões do navegador](/blog/browser-session-manager) e como ele se diferencia dos favoritos.
+- **Leia depois.** Se for um artigo, uma lista de leitura é melhor que uma aba. Não sabe onde guardar uma página? Nosso [guia abas ou favoritos](/blog/tabs-vs-bookmarks) tem uma tabela para decidir.
+
+Depois, feche o que você salvou. Esse é o truque todo: salvar é o que torna seguro fechar.
+
+</Section>
+
+<Section id="schedule" title="4. Marque uma revisão semanal na agenda">
+
+As abas voltam a se acumular. Uma revisão curta e regular mantém o número baixo sem depender de força de vontade:
+
+1. Uma vez por semana, abra suas pastas ou grupos salvos.
+2. Apague o que você não precisa mais. Se você não abriu algo em um mês, provavelmente não vai abrir.
+3. Feche as janelas que você salvou durante a semana.
+
+Se pesquisa faz parte do seu trabalho (estudantes, analistas, desenvolvedores lendo documentação), mantenha um grupo salvo por projeto e revise quando o projeto terminar, não antes.
+
+</Section>
+
+<Section id="memory" title="Deixe o navegador liberar a memória">
+
+Os navegadores conseguem impedir que abas paradas usem memória sem fechá-las. A aba continua na barra e recarrega quando você clica nela.
+
+<BrowserPanels section="memory">
+<BrowserPanel browser="chrome">
+
+Ative a **Economia de memória** (“Memory Saver”): **Configurações → Desempenho** (“Settings → Performance”), ou cole `chrome://settings/performance` na barra de endereço.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Configurações do Chrome, “Performance” (Desempenho), com a chave “Memory Saver” (Economia de memória)" width={1600} height={524} eager boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">“Memory Saver” (Economia de memória) do Chrome, desativada em um perfil novo do Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Ative **Automatically put tabs to sleep** em **Configurações → System and performance → Performance** e escolha quanto tempo uma aba espera antes de entrar em suspensão.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Configurações do Edge, “Performance”, com “Automatically put tabs to sleep” ativado e definido em 15 minutos" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">As abas em suspensão do Edge, ativadas por padrão: abas inativas entram em suspensão depois de 15 minutos.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Clique com o botão direito em uma aba e escolha **Descarregar aba** (“Unload Tab”) para liberar a memória dela manualmente.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>isso ajuda o computador, não você. Cinquenta abas em suspensão continuam sendo cinquenta abas para olhar. Use junto com a rotina, não no lugar dela.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="Faça isso no TabMerger">
+
+O [TabMerger](/features), nossa extensão gratuita para Chrome, Edge e Firefox, transforma os passos 3 e 4 em poucos cliques. **Abertas agora** mostra todas as janelas abertas e suas abas em um só lugar, para você ver a pilha inteira de uma vez. Salve todas em um grupo com nome usando **Mesclar com as atuais**, feche as janelas e encontre qualquer aba de novo com <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>, esteja ela aberta, salva ou fechada recentemente. Um computador lento costuma ser o primeiro sinal de abas demais; [veja como salvar e fechar libera a memória](/blog/too-many-tabs-slow-browser).
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-now-open" alt="TabMerger, “Now Open” (Abertas agora), com três janelas do navegador e 18 abas, tema claro" darkAlt="TabMerger, “Now Open” (Abertas agora), com três janelas do navegador e 18 abas, tema escuro" boxes={[{ id: 'now-open-summary', label: 'Janelas e abas abertas' }]} source="TabMerger 3.16.1">“Now Open” (Abertas agora): três janelas e 18 abas, antes da organização.</ThemedScreenshot>
+
+Para a revisão semanal, **Configurações → Dados → Salvar abas abertas automaticamente** pode salvar suas abas abertas como um novo grupo em um horário programado, ou assim que você passar de 20, 30, 50, 75 ou 100 abas abertas. O plano gratuito mantém os 2 salvamentos automáticos mais recentes, e eles contam nos 5 grupos e 50 abas do plano; o Pro mantém todos. Para uma rotina que impede a pilha de voltar, veja [um fluxo diário de abas com o TabMerger](/blog/tabmerger-daily-workflow).
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-auto-save-threshold" alt="Configurações do TabMerger, aba “Data” (Dados): “Auto-save open tabs” (Salvar abas abertas automaticamente) ativado, com “When open tabs pass” (Quando as abas abertas passarem de) em “30 open tabs”, tema claro" darkAlt="Configurações do TabMerger, aba “Data” (Dados): “Auto-save open tabs” (Salvar abas abertas automaticamente) ativado, com “When open tabs pass” (Quando as abas abertas passarem de) em “30 open tabs”, tema escuro" boxes={[{ id: 'threshold', label: 'Quando as abas abertas passarem de' }]} source="TabMerger 3.16.1">“Auto-save open tabs” (Salvar abas abertas automaticamente), configurado para entrar em ação quando houver mais de 30 abas abertas.</ThemedScreenshot>
+
+As abas salvas também ganham um ponto âmbar quando passam da idade que você escolher (7, 14, 30 ou 60 dias), e o menu **⋯** de um grupo tem **Remover abas duplicadas**.
+
+<InstallCta>Grátis para Chrome, Edge e Firefox. Não precisa de conta para começar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

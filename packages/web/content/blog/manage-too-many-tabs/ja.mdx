@@ -1,0 +1,246 @@
+export const post = {
+  slug: 'manage-too-many-tabs',
+  title: 'タブが多すぎる？どのブラウザでも使える4ステップの整理術',
+  seoTitle: 'タブが多すぎるときの整理術（Chrome・Edge・Firefox）',
+  description:
+    'タブを開きすぎて困っていませんか？Chrome、Edge、Firefox で使える4ステップの整理術と、TabMerger ですべてのウィンドウをワンクリックで保存し、何も失わずに閉じる方法を紹介します。',
+  shareSummary: '閉じる、まとめる、保存する、予定に入れる。Chrome・Edge・Firefox のタブ整理術。',
+  dek: '終わったものは閉じ、作業中のものはグループにまとめ、残りはワンクリックで保存。あとは自動保存に任せます。',
+  published: '2026-11-21',
+  updated: '2026-11-21',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Chrome のメモリセーバーは、新しい Chrome 157 プロファイルではオフでした。', source: 'chrome://settings/performance、2026年11月20日' },
+    { text: 'Edge 158 は使っていないタブをスリープさせます。初期設定では15分後です。', source: 'edge://settings、2026年11月20日' },
+    {
+      text: 'Chrome と Firefox では Ctrl+Shift+A で開いているタブを検索できます。',
+      source: 'Chrome ヘルプ、Firefox 159 のキー設定',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Firefox のタブメニューには「重複タブを閉じる」があります。', source: 'Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'タブは何個からが多すぎですか？',
+      answer:
+        '決まった数はありません。タブのタイトルが読めない、探し回らないとタブが見つからない、ブラウザがパフォーマンスの警告を出し始めた、といったときが多すぎるサインです。',
+    },
+    {
+      question: 'タブを開きすぎないようにするには？',
+      answer:
+        '終わったタブは毎日閉じ、今日の作業のタブはグループにまとめ、残りは検索できる場所に保存して、週に1回短い整理をしましょう。',
+    },
+    {
+      question: '開いているタブでパソコンは遅くなりますか？',
+      answer:
+        'なることがあります。開いているページはそれぞれメモリを使うからです。Chrome のメモリセーバーと Edge のスリープタブは、使っていないタブのメモリを解放します。タブに戻ると再読み込みされます。',
+    },
+    {
+      question: 'あとで必要になるかもしれないタブを閉じても大丈夫ですか？',
+      answer:
+        'はい、先に保存しておけば大丈夫です。ブックマークフォルダ、セッションマネージャー、TabMerger のどれでもアドレスが残るので、また開けます。詳しくは開いているタブをすべて保存する方法のガイドをご覧ください。',
+      link: { text: '開いているタブをすべて保存する方法', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp', alt: 'TabMerger の「Now Open」（現在開いているタブ）。ブラウザのウィンドウ3つとタブ18個。ライトテーマ' },
+    { src: '/blog/manage-too-many-tabs/tm-now-open-dark.webp', alt: 'TabMerger の「Now Open」（現在開いているタブ）。ブラウザのウィンドウ3つとタブ18個。ダークテーマ' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-light.webp', alt: 'TabMerger の設定の「Data」（データ）タブ。「Auto-save open tabs」（開いているタブを自動保存）がオンで、「When open tabs pass」（開いているタブがこの数を超えたとき）が「30 open tabs」。ライトテーマ' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-dark.webp', alt: 'TabMerger の設定の「Data」（データ）タブ。「Auto-save open tabs」（開いているタブを自動保存）がオンで、「When open tabs pass」（開いているタブがこの数を超えたとき）が「30 open tabs」。ダークテーマ' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Chrome の設定の「Performance」（パフォーマンス）。「Memory Saver」（メモリセーバー）のスイッチがある' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Edge の設定の「Performance」。「Automatically put tabs to sleep」がオンで、15分に設定されている' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'save-tabs', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp' },
+  ogImage: { src: '/blog/manage-too-many-tabs/og.png', alt: 'タブが多すぎる？どのブラウザでも使える4ステップの整理術：TabMerger のガイド。3つのブラウザウィンドウが1か所に並んでいる' },
+  toc: [
+    { id: 'quick', label: '簡単な答え' },
+    { id: 'how-many', label: '何個からが多すぎ？' },
+    { id: 'close', label: '1. 閉じる' },
+    { id: 'group', label: '2. まとめる' },
+    { id: 'save', label: '3. 保存する' },
+    { id: 'schedule', label: '4. 整理を予定に入れる' },
+    { id: 'memory', label: 'ブラウザの機能に頼る' },
+    { id: 'tabmerger', label: 'TabMerger でやる' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+  browserSections: ['close', 'memory'],
+  browserFact: {
+    label: 'メモリの設定',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: '設定 → System and performance → Performance',
+      firefox: 'タブを右クリック → タブを解放',
+    },
+  },
+}
+
+<QuickAnswer>
+
+次の4ステップをこの順番で行います。使い終わったタブはすべて**閉じる**、今取り組んでいる作業のタブを**グループにまとめる**、「あとで見るかも」のタブは検索できる場所に**保存する**、そして週に1回、10分の整理を**予定に入れる**。Chrome、Edge、Firefox のどれでも使えます。いちばんすっきりするのは保存のステップで、[TabMerger](/features) ならワンクリックです。開いているウィンドウがすべて名前付きのグループに保存され、いつでも検索して開き直せます。
+
+</QuickAnswer>
+
+<InstallCta>開いているウィンドウをワンクリックですべて保存し、何も失わずに閉じられます。Chrome、Edge、Firefox 向けに無料。</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="how-many" title="タブは何個からが多すぎ？">
+
+魔法の数字はありませんし、こちらで勝手に作ることもしません。タブが問題になるのは、本来の役目、つまり近いうちに戻ってくるものを手元に置いておくという役目を果たせなくなったときです。次のようなサインに注意しましょう。
+
+- タブバーにアイコンしか表示されず、タイトルが読めない。
+- ページを開いたら、すでに開いていた。しかも2つも。
+- 閉じると失くしてしまう気がして、「念のため」タブを開いたままにしている。
+- ブラウザが警告してくる。Chrome はパフォーマンスの低下を検出すると、タブの無効化を勧める**パフォーマンスの問題に関するアラート**（Performance issue alerts）を表示します。
+
+最後のサインはブラウザ側の問題で、対処法があります（後述）。最初の3つは整理の問題で、それをこの手順で解決します。
+
+ブラウザのスクリーンショットは英語の画面です。日本語の名前が異なる場合は、初出時に英語の名前を括弧で添えています。
+
+</Section>
+
+<Section id="close" title="1. 使い終わったものを閉じる">
+
+いちばん簡単なところから始めましょう。役目を終えたタブを閉じます。答えが見つかった検索、読み終わった記事、決済ページなどです。
+
+- <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd>（Mac では <Kbd>⌘</Kbd>+<Kbd>W</Kbd>）で、3つのブラウザすべてで現在のタブが閉じます。
+- 閉じすぎたら <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> で開き直せます。詳しくは[タブのキーボードショートカット](/blog/tab-keyboard-shortcuts)の一覧をご覧ください。
+
+<BrowserPanels section="close">
+<BrowserPanel browser="chrome">
+
+<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>（Mac では <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>）を押すと**タブ検索**（Tab Search）が開きます。開いているタブがすべて一覧になり、各行に閉じるボタンがあります。使い終わったタブは一覧から直接閉じましょう。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge のキーボードショートカット一覧には、開いているタブを検索するキーがありません。タブバーを順に見ていき、使い終わったタブをクリックして <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> を押します。
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> ですべてのタブが一覧になるので、使い終わったタブを見つけて閉じられます。
+- 任意のタブを右クリックして**重複タブを閉じる**（Close Duplicate Tabs）を選ぶと、重複をまとめて片付けられます。
+
+TabMerger なら**すべての**ウィンドウの重複を一度に片付けられます。[重複タブを閉じる方法](/blog/close-duplicate-tabs)をご覧ください。
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>閉じても安全なのは、確信が持てるタブだけです。迷うタブはゴミ箱ではなくステップ3へ。</Catch>
+
+</Section>
+
+<Section id="group" title="2. 今日の作業のタブをグループにまとめる">
+
+タブグループは、複数のタブに名前と色を付け、1つのラベルに折りたためる機能です。Chrome、Edge、Firefox のどれにもあります。タブを右クリックして新しいグループに追加しましょう。
+
+今日実際に取り組んでいる作業ごとにグループを1つ作り、見ていないグループは折りたたんでおきます。折りたたんだグループはタブ1つ分の幅しか取りません。グループの保存、同期、開き直しの仕組みはブラウザによって違います。詳細と制限は [Chrome のタブグループのガイド](/blog/chrome-tab-groups)にまとめています。
+
+</Section>
+
+<Section id="save" title="3. 「あとで見るかも」のタブを保存する">
+
+タブバーが本当に短くなるのはこのステップです。来週必要になるかもしれないタブは、開いておく必要はありません。見つけられれば十分です。
+
+- **ウィンドウをブックマークする**。<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> で、現在のウィンドウのタブがすべて新しいブックマークフォルダに保存されます。ブラウザごとの手順は[開いているタブをすべて保存する方法](/blog/save-all-open-tabs)のガイドで説明しています。
+- **セッションマネージャーを使う**。ウィンドウを丸ごと名前付きで保存し、ワンクリックで復元できます。[ブラウザのセッションマネージャーでできること](/blog/browser-session-manager)と、ブックマークとの違いをご覧ください。
+- **あとで読む**。記事なら、タブより「あとで読む」リストのほうが向いています。ページの置き場所に迷ったら、[タブとブックマークの使い分けガイド](/blog/tabs-vs-bookmarks)の判断表が役立ちます。
+
+保存したら閉じましょう。コツはこれだけです。保存しておくから、安心して閉じられるのです。
+
+</Section>
+
+<Section id="schedule" title="4. 週1回の整理をカレンダーに入れる">
+
+タブはまたいつの間にか増えます。短い整理を定期的に行えば、意志の力に頼らなくても数を抑えられます。
+
+1. 週に1回、保存したフォルダやグループを開きます。
+2. もう必要ないものは削除します。1か月開いていないものは、おそらくこの先も開きません。
+3. その週に保存したウィンドウを閉じます。
+
+調べものが仕事の人（学生、アナリスト、ドキュメントを読む開発者など）は、プロジェクトごとに保存したグループを1つ持ち、プロジェクトが終わったときに整理しましょう。それより前に整理する必要はありません。
+
+</Section>
+
+<Section id="memory" title="メモリの解放はブラウザに任せる">
+
+ブラウザには、使っていないタブを閉じずにメモリを使わないようにする機能があります。タブはタブバーに残り、クリックすると再読み込みされます。
+
+<BrowserPanels section="memory">
+<BrowserPanel browser="chrome">
+
+**メモリセーバー**（Memory Saver）をオンにします。**設定 → パフォーマンス**（Settings → Performance）を開くか、アドレスバーに `chrome://settings/performance` を貼り付けます。
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Chrome の設定の「Performance」（パフォーマンス）。「Memory Saver」（メモリセーバー）のスイッチがある" width={1600} height={524} eager boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">Chrome の「Memory Saver」（メモリセーバー）。新しい Chrome 157 プロファイルではオフでした。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+**設定 → System and performance → Performance** で **Automatically put tabs to sleep** をオンにし、タブがスリープするまでの時間を選びます。
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Edge の設定の「Performance」。「Automatically put tabs to sleep」がオンで、15分に設定されている" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Edge のスリープタブは初期設定でオン。使っていないタブは15分後にスリープします。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+タブを右クリックして**タブを解放**（Unload Tab）を選ぶと、手動でメモリを解放できます。
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>助かるのはパソコンで、あなたではありません。スリープ中のタブが50個あっても、目で探すタブが50個あることに変わりはありません。整理の代わりではなく、整理と組み合わせて使いましょう。</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger でやる">
+
+Chrome、Edge、Firefox 向けの無料拡張機能 [TabMerger](/features) なら、ステップ3と4が数回のクリックで済みます。**現在開いているタブ** には開いているウィンドウとそのタブがすべて1か所に表示されるので、全体を一度に見渡せます。**現在の内容と統合** ですべてを名前付きのグループに保存し、ウィンドウを閉じれば、開いているタブも保存したタブも最近閉じたタブも、<Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> ですぐに見つかります。パソコンが重くなるのは、タブが多すぎることの最初のサインであることがよくあります。[保存して閉じるとメモリが解放される仕組み](/blog/too-many-tabs-slow-browser)もご覧ください。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-now-open" alt="TabMerger の「Now Open」（現在開いているタブ）。ブラウザのウィンドウ3つとタブ18個。ライトテーマ" darkAlt="TabMerger の「Now Open」（現在開いているタブ）。ブラウザのウィンドウ3つとタブ18個。ダークテーマ" boxes={[{ id: 'now-open-summary', label: '開いているウィンドウとタブ' }]} source="TabMerger 3.16.1">「Now Open」（現在開いているタブ）：整理する前の、ウィンドウ3つとタブ18個。</ThemedScreenshot>
+
+週1回の整理には、**設定 → データ → 開いているタブを自動保存** が使えます。開いているタブを決まった間隔で、または開いているタブが20、30、50、75、100個を超えた時点で、新しいグループとして保存します。無料プランでは最新の自動保存2件が残り、これはグループ5個・タブ50個の上限に含まれます。Pro ではすべて残ります。タブが再び増えないようにする習慣は、[TabMerger で毎日タブを整理する方法](/blog/tabmerger-daily-workflow)をご覧ください。
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-auto-save-threshold" alt="TabMerger の設定の「Data」（データ）タブ。「Auto-save open tabs」（開いているタブを自動保存）がオンで、「When open tabs pass」（開いているタブがこの数を超えたとき）が「30 open tabs」。ライトテーマ" darkAlt="TabMerger の設定の「Data」（データ）タブ。「Auto-save open tabs」（開いているタブを自動保存）がオンで、「When open tabs pass」（開いているタブがこの数を超えたとき）が「30 open tabs」。ダークテーマ" boxes={[{ id: 'threshold', label: '開いているタブがこの数を超えたとき' }]} source="TabMerger 3.16.1">「Auto-save open tabs」（開いているタブを自動保存）を、開いているタブが30個を超えたら動くように設定したところ。</ThemedScreenshot>
+
+保存したタブは、選んだ日数（7、14、30、60日）を過ぎると琥珀色の点が付きます。また、グループの **⋯** メニューには **重複タブを削除** があります。
+
+<InstallCta>Chrome、Edge、Firefox 向けに無料。アカウントなしで始められます。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

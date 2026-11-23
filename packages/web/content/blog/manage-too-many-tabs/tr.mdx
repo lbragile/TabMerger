@@ -1,0 +1,246 @@
+export const post = {
+  slug: 'manage-too-many-tabs',
+  title: 'Çok fazla sekme mi açık? Her tarayıcıda işe yarayan dört adımlık bir düzen',
+  seoTitle: 'Çok Fazla Sekme mi Açık? Her Tarayıcıda Sekmeleri Yönetme',
+  description:
+    'Çok fazla sekme mi açık? Chrome, Edge ve Firefox için dört adımlık bir düzen ve TabMerger’ın tüm pencereleri tek tıkla kaydederek hiçbir şey kaybetmeden kapatmanızı nasıl sağladığı.',
+  shareSummary: 'Kapat, grupla, kaydet, planla: Chrome, Edge ve Firefox için bir sekme düzeni.',
+  dek: 'İşi biteni kapatın, üzerinde çalıştığınızı gruplayın, kalanını tek tıkla kaydedin ve bu düzeni otomatik kaydetmeye bırakın.',
+  published: '2026-11-21',
+  updated: '2026-11-21',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Chrome’un Bellek Tasarrufu özelliği yeni bir Chrome 157 profilinde kapalıydı.', source: 'chrome://settings/performance, 20 Kas 2026' },
+    { text: 'Edge 158, etkin olmayan sekmeleri varsayılan olarak 15 dakika sonra uyku moduna alır.', source: 'edge://settings, 20 Kas 2026' },
+    {
+      text: 'Ctrl+Shift+A, Chrome ve Firefox’ta açık sekmelerde arama yapar.',
+      source: 'Chrome Yardım; Firefox 159 kısayolları',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Firefox’un sekme menüsünde “Yinelenen sekmeleri kapat” bulunur.', source: 'Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Kaç sekme çok fazladır?',
+      answer:
+        'Sabit bir sayı yok. Sekme başlıklarını okuyamıyorsanız, bir sekmeyi aramadan bulamıyorsanız ya da tarayıcı performans uyarısı vermeye başladıysa sekmeleriniz çok fazladır.',
+    },
+    {
+      question: 'Sürekli çok fazla sekme açık tutmayı nasıl bırakırım?',
+      answer:
+        'İşi biten sekmeleri her gün kapatın, bugünkü işin sekmelerini gruplayın, kalanını arama yapabileceğiniz bir yere kaydedin ve haftada bir kısa bir temizlik yapın.',
+    },
+    {
+      question: 'Açık sekmeler bilgisayarımı yavaşlatır mı?',
+      answer:
+        'Yavaşlatabilir, çünkü her açık sayfa bellek kullanır. Chrome’un Bellek Tasarrufu ve Edge’in uyuyan sekmeleri, kullanmadığınız sekmelerin belleğini boşaltır; geri döndüğünüzde yeniden yüklenirler.',
+    },
+    {
+      question: 'Daha sonra lazım olabilecek sekmeleri kapatmak güvenli mi?',
+      answer:
+        'Evet, önce kaydederseniz: bir yer işareti klasörü, bir oturum yöneticisi ya da TabMerger adresi saklar, böylece yeniden açabilirsiniz. Tüm açık sekmeleri kaydetme rehberimize göz atın.',
+      link: { text: 'Tüm açık sekmeleri kaydetme rehberimize', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp', alt: 'TabMerger Now Open (Şu An Açık): üç tarayıcı penceresi ve 18 sekme, açık tema' },
+    { src: '/blog/manage-too-many-tabs/tm-now-open-dark.webp', alt: 'TabMerger Now Open (Şu An Açık): üç tarayıcı penceresi ve 18 sekme, koyu tema' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-light.webp', alt: 'TabMerger Ayarları, Data (Veri) sekmesi: Auto-save open tabs (Açık sekmeleri otomatik kaydet) açık, When open tabs pass (Açık sekme sayısı şunu geçince) 30 open tabs olarak ayarlı, açık tema' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-dark.webp', alt: 'TabMerger Ayarları, Data (Veri) sekmesi: Auto-save open tabs (Açık sekmeleri otomatik kaydet) açık, When open tabs pass (Açık sekme sayısı şunu geçince) 30 open tabs olarak ayarlı, koyu tema' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Chrome Ayarları, Performance (Performans) bölümü ve Memory Saver (Bellek Tasarrufu) anahtarı' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Edge Ayarları, Performance bölümü: Automatically put tabs to sleep açık ve 15 dakikaya ayarlı' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'save-tabs', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp' },
+  ogImage: { src: '/blog/manage-too-many-tabs/og.png', alt: 'Çok fazla sekme mi açık? Her tarayıcıda işe yarayan dört adımlık bir düzen: tek yerde listelenen üç tarayıcı penceresiyle bir TabMerger rehberi' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'how-many', label: 'Kaç sekme çok fazla?' },
+    { id: 'close', label: '1. Kapatın' },
+    { id: 'group', label: '2. Gruplayın' },
+    { id: 'save', label: '3. Kaydedin' },
+    { id: 'schedule', label: '4. Temizliği planlayın' },
+    { id: 'memory', label: 'Tarayıcıdan yardım alın' },
+    { id: 'tabmerger', label: 'TabMerger ile yapın' },
+    { id: 'faq', label: 'SSS' },
+  ],
+  browserSections: ['close', 'memory'],
+  browserFact: {
+    label: 'Bellek ayarı',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Ayarlar → System and performance → Performance',
+      firefox: 'Sekmeye sağ tıklayın → Sekmeyi boşalt',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Dört adımı bu sırayla uygulayın: işiniz biten tüm sekmeleri **kapatın**, üzerinde çalıştığınız işin sekmelerini **gruplayın**, “belki sonra” sekmelerini arama yapabileceğiniz bir yere **kaydedin** ve haftada bir on dakikalık bir temizliği **planlayın**. Chrome, Edge ve Firefox’ta işe yarar. En çok yer açan adım kaydetmektir ve [TabMerger](/features) bunu tek tıka indirir: açık pencerelerin hepsi, istediğiniz zaman arayıp yeniden açabileceğiniz adlandırılmış bir gruba kaydedilir.
+
+</QuickAnswer>
+
+<InstallCta>Tüm açık pencereleri tek tıkla kaydedin, sonra hiçbir şey kaybetmeden kapatın. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="how-many" title="Kaç sekme çok fazladır?">
+
+Sihirli bir sayı yok ve biz de uydurmayacağız. Sekmeler, asıl görevlerini, yani yakında döneceğiniz şeyleri elinizin altında tutmayı yapamaz hale geldiğinde sorun olur. Şu işaretlere dikkat edin:
+
+- Sekme şeridinde yalnızca simgeler görünüyor, başlıkları artık okuyamıyorsunuz.
+- Bir sayfa açıyorsunuz ve zaten açık olduğunu, hem de iki kez açık olduğunu fark ediyorsunuz.
+- Sekmeleri “ne olur ne olmaz” diye açık tutuyorsunuz, çünkü kapatmak onları kaybetmek gibi geliyor.
+- Tarayıcı sizi uyarıyor. Chrome, düşük performans algıladığında sekmeleri devre dışı bırakmayı öneren **Performans sorunlarıyla ilgili uyarılar** (Performance issue alerts) gösterir.
+
+Sonuncusu tarayıcının sorunudur ve çözümleri var (aşağıda). İlk üçü bir düzen sorunudur ve bu düzenin çözdüğü de tam olarak budur.
+
+Tarayıcı ekran görüntülerinde arayüz İngilizcedir. Türkçe ad farklıysa İngilizcesi ilk geçtiği yerde parantez içinde verilir.
+
+</Section>
+
+<Section id="close" title="1. İşiniz biteni kapatın">
+
+En kolay kazançla başlayın. Görevini tamamlamış sekmeleri kapatın: cevabını bulduğunuz arama, okuduğunuz makale, ödeme sayfası.
+
+- <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> (Mac’te <Kbd>⌘</Kbd>+<Kbd>W</Kbd>) üç tarayıcıda da geçerli sekmeyi kapatır.
+- Fazladan birini mi kapattınız? <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> onu yeniden açar. Daha fazlası [sekme klavye kısayolları](/blog/tab-keyboard-shortcuts) rehberimizde.
+
+<BrowserPanels section="close">
+<BrowserPanel browser="chrome">
+
+**Sekme arama** (Tab Search) özelliğini açmak için <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> tuşlarına basın (Mac’te <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>): her satırında kapatma düğmesi olan, tüm açık sekmelerin listesi açılır. İşiniz bitenleri doğrudan listeden kapatın.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge’in klavye kısayolları listesinde açık sekmelerde arama yapan bir tuş yok, bu yüzden sekme şeridinde ilerleyin: işiniz biten bir sekmeye tıklayıp <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> tuşlarına basın.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> tüm sekmelerinizi listeler, böylece işiniz bitenleri bulup kapatabilirsiniz.
+- Tekrarları tek seferde temizlemek için herhangi bir sekmeye sağ tıklayıp **Yinelenen sekmeleri kapat** (Close Duplicate Tabs) seçeneğini seçin.
+
+TabMerger tekrarları **tüm** pencerelerde aynı anda temizler; [yinelenen sekmeleri kapatma](/blog/close-duplicate-tabs) rehberine bakın.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>kapatmak yalnızca emin olduğunuz sekmeler için güvenlidir. Tereddüt ettiğiniz her şey çöpe değil, 3. adıma gider.</Catch>
+
+</Section>
+
+<Section id="group" title="2. Bugünkü işin sekmelerini gruplayın">
+
+Sekme grupları bir dizi sekmeye ad ve renk verir ve onları tek bir etikete daraltır. Chrome, Edge ve Firefox’ta da var: bir sekmeye sağ tıklayıp yeni bir gruba ekleyin.
+
+Bugün gerçekten üzerinde çalıştığınız her iş için bir grup tutun, bakmadıklarınızı daraltın. Daraltılmış bir grup tek bir sekme kadar yer kaplar. Grupların nasıl kaydedildiği, eşitlendiği ve yeniden açıldığı tarayıcıya göre değişir; [Chrome sekme grupları rehberimiz](/blog/chrome-tab-groups) ayrıntıları ve sınırları anlatıyor.
+
+</Section>
+
+<Section id="save" title="3. “Belki sonra” sekmelerini kaydedin">
+
+Sekme şeridini gerçekten küçülten adım budur. Gelecek hafta lazım olabilecek bir sekmenin açık durmasına gerek yok; bulunabilir olması yeter.
+
+- **Pencereyi yer işaretlerine ekleyin.** <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>, geçerli penceredeki tüm sekmeleri yeni bir yer işareti klasörüne kaydeder. [Tüm açık sekmeleri kaydetme](/blog/save-all-open-tabs) rehberimiz bunu tarayıcı tarayıcı anlatıyor.
+- **Bir oturum yöneticisi kullanın.** Pencereleri adlarıyla birlikte bütün olarak kaydeder ve tek tıkla geri yükler. [Tarayıcı oturum yöneticisinin ne işe yaradığına](/blog/browser-session-manager) ve yer işaretlerinden farkına bakın.
+- **Sonra okuyun.** Bir makaleyse okuma listesi sekmeden iyidir. Bir sayfanın nereye gideceğinden emin değil misiniz? [Sekmeler mi yer işaretleri mi rehberimizde](/blog/tabs-vs-bookmarks) bir karar tablosu var.
+
+Sonra kaydettiklerinizi kapatın. Bütün püf noktası bu: kapatmayı güvenli kılan, kaydetmektir.
+
+</Section>
+
+<Section id="schedule" title="4. Takviminize haftalık bir temizlik ekleyin">
+
+Sekmeler geri gelir. Kısa ve düzenli bir temizlik, irade gücüne gerek kalmadan sayıyı düşük tutar:
+
+1. Haftada bir, kaydettiğiniz klasörleri veya grupları açın.
+2. Artık ihtiyacınız olmayanları silin. Bir aydır açmadıysanız muhtemelen açmayacaksınız.
+3. Hafta boyunca kaydettiğiniz pencereleri kapatın.
+
+İşiniz araştırma yapmaksa (öğrenciler, analistler, belge okuyan geliştiriciler), her proje için bir kayıtlı grup tutun ve onu proje bittiğinde temizleyin, daha önce değil.
+
+</Section>
+
+<Section id="memory" title="Belleği tarayıcı boşaltsın">
+
+Tarayıcılar, boşta duran sekmelerin bellek kullanmasını onları kapatmadan durdurabilir. Sekme şeritte kalır ve tıkladığınızda yeniden yüklenir.
+
+<BrowserPanels section="memory">
+<BrowserPanel browser="chrome">
+
+**Bellek Tasarrufu** (Memory Saver) özelliğini açın: **Ayarlar → Performans** (Settings → Performance) veya adres çubuğuna `chrome://settings/performance` yapıştırın.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Chrome Ayarları, Performance (Performans) bölümü ve Memory Saver (Bellek Tasarrufu) anahtarı" width={1600} height={524} eager boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">Chrome’un Memory Saver (Bellek Tasarrufu) özelliği, yeni bir Chrome 157 profilinde kapalı.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+**Ayarlar → System and performance → Performance** altında **Automatically put tabs to sleep** seçeneğini işaretleyin ve bir sekmenin uykuya geçmeden önce ne kadar bekleyeceğini seçin.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Edge Ayarları, Performance bölümü: Automatically put tabs to sleep açık ve 15 dakikaya ayarlı" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Edge’in uyuyan sekmeleri varsayılan olarak açık: etkin olmayan sekmeler 15 dakika sonra uykuya geçer.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Belleğini elle boşaltmak için bir sekmeye sağ tıklayıp **Sekmeyi boşalt** (Unload Tab) seçeneğini seçin.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>bu, size değil bilgisayara yardım eder. Elli uyuyan sekme yine de gözden geçirmeniz gereken elli sekmedir. Bunu düzenin yerine değil, yanında kullanın.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger ile yapın">
+
+Chrome, Edge ve Firefox için ücretsiz uzantımız [TabMerger](/features), 3. ve 4. adımları birkaç tıka indirir. **Şu An Açık**, tüm açık pencereleri ve sekmelerini tek yerde gösterir, böylece yığının tamamını bir bakışta görürsünüz. **Mevcutla birleştir** ile hepsini adlandırılmış bir gruba kaydedin, pencereleri kapatın ve ister açık, ister kayıtlı, ister yakın zamanda kapatılmış olsun, herhangi bir sekmeyi <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> ile yeniden bulun. Yavaşlayan bilgisayar çoğu zaman çok fazla sekmenin ilk işaretidir; [kaydedip kapatmanın belleği nasıl boşalttığını buradan okuyun](/blog/too-many-tabs-slow-browser).
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-now-open" alt="TabMerger Now Open (Şu An Açık): üç tarayıcı penceresi ve 18 sekme, açık tema" darkAlt="TabMerger Now Open (Şu An Açık): üç tarayıcı penceresi ve 18 sekme, koyu tema" boxes={[{ id: 'now-open-summary', label: 'Açık pencereler ve sekmeler' }]} source="TabMerger 3.16.1">Now Open (Şu An Açık): düzenlemeden önce üç pencere ve 18 sekme.</ThemedScreenshot>
+
+Haftalık temizlik için **Ayarlar → Veri → Açık sekmeleri otomatik kaydet**, açık sekmelerinizi bir zamanlamaya göre ya da 20, 30, 50, 75 veya 100 açık sekmeyi geçtiğiniz anda yeni bir grup olarak kaydedebilir. Ücretsiz plan en yeni 2 otomatik kaydı saklar ve bunlar 5 grup ve 50 sekme sınırına sayılır; Pro hepsini saklar. Yığının geri gelmesini önleyen bir düzen için [TabMerger ile günlük sekme akışı](/blog/tabmerger-daily-workflow) yazısına bakın.
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-auto-save-threshold" alt="TabMerger Ayarları, Data (Veri) sekmesi: Auto-save open tabs (Açık sekmeleri otomatik kaydet) açık, When open tabs pass (Açık sekme sayısı şunu geçince) 30 open tabs olarak ayarlı, açık tema" darkAlt="TabMerger Ayarları, Data (Veri) sekmesi: Auto-save open tabs (Açık sekmeleri otomatik kaydet) açık, When open tabs pass (Açık sekme sayısı şunu geçince) 30 open tabs olarak ayarlı, koyu tema" boxes={[{ id: 'threshold', label: 'Açık sekme sayısı şunu geçince' }]} source="TabMerger 3.16.1">Auto-save open tabs (Açık sekmeleri otomatik kaydet), 30’dan fazla sekme açıldığında devreye girecek şekilde ayarlı.</ThemedScreenshot>
+
+Kayıtlı sekmeler, seçtiğiniz yaşı (7, 14, 30 veya 60 gün) geçtiğinde ayrıca kehribar renkli bir nokta alır ve bir grubun **⋯** menüsünde **Yinelenen sekmeleri kaldır** bulunur.
+
+<InstallCta>Chrome, Edge ve Firefox için ücretsiz. Başlamak için hesap gerekmez.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

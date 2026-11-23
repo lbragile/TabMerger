@@ -1,0 +1,246 @@
+export const post = {
+  slug: 'manage-too-many-tabs',
+  title: 'علامات تبويب كثيرة جدًا؟ روتين من أربع خطوات يعمل في أي متصفح',
+  seoTitle: 'علامات تبويب كثيرة مفتوحة؟ كيف تنظمها في أي متصفح',
+  description:
+    'علامات تبويب كثيرة جدًا مفتوحة؟ روتين من أربع خطوات لـ Chrome وEdge وFirefox، وكيف يحفظ TabMerger كل النوافذ بنقرة واحدة لتغلقها دون أن تفقد شيئًا.',
+  shareSummary: 'أغلق، جمّع، احفظ، جدول: روتين لعلامات التبويب في Chrome وEdge وFirefox.',
+  dek: 'أغلق ما انتهيت منه، وجمّع ما تعمل عليه، واحفظ الباقي بنقرة واحدة، ودع الحفظ التلقائي يحافظ على هذا الترتيب.',
+  published: '2026-11-21',
+  updated: '2026-11-21',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'كانت ميزة توفير الذاكرة في Chrome متوقفة في ملف شخصي جديد على Chrome 157.', source: 'chrome://settings/performance، 20 نوفمبر 2026' },
+    { text: 'يضع Edge 158 علامات التبويب غير النشطة في وضع السكون، بعد 15 دقيقة افتراضيًا.', source: 'edge://settings، 20 نوفمبر 2026' },
+    {
+      text: 'يبحث الاختصار Ctrl+Shift+A في علامات التبويب المفتوحة في Chrome وFirefox.',
+      source: 'مساعدة Chrome؛ اختصارات Firefox 159',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'تحتوي قائمة اللسان في Firefox على «أغلِق الألسنة المتكررة».', source: 'Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'كم عدد علامات التبويب الذي يُعد كثيرًا جدًا؟',
+      answer:
+        'لا يوجد رقم ثابت. تصبح كثيرة جدًا عندما لا تستطيع قراءة عناوينها، أو لا تجد علامة تبويب دون بحث طويل، أو يبدأ المتصفح في التحذير من مشاكل الأداء.',
+    },
+    {
+      question: 'كيف أتوقف عن فتح علامات تبويب كثيرة جدًا؟',
+      answer:
+        'أغلق كل يوم علامات التبويب التي انتهيت منها، وجمّع علامات تبويب مهمة اليوم، واحفظ الباقي في مكان يمكنك البحث فيه، وخصص جولة ترتيب قصيرة كل أسبوع.',
+    },
+    {
+      question: 'هل تُبطئ علامات التبويب المفتوحة جهاز الكمبيوتر؟',
+      answer:
+        'قد تفعل ذلك، لأن كل صفحة مفتوحة تستهلك الذاكرة. تحرر ميزة توفير الذاكرة في Chrome وعلامات التبويب النائمة في Edge ذاكرة علامات التبويب التي لا تستخدمها، ثم يُعاد تحميلها عندما تعود إليها.',
+    },
+    {
+      question: 'هل من الآمن إغلاق علامات تبويب قد أحتاجها لاحقًا؟',
+      answer:
+        'نعم، إذا حفظتها أولًا: مجلد إشارات مرجعية أو مدير جلسات أو TabMerger يحتفظ بالعنوان لتتمكن من فتحه مجددًا. راجع دليلنا لحفظ جميع علامات التبويب المفتوحة.',
+      link: { text: 'لحفظ جميع علامات التبويب المفتوحة', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp', alt: 'قسم Now Open (المفتوحة الآن) في TabMerger يعرض ثلاث نوافذ متصفح و18 علامة تبويب، المظهر الفاتح' },
+    { src: '/blog/manage-too-many-tabs/tm-now-open-dark.webp', alt: 'قسم Now Open (المفتوحة الآن) في TabMerger يعرض ثلاث نوافذ متصفح و18 علامة تبويب، المظهر الداكن' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-light.webp', alt: 'إعدادات TabMerger، علامة التبويب Data (البيانات): الخيار Auto-save open tabs (الحفظ التلقائي لعلامات التبويب المفتوحة) مفعّل، والخيار When open tabs pass (عندما تتجاوز علامات التبويب المفتوحة) مضبوط على 30 open tabs، المظهر الفاتح' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-dark.webp', alt: 'إعدادات TabMerger، علامة التبويب Data (البيانات): الخيار Auto-save open tabs (الحفظ التلقائي لعلامات التبويب المفتوحة) مفعّل، والخيار When open tabs pass (عندما تتجاوز علامات التبويب المفتوحة) مضبوط على 30 open tabs، المظهر الداكن' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'إعدادات Chrome، قسم Performance (الأداء)، مع مفتاح Memory Saver (توفير الذاكرة)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'إعدادات Edge، قسم Performance، والخيار Automatically put tabs to sleep مفعّل ومضبوط على 15 دقيقة' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'save-tabs', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp' },
+  ogImage: { src: '/blog/manage-too-many-tabs/og.png', alt: 'علامات تبويب كثيرة جدًا؟ روتين من أربع خطوات يعمل في أي متصفح: دليل من TabMerger، مع ثلاث نوافذ متصفح في مكان واحد' },
+  toc: [
+    { id: 'quick', label: 'إجابة سريعة' },
+    { id: 'how-many', label: 'كم يُعد كثيرًا جدًا؟' },
+    { id: 'close', label: '1. أغلق' },
+    { id: 'group', label: '2. جمّع' },
+    { id: 'save', label: '3. احفظ' },
+    { id: 'schedule', label: '4. جدول جولة ترتيب' },
+    { id: 'memory', label: 'دع المتصفح يساعد' },
+    { id: 'tabmerger', label: 'افعلها في TabMerger' },
+    { id: 'faq', label: 'الأسئلة الشائعة' },
+  ],
+  browserSections: ['close', 'memory'],
+  browserFact: {
+    label: 'إعداد الذاكرة',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'الإعدادات ← System and performance → Performance',
+      firefox: 'انقر بزر الماوس الأيمن على علامة تبويب ← ألغ التحميل',
+    },
+  },
+}
+
+<QuickAnswer>
+
+اتبع أربع خطوات بهذا الترتيب: **أغلق** كل علامة تبويب انتهيت منها، و**جمّع** علامات التبويب الخاصة بالمهمة التي تعمل عليها، و**احفظ** علامات «ربما لاحقًا» في مكان يمكنك البحث فيه، و**خصص** عشر دقائق للترتيب مرة كل أسبوع. يعمل هذا في Chrome وEdge وFirefox. الخطوة التي تُفرغ أكبر مساحة هي الحفظ، و[TabMerger](/features) يجعلها نقرة واحدة: تُحفظ كل النوافذ المفتوحة في مجموعة باسم يمكنك البحث فيها وإعادة فتحها في أي وقت.
+
+</QuickAnswer>
+
+<InstallCta>احفظ كل النوافذ المفتوحة بنقرة واحدة، ثم أغلقها دون أن تفقد شيئًا. مجانية لـ Chrome وEdge وFirefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="how-many" title="كم عدد علامات التبويب الذي يُعد كثيرًا جدًا؟">
+
+لا يوجد رقم سحري، ولن نخترع رقمًا. تصبح علامات التبويب مشكلة عندما تتوقف عن أداء مهمتها، وهي إبقاء ما ستعود إليه قريبًا في متناول يدك. انتبه إلى هذه العلامات:
+
+- شريط علامات التبويب لا يعرض إلا الأيقونات، فلم تعد تستطيع قراءة العناوين.
+- تفتح صفحة فتكتشف أنها كانت مفتوحة من قبل، بل مرتين.
+- تُبقي علامات تبويب مفتوحة «احتياطًا»، لأن إغلاقها يبدو كأنك تفقدها.
+- المتصفح يحذّرك. يعرض Chrome **تنبيهات بشأن مشاكل الأداء** (<bdi dir="ltr">Performance issue alerts</bdi>) التي تقترح إيقاف علامات التبويب عندما يرصد أداءً ضعيفًا.
+
+العلامة الأخيرة مشكلة في المتصفح، ولها حلول (في الأسفل). أما العلامات الثلاث الأولى فهي مشكلة ترتيب، وهذا ما يعالجه الروتين.
+
+تعرض لقطات شاشة المتصفحات الواجهة الإنجليزية. عندما يختلف الاسم العربي، يظهر الاسم الإنجليزي بين قوسين في المرة الأولى.
+
+</Section>
+
+<Section id="close" title="1. أغلق ما انتهيت منه">
+
+ابدأ بأسهل مكسب. أغلق علامات التبويب التي أدّت مهمتها: البحث الذي وجدت إجابته، والمقال الذي قرأته، وصفحة الدفع.
+
+- <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>W</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>W</Kbd></bdi> على Mac) يغلق علامة التبويب الحالية في المتصفحات الثلاثة.
+- أغلقت واحدة زائدة؟ <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> يعيد فتحها. المزيد في مرجعنا عن [اختصارات لوحة المفاتيح لعلامات التبويب](/blog/tab-keyboard-shortcuts).
+
+<BrowserPanels section="close">
+<BrowserPanel browser="chrome">
+
+اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi> على Mac) لفتح **البحث في علامات التبويب** (<bdi dir="ltr">Tab Search</bdi>): قائمة بكل علامات التبويب المفتوحة، وفي كل صف زر إغلاق. أغلق ما انتهيت منه مباشرة من القائمة.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+لا تتضمن قائمة اختصارات لوحة المفاتيح في Edge مفتاحًا للبحث في علامات التبويب المفتوحة، لذا تنقّل على طول شريط علامات التبويب: انقر علامة تبويب انتهيت منها ثم اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>W</Kbd></bdi>.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi> يعرض قائمة بكل علامات التبويب، لتجد ما انتهيت منه وتغلقه.
+- انقر بزر الماوس الأيمن على أي علامة تبويب واختر **أغلِق الألسنة المتكررة** (<bdi dir="ltr">Close Duplicate Tabs</bdi>) لإزالة التكرارات دفعة واحدة.
+
+يزيل TabMerger التكرارات من **كل** النوافذ في وقت واحد؛ راجع [كيف تغلق علامات التبويب المكررة](/blog/close-duplicate-tabs).
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>الإغلاق آمن فقط لعلامات التبويب التي أنت متأكد منها. كل ما تتردد فيه يذهب إلى الخطوة 3، لا إلى سلة المهملات.</Catch>
+
+</Section>
+
+<Section id="group" title="2. جمّع علامات تبويب مهمة اليوم">
+
+تمنح مجموعات علامات التبويب مجموعةً من علامات التبويب اسمًا ولونًا، ويمكن طيّها في تسمية واحدة. تتوفر في Chrome وEdge وFirefox: انقر بزر الماوس الأيمن على علامة تبويب وأضفها إلى مجموعة جديدة.
+
+خصص مجموعة واحدة لكل مهمة تعمل عليها فعلًا اليوم، واطوِ المجموعات التي لا تنظر إليها. المجموعة المطوية تشغل مساحة علامة تبويب واحدة. تختلف طريقة حفظ المجموعات ومزامنتها وإعادة فتحها من متصفح لآخر؛ ويشرح [دليلنا لمجموعات علامات التبويب في Chrome](/blog/chrome-tab-groups) التفاصيل والحدود.
+
+</Section>
+
+<Section id="save" title="3. احفظ علامات «ربما لاحقًا»">
+
+هذه هي الخطوة التي تقلّص شريط علامات التبويب فعلًا. علامة التبويب التي قد تحتاجها الأسبوع القادم لا يلزم أن تبقى مفتوحة؛ يكفي أن تستطيع العثور عليها.
+
+- **أضف النافذة إلى الإشارات المرجعية.** يحفظ <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> كل علامات التبويب في النافذة الحالية في مجلد إشارات مرجعية جديد. يشرح دليلنا [لحفظ جميع علامات التبويب المفتوحة](/blog/save-all-open-tabs) ذلك لكل متصفح.
+- **استخدم مدير جلسات.** يحفظ نوافذ كاملة بأسمائها ويستعيدها بنقرة واحدة. تعرّف على [ما يفعله مدير جلسات المتصفح](/blog/browser-session-manager) وكيف يختلف عن الإشارات المرجعية.
+- **اقرأ لاحقًا.** إذا كانت مقالًا، فقائمة القراءة أفضل من علامة تبويب. لست متأكدًا أين تضع صفحة ما؟ في [دليلنا للمقارنة بين علامات التبويب والإشارات المرجعية](/blog/tabs-vs-bookmarks) جدول يساعدك على القرار.
+
+ثم أغلق ما حفظته. هذه هي الحيلة كلها: الحفظ هو ما يجعل الإغلاق آمنًا.
+
+</Section>
+
+<Section id="schedule" title="4. ضع جولة ترتيب أسبوعية في التقويم">
+
+علامات التبويب تتراكم من جديد. جولة قصيرة ومنتظمة تبقي العدد منخفضًا دون حاجة إلى قوة إرادة:
+
+1. مرة في الأسبوع، افتح المجلدات أو المجموعات التي حفظتها.
+2. احذف ما لم تعد تحتاجه. إذا لم تفتحه منذ شهر، فالأرجح أنك لن تفتحه.
+3. أغلق النوافذ التي حفظتها خلال الأسبوع.
+
+إذا كان البحث جزءًا من عملك (طلاب، محللون، مطورون يقرؤون التوثيق)، فخصص مجموعة محفوظة لكل مشروع ورتّبها عند انتهاء المشروع، لا قبل ذلك.
+
+</Section>
+
+<Section id="memory" title="دع المتصفح يحرر الذاكرة">
+
+تستطيع المتصفحات منع علامات التبويب الخاملة من استهلاك الذاكرة دون إغلاقها. تبقى علامة التبويب في الشريط ويُعاد تحميلها عند النقر عليها.
+
+<BrowserPanels section="memory">
+<BrowserPanel browser="chrome">
+
+فعّل **توفير الذاكرة** (<bdi dir="ltr">Memory Saver</bdi>): **الإعدادات ← الأداء** (<bdi dir="ltr">Settings → Performance</bdi>)، أو الصق `chrome://settings/performance` في شريط العناوين.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="إعدادات Chrome، قسم Performance (الأداء)، مع مفتاح Memory Saver (توفير الذاكرة)" width={1600} height={524} eager boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">ميزة <bdi dir="ltr">Memory Saver</bdi> (توفير الذاكرة) في Chrome، متوقفة في ملف شخصي جديد على Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+فعّل <bdi dir="ltr">**Automatically put tabs to sleep**</bdi> ضمن **الإعدادات** ← <bdi dir="ltr">**System and performance → Performance**</bdi>، واختر المدة التي تنتظرها علامة التبويب قبل أن تنام.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="إعدادات Edge، قسم Performance، والخيار Automatically put tabs to sleep مفعّل ومضبوط على 15 دقيقة" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">علامات التبويب النائمة في Edge مفعّلة افتراضيًا: تنام علامات التبويب غير النشطة بعد 15 دقيقة.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+انقر بزر الماوس الأيمن على علامة تبويب واختر **ألغ التحميل** (<bdi dir="ltr">Unload Tab</bdi>) لتحرير ذاكرتها يدويًا.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>هذا يساعد الكمبيوتر، لا يساعدك أنت. خمسون علامة تبويب نائمة تبقى خمسين علامة تبويب عليك تصفحها. استخدمه إلى جانب الروتين، لا بدلًا منه.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="افعلها في TabMerger">
+
+[TabMerger](/features)، إضافتنا المجانية لـ Chrome وEdge وFirefox، يحوّل الخطوتين 3 و4 إلى بضع نقرات. يعرض قسم **المفتوحة الآن** كل نافذة مفتوحة وعلامات تبويبها في مكان واحد، فترى الكومة كلها دفعة واحدة. احفظها كلها في مجموعة باسم عبر **دمج مع الحالية**، وأغلق النوافذ، ثم اعثر على أي علامة تبويب مجددًا بضغطة <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi>، سواء كانت مفتوحة أو محفوظة أو مغلقة مؤخرًا. بطء الكمبيوتر كثيرًا ما يكون أول علامة على كثرة علامات التبويب؛ [إليك كيف يحرر الحفظ والإغلاق الذاكرة](/blog/too-many-tabs-slow-browser).
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-now-open" alt="قسم Now Open (المفتوحة الآن) في TabMerger يعرض ثلاث نوافذ متصفح و18 علامة تبويب، المظهر الفاتح" darkAlt="قسم Now Open (المفتوحة الآن) في TabMerger يعرض ثلاث نوافذ متصفح و18 علامة تبويب، المظهر الداكن" boxes={[{ id: 'now-open-summary', label: 'النوافذ وعلامات التبويب المفتوحة' }]} source="TabMerger 3.16.1">قسم <bdi dir="ltr">Now Open</bdi> (المفتوحة الآن): ثلاث نوافذ و18 علامة تبويب، قبل الترتيب.</ThemedScreenshot>
+
+لجولة الترتيب الأسبوعية، يستطيع **الإعدادات ← البيانات ← الحفظ التلقائي لعلامات التبويب المفتوحة** حفظ علامات تبويبك المفتوحة كمجموعة جديدة وفق جدول زمني، أو فور تجاوزك 20 أو 30 أو 50 أو 75 أو 100 علامة تبويب مفتوحة. تحتفظ الخطة المجانية بأحدث عمليتي حفظ تلقائي، وتُحتسبان ضمن حدها البالغ 5 مجموعات و50 علامة تبويب؛ أما Pro فتحتفظ بها كلها. لروتين يمنع الكومة من العودة، راجع [سير عمل يومي لعلامات التبويب مع TabMerger](/blog/tabmerger-daily-workflow).
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-auto-save-threshold" alt="إعدادات TabMerger، علامة التبويب Data (البيانات): الخيار Auto-save open tabs (الحفظ التلقائي لعلامات التبويب المفتوحة) مفعّل، والخيار When open tabs pass (عندما تتجاوز علامات التبويب المفتوحة) مضبوط على 30 open tabs، المظهر الفاتح" darkAlt="إعدادات TabMerger، علامة التبويب Data (البيانات): الخيار Auto-save open tabs (الحفظ التلقائي لعلامات التبويب المفتوحة) مفعّل، والخيار When open tabs pass (عندما تتجاوز علامات التبويب المفتوحة) مضبوط على 30 open tabs، المظهر الداكن" boxes={[{ id: 'threshold', label: 'عندما تتجاوز علامات التبويب المفتوحة' }]} source="TabMerger 3.16.1">الخيار <bdi dir="ltr">Auto-save open tabs</bdi> (الحفظ التلقائي لعلامات التبويب المفتوحة) مضبوط ليعمل فور فتح أكثر من 30 علامة تبويب.</ThemedScreenshot>
+
+تحصل علامات التبويب المحفوظة أيضًا على نقطة كهرمانية اللون عندما تتجاوز العمر الذي تختاره (7 أو 14 أو 30 أو 60 يومًا)، وفي قائمة **⋯** الخاصة بالمجموعة خيار **إزالة علامات التبويب المكررة**.
+
+<InstallCta>مجانية لـ Chrome وEdge وFirefox. لا تحتاج إلى حساب للبدء.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="الأسئلة الشائعة">
+
+<Faq items={post.faq} />
+
+</Section>

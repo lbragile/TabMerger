@@ -1,0 +1,246 @@
+export const post = {
+  slug: 'manage-too-many-tabs',
+  title: 'Zu viele Tabs offen? Eine Routine in vier Schritten, die in jedem Browser funktioniert',
+  seoTitle: 'Zu viele Tabs offen? So räumst du in jedem Browser auf',
+  description:
+    'Zu viele Tabs offen? Eine Routine in vier Schritten für Chrome, Edge und Firefox, und wie TabMerger alle Fenster mit einem Klick speichert, damit beim Schließen nichts verloren geht.',
+  shareSummary: 'Schließen, gruppieren, speichern, einplanen: eine Tab-Routine für Chrome, Edge und Firefox.',
+  dek: 'Schließ, was erledigt ist, gruppiere, was gerade läuft, speichere den Rest mit einem Klick und lass das automatische Speichern dafür sorgen, dass es so bleibt.',
+  published: '2026-11-21',
+  updated: '2026-11-21',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Der Arbeitsspeicher-Sparmodus von Chrome war in einem neuen Chrome-157-Profil ausgeschaltet.', source: 'chrome://settings/performance, 20. Nov. 2026' },
+    { text: 'Edge 158 versetzt inaktive Tabs in den Ruhezustand, standardmäßig nach 15 Minuten.', source: 'edge://settings, 20. Nov. 2026' },
+    {
+      text: 'Ctrl+Shift+A durchsucht in Chrome und Firefox die offenen Tabs.',
+      source: 'Chrome-Hilfe; Tastenbelegung von Firefox 159',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Das Tab-Menü von Firefox hat „Doppelte Tabs schließen“.', source: 'Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Ab wie vielen Tabs sind es zu viele?',
+      answer:
+        'Eine feste Zahl gibt es nicht. Es sind zu viele, wenn du die Tab-Titel nicht mehr lesen kannst, einen Tab nicht ohne Suchen findest oder der Browser vor Leistungsproblemen warnt.',
+    },
+    {
+      question: 'Wie höre ich auf, ständig zu viele Tabs offen zu haben?',
+      answer:
+        'Schließ erledigte Tabs jeden Tag, gruppiere die für die heutige Aufgabe, speichere den Rest an einem Ort, den du durchsuchen kannst, und räum einmal pro Woche kurz auf.',
+    },
+    {
+      question: 'Machen offene Tabs meinen Computer langsamer?',
+      answer:
+        'Das können sie, denn jede offene Seite belegt Arbeitsspeicher. Der Arbeitsspeicher-Sparmodus von Chrome und die schlafenden Tabs von Edge geben Speicher von Tabs frei, die du gerade nicht nutzt; sie laden neu, wenn du zurückkommst.',
+    },
+    {
+      question: 'Kann ich Tabs, die ich vielleicht noch brauche, gefahrlos schließen?',
+      answer:
+        'Ja, wenn du sie vorher speicherst: Ein Lesezeichenordner, ein Sitzungsmanager oder TabMerger behält die Adresse, sodass du sie wieder öffnen kannst. Siehe unsere Anleitung zum Speichern aller offenen Tabs.',
+      link: { text: 'Speichern aller offenen Tabs', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp', alt: 'TabMerger, „Now Open“ (Jetzt geöffnet) mit drei Browserfenstern und 18 Tabs, helles Design' },
+    { src: '/blog/manage-too-many-tabs/tm-now-open-dark.webp', alt: 'TabMerger, „Now Open“ (Jetzt geöffnet) mit drei Browserfenstern und 18 Tabs, dunkles Design' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-light.webp', alt: 'TabMerger-Einstellungen, Tab „Data“ (Daten): „Auto-save open tabs“ (Offene Tabs automatisch speichern) aktiviert, „When open tabs pass“ (Wenn offene Tabs mehr sind als) auf „30 open tabs“ gestellt, helles Design' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-dark.webp', alt: 'TabMerger-Einstellungen, Tab „Data“ (Daten): „Auto-save open tabs“ (Offene Tabs automatisch speichern) aktiviert, „When open tabs pass“ (Wenn offene Tabs mehr sind als) auf „30 open tabs“ gestellt, dunkles Design' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Chrome-Einstellungen, „Performance“ (Leistung), mit dem Schalter „Memory Saver“ (Arbeitsspeicher-Sparmodus)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Edge-Einstellungen, „Performance“, mit aktivierter Option „Automatically put tabs to sleep“, auf 15 Minuten gestellt' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'save-tabs', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp' },
+  ogImage: { src: '/blog/manage-too-many-tabs/og.png', alt: 'Titelkarte „Too many tabs? A four-step routine that works in any browser“: eine TabMerger-Anleitung, mit drei Browserfenstern an einem Ort' },
+  toc: [
+    { id: 'quick', label: 'Kurze Antwort' },
+    { id: 'how-many', label: 'Wie viele sind zu viele?' },
+    { id: 'close', label: '1. Schließen' },
+    { id: 'group', label: '2. Gruppieren' },
+    { id: 'save', label: '3. Speichern' },
+    { id: 'schedule', label: '4. Aufräumen einplanen' },
+    { id: 'memory', label: 'Den Browser helfen lassen' },
+    { id: 'tabmerger', label: 'Mit TabMerger' },
+    { id: 'faq', label: 'Häufige Fragen' },
+  ],
+  browserSections: ['close', 'memory'],
+  browserFact: {
+    label: 'Speichereinstellung',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Einstellungen → System and performance → Performance',
+      firefox: 'Rechtsklick auf einen Tab → Tab entladen',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Vier Schritte, in dieser Reihenfolge: **Schließe** jeden Tab, mit dem du fertig bist, **gruppiere** die Tabs für die Aufgabe, an der du gerade sitzt, **speichere** die „vielleicht später“-Tabs an einem Ort, den du durchsuchen kannst, und **plane** einmal pro Woche zehn Minuten zum Aufräumen ein. Das funktioniert in Chrome, Edge und Firefox. Am meisten Platz schafft das Speichern, und [TabMerger](/features) macht daraus einen Klick: Alle offenen Fenster landen in einer benannten Gruppe, die du jederzeit durchsuchen und wieder öffnen kannst.
+
+</QuickAnswer>
+
+<InstallCta>Alle offenen Fenster mit einem Klick speichern und dann schließen, ohne etwas zu verlieren. Kostenlos für Chrome, Edge und Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="how-many" title="Ab wie vielen Tabs sind es zu viele?">
+
+Eine magische Zahl gibt es nicht, und wir erfinden auch keine. Tabs werden zum Problem, wenn sie ihre Aufgabe nicht mehr erfüllen: Dinge bereitzuhalten, zu denen du bald zurückkehrst. Achte auf diese Anzeichen:
+
+- Die Tableiste zeigt nur noch Symbole, du kannst die Titel nicht mehr lesen.
+- Du öffnest eine Seite und merkst, dass sie schon offen war, sogar zweimal.
+- Du lässt Tabs „für alle Fälle“ offen, weil sich Schließen wie Verlieren anfühlt.
+- Der Browser warnt dich. Chrome zeigt **Benachrichtigungen zu Leistungsproblemen** („Performance issue alerts“), die vorschlagen, Tabs zu deaktivieren, wenn die Leistung nachlässt.
+
+Das Letzte ist ein Problem des Browsers, und dafür gibt es Abhilfe (siehe unten). Die ersten drei sind ein Ablageproblem, und genau das löst die Routine.
+
+Die Browser-Screenshots zeigen die englische Oberfläche. Wo die deutsche Bezeichnung anders lautet, steht die englische beim ersten Mal in Klammern.
+
+</Section>
+
+<Section id="close" title="1. Schließ, womit du fertig bist">
+
+Fang mit dem einfachsten Gewinn an. Schließ Tabs, deren Aufgabe erledigt ist: die Suche, die du schon beantwortet hast, der Artikel, den du schon gelesen hast, die Kassenseite.
+
+- <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> (<Kbd>⌘</Kbd>+<Kbd>W</Kbd> auf dem Mac) schließt in allen drei Browsern den aktuellen Tab.
+- Einen zu viel geschlossen? <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> öffnet ihn wieder. Mehr dazu in unserer Übersicht der [Tastenkürzel für Tabs](/blog/tab-keyboard-shortcuts).
+
+<BrowserPanels section="close">
+<BrowserPanel browser="chrome">
+
+Drück <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> auf dem Mac), um die **Tab-Suche** („Tab Search“) zu öffnen: eine Liste aller offenen Tabs mit einer Schließen-Schaltfläche in jeder Zeile. Schließ die erledigten direkt aus der Liste.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+In der Liste der Tastenkürzel von Edge gibt es keine Taste zum Durchsuchen offener Tabs. Geh deshalb die Tableiste entlang: Klick auf einen erledigten Tab und drück <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd>.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> listet alle deine Tabs auf, damit du die erledigten findest und schließt.
+- Klick mit der rechten Maustaste auf einen Tab und wähle **Doppelte Tabs schließen** („Close Duplicate Tabs“), um Wiederholungen in einem Rutsch loszuwerden.
+
+TabMerger entfernt Doppelte in **allen** Fenstern auf einmal; siehe [doppelte Tabs schließen](/blog/close-duplicate-tabs).
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>Schließen ist nur bei Tabs sicher, bei denen du dir sicher bist. Alles, bei dem du zögerst, kommt in Schritt 3, nicht in den Papierkorb.</Catch>
+
+</Section>
+
+<Section id="group" title="2. Gruppiere die Tabs für die heutige Aufgabe">
+
+Tab-Gruppen geben einer Reihe von Tabs einen Namen und eine Farbe und lassen sich zu einem einzigen Label zusammenklappen. Chrome, Edge und Firefox haben sie alle: Klick mit der rechten Maustaste auf einen Tab und füge ihn einer neuen Gruppe hinzu.
+
+Behalte eine Gruppe pro Aufgabe, an der du heute wirklich arbeitest, und klapp die zu, die du gerade nicht brauchst. Eine zugeklappte Gruppe braucht so viel Platz wie ein Tab. Wie Gruppen gespeichert, synchronisiert und wieder geöffnet werden, unterscheidet sich je nach Browser; unsere [Anleitung zu Tab-Gruppen in Chrome](/blog/chrome-tab-groups) erklärt die Details und Grenzen.
+
+</Section>
+
+<Section id="save" title="3. Speichere die „vielleicht später“-Tabs">
+
+Das ist der Schritt, der die Tableiste wirklich schrumpfen lässt. Ein Tab, den du vielleicht nächste Woche brauchst, muss nicht offen sein; er muss auffindbar sein.
+
+- **Das Fenster als Lesezeichen speichern.** <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> speichert alle Tabs des aktuellen Fensters in einem neuen Lesezeichenordner. Unsere Anleitung zum [Speichern aller offenen Tabs](/blog/save-all-open-tabs) zeigt das für jeden Browser.
+- **Einen Sitzungsmanager nutzen.** Er speichert ganze Fenster mit Namen und stellt sie mit einem Klick wieder her. Lies, [was ein Sitzungsmanager für den Browser leistet](/blog/browser-session-manager) und worin er sich von Lesezeichen unterscheidet.
+- **Später lesen.** Ist es ein Artikel, ist eine Leseliste besser als ein Tab. Unsicher, wo eine Seite hingehört? Unser Vergleich [Tabs oder Lesezeichen](/blog/tabs-vs-bookmarks) hat eine Entscheidungstabelle.
+
+Dann schließ, was du gespeichert hast. Das ist der ganze Trick: Erst das Speichern macht das Schließen sicher.
+
+</Section>
+
+<Section id="schedule" title="4. Trag dir ein wöchentliches Aufräumen in den Kalender ein">
+
+Tabs kommen zurück. Ein kurzes, regelmäßiges Aufräumen hält die Zahl niedrig, ganz ohne Willenskraft:
+
+1. Öffne einmal pro Woche deine gespeicherten Ordner oder Gruppen.
+2. Lösch, was du nicht mehr brauchst. Wenn du etwas einen Monat lang nicht geöffnet hast, wirst du es wahrscheinlich auch nicht mehr tun.
+3. Schließ die Fenster, die du im Lauf der Woche gespeichert hast.
+
+Wenn Recherche zu deinem Beruf gehört (Studierende, Analysten, Entwickler, die Dokumentation lesen), behalte eine gespeicherte Gruppe pro Projekt und räum sie auf, wenn das Projekt endet, nicht vorher.
+
+</Section>
+
+<Section id="memory" title="Lass den Browser den Speicher freigeben">
+
+Browser können verhindern, dass ungenutzte Tabs Arbeitsspeicher belegen, ohne sie zu schließen. Der Tab bleibt in der Leiste und lädt neu, wenn du ihn anklickst.
+
+<BrowserPanels section="memory">
+<BrowserPanel browser="chrome">
+
+Schalte den **Arbeitsspeicher-Sparmodus** („Memory Saver“) ein: **Einstellungen → Leistung** („Settings → Performance“), oder füge `chrome://settings/performance` in die Adressleiste ein.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Chrome-Einstellungen, „Performance“ (Leistung), mit dem Schalter „Memory Saver“ (Arbeitsspeicher-Sparmodus)" width={1600} height={524} eager boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">„Memory Saver“ (Arbeitsspeicher-Sparmodus) von Chrome, in einem neuen Chrome-157-Profil ausgeschaltet.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Aktiviere **Automatically put tabs to sleep** unter **Einstellungen → System and performance → Performance** und wähle, wie lange ein Tab wartet, bevor er in den Ruhezustand geht.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Edge-Einstellungen, „Performance“, mit aktivierter Option „Automatically put tabs to sleep“, auf 15 Minuten gestellt" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Die schlafenden Tabs von Edge sind standardmäßig aktiv: Inaktive Tabs gehen nach 15 Minuten in den Ruhezustand.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Klick mit der rechten Maustaste auf einen Tab und wähle **Tab entladen** („Unload Tab“), um seinen Speicher von Hand freizugeben.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>Das hilft dem Computer, nicht dir. Fünfzig schlafende Tabs sind immer noch fünfzig Tabs, die du durchsehen musst. Nutze es zusätzlich zur Routine, nicht stattdessen.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="Mit TabMerger geht es schneller">
+
+[TabMerger](/features), unsere kostenlose Erweiterung für Chrome, Edge und Firefox, macht aus den Schritten 3 und 4 ein paar Klicks. **Jetzt geöffnet** zeigt alle offenen Fenster und ihre Tabs an einem Ort, sodass du den ganzen Stapel auf einmal siehst. Speichere sie alle mit **Mit aktueller zusammenführen** in einer benannten Gruppe, schließ die Fenster und finde jeden Tab mit <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> wieder, ob er offen, gespeichert oder kürzlich geschlossen ist. Ein langsamer Computer ist oft das erste Zeichen für zu viele Tabs; [so gibt Speichern und Schließen den Arbeitsspeicher frei](/blog/too-many-tabs-slow-browser).
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-now-open" alt="TabMerger, „Now Open“ (Jetzt geöffnet) mit drei Browserfenstern und 18 Tabs, helles Design" darkAlt="TabMerger, „Now Open“ (Jetzt geöffnet) mit drei Browserfenstern und 18 Tabs, dunkles Design" boxes={[{ id: 'now-open-summary', label: 'Offene Fenster und Tabs' }]} source="TabMerger 3.16.1">„Now Open“ (Jetzt geöffnet): drei Fenster und 18 Tabs, vor dem Aufräumen.</ThemedScreenshot>
+
+Für das wöchentliche Aufräumen kann **Einstellungen → Daten → Offene Tabs automatisch speichern** deine offenen Tabs nach Zeitplan als neue Gruppe speichern, oder sobald du 20, 30, 50, 75 oder 100 offene Tabs überschreitest. Im kostenlosen Tarif bleiben die neuesten 2 automatischen Speicherungen, und sie zählen zu den 5 Gruppen und 50 Tabs; Pro behält sie alle. Für eine Routine, die den Stapel gar nicht erst zurückkommen lässt, siehe [einen täglichen Tab-Ablauf mit TabMerger](/blog/tabmerger-daily-workflow).
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-auto-save-threshold" alt="TabMerger-Einstellungen, Tab „Data“ (Daten): „Auto-save open tabs“ (Offene Tabs automatisch speichern) aktiviert, „When open tabs pass“ (Wenn offene Tabs mehr sind als) auf „30 open tabs“ gestellt, helles Design" darkAlt="TabMerger-Einstellungen, Tab „Data“ (Daten): „Auto-save open tabs“ (Offene Tabs automatisch speichern) aktiviert, „When open tabs pass“ (Wenn offene Tabs mehr sind als) auf „30 open tabs“ gestellt, dunkles Design" boxes={[{ id: 'threshold', label: 'Wenn offene Tabs mehr sind als' }]} source="TabMerger 3.16.1">„Auto-save open tabs“ (Offene Tabs automatisch speichern) springt an, sobald mehr als 30 Tabs offen sind.</ThemedScreenshot>
+
+Gespeicherte Tabs bekommen außerdem einen bernsteinfarbenen Punkt, sobald sie das von dir gewählte Alter überschreiten (7, 14, 30 oder 60 Tage), und das **⋯**-Menü einer Gruppe hat **Doppelte Tabs entfernen**.
+
+<InstallCta>Kostenlos für Chrome, Edge und Firefox. Zum Start ist kein Konto nötig.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Häufige Fragen">
+
+<Faq items={post.faq} />
+
+</Section>
