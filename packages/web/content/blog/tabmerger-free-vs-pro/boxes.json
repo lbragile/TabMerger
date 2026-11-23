@@ -1,0 +1,38 @@
+{
+  "tm-over-limit-dark": [
+    {
+      "id": "banner",
+      "label": "Free plan notice",
+      "l": "3.45%",
+      "t": "7.77%",
+      "w": "55.69%",
+      "h": "4.80%"
+    },
+    {
+      "id": "locked",
+      "label": "Over the limit",
+      "l": "0.83%",
+      "t": "48.35%",
+      "w": "28.60%",
+      "h": "10.63%"
+    }
+  ],
+  "tm-over-limit-light": [
+    {
+      "id": "banner",
+      "label": "Free plan notice",
+      "l": "3.45%",
+      "t": "7.77%",
+      "w": "55.69%",
+      "h": "4.80%"
+    },
+    {
+      "id": "locked",
+      "label": "Over the limit",
+      "l": "0.83%",
+      "t": "48.35%",
+      "w": "28.60%",
+      "h": "10.63%"
+    }
+  ]
+}

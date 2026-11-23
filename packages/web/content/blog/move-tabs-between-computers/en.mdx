@@ -79,7 +79,7 @@ export const post = {
 
 <QuickAnswer>
 
-For a one-off move, use [TabMerger](/features)’s **Settings → Data → Export JSON** on the old computer and **Import file** on the new one: every open tab and saved group comes across, free, no account, in any of Chrome, Edge and Firefox. To keep two computers in step, **TabMerger Pro** syncs your groups and sessions automatically, end-to-end encrypted. Staying in one browser? Sign in on both and use its sync.
+For a one-off move, use [TabMerger](/features)’s **Settings → Data → Export JSON** on the old computer and **Import file** on the new one: every saved group comes across (save your open windows into a group first), free, no account, in any of Chrome, Edge and Firefox. To keep two computers in step, **TabMerger Pro** syncs your groups and sessions automatically, end-to-end encrypted. Staying in one browser? Sign in on both and use its sync.
 
 </QuickAnswer>
 
@@ -107,15 +107,16 @@ For a one-off move, use [TabMerger](/features)’s **Settings → Data → Expor
 
 **Once, with a file (Free):**
 
-1. On the old computer, open TabMerger → **Settings → Data** → **Export JSON**.
-2. Copy the file to the new computer (a USB stick, email to yourself, a cloud drive).
-3. On the new computer, install TabMerger, then **Settings → Data** → **Import file**. Your groups appear next to any you already have.
+1. On the old computer, save the open windows you want to move into a group (**Merge with current** in a group’s **⋯** menu). The import adds saved groups; the file’s Now Open is left out, because those were the old browser’s open tabs.
+2. Open TabMerger → **Settings → Data** → **Export JSON**.
+3. Copy the file to the new computer (a USB stick, email to yourself, a cloud drive).
+4. On the new computer, install TabMerger, then **Settings → Data** → **Import file**. Your groups appear next to any you already have.
 
 <ScreenshotThemeToggle />
 
 <ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="TabMerger Settings, Data, with the Export JSON and Import file buttons under Import & export, light theme" darkAlt="TabMerger Settings, Data, with the Export JSON and Import file buttons under Import & export, dark theme" boxes={[{ id: 'export-json', label: 'Export JSON' }, { id: 'import-file', label: 'Import file' }]} source="TabMerger 3.16.1">Export on one computer, import on the other.</ThemedScreenshot>
 
-**Always, with sync ([Pro](/pricing)):** sign in to TabMerger on each computer and your groups and sessions follow you, in Chrome, Edge or Firefox. Everything is encrypted on your device before it’s synced, so the server can’t read your tabs. Pro also shows the tabs open on your other devices and restores them here, and keeps automatic backups.
+**Always, with sync ([Pro](/pricing)):** sign in to TabMerger on each computer and your groups and sessions follow you, in Chrome, Edge or Firefox. Everything is encrypted on your device before it’s synced, so the server can’t read your tabs. Pro also shows the tabs open on your other devices and restores them here, and keeps automatic backups. How it works, and what our server can and can’t see: [sync tabs between devices](/blog/sync-tabs-between-devices-with-tabmerger).
 
 More on what the file contains in [how to export your open tabs](/blog/export-open-tabs).
 

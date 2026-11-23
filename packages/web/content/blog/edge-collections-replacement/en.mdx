@@ -22,7 +22,7 @@ export const post = {
       source: 'Microsoft Support',
       href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
     },
-    { text: 'TabMerger turns each favorites folder into a named group.', source: 'Tested in TabMerger 3.16.1, Nov 21, 2026' },
+    { text: 'TabMerger turns each folder in Other favorites into a named group.', source: 'Tested in TabMerger 3.16.1, Nov 21, 2026' },
   ],
   faq: [
     {
@@ -42,7 +42,7 @@ export const post = {
     },
     {
       question: 'Can I import my collections into TabMerger?',
-      answer: 'Yes. Export your favorites as an HTML file and import it under Settings → Data: each top-level folder becomes a TabMerger group.',
+      answer: 'Yes. Move the collection folders into Other favorites, export your favorites as an HTML file and import it under Settings → Data: each of those folders becomes a TabMerger group.',
     },
   ],
   images: [
@@ -87,7 +87,7 @@ export const post = {
 
 <QuickAnswer>
 
-Yes, it’s gone: Microsoft says **Collections is no longer available starting with Edge 149** (released June 4, 2026). Your pages weren’t deleted: **Move to Favorites** turned each collection into a favorites folder. The best new home is [TabMerger](/features): export your favorites as HTML, import the file, and every folder becomes a named, searchable group, with notes, reminders and encrypted sync, in Edge, Chrome and Firefox.
+Yes, it’s gone: Microsoft says **Collections is no longer available starting with Edge 149** (released June 4, 2026). Your pages weren’t deleted: **Move to Favorites** turned each collection into a favorites folder. The best new home is [TabMerger](/features): export your favorites as HTML, import the file, and every folder in Other favorites becomes a named, searchable group, with notes, reminders and encrypted sync, in Edge, Chrome and Firefox.
 
 </QuickAnswer>
 
@@ -124,11 +124,12 @@ Personal Microsoft accounts can also find previously saved collections at `bing.
 
 <Section id="move" title="How do I move my collections into TabMerger?">
 
-Two minutes, and every former collection becomes a group:
+A few minutes, and every former collection becomes a group:
 
-1. In Edge, open Favorites (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>) and choose **Export favorites**. Save the HTML file.
-2. Open TabMerger → **Settings → Data** → **Import file**, and choose that file.
-3. Confirm. Each top-level folder becomes a group with the folder’s name; folders nested deeper are folded into their parent’s group.
+1. In Edge, open Favorites (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>). If your former collections are inside **Favorites bar**, move those folders into **Other favorites**. The export writes the whole Favorites bar as one folder, so folders left inside it would arrive merged into one group.
+2. Choose **Export favorites** and save the HTML file.
+3. Open TabMerger → **Settings → Data** → **Import file**, and choose that file.
+4. Confirm. Each folder in Other favorites becomes a group with the folder’s name, and folders inside it are folded into that group. The Favorites bar comes in as one group of its own.
 
 <ScreenshotThemeToggle />
 
@@ -137,7 +138,7 @@ Two minutes, and every former collection becomes a group:
 <ThemedScreenshot src="/blog/edge-collections-replacement/tm-imported-groups" alt="TabMerger sidebar with the groups Trip to Lisbon and Thesis reading, imported from favorites folders, light theme" darkAlt="TabMerger sidebar with the groups Trip to Lisbon and Thesis reading, imported from favorites folders, dark theme" boxes={[{ id: 'imported', label: 'Groups named after folders' }]} source="TabMerger 3.16.1">Each folder is now a group with the same name and pages.</ThemedScreenshot>
 </Carousel>
 
-Your other favorites folders come along too; delete the groups you don’t need. Free holds 5 groups and 50 tabs, and an import that would go past that is stopped before anything is added; [Pro](/pricing) has no limit.
+Your other folders in Other favorites come along too; delete the groups you don’t need. Every import format is covered in [import tabs into TabMerger](/blog/import-tabs-into-tabmerger). Free holds 5 groups and 50 tabs, and an import that would go past that is stopped before anything is added; [Pro](/pricing) has no limit.
 
 {/* Screenshot still to capture by hand (needs a visible browser): Edge Favorites page menu with Export favorites. */}
 

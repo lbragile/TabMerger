@@ -1,0 +1,78 @@
+{
+  "tm-data-tab-dark": [
+    {
+      "id": "export",
+      "label": "Export your groups",
+      "l": "24.33%",
+      "t": "54.77%",
+      "w": "16.18%",
+      "h": "7.47%"
+    },
+    {
+      "id": "import",
+      "label": "Import a file",
+      "l": "39.90%",
+      "t": "54.77%",
+      "w": "14.82%",
+      "h": "7.47%"
+    }
+  ],
+  "tm-data-tab-light": [
+    {
+      "id": "export",
+      "label": "Export your groups",
+      "l": "24.33%",
+      "t": "54.77%",
+      "w": "16.18%",
+      "h": "7.47%"
+    },
+    {
+      "id": "import",
+      "label": "Import a file",
+      "l": "39.90%",
+      "t": "54.77%",
+      "w": "14.82%",
+      "h": "7.47%"
+    }
+  ],
+  "tm-import-confirm-dark": [
+    {
+      "id": "import-confirm",
+      "label": "Import 2 groups",
+      "l": "53.09%",
+      "t": "53.60%",
+      "w": "18.59%",
+      "h": "8.80%"
+    }
+  ],
+  "tm-import-confirm-light": [
+    {
+      "id": "import-confirm",
+      "label": "Import 2 groups",
+      "l": "53.09%",
+      "t": "53.60%",
+      "w": "18.59%",
+      "h": "8.80%"
+    }
+  ],
+  "tm-imported-dark": [
+    {
+      "id": "imported",
+      "label": "One group per list",
+      "l": "0.83%",
+      "t": "30.85%",
+      "w": "28.60%",
+      "h": "10.63%"
+    }
+  ],
+  "tm-imported-light": [
+    {
+      "id": "imported",
+      "label": "One group per list",
+      "l": "0.83%",
+      "t": "30.85%",
+      "w": "28.60%",
+      "h": "10.63%"
+    }
+  ]
+}

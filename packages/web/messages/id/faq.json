@@ -33,6 +33,6 @@
   },
   "downgrade": {
     "question": "Apa yang terjadi pada grup saya jika saya menurunkan paket?",
-    "answer": "Jika Anda turun dari Pro ke Gratis, grup Anda tetap tersimpan di cloud selama 30 hari. Tab lokal Anda selalu disimpan. Anda dapat mengekspor semuanya sebelum menurunkan paket."
+    "answer": "Tidak ada yang hilang. Grup Anda tetap ada di perangkat Anda, dan yang melebihi batas paket Gratis tetap disimpan dalam keadaan terkunci sampai Anda kembali ke Pro atau mengosongkan ruang. Salinan yang sudah ada di akun Anda juga tetap tersimpan: di dasbor, Anda masih bisa membuka atau menghapus sesi tersimpan serta mengunduh atau menghapus cadangan. Hanya perubahan baru yang berhenti disinkronkan, sampai Anda kembali ke Pro."
   }
 }

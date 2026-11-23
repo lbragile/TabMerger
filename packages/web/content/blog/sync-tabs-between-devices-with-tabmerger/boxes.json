@@ -1,0 +1,138 @@
+{
+  "tm-cloud-sync-dark": [
+    {
+      "id": "sync",
+      "label": "Sync on or off",
+      "l": "68.58%",
+      "t": "52.78%",
+      "w": "6.10%",
+      "h": "9.51%"
+    }
+  ],
+  "tm-cloud-sync-light": [
+    {
+      "id": "sync",
+      "label": "Sync on or off",
+      "l": "68.58%",
+      "t": "52.78%",
+      "w": "6.10%",
+      "h": "9.51%"
+    }
+  ],
+  "tm-devices-dark": [
+    {
+      "id": "other-device",
+      "label": "Your other browser",
+      "l": "32.58%",
+      "t": "47.52%",
+      "w": "10.55%",
+      "h": "4.80%"
+    },
+    {
+      "id": "restore",
+      "label": "Open its tabs here",
+      "l": "60.03%",
+      "t": "52.35%",
+      "w": "13.52%",
+      "h": "6.13%"
+    }
+  ],
+  "tm-devices-light": [
+    {
+      "id": "other-device",
+      "label": "Your other browser",
+      "l": "32.58%",
+      "t": "47.52%",
+      "w": "10.55%",
+      "h": "4.80%"
+    },
+    {
+      "id": "restore",
+      "label": "Open its tabs here",
+      "l": "60.03%",
+      "t": "52.35%",
+      "w": "13.52%",
+      "h": "6.13%"
+    }
+  ],
+  "tm-setup-encryption-dark": [
+    {
+      "id": "passphrase",
+      "label": "Only you know it",
+      "l": "24.33%",
+      "t": "48.10%",
+      "w": "51.35%",
+      "h": "7.47%"
+    }
+  ],
+  "tm-setup-encryption-light": [
+    {
+      "id": "passphrase",
+      "label": "Only you know it",
+      "l": "24.33%",
+      "t": "48.10%",
+      "w": "51.35%",
+      "h": "7.47%"
+    }
+  ],
+  "tm-sign-in-dark": [
+    {
+      "id": "email",
+      "label": "Your account email",
+      "l": "24.33%",
+      "t": "52.27%",
+      "w": "51.35%",
+      "h": "8.13%"
+    }
+  ],
+  "tm-sign-in-light": [
+    {
+      "id": "email",
+      "label": "Your account email",
+      "l": "24.33%",
+      "t": "52.27%",
+      "w": "51.35%",
+      "h": "8.13%"
+    }
+  ],
+  "tm-synced-groups-dark": [
+    {
+      "id": "groups",
+      "label": "From the other device",
+      "l": "0.83%",
+      "t": "13.85%",
+      "w": "28.60%",
+      "h": "10.63%"
+    }
+  ],
+  "tm-synced-groups-light": [
+    {
+      "id": "groups",
+      "label": "From the other device",
+      "l": "0.83%",
+      "t": "13.85%",
+      "w": "28.60%",
+      "h": "10.63%"
+    }
+  ],
+  "tm-unlock-dark": [
+    {
+      "id": "unlock",
+      "label": "Once per device",
+      "l": "24.33%",
+      "t": "59.10%",
+      "w": "51.35%",
+      "h": "7.47%"
+    }
+  ],
+  "tm-unlock-light": [
+    {
+      "id": "unlock",
+      "label": "Once per device",
+      "l": "24.33%",
+      "t": "59.10%",
+      "w": "51.35%",
+      "h": "7.47%"
+    }
+  ]
+}

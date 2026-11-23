@@ -1,0 +1,149 @@
+export const post = {
+  slug: 'tabmerger-free-vs-pro',
+  title: 'TabMerger Free vs Pro: exactly what each plan includes',
+  navTitle: 'TabMerger Free vs Pro',
+  seoTitle: 'TabMerger Free vs Pro: Limits, Sync, Price and What Happens If You Cancel',
+  description:
+    'Everything in TabMerger’s Free plan, everything Pro adds, how the limits are enforced, and what happens to your tabs if a Pro plan ends. No small print.',
+  shareSummary: 'What Free includes, what Pro adds, and what happens if you cancel. No small print.',
+  dek: 'Free is a complete tab manager. Pro is for more tabs, more computers, and backups you never think about.',
+  published: '2026-12-20',
+  updated: '2026-12-20',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Free: 5 groups, 50 tabs, 3 URL rules, 3 sessions, no account needed.', source: 'TabMerger pricing', href: '/pricing' },
+    { text: 'Pro: US$3.99 a month or US$42.99 a year, with no limits and encrypted sync.', source: 'TabMerger pricing', href: '/pricing' },
+    { text: 'Everything that uses our servers is checked by the server, not just the app.', source: 'TabMerger 3.16.1 source' },
+    { text: 'If Pro ends, nothing is deleted.', source: 'TabMerger 3.16.1 source' },
+  ],
+  faq: [
+    {
+      question: 'Is TabMerger free?',
+      answer:
+        'Yes. The Free plan needs no account and includes groups, sessions, search, auto-save, Recently closed, URL rules, import and export, within its limits: 5 groups, 50 tabs, 3 URL rules and 3 sessions.',
+    },
+    {
+      question: 'What does TabMerger Pro add?',
+      answer:
+        'No limits on groups, tabs, rules or sessions; end-to-end encrypted sync between devices; automatic encrypted backups; every auto-save kept; 30 days of Recently closed instead of 2; and priority support.',
+    },
+    {
+      question: 'How much is TabMerger Pro?',
+      answer: 'US$3.99 a month, or US$42.99 a year (about 10% less than paying monthly). You can cancel anytime and keep Pro until the end of the period you paid for.',
+    },
+    {
+      question: 'What happens to my tabs if I cancel Pro?',
+      answer:
+        'Nothing is deleted. Groups and tabs beyond the Free limits stay on your device, locked, until you upgrade again or make room. New changes stop syncing; what’s already in your account stays there.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabmerger-free-vs-pro/tm-over-limit-light.webp', alt: 'TabMerger on the Free plan with 7 saved groups: the last two are locked and a banner offers Pro, light theme' },
+    { src: '/blog/tabmerger-free-vs-pro/tm-over-limit-dark.webp', alt: 'TabMerger on the Free plan with 7 saved groups: the last two are locked and a banner offers Pro, dark theme' },
+  ],
+  tags: ['tabmerger-guides', 'tab-manager', 'comparison', 'browser-productivity'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabmerger-free-vs-pro/tm-over-limit-light.webp' },
+  ogImage: { src: '/blog/tabmerger-free-vs-pro/og.png', alt: 'TabMerger Free vs Pro: the Free plan with two groups locked past its limit' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'problem', label: 'Free or paid?' },
+    { id: 'compare', label: 'Side by side' },
+    { id: 'why', label: 'Why the plans are drawn here' },
+    { id: 'enforce', label: 'How limits are checked' },
+    { id: 'cancel', label: 'If Pro ends' },
+    { id: 'choose', label: 'Which plan fits' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+**Free** is a full tab manager with no account: 5 groups, 50 tabs, 3 URL rules and 3 sessions, plus search, auto-save (newest 2 kept), 2 days of Recently closed, and import and export. **Pro** (US$3.99 a month or US$42.99 a year) removes every limit and adds end-to-end encrypted sync between devices, automatic encrypted backups, every auto-save kept and 30 days of Recently closed. If Pro ends, nothing is deleted.
+
+</QuickAnswer>
+
+<InstallCta>Start free, no account needed. Chrome, Edge and Firefox.</InstallCta>
+
+<Section id="problem" title="Free or paid: the real question">
+
+Most people wonder two things before installing a tab manager: “Will the free version actually be useful?” and “If I pay and later stop, do I lose my tabs?” Both deserve a straight answer, so here is everything each plan includes, how it’s enforced, and what happens at the edges.
+
+</Section>
+
+<Section id="compare" title="Free and Pro, side by side">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="34rem"
+  rows={[
+    ['Price', 'US$0, no account needed', 'US$3.99 a month or US$42.99 a year'],
+    ['Groups', 'Up to 5', 'Unlimited'],
+    ['Tabs', 'Up to 50', 'Unlimited'],
+    ['URL rules', 'Up to 3', 'Unlimited'],
+    ['Sessions', 'Up to 3, in this browser', 'Unlimited, synced across devices'],
+    ['Auto-save open tabs', 'Newest 2 kept', 'All kept'],
+    ['Recently closed tabs', 'Your last 2 days', 'Your last 30 days'],
+    ['Search, notes, reminders, import & export', 'Yes', 'Yes'],
+    ['Drag & drop, keyboard shortcuts', 'Yes', 'Yes'],
+    ['Cloud sync across devices (end-to-end encrypted)', 'No, stored on this device', 'Yes'],
+    ['Automatic encrypted backups', 'No', 'Yes'],
+    ['Share links, Settings → Devices', 'No', 'Yes'],
+    ['Support', 'Yes', 'Priority'],
+  ]}
+/>
+
+The [pricing page](/pricing) is the source of truth for prices; the yearly plan costs about 10% less than twelve monthly payments.
+
+</Section>
+
+<Section id="why" title="Why the plans are drawn where they are">
+
+The line follows cost. Everything that runs only in your browser costs us nothing to give away, so Free gets the whole tab manager: groups, search, auto-save, Recently closed, URL rules, import and export, with limits sized for one person’s daily work.
+
+Pro pays for what runs on our servers: syncing and storing your encrypted groups, sessions and backups, and the open tabs your devices share in Settings → Devices. It also lifts the local limits, for people whose tabs outgrew 5 groups and 50 tabs.
+
+</Section>
+
+<Section id="enforce" title="How the limits are checked">
+
+- **On your device:** the group, tab, rule and session limits, auto-save rotation and Recently closed retention are applied by the extension. That data never leaves your browser, so there is nothing for a server to check.
+- **On our servers:** every feature that stores data with us (sync, sessions and backups in your account, your devices’ open tabs, share links, setting up encryption) is refused by the database for an account without an active Pro plan. A hidden button is never the only lock.
+
+When you approach the Free limits, TabMerger says so with a banner and offers Pro; it never deletes your groups or tabs to make room.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabmerger-free-vs-pro/tm-over-limit" alt="TabMerger on the Free plan with 7 saved groups: the last two are locked and a banner offers Pro, light theme" darkAlt="TabMerger on the Free plan with 7 saved groups: the last two are locked and a banner offers Pro, dark theme" boxes={[{ id: 'banner', label: 'Free plan notice' }, { id: 'locked', label: 'Over the limit' }]} source="TabMerger 3.16.1">Seven groups on Free: the first five work as usual, the last two are kept but locked.</ThemedScreenshot>
+
+</Section>
+
+<Section id="cancel" title="If a Pro plan ends">
+
+You keep Pro until the end of the period you paid for. After that:
+
+- **Nothing is deleted.** Groups and tabs beyond the Free limits stay on your device, shown with a lock, until you upgrade again or remove others to make room.
+- **Your URL rules keep working**, even if you have more than 3; only adding new ones past 3 needs Pro.
+- **Sync stops for new changes.** What’s already in your account stays there; in the dashboard you can still open or delete saved sessions and download or delete backups.
+- **Everything local keeps working:** search, auto-save (new auto-saves rotate, newest 2 kept), Recently closed (back to 2 days), import and export.
+
+</Section>
+
+<Section id="choose" title="Which plan fits you">
+
+- **Stay on Free** if you use one computer and keep a handful of projects: it’s complete, private by default, and needs no account.
+- **Choose Pro** if you work on more than one computer, keep more than 5 groups or 50 tabs, or want backups and a month of closed tabs without thinking about it.
+
+Not sure? Start on Free; upgrading later keeps everything you already have. For the routine that makes either plan work, see [a daily tab workflow with TabMerger](/blog/tabmerger-daily-workflow); for how sync protects your data, [sync tabs between devices](/blog/sync-tabs-between-devices-with-tabmerger).
+
+<InstallCta>Free for one computer, Pro when you need more. Chrome, Edge and Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

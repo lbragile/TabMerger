@@ -89,6 +89,29 @@ the box points at nothing visible. For TabMerger-only posts `testedOn` names the
 Chromium build (version from `%LOCALAPPDATA%/ms-playwright/chromium-*/chrome-win64/*.manifest`),
 not a branded browser that wasn't used.
 
+**Import/export semantics** (checked against `lib/importExport.ts`): bookmarks HTML makes one group
+per TOP-LEVEL folder and flattens everything nested; loose top-level links are dropped. Chromium's
+exporter (`bookmark_html_writer.cc`) writes the bookmarks/favorites bar as one H3 folder and the
+children of Other bookmarks/favorites directly at the top level, so a full Chrome/Edge export gives
+one "Favorites bar" group plus one group per Other-favorites folder. A TabMerger JSON import drops the
+file's Now Open (the export includes it), so "every open tab comes across" is false. To test a parser
+against a fixture without touching the package, run vitest from the extension with a scratchpad
+config that has no imports (`export default { resolve: { alias: { '@': <ext>/src } }, test: {...} }`)
+and the LONG (non-8.3) scratchpad path as `--root`, or it reports "Cannot find module".
+
+**Downgrade wording.** RLS 019 leaves select/delete open, but the web dashboard hides synced GROUPS
+for a non-entitled account; only saved sessions (open/delete) and backups (download/delete) stay
+visible there. Say exactly that; there is no purge job, so promise no time limit either way.
+
+**Capturing real Pro sync locally.** Vite env precedence: process env VITE_* beats every .env file,
+and `.env.local` is loaded in production mode too (that's where the BYOK AI flag comes from; the
+production publish also enables BYOK, so the header's "Pro AI" sparkle is faithful). Build the scratch
+extension with VITE_SUPABASE_URL/KEY/WEB_APP_URL overrides. A seed user needs `instance_id` set and
+null token columns coalesced to '' before GoTrue accepts a password set via the admin API. The
+device row (`device_sessions`) is pushed only when Now Open changes, so open a tab after sign-in
+before opening Settings → Devices; two profiles get the same `getDeviceName`, and the list keeps one
+row per name, so rename one first. `convert.mjs` CROPS keys include the theme suffix.
+
 **Series pillars and not-yet-written posts.** The blog-posts link test rejects `/blog/<slug>` for a
 slug with no post folder, so a pillar can only link posts that exist; name later ones as plain
 text and link them when they land. Avoid `&quot;` in MDX JSX attribute strings (alt text): reword

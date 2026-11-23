@@ -1,0 +1,94 @@
+{
+  "tm-add-rule-dark": [
+    {
+      "id": "pattern",
+      "label": "The address pattern",
+      "l": "32.33%",
+      "t": "41.77%",
+      "w": "35.35%",
+      "h": "7.47%"
+    },
+    {
+      "id": "group",
+      "label": "The target group",
+      "l": "32.33%",
+      "t": "48.43%",
+      "w": "35.35%",
+      "h": "7.47%"
+    }
+  ],
+  "tm-add-rule-light": [
+    {
+      "id": "pattern",
+      "label": "The address pattern",
+      "l": "32.33%",
+      "t": "41.77%",
+      "w": "35.35%",
+      "h": "7.47%"
+    },
+    {
+      "id": "group",
+      "label": "The target group",
+      "l": "32.33%",
+      "t": "48.43%",
+      "w": "35.35%",
+      "h": "7.47%"
+    }
+  ],
+  "tm-rule-result-dark": [
+    {
+      "id": "new-tab",
+      "label": "Filed by the rule",
+      "l": "33.08%",
+      "t": "25.93%",
+      "w": "47.77%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-rule-result-light": [
+    {
+      "id": "new-tab",
+      "label": "Filed by the rule",
+      "l": "33.08%",
+      "t": "25.93%",
+      "w": "47.77%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-rules-list-dark": [
+    {
+      "id": "order",
+      "label": "Checked top to bottom",
+      "l": "64.58%",
+      "t": "32.43%",
+      "w": "4.10%",
+      "h": "5.47%"
+    },
+    {
+      "id": "used",
+      "label": "Free plan count",
+      "l": "24.33%",
+      "t": "66.77%",
+      "w": "7.52%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-rules-list-light": [
+    {
+      "id": "order",
+      "label": "Checked top to bottom",
+      "l": "64.58%",
+      "t": "32.43%",
+      "w": "4.10%",
+      "h": "5.47%"
+    },
+    {
+      "id": "used",
+      "label": "Free plan count",
+      "l": "24.33%",
+      "t": "66.77%",
+      "w": "7.52%",
+      "h": "4.80%"
+    }
+  ]
+}

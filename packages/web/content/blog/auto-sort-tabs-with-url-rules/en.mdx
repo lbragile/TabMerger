@@ -1,0 +1,179 @@
+export const post = {
+  slug: 'auto-sort-tabs-with-url-rules',
+  title: 'Auto-sort tabs into groups with URL rules',
+  navTitle: 'Auto-sort tabs with URL rules',
+  seoTitle: 'Automatically Sort Browser Tabs into Groups by URL',
+  description:
+    'Let TabMerger file your tabs for you: a URL rule copies every matching page into the right group as you browse. How patterns and the * wildcard work, rule order, and patterns that work well.',
+  shareSummary: 'A pattern and a group: TabMerger files every matching tab for you as you browse.',
+  dek: 'Write the rule once. Every matching page you open from then on is filed in the right group.',
+  published: '2026-12-17',
+  updated: '2026-12-17',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'A rule is a pattern plus a group; * matches any run of characters.', source: 'TabMerger 3.16.1' },
+    { text: 'Patterns match the whole address without http:// or https://.', source: 'TabMerger 3.16.1 source' },
+    { text: 'Rules are checked top to bottom; the first match wins.', source: 'TabMerger 3.16.1' },
+    { text: 'Free has 3 URL rules; Pro has no limit.', source: 'TabMerger pricing', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Can browser tabs be sorted into groups automatically?',
+      answer:
+        'Yes, with TabMerger’s URL rules. A rule pairs an address pattern, such as github.com/your-org/*, with a group. Whenever a matching page opens or finishes loading, TabMerger saves a copy of it into that group. The tab itself stays open.',
+    },
+    {
+      question: 'How do URL rule patterns work?',
+      answer:
+        'A pattern must match the whole address, without the http:// or https:// part. * stands for any run of characters, including none, and is the only wildcard. So github.com/* matches every GitHub page, and *wikipedia.org/* matches Wikipedia in any language.',
+    },
+    {
+      question: 'What if two rules match the same page?',
+      answer: 'Rules are checked from the top of the list down, and the first match wins. Use the arrows next to each rule to put specific rules above general ones.',
+    },
+    {
+      question: 'Does a URL rule close the tab?',
+      answer: 'No. The rule saves a copy into the group; the tab stays open where it is.',
+    },
+    {
+      question: 'How many URL rules can I have?',
+      answer: 'Free has 3. Pro has no limit. Rules you already have keep working if your plan changes.',
+    },
+  ],
+  images: [
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-light.webp', alt: 'TabMerger Add URL Rule dialog with the pattern *wikivoyage.org/wiki/* and the group Trip to Lisbon, light theme' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-dark.webp', alt: 'TabMerger Add URL Rule dialog with the pattern *wikivoyage.org/wiki/* and the group Trip to Lisbon, dark theme' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-light.webp', alt: 'TabMerger URL Rules with three rules, each with arrows to change its order, and 3/3 used, light theme' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-dark.webp', alt: 'TabMerger URL Rules with three rules, each with arrows to change its order, and 3/3 used, dark theme' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp', alt: 'The Trip to Lisbon group with the Sintra page added by a URL rule, light theme' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-dark.webp', alt: 'The Trip to Lisbon group with the Sintra page added by a URL rule, dark theme' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'developers'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-light.webp' },
+  ogImage: { src: '/blog/auto-sort-tabs-with-url-rules/og.png', alt: 'Auto-sort tabs with URL rules: three TabMerger rules filing tabs into groups' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'problem', label: 'Filing by hand' },
+    { id: 'why', label: 'Why rules work this way' },
+    { id: 'steps', label: 'Add a rule' },
+    { id: 'patterns', label: 'Writing patterns' },
+    { id: 'order', label: 'Rule order' },
+    { id: 'benefit', label: 'What you get' },
+    { id: 'habits', label: 'Good habits' },
+    { id: 'plans', label: 'Free vs Pro' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+In [TabMerger](/features), open **Settings → General → URL rules → Manage** and add a rule: an address pattern such as `github.com/your-org/*` and the group it belongs to. From then on, every page that matches is saved into that group as you browse, and the tab stays open. `*` matches anything; the first matching rule wins.
+
+</QuickAnswer>
+
+<InstallCta>Tabs that file themselves into the right group. Free for Chrome, Edge and Firefox.</InstallCta>
+
+<Section id="problem" title="Filing tabs by hand doesn’t last">
+
+You start the week organised: work in one group, the trip in another, reading in a third. Then the day happens. A colleague links an issue, you look up two train times, a search turns up an article. Each one should go somewhere, and each one is a drag you won’t do. By Friday the groups are out of date and Now Open is a pile again.
+
+The pages you open most often come from the same few sites. That is exactly what a rule can recognise.
+
+</Section>
+
+<Section id="why" title="Why URL rules work the way they do">
+
+- **Copy, don’t move.** A rule saves a copy of the page into the group and leaves the tab open. Filing never interrupts what you’re reading.
+- **Watches as you browse.** A rule is checked when a tab opens with an address and whenever a page finishes loading, so a link you follow inside a tab is filed too. The copy goes into the group’s first window. A page that loads again (a reload, a later visit) is saved again; **Deduplicate tabs** in the group’s **⋯** menu clears repeats.
+- **The whole address, no scheme.** A pattern is compared with the entire address after `http://` or `https://`, so you never type those, and `localhost:3000/*` works as written.
+- **One wildcard, on purpose.** `*` means any run of characters, including none. There are no other special characters to escape. Patterns are matched as plain text, never turned into a regular expression, so even long patterns are checked quickly.
+- **Order decides.** When two rules match, the higher one wins, so a specific rule can sit above a general one.
+
+</Section>
+
+<Section id="steps" title="Add a rule">
+
+1. Open TabMerger, then **Settings** → **General**. Next to **URL rules**, press **Manage**.
+2. Press **Add rule**. Type the pattern, choose the target group, and press **Add rule** in the dialog.
+3. Repeat for each site you want filed, then press **Save** to keep the list.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="A URL rule from start to finish" steps={[{ title: 'Add' }, { title: 'The list' }, { title: 'The result' }]}>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-add-rule" alt="TabMerger Add URL Rule dialog with the pattern *wikivoyage.org/wiki/* and the group Trip to Lisbon, light theme" darkAlt="TabMerger Add URL Rule dialog with the pattern *wikivoyage.org/wiki/* and the group Trip to Lisbon, dark theme" boxes={[{ id: 'pattern', label: 'The address pattern' }, { id: 'group', label: 'The target group' }]} source="TabMerger 3.16.1">Every Wikivoyage article goes to the trip.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rules-list" alt="TabMerger URL Rules with three rules, each with arrows to change its order, and 3/3 used, light theme" darkAlt="TabMerger URL Rules with three rules, each with arrows to change its order, and 3/3 used, dark theme" boxes={[{ id: 'order', label: 'Checked top to bottom' }, { id: 'used', label: 'Free plan count' }]} source="TabMerger 3.16.1">Three rules, three groups. The arrows set which rule is tried first.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rule-result" alt="The Trip to Lisbon group with the Sintra page added by a URL rule, light theme" darkAlt="The Trip to Lisbon group with the Sintra page added by a URL rule, dark theme" boxes={[{ id: 'new-tab', label: 'Filed by the rule' }]} source="TabMerger 3.16.1">Opening the Sintra article saved it into Trip to Lisbon on its own.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="patterns" title="Writing patterns that match">
+
+<ComparisonTable
+  head={['Pattern', 'Matches', 'Doesn’t match']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['github.com/your-org/*', 'Every repo, issue and pull request of your-org', 'github.com/other-org/…'],
+    ['*wikipedia.org/wiki/*', 'Articles in every language (en., de., …)', 'wikipedia.org’s home page'],
+    ['localhost:3000/*', 'Every page of your local dev server', 'localhost:8080/…'],
+    ['docs.example.com/*', 'The docs site', 'www.docs.example.com/… (add *docs.example.com/*)'],
+    ['github.com', 'Only the address github.com itself', 'github.com/anything (add /*)'],
+  ]}
+/>
+
+Tips that save a debugging session:
+
+- **End with `/*`** to cover a whole site. Without a `*`, a pattern matches one exact address.
+- **Start with `*`** when a site uses subdomains or `www.`: `*example.com/*`.
+- **Letters must match as written.** Browsers write domain names in lowercase, so write them that way too.
+- **Query strings count.** `*youtube.com/watch*` matches videos whatever comes after `watch`.
+
+</Section>
+
+<Section id="order" title="Rule order: specific first">
+
+Rules are tried from the top. Put the narrow rule (`github.com/your-org/design-system/*` → “Design system”) above the broad one (`github.com/your-org/*` → “Work”), using the arrows next to each rule. The first rule that matches files the page, and the rest are skipped.
+
+</Section>
+
+<Section id="benefit" title="What you get">
+
+Your groups stay current without any filing on your part. A page you opened on Tuesday is already in its project’s group on Friday, and searching that group finds it.
+
+</Section>
+
+<Section id="habits" title="Good habits">
+
+- **Rule the sites you open daily,** not every site you visit once.
+- **One rule per project domain or path**, specific rules first.
+- **Pair rules with groups per project:** see [organize tabs by project](/blog/organize-tabs-by-project). Developers will find more patterns in [tab management for developers](/blog/tab-management-for-developers).
+- **Tidy now and then** with **Deduplicate tabs** on groups that rules fill often.
+
+</Section>
+
+<Section id="plans" title="Free vs Pro">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['URL rules', '3', 'Unlimited'],
+    ['Patterns, order, every option above', 'Yes', 'Yes'],
+  ]}
+/>
+
+URL rules are saved in the browser where you made them. If a Pro plan ends, rules you already have keep filing tabs; only adding a fourth rule needs [Pro](/pricing).
+
+<InstallCta>Write three rules today and stop filing tabs by hand. Free for Chrome, Edge and Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

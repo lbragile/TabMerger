@@ -32,6 +32,9 @@ const CROPS = {
   'chrome-tab-groups-setting': [0, 0, 2200, 1160],
   'edge-sleeping-tabs': [0, 0, 1760, 940],
   'edge-extension-shortcuts': [0, 0, 1760, 1500],
+  // Series batch 2: the Cloud sync row and the two below it, nothing further down the list.
+  'tm-cloud-sync-light': [0, 0, 1600, 690],
+  'tm-cloud-sync-dark': [0, 0, 1600, 690],
 };
 
 // Captures with no DOM to measure (Firefox's own -screenshot): boxes measured by hand on the raw

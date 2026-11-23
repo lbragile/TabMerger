@@ -33,6 +33,6 @@
   },
   "downgrade": {
     "question": "Điều gì xảy ra với các nhóm của tôi nếu tôi hạ cấp?",
-    "answer": "Nếu bạn hạ cấp từ Pro xuống Miễn phí, các nhóm của bạn vẫn được giữ trên đám mây trong 30 ngày. Tab cục bộ của bạn luôn được giữ lại. Bạn có thể xuất mọi thứ trước khi hạ cấp."
+    "answer": "Không có gì bị mất. Các nhóm vẫn nằm trên thiết bị của bạn, và những nhóm vượt quá giới hạn của gói Miễn phí vẫn được giữ lại nhưng bị khóa cho đến khi bạn nâng cấp lại hoặc dọn bớt. Các bản sao đã có trong tài khoản cũng vẫn còn: trên bảng điều khiển, bạn vẫn có thể mở hoặc xóa các phiên đã lưu và tải xuống hoặc xóa các bản sao lưu. Chỉ những thay đổi mới ngừng đồng bộ cho đến khi bạn nâng cấp lại."
   }
 }
