@@ -20,7 +20,7 @@ export const post = {
     {
       question: 'How do I import OneTab into TabMerger?',
       answer:
-        'In OneTab, choose Export / Import URLs, copy the text and save it as a .txt file. In TabMerger, open Settings → Data → Import file and choose it. Each OneTab list becomes its own group.',
+        'In OneTab, choose Import & Export, copy the text and save it as a .txt file. In TabMerger, open Settings → Data → Import file and choose it. Each OneTab list becomes its own group.',
     },
     {
       question: 'Can I import bookmarks into TabMerger?',
@@ -47,7 +47,7 @@ export const post = {
   tags: ['tabmerger-guides', 'save-tabs', 'bookmarks', 'tab-manager'],
   sources: [],
   screenshotsCaptured: '2026-11-21',
-  cover: { src: '/blog/import-tabs-into-tabmerger/tm-imported-light.webp' },
+  cover: { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-light.webp' },
   ogImage: { src: '/blog/import-tabs-into-tabmerger/og.png', alt: 'Import tabs into TabMerger: two OneTab lists imported as groups' },
   toc: [
     { id: 'quick', label: 'Quick answer' },
@@ -95,7 +95,7 @@ Import turns that job into one file and one click.
   rowHeaders
   minWidth="36rem"
   rows={[
-    ['.txt (OneTab)', 'OneTab’s Export / Import URLs text: one “address | title” per line, a blank line between lists', 'One group per list (“Imported 1”, “Imported 2”, …), titles kept'],
+    ['.txt (OneTab)', 'OneTab’s Import & Export text: one “address | title” per line, a blank line between lists', 'One group per list (“Imported 1”, “Imported 2”, …), titles kept'],
     ['.txt (plain list)', 'Addresses, one per line', 'One group per block of lines; the address doubles as the title'],
     ['.html (bookmarks)', 'A bookmarks or favorites export from your browser', 'One group per top-level folder, named after it; folders inside are folded in'],
     ['.json (TabMerger)', 'A file from Export JSON in TabMerger', 'Your groups with windows, names, colours, notes, stars and reminder times'],
