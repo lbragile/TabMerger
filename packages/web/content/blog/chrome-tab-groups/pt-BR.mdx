@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'chrome-tab-groups',
+  title: 'Grupos de abas no Chrome: como salvar, reabrir e sincronizar',
+  seoTitle: 'Grupos de abas do Chrome: salvar, reabrir e sincronizar (e os limites)',
+  description:
+    'Como funcionam os grupos de abas do Chrome: criar, recolher, fechar e reabrir um grupo salvo, o que sincroniza com seus outros dispositivos e o que as extensões conseguem ou não ver.',
+  shareSummary: 'Crie, salve, reabra e sincronize grupos de abas no Chrome, e veja onde eles deixam a desejar.',
+  dek: 'Um grupo fechado não sumiu: ele foi salvo. Veja para onde ele vai, o que acompanha você em outros dispositivos e o que não acompanha.',
+  published: '2026-11-23',
+  updated: '2026-11-23',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Fechar um grupo salva o grupo; reabra pela barra de favoritos ou por ⋮ → Grupos de guias.',
+      source: 'Ajuda do Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Excluir ou desagrupar remove o grupo em todos os dispositivos conectados.', source: 'Ajuda do Chrome' },
+    {
+      text: 'chrome.tabGroups só enxerga grupos em janelas abertas.',
+      source: 'Documentação do chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'As duas configurações de grupos de abas na barra de favoritos estavam ativadas em um Chrome 157 recém-instalado.', source: 'chrome://settings/appearance, 20 nov. 2026' },
+  ],
+  faq: [
+    {
+      question: 'Como salvo um grupo de abas no Chrome?',
+      answer:
+        'Clique com o botão direito no nome do grupo e escolha “Fechar grupo”. O Chrome guarda o grupo, e você o reabre pela barra de favoritos ou por ⋮ → Grupos de guias.',
+    },
+    {
+      question: 'Os grupos de abas do Chrome sincronizam entre dispositivos?',
+      answer:
+        'Os grupos salvos acompanham sua Conta do Google: a ajuda do Chrome avisa que excluir ou desagrupar um grupo remove esse grupo em todos os dispositivos conectados à mesma conta.',
+    },
+    {
+      question: 'Qual é a diferença entre “Fechar grupo” e “Excluir grupo”?',
+      answer: '“Fechar grupo” fecha as abas e guarda o grupo para você reabrir depois. “Excluir grupo” remove o grupo, inclusive nos seus outros dispositivos.',
+    },
+    {
+      question: 'Uma extensão gerenciadora de abas consegue salvar meus grupos fechados do Chrome?',
+      answer:
+        'Não enquanto estiverem fechados: a API de extensões só descreve grupos em janelas abertas. Reabra o grupo primeiro e depois salve com a extensão.',
+    },
+  ],
+  images: [
+    { src: '/blog/chrome-tab-groups/chrome-tab-groups-setting.webp', alt: 'Configurações do Chrome, “Appearance” (Aparência), com “Show tab groups in bookmarks bar” (Mostrar grupos de guias na barra de favoritos) e “Automatically pin new tab groups created on any device to the bookmarks bar” (Fixar novos grupos de guias automaticamente na barra de favoritos) ativadas' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp', alt: 'TabMerger, “Now Open” (Abertas agora): seis abas, três marcadas como Sprint em azul e três como Thesis em verde, tema claro' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-dark.webp', alt: 'TabMerger, “Now Open” (Abertas agora): seis abas, três marcadas como Sprint em azul e três como Thesis em verde, tema escuro' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-light.webp', alt: 'O grupo do TabMerger “Sprint + thesis” com as mesmas seis abas e suas marcas Sprint e Thesis, tema claro' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-dark.webp', alt: 'O grupo do TabMerger “Sprint + thesis” com as mesmas seis abas e suas marcas Sprint e Thesis, tema escuro' },
+  ],
+  tags: ['chrome', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (tab groups with the keyboard)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp' },
+  ogImage: { src: '/blog/chrome-tab-groups/og.png', alt: 'Capa “Chrome tab groups: how to save, reopen and sync them”: um guia do TabMerger, com abas marcadas pelo grupo do Chrome' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'basics', label: 'Criar e recolher' },
+    { id: 'save', label: 'Salvar e reabrir' },
+    { id: 'sync', label: 'Eles sincronizam?' },
+    { id: 'limits', label: 'Os limites' },
+    { id: 'tabmerger', label: 'Guardar os grupos de vez' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Para criar um grupo, clique com o botão direito em uma aba e escolha **Adicionar guia ao grupo** (“Add tab to group”); depois dê um nome e escolha uma cor. Para salvar um grupo, clique com o botão direito no nome dele e escolha **Fechar grupo** (“Close group”): o Chrome guarda o grupo, e você o reabre pela barra de favoritos ou por **⋮ → Grupos de guias** (“Tab groups”). Os grupos salvos acompanham sua Conta do Google, então excluir um grupo exclui esse grupo em todos os lugares. Para guardar seus grupos com segurança de vez, salve-os no [TabMerger](/features): ele mantém o nome e a cor do grupo do Chrome de cada aba e coloca as abas de volta nos grupos quando você as reabre.
+
+</QuickAnswer>
+
+<InstallCta>Mantenha seus grupos de abas do Chrome seguros, fáceis de buscar e sincronizados. Grátis para Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="basics" title="Como funcionam os grupos de abas do Chrome?">
+
+Um grupo de abas (que o Chrome chama de “grupo de guias”) é uma sequência de abas com nome e cor dentro de uma janela.
+
+1. Clique com o botão direito em uma aba e escolha **Adicionar guia ao grupo** → **Novo grupo** (“New group”) ou um grupo existente.
+2. Dê um nome ao grupo e escolha uma cor. Depois, clique com o botão direito no nome para renomear, mudar a cor ou adicionar uma nova aba ao grupo.
+3. Arraste uma aba para dentro do grupo para adicioná-la; clique com o botão direito em uma aba → **Remover do grupo** (“Remove from group”) para tirá-la.
+4. Clique no nome do grupo para recolhê-lo em um único rótulo, e clique de novo para expandi-lo.
+
+Pelo teclado: pressione <Kbd>F6</Kbd> até as abas ficarem em foco, vá até o grupo com <Kbd>Tab</Kbd>, e a tecla Menu abre o menu do grupo. <Kbd>Space</Kbd> ou <Kbd>Enter</Kbd> recolhe o grupo, e <Kbd>Ctrl</Kbd>+<Kbd>←</Kbd>/<Kbd>→</Kbd> move o grupo.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with Close group and Delete group. */}
+
+</Section>
+
+<Section id="save" title="Como salvar um grupo de abas e recuperá-lo?">
+
+**Fechar grupo** é o botão de salvar do Chrome. As abas fecham, o grupo não: o Chrome guarda o grupo e o lista em dois lugares.
+
+- **Barra de favoritos:** um ícone de grade com o nome do grupo. Clique nele para reabrir.
+- **Menu ⋮ → Grupos de guias:** seus grupos salvos.
+
+Duas configurações em **Configurações → Aparência** (“Settings → Appearance”) controlam a parte da barra de favoritos. As duas estavam ativadas em um perfil novo do Chrome 157.
+
+<AnnotatedFigure src="/blog/chrome-tab-groups/chrome-tab-groups-setting.webp" alt="Configurações do Chrome, “Appearance” (Aparência), com “Show tab groups in bookmarks bar” (Mostrar grupos de guias na barra de favoritos) e “Automatically pin new tab groups created on any device to the bookmarks bar” (Fixar novos grupos de guias automaticamente na barra de favoritos) ativadas" width={1600} height={844} eager boxes={[{ id: 'tab-groups-setting', label: 'Mostrar na barra de favoritos' }, { id: 'auto-pin', label: 'Fixar grupos novos' }]} source="chrome://settings/appearance · Chrome 157.0.8103.80">As duas configurações de grupos de abas na página “Appearance” (Aparência) do Chrome.</AnnotatedFigure>
+
+<Catch>um grupo salvo guarda só endereços. Não é um backup: exclua uma vez e ele some de todos os dispositivos.</Catch>
+
+</Section>
+
+<Section id="sync" title="Os grupos de abas sincronizam entre dispositivos?">
+
+Sim, pela sua Conta do Google. A ajuda do Chrome é explícita sobre o efeito colateral: quando você **exclui** um grupo, ou **desagrupa** as abas dele (**Desagrupar**, “Ungroup”), o grupo é removido do seu dispositivo *e* de todos os outros conectados à mesma conta. A configuração **Fixar novos grupos de guias automaticamente na barra de favoritos** (“Automatically pin new tab groups created on any device to the bookmarks bar”) também fixa grupos que você criou em outro lugar.
+
+Na prática, isso significa que:
+
+- Grupos criados em um computador podem aparecer em outro conectado à mesma conta; é a isso que a configuração de fixar se refere.
+- Fazer uma limpeza no notebook exclui os mesmos grupos no desktop.
+
+O Firefox 159 também tem grupos de abas, com **Salvar e fechar grupo** (“Save and close group”) e uma lista de **Grupos fechados** (“Closed Groups”); os passos e as capturas de tela deste guia são do Chrome. Quem usa Firefox pode ver [Grupos de abas no Firefox](/blog/firefox-tab-groups).
+
+</Section>
+
+<Section id="limits" title="Onde os grupos de abas deixam a desejar?">
+
+- **Uma janela cada.** Um grupo vive em uma janela. Salvar “tudo o que tenho aberto” em três janelas significa três grupos ou mais.
+- **Só endereços.** Como um favorito, um grupo salvo recarrega a página do zero: a posição de rolagem e o que foi digitado nos formulários se perdem.
+- **Invisíveis para extensões enquanto fechados.** A API `chrome.tabGroups` descreve os grupos que estão em uma janela aberta: todo grupo que ela retorna tem um `windowId`, fechar um grupo dispara `onRemoved`, e não existe nenhuma chamada que liste os grupos salvos e fechados. Um gerenciador de abas não consegue fazer backup de um grupo que você fechou até você reabri-lo.
+- **Exclusões viajam.** A sincronização que torna os grupos tão práticos também espalha um erro para todos os dispositivos.
+
+Nosso guia para [salvar todas as abas abertas](/blog/save-all-open-tabs) compara os grupos com favoritos, a restauração ao iniciar e os gerenciadores de sessão, e a [rotina para quem tem abas demais](/blog/manage-too-many-tabs) mostra onde os grupos se encaixam no dia a dia.
+
+</Section>
+
+<Section id="tabmerger" title="Guarde seus grupos de vez com o TabMerger">
+
+O [TabMerger](/features), nossa extensão gratuita para Chrome, Edge e Firefox, lê seus grupos de abas do Chrome que estão abertos. **Abertas agora** marca cada aba com o nome e a cor do grupo dela, e salvar uma janela em um grupo do TabMerger mantém essas marcas. Salvas ali, as abas ficam intactas quando um grupo do Chrome é excluído em outro dispositivo.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Salvar grupos de abas do Chrome no TabMerger" steps={[{ title: 'Abertas agora' }, { title: 'Grupo salvo' }]}>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-now-open-groups" alt="TabMerger, “Now Open” (Abertas agora): seis abas, três marcadas como Sprint em azul e três como Thesis em verde, tema claro" darkAlt="TabMerger, “Now Open” (Abertas agora): seis abas, três marcadas como Sprint em azul e três como Thesis em verde, tema escuro" boxes={[{ id: 'group-badge-1', label: 'Grupo Sprint' }, { id: 'group-badge-4', label: 'Grupo Thesis' }]} source="TabMerger 3.16.1">Dois grupos de abas do Chrome, Sprint e Thesis, como “Now Open” (Abertas agora) os mostra.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-saved-groups" alt="O grupo do TabMerger “Sprint + thesis” com as mesmas seis abas e suas marcas Sprint e Thesis, tema claro" darkAlt="O grupo do TabMerger “Sprint + thesis” com as mesmas seis abas e suas marcas Sprint e Thesis, tema escuro" boxes={[{ id: 'group-badge-1', label: 'Grupo Sprint' }, { id: 'group-badge-4', label: 'Grupo Thesis' }]} source="TabMerger 3.16.1">Depois de “Merge with current” (Mesclar com as atuais): o grupo salvo mantém o grupo do Chrome de cada aba.</ThemedScreenshot>
+</Carousel>
+
+Reabra a janela salva no Chrome ou no Edge e as abas dela voltam para grupos de abas com os mesmos nomes e cores.
+
+<InstallCta>Grátis para Chrome, Edge e Firefox. Não precisa de conta para começar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

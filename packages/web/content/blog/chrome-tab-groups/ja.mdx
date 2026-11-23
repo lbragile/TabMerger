@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'chrome-tab-groups',
+  title: 'Chrome のタブグループ：保存、再表示、同期のしかた',
+  seoTitle: 'Chrome タブグループの保存・再表示・同期（とその限界）',
+  description:
+    'Chrome のタブグループの仕組みを解説します。作成、折りたたみ、閉じる操作、保存したグループを開き直す方法、他のデバイスに同期されるもの、拡張機能から見えるものと見えないもの。',
+  shareSummary: 'Chrome のタブグループを作成、保存、再表示、同期する方法と、その弱点。',
+  dek: '閉じたグループは消えたわけではなく、保存されています。保存先、他のデバイスに引き継がれるもの、引き継がれないものを見ていきます。',
+  published: '2026-11-23',
+  updated: '2026-11-23',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'グループを閉じると保存され、ブックマーク バーか ⋮ →「タブグループ」から開き直せます。',
+      source: 'Chrome ヘルプ',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'グループを削除または解除すると、ログイン中のすべてのデバイスから消えます。', source: 'Chrome ヘルプ' },
+    {
+      text: 'chrome.tabGroups から見えるのは、開いているウィンドウのグループだけです。',
+      source: 'chrome.tabGroups のドキュメント',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'ブックマーク バーに関する 2 つのタブグループ設定は、新規インストールの Chrome 157 でどちらもオンでした。', source: 'chrome://settings/appearance、2026年11月20日' },
+  ],
+  faq: [
+    {
+      question: 'Chrome でタブグループを保存するには？',
+      answer:
+        'グループ名を右クリックして「グループを閉じる」を選びます。グループは Chrome に残り、ブックマーク バーか ⋮ →「タブグループ」から開き直せます。',
+    },
+    {
+      question: 'Chrome のタブグループはデバイス間で同期されますか？',
+      answer:
+        '保存したグループは Google アカウントに紐づきます。Chrome ヘルプには、グループを削除または解除すると、同じアカウントでログインしているすべてのデバイスから消えるという注意書きがあります。',
+    },
+    {
+      question: '「グループを閉じる」と「グループを削除」の違いは？',
+      answer: '「グループを閉じる」はタブを閉じ、グループを残して後で開き直せるようにします。「グループを削除」はグループそのものを消し、他のデバイスからも消えます。',
+    },
+    {
+      question: 'タブ管理の拡張機能で、閉じた Chrome のグループを保存できますか？',
+      answer:
+        '閉じている間はできません。拡張機能の API が扱うのは、開いているウィンドウのグループだけだからです。まずグループを開き直してから、拡張機能で保存してください。',
+    },
+  ],
+  images: [
+    { src: '/blog/chrome-tab-groups/chrome-tab-groups-setting.webp', alt: 'Chrome の設定の「Appearance」（デザイン）。「Show tab groups in bookmarks bar」（ブックマーク バーにタブグループを表示する）と「Automatically pin new tab groups created on any device to the bookmarks bar」（新しいタブグループをブックマーク バーに自動的に固定する）がどちらもオン' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp', alt: 'TabMerger の「Now Open」（現在開いているタブ）。6 つのタブのうち 3 つに青の Sprint、3 つに緑の Thesis のタグ。ライトテーマ' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-dark.webp', alt: 'TabMerger の「Now Open」（現在開いているタブ）。6 つのタブのうち 3 つに青の Sprint、3 つに緑の Thesis のタグ。ダークテーマ' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-light.webp', alt: 'TabMerger のグループ「Sprint + thesis」。同じ 6 つのタブが Sprint と Thesis のタグ付きで入っている。ライトテーマ' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-dark.webp', alt: 'TabMerger のグループ「Sprint + thesis」。同じ 6 つのタブが Sprint と Thesis のタグ付きで入っている。ダークテーマ' },
+  ],
+  tags: ['chrome', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (tab groups with the keyboard)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp' },
+  ogImage: { src: '/blog/chrome-tab-groups/og.png', alt: 'タイトルカード「Chrome tab groups: how to save, reopen and sync them」。Chrome のグループ名でタグ付けされたタブが並ぶ TabMerger のガイド' },
+  toc: [
+    { id: 'quick', label: '簡単な答え' },
+    { id: 'basics', label: '作成と折りたたみ' },
+    { id: 'save', label: '保存と再表示' },
+    { id: 'sync', label: '同期されるか' },
+    { id: 'limits', label: 'タブグループの限界' },
+    { id: 'tabmerger', label: 'グループをずっと残す' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+}
+
+<QuickAnswer>
+
+グループを作るには、タブを右クリックして「**タブをグループに追加**」（Add tab to group）を選び、名前と色を決めます。グループを保存するには、グループ名を右クリックして「**グループを閉じる**」（Close group）を選びます。グループは Chrome に残り、ブックマーク バーか **⋮ →「タブグループ」**（Tab groups）から開き直せます。保存したグループは Google アカウントに紐づくため、1 か所で削除するとすべてのデバイスから消えます。グループをずっと安全に残したいなら [TabMerger](/features) に保存しましょう。各タブの Chrome グループの名前と色を記録し、開き直すとタブをグループに戻します。
+
+</QuickAnswer>
+
+<InstallCta>Chrome のタブグループを安全に、検索できる形で、同期して残せます。Chrome、Edge、Firefox に無料で追加できます。</InstallCta>
+
+<Section id="basics" title="Chrome のタブグループの仕組み">
+
+タブグループは、1 つのウィンドウの中で名前と色が付いたタブのまとまりです。
+
+1. タブを右クリックして「**タブをグループに追加**」→「**新しいグループ**」（New group）または既存のグループを選びます。
+2. グループに名前を付け、色を選びます。あとから名前を右クリックすれば、名前の変更、色の変更、新しいタブの追加ができます。
+3. タブをグループにドラッグすると追加できます。外すときは、タブを右クリック →「**グループから削除**」（Remove from group）を選びます。
+4. グループ名をクリックするとラベル 1 つに折りたたまれ、もう一度クリックすると展開されます。
+
+キーボードの場合：タブにフォーカスが移るまで <Kbd>F6</Kbd> を押し、<Kbd>Tab</Kbd> でグループに移動すると、メニューキーでグループのメニューが開きます。<Kbd>Space</Kbd> か <Kbd>Enter</Kbd> で折りたたみ、<Kbd>Ctrl</Kbd>+<Kbd>←</Kbd>/<Kbd>→</Kbd> で移動できます。
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with Close group and Delete group. */}
+
+</Section>
+
+<Section id="save" title="タブグループを保存して元に戻すには">
+
+「**グループを閉じる**」が Chrome の保存ボタンです。タブは閉じますが、グループは閉じません。Chrome はグループを残し、2 か所に表示します。
+
+- **ブックマーク バー：** グループ名の付いたグリッドアイコン。クリックすると開き直せます。
+- **⋮ メニュー →「タブグループ」：** 保存したグループの一覧。
+
+ブックマーク バーへの表示は、**設定 →「デザイン」**（Settings → Appearance）にある 2 つの設定で決まります。新しい Chrome 157 のプロファイルでは、どちらもオンでした。
+
+<AnnotatedFigure src="/blog/chrome-tab-groups/chrome-tab-groups-setting.webp" alt="Chrome の設定の「Appearance」（デザイン）。「Show tab groups in bookmarks bar」（ブックマーク バーにタブグループを表示する）と「Automatically pin new tab groups created on any device to the bookmarks bar」（新しいタブグループをブックマーク バーに自動的に固定する）がどちらもオン" width={1600} height={844} eager boxes={[{ id: 'tab-groups-setting', label: 'ブックマーク バーに表示' }, { id: 'auto-pin', label: '新しいグループを固定' }]} source="chrome://settings/appearance · Chrome 157.0.8103.80">Chrome の「Appearance」（デザイン）ページにある 2 つのタブグループ設定。</AnnotatedFigure>
+
+<Catch>保存したグループに入っているのはアドレスだけです。バックアップではないので、一度削除するとすべてのデバイスから消えます。</Catch>
+
+</Section>
+
+<Section id="sync" title="タブグループはデバイス間で同期されるか">
+
+はい、Google アカウントを通じて同期されます。Chrome ヘルプは副作用をはっきり書いています。グループを**削除**したり、タブの**グループを解除**（Ungroup）したりすると、そのグループはお使いのデバイス*だけでなく*、同じアカウントでログインしている他のすべてのデバイスからも消えます。また「**新しいタブグループをブックマーク バーに自動的に固定する**」（Automatically pin new tab groups created on any device to the bookmarks bar）の設定は、別のデバイスで作ったグループも固定します。
+
+実際には、次のようなことが起こります。
+
+- あるパソコンで作ったグループが、同じアカウントでログインしている別のパソコンに現れることがあります。固定の設定が指しているのはこのことです。
+- ノートパソコンで整理すると、デスクトップの同じグループも消えます。
+
+Firefox 159 にもタブグループがあり、「**グループを保存して閉じる**」（Save and close group）と「**閉じたグループ**」（Closed Groups）の一覧があります。このガイドの手順とスクリーンショットは Chrome のものです。Firefox をお使いなら [Firefox のタブグループ](/blog/firefox-tab-groups)をご覧ください。
+
+</Section>
+
+<Section id="limits" title="タブグループの弱点">
+
+- **1 グループにつき 1 ウィンドウ。** グループは 1 つのウィンドウの中にしか存在しません。3 つのウィンドウにまたがる「開いているものすべて」を保存するには、3 つ以上のグループが必要です。
+- **保存されるのはアドレスだけ。** ブックマークと同じく、保存したグループはページを最初から読み込み直します。スクロール位置やフォームへの入力は失われます。
+- **閉じている間は拡張機能から見えない。** `chrome.tabGroups` API が扱うのは、開いているウィンドウにあるグループです。返されるグループにはどれも `windowId` があり、グループを閉じると `onRemoved` が発生し、保存済みの閉じたグループを一覧にする呼び出しはありません。閉じたグループは、開き直すまでタブ管理ツールでバックアップできません。
+- **削除も同期される。** グループを便利にしている同期が、誤操作もすべてのデバイスに広げます。
+
+[開いているタブをすべて保存する](/blog/save-all-open-tabs)ガイドでは、グループをブックマーク、起動時の復元、セッション管理ツールと比較しています。[タブが多すぎるときの習慣](/blog/manage-too-many-tabs)では、日々の作業の中でグループをどう使うかを紹介しています。
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger でグループをずっと残す">
+
+Chrome、Edge、Firefox に対応した無料の拡張機能 [TabMerger](/features) は、開いている Chrome のタブグループを読み取ります。「**現在開いているタブ**」では各タブにグループの名前と色のタグが付き、ウィンドウを TabMerger のグループに保存してもそのタグは残ります。ここに保存しておけば、別のデバイスで Chrome のグループが削除されてもタブは影響を受けません。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Chrome のタブグループを TabMerger に保存する" steps={[{ title: '現在開いているタブ' }, { title: '保存したグループ' }]}>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-now-open-groups" alt="TabMerger の「Now Open」（現在開いているタブ）。6 つのタブのうち 3 つに青の Sprint、3 つに緑の Thesis のタグ。ライトテーマ" darkAlt="TabMerger の「Now Open」（現在開いているタブ）。6 つのタブのうち 3 つに青の Sprint、3 つに緑の Thesis のタグ。ダークテーマ" boxes={[{ id: 'group-badge-1', label: 'Sprint グループ' }, { id: 'group-badge-4', label: 'Thesis グループ' }]} source="TabMerger 3.16.1">「Now Open」（現在開いているタブ）に表示された 2 つの Chrome タブグループ、Sprint と Thesis。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-saved-groups" alt="TabMerger のグループ「Sprint + thesis」。同じ 6 つのタブが Sprint と Thesis のタグ付きで入っている。ライトテーマ" darkAlt="TabMerger のグループ「Sprint + thesis」。同じ 6 つのタブが Sprint と Thesis のタグ付きで入っている。ダークテーマ" boxes={[{ id: 'group-badge-1', label: 'Sprint グループ' }, { id: 'group-badge-4', label: 'Thesis グループ' }]} source="TabMerger 3.16.1">「Merge with current」（現在の内容と統合）の後も、保存したグループは各タブの Chrome グループを保っています。</ThemedScreenshot>
+</Carousel>
+
+保存したウィンドウを Chrome か Edge で開き直すと、タブは同じ名前と色のタブグループに戻ります。
+
+<InstallCta>Chrome、Edge、Firefox に無料で追加できます。使い始めるのにアカウントは不要です。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

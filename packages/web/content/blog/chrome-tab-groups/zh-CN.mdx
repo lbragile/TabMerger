@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'chrome-tab-groups',
+  title: 'Chrome 标签页分组：如何保存、重新打开和同步',
+  seoTitle: 'Chrome 标签页分组：保存、重新打开与同步（以及局限）',
+  description:
+    'Chrome 标签页分组的工作方式：创建、收起、关闭和重新打开已保存的分组，哪些内容会同步到你的其他设备，以及扩展程序能看到什么、看不到什么。',
+  shareSummary: '创建、保存、重新打开和同步 Chrome 标签页分组，以及它的不足之处。',
+  dek: '关闭的分组并没有消失，而是被保存了。下面说明它去了哪里、哪些会跟随你到其他设备、哪些不会。',
+  published: '2026-11-23',
+  updated: '2026-11-23',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: '关闭分组即会保存它；可从书签栏或 ⋮ →“标签页分组”重新打开。',
+      source: 'Chrome 帮助',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: '删除分组或取消分组，会在所有已登录的设备上移除该分组。', source: 'Chrome 帮助' },
+    {
+      text: 'chrome.tabGroups 只能看到已打开窗口中的分组。',
+      source: 'chrome.tabGroups 文档',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: '在全新安装的 Chrome 157 中，与书签栏相关的两项标签页分组设置都是开启的。', source: 'chrome://settings/appearance，2026 年 11 月 20 日' },
+  ],
+  faq: [
+    {
+      question: '如何在 Chrome 中保存标签页分组？',
+      answer:
+        '右键点击分组名称，选择“关闭组”。Chrome 会保留这个分组，你可以从书签栏或 ⋮ →“标签页分组”重新打开它。',
+    },
+    {
+      question: 'Chrome 标签页分组会在设备之间同步吗？',
+      answer:
+        '已保存的分组跟随你的 Google 账号：Chrome 帮助提醒，删除分组或取消分组后，该分组会从登录了同一账号的所有设备上移除。',
+    },
+    {
+      question: '“关闭组”和“删除分组”有什么区别？',
+      answer: '“关闭组”会关闭标签页，但保留分组以便日后重新打开。“删除分组”会移除分组，你的其他设备上也会一并移除。',
+    },
+    {
+      question: '标签页管理扩展程序能保存我已关闭的 Chrome 分组吗？',
+      answer:
+        '分组关闭期间不能：扩展程序 API 只描述已打开窗口中的分组。请先重新打开该分组，再用扩展程序保存。',
+    },
+  ],
+  images: [
+    { src: '/blog/chrome-tab-groups/chrome-tab-groups-setting.webp', alt: 'Chrome 设置的“Appearance”（外观）页面，“Show tab groups in bookmarks bar”（在书签栏中显示标签页分组）和“Automatically pin new tab groups created on any device to the bookmarks bar”（自动将新标签页分组固定到书签栏）均已开启' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp', alt: 'TabMerger 的“Now Open”（当前打开）：六个标签页，三个带蓝色 Sprint 标记，三个带绿色 Thesis 标记，浅色主题' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-dark.webp', alt: 'TabMerger 的“Now Open”（当前打开）：六个标签页，三个带蓝色 Sprint 标记，三个带绿色 Thesis 标记，深色主题' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-light.webp', alt: 'TabMerger 分组“Sprint + thesis”，包含同样的六个标签页及其 Sprint 和 Thesis 标记，浅色主题' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-dark.webp', alt: 'TabMerger 分组“Sprint + thesis”，包含同样的六个标签页及其 Sprint 和 Thesis 标记，深色主题' },
+  ],
+  tags: ['chrome', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (tab groups with the keyboard)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp' },
+  ogImage: { src: '/blog/chrome-tab-groups/og.png', alt: '标题卡“Chrome tab groups: how to save, reopen and sync them”：一篇 TabMerger 指南，图中的标签页按所属 Chrome 分组加了标记' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'basics', label: '创建与收起' },
+    { id: 'save', label: '保存与重新打开' },
+    { id: 'sync', label: '会同步吗？' },
+    { id: 'limits', label: '局限' },
+    { id: 'tabmerger', label: '长期保留分组' },
+    { id: 'faq', label: '常见问题' },
+  ],
+}
+
+<QuickAnswer>
+
+右键点击一个标签页，选择“向分组中添加标签页”（Add tab to group）即可新建分组，然后为它命名并选择颜色。要保存分组，右键点击分组名称并选择“关闭组”（Close group）：Chrome 会保留这个分组，你可以从书签栏或 ⋮ →“标签页分组”（Tab groups）重新打开它。已保存的分组跟随你的 Google 账号，所以在一处删除，各处都会删除。想让分组长期安全保存，可以把它们存进 [TabMerger](/features)：它会记下每个标签页所属 Chrome 分组的名称和颜色，重新打开时再把标签页放回分组。
+
+</QuickAnswer>
+
+<InstallCta>让你的 Chrome 标签页分组安全保存、可以搜索并保持同步。免费用于 Chrome、Edge 和 Firefox。</InstallCta>
+
+<Section id="basics" title="Chrome 标签页分组如何使用？">
+
+标签页分组是同一窗口中一组带名称和颜色的标签页。
+
+1. 右键点击一个标签页，依次选择“向分组中添加标签页”→“新建组”（New group）或现有分组。
+2. 为分组命名并选择颜色。之后右键点击名称，可以重命名、更换颜色或向分组添加新标签页。
+3. 把标签页拖进分组即可添加；右键点击标签页 →“从分组中移除”（Remove from group）即可移出。
+4. 点击分组名称可将它收起为一个标签，再次点击即可展开。
+
+使用键盘：按 <Kbd>F6</Kbd> 直到焦点移到标签页上，按 <Kbd>Tab</Kbd> 移到分组，然后按菜单键打开分组菜单。<Kbd>Space</Kbd> 或 <Kbd>Enter</Kbd> 可收起分组，<Kbd>Ctrl</Kbd>+<Kbd>←</Kbd>/<Kbd>→</Kbd> 可移动分组。
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with Close group and Delete group. */}
+
+</Section>
+
+<Section id="save" title="如何保存标签页分组并找回？">
+
+“关闭组”就是 Chrome 的保存按钮。标签页会关闭，分组却不会：Chrome 会保留它，并在两个地方列出。
+
+- **书签栏：** 一个带分组名称的网格图标，点击即可重新打开。
+- **⋮ 菜单 →“标签页分组”：** 你保存的分组。
+
+书签栏部分由“设置”→“外观”（Settings → Appearance）下的两项设置控制。在全新的 Chrome 157 个人资料中，这两项都是开启的。
+
+<AnnotatedFigure src="/blog/chrome-tab-groups/chrome-tab-groups-setting.webp" alt="Chrome 设置的“Appearance”（外观）页面，“Show tab groups in bookmarks bar”（在书签栏中显示标签页分组）和“Automatically pin new tab groups created on any device to the bookmarks bar”（自动将新标签页分组固定到书签栏）均已开启" width={1600} height={844} eager boxes={[{ id: 'tab-groups-setting', label: '在书签栏中显示' }, { id: 'auto-pin', label: '固定新分组' }]} source="chrome://settings/appearance · Chrome 157.0.8103.80">Chrome“Appearance”（外观）页面中的两项标签页分组设置。</AnnotatedFigure>
+
+<Catch>已保存的分组只记录网址。它不是备份：删除一次，所有设备上都会消失。</Catch>
+
+</Section>
+
+<Section id="sync" title="标签页分组会在设备之间同步吗？">
+
+会，通过你的 Google 账号同步。Chrome 帮助对副作用写得很明确：当你**删除**分组，或对其中的标签页**取消分组**（Ungroup）时，该分组会从你的设备*以及*登录了同一账号的所有其他设备上移除。“自动将新标签页分组固定到书签栏”（Automatically pin new tab groups created on any device to the bookmarks bar）这项设置还会固定你在其他地方创建的分组。
+
+实际意味着：
+
+- 你在一台电脑上创建的分组，可能会出现在登录了同一账号的另一台电脑上；固定设置指的正是这个。
+- 在笔记本电脑上清理分组，台式机上的同一批分组也会被删除。
+
+Firefox 159 也有标签页分组，提供“保存群组并关闭”（Save and close group）和“关闭的群组”（Closed Groups）列表；本指南的步骤和截图均来自 Chrome。Firefox 用户请参阅 [Firefox 标签页分组](/blog/firefox-tab-groups)。
+
+</Section>
+
+<Section id="limits" title="标签页分组有哪些不足？">
+
+- **每个分组只在一个窗口里。** 分组只存在于一个窗口中。要保存分布在三个窗口里的“所有打开的内容”，就需要三个或更多分组。
+- **只保存网址。** 和书签一样，已保存的分组会重新加载页面：滚动位置和表单中填写的内容都会丢失。
+- **关闭后扩展程序看不到。** `chrome.tabGroups` API 描述的是位于已打开窗口中的分组：它返回的每个分组都有 `windowId`，关闭分组会触发 `onRemoved`，也没有任何调用能列出已保存、已关闭的分组。在你重新打开之前，标签页管理工具无法备份你关闭的分组。
+- **删除也会同步。** 让分组用起来很方便的同步，也会把一次误操作带到所有设备上。
+
+我们的[保存所有打开的标签页](/blog/save-all-open-tabs)指南把分组与书签、启动时恢复和会话管理器做了对比，[标签页太多时的整理方法](/blog/manage-too-many-tabs)则介绍了分组在日常使用中的位置。
+
+</Section>
+
+<Section id="tabmerger" title="用 TabMerger 长期保留你的分组">
+
+[TabMerger](/features) 是我们为 Chrome、Edge 和 Firefox 推出的免费扩展程序，它能读取你已打开的 Chrome 标签页分组。“当前打开”会为每个标签页标上所属分组的名称和颜色，把窗口保存到 TabMerger 分组时，这些标记也会保留。保存在那里之后，即使另一台设备上的 Chrome 分组被删除，这些标签页也不受影响。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="在 TabMerger 中保存 Chrome 标签页分组" steps={[{ title: '当前打开' }, { title: '已保存的分组' }]}>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-now-open-groups" alt="TabMerger 的“Now Open”（当前打开）：六个标签页，三个带蓝色 Sprint 标记，三个带绿色 Thesis 标记，浅色主题" darkAlt="TabMerger 的“Now Open”（当前打开）：六个标签页，三个带蓝色 Sprint 标记，三个带绿色 Thesis 标记，深色主题" boxes={[{ id: 'group-badge-1', label: 'Sprint 分组' }, { id: 'group-badge-4', label: 'Thesis 分组' }]} source="TabMerger 3.16.1">“Now Open”（当前打开）中显示的两个 Chrome 标签页分组：Sprint 和 Thesis。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-saved-groups" alt="TabMerger 分组“Sprint + thesis”，包含同样的六个标签页及其 Sprint 和 Thesis 标记，浅色主题" darkAlt="TabMerger 分组“Sprint + thesis”，包含同样的六个标签页及其 Sprint 和 Thesis 标记，深色主题" boxes={[{ id: 'group-badge-1', label: 'Sprint 分组' }, { id: 'group-badge-4', label: 'Thesis 分组' }]} source="TabMerger 3.16.1">执行“Merge with current”（与当前合并）后：已保存的分组保留了每个标签页所属的 Chrome 分组。</ThemedScreenshot>
+</Carousel>
+
+在 Chrome 或 Edge 中重新打开保存的窗口，其中的标签页会回到名称和颜色都相同的标签页分组中。
+
+<InstallCta>免费用于 Chrome、Edge 和 Firefox。无需账号即可开始使用。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

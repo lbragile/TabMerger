@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'chrome-tab-groups',
+  title: 'Grupos de pestañas en Chrome: cómo guardarlos, reabrirlos y sincronizarlos',
+  seoTitle: 'Grupos de pestañas de Chrome: guardar, reabrir y sincronizar (y sus límites)',
+  description:
+    'Cómo funcionan los grupos de pestañas de Chrome: crearlos, contraerlos, cerrarlos y reabrir un grupo guardado, qué se sincroniza con tus otros dispositivos y qué pueden ver las extensiones y qué no.',
+  shareSummary: 'Crea, guarda, reabre y sincroniza grupos de pestañas en Chrome, y descubre dónde se quedan cortos.',
+  dek: 'Un grupo cerrado no desaparece: se guarda. Aquí verás adónde va, qué te sigue a otros dispositivos y qué no.',
+  published: '2026-11-23',
+  updated: '2026-11-23',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Cerrar un grupo lo guarda; se reabre desde la barra de marcadores o desde ⋮ → Grupos de pestañas.',
+      source: 'Ayuda de Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Eliminar o desagrupar un grupo lo quita en todos los dispositivos con la sesión iniciada.', source: 'Ayuda de Chrome' },
+    {
+      text: 'chrome.tabGroups solo ve los grupos de las ventanas abiertas.',
+      source: 'Documentación de chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'Los dos ajustes de grupos de pestañas en la barra de marcadores estaban activados en un Chrome 157 recién instalado.', source: 'chrome://settings/appearance, 20 nov. 2026' },
+  ],
+  faq: [
+    {
+      question: '¿Cómo guardo un grupo de pestañas en Chrome?',
+      answer:
+        'Haz clic con el botón derecho en el nombre del grupo y elige «Cerrar grupo». Chrome lo conserva y puedes reabrirlo desde la barra de marcadores o desde ⋮ → Grupos de pestañas.',
+    },
+    {
+      question: '¿Los grupos de pestañas de Chrome se sincronizan entre dispositivos?',
+      answer:
+        'Los grupos guardados siguen a tu cuenta de Google: la ayuda de Chrome advierte que eliminar o desagrupar un grupo lo quita en todos los dispositivos que tengan iniciada la sesión con la misma cuenta.',
+    },
+    {
+      question: '¿Qué diferencia hay entre «Cerrar grupo» y «Eliminar grupo»?',
+      answer: '«Cerrar grupo» cierra las pestañas y conserva el grupo para reabrirlo más tarde. «Eliminar grupo» lo borra, también en tus otros dispositivos.',
+    },
+    {
+      question: '¿Puede una extensión de gestión de pestañas guardar mis grupos cerrados de Chrome?',
+      answer:
+        'No mientras estén cerrados: la API de extensiones solo describe los grupos de las ventanas abiertas. Primero reabre el grupo y después guárdalo con la extensión.',
+    },
+  ],
+  images: [
+    { src: '/blog/chrome-tab-groups/chrome-tab-groups-setting.webp', alt: 'Configuración de Chrome, «Appearance» (Aspecto), con «Show tab groups in bookmarks bar» (Mostrar grupos de pestañas en la barra de marcadores) y «Automatically pin new tab groups created on any device to the bookmarks bar» (Fijar automáticamente nuevos grupos de pestañas a la barra de marcadores) activados' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp', alt: 'TabMerger, «Now Open» (Abiertas ahora): seis pestañas, tres etiquetadas como Sprint en azul y tres como Thesis en verde, tema claro' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-dark.webp', alt: 'TabMerger, «Now Open» (Abiertas ahora): seis pestañas, tres etiquetadas como Sprint en azul y tres como Thesis en verde, tema oscuro' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-light.webp', alt: 'El grupo de TabMerger «Sprint + thesis» con las mismas seis pestañas y sus etiquetas Sprint y Thesis, tema claro' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-dark.webp', alt: 'El grupo de TabMerger «Sprint + thesis» con las mismas seis pestañas y sus etiquetas Sprint y Thesis, tema oscuro' },
+  ],
+  tags: ['chrome', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (tab groups with the keyboard)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp' },
+  ogImage: { src: '/blog/chrome-tab-groups/og.png', alt: 'Portada «Chrome tab groups: how to save, reopen and sync them»: una guía de TabMerger, con pestañas etiquetadas según su grupo de Chrome' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'basics', label: 'Crear y contraer' },
+    { id: 'save', label: 'Guardar y reabrir' },
+    { id: 'sync', label: '¿Se sincronizan?' },
+    { id: 'limits', label: 'Los límites' },
+    { id: 'tabmerger', label: 'Conservar los grupos' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Para crear un grupo, haz clic con el botón derecho en una pestaña y elige **Añadir pestaña al grupo** («Add tab to group»); después ponle nombre y elige un color. Para guardar un grupo, haz clic con el botón derecho en su nombre y elige **Cerrar grupo** («Close group»): Chrome lo conserva y puedes reabrirlo desde la barra de marcadores o desde **⋮ → Grupos de pestañas** («Tab groups»). Los grupos guardados siguen a tu cuenta de Google, así que si eliminas uno, se elimina en todas partes. Para tener tus grupos a salvo para siempre, guárdalos en [TabMerger](/features): conserva el nombre y el color del grupo de Chrome de cada pestaña y las vuelve a agrupar cuando las reabres.
+
+</QuickAnswer>
+
+<InstallCta>Mantén tus grupos de pestañas de Chrome a salvo, fáciles de buscar y sincronizados. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+<Section id="basics" title="¿Cómo funcionan los grupos de pestañas de Chrome?">
+
+Un grupo de pestañas es una fila de pestañas con nombre y color dentro de una ventana.
+
+1. Haz clic con el botón derecho en una pestaña y elige **Añadir pestaña al grupo** → **Nuevo grupo** («New group») o uno ya creado.
+2. Ponle nombre al grupo y elige un color. Más tarde, haz clic con el botón derecho en el nombre para cambiarlo, cambiar el color o añadirle una pestaña nueva.
+3. Arrastra una pestaña al grupo para añadirla; para sacarla, haz clic con el botón derecho en ella → **Eliminar del grupo** («Remove from group»).
+4. Haz clic en el nombre del grupo para contraerlo a una sola etiqueta, y otra vez para expandirlo.
+
+Con el teclado: pulsa <Kbd>F6</Kbd> hasta que el foco esté en las pestañas, ve al grupo con <Kbd>Tab</Kbd> y la tecla de menú abre el menú del grupo. <Kbd>Space</Kbd> o <Kbd>Enter</Kbd> lo contrae, y <Kbd>Ctrl</Kbd>+<Kbd>←</Kbd>/<Kbd>→</Kbd> lo mueve.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with Close group and Delete group. */}
+
+</Section>
+
+<Section id="save" title="¿Cómo guardo un grupo de pestañas y lo recupero?">
+
+**Cerrar grupo** es el botón de guardar de Chrome. Las pestañas se cierran, pero el grupo no: Chrome lo conserva y lo muestra en dos sitios.
+
+- **Barra de marcadores:** un icono de cuadrícula con el nombre del grupo. Haz clic en él para reabrirlo.
+- **Menú ⋮ → Grupos de pestañas:** tus grupos guardados.
+
+Dos ajustes de **Configuración → Aspecto** («Settings → Appearance») controlan la parte de la barra de marcadores. Los dos estaban activados en un perfil nuevo de Chrome 157.
+
+<AnnotatedFigure src="/blog/chrome-tab-groups/chrome-tab-groups-setting.webp" alt="Configuración de Chrome, «Appearance» (Aspecto), con «Show tab groups in bookmarks bar» (Mostrar grupos de pestañas en la barra de marcadores) y «Automatically pin new tab groups created on any device to the bookmarks bar» (Fijar automáticamente nuevos grupos de pestañas a la barra de marcadores) activados" width={1600} height={844} eager boxes={[{ id: 'tab-groups-setting', label: 'Mostrar en la barra de marcadores' }, { id: 'auto-pin', label: 'Fijar grupos nuevos' }]} source="chrome://settings/appearance · Chrome 157.0.8103.80">Los dos ajustes de grupos de pestañas en la página «Appearance» (Aspecto) de Chrome.</AnnotatedFigure>
+
+<Catch>un grupo guardado solo contiene direcciones. No es una copia de seguridad: si lo eliminas una vez, desaparece de todos tus dispositivos.</Catch>
+
+</Section>
+
+<Section id="sync" title="¿Los grupos de pestañas se sincronizan entre dispositivos?">
+
+Sí, a través de tu cuenta de Google. La ayuda de Chrome deja claro el efecto secundario: cuando **eliminas** un grupo o **desagrupas** sus pestañas (**Desagrupar**, «Ungroup»), el grupo se quita de tu dispositivo *y* de todos los demás que tengan iniciada la sesión con la misma cuenta. El ajuste **Fijar automáticamente nuevos grupos de pestañas a la barra de marcadores** («Automatically pin new tab groups created on any device to the bookmarks bar») también fija los grupos que creaste en otro sitio.
+
+En la práctica, eso significa que:
+
+- Los grupos que creas en un ordenador pueden aparecer en otro con la misma cuenta; a eso se refiere el ajuste de fijar.
+- Si haces limpieza en el portátil, borras los mismos grupos en el ordenador de sobremesa.
+
+Firefox 159 también tiene grupos de pestañas, con **Guardar y cerrar grupo** («Save and close group») y una lista de **Grupos cerrados** («Closed Groups»); los pasos y las capturas de esta guía son de Chrome. Si usas Firefox, consulta [Grupos de pestañas en Firefox](/blog/firefox-tab-groups).
+
+</Section>
+
+<Section id="limits" title="¿En qué se quedan cortos los grupos de pestañas?">
+
+- **Una ventana cada uno.** Un grupo vive en una sola ventana. Guardar «todo lo que tengo abierto» repartido en tres ventanas significa tres grupos o más.
+- **Solo direcciones.** Igual que un marcador, un grupo guardado vuelve a cargar la página desde cero: la posición de desplazamiento y lo escrito en los formularios se pierden.
+- **Invisibles para las extensiones mientras están cerrados.** La API `chrome.tabGroups` describe los grupos que están en una ventana abierta: cada grupo que devuelve tiene un `windowId`, cerrar un grupo dispara `onRemoved` y no hay ninguna llamada que liste los grupos guardados y cerrados. Un gestor de pestañas no puede hacer una copia de un grupo que cerraste hasta que lo reabras.
+- **Los borrados viajan.** La sincronización que hace tan cómodos los grupos también extiende un error a todos tus dispositivos.
+
+Nuestra guía para [guardar todas las pestañas abiertas](/blog/save-all-open-tabs) compara los grupos con los marcadores, la restauración al inicio y los gestores de sesiones, y la [rutina para cuando tienes demasiadas pestañas](/blog/manage-too-many-tabs) muestra dónde encajan los grupos en el día a día.
+
+</Section>
+
+<Section id="tabmerger" title="Conserva tus grupos para siempre con TabMerger">
+
+[TabMerger](/features), nuestra extensión gratuita para Chrome, Edge y Firefox, lee tus grupos de pestañas de Chrome abiertos. **Abiertas ahora** etiqueta cada pestaña con el nombre y el color de su grupo, y al guardar una ventana en un grupo de TabMerger esas etiquetas se mantienen. Guardadas ahí, las pestañas no se tocan cuando se elimina un grupo de Chrome en otro dispositivo.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Guardar grupos de pestañas de Chrome en TabMerger" steps={[{ title: 'Abiertas ahora' }, { title: 'Grupo guardado' }]}>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-now-open-groups" alt="TabMerger, «Now Open» (Abiertas ahora): seis pestañas, tres etiquetadas como Sprint en azul y tres como Thesis en verde, tema claro" darkAlt="TabMerger, «Now Open» (Abiertas ahora): seis pestañas, tres etiquetadas como Sprint en azul y tres como Thesis en verde, tema oscuro" boxes={[{ id: 'group-badge-1', label: 'Grupo Sprint' }, { id: 'group-badge-4', label: 'Grupo Thesis' }]} source="TabMerger 3.16.1">Dos grupos de pestañas de Chrome, Sprint y Thesis, tal como los muestra «Now Open» (Abiertas ahora).</ThemedScreenshot>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-saved-groups" alt="El grupo de TabMerger «Sprint + thesis» con las mismas seis pestañas y sus etiquetas Sprint y Thesis, tema claro" darkAlt="El grupo de TabMerger «Sprint + thesis» con las mismas seis pestañas y sus etiquetas Sprint y Thesis, tema oscuro" boxes={[{ id: 'group-badge-1', label: 'Grupo Sprint' }, { id: 'group-badge-4', label: 'Grupo Thesis' }]} source="TabMerger 3.16.1">Después de «Merge with current» (Combinar con lo actual): el grupo guardado conserva el grupo de Chrome de cada pestaña.</ThemedScreenshot>
+</Carousel>
+
+Si vuelves a abrir la ventana guardada en Chrome o Edge, sus pestañas regresan a grupos de pestañas con los mismos nombres y colores.
+
+<InstallCta>Gratis para Chrome, Edge y Firefox. No necesitas cuenta para empezar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'chrome-tab-groups',
+  title: 'Groupes d’onglets Chrome : les enregistrer, les rouvrir et les synchroniser',
+  seoTitle: 'Groupes d’onglets Chrome : enregistrer, rouvrir, synchroniser (et leurs limites)',
+  description:
+    'Comment fonctionnent les groupes d’onglets Chrome : créer, réduire, fermer et rouvrir un groupe enregistré, ce qui se synchronise avec vos autres appareils, et ce que les extensions peuvent voir ou non.',
+  shareSummary: 'Créer, enregistrer, rouvrir et synchroniser des groupes d’onglets Chrome, et leurs limites.',
+  dek: 'Un groupe fermé n’a pas disparu : il est enregistré. Voici où il va, ce qui vous suit sur vos autres appareils, et ce qui ne vous suit pas.',
+  published: '2026-11-23',
+  updated: '2026-11-23',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Fermer un groupe l’enregistre ; on le rouvre depuis la barre de favoris ou via ⋮ → Groupes d’onglets.',
+      source: 'Aide Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Supprimer ou dégrouper un groupe le retire de tous les appareils connectés.', source: 'Aide Chrome' },
+    {
+      text: 'chrome.tabGroups ne voit que les groupes des fenêtres ouvertes.',
+      source: 'Documentation chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'Les deux paramètres des groupes d’onglets dans la barre de favoris étaient activés dans un Chrome 157 tout neuf.', source: 'chrome://settings/appearance, 20 nov. 2026' },
+  ],
+  faq: [
+    {
+      question: 'Comment enregistrer un groupe d’onglets dans Chrome ?',
+      answer:
+        'Effectuez un clic droit sur le nom du groupe et choisissez « Fermer le groupe ». Chrome le conserve, et vous le rouvrez depuis la barre de favoris ou via ⋮ → Groupes d’onglets.',
+    },
+    {
+      question: 'Les groupes d’onglets Chrome se synchronisent-ils entre appareils ?',
+      answer:
+        'Les groupes enregistrés suivent votre compte Google : l’aide de Chrome prévient que supprimer ou dégrouper un groupe le retire de tous les appareils connectés au même compte.',
+    },
+    {
+      question: 'Quelle différence entre « Fermer le groupe » et « Supprimer le groupe » ?',
+      answer: '« Fermer le groupe » ferme les onglets et garde le groupe pour le rouvrir plus tard. « Supprimer le groupe » l’efface, y compris sur vos autres appareils.',
+    },
+    {
+      question: 'Une extension de gestion d’onglets peut-elle enregistrer mes groupes Chrome fermés ?',
+      answer:
+        'Pas tant qu’ils sont fermés : l’API des extensions ne décrit que les groupes des fenêtres ouvertes. Rouvrez d’abord le groupe, puis enregistrez-le avec l’extension.',
+    },
+  ],
+  images: [
+    { src: '/blog/chrome-tab-groups/chrome-tab-groups-setting.webp', alt: 'Paramètres de Chrome, « Appearance » (Apparence), avec « Show tab groups in bookmarks bar » (Afficher les groupes d’onglets dans la barre de favoris) et « Automatically pin new tab groups created on any device to the bookmarks bar » (Épingler automatiquement les nouveaux groupes d’onglets à la barre de favoris) tous deux activés' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp', alt: 'TabMerger, « Now Open » (Ouverts maintenant) : six onglets, trois marqués Sprint en bleu et trois marqués Thesis en vert, thème clair' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-dark.webp', alt: 'TabMerger, « Now Open » (Ouverts maintenant) : six onglets, trois marqués Sprint en bleu et trois marqués Thesis en vert, thème sombre' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-light.webp', alt: 'Le groupe TabMerger « Sprint + thesis » avec les mêmes six onglets et leurs marques Sprint et Thesis, thème clair' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-dark.webp', alt: 'Le groupe TabMerger « Sprint + thesis » avec les mêmes six onglets et leurs marques Sprint et Thesis, thème sombre' },
+  ],
+  tags: ['chrome', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (tab groups with the keyboard)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp' },
+  ogImage: { src: '/blog/chrome-tab-groups/og.png', alt: 'Carte de titre « Chrome tab groups: how to save, reopen and sync them » : un guide TabMerger, avec des onglets marqués selon leur groupe Chrome' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'basics', label: 'Créer et réduire' },
+    { id: 'save', label: 'Enregistrer et rouvrir' },
+    { id: 'sync', label: 'Synchronisés ?' },
+    { id: 'limits', label: 'Les limites' },
+    { id: 'tabmerger', label: 'Garder vos groupes' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Effectuez un clic droit sur un onglet et choisissez **Ajouter l’onglet à un groupe** (« Add tab to group ») pour créer un groupe, puis donnez-lui un nom et une couleur. Pour enregistrer un groupe, effectuez un clic droit sur son nom et choisissez **Fermer le groupe** (« Close group ») : Chrome le conserve, et vous le rouvrez depuis la barre de favoris ou via **⋮ → Groupes d’onglets** (« Tab groups »). Les groupes enregistrés suivent votre compte Google : en supprimer un le supprime partout. Pour garder vos groupes en lieu sûr pour de bon, enregistrez-les dans [TabMerger](/features) : il conserve le nom et la couleur du groupe Chrome de chaque onglet, et remet les onglets dans leurs groupes quand vous les rouvrez.
+
+</QuickAnswer>
+
+<InstallCta>Gardez vos groupes d’onglets Chrome en sécurité, faciles à retrouver et synchronisés. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+<Section id="basics" title="Comment fonctionnent les groupes d’onglets Chrome ?">
+
+Un groupe d’onglets est une série d’onglets avec un nom et une couleur, dans une seule fenêtre.
+
+1. Effectuez un clic droit sur un onglet et choisissez **Ajouter l’onglet à un groupe** → **Nouveau groupe** (« New group ») ou un groupe existant.
+2. Nommez le groupe et choisissez une couleur. Plus tard, un clic droit sur le nom permet de le renommer, d’en changer la couleur ou d’y ajouter un nouvel onglet.
+3. Faites glisser un onglet dans le groupe pour l’y ajouter ; clic droit sur un onglet → **Retirer du groupe** (« Remove from group ») pour l’en sortir.
+4. Cliquez sur le nom du groupe pour le réduire à une simple étiquette, et cliquez de nouveau pour le développer.
+
+Au clavier : appuyez sur <Kbd>F6</Kbd> jusqu’à ce que les onglets aient le focus, allez jusqu’au groupe avec <Kbd>Tab</Kbd>, puis la touche Menu ouvre le menu du groupe. <Kbd>Space</Kbd> ou <Kbd>Enter</Kbd> le réduit, et <Kbd>Ctrl</Kbd>+<Kbd>←</Kbd>/<Kbd>→</Kbd> le déplace.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with Close group and Delete group. */}
+
+</Section>
+
+<Section id="save" title="Comment enregistrer un groupe d’onglets et le retrouver ?">
+
+**Fermer le groupe** est le bouton d’enregistrement de Chrome. Les onglets se ferment, pas le groupe : Chrome le conserve et le liste à deux endroits.
+
+- **Barre de favoris :** une icône en grille avec le nom du groupe. Cliquez dessus pour le rouvrir.
+- **Menu ⋮ → Groupes d’onglets :** vos groupes enregistrés.
+
+Deux paramètres, dans **Paramètres → Apparence** (« Settings → Appearance »), gèrent la partie barre de favoris. Les deux étaient activés dans un profil Chrome 157 tout neuf.
+
+<AnnotatedFigure src="/blog/chrome-tab-groups/chrome-tab-groups-setting.webp" alt="Paramètres de Chrome, « Appearance » (Apparence), avec « Show tab groups in bookmarks bar » (Afficher les groupes d’onglets dans la barre de favoris) et « Automatically pin new tab groups created on any device to the bookmarks bar » (Épingler automatiquement les nouveaux groupes d’onglets à la barre de favoris) tous deux activés" width={1600} height={844} eager boxes={[{ id: 'tab-groups-setting', label: 'Afficher dans la barre de favoris' }, { id: 'auto-pin', label: 'Épingler les nouveaux groupes' }]} source="chrome://settings/appearance · Chrome 157.0.8103.80">Les deux paramètres des groupes d’onglets dans la page « Appearance » (Apparence) de Chrome.</AnnotatedFigure>
+
+<Catch>un groupe enregistré ne contient que des adresses. Ce n’est pas une sauvegarde : supprimez-le une fois, et il disparaît de tous vos appareils.</Catch>
+
+</Section>
+
+<Section id="sync" title="Les groupes d’onglets se synchronisent-ils entre appareils ?">
+
+Oui, via votre compte Google. L’aide de Chrome est claire sur l’effet secondaire : quand vous **supprimez** un groupe, ou que vous dégroupez ses onglets (**Dégrouper**, « Ungroup »), le groupe est retiré de votre appareil *et* de tous les autres appareils connectés au même compte. Le paramètre **Épingler automatiquement les nouveaux groupes d’onglets à la barre de favoris** (« Automatically pin new tab groups created on any device to the bookmarks bar ») épingle aussi les groupes créés ailleurs.
+
+Concrètement :
+
+- Les groupes créés sur un ordinateur peuvent apparaître sur un autre connecté au même compte ; c’est à cela que fait référence le paramètre d’épinglage.
+- Faire du tri sur votre portable supprime les mêmes groupes sur votre ordinateur de bureau.
+
+Firefox 159 a lui aussi des groupes d’onglets, avec **Enregistrer et fermer le groupe** (« Save and close group ») et une liste **Groupes fermés** (« Closed Groups ») ; les étapes et les captures de ce guide sont celles de Chrome. Sur Firefox, consultez [Groupes d’onglets dans Firefox](/blog/firefox-tab-groups).
+
+</Section>
+
+<Section id="limits" title="Où les groupes d’onglets montrent-ils leurs limites ?">
+
+- **Une fenêtre chacun.** Un groupe vit dans une seule fenêtre. Enregistrer « tout ce que j’ai d’ouvert » sur trois fenêtres, c’est trois groupes ou plus.
+- **Des adresses seulement.** Comme un favori, un groupe enregistré recharge la page à zéro : la position de défilement et la saisie des formulaires sont perdues.
+- **Invisibles pour les extensions une fois fermés.** L’API `chrome.tabGroups` décrit les groupes présents dans une fenêtre ouverte : chaque groupe qu’elle renvoie a un `windowId`, fermer un groupe déclenche `onRemoved`, et aucun appel ne liste les groupes enregistrés et fermés. Un gestionnaire d’onglets ne peut pas sauvegarder un groupe que vous avez fermé tant que vous ne l’avez pas rouvert.
+- **Les suppressions voyagent.** La synchronisation qui rend les groupes si pratiques propage aussi une erreur sur tous vos appareils.
+
+Notre guide pour [enregistrer tous les onglets ouverts](/blog/save-all-open-tabs) compare les groupes aux favoris, à la restauration au démarrage et aux gestionnaires de sessions, et la [routine contre les onglets trop nombreux](/blog/manage-too-many-tabs) montre la place des groupes au quotidien.
+
+</Section>
+
+<Section id="tabmerger" title="Gardez vos groupes pour de bon avec TabMerger">
+
+[TabMerger](/features), notre extension gratuite pour Chrome, Edge et Firefox, lit vos groupes d’onglets Chrome ouverts. **Ouverts maintenant** marque chaque onglet du nom et de la couleur de son groupe, et enregistrer une fenêtre dans un groupe TabMerger conserve ces marques. Une fois enregistrés là, les onglets ne bougent pas quand un groupe Chrome est supprimé sur un autre appareil.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Enregistrer des groupes d’onglets Chrome dans TabMerger" steps={[{ title: 'Ouverts maintenant' }, { title: 'Groupe enregistré' }]}>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-now-open-groups" alt="TabMerger, « Now Open » (Ouverts maintenant) : six onglets, trois marqués Sprint en bleu et trois marqués Thesis en vert, thème clair" darkAlt="TabMerger, « Now Open » (Ouverts maintenant) : six onglets, trois marqués Sprint en bleu et trois marqués Thesis en vert, thème sombre" boxes={[{ id: 'group-badge-1', label: 'Groupe Sprint' }, { id: 'group-badge-4', label: 'Groupe Thesis' }]} source="TabMerger 3.16.1">Deux groupes d’onglets Chrome, Sprint et Thesis, tels que « Now Open » (Ouverts maintenant) les affiche.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-saved-groups" alt="Le groupe TabMerger « Sprint + thesis » avec les mêmes six onglets et leurs marques Sprint et Thesis, thème clair" darkAlt="Le groupe TabMerger « Sprint + thesis » avec les mêmes six onglets et leurs marques Sprint et Thesis, thème sombre" boxes={[{ id: 'group-badge-1', label: 'Groupe Sprint' }, { id: 'group-badge-4', label: 'Groupe Thesis' }]} source="TabMerger 3.16.1">Après « Merge with current » (Fusionner avec l’actuel) : le groupe enregistré garde le groupe Chrome de chaque onglet.</ThemedScreenshot>
+</Carousel>
+
+Rouvrez la fenêtre enregistrée dans Chrome ou Edge, et ses onglets reprennent place dans des groupes d’onglets aux mêmes noms et aux mêmes couleurs.
+
+<InstallCta>Gratuit pour Chrome, Edge et Firefox. Aucun compte nécessaire pour commencer.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

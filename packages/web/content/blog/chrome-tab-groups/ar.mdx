@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'chrome-tab-groups',
+  title: 'مجموعات علامات التبويب في Chrome: كيف تحفظها وتعيد فتحها وتزامنها',
+  seoTitle: 'مجموعات علامات التبويب في Chrome: الحفظ وإعادة الفتح والمزامنة (وحدودها)',
+  description:
+    'كيف تعمل مجموعات علامات التبويب في Chrome: إنشاء المجموعة وطيّها وإغلاقها وإعادة فتح مجموعة محفوظة، وما الذي تتم مزامنته مع أجهزتك الأخرى، وما الذي تستطيع الإضافات رؤيته وما لا تستطيع.',
+  shareSummary: 'أنشئ مجموعات علامات التبويب في Chrome واحفظها وأعد فتحها وزامنها، واعرف أين تقصر.',
+  dek: 'المجموعة المغلقة لم تختفِ، بل حُفظت. إليك أين تذهب، وما الذي يرافقك إلى أجهزتك الأخرى، وما الذي لا يرافقك.',
+  published: '2026-11-23',
+  updated: '2026-11-23',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'إغلاق المجموعة يحفظها، وتعيد فتحها من شريط الإشارات أو من ⋮ ← مجموعات علامات التبويب.',
+      source: 'مساعدة Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'حذف المجموعة أو إلغاء تجميعها يزيلها من كل جهاز مسجَّل الدخول.', source: 'مساعدة Chrome' },
+    {
+      text: 'لا ترى chrome.tabGroups إلا المجموعات الموجودة في نوافذ مفتوحة.',
+      source: 'مستندات chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'كان إعدادا مجموعات علامات التبويب الخاصان بشريط الإشارات مفعّلَين كلاهما في Chrome 157 مثبَّت حديثًا.', source: 'chrome://settings/appearance، 20 نوفمبر 2026' },
+  ],
+  faq: [
+    {
+      question: 'كيف أحفظ مجموعة علامات تبويب في Chrome؟',
+      answer:
+        'انقر بزر الماوس الأيمن على اسم المجموعة واختر إغلاق المجموعة. يحتفظ Chrome بها، وتعيد فتحها من شريط الإشارات أو من ⋮ ← مجموعات علامات التبويب.',
+    },
+    {
+      question: 'هل تتزامن مجموعات علامات التبويب في Chrome بين الأجهزة؟',
+      answer:
+        'المجموعات المحفوظة تتبع حسابك على Google: تنبّه مساعدة Chrome إلى أن حذف المجموعة أو إلغاء تجميعها يزيلها من كل جهاز مسجَّل الدخول بالحساب نفسه.',
+    },
+    {
+      question: 'ما الفرق بين إغلاق المجموعة وحذف المجموعة؟',
+      answer: 'إغلاق المجموعة يغلق علامات التبويب ويحتفظ بالمجموعة لتعيد فتحها لاحقًا. أما حذف المجموعة فيزيلها، وعلى أجهزتك الأخرى أيضًا.',
+    },
+    {
+      question: 'هل تستطيع إضافة لإدارة علامات التبويب حفظ مجموعاتي المغلقة في Chrome؟',
+      answer:
+        'ليس وهي مغلقة: واجهة برمجة الإضافات لا تصف إلا المجموعات الموجودة في نوافذ مفتوحة. أعد فتح المجموعة أولًا، ثم احفظها بالإضافة.',
+    },
+  ],
+  images: [
+    { src: '/blog/chrome-tab-groups/chrome-tab-groups-setting.webp', alt: 'إعدادات Chrome، صفحة Appearance (المظهر)، والخياران Show tab groups in bookmarks bar (عرض مجموعات علامات التبويب في شريط الإشارات) وAutomatically pin new tab groups created on any device to the bookmarks bar (تثبيت مجموعات علامات التبويب الجديدة تلقائيًا في شريط الإشارات) مفعّلان' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp', alt: 'قسم Now Open (المفتوحة الآن) في TabMerger: ست علامات تبويب، ثلاث بوسم Sprint باللون الأزرق وثلاث بوسم Thesis باللون الأخضر، المظهر الفاتح' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-dark.webp', alt: 'قسم Now Open (المفتوحة الآن) في TabMerger: ست علامات تبويب، ثلاث بوسم Sprint باللون الأزرق وثلاث بوسم Thesis باللون الأخضر، المظهر الداكن' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-light.webp', alt: 'مجموعة TabMerger باسم Sprint + thesis تضم علامات التبويب الست نفسها بوسومها Sprint وThesis، المظهر الفاتح' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-dark.webp', alt: 'مجموعة TabMerger باسم Sprint + thesis تضم علامات التبويب الست نفسها بوسومها Sprint وThesis، المظهر الداكن' },
+  ],
+  tags: ['chrome', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (tab groups with the keyboard)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp' },
+  ogImage: { src: '/blog/chrome-tab-groups/og.png', alt: 'بطاقة العنوان Chrome tab groups: how to save, reopen and sync them: دليل من TabMerger، مع علامات تبويب موسومة حسب مجموعتها في Chrome' },
+  toc: [
+    { id: 'quick', label: 'إجابة سريعة' },
+    { id: 'basics', label: 'الإنشاء والطي' },
+    { id: 'save', label: 'الحفظ وإعادة الفتح' },
+    { id: 'sync', label: 'هل تتزامن؟' },
+    { id: 'limits', label: 'الحدود' },
+    { id: 'tabmerger', label: 'احتفظ بالمجموعات دائمًا' },
+    { id: 'faq', label: 'الأسئلة الشائعة' },
+  ],
+}
+
+<QuickAnswer>
+
+لبدء مجموعة، انقر بزر الماوس الأيمن على علامة تبويب واختر **إضافة علامة تبويب إلى المجموعة** (<bdi dir="ltr">Add tab to group</bdi>)، ثم سمِّها واختر لونًا. ولحفظ مجموعة، انقر بزر الماوس الأيمن على اسمها واختر **إغلاق المجموعة** (<bdi dir="ltr">Close group</bdi>): يحتفظ Chrome بها، وتعيد فتحها من شريط الإشارات أو من **⋮ ← مجموعات علامات التبويب** (<bdi dir="ltr">Tab groups</bdi>). المجموعات المحفوظة تتبع حسابك على Google، لذا فإن حذف مجموعة يحذفها في كل مكان. ولتبقى مجموعاتك في أمان دائمًا، احفظها في [TabMerger](/features): فهو يحتفظ باسم مجموعة Chrome ولونها لكل علامة تبويب، ويعيد علامات التبويب إلى مجموعاتها عند إعادة فتحها.
+
+</QuickAnswer>
+
+<InstallCta>احتفظ بمجموعات علامات التبويب في Chrome آمنة وقابلة للبحث ومتزامنة. مجانية لـ Chrome وEdge وFirefox.</InstallCta>
+
+<Section id="basics" title="كيف تعمل مجموعات علامات التبويب في Chrome؟">
+
+مجموعة علامات التبويب هي صف من علامات التبويب له اسم ولون داخل نافذة واحدة.
+
+1. انقر بزر الماوس الأيمن على علامة تبويب واختر **إضافة علامة تبويب إلى المجموعة** ← **مجموعة جديدة** (<bdi dir="ltr">New group</bdi>) أو مجموعة حالية.
+2. سمِّ المجموعة واختر لونًا. ويمكنك لاحقًا النقر بزر الماوس الأيمن على الاسم لإعادة تسميتها أو تغيير لونها أو إضافة علامة تبويب جديدة إليها.
+3. اسحب علامة تبويب إلى المجموعة لإضافتها، وانقر بزر الماوس الأيمن على علامة التبويب ← **إزالة من المجموعة** (<bdi dir="ltr">Remove from group</bdi>) لإخراجها.
+4. انقر على اسم المجموعة لطيّها إلى تسمية واحدة، ثم انقر مرة أخرى لتوسيعها.
+
+من لوحة المفاتيح: اضغط <Kbd>F6</Kbd> حتى يصبح التركيز على علامات التبويب، ثم <Kbd>Tab</Kbd> للانتقال إلى المجموعة، فيفتح مفتاح القائمة قائمة المجموعة. يطوي <Kbd>Space</Kbd> أو <Kbd>Enter</Kbd> المجموعة، وينقلها <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>←</Kbd>/<Kbd>→</Kbd></bdi>.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with Close group and Delete group. */}
+
+</Section>
+
+<Section id="save" title="كيف أحفظ مجموعة علامات تبويب وأستعيدها؟">
+
+**إغلاق المجموعة** هو زر الحفظ في Chrome. تُغلق علامات التبويب، أما المجموعة فلا: يحتفظ Chrome بها ويعرضها في مكانين.
+
+- **شريط الإشارات:** رمز شبكة يحمل اسم المجموعة. انقر عليه لإعادة فتحها.
+- **القائمة ⋮ ← مجموعات علامات التبويب:** مجموعاتك المحفوظة.
+
+يتحكم إعدادان ضمن **الإعدادات ← المظهر** (<bdi dir="ltr">Settings → Appearance</bdi>) في الجزء الخاص بشريط الإشارات. وكان كلاهما مفعّلًا في ملف شخصي جديد على Chrome 157.
+
+<AnnotatedFigure src="/blog/chrome-tab-groups/chrome-tab-groups-setting.webp" alt="إعدادات Chrome، صفحة Appearance (المظهر)، والخياران Show tab groups in bookmarks bar (عرض مجموعات علامات التبويب في شريط الإشارات) وAutomatically pin new tab groups created on any device to the bookmarks bar (تثبيت مجموعات علامات التبويب الجديدة تلقائيًا في شريط الإشارات) مفعّلان" width={1600} height={844} eager boxes={[{ id: 'tab-groups-setting', label: 'العرض في شريط الإشارات' }, { id: 'auto-pin', label: 'تثبيت المجموعات الجديدة' }]} source="chrome://settings/appearance · Chrome 157.0.8103.80">إعدادا مجموعات علامات التبويب في صفحة <bdi dir="ltr">Appearance</bdi> (المظهر) في Chrome.</AnnotatedFigure>
+
+<Catch>المجموعة المحفوظة لا تضم سوى العناوين. إنها ليست نسخة احتياطية: احذفها مرة واحدة وتختفي من كل الأجهزة.</Catch>
+
+</Section>
+
+<Section id="sync" title="هل تتزامن مجموعات علامات التبويب بين الأجهزة؟">
+
+نعم، من خلال حسابك على Google. ومساعدة Chrome صريحة بشأن الأثر الجانبي: عندما **تحذف** مجموعة، أو تلغي تجميع علامات التبويب فيها بالخيار **إلغاء التجميع** (<bdi dir="ltr">Ungroup</bdi>)، تُزال المجموعة من جهازك *ومن* كل جهاز آخر مسجَّل الدخول بالحساب نفسه. كما أن الإعداد **تثبيت مجموعات علامات التبويب الجديدة تلقائيًا في شريط الإشارات** (<bdi dir="ltr">Automatically pin new tab groups created on any device to the bookmarks bar</bdi>) يثبّت أيضًا المجموعات التي أنشأتها في مكان آخر.
+
+ما يعنيه ذلك عمليًا:
+
+- قد تظهر المجموعات التي تنشئها على كمبيوتر على كمبيوتر آخر مسجَّل الدخول بالحساب نفسه، وهذا ما يشير إليه إعداد التثبيت.
+- ترتيب المجموعات على الكمبيوتر المحمول يحذف المجموعات نفسها على الكمبيوتر المكتبي.
+
+يضم Firefox 159 مجموعات علامات تبويب أيضًا، مع **احفظ وأغلق المجموعة** (<bdi dir="ltr">Save and close group</bdi>) وقائمة **الألسنة المغلقة** (<bdi dir="ltr">Closed Groups</bdi>)، أما خطوات هذا الدليل ولقطات الشاشة فيه فهي من Chrome. لمستخدمي Firefox: راجع [مجموعات علامات التبويب في Firefox](/blog/firefox-tab-groups).
+
+</Section>
+
+<Section id="limits" title="أين تقصر مجموعات علامات التبويب؟">
+
+- **نافذة واحدة لكل مجموعة.** تعيش المجموعة في نافذة واحدة. وحفظ «كل ما هو مفتوح لديّ» في ثلاث نوافذ يعني ثلاث مجموعات أو أكثر.
+- **العناوين فقط.** مثل الإشارات المرجعية، تعيد المجموعة المحفوظة فتح الصفحة من جديد: يضيع موضع التمرير وما أدخلته في النماذج.
+- **مخفية عن الإضافات وهي مغلقة.** تصف واجهة `chrome.tabGroups` المجموعات الموجودة في نافذة مفتوحة: كل مجموعة تعيدها لها `windowId`، وإغلاق المجموعة يطلق `onRemoved`، ولا يوجد استدعاء يسرد المجموعات المحفوظة المغلقة. لا يستطيع مدير علامات التبويب نسخ مجموعة أغلقتها احتياطيًا حتى تعيد فتحها.
+- **الحذف ينتقل.** المزامنة التي تجعل المجموعات مفيدة تنشر الخطأ أيضًا إلى كل جهاز.
+
+يقارن دليلنا [لحفظ كل علامات التبويب المفتوحة](/blog/save-all-open-tabs) بين المجموعات والإشارات المرجعية والاستعادة عند بدء التشغيل ومديري الجلسات، ويوضح [روتين التعامل مع كثرة علامات التبويب](/blog/manage-too-many-tabs) موقع المجموعات في العمل اليومي.
+
+</Section>
+
+<Section id="tabmerger" title="احتفظ بمجموعاتك دائمًا مع TabMerger">
+
+[TabMerger](/features)، إضافتنا المجانية لـ Chrome وEdge وFirefox، تقرأ مجموعات علامات التبويب المفتوحة في Chrome. يسم قسم **المفتوحة الآن** كل علامة تبويب باسم مجموعتها ولونها، وحفظ نافذة في مجموعة TabMerger يُبقي هذه الوسوم. وبعد حفظها هناك، لا تتأثر علامات التبويب عند حذف مجموعة Chrome على جهاز آخر.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="حفظ مجموعات علامات التبويب من Chrome في TabMerger" steps={[{ title: 'المفتوحة الآن' }, { title: 'المجموعة المحفوظة' }]}>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-now-open-groups" alt="قسم Now Open (المفتوحة الآن) في TabMerger: ست علامات تبويب، ثلاث بوسم Sprint باللون الأزرق وثلاث بوسم Thesis باللون الأخضر، المظهر الفاتح" darkAlt="قسم Now Open (المفتوحة الآن) في TabMerger: ست علامات تبويب، ثلاث بوسم Sprint باللون الأزرق وثلاث بوسم Thesis باللون الأخضر، المظهر الداكن" boxes={[{ id: 'group-badge-1', label: 'مجموعة Sprint' }, { id: 'group-badge-4', label: 'مجموعة Thesis' }]} source="TabMerger 3.16.1">مجموعتا علامات تبويب من Chrome، <bdi dir="ltr">Sprint</bdi> و<bdi dir="ltr">Thesis</bdi>، كما يعرضهما قسم <bdi dir="ltr">Now Open</bdi> (المفتوحة الآن).</ThemedScreenshot>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-saved-groups" alt="مجموعة TabMerger باسم Sprint + thesis تضم علامات التبويب الست نفسها بوسومها Sprint وThesis، المظهر الفاتح" darkAlt="مجموعة TabMerger باسم Sprint + thesis تضم علامات التبويب الست نفسها بوسومها Sprint وThesis، المظهر الداكن" boxes={[{ id: 'group-badge-1', label: 'مجموعة Sprint' }, { id: 'group-badge-4', label: 'مجموعة Thesis' }]} source="TabMerger 3.16.1">بعد <bdi dir="ltr">Merge with current</bdi> (دمج مع الحالية): تحتفظ المجموعة المحفوظة بمجموعة Chrome لكل علامة تبويب.</ThemedScreenshot>
+</Carousel>
+
+أعد فتح النافذة المحفوظة في Chrome أو Edge، وستعود علامات التبويب فيها إلى مجموعات علامات تبويب بالأسماء والألوان نفسها.
+
+<InstallCta>مجانية لـ Chrome وEdge وFirefox. لا تحتاج إلى حساب للبدء.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="الأسئلة الشائعة">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'chrome-tab-groups',
+  title: 'Chrome sekme grupları: kaydetme, yeniden açma ve senkronizasyon',
+  seoTitle: 'Chrome Sekme Grupları: Kaydetme, Yeniden Açma ve Senkronizasyon (ve Sınırları)',
+  description:
+    'Chrome sekme grupları nasıl çalışır: grup oluşturma, daraltma, kapatma ve kaydedilmiş bir grubu yeniden açma, diğer cihazlarınıza nelerin senkronize edildiği ve uzantıların neleri görüp neleri göremediği.',
+  shareSummary: 'Chrome sekme gruplarını oluşturun, kaydedin, yeniden açın, senkronize edin ve sınırlarını görün.',
+  dek: 'Kapatılan bir grup kaybolmaz, kaydedilir. Nereye gittiğini, diğer cihazlara neyin taşındığını ve neyin taşınmadığını anlatıyoruz.',
+  published: '2026-11-23',
+  updated: '2026-11-23',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Grubu kapatmak onu kaydeder; yer işareti çubuğundan veya ⋮ → Sekme grupları menüsünden yeniden açılır.',
+      source: 'Chrome Yardım',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Grubu silmek veya çözmek, oturum açılmış her cihazdan grubu kaldırır.', source: 'Chrome Yardım' },
+    {
+      text: 'chrome.tabGroups yalnızca açık pencerelerdeki grupları görür.',
+      source: 'chrome.tabGroups belgeleri',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'Yer işareti çubuğuyla ilgili iki sekme grubu ayarı da yeni kurulmuş bir Chrome 157’de açıktı.', source: 'chrome://settings/appearance, 20 Kas 2026' },
+  ],
+  faq: [
+    {
+      question: 'Chrome’da bir sekme grubunu nasıl kaydederim?',
+      answer:
+        'Grubun adını sağ tıklayıp Grubu kapat’ı seçin. Chrome grubu saklar; grubu yer işareti çubuğundan veya ⋮ → Sekme grupları menüsünden yeniden açabilirsiniz.',
+    },
+    {
+      question: 'Chrome sekme grupları cihazlar arasında senkronize edilir mi?',
+      answer:
+        'Kaydedilmiş gruplar Google Hesabınızla birlikte gelir: Chrome yardımı, bir grubu silmenin veya çözmenin onu aynı hesapla oturum açılmış her cihazdan kaldırdığı konusunda uyarır.',
+    },
+    {
+      question: 'Grubu kapat ile Grubu sil arasındaki fark nedir?',
+      answer: 'Grubu kapat sekmeleri kapatır ve grubu daha sonra yeniden açmanız için saklar. Grubu sil ise grubu diğer cihazlarınızda da kaldırır.',
+    },
+    {
+      question: 'Bir sekme yöneticisi uzantısı kapattığım Chrome gruplarını kaydedebilir mi?',
+      answer:
+        'Kapalı oldukları sürece hayır: uzantı API’si yalnızca açık pencerelerdeki grupları tanımlar. Önce grubu yeniden açın, ardından uzantıyla kaydedin.',
+    },
+  ],
+  images: [
+    { src: '/blog/chrome-tab-groups/chrome-tab-groups-setting.webp', alt: 'Chrome Ayarlar, Appearance (Görünüm): Show tab groups in bookmarks bar (Sekme gruplarını yer işareti çubuğunda göster) ve Automatically pin new tab groups created on any device to the bookmarks bar (Yeni sekme gruplarını yer işareti çubuğuna otomatik olarak sabitle) ayarlarının ikisi de açık' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp', alt: 'TabMerger Now Open (Şu An Açık): altı sekme, üçü mavi Sprint, üçü yeşil Thesis etiketli, açık tema' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-dark.webp', alt: 'TabMerger Now Open (Şu An Açık): altı sekme, üçü mavi Sprint, üçü yeşil Thesis etiketli, koyu tema' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-light.webp', alt: 'Aynı altı sekmeyi Sprint ve Thesis etiketleriyle tutan Sprint + thesis adlı TabMerger grubu, açık tema' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-dark.webp', alt: 'Aynı altı sekmeyi Sprint ve Thesis etiketleriyle tutan Sprint + thesis adlı TabMerger grubu, koyu tema' },
+  ],
+  tags: ['chrome', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (tab groups with the keyboard)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp' },
+  ogImage: { src: '/blog/chrome-tab-groups/og.png', alt: 'Chrome tab groups: how to save, reopen and sync them başlık kartı: sekmeleri Chrome gruplarına göre etiketlenmiş bir TabMerger rehberi' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'basics', label: 'Oluşturma ve daraltma' },
+    { id: 'save', label: 'Kaydetme ve yeniden açma' },
+    { id: 'sync', label: 'Senkronize olur mu?' },
+    { id: 'limits', label: 'Sınırlar' },
+    { id: 'tabmerger', label: 'Grupları kalıcı tutun' },
+    { id: 'faq', label: 'SSS' },
+  ],
+}
+
+<QuickAnswer>
+
+Bir grup başlatmak için bir sekmeyi sağ tıklayıp **Sekmeyi gruba ekle** (Add tab to group) seçeneğini seçin, ardından gruba bir ad verip renk seçin. Bir grubu kaydetmek için adını sağ tıklayıp **Grubu kapat** (Close group) seçeneğini seçin: Chrome grubu saklar, siz de onu yer işareti çubuğundan veya **⋮ → Sekme grupları** (Tab groups) menüsünden yeniden açarsınız. Kaydedilmiş gruplar Google Hesabınızla birlikte gelir; bu yüzden birini silerseniz her yerden silinir. Gruplarınızı kalıcı olarak güvende tutmak için onları [TabMerger](/features)’a kaydedin: her sekmenin Chrome grubu adını ve rengini korur, sekmeleri yeniden açtığınızda da onları tekrar gruplara yerleştirir.
+
+</QuickAnswer>
+
+<InstallCta>Chrome sekme gruplarınızı güvende, aranabilir ve senkronize tutun. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+<Section id="basics" title="Chrome sekme grupları nasıl çalışır?">
+
+Sekme grubu, tek bir pencerede adı ve rengi olan bir sekme dizisidir.
+
+1. Bir sekmeyi sağ tıklayıp **Sekmeyi gruba ekle** → **Yeni grup** (New group) veya mevcut bir grubu seçin.
+2. Gruba bir ad verin ve renk seçin. Daha sonra adı sağ tıklayarak grubu yeniden adlandırabilir, rengini değiştirebilir veya gruba yeni bir sekme ekleyebilirsiniz.
+3. Bir sekmeyi eklemek için gruba sürükleyin; çıkarmak için sekmeyi sağ tıklayıp → **Gruptan kaldır** (Remove from group) seçeneğini seçin.
+4. Grubu tek bir etikete daraltmak için adını tıklayın, yeniden genişletmek için bir kez daha tıklayın.
+
+Klavyeyle: sekmeler odaklanana kadar <Kbd>F6</Kbd> tuşuna basın, <Kbd>Tab</Kbd> ile gruba gelin; ardından Menü tuşu grup menüsünü açar. <Kbd>Space</Kbd> veya <Kbd>Enter</Kbd> grubu daraltır, <Kbd>Ctrl</Kbd>+<Kbd>←</Kbd>/<Kbd>→</Kbd> ise grubu taşır.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with Close group and Delete group. */}
+
+</Section>
+
+<Section id="save" title="Bir sekme grubunu nasıl kaydeder ve geri getiririm?">
+
+**Grubu kapat**, Chrome’un kaydet düğmesidir. Sekmeler kapanır ama grup kapanmaz: Chrome grubu saklar ve iki yerde listeler.
+
+- **Yer işareti çubuğu:** grubun adını taşıyan bir ızgara simgesi. Yeniden açmak için tıklayın.
+- **⋮ menüsü → Sekme grupları:** kaydettiğiniz gruplar.
+
+Yer işareti çubuğu kısmını **Ayarlar → Görünüm** (Settings → Appearance) altındaki iki ayar yönetir. İkisi de yeni bir Chrome 157 profilinde açıktı.
+
+<AnnotatedFigure src="/blog/chrome-tab-groups/chrome-tab-groups-setting.webp" alt="Chrome Ayarlar, Appearance (Görünüm): Show tab groups in bookmarks bar (Sekme gruplarını yer işareti çubuğunda göster) ve Automatically pin new tab groups created on any device to the bookmarks bar (Yeni sekme gruplarını yer işareti çubuğuna otomatik olarak sabitle) ayarlarının ikisi de açık" width={1600} height={844} eager boxes={[{ id: 'tab-groups-setting', label: 'Yer işareti çubuğunda göster' }, { id: 'auto-pin', label: 'Yeni grupları sabitle' }]} source="chrome://settings/appearance · Chrome 157.0.8103.80">Chrome’un Appearance (Görünüm) sayfasındaki iki sekme grubu ayarı.</AnnotatedFigure>
+
+<Catch>kaydedilmiş bir grup yalnızca adresleri tutar. Bu bir yedek değildir: bir kez silerseniz tüm cihazlardan gider.</Catch>
+
+</Section>
+
+<Section id="sync" title="Sekme grupları cihazlar arasında senkronize edilir mi?">
+
+Evet, Google Hesabınız üzerinden. Chrome yardımı yan etki konusunda açıktır: bir grubu **sildiğinizde** veya sekmelerini **gruptan çözdüğünüzde** (**Grubu çöz**, Ungroup), grup hem cihazınızdan *hem de* aynı hesapla oturum açılmış diğer tüm cihazlardan kaldırılır. **Yeni sekme gruplarını yer işareti çubuğuna otomatik olarak sabitle** (Automatically pin new tab groups created on any device to the bookmarks bar) ayarı, başka yerde oluşturduğunuz grupları da sabitler.
+
+Uygulamada bunun anlamı şu:
+
+- Bir bilgisayarda oluşturduğunuz gruplar, aynı hesapla oturum açılmış başka bir bilgisayarda görünebilir; sabitleme ayarı da tam olarak bundan söz eder.
+- Dizüstü bilgisayarda temizlik yapmak, masaüstündeki aynı grupları da siler.
+
+Firefox 159’da da **Grubu kaydet ve kapat** (Save and close group) seçeneği ve **Kapalı gruplar** (Closed Groups) listesiyle sekme grupları var; bu rehberdeki adımlar ve ekran görüntüleri Chrome’a aittir. Firefox kullanıyorsanız [Firefox sekme grupları](/blog/firefox-tab-groups) rehberine bakın.
+
+</Section>
+
+<Section id="limits" title="Sekme gruplarının yetersiz kaldığı yerler">
+
+- **Her biri tek pencerede.** Bir grup tek bir pencerede yaşar. Üç pencereye yayılmış “açık olan her şeyi” kaydetmek üç veya daha fazla grup demektir.
+- **Yalnızca adresler.** Yer işaretleri gibi, kaydedilmiş bir grup da sayfayı baştan açar: kaydırma konumu ve formlara girilenler kaybolur.
+- **Kapalıyken uzantılardan gizli.** `chrome.tabGroups` API’si açık bir penceredeki grupları tanımlar: döndürdüğü her grubun bir `windowId` değeri vardır, bir grubu kapatmak `onRemoved` olayını tetikler ve kaydedilmiş, kapalı grupları listeleyen bir çağrı yoktur. Bir sekme yöneticisi, kapattığınız bir grubu siz yeniden açana kadar yedekleyemez.
+- **Silmeler yayılır.** Grupları bu kadar kullanışlı yapan senkronizasyon, bir hatayı da her cihaza taşır.
+
+[Tüm açık sekmeleri kaydetme](/blog/save-all-open-tabs) rehberimiz grupları yer işaretleri, başlangıçta geri yükleme ve oturum yöneticileriyle karşılaştırıyor; [çok fazla sekme rutini](/blog/manage-too-many-tabs) ise grupların günlük işlerde nereye oturduğunu gösteriyor.
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger ile gruplarınızı kalıcı olarak saklayın">
+
+Chrome, Edge ve Firefox için ücretsiz uzantımız [TabMerger](/features), açık Chrome sekme gruplarınızı okur. **Şu An Açık**, her sekmeyi grubunun adı ve rengiyle etiketler; bir pencereyi bir TabMerger grubuna kaydettiğinizde bu etiketler korunur. Orada kaydedilen sekmelere, başka bir cihazda bir Chrome grubu silindiğinde dokunulmaz.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Chrome sekme gruplarını TabMerger’a kaydetme" steps={[{ title: 'Şu An Açık' }, { title: 'Kaydedilen grup' }]}>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-now-open-groups" alt="TabMerger Now Open (Şu An Açık): altı sekme, üçü mavi Sprint, üçü yeşil Thesis etiketli, açık tema" darkAlt="TabMerger Now Open (Şu An Açık): altı sekme, üçü mavi Sprint, üçü yeşil Thesis etiketli, koyu tema" boxes={[{ id: 'group-badge-1', label: 'Sprint grubu' }, { id: 'group-badge-4', label: 'Thesis grubu' }]} source="TabMerger 3.16.1">Now Open (Şu An Açık) bölümünün gösterdiği iki Chrome sekme grubu: Sprint ve Thesis.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-saved-groups" alt="Aynı altı sekmeyi Sprint ve Thesis etiketleriyle tutan Sprint + thesis adlı TabMerger grubu, açık tema" darkAlt="Aynı altı sekmeyi Sprint ve Thesis etiketleriyle tutan Sprint + thesis adlı TabMerger grubu, koyu tema" boxes={[{ id: 'group-badge-1', label: 'Sprint grubu' }, { id: 'group-badge-4', label: 'Thesis grubu' }]} source="TabMerger 3.16.1">Merge with current (Mevcutla birleştir) sonrasında: kaydedilen grup, her sekmenin Chrome grubunu korur.</ThemedScreenshot>
+</Carousel>
+
+Kaydedilen pencereyi Chrome’da veya Edge’de yeniden açtığınızda sekmeleri aynı adlar ve renklerle sekme gruplarına geri döner.
+
+<InstallCta>Chrome, Edge ve Firefox için ücretsiz. Başlamak için hesap gerekmez.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

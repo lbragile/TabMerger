@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'chrome-tab-groups',
+  title: 'گروه‌های زبانه در Chrome: ذخیره، باز کردن دوباره و همگام‌سازی',
+  seoTitle: 'گروه‌های زبانه (تب) در Chrome: ذخیره، بازگشایی و همگام‌سازی (و محدودیت‌ها)',
+  description:
+    'گروه‌های زبانه در Chrome چطور کار می‌کنند: ساختن، جمع کردن، بستن و دوباره باز کردن گروه ذخیره‌شده، اینکه چه چیزی با دستگاه‌های دیگرتان همگام می‌شود، و افزونه‌ها چه چیزی را می‌بینند و چه چیزی را نمی‌بینند.',
+  shareSummary: 'ساختن، ذخیره، باز کردن دوباره و همگام‌سازی گروه‌های زبانه در Chrome، و کاستی‌هایشان.',
+  dek: 'گروهی که می‌بندید از بین نمی‌رود، ذخیره می‌شود. اینجا می‌گوییم کجا می‌رود، چه چیزی همراه شما به دستگاه‌های دیگر می‌آید و چه چیزی نمی‌آید.',
+  published: '2026-11-23',
+  updated: '2026-11-23',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'بستن گروه آن را ذخیره می‌کند؛ از نوار نشانک‌ها یا ⋮ ← گروه برگه دوباره بازش کنید.',
+      source: 'راهنمای Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'حذف گروه یا لغو گروه‌بندی، گروه را از همهٔ دستگاه‌هایی که با حساب وارد شده‌اند برمی‌دارد.', source: 'راهنمای Chrome' },
+    {
+      text: 'chrome.tabGroups فقط گروه‌های پنجره‌های باز را می‌بیند.',
+      source: 'مستندات chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'هر دو تنظیم گروه‌های برگه برای نوار نشانک‌ها در یک Chrome 157 تازه‌نصب روشن بودند.', source: 'chrome://settings/appearance، ۲۰ نوامبر ۲۰۲۶' },
+  ],
+  faq: [
+    {
+      question: 'چطور یک گروه زبانه را در Chrome ذخیره کنم؟',
+      answer:
+        'روی نام گروه کلیک راست کنید و «بستن گروه» را انتخاب کنید. Chrome گروه را نگه می‌دارد و می‌توانید آن را از نوار نشانک‌ها یا از ⋮ ← گروه برگه دوباره باز کنید.',
+    },
+    {
+      question: 'آیا گروه‌های زبانه در Chrome بین دستگاه‌ها همگام می‌شوند؟',
+      answer:
+        'گروه‌های ذخیره‌شده همراه حساب Google شما هستند: راهنمای Chrome هشدار می‌دهد که حذف گروه یا لغو گروه‌بندی آن، گروه را از همهٔ دستگاه‌هایی که با همان حساب وارد شده‌اند برمی‌دارد.',
+    },
+    {
+      question: 'فرق «بستن گروه» و «حذف گروه» چیست؟',
+      answer: '«بستن گروه» زبانه‌ها را می‌بندد و گروه را نگه می‌دارد تا بعداً دوباره بازش کنید. «حذف گروه» آن را پاک می‌کند، در دستگاه‌های دیگرتان هم.',
+    },
+    {
+      question: 'آیا یک افزونهٔ مدیریت زبانه می‌تواند گروه‌های بستهٔ Chrome را ذخیره کند؟',
+      answer:
+        'تا وقتی بسته‌اند، نه: API افزونه‌ها فقط گروه‌های پنجره‌های باز را توصیف می‌کند. اول گروه را دوباره باز کنید، بعد با افزونه ذخیره‌اش کنید.',
+    },
+  ],
+  images: [
+    { src: '/blog/chrome-tab-groups/chrome-tab-groups-setting.webp', alt: 'تنظیمات Chrome، بخش Appearance (ظاهر)، با گزینه‌های Show tab groups in bookmarks bar (نمایش گروه‌های برگه در نوار نشانک‌ها) و Automatically pin new tab groups created on any device to the bookmarks bar (سنجاق کردن خودکار گروه‌های برگه جدید به نوار نشانک‌ها) که هر دو روشن‌اند' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp', alt: 'بخش Now Open (هم‌اکنون باز) در TabMerger: شش زبانه، سه زبانه با برچسب آبی Sprint و سه زبانه با برچسب سبز Thesis، پوستهٔ روشن' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-dark.webp', alt: 'بخش Now Open (هم‌اکنون باز) در TabMerger: شش زبانه، سه زبانه با برچسب آبی Sprint و سه زبانه با برچسب سبز Thesis، پوستهٔ تیره' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-light.webp', alt: 'گروه Sprint + thesis در TabMerger با همان شش زبانه و برچسب‌های Sprint و Thesis آن‌ها، پوستهٔ روشن' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-dark.webp', alt: 'گروه Sprint + thesis در TabMerger با همان شش زبانه و برچسب‌های Sprint و Thesis آن‌ها، پوستهٔ تیره' },
+  ],
+  tags: ['chrome', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (tab groups with the keyboard)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp' },
+  ogImage: { src: '/blog/chrome-tab-groups/og.png', alt: 'کارت عنوان Chrome tab groups: how to save, reopen and sync them: راهنمایی از TabMerger، با زبانه‌هایی که بر اساس گروهشان در Chrome برچسب خورده‌اند' },
+  toc: [
+    { id: 'quick', label: 'پاسخ کوتاه' },
+    { id: 'basics', label: 'ساختن و جمع کردن' },
+    { id: 'save', label: 'ذخیره و باز کردن دوباره' },
+    { id: 'sync', label: 'همگام می‌شوند؟' },
+    { id: 'limits', label: 'محدودیت‌ها' },
+    { id: 'tabmerger', label: 'نگه داشتن همیشگی گروه‌ها' },
+    { id: 'faq', label: 'پرسش‌های متداول' },
+  ],
+}
+
+<QuickAnswer>
+
+برای ساختن گروه، روی یک زبانه کلیک راست کنید و **افزودن برگه به گروه** (<bdi dir="ltr">Add tab to group</bdi>) را انتخاب کنید، بعد برایش نام و رنگ بگذارید. برای ذخیرهٔ گروه، روی نامش کلیک راست کنید و **بستن گروه** (<bdi dir="ltr">Close group</bdi>) را انتخاب کنید: Chrome گروه را نگه می‌دارد و می‌توانید آن را از نوار نشانک‌ها یا از **⋮ ← گروه برگه** (<bdi dir="ltr">Tab groups</bdi>) دوباره باز کنید. گروه‌های ذخیره‌شده همراه حساب Google شما هستند، پس اگر یکی را حذف کنید، همه‌جا حذف می‌شود. برای اینکه گروه‌هایتان برای همیشه امن بمانند، آن‌ها را در [TabMerger](/features) ذخیره کنید: نام و رنگ گروه Chrome هر زبانه را نگه می‌دارد و وقتی زبانه‌ها را دوباره باز می‌کنید، آن‌ها را به گروه‌هایشان برمی‌گرداند.
+
+</QuickAnswer>
+
+<InstallCta>گروه‌های زبانهٔ Chrome را امن، قابل جستجو و همگام نگه دارید. رایگان برای Chrome،‏ Edge و Firefox.</InstallCta>
+
+<Section id="basics" title="گروه‌های زبانه در Chrome چطور کار می‌کنند؟">
+
+گروه زبانه (یا گروه تب؛ Chrome آن را «گروه برگه» می‌نامد) ردیفی از زبانه‌ها با نام و رنگ در یک پنجره است.
+
+1. روی یک زبانه کلیک راست کنید و **افزودن برگه به گروه** ← **گروه جدید** (<bdi dir="ltr">New group</bdi>) یا یکی از گروه‌های موجود را انتخاب کنید.
+2. برای گروه نام و رنگ انتخاب کنید. بعداً با کلیک راست روی نام می‌توانید نامش را عوض کنید، رنگش را تغییر دهید یا زبانهٔ تازه‌ای به آن اضافه کنید.
+3. برای افزودن زبانه، آن را به داخل گروه بکشید؛ برای بیرون آوردنش روی زبانه کلیک راست کنید ← **برداشتن از گروه** (<bdi dir="ltr">Remove from group</bdi>).
+4. روی نام گروه کلیک کنید تا به یک برچسب جمع شود، و دوباره کلیک کنید تا باز شود.
+
+با صفحه‌کلید: <Kbd>F6</Kbd> را بزنید تا تمرکز روی زبانه‌ها برود، با <Kbd>Tab</Kbd> به گروه بروید، و کلید منو، منوی گروه را باز می‌کند. <Kbd>Space</Kbd> یا <Kbd>Enter</Kbd> گروه را جمع می‌کند و <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>←</Kbd>/<Kbd>→</Kbd></bdi> آن را جابه‌جا می‌کند.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with Close group and Delete group. */}
+
+</Section>
+
+<Section id="save" title="چطور یک گروه زبانه را ذخیره کنم و برگردانم؟">
+
+**بستن گروه** دکمهٔ ذخیرهٔ Chrome است. زبانه‌ها بسته می‌شوند، گروه نه: Chrome آن را نگه می‌دارد و در دو جا نشانش می‌دهد.
+
+- **نوار نشانک‌ها:** نمادی شبکه‌ای با نام گروه. برای باز کردن دوباره رویش کلیک کنید.
+- **منوی ⋮ ← گروه برگه:** گروه‌های ذخیره‌شدهٔ شما.
+
+دو تنظیم در **تنظیمات ← ظاهر** (<bdi dir="ltr">Settings → Appearance</bdi>) بخش نوار نشانک‌ها را کنترل می‌کنند. هر دو در یک نمایهٔ تازهٔ Chrome 157 روشن بودند.
+
+<AnnotatedFigure src="/blog/chrome-tab-groups/chrome-tab-groups-setting.webp" alt="تنظیمات Chrome، بخش Appearance (ظاهر)، با گزینه‌های Show tab groups in bookmarks bar (نمایش گروه‌های برگه در نوار نشانک‌ها) و Automatically pin new tab groups created on any device to the bookmarks bar (سنجاق کردن خودکار گروه‌های برگه جدید به نوار نشانک‌ها) که هر دو روشن‌اند" width={1600} height={844} eager boxes={[{ id: 'tab-groups-setting', label: 'نمایش در نوار نشانک‌ها' }, { id: 'auto-pin', label: 'سنجاق کردن گروه‌های جدید' }]} source="chrome://settings/appearance · Chrome 157.0.8103.80">دو تنظیم گروه‌های برگه در صفحهٔ <bdi dir="ltr">Appearance</bdi> (ظاهر) در Chrome.</AnnotatedFigure>
+
+<Catch>گروه ذخیره‌شده فقط نشانی‌ها را نگه می‌دارد. پشتیبان نیست: یک بار حذفش کنید و از همهٔ دستگاه‌ها می‌رود.</Catch>
+
+</Section>
+
+<Section id="sync" title="آیا گروه‌های زبانه بین دستگاه‌ها همگام می‌شوند؟">
+
+بله، از طریق حساب Google شما. راهنمای Chrome دربارهٔ عارضهٔ جانبی‌اش صریح است: وقتی گروهی را **حذف** می‌کنید، یا گروه‌بندی زبانه‌هایش را با **لغو گروه‌بندی** (<bdi dir="ltr">Ungroup</bdi>) برمی‌دارید، گروه از دستگاه شما *و* از همهٔ دستگاه‌های دیگری که با همان حساب وارد شده‌اند برداشته می‌شود. تنظیم **سنجاق کردن خودکار گروه‌های برگه جدید به نوار نشانک‌ها** (<bdi dir="ltr">Automatically pin new tab groups created on any device to the bookmarks bar</bdi>) گروه‌هایی را هم که جای دیگری ساخته‌اید سنجاق می‌کند.
+
+در عمل یعنی:
+
+- گروه‌هایی که روی یک رایانه می‌سازید ممکن است روی رایانهٔ دیگری که با همان حساب وارد شده است ظاهر شوند؛ تنظیم سنجاق دقیقاً به همین اشاره دارد.
+- مرتب کردن گروه‌ها روی لپ‌تاپ، همان گروه‌ها را روی رایانهٔ رومیزی هم حذف می‌کند.
+
+Firefox 159 هم گروه زبانه دارد، با **ذخیره و بستن گروه** (<bdi dir="ltr">Save and close group</bdi>) و فهرست **گروه‌های بسته‌شده** (<bdi dir="ltr">Closed Groups</bdi>)؛ مراحل و تصویرهای این راهنما مربوط به Chrome است. کاربران Firefox: [گروه‌های زبانه در Firefox](/blog/firefox-tab-groups) را ببینید.
+
+</Section>
+
+<Section id="limits" title="گروه‌های زبانه کجا کم می‌آورند؟">
+
+- **هر گروه در یک پنجره.** هر گروه فقط در یک پنجره است. ذخیرهٔ «همهٔ چیزهایی که باز دارم» در سه پنجره یعنی سه گروه یا بیشتر.
+- **فقط نشانی‌ها.** مثل نشانک، گروه ذخیره‌شده صفحه را از نو باز می‌کند: جای پیمایش و چیزهایی که در فرم‌ها نوشته‌اید از دست می‌روند.
+- **بسته که باشند، از افزونه‌ها پنهان‌اند.** API ‏`chrome.tabGroups` گروه‌هایی را توصیف می‌کند که در یک پنجرهٔ باز هستند: هر گروهی که برمی‌گرداند `windowId` دارد، بستن گروه `onRemoved` را اجرا می‌کند و هیچ فراخوانی‌ای نیست که گروه‌های ذخیره‌شدهٔ بسته را فهرست کند. یک مدیر زبانه نمی‌تواند از گروهی که بسته‌اید پشتیبان بگیرد، مگر اینکه دوباره بازش کنید.
+- **حذف هم منتقل می‌شود.** همان همگام‌سازی‌ای که گروه‌ها را کارآمد می‌کند، یک اشتباه را هم به همهٔ دستگاه‌ها می‌برد.
+
+راهنمای ما برای [ذخیرهٔ همهٔ زبانه‌های باز](/blog/save-all-open-tabs) گروه‌ها را با نشانک‌ها، بازیابی هنگام راه‌اندازی و مدیران نشست مقایسه می‌کند، و [روال کار با زبانه‌های خیلی زیاد](/blog/manage-too-many-tabs) نشان می‌دهد گروه‌ها در کار روزمره کجا به کار می‌آیند.
+
+</Section>
+
+<Section id="tabmerger" title="گروه‌هایتان را با TabMerger برای همیشه نگه دارید">
+
+[TabMerger](/features)، افزونهٔ رایگان ما برای Chrome،‏ Edge و Firefox، گروه‌های زبانهٔ باز Chrome را می‌خواند. **هم‌اکنون باز** روی هر زبانه برچسبی با نام و رنگ گروهش می‌زند، و وقتی پنجره‌ای را در یک گروه TabMerger ذخیره می‌کنید، این برچسب‌ها می‌مانند. زبانه‌هایی که آنجا ذخیره شده‌اند، با حذف یک گروه Chrome در دستگاهی دیگر دست نمی‌خورند.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="ذخیرهٔ گروه‌های زبانهٔ Chrome در TabMerger" steps={[{ title: 'هم‌اکنون باز' }, { title: 'گروه ذخیره‌شده' }]}>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-now-open-groups" alt="بخش Now Open (هم‌اکنون باز) در TabMerger: شش زبانه، سه زبانه با برچسب آبی Sprint و سه زبانه با برچسب سبز Thesis، پوستهٔ روشن" darkAlt="بخش Now Open (هم‌اکنون باز) در TabMerger: شش زبانه، سه زبانه با برچسب آبی Sprint و سه زبانه با برچسب سبز Thesis، پوستهٔ تیره" boxes={[{ id: 'group-badge-1', label: 'گروه Sprint' }, { id: 'group-badge-4', label: 'گروه Thesis' }]} source="TabMerger 3.16.1">دو گروه زبانهٔ Chrome، یعنی <bdi dir="ltr">Sprint</bdi> و <bdi dir="ltr">Thesis</bdi>، همان‌طور که <bdi dir="ltr">Now Open</bdi> (هم‌اکنون باز) نشانشان می‌دهد.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-saved-groups" alt="گروه Sprint + thesis در TabMerger با همان شش زبانه و برچسب‌های Sprint و Thesis آن‌ها، پوستهٔ روشن" darkAlt="گروه Sprint + thesis در TabMerger با همان شش زبانه و برچسب‌های Sprint و Thesis آن‌ها، پوستهٔ تیره" boxes={[{ id: 'group-badge-1', label: 'گروه Sprint' }, { id: 'group-badge-4', label: 'گروه Thesis' }]} source="TabMerger 3.16.1">پس از <bdi dir="ltr">Merge with current</bdi> (ادغام با وضعیت فعلی): گروه ذخیره‌شده گروه Chrome هر زبانه را نگه می‌دارد.</ThemedScreenshot>
+</Carousel>
+
+پنجرهٔ ذخیره‌شده را دوباره در Chrome یا Edge باز کنید تا زبانه‌هایش با همان نام‌ها و رنگ‌ها به گروه‌های زبانه برگردند.
+
+<InstallCta>رایگان برای Chrome،‏ Edge و Firefox. برای شروع به حساب کاربری نیازی نیست.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="پرسش‌های متداول">
+
+<Faq items={post.faq} />
+
+</Section>
