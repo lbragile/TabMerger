@@ -154,6 +154,19 @@ jobs:
           fi
           echo "url=$url" >> "$GITHUB_OUTPUT"
 
+      # Adds every blog post in this build (scheduled ones included) to the preview DB's
+      # blog_posts allow-list, which the Helpful votes' foreign key checks, and marks removed
+      # ones for cleanup after 30 days (migration 035). main only: a PR must not touch the
+      # shared preview list. The RPC checks BLOG_SYNC_TOKEN against a hash in the DB; only the
+      # public URL and publishable key come from the pulled env file. A failed sync only
+      # leaves new posts' Helpful button failing, so it must never fail the deploy.
+      - name: Sync blog posts
+        if: github.ref == 'refs/heads/main'
+        continue-on-error: true
+        env:
+          BLOG_SYNC_TOKEN: ${{ secrets.BLOG_SYNC_TOKEN }}
+        run: node packages/web/scripts/sync-blog-posts.mjs --env-file .vercel/.env.preview.local
+
       # Points the fixed preview URL at the deployment just made. CLI deploys get only
       # the hashed per-deployment URL; Vercel's automatic branch URLs apply to its own
       # Git integration, which this project doesn't use.

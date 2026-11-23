@@ -184,6 +184,15 @@ jobs:
           case "$url" in http*) ;; *) url="https://$url" ;; esac
           echo "url=$url" >> "$GITHUB_OUTPUT"
 
+      # Adds every blog post in this build (scheduled ones included) to the production
+      # blog_posts allow-list for Helpful votes, and marks removed ones for cleanup after 30
+      # days (migration 035; see deploy-web.yml). A failed sync never fails the deploy.
+      - name: Sync blog posts
+        continue-on-error: true
+        env:
+          BLOG_SYNC_TOKEN: ${{ secrets.BLOG_SYNC_TOKEN }}
+        run: node packages/web/scripts/sync-blog-posts.mjs --env-file .vercel/.env.production.local
+
       # tabmerger.vercel.app is an ALIAS, not a domain registered on the Vercel project, so
       # `--prod` alone leaves it on whatever deployment it was last pointed at. The first
       # run of this workflow deployed correctly and still left the site on a months-old
