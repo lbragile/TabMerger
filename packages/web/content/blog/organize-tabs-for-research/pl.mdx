@@ -1,0 +1,117 @@
+export const post = {
+  slug: 'organize-tabs-for-research',
+  title: 'Jak uporządkować karty do researchu: notatki, przypomnienia i źródła',
+  navTitle: 'Uporządkuj karty do researchu',
+  seoTitle: 'Jak uporządkować karty przeglądarki do researchu (notatki, sesje, źródła)',
+  description:
+    'Sposób na karty przy researchu i pracy naukowej: grupa TabMerger na każdy projekt, notatka przy każdym ważnym źródle, przypomnienia o powrocie, sesje do wstrzymania całego projektu i eksport źródeł, gdy zaczynasz pisać.',
+  shareSummary: 'Grupa na projekt, notatki przy źródłach, przypomnienia i eksport, gdy zaczynasz pisać.',
+  dek: 'Czterdzieści kart ze źródłami to biblioteka, a nie bałagan, jeśli każda mówi, po co tam jest.',
+  published: '2026-12-09',
+  updated: '2026-12-09',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Każda zapisana karta może mieć notatkę i przypomnienie.', source: 'TabMerger 3.16.1' },
+    { text: 'Przypomnienia: 30 min, 1 godzina, 3 godziny, jutro albo wybrana data i godzina.', source: 'TabMerger 3.16.1' },
+    { text: 'Sesja zapisuje wszystkie twoje grupy, by przywrócić je razem; w darmowym planie zostają 3.', source: 'Cennik TabMerger', href: '/pricing' },
+    { text: 'Eksport JSON zawiera tytuł i adres każdego źródła.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Jak pilnować źródeł w przeglądarce?',
+      answer:
+        'Zapisz karty każdego projektu jako grupę TabMerger i dodaj notatkę do każdego źródła, które zacytujesz: dlaczego jest ważne, do której sekcji, do którego rozdziału. Ctrl+K przeszukuje tytuły i adresy we wszystkich twoich grupach.',
+    },
+    {
+      question: 'Czy mogę ustawić przypomnienie, żeby wrócić do karty?',
+      answer: 'Tak. Kliknij prawym przyciskiem zapisaną kartę w TabMerger i wybierz „Przypomnij mi…”: 30 minut, 1 godzina, 3 godziny, jutro albo wybrana data i godzina, z opcjonalną notatką.',
+    },
+    {
+      question: 'Czy karty z researchu powinny być zakładkami?',
+      answer: 'Przy pracy w toku lepsza jest zapisana grupa: trzyma cały zestaw razem z notatkami i otwiera się jednym kliknięciem. Dodaj do zakładek tylko te nieliczne, których będziesz potrzebować latami.',
+      link: { text: 'Dodaj do zakładek', href: '/blog/tabs-vs-bookmarks' },
+    },
+    {
+      question: 'Jak wyciągnąć listę moich źródeł?',
+      answer: 'Ustawienia → Dane → Eksportuj JSON zapisuje tytuły i adresy wszystkich grup w jednym pliku, z którego zrobisz listę bibliograficzną.',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp', alt: 'Grupa TabMerger „Thesis sources” z otwartym menu karty: Move to group (Przenieś do grupy), Add note (Dodaj notatkę), Remind me… (Przypomnij mi…), Rename tab (Zmień nazwę karty), Remove tab (Usuń kartę), motyw jasny' },
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-dark.webp', alt: 'Grupa TabMerger „Thesis sources” z otwartym menu karty: Move to group (Przenieś do grupy), Add note (Dodaj notatkę), Remind me… (Przypomnij mi…), Rename tab (Zmień nazwę karty), Remove tab (Usuń kartę), motyw ciemny' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-light.webp', alt: 'Wybór przypomnienia w TabMerger pod kartą: 30 min, 1 hour, 3 hours, Tomorrow (Jutro), data i godzina oraz opcjonalna notatka, motyw jasny' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-dark.webp', alt: 'Wybór przypomnienia w TabMerger pod kartą: 30 min, 1 hour, 3 hours, Tomorrow (Jutro), data i godzina oraz opcjonalna notatka, motyw ciemny' },
+  ],
+  tags: ['research', 'tab-management', 'save-tabs', 'session-management'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-for-research/og.png', alt: 'Jak uporządkować karty do researchu: poradnik TabMerger z opcjami notatki i przypomnienia dla karty' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'project', label: 'Grupa na projekt' },
+    { id: 'notes', label: 'Notatki i przypomnienia' },
+    { id: 'sessions', label: 'Wstrzymanie całego projektu' },
+    { id: 'export', label: 'Eksport źródeł' },
+    { id: 'faq', label: 'Najczęstsze pytania' },
+  ],
+}
+
+<QuickAnswer>
+
+Daj każdemu projektowi badawczemu osobną grupę [TabMerger](/features) i dodaj do każdego źródła, którego użyjesz, **notatkę**, dlaczego jest ważne. Ustaw **przypomnienie** przy tych, do których musisz wrócić, zapisz **sesję**, by wstrzymać cały projekt i przywrócić go jednym kliknięciem, a gdy piszesz bibliografię, **wyeksportuj** grupę do pliku.
+
+</QuickAnswer>
+
+<InstallCta>Zamień czterdzieści kart ze źródłami w opisaną bibliotekę, którą łatwo przeszukać. Za darmo dla Chrome, Edge i Firefoksa.</InstallCta>
+
+<Section id="project" title="Jak uporządkować karty projektu badawczego?">
+
+1. Kliknij **Dodaj Grupę** (Add Group) i nazwij grupę od projektu, np. „Źródła do pracy” (na zrzutach ekranu „Thesis sources”).
+2. Otwórz menu **⋯** grupy i wybierz **Scal z bieżącą sesją** (Merge with current): każda otwarta karta zostanie w niej zapisana.
+3. Zamknij okna, gdy skończysz na dziś. Grupa zachowuje wszystko, a <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> znajdzie później każde źródło po tytule lub adresie.
+
+W grupie trzymaj jedno okno na każdy wątek (artykuły, dane, tło) i nadaj każdemu nazwę. Przy kartach z researchu połowa pracy to decyzja, co warto zachować; nasz [poradnik o kartach i zakładkach](/blog/tabs-vs-bookmarks) pomoże ci zdecydować.
+
+</Section>
+
+<Section id="notes" title="Jak opisywać źródła i do nich wracać?">
+
+Kliknij prawym przyciskiem dowolną zapisaną kartę:
+
+- **Dodaj notatkę** (Add note): dlaczego to źródło jest ważne. Ikona notatki oznacza karty, które ją mają.
+- **Przypomnij mi…** (Remind me…): 30 minut, 1 godzina, 3 godziny, jutro albo wybrana przez ciebie data i godzina, z opcjonalną notatką. Gdy nadejdzie czas, TabMerger pokaże powiadomienie przeglądarki.
+- **Zmień nazwę karty** (Rename tab): zastąp tajemniczy tytuł strony („[1706.03762]”) czymś, czego będziesz szukać.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Notatki i przypomnienia przy źródle" steps={[{ title: 'Menu karty' }, { title: 'Przypomnienie' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-tab-menu" alt="Grupa TabMerger „Thesis sources” z otwartym menu karty: Move to group (Przenieś do grupy), Add note (Dodaj notatkę), Remind me… (Przypomnij mi…), Rename tab (Zmień nazwę karty), Remove tab (Usuń kartę), motyw jasny" darkAlt="Grupa TabMerger „Thesis sources” z otwartym menu karty: Move to group (Przenieś do grupy), Add note (Dodaj notatkę), Remind me… (Przypomnij mi…), Rename tab (Zmień nazwę karty), Remove tab (Usuń kartę), motyw ciemny" boxes={[{ id: 'add-note', label: 'Dodaj notatkę' }, { id: 'remind-me', label: 'Przypomnij mi…' }]} source="TabMerger 3.16.1">Kliknij źródło prawym przyciskiem, by je opisać; pierwsza karta ma już notatkę.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-reminder" alt="Wybór przypomnienia w TabMerger pod kartą: 30 min, 1 hour, 3 hours, Tomorrow (Jutro), data i godzina oraz opcjonalna notatka, motyw jasny" darkAlt="Wybór przypomnienia w TabMerger pod kartą: 30 min, 1 hour, 3 hours, Tomorrow (Jutro), data i godzina oraz opcjonalna notatka, motyw ciemny" boxes={[{ id: 'remind-in', label: 'Przypomnij mi za…' }]} source="TabMerger 3.16.1">Wybierz, kiedy wrócić, i zostaw notatkę dla siebie z przyszłości.</ThemedScreenshot>
+</Carousel>
+
+Jak w ten sposób prowadzić całą listę lektur, przeczytasz w poradniku [karty jako lista zadań](/blog/tabs-as-a-to-do-list).
+
+</Section>
+
+<Section id="sessions" title="Jak wstrzymać cały projekt i wrócić do niego później?">
+
+**Zapisz bieżącą sesję** (Save current session, w sekcji Sesje na pasku bocznym) robi nazwaną migawkę wszystkich zapisanych grup; **Przywróć sesję** (Restore session) przywraca je razem. Używaj tego na kamieniach milowych, np. „Przed przeglądem literatury”, żeby później wrócić dokładnie do tego zestawu. W darmowym planie w przeglądarce zostają 3 sesje; [Pro](/pricing) przechowuje nieograniczoną liczbę sesji i synchronizuje je między twoimi urządzeniami z szyfrowaniem end-to-end. Więcej o sesjach w poradniku [co robi menedżer sesji](/blog/browser-session-manager).
+
+</Section>
+
+<Section id="export" title="Jak wyeksportować źródła, gdy zaczynam pisać?">
+
+Otwórz **Ustawienia → Dane** (Settings → Data) i naciśnij **Eksportuj JSON** (Export JSON). Plik zawiera każdą grupę, okno i kartę z tytułem i adresem, gotowe do zamiany na bibliografię krótkim skryptem albo w edytorze tekstu. Szczegóły i przykład pole po polu znajdziesz w poradniku [jak wyeksportować otwarte karty](/blog/export-open-tabs).
+
+<InstallCta>Za darmo dla Chrome, Edge i Firefoksa. Na start nie potrzebujesz konta.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Najczęstsze pytania">
+
+<Faq items={post.faq} />
+
+</Section>

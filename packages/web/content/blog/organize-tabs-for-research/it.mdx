@@ -1,0 +1,117 @@
+export const post = {
+  slug: 'organize-tabs-for-research',
+  title: 'Come organizzare le schede per la ricerca: note, promemoria e fonti',
+  navTitle: 'Organizzare le schede per la ricerca',
+  seoTitle: 'Come organizzare le schede del browser per la ricerca (note, sessioni, fonti)',
+  description:
+    'Un metodo per le schede della tua ricerca: un gruppo TabMerger per progetto, una nota su ogni fonte importante, promemoria per tornarci, sessioni per mettere in pausa un intero progetto e un export delle fonti quando scrivi.',
+  shareSummary: 'Un gruppo per progetto, note sulle fonti, promemoria e un export quando è ora di scrivere.',
+  dek: 'Quaranta schede di fonti sono una biblioteca, non un caos, se ognuna dice perché è lì.',
+  published: '2026-12-09',
+  updated: '2026-12-09',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ogni scheda salvata può avere una nota e un promemoria.', source: 'TabMerger 3.16.1' },
+    { text: 'Promemoria: 30 min, 1 ora, 3 ore, domani, oppure una data e un’ora.', source: 'TabMerger 3.16.1' },
+    { text: 'Una sessione salva tutti i tuoi gruppi per ripristinarli insieme; il piano gratuito ne tiene 3.', source: 'Prezzi di TabMerger', href: '/pricing' },
+    { text: 'L’export JSON elenca il titolo e l’indirizzo di ogni fonte.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Come tengo traccia delle fonti nel browser?',
+      answer:
+        'Salva le schede di ogni progetto in un gruppo TabMerger e aggiungi una nota a ogni fonte che citerai: perché è importante, per quale sezione, per quale capitolo. Ctrl+K cerca titoli e indirizzi in tutti i tuoi gruppi.',
+    },
+    {
+      question: 'Posso impostare un promemoria per tornare su una scheda?',
+      answer: 'Sì. In TabMerger fai clic destro su una scheda salvata e scegli «Ricordamelo…»: 30 minuti, 1 ora, 3 ore, domani, oppure una data e un’ora, con una nota facoltativa.',
+    },
+    {
+      question: 'Le schede di ricerca dovrebbero diventare segnalibri?',
+      answer: 'Per il lavoro in corso è meglio un gruppo salvato: tiene insieme le schede con le note e si riapre con un clic. Aggiungi ai segnalibri solo le poche che vorrai conservare per anni.',
+      link: { text: 'Aggiungi ai segnalibri', href: '/blog/tabs-vs-bookmarks' },
+    },
+    {
+      question: 'Come ottengo un elenco delle mie fonti?',
+      answer: 'Impostazioni → Dati → Esporta JSON salva i titoli e gli indirizzi di tutti i gruppi in un unico file, che puoi trasformare in una bibliografia.',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp', alt: 'Gruppo TabMerger «Thesis sources» con il menu di una scheda aperto: Move to group (Sposta nel gruppo), Add note (Aggiungi nota), Remind me… (Ricordamelo…), Rename tab (Rinomina scheda), Remove tab (Rimuovi scheda), tema chiaro' },
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-dark.webp', alt: 'Gruppo TabMerger «Thesis sources» con il menu di una scheda aperto: Move to group (Sposta nel gruppo), Add note (Aggiungi nota), Remind me… (Ricordamelo…), Rename tab (Rinomina scheda), Remove tab (Rimuovi scheda), tema scuro' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-light.webp', alt: 'Selettore del promemoria di TabMerger sotto una scheda: 30 min, 1 hour, 3 hours, Tomorrow (Domani), una data e un’ora e una nota facoltativa, tema chiaro' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-dark.webp', alt: 'Selettore del promemoria di TabMerger sotto una scheda: 30 min, 1 hour, 3 hours, Tomorrow (Domani), una data e un’ora e una nota facoltativa, tema scuro' },
+  ],
+  tags: ['research', 'tab-management', 'save-tabs', 'session-management'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-for-research/og.png', alt: 'Come organizzare le schede per la ricerca: una guida TabMerger, con le opzioni di nota e promemoria di una scheda' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'project', label: 'Un gruppo per progetto' },
+    { id: 'notes', label: 'Note e promemoria' },
+    { id: 'sessions', label: 'Mettere in pausa un progetto' },
+    { id: 'export', label: 'Esportare le fonti' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+}
+
+<QuickAnswer>
+
+Dai a ogni progetto di ricerca il suo gruppo [TabMerger](/features) e aggiungi una **nota** a ogni fonte che userai, per ricordarti perché è importante. Imposta un **promemoria** su quelle da rivedere, salva una **sessione** per mettere in pausa l’intero progetto e riprenderlo con un clic, ed **esporta** il gruppo in un file quando scrivi la bibliografia.
+
+</QuickAnswer>
+
+<InstallCta>Trasforma quaranta schede di fonti in una biblioteca annotata e ricercabile. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="project" title="Come organizzo le schede di un progetto di ricerca?">
+
+1. Fai clic su **Aggiungi gruppo** (Add Group) e dagli il nome del progetto, per esempio «Fonti della tesi» (negli screenshot «Thesis sources»).
+2. Apri il menu **⋯** del gruppo e scegli **Unisci con l'attuale** (Merge with current): tutte le schede aperte vengono salvate al suo interno.
+3. Chiudi le finestre quando hai finito per oggi. Il gruppo conserva tutto, e più tardi <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> trova qualsiasi fonte per titolo o indirizzo.
+
+Tieni una finestra per filone (articoli, dati, contesto) all’interno del gruppo e dai un nome a ciascuna. Con le schede di ricerca, metà del lavoro sta nel decidere cosa vale la pena tenere; la nostra [guida schede o segnalibri](/blog/tabs-vs-bookmarks) ti aiuta a scegliere.
+
+</Section>
+
+<Section id="notes" title="Come annoto le fonti e ci torno più tardi?">
+
+Fai clic destro su una scheda salvata:
+
+- **Aggiungi nota** (Add note): perché questa fonte è importante. Un’icona a forma di nota segnala le schede che ne hanno una.
+- **Ricordamelo…** (Remind me…): 30 minuti, 1 ora, 3 ore, domani, oppure una data e un’ora a tua scelta, con una nota facoltativa. Al momento giusto TabMerger mostra una notifica del browser.
+- **Rinomina scheda** (Rename tab): sostituisci un titolo di pagina criptico («[1706.03762]») con qualcosa che cercherai davvero.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Note e promemoria su una fonte" steps={[{ title: 'Menu della scheda' }, { title: 'Promemoria' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-tab-menu" alt="Gruppo TabMerger «Thesis sources» con il menu di una scheda aperto: Move to group (Sposta nel gruppo), Add note (Aggiungi nota), Remind me… (Ricordamelo…), Rename tab (Rinomina scheda), Remove tab (Rimuovi scheda), tema chiaro" darkAlt="Gruppo TabMerger «Thesis sources» con il menu di una scheda aperto: Move to group (Sposta nel gruppo), Add note (Aggiungi nota), Remind me… (Ricordamelo…), Rename tab (Rinomina scheda), Remove tab (Rimuovi scheda), tema scuro" boxes={[{ id: 'add-note', label: 'Aggiungi nota' }, { id: 'remind-me', label: 'Ricordamelo…' }]} source="TabMerger 3.16.1">Fai clic destro su una fonte per annotarla; la prima scheda ha già una nota.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-reminder" alt="Selettore del promemoria di TabMerger sotto una scheda: 30 min, 1 hour, 3 hours, Tomorrow (Domani), una data e un’ora e una nota facoltativa, tema chiaro" darkAlt="Selettore del promemoria di TabMerger sotto una scheda: 30 min, 1 hour, 3 hours, Tomorrow (Domani), una data e un’ora e una nota facoltativa, tema scuro" boxes={[{ id: 'remind-in', label: 'Ricordamelo tra…' }]} source="TabMerger 3.16.1">Scegli quando tornarci e lascia una nota al te stesso del futuro.</ThemedScreenshot>
+</Carousel>
+
+Per gestire così un’intera lista di letture, vedi [come usare le schede come lista di cose da fare](/blog/tabs-as-a-to-do-list).
+
+</Section>
+
+<Section id="sessions" title="Come metto in pausa un intero progetto e lo riprendo più tardi?">
+
+**Salva la sessione attuale** (Save current session, nella sezione Sessioni della barra laterale) crea un’istantanea con nome di tutti i tuoi gruppi salvati; **Ripristina sessione** (Restore session) li riporta indietro tutti insieme. Usalo alle tappe importanti, come «Prima della rassegna della letteratura», così potrai tornare più tardi esattamente a quell’insieme. Il piano gratuito tiene 3 sessioni nel browser; [Pro](/pricing) tiene sessioni illimitate e le sincronizza tra i tuoi dispositivi, crittografate end-to-end. Altro sulle sessioni in [cosa fa un gestore di sessioni](/blog/browser-session-manager).
+
+</Section>
+
+<Section id="export" title="Come esporto le fonti quando scrivo?">
+
+Apri **Impostazioni → Dati** (Settings → Data) e premi **Esporta JSON** (Export JSON). Il file elenca ogni gruppo, finestra e scheda con titolo e indirizzo, pronto da trasformare in una bibliografia con un breve script o un editor di testo. Dettagli e un esempio campo per campo in [come esportare le schede aperte](/blog/export-open-tabs).
+
+<InstallCta>Gratis per Chrome, Edge e Firefox. Non serve un account per iniziare.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

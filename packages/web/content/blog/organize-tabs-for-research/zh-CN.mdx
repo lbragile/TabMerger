@@ -1,0 +1,117 @@
+export const post = {
+  slug: 'organize-tabs-for-research',
+  title: '做研究时如何整理标签页：备注、提醒和资料来源',
+  navTitle: '做研究时整理标签页',
+  seoTitle: '做研究时如何整理浏览器标签页（备注、会话、资料来源）',
+  description:
+    '一套研究用的标签页工作流：每个项目一个 TabMerger 分组，每个重要来源一条备注，到点回来看的提醒，用会话暂停整个项目，动笔写作时再导出全部资料来源。',
+  shareSummary: '每个项目一个分组，来源加备注，设好提醒，写作时一键导出。',
+  dek: '四十个资料标签页，只要每个都写明为什么在那儿，就是一座资料库，而不是一团乱麻。',
+  published: '2026-12-09',
+  updated: '2026-12-09',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '任何已保存的标签页都可以带一条备注和一个提醒。', source: 'TabMerger 3.16.1' },
+    { text: '提醒：30 分钟、1 小时、3 小时、明天，或指定的日期和时间。', source: 'TabMerger 3.16.1' },
+    { text: '会话会保存你的所有分组，方便一起恢复；免费版保留 3 个。', source: 'TabMerger 价格', href: '/pricing' },
+    { text: '导出的 JSON 列出每个来源的标题和地址。', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: '怎样在浏览器里管理资料来源？',
+      answer:
+        '把每个项目的标签页保存为一个 TabMerger 分组，并给每个要引用的来源加一条备注：为什么重要、用在哪一节、用在哪一章。Ctrl+K 可以在所有分组中搜索标题和地址。',
+    },
+    {
+      question: '能设置提醒，让我之后回到某个标签页吗？',
+      answer: '可以。在 TabMerger 中右键点击一个已保存的标签页，选择“提醒我…”：30 分钟、1 小时、3 小时、明天，或指定的日期和时间，还可以附上一条备注。',
+    },
+    {
+      question: '研究用的标签页应该存成书签吗？',
+      answer: '对进行中的工作来说，保存的分组更合适：它把整组标签页和备注放在一起，一键就能重新打开。只有那几个要用上好几年的页面才值得存成书签。',
+      link: { text: '存成书签', href: '/blog/tabs-vs-bookmarks' },
+    },
+    {
+      question: '怎样导出我的资料来源列表？',
+      answer: '设置 → 数据 → 导出 JSON 会把所有分组的标题和地址保存到一个文件里，你可以把它整理成参考文献列表。',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp', alt: 'TabMerger 分组 Thesis sources，打开了一个标签页的菜单：Move to group（移动到分组）、Add note（添加备注）、Remind me…（提醒我…）、Rename tab（重命名标签页）、Remove tab（移除标签页），浅色主题' },
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-dark.webp', alt: 'TabMerger 分组 Thesis sources，打开了一个标签页的菜单：Move to group（移动到分组）、Add note（添加备注）、Remind me…（提醒我…）、Rename tab（重命名标签页）、Remove tab（移除标签页），深色主题' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-light.webp', alt: '标签页下方的 TabMerger 提醒选择器：30 min, 1 hour, 3 hours, Tomorrow（明天）、指定日期和时间，以及可选备注，浅色主题' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-dark.webp', alt: '标签页下方的 TabMerger 提醒选择器：30 min, 1 hour, 3 hours, Tomorrow（明天）、指定日期和时间，以及可选备注，深色主题' },
+  ],
+  tags: ['research', 'tab-management', 'save-tabs', 'session-management'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-for-research/og.png', alt: '做研究时如何整理标签页：TabMerger 指南，展示标签页的备注和提醒选项' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'project', label: '每个项目一个分组' },
+    { id: 'notes', label: '备注和提醒' },
+    { id: 'sessions', label: '暂停整个项目' },
+    { id: 'export', label: '导出资料来源' },
+    { id: 'faq', label: '常见问题' },
+  ],
+}
+
+<QuickAnswer>
+
+给每个研究项目建一个专属的 [TabMerger](/features) 分组，并给要用到的每个来源加一条**备注**，写明它为什么重要。给需要再看的来源设一个**提醒**，保存一个**会话**来暂停整个项目、之后一键恢复；写参考文献时，把分组**导出**成文件即可。
+
+</QuickAnswer>
+
+<InstallCta>把四十个资料标签页变成一座带备注、可搜索的资料库。适用于 Chrome、Edge 和 Firefox，免费。</InstallCta>
+
+<Section id="project" title="怎样整理一个研究项目的标签页？">
+
+1. 点击**添加分组**（Add Group），用项目名给它命名，比如“论文资料”（截图中为“Thesis sources”）。
+2. 打开分组的 **⋯** 菜单，选择**与当前合并**（Merge with current）：你当前打开的所有标签页都会保存进去。
+3. 当天工作结束后关掉窗口即可。分组会保留一切，之后用 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> 就能按标题或地址找到任何来源。
+
+在分组内，每条线索（论文、数据、背景资料）各用一个窗口，并分别命名。处理研究标签页，一半的工夫在于判断哪些值得留下；我们的[标签页与书签对比指南](/blog/tabs-vs-bookmarks)可以帮你做决定。
+
+</Section>
+
+<Section id="notes" title="怎样给来源加注释，并在之后回来查看？">
+
+右键点击任意已保存的标签页：
+
+- **添加备注**（Add note）：写下这个来源为什么重要。有备注的标签页会显示一个备注图标。
+- **提醒我…**（Remind me…）：30 分钟、1 小时、3 小时、明天，或你选定的日期和时间，还可以附上一条备注。到时间后，TabMerger 会弹出浏览器通知。
+- **重命名标签页**（Rename tab）：把晦涩的页面标题（“[1706.03762]”）换成你以后会搜索的名字。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="给来源加备注和提醒" steps={[{ title: '标签页菜单' }, { title: '提醒' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-tab-menu" alt="TabMerger 分组 Thesis sources，打开了一个标签页的菜单：Move to group（移动到分组）、Add note（添加备注）、Remind me…（提醒我…）、Rename tab（重命名标签页）、Remove tab（移除标签页），浅色主题" darkAlt="TabMerger 分组 Thesis sources，打开了一个标签页的菜单：Move to group（移动到分组）、Add note（添加备注）、Remind me…（提醒我…）、Rename tab（重命名标签页）、Remove tab（移除标签页），深色主题" boxes={[{ id: 'add-note', label: '添加备注' }, { id: 'remind-me', label: '提醒我…' }]} source="TabMerger 3.16.1">右键点击来源即可加注释；第一个标签页已经有备注了。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-reminder" alt="标签页下方的 TabMerger 提醒选择器：30 min, 1 hour, 3 hours, Tomorrow（明天）、指定日期和时间，以及可选备注，浅色主题" darkAlt="标签页下方的 TabMerger 提醒选择器：30 min, 1 hour, 3 hours, Tomorrow（明天）、指定日期和时间，以及可选备注，深色主题" boxes={[{ id: 'remind-in', label: '多久后提醒我…' }]} source="TabMerger 3.16.1">选好什么时候回来，再给未来的自己留一条备注。</ThemedScreenshot>
+</Carousel>
+
+想用这种方式管理整份阅读清单，请看[把标签页当作待办清单](/blog/tabs-as-a-to-do-list)。
+
+</Section>
+
+<Section id="sessions" title="怎样暂停整个项目，之后再接着做？">
+
+**保存当前会话**（Save current session，位于侧边栏的“会话”部分）会为你所有已保存的分组拍一个带名称的快照；**恢复会话**（Restore session）则把它们一起恢复。在关键节点使用它，比如“文献综述之前”，之后就能回到当时那一整套标签页。免费版在浏览器中保留 3 个会话；[Pro](/pricing) 版不限会话数量，并在你的设备之间以端到端加密方式同步。关于会话的更多内容，请看[会话管理器能做什么](/blog/browser-session-manager)。
+
+</Section>
+
+<Section id="export" title="写作时怎样导出资料来源？">
+
+打开**设置 → 数据**（Settings → Data），点击**导出 JSON**（Export JSON）。文件会列出每个分组、窗口和标签页及其标题和地址，用一段简短的脚本或文本编辑器就能整理成参考文献列表。详细说明和逐字段示例见[如何导出已打开的标签页](/blog/export-open-tabs)。
+
+<InstallCta>适用于 Chrome、Edge 和 Firefox，免费。无需账号即可开始使用。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

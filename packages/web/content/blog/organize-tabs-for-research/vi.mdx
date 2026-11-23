@@ -1,0 +1,117 @@
+export const post = {
+  slug: 'organize-tabs-for-research',
+  title: 'Cách sắp xếp tab để nghiên cứu: ghi chú, lời nhắc và nguồn tài liệu',
+  navTitle: 'Sắp xếp tab để nghiên cứu',
+  seoTitle: 'Cách sắp xếp tab trình duyệt để nghiên cứu (ghi chú, phiên, nguồn tài liệu)',
+  description:
+    'Quy trình quản lý tab khi nghiên cứu: mỗi dự án một nhóm TabMerger, ghi chú trên từng nguồn quan trọng, lời nhắc để quay lại, phiên để tạm dừng cả dự án và xuất danh sách nguồn khi bắt tay vào viết.',
+  shareSummary: 'Mỗi dự án một nhóm, ghi chú trên nguồn, lời nhắc và một bản xuất khi bắt tay vào viết.',
+  dek: 'Bốn mươi tab nguồn là một thư viện chứ không phải mớ hỗn độn, nếu tab nào cũng cho biết vì sao nó ở đó.',
+  published: '2026-12-09',
+  updated: '2026-12-09',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Tab đã lưu nào cũng có thể kèm ghi chú và lời nhắc.', source: 'TabMerger 3.16.1' },
+    { text: 'Lời nhắc: 30 phút, 1 giờ, 3 giờ, ngày mai, hoặc một ngày giờ cụ thể.', source: 'TabMerger 3.16.1' },
+    { text: 'Một phiên lưu tất cả các nhóm để khôi phục cùng lúc; gói Miễn phí giữ 3 phiên.', source: 'Bảng giá TabMerger', href: '/pricing' },
+    { text: 'Bản xuất JSON liệt kê tiêu đề và địa chỉ của từng nguồn.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Làm sao để theo dõi các nguồn tài liệu trong trình duyệt?',
+      answer:
+        'Lưu các tab của mỗi dự án thành một nhóm TabMerger và thêm ghi chú cho từng nguồn bạn sẽ trích dẫn: vì sao nó quan trọng, cho mục nào, cho chương nào. Ctrl+K tìm theo tiêu đề và địa chỉ trong tất cả các nhóm của bạn.',
+    },
+    {
+      question: 'Tôi có thể đặt lời nhắc để quay lại một tab không?',
+      answer: 'Có. Nhấp chuột phải vào một tab đã lưu trong TabMerger và chọn “Nhắc tôi…”: 30 phút, 1 giờ, 3 giờ, ngày mai, hoặc một ngày giờ cụ thể, kèm ghi chú tùy chọn.',
+    },
+    {
+      question: 'Có nên lưu tab nghiên cứu thành dấu trang không?',
+      answer: 'Với công việc đang dở dang, một nhóm đã lưu sẽ tốt hơn: nó giữ cả bộ tab cùng ghi chú và mở lại chỉ bằng một cú nhấp. Hãy đánh dấu trang cho số ít trang bạn sẽ cần trong nhiều năm.',
+      link: { text: 'đánh dấu trang', href: '/blog/tabs-vs-bookmarks' },
+    },
+    {
+      question: 'Làm sao để lấy ra danh sách nguồn của tôi?',
+      answer: 'Cài đặt → Dữ liệu → Xuất JSON lưu tiêu đề và địa chỉ của mọi nhóm vào một tệp mà bạn có thể biến thành danh mục tài liệu tham khảo.',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp', alt: 'Nhóm TabMerger “Thesis sources” với menu của một tab đang mở: Move to group (Di chuyển vào nhóm), Add note (Thêm ghi chú), Remind me… (Nhắc tôi…), Rename tab (Đổi tên thẻ), Remove tab (Xóa thẻ), giao diện sáng' },
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-dark.webp', alt: 'Nhóm TabMerger “Thesis sources” với menu của một tab đang mở: Move to group (Di chuyển vào nhóm), Add note (Thêm ghi chú), Remind me… (Nhắc tôi…), Rename tab (Đổi tên thẻ), Remove tab (Xóa thẻ), giao diện tối' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-light.webp', alt: 'Bộ chọn lời nhắc của TabMerger bên dưới một tab: 30 min, 1 hour, 3 hours, Tomorrow (Ngày mai), một ngày giờ và một ghi chú tùy chọn, giao diện sáng' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-dark.webp', alt: 'Bộ chọn lời nhắc của TabMerger bên dưới một tab: 30 min, 1 hour, 3 hours, Tomorrow (Ngày mai), một ngày giờ và một ghi chú tùy chọn, giao diện tối' },
+  ],
+  tags: ['research', 'tab-management', 'save-tabs', 'session-management'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-for-research/og.png', alt: 'Cách sắp xếp tab để nghiên cứu: hướng dẫn của TabMerger, với các tùy chọn ghi chú và lời nhắc của một tab' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'project', label: 'Mỗi dự án một nhóm' },
+    { id: 'notes', label: 'Ghi chú và lời nhắc' },
+    { id: 'sessions', label: 'Tạm dừng cả dự án' },
+    { id: 'export', label: 'Xuất danh sách nguồn' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+}
+
+<QuickAnswer>
+
+Cho mỗi dự án nghiên cứu một nhóm [TabMerger](/features) riêng, và thêm **ghi chú** cho từng nguồn bạn sẽ dùng, nói rõ vì sao nó quan trọng. Đặt **lời nhắc** cho những nguồn cần xem lại, lưu một **phiên** để tạm dừng cả dự án rồi mang nó trở lại chỉ bằng một cú nhấp, và **xuất** nhóm ra một tệp khi bạn viết danh mục tài liệu tham khảo.
+
+</QuickAnswer>
+
+<InstallCta>Biến bốn mươi tab nguồn thành một thư viện có chú thích và tìm kiếm được. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+<Section id="project" title="Làm sao để sắp xếp các tab của một dự án nghiên cứu?">
+
+1. Nhấp **Thêm Nhóm** (Add Group) và đặt tên theo dự án, chẳng hạn “Nguồn luận văn” (trong ảnh chụp màn hình là “Thesis sources”).
+2. Mở menu **⋯** của nhóm và chọn **Hợp nhất với phiên hiện tại** (Merge with current): mọi tab đang mở đều được lưu vào nhóm.
+3. Đóng các cửa sổ khi bạn xong việc trong ngày. Nhóm giữ lại mọi thứ, và sau này <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> sẽ tìm ra bất kỳ nguồn nào theo tiêu đề hoặc địa chỉ.
+
+Trong nhóm, hãy dành mỗi cửa sổ cho một mạch nội dung (bài báo, dữ liệu, bối cảnh) và đặt tên cho từng cửa sổ. Với tab nghiên cứu, một nửa công việc là quyết định cái gì đáng giữ lại; [hướng dẫn tab hay dấu trang](/blog/tabs-vs-bookmarks) của chúng tôi giúp bạn quyết định.
+
+</Section>
+
+<Section id="notes" title="Làm sao để chú thích nguồn và quay lại với chúng?">
+
+Nhấp chuột phải vào bất kỳ tab đã lưu nào:
+
+- **Thêm ghi chú** (Add note): vì sao nguồn này quan trọng. Biểu tượng ghi chú đánh dấu những tab có ghi chú.
+- **Nhắc tôi…** (Remind me…): 30 phút, 1 giờ, 3 giờ, ngày mai, hoặc ngày giờ bạn chọn, kèm ghi chú tùy chọn. Đến hạn, TabMerger sẽ hiện thông báo của trình duyệt.
+- **Đổi tên thẻ** (Rename tab): thay tiêu đề trang khó hiểu (“[1706.03762]”) bằng thứ bạn sẽ tìm kiếm.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Ghi chú và lời nhắc trên một nguồn" steps={[{ title: 'Menu tab' }, { title: 'Lời nhắc' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-tab-menu" alt="Nhóm TabMerger “Thesis sources” với menu của một tab đang mở: Move to group (Di chuyển vào nhóm), Add note (Thêm ghi chú), Remind me… (Nhắc tôi…), Rename tab (Đổi tên thẻ), Remove tab (Xóa thẻ), giao diện sáng" darkAlt="Nhóm TabMerger “Thesis sources” với menu của một tab đang mở: Move to group (Di chuyển vào nhóm), Add note (Thêm ghi chú), Remind me… (Nhắc tôi…), Rename tab (Đổi tên thẻ), Remove tab (Xóa thẻ), giao diện tối" boxes={[{ id: 'add-note', label: 'Thêm ghi chú' }, { id: 'remind-me', label: 'Nhắc tôi…' }]} source="TabMerger 3.16.1">Nhấp chuột phải vào một nguồn để chú thích; tab đầu tiên đã có ghi chú.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-reminder" alt="Bộ chọn lời nhắc của TabMerger bên dưới một tab: 30 min, 1 hour, 3 hours, Tomorrow (Ngày mai), một ngày giờ và một ghi chú tùy chọn, giao diện sáng" darkAlt="Bộ chọn lời nhắc của TabMerger bên dưới một tab: 30 min, 1 hour, 3 hours, Tomorrow (Ngày mai), một ngày giờ và một ghi chú tùy chọn, giao diện tối" boxes={[{ id: 'remind-in', label: 'Nhắc tôi sau…' }]} source="TabMerger 3.16.1">Chọn lúc quay lại, và để lại ghi chú cho chính bạn sau này.</ThemedScreenshot>
+</Carousel>
+
+Để quản lý cả một danh sách cần đọc theo cách này, xem [dùng tab như danh sách việc cần làm](/blog/tabs-as-a-to-do-list).
+
+</Section>
+
+<Section id="sessions" title="Làm sao để tạm dừng cả dự án và quay lại sau?">
+
+**Lưu phiên hiện tại** (Save current session, trong mục Phiên ở thanh bên) chụp lại tất cả các nhóm đã lưu thành một bản có tên; **Khôi phục phiên** (Restore session) mang chúng trở lại cùng lúc. Hãy dùng ở các mốc quan trọng, như “Trước phần tổng quan tài liệu”, để sau này bạn có thể quay về đúng bộ tab đó. Gói Miễn phí giữ 3 phiên trong trình duyệt; [Pro](/pricing) giữ số phiên không giới hạn và đồng bộ chúng giữa các thiết bị của bạn, mã hóa đầu cuối. Xem thêm về phiên trong bài [trình quản lý phiên làm gì](/blog/browser-session-manager).
+
+</Section>
+
+<Section id="export" title="Làm sao để xuất danh sách nguồn khi bắt tay vào viết?">
+
+Mở **Cài đặt → Dữ liệu** (Settings → Data) và nhấn **Xuất JSON** (Export JSON). Tệp liệt kê mọi nhóm, cửa sổ và tab cùng tiêu đề và địa chỉ, sẵn sàng biến thành danh mục tài liệu tham khảo bằng một đoạn script ngắn hoặc trình soạn thảo văn bản. Chi tiết và ví dụ cho từng trường có trong bài [cách xuất các tab đang mở](/blog/export-open-tabs).
+
+<InstallCta>Miễn phí cho Chrome, Edge và Firefox. Không cần tài khoản để bắt đầu.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+</Section>

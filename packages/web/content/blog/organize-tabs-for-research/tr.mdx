@@ -1,0 +1,117 @@
+export const post = {
+  slug: 'organize-tabs-for-research',
+  title: 'Araştırma için sekmeler nasıl düzenlenir: notlar, hatırlatıcılar ve kaynaklar',
+  navTitle: 'Araştırma için sekmeleri düzenleyin',
+  seoTitle: 'Araştırma İçin Tarayıcı Sekmeleri Nasıl Düzenlenir (Notlar, Oturumlar, Kaynaklar)',
+  description:
+    'Araştırma sekmeleri için bir yöntem: her proje için bir TabMerger grubu, önemli her kaynağa bir not, geri dönmek için hatırlatıcılar, bütün bir projeyi duraklatmak için oturumlar ve yazmaya geçtiğinizde kaynaklarınızın dışa aktarımı.',
+  shareSummary: 'Proje başına bir grup, kaynaklara notlar, hatırlatıcılar ve yazarken bir dışa aktarım.',
+  dek: 'Kırk kaynak sekmesi, her biri neden orada olduğunu söylüyorsa karmaşa değil, bir kütüphanedir.',
+  published: '2026-12-09',
+  updated: '2026-12-09',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Kayıtlı her sekmeye bir not ve bir hatırlatıcı eklenebilir.', source: 'TabMerger 3.16.1' },
+    { text: 'Hatırlatıcılar: 30 dk, 1 saat, 3 saat, yarın ya da bir tarih ve saat.', source: 'TabMerger 3.16.1' },
+    { text: 'Oturum, tüm gruplarınızı birlikte geri yüklemek üzere kaydeder; ücretsiz plan 3 oturum tutar.', source: 'TabMerger fiyatları', href: '/pricing' },
+    { text: 'JSON dışa aktarımı her kaynağın başlığını ve adresini listeler.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Tarayıcıda kaynaklarımı nasıl takip ederim?',
+      answer:
+        'Her projenin sekmelerini bir TabMerger grubu olarak kaydedin ve alıntı yapacağınız her kaynağa bir not ekleyin: neden önemli, hangi kısım için, hangi bölüm için. Ctrl+K tüm gruplarınızda başlıkları ve adresleri arar.',
+    },
+    {
+      question: 'Bir sekmeye geri dönmek için hatırlatıcı kurabilir miyim?',
+      answer: 'Evet. TabMerger’da kayıtlı bir sekmeye sağ tıklayın ve “Bana hatırlat…” seçeneğini seçin: 30 dakika, 1 saat, 3 saat, yarın ya da bir tarih ve saat, isteğe bağlı bir notla.',
+    },
+    {
+      question: 'Araştırma sekmeleri yer imi mi olmalı?',
+      answer: 'Süren işler için kayıtlı bir grup daha iyidir: seti notlarıyla birlikte bir arada tutar ve tek tıkla yeniden açılır. Yıllarca isteyeceğiniz birkaç sayfayı yer imlerine ekleyin.',
+      link: { text: 'yer imlerine ekleyin', href: '/blog/tabs-vs-bookmarks' },
+    },
+    {
+      question: 'Kaynaklarımın listesini nasıl dışarı alırım?',
+      answer: 'Ayarlar → Veri → JSON olarak dışa aktar, tüm grupların başlıklarını ve adreslerini kaynakçaya dönüştürebileceğiniz tek bir dosyaya kaydeder.',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp', alt: 'Bir sekmenin menüsü açık TabMerger grubu “Thesis sources”: Move to group (Gruba taşı), Add note (Not ekle), Remind me… (Bana hatırlat…), Rename tab (Sekmeyi yeniden adlandır), Remove tab (Sekmeyi kaldır), açık tema' },
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-dark.webp', alt: 'Bir sekmenin menüsü açık TabMerger grubu “Thesis sources”: Move to group (Gruba taşı), Add note (Not ekle), Remind me… (Bana hatırlat…), Rename tab (Sekmeyi yeniden adlandır), Remove tab (Sekmeyi kaldır), koyu tema' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-light.webp', alt: 'Bir sekmenin altında TabMerger hatırlatıcı seçicisi: 30 min, 1 hour, 3 hours, Tomorrow (Yarın), bir tarih ve saat ve isteğe bağlı bir not, açık tema' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-dark.webp', alt: 'Bir sekmenin altında TabMerger hatırlatıcı seçicisi: 30 min, 1 hour, 3 hours, Tomorrow (Yarın), bir tarih ve saat ve isteğe bağlı bir not, koyu tema' },
+  ],
+  tags: ['research', 'tab-management', 'save-tabs', 'session-management'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-for-research/og.png', alt: 'Araştırma için sekmeler nasıl düzenlenir: bir sekmenin not ve hatırlatıcı seçenekleriyle bir TabMerger rehberi' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'project', label: 'Proje başına bir grup' },
+    { id: 'notes', label: 'Notlar ve hatırlatıcılar' },
+    { id: 'sessions', label: 'Bütün bir projeyi duraklatın' },
+    { id: 'export', label: 'Kaynaklarınızı dışa aktarın' },
+    { id: 'faq', label: 'SSS' },
+  ],
+}
+
+<QuickAnswer>
+
+Her araştırma projesine kendi [TabMerger](/features) grubunu verin ve kullanacağınız her kaynağa, neden önemli olduğunu söyleyen bir **not** ekleyin. Yeniden bakmanız gerekenlere bir **hatırlatıcı** kurun, bütün projeyi duraklatıp tek tıkla geri getirmek için bir **oturum** kaydedin ve kaynakçanızı yazarken grubu bir dosyaya **dışa aktarın**.
+
+</QuickAnswer>
+
+<InstallCta>Kırk kaynak sekmesini notlu, aranabilir bir kütüphaneye dönüştürün. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+<Section id="project" title="Bir araştırma projesinin sekmelerini nasıl düzenlerim?">
+
+1. **Grup Ekle** (Add Group) düğmesine tıklayın ve gruba projenin adını verin, örneğin “Tez kaynakları” (ekran görüntülerinde “Thesis sources”).
+2. Grubun **⋯** menüsünü açın ve **Mevcutla birleştir** (Merge with current) seçeneğini seçin: açık olan her sekme gruba kaydedilir.
+3. Günü bitirdiğinizde pencereleri kapatın. Grup her şeyi saklar ve <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> daha sonra her kaynağı başlığından ya da adresinden bulur.
+
+Grubun içinde her konu için bir pencere tutun (makaleler, veriler, arka plan) ve her birine bir ad verin. Araştırma sekmelerinde işin yarısı neyin saklanmaya değer olduğuna karar vermektir; [sekmeler ve yer imleri rehberimiz](/blog/tabs-vs-bookmarks) karar vermenize yardımcı olur.
+
+</Section>
+
+<Section id="notes" title="Kaynaklara nasıl not eklerim ve onlara nasıl geri dönerim?">
+
+Kayıtlı herhangi bir sekmeye sağ tıklayın:
+
+- **Not ekle** (Add note): bu kaynağın neden önemli olduğu. Notu olan sekmeleri bir not simgesi işaretler.
+- **Bana hatırlat…** (Remind me…): 30 dakika, 1 saat, 3 saat, yarın ya da seçtiğiniz bir tarih ve saat, isteğe bağlı bir notla. Zamanı geldiğinde TabMerger bir tarayıcı bildirimi gösterir.
+- **Sekmeyi yeniden adlandır** (Rename tab): anlaşılmaz bir sayfa başlığını (“[1706.03762]”) arayacağınız bir şeyle değiştirin.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Bir kaynakta notlar ve hatırlatıcılar" steps={[{ title: 'Sekme menüsü' }, { title: 'Hatırlatıcı' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-tab-menu" alt="Bir sekmenin menüsü açık TabMerger grubu “Thesis sources”: Move to group (Gruba taşı), Add note (Not ekle), Remind me… (Bana hatırlat…), Rename tab (Sekmeyi yeniden adlandır), Remove tab (Sekmeyi kaldır), açık tema" darkAlt="Bir sekmenin menüsü açık TabMerger grubu “Thesis sources”: Move to group (Gruba taşı), Add note (Not ekle), Remind me… (Bana hatırlat…), Rename tab (Sekmeyi yeniden adlandır), Remove tab (Sekmeyi kaldır), koyu tema" boxes={[{ id: 'add-note', label: 'Not ekle' }, { id: 'remind-me', label: 'Bana hatırlat…' }]} source="TabMerger 3.16.1">Bir kaynağa not eklemek için sağ tıklayın; ilk sekmenin zaten bir notu var.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-reminder" alt="Bir sekmenin altında TabMerger hatırlatıcı seçicisi: 30 min, 1 hour, 3 hours, Tomorrow (Yarın), bir tarih ve saat ve isteğe bağlı bir not, açık tema" darkAlt="Bir sekmenin altında TabMerger hatırlatıcı seçicisi: 30 min, 1 hour, 3 hours, Tomorrow (Yarın), bir tarih ve saat ve isteğe bağlı bir not, koyu tema" boxes={[{ id: 'remind-in', label: 'Bana şu süre sonra hatırlat…' }]} source="TabMerger 3.16.1">Ne zaman geri döneceğinizi seçin ve gelecekteki kendinize bir not bırakın.</ThemedScreenshot>
+</Carousel>
+
+Bütün bir okuma listesini bu şekilde yürütmek için [sekmeleri yapılacaklar listesi olarak kullanma](/blog/tabs-as-a-to-do-list) yazımıza bakın.
+
+</Section>
+
+<Section id="sessions" title="Bütün bir projeyi nasıl duraklatıp sonra geri dönerim?">
+
+**Mevcut oturumu kaydet** (Save current session, kenar çubuğunun Oturumlar bölümünde) kayıtlı tüm gruplarınızın adlandırılmış bir anlık görüntüsünü alır; **Oturumu geri yükle** (Restore session) hepsini birlikte geri getirir. Bunu “Literatür taramasından önce” gibi dönüm noktalarında kullanın; böylece daha sonra tam o sete geri dönebilirsiniz. Ücretsiz plan tarayıcıda 3 oturum tutar; [Pro](/pricing) sınırsız oturum tutar ve bunları cihazlarınız arasında uçtan uca şifreli olarak senkronize eder. Oturumlar hakkında daha fazlası için [bir oturum yöneticisi ne yapar](/blog/browser-session-manager) yazımıza bakın.
+
+</Section>
+
+<Section id="export" title="Yazmaya geçtiğimde kaynaklarımı nasıl dışa aktarırım?">
+
+**Ayarlar → Veri** (Settings → Data) bölümünü açın ve **JSON olarak dışa aktar** (Export JSON) düğmesine basın. Dosya her grubu, pencereyi ve sekmeyi başlığı ve adresiyle listeler; kısa bir betikle ya da bir metin düzenleyicide kaynakçaya dönüştürülmeye hazırdır. Ayrıntılar ve alan alan bir örnek için [açık sekmelerinizi nasıl dışa aktarırsınız](/blog/export-open-tabs) yazımıza bakın.
+
+<InstallCta>Chrome, Edge ve Firefox için ücretsiz. Başlamak için hesap gerekmez.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

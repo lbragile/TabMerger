@@ -55,3 +55,10 @@ Run the template check again just before writing into the repo, to confirm en.md
 **Search-syntax examples pin the example names:** when the body uses `group:"Docs"` or `window:"Local"`, keep those group and window names in English in every locale, or the prose contradicts the code.
 
 **RTL marks:** a ComparisonTable cell (single-quoted string) can't hold U+200F, so reword it ("API ו-MDN" instead of "API, ‏MDN"). A caption that ends a Latin run with a neutral character (`github.com/lbragile/`) needs `<bdi dir="ltr">`.
+
+**Catalog tokens:** let the generator expand `{L:file.key}` from `packages/extension/src/locales/<loc>/<file>.json` and refuse missing keys or unexpanded tokens. No hand-copied label drift, and fa ZWNJ inside labels stays intact.
+
+- CJK bold: an opening `**` right after `、`/`。` is fine; only a closing `**` after CJK punctuation fails. Rely on the compile stray-`**` check plus the strong count rather than a bare `[。、]**` regex.
+- FAQ link text: PostBody links the first occurrence of `link.text` in the answer, so keep it to the bare word (hi "बुकमार्क", ko "북마크"), not a clause.
+- Invisible marks: in Git Bash `grep $'‌'` does not expand the escape; scan with node, e.g. `/[​-‏⁦-⁩]/`.
+- Korean particles after a glossed label follow the Korean label's last syllable, not the English: "**JSON 내보내기**(Export JSON)를".

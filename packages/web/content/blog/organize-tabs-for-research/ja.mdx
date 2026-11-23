@@ -1,0 +1,117 @@
+export const post = {
+  slug: 'organize-tabs-for-research',
+  title: 'リサーチ用にタブを整理する方法：メモ、リマインダー、情報源',
+  navTitle: 'リサーチ用のタブ整理',
+  seoTitle: 'リサーチ・研究のためのブラウザのタブ整理術（メモ、セッション、情報源）',
+  description:
+    'リサーチのタブを扱う手順：プロジェクトごとに TabMerger のグループを作り、大事な情報源にはメモを付け、見直す日にはリマインダーを設定し、プロジェクト全体はセッションで一時停止し、執筆時には情報源をエクスポートします。',
+  shareSummary: 'プロジェクトごとのグループ、情報源へのメモ、リマインダー、そして執筆時のエクスポート。',
+  dek: '情報源のタブが 40 個あっても、それぞれに開いている理由が書いてあれば、散らかりではなく資料庫です。',
+  published: '2026-12-09',
+  updated: '2026-12-09',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '保存したタブには、どれでもメモとリマインダーを付けられます。', source: 'TabMerger 3.16.1' },
+    { text: 'リマインダー：30分後、1時間後、3時間後、明日、または指定した日時。', source: 'TabMerger 3.16.1' },
+    { text: 'セッションはすべてのグループを保存してまとめて復元できます。無料プランでは 3 つまで。', source: 'TabMerger の料金', href: '/pricing' },
+    { text: 'JSON のエクスポートには、各情報源のタイトルとアドレスが含まれます。', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'ブラウザで情報源を管理するには？',
+      answer:
+        'プロジェクトごとのタブを TabMerger のグループとして保存し、引用する情報源にはそれぞれメモを付けます。なぜ重要か、どの節で使うか、どの章で使うかを書いておきましょう。Ctrl+K で、すべてのグループのタイトルとアドレスを検索できます。',
+    },
+    {
+      question: 'タブに戻ってくるためのリマインダーは設定できますか？',
+      answer: 'はい。TabMerger で保存済みのタブを右クリックし、「後で通知…」を選びます。30分後、1時間後、3時間後、明日、または指定した日時から選べて、メモも任意で付けられます。',
+    },
+    {
+      question: 'リサーチ中のタブはブックマークにすべきですか？',
+      answer: '進行中の作業なら、保存したグループのほうが便利です。メモと一緒にひとまとまりで残り、ワンクリックで開き直せます。ブックマークにするのは、何年も使い続ける少数のページだけで十分です。',
+      link: { text: 'ブックマークにする', href: '/blog/tabs-vs-bookmarks' },
+    },
+    {
+      question: '情報源の一覧を取り出すには？',
+      answer: '設定 → データ → JSON をエクスポート で、すべてのグループのタイトルとアドレスが 1 つのファイルに保存されます。これを参考文献リストに仕立てられます。',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp', alt: 'タブのメニューを開いた TabMerger のグループ Thesis sources：Move to group（グループに移動）、Add note（メモを追加）、Remind me…（後で通知…）、Rename tab（タブ名を変更）、Remove tab（タブを削除）、ライトテーマ' },
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-dark.webp', alt: 'タブのメニューを開いた TabMerger のグループ Thesis sources：Move to group（グループに移動）、Add note（メモを追加）、Remind me…（後で通知…）、Rename tab（タブ名を変更）、Remove tab（タブを削除）、ダークテーマ' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-light.webp', alt: 'タブの下に表示された TabMerger のリマインダー選択：30 min, 1 hour, 3 hours, Tomorrow（明日）、日時の指定、任意のメモ、ライトテーマ' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-dark.webp', alt: 'タブの下に表示された TabMerger のリマインダー選択：30 min, 1 hour, 3 hours, Tomorrow（明日）、日時の指定、任意のメモ、ダークテーマ' },
+  ],
+  tags: ['research', 'tab-management', 'save-tabs', 'session-management'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-for-research/og.png', alt: 'リサーチ用にタブを整理する方法：タブのメモとリマインダーの項目を紹介する TabMerger のガイド' },
+  toc: [
+    { id: 'quick', label: '簡単な答え' },
+    { id: 'project', label: 'プロジェクトごとに 1 グループ' },
+    { id: 'notes', label: 'メモとリマインダー' },
+    { id: 'sessions', label: 'プロジェクト全体を一時停止' },
+    { id: 'export', label: '情報源をエクスポート' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+}
+
+<QuickAnswer>
+
+リサーチのプロジェクトごとに専用の [TabMerger](/features) グループを用意し、使う情報源にはそれぞれ、なぜ重要かを書いた**メモ**を付けましょう。見直したい情報源には**リマインダー**を設定し、プロジェクト全体は**セッション**として保存すれば一時停止してワンクリックで戻せます。参考文献をまとめるときは、グループをファイルに**エクスポート**します。
+
+</QuickAnswer>
+
+<InstallCta>40 個の情報源タブを、メモ付きで検索できる資料庫に。Chrome、Edge、Firefox 向けに無料。</InstallCta>
+
+<Section id="project" title="リサーチプロジェクトのタブはどう整理する？">
+
+1. **グループを追加**（Add Group）をクリックし、プロジェクト名を付けます。たとえば「論文の資料」（スクリーンショットでは「Thesis sources」）。
+2. グループの **⋯** メニューを開き、**現在の内容と統合**（Merge with current）を選びます。開いているタブがすべてグループに保存されます。
+3. その日の作業が終わったら、ウィンドウを閉じましょう。グループにはすべて残り、あとで <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> を押せば、どの情報源もタイトルやアドレスで見つかります。
+
+グループの中では、テーマの筋（論文、データ、背景）ごとにウィンドウを 1 つずつ分け、それぞれに名前を付けます。リサーチのタブは、何を残す価値があるかを決めるのが仕事の半分です。判断には[タブとブックマークの使い分けガイド](/blog/tabs-vs-bookmarks)が役立ちます。
+
+</Section>
+
+<Section id="notes" title="情報源にメモを付けて、あとで戻ってくるには？">
+
+保存したタブを右クリックします。
+
+- **メモを追加**（Add note）：その情報源がなぜ重要か。メモのあるタブにはメモのアイコンが付きます。
+- **後で通知…**（Remind me…）：30分後、1時間後、3時間後、明日、または好きな日時を選べて、メモも任意で付けられます。時間になると、TabMerger がブラウザの通知を表示します。
+- **タブ名を変更**（Rename tab）：意味の分からないページタイトル（「[1706.03762]」）を、あとで検索しそうな名前に置き換えます。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="情報源へのメモとリマインダー" steps={[{ title: 'タブのメニュー' }, { title: 'リマインダー' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-tab-menu" alt="タブのメニューを開いた TabMerger のグループ Thesis sources：Move to group（グループに移動）、Add note（メモを追加）、Remind me…（後で通知…）、Rename tab（タブ名を変更）、Remove tab（タブを削除）、ライトテーマ" darkAlt="タブのメニューを開いた TabMerger のグループ Thesis sources：Move to group（グループに移動）、Add note（メモを追加）、Remind me…（後で通知…）、Rename tab（タブ名を変更）、Remove tab（タブを削除）、ダークテーマ" boxes={[{ id: 'add-note', label: 'メモを追加' }, { id: 'remind-me', label: '後で通知…' }]} source="TabMerger 3.16.1">情報源を右クリックしてメモを付けます。最初のタブにはすでにメモがあります。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-reminder" alt="タブの下に表示された TabMerger のリマインダー選択：30 min, 1 hour, 3 hours, Tomorrow（明日）、日時の指定、任意のメモ、ライトテーマ" darkAlt="タブの下に表示された TabMerger のリマインダー選択：30 min, 1 hour, 3 hours, Tomorrow（明日）、日時の指定、任意のメモ、ダークテーマ" boxes={[{ id: 'remind-in', label: '後で通知…' }]} source="TabMerger 3.16.1">戻ってくるタイミングを選び、未来の自分へのメモを残しましょう。</ThemedScreenshot>
+</Carousel>
+
+読書リスト全体をこの方法で回すなら、[タブを ToDo リストとして使う方法](/blog/tabs-as-a-to-do-list)をご覧ください。
+
+</Section>
+
+<Section id="sessions" title="プロジェクト全体を一時停止して、あとで再開するには？">
+
+**現在のセッションを保存**（Save current session。サイドバーのセッション欄にあります）は、保存したすべてのグループに名前を付けてスナップショットとして残します。**セッションを復元**（Restore session）でそれらをまとめて戻せます。「先行研究レビューの前」のような節目で使えば、あとでそのときのセットにそのまま戻れます。無料プランではブラウザに 3 つのセッションを保存でき、[Pro](/pricing) ではセッション数が無制限になり、デバイス間でエンドツーエンド暗号化して同期します。セッションについて詳しくは[セッションマネージャーでできること](/blog/browser-session-manager)をご覧ください。
+
+</Section>
+
+<Section id="export" title="執筆時に情報源をエクスポートするには？">
+
+**設定 → データ**（Settings → Data）を開き、**JSON をエクスポート**（Export JSON）を押します。ファイルにはすべてのグループ、ウィンドウ、タブがタイトルとアドレス付きで並ぶので、短いスクリプトやテキストエディタで参考文献リストに仕立てられます。詳しい手順と各項目の例は[開いているタブをエクスポートする方法](/blog/export-open-tabs)にあります。
+
+<InstallCta>Chrome、Edge、Firefox 向けに無料。アカウントなしで始められます。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>
