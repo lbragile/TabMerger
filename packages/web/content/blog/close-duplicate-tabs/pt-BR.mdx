@@ -1,0 +1,161 @@
+export const post = {
+  slug: 'close-duplicate-tabs',
+  title: 'Como fechar abas duplicadas com um clique',
+  navTitle: 'Fechar abas duplicadas',
+  seoTitle: 'Como fechar abas duplicadas no Chrome, Edge e Firefox',
+  description:
+    'A mesma página aberta três vezes? Feche abas duplicadas em todas as janelas com um clique no TabMerger, ou use o recurso nativo do Firefox, “Fechar abas duplicadas”. O que o Chrome e o Edge oferecem, e o que exatamente conta como duplicata.',
+  shareSummary: 'Feche abas duplicadas em todas as janelas com um clique, no Chrome, Edge e Firefox.',
+  dek: 'As duplicatas se acumulam sem você perceber. Tire todas de uma vez, em todas as janelas, e mantenha a primeira cópia de cada página.',
+  published: '2026-12-01',
+  updated: '2026-12-01',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '“Remover abas duplicadas” do TabMerger fecha as repetidas em todas as janelas abertas e mantém a primeira.', source: 'Testado no TabMerger 3.16.1, 21 nov. 2026' },
+    { text: 'Ele pergunta antes e diz quantas abas vai remover.', source: 'TabMerger 3.16.1' },
+    { text: 'O menu de abas do Firefox 159 tem “Fechar abas duplicadas”.', source: 'Texto do menu do Firefox 159' },
+    { text: '“Duplicate tab” do Edge cria uma cópia; não remove nenhuma.', source: 'Texto do menu do Edge 158' },
+  ],
+  faq: [
+    {
+      question: 'O Chrome tem um removedor de abas duplicadas?',
+      answer:
+        'As páginas de ajuda do Chrome não descrevem nenhum. O TabMerger adiciona um: abra o menu ⋯ de “Abertas agora” e escolha “Remover abas duplicadas” para fechar todas as repetidas em todas as janelas.',
+    },
+    {
+      question: 'Qual aba é mantida?',
+      answer: 'No TabMerger, a primeira cópia na ordem de leitura: primeiro a janela mais antiga, depois da esquerda para a direita. Todas as cópias seguintes do mesmo endereço são removidas.',
+    },
+    {
+      question: 'Páginas com #âncoras diferentes são duplicatas?',
+      answer: 'Não. O TabMerger compara endereços completos sem diferenciar maiúsculas de minúsculas, então page#top e page#faq, ou a mesma página com ?parâmetros diferentes, continuam como abas diferentes.',
+    },
+    {
+      question: 'Também posso limpar duplicatas dos grupos salvos?',
+      answer: 'Sim: a mesma opção “Remover abas duplicadas” está no menu ⋯ de cada grupo, para as abas salvas nele.',
+    },
+  ],
+  images: [
+    { src: '/blog/close-duplicate-tabs/tm-before-light.webp', alt: 'TabMerger, “Now Open” (Abertas agora), com duas janelas e oito abas, três delas repetidas, tema claro' },
+    { src: '/blog/close-duplicate-tabs/tm-before-dark.webp', alt: 'TabMerger, “Now Open” (Abertas agora), com duas janelas e oito abas, três delas repetidas, tema escuro' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp', alt: 'Caixa de diálogo do TabMerger “Remove duplicates” (Remover duplicatas), avisando que 3 abas duplicadas serão removidas, com um botão “Remove 3 duplicates” (Remover 3 duplicatas), tema claro' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-dark.webp', alt: 'Caixa de diálogo do TabMerger “Remove duplicates” (Remover duplicatas), avisando que 3 abas duplicadas serão removidas, com um botão “Remove 3 duplicates” (Remover 3 duplicatas), tema escuro' },
+    { src: '/blog/close-duplicate-tabs/tm-after-light.webp', alt: 'TabMerger, “Now Open” (Abertas agora) depois de remover as duplicatas: duas janelas, cinco abas, cada página uma vez só, tema claro' },
+    { src: '/blog/close-duplicate-tabs/tm-after-dark.webp', alt: 'TabMerger, “Now Open” (Abertas agora) depois de remover as duplicatas: duas janelas, cinco abas, cada página uma vez só, tema escuro' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp' },
+  ogImage: { src: '/blog/close-duplicate-tabs/og.png', alt: 'Como fechar abas duplicadas com um clique: um guia do TabMerger, com a caixa de diálogo “Remove 3 duplicates” (Remover 3 duplicatas)' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'tabmerger', label: 'Um clique, todas as janelas' },
+    { id: 'what-counts', label: 'O que conta como duplicata' },
+    { id: 'builtin', label: 'Opções nativas' },
+    { id: 'prevent', label: 'Menos duplicatas' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Fechamento nativo de duplicatas',
+    values: { chrome: 'Nenhum nas páginas de ajuda', edge: 'Nenhum (Duplicate tab cria uma cópia)', firefox: 'Clique com o botão direito → Fechar abas duplicadas' },
+  },
+}
+
+<QuickAnswer>
+
+No [TabMerger](/features), abra o menu **⋯** de **Abertas agora** e escolha **Remover abas duplicadas**. Ele encontra todas as páginas abertas mais de uma vez, **em todas as suas janelas**, mostra quantas abas vai fechar e mantém a primeira cópia de cada uma. O Firefox tem o recurso nativo **Fechar abas duplicadas** (“Close Duplicate Tabs”) no menu de abas; as páginas de ajuda do Chrome não descrevem nenhum removedor de duplicatas.
+
+</QuickAnswer>
+
+<InstallCta>Tire as abas duplicadas de todas as janelas com um clique. Grátis para Chrome, Edge e Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Como fecho todas as duplicatas de uma vez?">
+
+1. Abra o TabMerger. **Abertas agora** lista todas as janelas e abas abertas.
+2. Abra o menu **⋯** e escolha **Remover abas duplicadas**.
+3. Confira o número e clique no botão de remover, aqui **Remover 3 duplicatas**. As abas extras se fecham no navegador; a primeira cópia de cada página fica exatamente onde estava.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Removendo duplicatas das abas abertas" steps={[{ title: 'Antes' }, { title: 'Confirmar' }, { title: 'Depois' }]}>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-before" alt="TabMerger, “Now Open” (Abertas agora), com duas janelas e oito abas, três delas repetidas, tema claro" darkAlt="TabMerger, “Now Open” (Abertas agora), com duas janelas e oito abas, três delas repetidas, tema escuro" boxes={[{ id: 'summary', label: '8 abas' }]} source="TabMerger 3.16.1">Antes: duas janelas, oito abas, três delas repetidas.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-confirm" alt="Caixa de diálogo do TabMerger “Remove duplicates” (Remover duplicatas), avisando que 3 abas duplicadas serão removidas, com um botão “Remove 3 duplicates” (Remover 3 duplicatas), tema claro" darkAlt="Caixa de diálogo do TabMerger “Remove duplicates” (Remover duplicatas), avisando que 3 abas duplicadas serão removidas, com um botão “Remove 3 duplicates” (Remover 3 duplicatas), tema escuro" boxes={[{ id: 'confirm', label: 'Remover' }]} source="TabMerger 3.16.1">O TabMerger diz quantas abas vai fechar antes de fechar.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-after" alt="TabMerger, “Now Open” (Abertas agora) depois de remover as duplicatas: duas janelas, cinco abas, cada página uma vez só, tema claro" darkAlt="TabMerger, “Now Open” (Abertas agora) depois de remover as duplicatas: duas janelas, cinco abas, cada página uma vez só, tema escuro" boxes={[{ id: 'summary', label: '5 abas' }]} source="TabMerger 3.16.1">Depois: cinco abas, cada página uma vez só. As abas do navegador foram mesmo fechadas.</ThemedScreenshot>
+</Carousel>
+
+A mesma opção funciona em qualquer grupo salvo, então até um grupo de pesquisa que cresce há semanas continua limpo.
+
+</Section>
+
+<Section id="what-counts" title="O que conta como duplicata?">
+
+O TabMerger compara o **endereço completo** na forma padrão, sem diferenciar maiúsculas de minúsculas:
+
+<ComparisonTable
+  head={['Estas duas abas', 'Duplicatas?']}
+  rows={[
+    [<code>example.com/page</code>, 'A mesma página duas vezes: sim, uma é fechada'],
+    [<code>example.com/Page</code>, 'Só muda maiúscula/minúscula: sim'],
+    [<code>example.com/page#faq</code>, 'Âncora diferente: não, as duas ficam'],
+    [<code>example.com/page?ref=mail</code>, 'Parâmetros diferentes: não, as duas ficam'],
+  ]}
+/>
+
+É de propósito: duas abas em seções diferentes de um documento longo, ou duas pesquisas, são abas diferentes para você, então ficam. Só as repetições de verdade saem.
+
+</Section>
+
+<Section id="builtin" title="O navegador consegue fechar duplicatas sozinho?">
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+As páginas de ajuda do Chrome não descrevem nenhum removedor de abas duplicadas. O mais próximo é a **Pesquisa em Todas as Guias** (“Tab Search”, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>); o Chrome chama as abas de “guias”. Digite o nome de um site, encontre as repetidas na lista e feche uma por uma com o botão de fechar de cada linha.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+O menu de abas do Edge tem **Duplicate tab**, que abre mais uma cópia, o contrário do que você quer. Para achar as repetidas, só à mão: vá fechando uma por uma ao longo da barra de abas.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Clique com o botão direito em qualquer aba e escolha **Fechar abas duplicadas** (“Close Duplicate Tabs”) para fechar as repetidas, ou **Fechar duplicatas desta aba** (“Close Duplicates of This Tab”) para uma página só.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="prevent" title="Como ter menos duplicatas, para começar?">
+
+- **Pesquise antes de abrir.** <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> no TabMerger mostra se a página já está aberta ou salva. Mais em [encontrar uma aba entre centenas](/blog/find-a-tab-among-hundreds).
+- **Junte janelas com cuidado.** É ao juntar janelas que as repetidas se encontram; remova as duplicatas logo depois de [juntar as janelas](/blog/merge-browser-windows).
+- **Salve e depois feche.** Menos abas abertas, menos cópias. Nossa [rotina para quem tem abas demais](/blog/manage-too-many-tabs) transforma isso em hábito.
+
+<InstallCta>Grátis para Chrome, Edge e Firefox. Não precisa de conta para começar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

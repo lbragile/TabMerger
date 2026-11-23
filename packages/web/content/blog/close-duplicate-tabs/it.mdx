@@ -1,0 +1,161 @@
+export const post = {
+  slug: 'close-duplicate-tabs',
+  title: 'Come chiudere le schede duplicate con un clic',
+  navTitle: 'Chiudere le schede duplicate',
+  seoTitle: 'Come chiudere le schede duplicate in Chrome, Edge e Firefox',
+  description:
+    'La stessa pagina aperta tre volte? Chiudi le schede duplicate in tutte le finestre con un clic grazie a TabMerger, oppure usa la funzione integrata di Firefox, «Chiudi schede duplicate». Cosa offrono Chrome ed Edge, e cosa conta esattamente come duplicato.',
+  shareSummary: 'Chiudi le schede duplicate in tutte le finestre con un clic, in Chrome, Edge e Firefox.',
+  dek: 'I duplicati si accumulano senza che te ne accorga. Eliminali da tutte le finestre in una volta e tieni la prima copia di ogni pagina.',
+  published: '2026-12-01',
+  updated: '2026-12-01',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '«Rimuovi schede duplicate» di TabMerger chiude i doppioni in tutte le finestre aperte e tiene la prima.', source: 'Testato in TabMerger 3.16.1, 21 nov 2026' },
+    { text: 'Chiede prima conferma e dice quante schede rimuoverà.', source: 'TabMerger 3.16.1' },
+    { text: 'Il menu delle schede di Firefox 159 ha «Chiudi schede duplicate».', source: 'Testo del menu di Firefox 159' },
+    { text: '«Duplicate tab» di Edge crea una copia; non ne rimuove nessuna.', source: 'Testo del menu di Edge 158' },
+  ],
+  faq: [
+    {
+      question: 'Chrome ha una funzione per rimuovere le schede duplicate?',
+      answer:
+        'Le pagine di assistenza di Chrome non ne descrivono nessuna. TabMerger la aggiunge: apri il menu ⋯ di «Aperte ora» e scegli «Rimuovi schede duplicate» per chiudere ogni doppione in tutte le finestre.',
+    },
+    {
+      question: 'Quale scheda viene tenuta?',
+      answer: 'In TabMerger, la prima copia in ordine di lettura: prima la finestra più vecchia, poi da sinistra a destra. Ogni copia successiva dello stesso indirizzo viene rimossa.',
+    },
+    {
+      question: 'Le pagine con #ancore diverse sono duplicati?',
+      answer: 'No. TabMerger confronta gli indirizzi completi senza distinguere maiuscole e minuscole, quindi page#top e page#faq, o la stessa pagina con ?parametri diversi, restano schede distinte.',
+    },
+    {
+      question: 'Posso eliminare i duplicati anche dai gruppi salvati?',
+      answer: 'Sì: la stessa voce «Rimuovi schede duplicate» si trova nel menu ⋯ di ogni gruppo, per le schede salvate lì.',
+    },
+  ],
+  images: [
+    { src: '/blog/close-duplicate-tabs/tm-before-light.webp', alt: 'TabMerger, «Now Open» (Aperte ora), con due finestre e otto schede, tre delle quali doppie, tema chiaro' },
+    { src: '/blog/close-duplicate-tabs/tm-before-dark.webp', alt: 'TabMerger, «Now Open» (Aperte ora), con due finestre e otto schede, tre delle quali doppie, tema scuro' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp', alt: 'Finestra di dialogo di TabMerger «Remove duplicates» (Rimuovi duplicati), che indica che verranno rimosse 3 schede duplicate, con un pulsante «Remove 3 duplicates» (Rimuovi 3 duplicati), tema chiaro' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-dark.webp', alt: 'Finestra di dialogo di TabMerger «Remove duplicates» (Rimuovi duplicati), che indica che verranno rimosse 3 schede duplicate, con un pulsante «Remove 3 duplicates» (Rimuovi 3 duplicati), tema scuro' },
+    { src: '/blog/close-duplicate-tabs/tm-after-light.webp', alt: 'TabMerger, «Now Open» (Aperte ora) dopo la rimozione dei duplicati: due finestre, cinque schede, ogni pagina una sola volta, tema chiaro' },
+    { src: '/blog/close-duplicate-tabs/tm-after-dark.webp', alt: 'TabMerger, «Now Open» (Aperte ora) dopo la rimozione dei duplicati: due finestre, cinque schede, ogni pagina una sola volta, tema scuro' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp' },
+  ogImage: { src: '/blog/close-duplicate-tabs/og.png', alt: 'Come chiudere le schede duplicate con un clic: una guida di TabMerger, con una finestra di dialogo «Remove 3 duplicates» (Rimuovi 3 duplicati)' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'tabmerger', label: 'Un clic, tutte le finestre' },
+    { id: 'what-counts', label: 'Cosa conta come duplicato' },
+    { id: 'builtin', label: 'Opzioni integrate' },
+    { id: 'prevent', label: 'Meno duplicati' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Chiusura integrata dei duplicati',
+    values: { chrome: 'Nessuna nelle pagine di assistenza', edge: 'Nessuna (Duplicate tab crea una copia)', firefox: 'Clic destro → Chiudi schede duplicate' },
+  },
+}
+
+<QuickAnswer>
+
+In [TabMerger](/features), apri il menu **⋯** di **Aperte ora** e scegli **Rimuovi schede duplicate**. Trova ogni pagina aperta più di una volta, **in tutte le tue finestre**, mostra quante schede chiuderà e tiene la prima copia di ciascuna. Firefox ha una funzione integrata, **Chiudi schede duplicate** («Close Duplicate Tabs»), nel menu delle schede; le pagine di assistenza di Chrome non descrivono alcuno strumento per rimuovere i duplicati.
+
+</QuickAnswer>
+
+<InstallCta>Elimina le schede duplicate da tutte le finestre con un clic. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Come chiudo tutti i duplicati in una volta?">
+
+1. Apri TabMerger. **Aperte ora** elenca tutte le finestre e le schede aperte.
+2. Apri il suo menu **⋯** e scegli **Rimuovi schede duplicate**.
+3. Controlla il numero e premi il pulsante di rimozione, qui **Rimuovi 3 duplicati**. Le schede in più si chiudono nel browser; la prima copia di ogni pagina resta esattamente dov’era.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Rimuovere i duplicati dalle schede aperte" steps={[{ title: 'Prima' }, { title: 'Conferma' }, { title: 'Dopo' }]}>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-before" alt="TabMerger, «Now Open» (Aperte ora), con due finestre e otto schede, tre delle quali doppie, tema chiaro" darkAlt="TabMerger, «Now Open» (Aperte ora), con due finestre e otto schede, tre delle quali doppie, tema scuro" boxes={[{ id: 'summary', label: '8 schede' }]} source="TabMerger 3.16.1">Prima: due finestre, otto schede, tre delle quali doppie.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-confirm" alt="Finestra di dialogo di TabMerger «Remove duplicates» (Rimuovi duplicati), che indica che verranno rimosse 3 schede duplicate, con un pulsante «Remove 3 duplicates» (Rimuovi 3 duplicati), tema chiaro" darkAlt="Finestra di dialogo di TabMerger «Remove duplicates» (Rimuovi duplicati), che indica che verranno rimosse 3 schede duplicate, con un pulsante «Remove 3 duplicates» (Rimuovi 3 duplicati), tema scuro" boxes={[{ id: 'confirm', label: 'Rimuovi' }]} source="TabMerger 3.16.1">TabMerger dice quante schede chiuderà prima di farlo.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-after" alt="TabMerger, «Now Open» (Aperte ora) dopo la rimozione dei duplicati: due finestre, cinque schede, ogni pagina una sola volta, tema chiaro" darkAlt="TabMerger, «Now Open» (Aperte ora) dopo la rimozione dei duplicati: due finestre, cinque schede, ogni pagina una sola volta, tema scuro" boxes={[{ id: 'summary', label: '5 schede' }]} source="TabMerger 3.16.1">Dopo: cinque schede, ogni pagina una sola volta. Le schede del browser sono state chiuse davvero.</ThemedScreenshot>
+</Carousel>
+
+La stessa voce funziona su qualsiasi gruppo salvato, così anche un gruppo di ricerca che cresce da settimane resta in ordine.
+
+</Section>
+
+<Section id="what-counts" title="Cosa conta come duplicato?">
+
+TabMerger confronta l’**indirizzo completo** nella sua forma standard, senza distinguere maiuscole e minuscole:
+
+<ComparisonTable
+  head={['Queste due schede', 'Duplicate?']}
+  rows={[
+    [<code>example.com/page</code>, 'Stessa pagina due volte: sì, una viene chiusa'],
+    [<code>example.com/Page</code>, 'Cambiano solo maiuscole e minuscole: sì'],
+    [<code>example.com/page#faq</code>, 'Ancora diversa: no, restano entrambe'],
+    [<code>example.com/page?ref=mail</code>, 'Parametri diversi: no, restano entrambe'],
+  ]}
+/>
+
+È voluto: due schede su sezioni diverse di un documento lungo, o due ricerche, per te sono schede diverse, quindi restano. Se ne vanno solo le vere ripetizioni.
+
+</Section>
+
+<Section id="builtin" title="Il browser può chiudere i duplicati da solo?">
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+Le pagine di assistenza di Chrome non descrivono alcuno strumento per rimuovere le schede duplicate. La cosa più vicina è **ricerca di schede** («Tab Search», <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>): digita il nome di un sito, individua i doppioni nell’elenco e chiudili uno alla volta con il pulsante di chiusura di ogni riga.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Il menu delle schede di Edge ha **Duplicate tab**, che apre un’altra copia: l’esatto contrario di ciò che vuoi. I doppioni vanno trovati a mano, chiudendoli uno per uno mentre scorri la barra delle schede.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Fai clic destro su una scheda qualsiasi e scegli **Chiudi schede duplicate** («Close Duplicate Tabs») per chiudere i doppioni, oppure **Chiudi duplicati di questa scheda** («Close Duplicates of This Tab») per una sola pagina.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="prevent" title="Come evito tanti duplicati fin dall’inizio?">
+
+- **Cerca prima di aprire.** <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> in TabMerger mostra se la pagina è già aperta o salvata. Approfondisci in [trovare una scheda tra centinaia](/blog/find-a-tab-among-hundreds).
+- **Unisci le finestre con attenzione.** È unendo le finestre che i doppioni si incontrano; rimuovi i duplicati subito dopo aver [unito le finestre](/blog/merge-browser-windows).
+- **Salva, poi chiudi.** Meno schede aperte, meno copie. La nostra [routine per chi ha troppe schede](/blog/manage-too-many-tabs) lo trasforma in un’abitudine.
+
+<InstallCta>Gratis per Chrome, Edge e Firefox. Non serve un account per iniziare.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

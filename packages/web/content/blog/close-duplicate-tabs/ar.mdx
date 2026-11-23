@@ -1,0 +1,161 @@
+export const post = {
+  slug: 'close-duplicate-tabs',
+  title: 'كيف تغلق علامات التبويب المكررة بنقرة واحدة',
+  navTitle: 'إغلاق علامات التبويب المكررة',
+  seoTitle: 'كيف تغلق علامات التبويب المكررة في Chrome وEdge وFirefox',
+  description:
+    'الصفحة نفسها مفتوحة ثلاث مرات؟ أغلق علامات التبويب المكررة في كل النوافذ بنقرة واحدة باستخدام TabMerger، أو استخدم خيار Firefox المدمج "أغلِق الألسنة المتكررة". ما الذي يقدمه Chrome وEdge، وما الذي يُعد تكرارًا بالضبط.',
+  shareSummary: 'أغلق علامات التبويب المكررة في كل النوافذ بنقرة واحدة، في Chrome وEdge وFirefox.',
+  dek: 'التكرارات تتراكم بصمت. أزلها من كل النوافذ دفعة واحدة، واحتفظ بالنسخة الأولى من كل صفحة.',
+  published: '2026-12-01',
+  updated: '2026-12-01',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'يغلق خيار "إزالة علامات التبويب المكررة" في TabMerger التكرارات في كل النوافذ المفتوحة، ويُبقي الأولى.', source: 'تم الاختبار في TabMerger 3.16.1، 21 نوفمبر 2026' },
+    { text: 'يسأل أولًا، ويذكر عدد علامات التبويب التي سيزيلها.', source: 'TabMerger 3.16.1' },
+    { text: 'تحتوي قائمة اللسان في Firefox 159 على "أغلِق الألسنة المتكررة".', source: 'نص القائمة في Firefox 159' },
+    { text: 'خيار Duplicate tab في Edge ينشئ نسخة إضافية، ولا يزيل أي نسخة.', source: 'نص القائمة في Edge 158' },
+  ],
+  faq: [
+    {
+      question: 'هل في Chrome أداة لإزالة علامات التبويب المكررة؟',
+      answer:
+        'صفحات مساعدة Chrome لا تصف أي أداة من هذا النوع. يضيفها TabMerger: افتح قائمة ⋯ في "المفتوحة الآن" واختر "إزالة علامات التبويب المكررة" لإغلاق كل تكرار في جميع نوافذك.',
+    },
+    {
+      question: 'أي علامة تبويب تبقى؟',
+      answer: 'في TabMerger، النسخة الأولى بترتيب القراءة: النافذة الأقدم أولًا، ثم من اليسار إلى اليمين. وتُزال كل نسخة لاحقة من العنوان نفسه.',
+    },
+    {
+      question: 'هل تُعد الصفحات ذات #المرابط المختلفة مكررة؟',
+      answer: 'لا. يقارن TabMerger العناوين الكاملة دون التمييز بين الأحرف الكبيرة والصغيرة، لذا تبقى page#top وpage#faq، أو الصفحة نفسها مع ?معاملات مختلفة، علامات تبويب منفصلة.',
+    },
+    {
+      question: 'هل يمكنني إزالة التكرارات من المجموعات المحفوظة أيضًا؟',
+      answer: 'نعم: الخيار نفسه، "إزالة علامات التبويب المكررة"، موجود في قائمة ⋯ لكل مجموعة، لعلامات التبويب المحفوظة فيها.',
+    },
+  ],
+  images: [
+    { src: '/blog/close-duplicate-tabs/tm-before-light.webp', alt: 'قسم Now Open (المفتوحة الآن) في TabMerger يعرض نافذتين و8 علامات تبويب، ثلاث منها مكررة، المظهر الفاتح' },
+    { src: '/blog/close-duplicate-tabs/tm-before-dark.webp', alt: 'قسم Now Open (المفتوحة الآن) في TabMerger يعرض نافذتين و8 علامات تبويب، ثلاث منها مكررة، المظهر الداكن' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp', alt: 'مربع الحوار Remove duplicates (إزالة التكرارات) في TabMerger، يذكر أن 3 علامات تبويب مكررة ستُزال، مع زر Remove 3 duplicates (إزالة 3 تكرارات)، المظهر الفاتح' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-dark.webp', alt: 'مربع الحوار Remove duplicates (إزالة التكرارات) في TabMerger، يذكر أن 3 علامات تبويب مكررة ستُزال، مع زر Remove 3 duplicates (إزالة 3 تكرارات)، المظهر الداكن' },
+    { src: '/blog/close-duplicate-tabs/tm-after-light.webp', alt: 'قسم Now Open (المفتوحة الآن) في TabMerger بعد إزالة التكرارات: نافذتان و5 علامات تبويب، كل صفحة مرة واحدة، المظهر الفاتح' },
+    { src: '/blog/close-duplicate-tabs/tm-after-dark.webp', alt: 'قسم Now Open (المفتوحة الآن) في TabMerger بعد إزالة التكرارات: نافذتان و5 علامات تبويب، كل صفحة مرة واحدة، المظهر الداكن' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp' },
+  ogImage: { src: '/blog/close-duplicate-tabs/og.png', alt: 'كيف تغلق علامات التبويب المكررة بنقرة واحدة: دليل من TabMerger، مع مربع الحوار Remove 3 duplicates (إزالة 3 تكرارات)' },
+  toc: [
+    { id: 'quick', label: 'إجابة سريعة' },
+    { id: 'tabmerger', label: 'نقرة واحدة لكل النوافذ' },
+    { id: 'what-counts', label: 'ما الذي يُعد تكرارًا' },
+    { id: 'builtin', label: 'الخيارات المدمجة' },
+    { id: 'prevent', label: 'تكرارات أقل' },
+    { id: 'faq', label: 'الأسئلة الشائعة' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'إغلاق التكرارات المدمج',
+    values: { chrome: 'لا شيء في صفحات المساعدة', edge: 'لا شيء (Duplicate tab ينشئ نسخة)', firefox: 'انقر بزر الماوس الأيمن على علامة تبويب ← أغلِق الألسنة المتكررة' },
+  },
+}
+
+<QuickAnswer>
+
+في [TabMerger](/features)، افتح قائمة **⋯** في **المفتوحة الآن** واختر **إزالة علامات التبويب المكررة**. تجد الإضافة كل صفحة مفتوحة أكثر من مرة، **في كل نوافذك**، وتعرض عدد علامات التبويب التي ستغلقها، وتحتفظ بالنسخة الأولى من كل صفحة. في قائمة اللسان في Firefox خيار مدمج هو **أغلِق الألسنة المتكررة** (<bdi dir="ltr">Close Duplicate Tabs</bdi>)؛ أما صفحات مساعدة Chrome فلا تصف أي أداة لإزالة التكرارات.
+
+</QuickAnswer>
+
+<InstallCta>أزل علامات التبويب المكررة من كل النوافذ بنقرة واحدة. مجانًا لـ Chrome وEdge وFirefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="كيف أغلق كل التكرارات دفعة واحدة؟">
+
+1. افتح TabMerger. يعرض **المفتوحة الآن** كل النوافذ وعلامات التبويب المفتوحة.
+2. افتح قائمة **⋯** الخاصة به واختر **إزالة علامات التبويب المكررة**.
+3. تحقق من العدد واضغط زر الإزالة، وهو هنا **إزالة 3 تكرارات**. تُغلق علامات التبويب الزائدة في المتصفح، وتبقى النسخة الأولى من كل صفحة في مكانها تمامًا.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="إزالة التكرارات من علامات التبويب المفتوحة" steps={[{ title: 'قبل' }, { title: 'تأكيد' }, { title: 'بعد' }]}>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-before" alt="قسم Now Open (المفتوحة الآن) في TabMerger يعرض نافذتين و8 علامات تبويب، ثلاث منها مكررة، المظهر الفاتح" darkAlt="قسم Now Open (المفتوحة الآن) في TabMerger يعرض نافذتين و8 علامات تبويب، ثلاث منها مكررة، المظهر الداكن" boxes={[{ id: 'summary', label: '8 علامات تبويب' }]} source="TabMerger 3.16.1">قبل: نافذتان و8 علامات تبويب، ثلاث منها مكررة.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-confirm" alt="مربع الحوار Remove duplicates (إزالة التكرارات) في TabMerger، يذكر أن 3 علامات تبويب مكررة ستُزال، مع زر Remove 3 duplicates (إزالة 3 تكرارات)، المظهر الفاتح" darkAlt="مربع الحوار Remove duplicates (إزالة التكرارات) في TabMerger، يذكر أن 3 علامات تبويب مكررة ستُزال، مع زر Remove 3 duplicates (إزالة 3 تكرارات)، المظهر الداكن" boxes={[{ id: 'confirm', label: 'إزالة' }]} source="TabMerger 3.16.1">يخبرك TabMerger بعدد علامات التبويب التي سيغلقها قبل أن يغلقها.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-after" alt="قسم Now Open (المفتوحة الآن) في TabMerger بعد إزالة التكرارات: نافذتان و5 علامات تبويب، كل صفحة مرة واحدة، المظهر الفاتح" darkAlt="قسم Now Open (المفتوحة الآن) في TabMerger بعد إزالة التكرارات: نافذتان و5 علامات تبويب، كل صفحة مرة واحدة، المظهر الداكن" boxes={[{ id: 'summary', label: '5 علامات تبويب' }]} source="TabMerger 3.16.1">بعد: 5 علامات تبويب، كل صفحة مرة واحدة. أُغلقت علامات التبويب في المتصفح فعلًا.</ThemedScreenshot>
+</Carousel>
+
+الخيار نفسه يعمل على أي مجموعة محفوظة، فتبقى حتى مجموعة البحث التي تكبر منذ أسابيع مرتبة.
+
+</Section>
+
+<Section id="what-counts" title="ما الذي يُعد تكرارًا؟">
+
+يقارن TabMerger **العنوان الكامل** بصيغته القياسية، دون التمييز بين الأحرف الكبيرة والصغيرة:
+
+<ComparisonTable
+  head={['علامتا التبويب هاتان', 'مكررتان؟']}
+  rows={[
+    [<code>example.com/page</code>, 'الصفحة نفسها مرتين: نعم، تُغلق إحداهما'],
+    [<code>example.com/Page</code>, 'الاختلاف في حالة الأحرف فقط: نعم'],
+    [<code>example.com/page#faq</code>, 'مربط مختلف: لا، تبقى الاثنتان'],
+    [<code>example.com/page?ref=mail</code>, 'معاملات مختلفة: لا، تبقى الاثنتان'],
+  ]}
+/>
+
+هذا مقصود: علامتا تبويب على قسمين مختلفين من مستند طويل، أو عمليتا بحث، هما بالنسبة إليك علامتا تبويب مختلفتان، لذا تبقيان. لا يُزال إلا التكرار الحقيقي.
+
+</Section>
+
+<Section id="builtin" title="هل يستطيع المتصفح إغلاق التكرارات بنفسه؟">
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+صفحات مساعدة Chrome لا تصف أي أداة لإزالة علامات التبويب المكررة. أقرب ما يوجد هو **البحث في علامات التبويب** (<bdi dir="ltr">Tab Search</bdi>، <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi>): اكتب اسم موقع، وحدد التكرارات في القائمة، وأغلقها واحدة تلو الأخرى بزر الإغلاق في كل صف.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+في قائمة علامة التبويب في Edge خيار <bdi dir="ltr">**Duplicate tab**</bdi>، وهو يفتح نسخة أخرى، أي عكس ما تريده تمامًا. عليك أن تجد التكرارات يدويًا وتغلقها واحدة تلو الأخرى على امتداد شريط علامات التبويب.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+انقر بزر الماوس الأيمن على أي علامة تبويب واختر **أغلِق الألسنة المتكررة** (<bdi dir="ltr">Close Duplicate Tabs</bdi>) لإغلاق التكرارات، أو **أغلق المكرّرة من هذا اللسان** (<bdi dir="ltr">Close Duplicates of This Tab</bdi>) لصفحة واحدة فقط.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="prevent" title="كيف أقلل التكرارات من البداية؟">
+
+- **ابحث قبل أن تفتح.** يُظهر <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> في TabMerger ما إذا كانت الصفحة مفتوحة بالفعل أو محفوظة. المزيد في [العثور على علامة تبويب بين المئات](/blog/find-a-tab-among-hundreds).
+- **ادمج النوافذ بعناية.** عند جمع النوافذ تلتقي التكرارات؛ أزل التكرارات مباشرة بعد [دمج النوافذ](/blog/merge-browser-windows).
+- **احفظ، ثم أغلق.** علامات تبويب مفتوحة أقل تعني نسخًا أقل. [روتيننا لكثرة علامات التبويب](/blog/manage-too-many-tabs) يجعل ذلك عادة.
+
+<InstallCta>مجانًا لـ Chrome وEdge وFirefox. لا حاجة إلى حساب للبدء.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="الأسئلة الشائعة">
+
+<Faq items={post.faq} />
+
+</Section>

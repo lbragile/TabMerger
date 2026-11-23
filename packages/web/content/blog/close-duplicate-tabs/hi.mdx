@@ -1,0 +1,161 @@
+export const post = {
+  slug: 'close-duplicate-tabs',
+  title: 'एक क्लिक में डुप्लिकेट टैब कैसे बंद करें',
+  navTitle: 'डुप्लिकेट टैब बंद करें',
+  seoTitle: 'Chrome, Edge और Firefox में डुप्लिकेट टैब कैसे बंद करें',
+  description:
+    'एक ही पेज तीन बार खुला है? TabMerger से हर विंडो के डुप्लिकेट टैब एक क्लिक में बंद करें, या Firefox का बिल्ट-इन Close Duplicate Tabs इस्तेमाल करें। Chrome और Edge क्या देते हैं, और ठीक-ठीक किसे डुप्लिकेट माना जाता है।',
+  shareSummary: 'Chrome, Edge और Firefox में हर विंडो के डुप्लिकेट टैब एक क्लिक में बंद करें।',
+  dek: 'डुप्लिकेट टैब चुपचाप जमा होते रहते हैं। उन्हें हर विंडो से एक साथ हटाएं, और हर पेज की पहली कॉपी रखें।',
+  published: '2026-12-01',
+  updated: '2026-12-01',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger का “डुप्लिकेट टैब हटाएं” हर खुली विंडो में दोहराए गए टैब बंद करता है और पहला टैब रखता है।', source: 'TabMerger 3.16.1 में जांचा गया, 21 नवंबर 2026' },
+    { text: 'यह पहले पूछता है, और बताता है कि कितने टैब हटाएगा।', source: 'TabMerger 3.16.1' },
+    { text: 'Firefox 159 के टैब मेन्यू में Close Duplicate Tabs है।', source: 'Firefox 159 का मेन्यू टेक्स्ट' },
+    { text: 'Edge का Duplicate tab एक कॉपी बनाता है; यह कोई टैब नहीं हटाता।', source: 'Edge 158 का मेन्यू टेक्स्ट' },
+  ],
+  faq: [
+    {
+      question: 'क्या Chrome में डुप्लिकेट टैब हटाने का कोई तरीका है?',
+      answer:
+        'Chrome के सहायता पेज ऐसा कोई तरीका नहीं बताते। TabMerger यह सुविधा जोड़ता है: “अभी खुले हुए” का ⋯ मेन्यू खोलें और अपनी सभी विंडो में हर दोहराया गया टैब बंद करने के लिए “डुप्लिकेट टैब हटाएं” चुनें।',
+    },
+    {
+      question: 'कौन-सा टैब रखा जाता है?',
+      answer: 'TabMerger में, पढ़ने के क्रम में पहली कॉपी: पहले सबसे पुरानी विंडो, फिर बाएं से दाएं। उसी पते की हर बाद वाली कॉपी हटा दी जाती है।',
+    },
+    {
+      question: 'क्या अलग-अलग #एंकर वाले पेज डुप्लिकेट माने जाते हैं?',
+      answer: 'नहीं। TabMerger पूरे पते की तुलना करता है और छोटे-बड़े अक्षरों का फ़र्क नहीं देखता, इसलिए page#top और page#faq, या अलग ?पैरामीटर वाला वही पेज, अलग-अलग टैब के रूप में बने रहते हैं।',
+    },
+    {
+      question: 'क्या मैं सेव किए गए ग्रुप से भी डुप्लिकेट हटा सकता हूं?',
+      answer: 'हां: वही “डुप्लिकेट टैब हटाएं” विकल्प हर ग्रुप के ⋯ मेन्यू में है, वहां सेव किए गए टैब के लिए।',
+    },
+  ],
+  images: [
+    { src: '/blog/close-duplicate-tabs/tm-before-light.webp', alt: 'TabMerger में Now Open (अभी खुले हुए): दो विंडो और आठ टैब, जिनमें से तीन दोहराए गए हैं, लाइट थीम' },
+    { src: '/blog/close-duplicate-tabs/tm-before-dark.webp', alt: 'TabMerger में Now Open (अभी खुले हुए): दो विंडो और आठ टैब, जिनमें से तीन दोहराए गए हैं, डार्क थीम' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp', alt: 'TabMerger का Remove duplicates (डुप्लिकेट हटाएं) डायलॉग, जो बताता है कि 3 डुप्लिकेट टैब हटाए जाएंगे, और Remove 3 duplicates (3 डुप्लिकेट हटाएं) बटन, लाइट थीम' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-dark.webp', alt: 'TabMerger का Remove duplicates (डुप्लिकेट हटाएं) डायलॉग, जो बताता है कि 3 डुप्लिकेट टैब हटाए जाएंगे, और Remove 3 duplicates (3 डुप्लिकेट हटाएं) बटन, डार्क थीम' },
+    { src: '/blog/close-duplicate-tabs/tm-after-light.webp', alt: 'डुप्लिकेट हटाने के बाद TabMerger में Now Open (अभी खुले हुए): दो विंडो, पांच टैब, हर पेज एक बार, लाइट थीम' },
+    { src: '/blog/close-duplicate-tabs/tm-after-dark.webp', alt: 'डुप्लिकेट हटाने के बाद TabMerger में Now Open (अभी खुले हुए): दो विंडो, पांच टैब, हर पेज एक बार, डार्क थीम' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp' },
+  ogImage: { src: '/blog/close-duplicate-tabs/og.png', alt: 'एक क्लिक में डुप्लिकेट टैब कैसे बंद करें: TabMerger गाइड, Remove 3 duplicates (3 डुप्लिकेट हटाएं) डायलॉग के साथ' },
+  toc: [
+    { id: 'quick', label: 'छोटा जवाब' },
+    { id: 'tabmerger', label: 'एक क्लिक, हर विंडो' },
+    { id: 'what-counts', label: 'डुप्लिकेट किसे माना जाता है' },
+    { id: 'builtin', label: 'बिल्ट-इन विकल्प' },
+    { id: 'prevent', label: 'कम डुप्लिकेट' },
+    { id: 'faq', label: 'अक्सर पूछे जाने वाले प्रश्न' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'बिल्ट-इन डुप्लिकेट बंद करना',
+    values: { chrome: 'सहायता पेजों में कोई नहीं', edge: 'कोई नहीं (Duplicate tab कॉपी बनाता है)', firefox: 'राइट-क्लिक → Close Duplicate Tabs' },
+  },
+}
+
+<QuickAnswer>
+
+[TabMerger](/features) में **अभी खुले हुए** का **⋯** मेन्यू खोलें और **डुप्लिकेट टैब हटाएं** चुनें। यह हर उस पेज को ढूंढता है जो एक से ज़्यादा बार खुला है, **आपकी सभी विंडो में**, बताता है कि कितने टैब बंद करेगा, और हर पेज की पहली कॉपी रखता है। Firefox के टैब मेन्यू में बिल्ट-इन **Close Duplicate Tabs** है; Chrome के सहायता पेज डुप्लिकेट हटाने का कोई टूल नहीं बताते।
+
+</QuickAnswer>
+
+<InstallCta>एक क्लिक में हर विंडो से डुप्लिकेट टैब हटाएं। Chrome, Edge और Firefox के लिए मुफ़्त।</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="सारे डुप्लिकेट एक साथ कैसे बंद करें?">
+
+1. TabMerger खोलें। **अभी खुले हुए** में हर खुली विंडो और टैब दिखता है।
+2. इसका **⋯** मेन्यू खोलें और **डुप्लिकेट टैब हटाएं** चुनें।
+3. गिनती देखें और हटाने वाला बटन दबाएं, यहां **3 डुप्लिकेट हटाएं**। फ़ालतू ब्राउज़र टैब बंद हो जाते हैं; हर पेज की पहली कॉपी ठीक वहीं रहती है जहां थी।
+
+<ScreenshotThemeToggle />
+
+<Carousel label="खुले टैब से डुप्लिकेट हटाना" steps={[{ title: 'पहले' }, { title: 'पुष्टि करें' }, { title: 'बाद में' }]}>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-before" alt="TabMerger में Now Open (अभी खुले हुए): दो विंडो और आठ टैब, जिनमें से तीन दोहराए गए हैं, लाइट थीम" darkAlt="TabMerger में Now Open (अभी खुले हुए): दो विंडो और आठ टैब, जिनमें से तीन दोहराए गए हैं, डार्क थीम" boxes={[{ id: 'summary', label: '8 टैब' }]} source="TabMerger 3.16.1">पहले: दो विंडो, आठ टैब, जिनमें से तीन दोहराए गए हैं।</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-confirm" alt="TabMerger का Remove duplicates (डुप्लिकेट हटाएं) डायलॉग, जो बताता है कि 3 डुप्लिकेट टैब हटाए जाएंगे, और Remove 3 duplicates (3 डुप्लिकेट हटाएं) बटन, लाइट थीम" darkAlt="TabMerger का Remove duplicates (डुप्लिकेट हटाएं) डायलॉग, जो बताता है कि 3 डुप्लिकेट टैब हटाए जाएंगे, और Remove 3 duplicates (3 डुप्लिकेट हटाएं) बटन, डार्क थीम" boxes={[{ id: 'confirm', label: 'हटाएं' }]} source="TabMerger 3.16.1">TabMerger बंद करने से पहले बताता है कि कितने टैब बंद करेगा।</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-after" alt="डुप्लिकेट हटाने के बाद TabMerger में Now Open (अभी खुले हुए): दो विंडो, पांच टैब, हर पेज एक बार, लाइट थीम" darkAlt="डुप्लिकेट हटाने के बाद TabMerger में Now Open (अभी खुले हुए): दो विंडो, पांच टैब, हर पेज एक बार, डार्क थीम" boxes={[{ id: 'summary', label: '5 टैब' }]} source="TabMerger 3.16.1">बाद में: पांच टैब, हर पेज एक बार। ब्राउज़र के टैब सच में बंद हुए।</ThemedScreenshot>
+</Carousel>
+
+यही विकल्प किसी भी सेव किए गए ग्रुप पर काम करता है, इसलिए हफ़्तों से बढ़ता हुआ रिसर्च ग्रुप भी साफ़-सुथरा रहता है।
+
+</Section>
+
+<Section id="what-counts" title="डुप्लिकेट किसे माना जाता है?">
+
+TabMerger **पूरे पते** की उसके मानक रूप में तुलना करता है, और छोटे-बड़े अक्षरों का फ़र्क नहीं देखता:
+
+<ComparisonTable
+  head={['ये दो टैब', 'डुप्लिकेट?']}
+  rows={[
+    [<code>example.com/page</code>, 'वही पेज दो बार: हां, एक बंद होता है'],
+    [<code>example.com/Page</code>, 'सिर्फ़ छोटे-बड़े अक्षरों का फ़र्क: हां'],
+    [<code>example.com/page#faq</code>, 'अलग एंकर: नहीं, दोनों रहते हैं'],
+    [<code>example.com/page?ref=mail</code>, 'अलग पैरामीटर: नहीं, दोनों रहते हैं'],
+  ]}
+/>
+
+ऐसा जान-बूझकर है: किसी लंबे दस्तावेज़ के अलग-अलग हिस्सों पर खुले दो टैब, या दो सर्च, आपके लिए अलग-अलग टैब हैं, इसलिए वे रहते हैं। सिर्फ़ असली दोहराव हटते हैं।
+
+</Section>
+
+<Section id="builtin" title="क्या ब्राउज़र खुद डुप्लिकेट बंद कर सकता है?">
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+Chrome के सहायता पेज डुप्लिकेट टैब हटाने का कोई टूल नहीं बताते। सबसे करीब **टैब सर्च** (Tab Search, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) है: किसी साइट का नाम टाइप करें, सूची में दोहराए गए टैब पहचानें और हर पंक्ति के बंद करें बटन से उन्हें एक-एक करके बंद करें।
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge के टैब मेन्यू में **Duplicate tab** है, जो एक और कॉपी खोल देता है, यानी ठीक उल्टा काम। दोहराए गए टैब हाथ से ही ढूंढने होंगे: टैब स्ट्रिप पर आगे बढ़ते हुए उन्हें एक-एक करके बंद करें।
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+किसी भी टैब पर राइट-क्लिक करें और दोहराए गए टैब बंद करने के लिए **Close Duplicate Tabs** चुनें, या सिर्फ़ एक पेज के लिए **Close Duplicates of This Tab** चुनें। हिंदी Firefox में भी ये विकल्प अंग्रेज़ी में दिखते हैं।
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="prevent" title="शुरू से ही डुप्लिकेट कम कैसे हों?">
+
+- **खोलने से पहले खोजें।** TabMerger में <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> बताता है कि पेज पहले से खुला है या सेव है। ज़्यादा जानकारी के लिए देखें [सैकड़ों टैब में से एक टैब ढूंढना](/blog/find-a-tab-among-hundreds)।
+- **विंडो सोच-समझकर मर्ज करें।** विंडो जोड़ते समय ही दोहराए गए टैब आपस में मिलते हैं; [विंडो मर्ज करने](/blog/merge-browser-windows) के तुरंत बाद डुप्लिकेट हटाएं।
+- **सेव करें, फिर बंद करें।** कम खुले टैब, कम कॉपी। हमारा [बहुत ज़्यादा टैब के लिए रूटीन](/blog/manage-too-many-tabs) इसे आदत बना देता है।
+
+<InstallCta>Chrome, Edge और Firefox के लिए मुफ़्त। शुरू करने के लिए किसी खाते की ज़रूरत नहीं।</InstallCta>
+
+</Section>
+
+<Section id="faq" title="अक्सर पूछे जाने वाले प्रश्न">
+
+<Faq items={post.faq} />
+
+</Section>

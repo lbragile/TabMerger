@@ -1,0 +1,161 @@
+export const post = {
+  slug: 'close-duplicate-tabs',
+  title: 'Comment fermer les onglets en double en un clic',
+  navTitle: 'Fermer les onglets en double',
+  seoTitle: 'Fermer les onglets en double dans Chrome, Edge et Firefox',
+  description:
+    'La même page ouverte trois fois ? Fermez les onglets en double dans toutes vos fenêtres en un clic avec TabMerger, ou utilisez la fonction intégrée de Firefox, « Fermer les onglets en double ». Ce que proposent Chrome et Edge, et ce qui compte exactement comme un doublon.',
+  shareSummary: 'Fermez les onglets en double de toutes vos fenêtres en un clic, dans Chrome, Edge et Firefox.',
+  dek: 'Les doublons s’accumulent sans bruit. Supprimez-les de toutes vos fenêtres d’un coup, en gardant la première copie de chaque page.',
+  published: '2026-12-01',
+  updated: '2026-12-01',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '« Dédupliquer les onglets » de TabMerger ferme les doublons dans toutes les fenêtres ouvertes et garde le premier.', source: 'Testé dans TabMerger 3.16.1, 21 nov. 2026' },
+    { text: 'Il demande d’abord confirmation et indique combien d’onglets il va supprimer.', source: 'TabMerger 3.16.1' },
+    { text: 'Le menu des onglets de Firefox 159 propose « Fermer les onglets en double ».', source: 'Texte du menu de Firefox 159' },
+    { text: '« Duplicate tab » dans Edge crée une copie ; il n’en supprime aucune.', source: 'Texte du menu d’Edge 158' },
+  ],
+  faq: [
+    {
+      question: 'Chrome sait-il supprimer les onglets en double ?',
+      answer:
+        'Les pages d’aide de Chrome n’en décrivent aucun. TabMerger en ajoute un : ouvrez le menu ⋯ de « Ouverts maintenant » et choisissez « Dédupliquer les onglets » pour fermer chaque doublon dans toutes vos fenêtres.',
+    },
+    {
+      question: 'Quel onglet est conservé ?',
+      answer: 'Dans TabMerger, la première copie dans l’ordre de lecture : la fenêtre la plus ancienne d’abord, puis de gauche à droite. Toute copie suivante de la même adresse est supprimée.',
+    },
+    {
+      question: 'Des pages avec des #ancres différentes sont-elles des doublons ?',
+      answer: 'Non. TabMerger compare les adresses complètes sans tenir compte des majuscules et minuscules : page#top et page#faq, ou la même page avec des ?paramètres différents, restent des onglets distincts.',
+    },
+    {
+      question: 'Puis-je aussi nettoyer les doublons des groupes enregistrés ?',
+      answer: 'Oui : la même option « Dédupliquer les onglets » se trouve dans le menu ⋯ de chaque groupe, pour les onglets qui y sont enregistrés.',
+    },
+  ],
+  images: [
+    { src: '/blog/close-duplicate-tabs/tm-before-light.webp', alt: 'TabMerger, « Now Open » (Ouverts maintenant), avec deux fenêtres et huit onglets, dont trois en double, thème clair' },
+    { src: '/blog/close-duplicate-tabs/tm-before-dark.webp', alt: 'TabMerger, « Now Open » (Ouverts maintenant), avec deux fenêtres et huit onglets, dont trois en double, thème sombre' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp', alt: 'Boîte de dialogue TabMerger « Remove duplicates » (Supprimer les doublons), indiquant que 3 onglets en double seront supprimés, avec un bouton « Remove 3 duplicates » (Supprimer 3 doublons), thème clair' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-dark.webp', alt: 'Boîte de dialogue TabMerger « Remove duplicates » (Supprimer les doublons), indiquant que 3 onglets en double seront supprimés, avec un bouton « Remove 3 duplicates » (Supprimer 3 doublons), thème sombre' },
+    { src: '/blog/close-duplicate-tabs/tm-after-light.webp', alt: 'TabMerger, « Now Open » (Ouverts maintenant) après la suppression des doublons : deux fenêtres, cinq onglets, chaque page une seule fois, thème clair' },
+    { src: '/blog/close-duplicate-tabs/tm-after-dark.webp', alt: 'TabMerger, « Now Open » (Ouverts maintenant) après la suppression des doublons : deux fenêtres, cinq onglets, chaque page une seule fois, thème sombre' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp' },
+  ogImage: { src: '/blog/close-duplicate-tabs/og.png', alt: 'Comment fermer les onglets en double en un clic : un guide TabMerger, avec une boîte de dialogue « Remove 3 duplicates » (Supprimer 3 doublons)' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'tabmerger', label: 'Un clic, toutes les fenêtres' },
+    { id: 'what-counts', label: 'Ce qui compte comme un doublon' },
+    { id: 'builtin', label: 'Options intégrées' },
+    { id: 'prevent', label: 'Moins de doublons' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Fermeture intégrée des doublons',
+    values: { chrome: 'Aucune dans les pages d’aide', edge: 'Aucune (Duplicate tab crée une copie)', firefox: 'Clic droit → Fermer les onglets en double' },
+  },
+}
+
+<QuickAnswer>
+
+Dans [TabMerger](/features), ouvrez le menu **⋯** de **Ouverts maintenant** et choisissez **Dédupliquer les onglets**. L’extension repère chaque page ouverte plus d’une fois, **dans toutes vos fenêtres**, indique combien d’onglets elle va fermer et garde la première copie de chacune. Firefox propose dans son menu des onglets une fonction intégrée, **Fermer les onglets en double** (« Close Duplicate Tabs ») ; les pages d’aide de Chrome ne décrivent aucun outil de suppression des doublons.
+
+</QuickAnswer>
+
+<InstallCta>Supprimez les onglets en double de toutes vos fenêtres en un clic. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Comment fermer tous les doublons d’un coup ?">
+
+1. Ouvrez TabMerger. **Ouverts maintenant** affiche toutes les fenêtres et tous les onglets ouverts.
+2. Ouvrez son menu **⋯** et choisissez **Dédupliquer les onglets**.
+3. Vérifiez le nombre et cliquez sur le bouton de suppression, ici **Supprimer 3 doublons**. Les onglets en trop se ferment dans le navigateur ; la première copie de chaque page reste exactement à sa place.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Supprimer les doublons des onglets ouverts" steps={[{ title: 'Avant' }, { title: 'Confirmer' }, { title: 'Après' }]}>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-before" alt="TabMerger, « Now Open » (Ouverts maintenant), avec deux fenêtres et huit onglets, dont trois en double, thème clair" darkAlt="TabMerger, « Now Open » (Ouverts maintenant), avec deux fenêtres et huit onglets, dont trois en double, thème sombre" boxes={[{ id: 'summary', label: '8 onglets' }]} source="TabMerger 3.16.1">Avant : deux fenêtres, huit onglets, dont trois en double.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-confirm" alt="Boîte de dialogue TabMerger « Remove duplicates » (Supprimer les doublons), indiquant que 3 onglets en double seront supprimés, avec un bouton « Remove 3 duplicates » (Supprimer 3 doublons), thème clair" darkAlt="Boîte de dialogue TabMerger « Remove duplicates » (Supprimer les doublons), indiquant que 3 onglets en double seront supprimés, avec un bouton « Remove 3 duplicates » (Supprimer 3 doublons), thème sombre" boxes={[{ id: 'confirm', label: 'Supprimer' }]} source="TabMerger 3.16.1">TabMerger indique combien d’onglets il va fermer avant de le faire.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-after" alt="TabMerger, « Now Open » (Ouverts maintenant) après la suppression des doublons : deux fenêtres, cinq onglets, chaque page une seule fois, thème clair" darkAlt="TabMerger, « Now Open » (Ouverts maintenant) après la suppression des doublons : deux fenêtres, cinq onglets, chaque page une seule fois, thème sombre" boxes={[{ id: 'summary', label: '5 onglets' }]} source="TabMerger 3.16.1">Après : cinq onglets, chaque page une seule fois. Les onglets du navigateur ont vraiment été fermés.</ThemedScreenshot>
+</Carousel>
+
+La même option fonctionne sur n’importe quel groupe enregistré : un groupe de recherche qui s’enrichit depuis des semaines reste propre, lui aussi.
+
+</Section>
+
+<Section id="what-counts" title="Qu’est-ce qui compte comme un doublon ?">
+
+TabMerger compare l’**adresse complète** sous sa forme standard, sans tenir compte des majuscules et minuscules :
+
+<ComparisonTable
+  head={['Ces deux onglets', 'Doublons ?']}
+  rows={[
+    [<code>example.com/page</code>, 'Même page deux fois : oui, l’un est fermé'],
+    [<code>example.com/Page</code>, 'Seule la casse diffère : oui'],
+    [<code>example.com/page#faq</code>, 'Ancre différente : non, les deux restent'],
+    [<code>example.com/page?ref=mail</code>, 'Paramètres différents : non, les deux restent'],
+  ]}
+/>
+
+C’est voulu : deux onglets sur des sections différentes d’un long document, ou deux recherches, sont pour vous des onglets différents, donc ils restent. Seuls les vrais doublons partent.
+
+</Section>
+
+<Section id="builtin" title="Le navigateur peut-il fermer les doublons lui-même ?">
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+Les pages d’aide de Chrome ne décrivent aucun outil pour supprimer les onglets en double. Ce qui s’en rapproche le plus est la **Recherche dans les onglets** (« Tab Search », <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) : saisissez le nom d’un site, repérez les doublons dans la liste et fermez-les un par un avec le bouton de fermeture de chaque ligne.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Le menu des onglets d’Edge propose **Duplicate tab**, qui ouvre une copie de plus : l’inverse de ce que vous cherchez. Pour trouver les doublons, il faut le faire à la main, en les fermant un par un le long de la barre d’onglets.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Faites un clic droit sur n’importe quel onglet et choisissez **Fermer les onglets en double** (« Close Duplicate Tabs ») pour fermer les doublons, ou **Fermer les doublons de cet onglet** (« Close Duplicates of This Tab ») pour une seule page.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="prevent" title="Comment avoir moins de doublons dès le départ ?">
+
+- **Cherchez avant d’ouvrir.** <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> dans TabMerger montre si la page est déjà ouverte ou enregistrée. Pour en savoir plus : [retrouver un onglet parmi des centaines](/blog/find-a-tab-among-hundreds).
+- **Fusionnez les fenêtres avec soin.** C’est en combinant des fenêtres que les doublons se retrouvent ; dédupliquez juste après avoir [fusionné vos fenêtres](/blog/merge-browser-windows).
+- **Enregistrez, puis fermez.** Moins d’onglets ouverts, moins de copies. Notre [routine contre l’excès d’onglets](/blog/manage-too-many-tabs) en fait une habitude.
+
+<InstallCta>Gratuit pour Chrome, Edge et Firefox. Aucun compte nécessaire pour commencer.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,161 @@
+export const post = {
+  slug: 'close-duplicate-tabs',
+  title: 'איך סוגרים כרטיסיות כפולות בלחיצה אחת',
+  navTitle: 'סגירת כרטיסיות כפולות',
+  seoTitle: 'איך סוגרים כרטיסיות כפולות ב-Chrome, ב-Edge וב-Firefox',
+  description:
+    'אותו דף פתוח שלוש פעמים? סוגרים כרטיסיות כפולות בכל החלונות בלחיצה אחת עם TabMerger, או משתמשים באפשרות המובנית של Firefox, "סגירת לשוניות כפולות". מה Chrome ו-Edge מציעים, ומה בדיוק נחשב לכפילות.',
+  shareSummary: 'סגירת כרטיסיות כפולות בכל החלונות בלחיצה אחת, ב-Chrome, ב-Edge וב-Firefox.',
+  dek: 'כפילויות מצטברות בשקט. מנקים אותן מכל החלונות בבת אחת, ושומרים את העותק הראשון של כל דף.',
+  published: '2026-12-01',
+  updated: '2026-12-01',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '"הסרת כרטיסיות כפולות" ב-TabMerger סוגרת כפילויות בכל החלונות הפתוחים ומשאירה את הראשונה.', source: 'נבדק ב-TabMerger 3.16.1, 21 בנובמבר 2026' },
+    { text: 'התוסף שואל קודם, ואומר כמה כרטיסיות יוסרו.', source: 'TabMerger 3.16.1' },
+    { text: 'בתפריט הלשונית של Firefox 159 יש את האפשרות "סגירת לשוניות כפולות".', source: 'טקסט התפריט של Firefox 159' },
+    { text: 'האפשרות Duplicate tab ב-Edge יוצרת עותק; היא לא מסירה אף כרטיסייה.', source: 'טקסט התפריט של Edge 158' },
+  ],
+  faq: [
+    {
+      question: 'האם יש ב-Chrome כלי להסרת כרטיסיות כפולות?',
+      answer:
+        'דפי העזרה של Chrome לא מתארים כלי כזה. TabMerger מוסיף אחד: פותחים את תפריט ⋯ של "פתוח עכשיו" ובוחרים "הסרת כרטיסיות כפולות" כדי לסגור כל כפילות בכל החלונות.',
+    },
+    {
+      question: 'איזו כרטיסייה נשארת?',
+      answer: 'ב-TabMerger, העותק הראשון לפי סדר הקריאה: קודם החלון המוקדם ביותר, ואחר כך משמאל לימין. כל עותק מאוחר יותר של אותה כתובת מוסר.',
+    },
+    {
+      question: 'האם דפים עם #עוגנים שונים נחשבים לכפולים?',
+      answer: 'לא. TabMerger משווה כתובות מלאות בלי להבחין בין אותיות גדולות לקטנות, כך ש-page#top ו-page#faq, או אותו דף עם ?פרמטרים שונים, נשארים כרטיסיות נפרדות.',
+    },
+    {
+      question: 'אפשר לנקות כפילויות גם מקבוצות שמורות?',
+      answer: 'כן: אותה אפשרות, "הסרת כרטיסיות כפולות", נמצאת בתפריט ⋯ של כל קבוצה, עבור הכרטיסיות השמורות בה.',
+    },
+  ],
+  images: [
+    { src: '/blog/close-duplicate-tabs/tm-before-light.webp', alt: 'הקטע Now Open (פתוח עכשיו) ב-TabMerger עם שני חלונות ושמונה כרטיסיות, שלוש מהן כפולות, ערכת נושא בהירה' },
+    { src: '/blog/close-duplicate-tabs/tm-before-dark.webp', alt: 'הקטע Now Open (פתוח עכשיו) ב-TabMerger עם שני חלונות ושמונה כרטיסיות, שלוש מהן כפולות, ערכת נושא כהה' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp', alt: 'תיבת הדו-שיח Remove duplicates (הסרת כפילויות) ב-TabMerger, עם ההודעה ש-3 כרטיסיות כפולות יוסרו והכפתור Remove 3 duplicates (הסרת 3 כפילויות), ערכת נושא בהירה' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-dark.webp', alt: 'תיבת הדו-שיח Remove duplicates (הסרת כפילויות) ב-TabMerger, עם ההודעה ש-3 כרטיסיות כפולות יוסרו והכפתור Remove 3 duplicates (הסרת 3 כפילויות), ערכת נושא כהה' },
+    { src: '/blog/close-duplicate-tabs/tm-after-light.webp', alt: 'הקטע Now Open (פתוח עכשיו) ב-TabMerger אחרי הסרת הכפילויות: שני חלונות, חמש כרטיסיות, כל דף פעם אחת, ערכת נושא בהירה' },
+    { src: '/blog/close-duplicate-tabs/tm-after-dark.webp', alt: 'הקטע Now Open (פתוח עכשיו) ב-TabMerger אחרי הסרת הכפילויות: שני חלונות, חמש כרטיסיות, כל דף פעם אחת, ערכת נושא כהה' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp' },
+  ogImage: { src: '/blog/close-duplicate-tabs/og.png', alt: 'איך סוגרים כרטיסיות כפולות בלחיצה אחת: מדריך של TabMerger, עם תיבת הדו-שיח Remove 3 duplicates (הסרת 3 כפילויות)' },
+  toc: [
+    { id: 'quick', label: 'תשובה קצרה' },
+    { id: 'tabmerger', label: 'לחיצה אחת, כל החלונות' },
+    { id: 'what-counts', label: 'מה נחשב לכפילות' },
+    { id: 'builtin', label: 'אפשרויות מובנות' },
+    { id: 'prevent', label: 'פחות כפילויות' },
+    { id: 'faq', label: 'שאלות נפוצות' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'סגירת כפילויות מובנית',
+    values: { chrome: 'אין בדפי העזרה', edge: 'אין (Duplicate tab יוצר עותק)', firefox: 'לחיצה ימנית ← סגירת לשוניות כפולות' },
+  },
+}
+
+<QuickAnswer>
+
+ב-[TabMerger](/features) פותחים את תפריט **⋯** של **פתוח עכשיו** ובוחרים **הסרת כרטיסיות כפולות**. התוסף מוצא כל דף שפתוח יותר מפעם אחת, **בכל החלונות שלכם**, מראה כמה כרטיסיות ייסגרו ומשאיר את העותק הראשון של כל דף. ב-Firefox יש בתפריט הלשונית אפשרות מובנית, **סגירת לשוניות כפולות** (<bdi dir="ltr">Close Duplicate Tabs</bdi>); דפי העזרה של Chrome לא מתארים שום כלי להסרת כפילויות.
+
+</QuickAnswer>
+
+<InstallCta>מנקים כרטיסיות כפולות מכל החלונות בלחיצה אחת. חינם ל-Chrome, ל-Edge ול-Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="איך סוגרים את כל הכפילויות בבת אחת?">
+
+1. פותחים את TabMerger. **פתוח עכשיו** מציג את כל החלונות והכרטיסיות הפתוחים.
+2. פותחים את תפריט **⋯** שלו ובוחרים **הסרת כרטיסיות כפולות**.
+3. בודקים את המספר ולוחצים על כפתור ההסרה, כאן **הסרת 3 כפילויות**. הכרטיסיות המיותרות בדפדפן נסגרות; העותק הראשון של כל דף נשאר בדיוק במקומו.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="הסרת כפילויות מהכרטיסיות הפתוחות" steps={[{ title: 'לפני' }, { title: 'אישור' }, { title: 'אחרי' }]}>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-before" alt="הקטע Now Open (פתוח עכשיו) ב-TabMerger עם שני חלונות ושמונה כרטיסיות, שלוש מהן כפולות, ערכת נושא בהירה" darkAlt="הקטע Now Open (פתוח עכשיו) ב-TabMerger עם שני חלונות ושמונה כרטיסיות, שלוש מהן כפולות, ערכת נושא כהה" boxes={[{ id: 'summary', label: '8 כרטיסיות' }]} source="TabMerger 3.16.1">לפני: שני חלונות, שמונה כרטיסיות, שלוש מהן כפולות.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-confirm" alt="תיבת הדו-שיח Remove duplicates (הסרת כפילויות) ב-TabMerger, עם ההודעה ש-3 כרטיסיות כפולות יוסרו והכפתור Remove 3 duplicates (הסרת 3 כפילויות), ערכת נושא בהירה" darkAlt="תיבת הדו-שיח Remove duplicates (הסרת כפילויות) ב-TabMerger, עם ההודעה ש-3 כרטיסיות כפולות יוסרו והכפתור Remove 3 duplicates (הסרת 3 כפילויות), ערכת נושא כהה" boxes={[{ id: 'confirm', label: 'הסרה' }]} source="TabMerger 3.16.1">TabMerger אומר כמה כרטיסיות ייסגרו לפני שהוא סוגר אותן.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-after" alt="הקטע Now Open (פתוח עכשיו) ב-TabMerger אחרי הסרת הכפילויות: שני חלונות, חמש כרטיסיות, כל דף פעם אחת, ערכת נושא בהירה" darkAlt="הקטע Now Open (פתוח עכשיו) ב-TabMerger אחרי הסרת הכפילויות: שני חלונות, חמש כרטיסיות, כל דף פעם אחת, ערכת נושא כהה" boxes={[{ id: 'summary', label: '5 כרטיסיות' }]} source="TabMerger 3.16.1">אחרי: חמש כרטיסיות, כל דף פעם אחת. הכרטיסיות בדפדפן באמת נסגרו.</ThemedScreenshot>
+</Carousel>
+
+אותה אפשרות עובדת בכל קבוצה שמורה, כך שגם קבוצת מחקר שגדלה כבר שבועות נשארת נקייה.
+
+</Section>
+
+<Section id="what-counts" title="מה נחשב לכפילות?">
+
+TabMerger משווה את **הכתובת המלאה** בצורתה הסטנדרטית, בלי להבחין בין אותיות גדולות לקטנות:
+
+<ComparisonTable
+  head={['שתי הכרטיסיות האלה', 'כפולות?']}
+  rows={[
+    [<code>example.com/page</code>, 'אותו דף פעמיים: כן, אחת נסגרת'],
+    [<code>example.com/Page</code>, 'הבדל רק באותיות גדולות או קטנות: כן'],
+    [<code>example.com/page#faq</code>, 'עוגן שונה: לא, שתיהן נשארות'],
+    [<code>example.com/page?ref=mail</code>, 'פרמטרים שונים: לא, שתיהן נשארות'],
+  ]}
+/>
+
+זה מכוון: שתי כרטיסיות על קטעים שונים של מסמך ארוך, או שני חיפושים, הן בשבילכם כרטיסיות שונות, ולכן הן נשארות. רק כפילויות אמיתיות יוצאות.
+
+</Section>
+
+<Section id="builtin" title="האם הדפדפן יכול לסגור כפילויות בעצמו?">
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+דפי העזרה של Chrome לא מתארים שום כלי להסרת כרטיסיות כפולות. הדבר הקרוב ביותר הוא סמל **החיפוש בכרטיסיות** (<bdi dir="ltr">Tab Search</bdi>, <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi>): מקלידים שם של אתר, מאתרים את הכפילויות ברשימה וסוגרים אותן אחת אחת בכפתור הסגירה של כל שורה.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+בתפריט הכרטיסייה של Edge יש <bdi dir="ltr">**Duplicate tab**</bdi>, שפותח עוד עותק, כלומר בדיוק ההפך ממה שרוצים. את הכפילויות צריך למצוא ידנית ולסגור אחת אחת לאורך שורת הכרטיסיות.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+לוחצים לחיצה ימנית על כרטיסייה כלשהי ובוחרים **סגירת לשוניות כפולות** (<bdi dir="ltr">Close Duplicate Tabs</bdi>) כדי לסגור כפילויות, או **סגירת כפילויות של לשונית זו** (<bdi dir="ltr">Close Duplicates of This Tab</bdi>) עבור דף אחד בלבד.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="prevent" title="איך נוצרות פחות כפילויות מלכתחילה?">
+
+- **מחפשים לפני שפותחים.** <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> ב-TabMerger מראה אם הדף כבר פתוח או שמור. עוד במדריך [למציאת כרטיסייה אחת מבין מאות](/blog/find-a-tab-among-hundreds).
+- **ממזגים חלונות בזהירות.** כפילויות נפגשות בדיוק כשמאחדים חלונות; מסירים כפילויות מיד אחרי [מיזוג החלונות](/blog/merge-browser-windows).
+- **שומרים, ואז סוגרים.** פחות כרטיסיות פתוחות, פחות עותקים. [השגרה שלנו ליותר מדי כרטיסיות](/blog/manage-too-many-tabs) הופכת את זה להרגל.
+
+<InstallCta>חינם ל-Chrome, ל-Edge ול-Firefox. לא צריך חשבון כדי להתחיל.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="שאלות נפוצות">
+
+<Faq items={post.faq} />
+
+</Section>

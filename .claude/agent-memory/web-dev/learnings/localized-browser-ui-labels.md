@@ -49,6 +49,8 @@ Translated posts name browser settings and menus. Every localized label must com
 
 ## CJK bold (ja, zh-CN, ko)
 
+CommonMark treats symbols such as `⋯` (U+22EF) and full-width `）` as punctuation for emphasis flanking, so `の**⋯**メニュー` or `**…（3個）**を` with no spaces leaves literal asterisks. Write ` **⋯** ` with spaces, or end the clause after the bold.
+
 CommonMark won't close `**` that comes right after punctuation and right before a letter: `**使用会话管理器。**它能` renders with literal asterisks, and MDX compiles it without complaint. Put the full stop outside (`**使用会话管理器**。它能`). To catch it, compile each locale and look for `**` inside the compiled string literals. Bold before `（`, `、` or `<Kbd>` is fine.
 
 ## Writing 17 files without 17 hook runs
@@ -79,3 +81,9 @@ A 15 KB MDX body in a Bash heredoc failed ("unexpected EOF while looking for mat
 **Firefox tab-list and tab-search labels:** `tabs-toolbar-list-all-tabs` ("List all tabs") and `urlbar-searchmode-tabs4` (the address-bar Tabs mode) in `browser/browser/browser.ftl`. Both exist in all 17 Mozilla locales, including hi-IN and id.
 
 **RTL table cells with code:** an inline `<code>` ending in a quote (e.g. `group:"Work"`) in a ComparisonTable cell shows its closing quote on the wrong side in ar/fa/he. Wrap the element itself: `<bdi dir="ltr"><code>…</code></bdi>`; a plain string in a rows array cannot carry one.
+
+**Firefox duplicate-tab menu items** (`tabContextMenu.ftl`): `tab-context-close-duplicate-tabs` and `tab-context-close-duplicate-tabs2`. de and ko give both the same string, `id` lacks `-tabs2`, and `hi-IN` lacks both (Firefox shows English there). Check both keys per locale before writing "X for all, Y for one page".
+
+**Chrome Help 2391819 outside English has no Ctrl+Shift+A paragraph** (checked 2026-11-23). Take the Tab Search label from the "From the tab strip, select Tab Search" step; Hebrew words it as an icon ("סמל החיפוש בכרטיסיות").
+
+**Plural catalog labels quoted with a number** ("Remove {{count}} duplicates"): pick the key with `new Intl.PluralRules(loc).select(n)`. For 3, ar/ru/pl use `_few`, not `_other`. The extension renders the count in Latin digits, so a quoted fa label keeps "3" even where the prose uses Persian digits.

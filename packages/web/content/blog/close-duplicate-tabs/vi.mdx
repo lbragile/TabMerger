@@ -1,0 +1,161 @@
+export const post = {
+  slug: 'close-duplicate-tabs',
+  title: 'Cách đóng tab trùng lặp chỉ với một cú nhấp',
+  navTitle: 'Đóng tab trùng lặp',
+  seoTitle: 'Cách đóng tab trùng lặp trên Chrome, Edge và Firefox',
+  description:
+    'Cùng một trang mở ba lần? Đóng tab trùng lặp ở mọi cửa sổ chỉ với một cú nhấp bằng TabMerger, hoặc dùng tính năng có sẵn của Firefox là “Đóng các thẻ trùng”. Chrome và Edge có gì, và chính xác thì thế nào là trùng lặp.',
+  shareSummary: 'Đóng tab trùng lặp ở mọi cửa sổ chỉ với một cú nhấp, trên Chrome, Edge và Firefox.',
+  dek: 'Tab trùng lặp cứ âm thầm tăng lên. Dọn chúng khỏi mọi cửa sổ cùng lúc và giữ lại bản đầu tiên của mỗi trang.',
+  published: '2026-12-01',
+  updated: '2026-12-01',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '“Loại bỏ thẻ trùng lặp” của TabMerger đóng các tab lặp lại trong mọi cửa sổ đang mở và giữ lại tab đầu tiên.', source: 'Đã thử trên TabMerger 3.16.1, 21/11/2026' },
+    { text: 'Tiện ích hỏi trước và cho biết sẽ xóa bao nhiêu tab.', source: 'TabMerger 3.16.1' },
+    { text: 'Trình đơn thẻ của Firefox 159 có “Đóng các thẻ trùng”.', source: 'Chữ trên trình đơn Firefox 159' },
+    { text: '“Duplicate tab” của Edge tạo thêm một bản sao; nó không xóa tab nào.', source: 'Chữ trên trình đơn Edge 158' },
+  ],
+  faq: [
+    {
+      question: 'Chrome có công cụ xóa tab trùng lặp không?',
+      answer:
+        'Các trang trợ giúp của Chrome không mô tả công cụ nào như vậy. TabMerger bổ sung tính năng này: mở trình đơn ⋯ của “Đang Mở” và chọn “Loại bỏ thẻ trùng lặp” để đóng mọi tab lặp lại trong tất cả cửa sổ.',
+    },
+    {
+      question: 'Tab nào được giữ lại?',
+      answer: 'Trong TabMerger, đó là bản đầu tiên theo thứ tự đọc: cửa sổ sớm nhất trước, rồi từ trái sang phải. Mọi bản sau của cùng một địa chỉ đều bị xóa.',
+    },
+    {
+      question: 'Các trang có #neo khác nhau có bị coi là trùng lặp không?',
+      answer: 'Không. TabMerger so sánh địa chỉ đầy đủ, không phân biệt chữ hoa chữ thường, nên page#top và page#faq, hoặc cùng một trang với ?tham số khác nhau, vẫn là những tab khác nhau.',
+    },
+    {
+      question: 'Tôi có thể dọn tab trùng lặp trong các nhóm đã lưu không?',
+      answer: 'Có: cùng mục “Loại bỏ thẻ trùng lặp” nằm trong trình đơn ⋯ của mọi nhóm, áp dụng cho các tab đã lưu ở đó.',
+    },
+  ],
+  images: [
+    { src: '/blog/close-duplicate-tabs/tm-before-light.webp', alt: 'Now Open (Đang Mở) trong TabMerger với hai cửa sổ và tám tab, ba tab bị lặp lại, giao diện sáng' },
+    { src: '/blog/close-duplicate-tabs/tm-before-dark.webp', alt: 'Now Open (Đang Mở) trong TabMerger với hai cửa sổ và tám tab, ba tab bị lặp lại, giao diện tối' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp', alt: 'Hộp thoại Remove duplicates (Xóa bản trùng lặp) của TabMerger cho biết 3 tab trùng lặp sẽ bị xóa, kèm nút Remove 3 duplicates (Xóa 3 bản trùng lặp), giao diện sáng' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-dark.webp', alt: 'Hộp thoại Remove duplicates (Xóa bản trùng lặp) của TabMerger cho biết 3 tab trùng lặp sẽ bị xóa, kèm nút Remove 3 duplicates (Xóa 3 bản trùng lặp), giao diện tối' },
+    { src: '/blog/close-duplicate-tabs/tm-after-light.webp', alt: 'Now Open (Đang Mở) trong TabMerger sau khi loại bỏ trùng lặp: hai cửa sổ, năm tab, mỗi trang một lần, giao diện sáng' },
+    { src: '/blog/close-duplicate-tabs/tm-after-dark.webp', alt: 'Now Open (Đang Mở) trong TabMerger sau khi loại bỏ trùng lặp: hai cửa sổ, năm tab, mỗi trang một lần, giao diện tối' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp' },
+  ogImage: { src: '/blog/close-duplicate-tabs/og.png', alt: 'Cách đóng tab trùng lặp chỉ với một cú nhấp: hướng dẫn của TabMerger, với hộp thoại Remove 3 duplicates (Xóa 3 bản trùng lặp)' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'tabmerger', label: 'Một cú nhấp, mọi cửa sổ' },
+    { id: 'what-counts', label: 'Thế nào là trùng lặp' },
+    { id: 'builtin', label: 'Tùy chọn có sẵn' },
+    { id: 'prevent', label: 'Ít trùng lặp hơn' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Đóng tab trùng lặp có sẵn',
+    values: { chrome: 'Không có trong trang trợ giúp', edge: 'Không có (Duplicate tab tạo bản sao)', firefox: 'Nhấp chuột phải → Đóng các thẻ trùng' },
+  },
+}
+
+<QuickAnswer>
+
+Trong [TabMerger](/features), mở trình đơn **⋯** của **Đang Mở** và chọn **Loại bỏ thẻ trùng lặp**. Tiện ích tìm mọi trang đang mở nhiều hơn một lần, **trong tất cả cửa sổ của bạn**, cho biết sẽ đóng bao nhiêu tab và giữ lại bản đầu tiên của mỗi trang. Firefox có sẵn mục **Đóng các thẻ trùng** (Close Duplicate Tabs) trong trình đơn thẻ; các trang trợ giúp của Chrome không mô tả công cụ xóa tab trùng lặp nào.
+
+</QuickAnswer>
+
+<InstallCta>Dọn tab trùng lặp khỏi mọi cửa sổ chỉ với một cú nhấp. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Làm sao để đóng mọi tab trùng lặp cùng lúc?">
+
+1. Mở TabMerger. **Đang Mở** liệt kê mọi cửa sổ và tab đang mở.
+2. Mở trình đơn **⋯** của mục này và chọn **Loại bỏ thẻ trùng lặp**.
+3. Kiểm tra con số và nhấn nút xóa, ở đây là **Xóa 3 bản trùng lặp**. Các tab thừa trên trình duyệt sẽ đóng; bản đầu tiên của mỗi trang vẫn nằm nguyên chỗ cũ.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Loại bỏ tab trùng lặp đang mở" steps={[{ title: 'Trước' }, { title: 'Xác nhận' }, { title: 'Sau' }]}>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-before" alt="Now Open (Đang Mở) trong TabMerger với hai cửa sổ và tám tab, ba tab bị lặp lại, giao diện sáng" darkAlt="Now Open (Đang Mở) trong TabMerger với hai cửa sổ và tám tab, ba tab bị lặp lại, giao diện tối" boxes={[{ id: 'summary', label: '8 tab' }]} source="TabMerger 3.16.1">Trước: hai cửa sổ, tám tab, ba tab bị lặp lại.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-confirm" alt="Hộp thoại Remove duplicates (Xóa bản trùng lặp) của TabMerger cho biết 3 tab trùng lặp sẽ bị xóa, kèm nút Remove 3 duplicates (Xóa 3 bản trùng lặp), giao diện sáng" darkAlt="Hộp thoại Remove duplicates (Xóa bản trùng lặp) của TabMerger cho biết 3 tab trùng lặp sẽ bị xóa, kèm nút Remove 3 duplicates (Xóa 3 bản trùng lặp), giao diện tối" boxes={[{ id: 'confirm', label: 'Xóa' }]} source="TabMerger 3.16.1">TabMerger cho biết sẽ đóng bao nhiêu tab trước khi đóng.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-after" alt="Now Open (Đang Mở) trong TabMerger sau khi loại bỏ trùng lặp: hai cửa sổ, năm tab, mỗi trang một lần, giao diện sáng" darkAlt="Now Open (Đang Mở) trong TabMerger sau khi loại bỏ trùng lặp: hai cửa sổ, năm tab, mỗi trang một lần, giao diện tối" boxes={[{ id: 'summary', label: '5 tab' }]} source="TabMerger 3.16.1">Sau: năm tab, mỗi trang một lần. Các tab trên trình duyệt thực sự đã đóng.</ThemedScreenshot>
+</Carousel>
+
+Cùng mục này dùng được với mọi nhóm đã lưu, nên một nhóm nghiên cứu cứ lớn dần qua nhiều tuần cũng luôn gọn gàng.
+
+</Section>
+
+<Section id="what-counts" title="Thế nào là tab trùng lặp?">
+
+TabMerger so sánh **địa chỉ đầy đủ** ở dạng chuẩn, không phân biệt chữ hoa chữ thường:
+
+<ComparisonTable
+  head={['Hai tab này', 'Trùng lặp?']}
+  rows={[
+    [<code>example.com/page</code>, 'Cùng một trang hai lần: có, một tab bị đóng'],
+    [<code>example.com/Page</code>, 'Chỉ khác chữ hoa chữ thường: có'],
+    [<code>example.com/page#faq</code>, 'Neo khác nhau: không, cả hai được giữ'],
+    [<code>example.com/page?ref=mail</code>, 'Tham số khác nhau: không, cả hai được giữ'],
+  ]}
+/>
+
+Đó là chủ ý: hai tab ở hai phần khác nhau của một tài liệu dài, hay hai lượt tìm kiếm, là hai tab khác nhau với bạn, nên chúng được giữ lại. Chỉ những bản lặp thật sự mới bị xóa.
+
+</Section>
+
+<Section id="builtin" title="Trình duyệt có tự đóng tab trùng lặp được không?">
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+Các trang trợ giúp của Chrome không mô tả công cụ xóa tab trùng lặp nào. Gần nhất là **Tìm thẻ** (Tab Search, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>); Chrome gọi tab là “thẻ”. Gõ tên trang web, tìm các tab lặp lại trong danh sách và đóng từng tab bằng nút đóng ở mỗi dòng.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Trình đơn tab của Edge có **Duplicate tab**, mục này mở thêm một bản sao, ngược hẳn với điều bạn cần. Muốn tìm tab lặp lại thì phải làm thủ công, đóng từng tab khi lướt dọc thanh tab.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Nhấp chuột phải vào tab bất kỳ và chọn **Đóng các thẻ trùng** (Close Duplicate Tabs) để đóng các tab lặp lại, hoặc **Đóng các bản sao của thẻ này** (Close Duplicates of This Tab) nếu chỉ muốn xử lý một trang.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="prevent" title="Làm sao để ít tab trùng lặp ngay từ đầu?">
+
+- **Tìm trước khi mở.** <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> trong TabMerger cho biết trang đó đã mở hay đã lưu chưa. Xem thêm cách [tìm một tab giữa hàng trăm tab](/blog/find-a-tab-among-hundreds).
+- **Gộp cửa sổ cẩn thận.** Gộp các cửa sổ là lúc các tab lặp lại gặp nhau; hãy loại bỏ trùng lặp ngay sau khi [gộp cửa sổ](/blog/merge-browser-windows).
+- **Lưu rồi đóng.** Ít tab mở hơn thì ít bản sao hơn. [Thói quen xử lý quá nhiều tab](/blog/manage-too-many-tabs) của chúng tôi biến việc này thành nếp quen.
+
+<InstallCta>Miễn phí cho Chrome, Edge và Firefox. Không cần tài khoản để bắt đầu.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+</Section>

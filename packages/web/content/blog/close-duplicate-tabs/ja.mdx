@@ -1,0 +1,161 @@
+export const post = {
+  slug: 'close-duplicate-tabs',
+  title: '重複タブをワンクリックで閉じる方法',
+  navTitle: '重複タブを閉じる',
+  seoTitle: 'Chrome・Edge・Firefox で重複タブを閉じる方法',
+  description:
+    '同じページが 3 つも開いていませんか？ TabMerger なら、すべてのウィンドウの重複タブをワンクリックで閉じられます。Firefox には「重複タブを閉じる」も組み込まれています。Chrome と Edge でできること、そして何が重複と見なされるのかを正確に説明します。',
+  shareSummary: 'Chrome・Edge・Firefox で、すべてのウィンドウの重複タブをワンクリックで閉じる方法。',
+  dek: '重複タブはいつの間にか増えていきます。すべてのウィンドウからまとめて片付け、各ページの最初のタブだけを残しましょう。',
+  published: '2026-12-01',
+  updated: '2026-12-01',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger の「重複タブを削除」は、開いているすべてのウィンドウの重複を閉じ、最初のタブを残します。', source: 'TabMerger 3.16.1 で確認、2026年11月21日' },
+    { text: '実行前に確認し、削除するタブの数を表示します。', source: 'TabMerger 3.16.1' },
+    { text: 'Firefox 159 のタブメニューには「重複タブを閉じる」があります。', source: 'Firefox 159 のメニュー表記' },
+    { text: 'Edge の「Duplicate tab」はタブを複製する機能で、重複を削除するものではありません。', source: 'Edge 158 のメニュー表記' },
+  ],
+  faq: [
+    {
+      question: 'Chrome に重複タブを削除する機能はありますか？',
+      answer:
+        'Chrome のヘルプページには記載がありません。TabMerger ならできます。「現在開いているタブ」の ⋯ メニューを開いて「重複タブを削除」を選ぶと、すべてのウィンドウの重複が閉じます。',
+    },
+    {
+      question: 'どのタブが残りますか？',
+      answer: 'TabMerger では、並び順で最初のタブが残ります。最も古いウィンドウから順に、左から右へ数えます。同じアドレスの 2 つ目以降のタブはすべて削除されます。',
+    },
+    {
+      question: '#アンカーが違うページも重複になりますか？',
+      answer: 'いいえ。TabMerger はアドレス全体を大文字と小文字を区別せずに比べます。そのため page#top と page#faq や、?パラメータが違う同じページは、別のタブとして残ります。',
+    },
+    {
+      question: '保存したグループの重複も削除できますか？',
+      answer: 'はい。各グループの ⋯ メニューにも同じ「重複タブを削除」があり、そのグループに保存されたタブが対象になります。',
+    },
+  ],
+  images: [
+    { src: '/blog/close-duplicate-tabs/tm-before-light.webp', alt: 'TabMerger の「Now Open」（現在開いているタブ）。ウィンドウ 2 つにタブ 8 個、そのうち 3 個が重複。ライトテーマ' },
+    { src: '/blog/close-duplicate-tabs/tm-before-dark.webp', alt: 'TabMerger の「Now Open」（現在開いているタブ）。ウィンドウ 2 つにタブ 8 個、そのうち 3 個が重複。ダークテーマ' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp', alt: 'TabMerger のダイアログ「Remove duplicates」（重複を削除）。重複タブ 3 個が削除されると表示され、「Remove 3 duplicates」（重複を削除（3個））ボタンがある。ライトテーマ' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-dark.webp', alt: 'TabMerger のダイアログ「Remove duplicates」（重複を削除）。重複タブ 3 個が削除されると表示され、「Remove 3 duplicates」（重複を削除（3個））ボタンがある。ダークテーマ' },
+    { src: '/blog/close-duplicate-tabs/tm-after-light.webp', alt: '重複を削除した後の TabMerger の「Now Open」（現在開いているタブ）。ウィンドウ 2 つにタブ 5 個、各ページ 1 つずつ。ライトテーマ' },
+    { src: '/blog/close-duplicate-tabs/tm-after-dark.webp', alt: '重複を削除した後の TabMerger の「Now Open」（現在開いているタブ）。ウィンドウ 2 つにタブ 5 個、各ページ 1 つずつ。ダークテーマ' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp' },
+  ogImage: { src: '/blog/close-duplicate-tabs/og.png', alt: '重複タブをワンクリックで閉じる方法：TabMerger ガイド。「Remove 3 duplicates」（重複を削除（3個））ダイアログ付き' },
+  toc: [
+    { id: 'quick', label: '簡単な答え' },
+    { id: 'tabmerger', label: 'ワンクリックで全ウィンドウ' },
+    { id: 'what-counts', label: '重複と見なされるもの' },
+    { id: 'builtin', label: 'ブラウザの標準機能' },
+    { id: 'prevent', label: '重複を減らすには' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: '重複タブを閉じる標準機能',
+    values: { chrome: 'ヘルプページに記載なし', edge: 'なし（Duplicate tab は複製）', firefox: '右クリック → 重複タブを閉じる' },
+  },
+}
+
+<QuickAnswer>
+
+[TabMerger](/features) で **現在開いているタブ** の **⋯** メニューを開き、**重複タブを削除** を選びます。2 回以上開いているページを **すべてのウィンドウから** 探し出し、閉じるタブの数を表示して、各ページの最初のタブを残します。Firefox にはタブメニューに **重複タブを閉じる**（Close Duplicate Tabs）が組み込まれています。Chrome のヘルプページには、重複を削除する機能の記載がありません。
+
+</QuickAnswer>
+
+<InstallCta>すべてのウィンドウの重複タブをワンクリックで片付け。Chrome、Edge、Firefox に無料で対応。</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="重複をまとめて閉じるには？">
+
+1. TabMerger を開きます。**現在開いているタブ** に、開いているすべてのウィンドウとタブが表示されます。
+2. その **⋯** メニューを開き、**重複タブを削除** を選びます。
+3. 数を確認して削除ボタンを押します。ここでは **重複を削除（3個）** です。余分なブラウザのタブが閉じ、各ページの最初のタブは元の場所にそのまま残ります。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="開いているタブの重複を削除" steps={[{ title: '前' }, { title: '確認' }, { title: '後' }]}>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-before" alt="TabMerger の「Now Open」（現在開いているタブ）。ウィンドウ 2 つにタブ 8 個、そのうち 3 個が重複。ライトテーマ" darkAlt="TabMerger の「Now Open」（現在開いているタブ）。ウィンドウ 2 つにタブ 8 個、そのうち 3 個が重複。ダークテーマ" boxes={[{ id: 'summary', label: 'タブ 8 個' }]} source="TabMerger 3.16.1">前：ウィンドウ 2 つ、タブ 8 個、そのうち 3 個が重複。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-confirm" alt="TabMerger のダイアログ「Remove duplicates」（重複を削除）。重複タブ 3 個が削除されると表示され、「Remove 3 duplicates」（重複を削除（3個））ボタンがある。ライトテーマ" darkAlt="TabMerger のダイアログ「Remove duplicates」（重複を削除）。重複タブ 3 個が削除されると表示され、「Remove 3 duplicates」（重複を削除（3個））ボタンがある。ダークテーマ" boxes={[{ id: 'confirm', label: '削除' }]} source="TabMerger 3.16.1">TabMerger は、閉じる前にいくつ閉じるかを知らせます。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-after" alt="重複を削除した後の TabMerger の「Now Open」（現在開いているタブ）。ウィンドウ 2 つにタブ 5 個、各ページ 1 つずつ。ライトテーマ" darkAlt="重複を削除した後の TabMerger の「Now Open」（現在開いているタブ）。ウィンドウ 2 つにタブ 5 個、各ページ 1 つずつ。ダークテーマ" boxes={[{ id: 'summary', label: 'タブ 5 個' }]} source="TabMerger 3.16.1">後：タブ 5 個、各ページ 1 つずつ。ブラウザのタブも実際に閉じています。</ThemedScreenshot>
+</Carousel>
+
+同じ項目は保存済みのどのグループでも使えるので、何週間も続く調べもの用のグループもすっきり保てます。
+
+</Section>
+
+<Section id="what-counts" title="何が重複と見なされますか？">
+
+TabMerger は、標準形にした **アドレス全体** を、大文字と小文字を区別せずに比べます。
+
+<ComparisonTable
+  head={['この 2 つのタブ', '重複？']}
+  rows={[
+    [<code>example.com/page</code>, '同じページが 2 つ：重複。1 つを閉じます'],
+    [<code>example.com/Page</code>, '大文字と小文字の違いだけ：重複'],
+    [<code>example.com/page#faq</code>, 'アンカーが違う：重複ではなく、両方残ります'],
+    [<code>example.com/page?ref=mail</code>, 'パラメータが違う：重複ではなく、両方残ります'],
+  ]}
+/>
+
+これは意図的な仕様です。長い文書の別々のセクションを開いた 2 つのタブや、2 つの検索結果は、あなたにとって別のタブなので残します。消えるのは本当の重複だけです。
+
+</Section>
+
+<Section id="builtin" title="ブラウザだけで重複を閉じられますか？">
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+Chrome のヘルプページには、重複タブを削除する機能の記載がありません。いちばん近いのは **タブ検索**（Tab Search、<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>）です。サイト名を入力し、一覧で重複を見つけて、各行の閉じるボタンで 1 つずつ閉じます。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge のタブメニューには **Duplicate tab** がありますが、これはもう 1 つコピーを開く機能で、目的とは正反対です。重複は手作業で探し、タブバーを順に見ながら 1 つずつ閉じるしかありません。
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+任意のタブを右クリックして **重複タブを閉じる**（Close Duplicate Tabs）を選ぶと重複が閉じます。1 つのページだけなら **このタブの重複を閉じる**（Close Duplicates of This Tab）を選びます。
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="prevent" title="そもそも重複を増やさないには？">
+
+- **開く前に検索する**。TabMerger で <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> を押すと、そのページがすでに開いているか保存済みかがわかります。詳しくは[何百ものタブから 1 つを探す方法](/blog/find-a-tab-among-hundreds)をご覧ください。
+- **ウィンドウは慎重に統合する**。重複が出会うのはウィンドウをまとめたときです。[ウィンドウを統合](/blog/merge-browser-windows)したら、すぐに重複を削除しましょう。
+- **保存してから閉じる**。開いているタブが減れば、重複も減ります。[タブが多すぎるときの習慣](/blog/manage-too-many-tabs)で、これを日課にしましょう。
+
+<InstallCta>Chrome、Edge、Firefox に無料で対応。アカウントなしで始められます。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,161 @@
+export const post = {
+  slug: 'close-duplicate-tabs',
+  title: 'So schließt du doppelte Tabs mit einem Klick',
+  navTitle: 'Doppelte Tabs schließen',
+  seoTitle: 'Doppelte Tabs schließen in Chrome, Edge und Firefox: So geht’s',
+  description:
+    'Dieselbe Seite dreimal offen? Schließ doppelte Tabs in allen Fenstern mit einem Klick mit TabMerger oder nutze das eingebaute „Doppelte Tabs schließen“ von Firefox. Was Chrome und Edge bieten und was genau als Duplikat zählt.',
+  shareSummary: 'Doppelte Tabs in allen Fenstern mit einem Klick schließen, in Chrome, Edge und Firefox.',
+  dek: 'Duplikate sammeln sich unbemerkt an. Räum sie in allen Fenstern auf einmal weg und behalte von jeder Seite die erste Kopie.',
+  published: '2026-12-01',
+  updated: '2026-12-01',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '„Doppelte Tabs entfernen“ in TabMerger schließt Wiederholungen in allen offenen Fenstern und behält jeweils die erste.', source: 'Getestet in TabMerger 3.16.1, 21. Nov. 2026' },
+    { text: 'Es fragt vorher nach und sagt, wie viele Tabs es entfernt.', source: 'TabMerger 3.16.1' },
+    { text: 'Das Tab-Menü von Firefox 159 hat „Doppelte Tabs schließen“.', source: 'Menütext von Firefox 159' },
+    { text: '„Duplicate tab“ in Edge erstellt eine Kopie; es entfernt keine.', source: 'Menütext von Edge 158' },
+  ],
+  faq: [
+    {
+      question: 'Kann Chrome doppelte Tabs entfernen?',
+      answer:
+        'Die Hilfeseiten von Chrome beschreiben keine solche Funktion. TabMerger bringt eine mit: Öffne das ⋯-Menü von „Jetzt geöffnet“ und wähle „Doppelte Tabs entfernen“, um jede Wiederholung in allen Fenstern zu schließen.',
+    },
+    {
+      question: 'Welcher Tab bleibt erhalten?',
+      answer: 'In TabMerger die erste Kopie in Lesereihenfolge: zuerst das früheste Fenster, darin von links nach rechts. Jede spätere Kopie derselben Adresse wird entfernt.',
+    },
+    {
+      question: 'Sind Seiten mit unterschiedlichen #Ankern Duplikate?',
+      answer: 'Nein. TabMerger vergleicht vollständige Adressen ohne Rücksicht auf Groß- und Kleinschreibung. page#top und page#faq oder dieselbe Seite mit anderen ?Parametern bleiben also getrennte Tabs.',
+    },
+    {
+      question: 'Kann ich auch gespeicherte Gruppen von Duplikaten befreien?',
+      answer: 'Ja: Derselbe Eintrag „Doppelte Tabs entfernen“ steht im ⋯-Menü jeder Gruppe und gilt dort für die gespeicherten Tabs.',
+    },
+  ],
+  images: [
+    { src: '/blog/close-duplicate-tabs/tm-before-light.webp', alt: 'TabMerger, „Now Open“ (Jetzt geöffnet) mit zwei Fenstern und acht Tabs, drei davon doppelt, helles Design' },
+    { src: '/blog/close-duplicate-tabs/tm-before-dark.webp', alt: 'TabMerger, „Now Open“ (Jetzt geöffnet) mit zwei Fenstern und acht Tabs, drei davon doppelt, dunkles Design' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp', alt: 'TabMerger-Dialog „Remove duplicates“ (Duplikate entfernen) mit dem Hinweis, dass 3 doppelte Tabs entfernt werden, und der Schaltfläche „Remove 3 duplicates“ (3 Duplikate entfernen), helles Design' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-dark.webp', alt: 'TabMerger-Dialog „Remove duplicates“ (Duplikate entfernen) mit dem Hinweis, dass 3 doppelte Tabs entfernt werden, und der Schaltfläche „Remove 3 duplicates“ (3 Duplikate entfernen), dunkles Design' },
+    { src: '/blog/close-duplicate-tabs/tm-after-light.webp', alt: 'TabMerger, „Now Open“ (Jetzt geöffnet) nach dem Entfernen der Duplikate: zwei Fenster, fünf Tabs, jede Seite einmal, helles Design' },
+    { src: '/blog/close-duplicate-tabs/tm-after-dark.webp', alt: 'TabMerger, „Now Open“ (Jetzt geöffnet) nach dem Entfernen der Duplikate: zwei Fenster, fünf Tabs, jede Seite einmal, dunkles Design' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp' },
+  ogImage: { src: '/blog/close-duplicate-tabs/og.png', alt: 'So schließt du doppelte Tabs mit einem Klick: eine TabMerger-Anleitung, mit dem Dialog „Remove 3 duplicates“ (3 Duplikate entfernen)' },
+  toc: [
+    { id: 'quick', label: 'Kurze Antwort' },
+    { id: 'tabmerger', label: 'Ein Klick, alle Fenster' },
+    { id: 'what-counts', label: 'Was als Duplikat zählt' },
+    { id: 'builtin', label: 'Eingebaute Optionen' },
+    { id: 'prevent', label: 'Weniger Duplikate' },
+    { id: 'faq', label: 'Häufige Fragen' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Doppelte Tabs eingebaut schließen',
+    values: { chrome: 'Keine laut Hilfeseiten', edge: 'Keine (Duplicate tab kopiert)', firefox: 'Rechtsklick → Doppelte Tabs schließen' },
+  },
+}
+
+<QuickAnswer>
+
+Öffne in [TabMerger](/features) das **⋯**-Menü von **Jetzt geöffnet** und wähle **Doppelte Tabs entfernen**. Es findet jede Seite, die mehr als einmal offen ist, **in allen deinen Fenstern**, zeigt, wie viele Tabs es schließen wird, und behält von jeder Seite die erste Kopie. Firefox hat im Tab-Menü das eingebaute **Doppelte Tabs schließen** („Close Duplicate Tabs“); die Hilfeseiten von Chrome beschreiben keine Funktion zum Entfernen von Duplikaten.
+
+</QuickAnswer>
+
+<InstallCta>Doppelte Tabs in allen Fenstern mit einem Klick schließen. Kostenlos für Chrome, Edge und Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Wie schließe ich alle Duplikate auf einmal?">
+
+1. Öffne TabMerger. **Jetzt geöffnet** listet alle offenen Fenster und Tabs auf.
+2. Öffne dort das **⋯**-Menü und wähle **Doppelte Tabs entfernen**.
+3. Prüf die Anzahl und klick auf die Schaltfläche zum Entfernen, hier **3 Duplikate entfernen**. Die überzähligen Browser-Tabs werden geschlossen; die erste Kopie jeder Seite bleibt genau da, wo sie war.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Doppelte offene Tabs entfernen" steps={[{ title: 'Vorher' }, { title: 'Bestätigen' }, { title: 'Nachher' }]}>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-before" alt="TabMerger, „Now Open“ (Jetzt geöffnet) mit zwei Fenstern und acht Tabs, drei davon doppelt, helles Design" darkAlt="TabMerger, „Now Open“ (Jetzt geöffnet) mit zwei Fenstern und acht Tabs, drei davon doppelt, dunkles Design" boxes={[{ id: 'summary', label: '8 Tabs' }]} source="TabMerger 3.16.1">Vorher: zwei Fenster, acht Tabs, drei davon doppelt.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-confirm" alt="TabMerger-Dialog „Remove duplicates“ (Duplikate entfernen) mit dem Hinweis, dass 3 doppelte Tabs entfernt werden, und der Schaltfläche „Remove 3 duplicates“ (3 Duplikate entfernen), helles Design" darkAlt="TabMerger-Dialog „Remove duplicates“ (Duplikate entfernen) mit dem Hinweis, dass 3 doppelte Tabs entfernt werden, und der Schaltfläche „Remove 3 duplicates“ (3 Duplikate entfernen), dunkles Design" boxes={[{ id: 'confirm', label: 'Entfernen' }]} source="TabMerger 3.16.1">TabMerger sagt, wie viele Tabs es schließen wird, bevor es das tut.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-after" alt="TabMerger, „Now Open“ (Jetzt geöffnet) nach dem Entfernen der Duplikate: zwei Fenster, fünf Tabs, jede Seite einmal, helles Design" darkAlt="TabMerger, „Now Open“ (Jetzt geöffnet) nach dem Entfernen der Duplikate: zwei Fenster, fünf Tabs, jede Seite einmal, dunkles Design" boxes={[{ id: 'summary', label: '5 Tabs' }]} source="TabMerger 3.16.1">Nachher: fünf Tabs, jede Seite einmal. Die Browser-Tabs wurden wirklich geschlossen.</ThemedScreenshot>
+</Carousel>
+
+Derselbe Eintrag funktioniert in jeder gespeicherten Gruppe, damit auch eine Recherchegruppe, die über Wochen wächst, aufgeräumt bleibt.
+
+</Section>
+
+<Section id="what-counts" title="Was zählt als Duplikat?">
+
+TabMerger vergleicht die **vollständige Adresse** in ihrer Standardform und ignoriert dabei Groß- und Kleinschreibung:
+
+<ComparisonTable
+  head={['Diese zwei Tabs', 'Duplikate?']}
+  rows={[
+    [<code>example.com/page</code>, 'Dieselbe Seite zweimal: ja, einer wird geschlossen'],
+    [<code>example.com/Page</code>, 'Nur Groß-/Kleinschreibung anders: ja'],
+    [<code>example.com/page#faq</code>, 'Anderer Anker: nein, beide bleiben'],
+    [<code>example.com/page?ref=mail</code>, 'Andere Parameter: nein, beide bleiben'],
+  ]}
+/>
+
+Das ist Absicht: Zwei Tabs mit verschiedenen Abschnitten eines langen Dokuments oder zwei Suchen sind für dich verschiedene Tabs, also bleiben sie. Nur echte Wiederholungen verschwinden.
+
+</Section>
+
+<Section id="builtin" title="Kann der Browser Duplikate selbst schließen?">
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+Die Hilfeseiten von Chrome beschreiben keine Funktion zum Entfernen doppelter Tabs. Am nächsten kommt die **Tab-Suche** („Tab Search“, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>): Gib den Namen einer Website ein, such die Wiederholungen in der Liste und schließ sie einzeln mit der Schließen-Schaltfläche der jeweiligen Zeile.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Im Tab-Menü von Edge gibt es **Duplicate tab**, das eine weitere Kopie öffnet, also das Gegenteil von dem, was du willst. Wiederholungen findest du hier nur von Hand: Geh die Tableiste entlang und schließ sie einzeln.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Klick mit der rechten Maustaste auf einen beliebigen Tab und wähle **Doppelte Tabs schließen** („Close Duplicate Tabs“), um Wiederholungen zu schließen. Für nur eine Seite gibt es einen zweiten Eintrag, der auf Deutsch ebenfalls **Doppelte Tabs schließen** heißt (englisch „Close Duplicates of This Tab“).
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="prevent" title="Wie entstehen gar nicht erst so viele Duplikate?">
+
+- **Erst suchen, dann öffnen.** <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> in TabMerger zeigt, ob die Seite schon offen oder gespeichert ist. Mehr dazu in [einen Tab unter Hunderten finden](/blog/find-a-tab-among-hundreds).
+- **Fenster mit Bedacht zusammenführen.** Beim Zusammenführen von Fenstern treffen Wiederholungen aufeinander; entferne die Duplikate direkt nach dem [Zusammenführen von Fenstern](/blog/merge-browser-windows).
+- **Speichern, dann schließen.** Weniger offene Tabs, weniger Kopien. Unsere [Routine gegen zu viele Tabs](/blog/manage-too-many-tabs) macht daraus eine Gewohnheit.
+
+<InstallCta>Kostenlos für Chrome, Edge und Firefox. Zum Start ist kein Konto nötig.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Häufige Fragen">
+
+<Faq items={post.faq} />
+
+</Section>

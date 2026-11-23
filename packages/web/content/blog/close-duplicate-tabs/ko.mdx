@@ -1,0 +1,161 @@
+export const post = {
+  slug: 'close-duplicate-tabs',
+  title: '중복 탭을 클릭 한 번으로 닫는 방법',
+  navTitle: '중복 탭 닫기',
+  seoTitle: 'Chrome, Edge, Firefox에서 중복 탭 닫는 방법',
+  description:
+    '같은 페이지가 세 번이나 열려 있나요? TabMerger로 모든 창의 중복 탭을 클릭 한 번으로 닫거나, Firefox에 기본으로 있는 중복 탭 닫기를 사용하세요. Chrome과 Edge에서 할 수 있는 것, 그리고 정확히 무엇이 중복으로 간주되는지 알려 드립니다.',
+  shareSummary: 'Chrome, Edge, Firefox에서 모든 창의 중복 탭을 클릭 한 번으로 닫으세요.',
+  dek: '중복 탭은 소리 없이 쌓입니다. 모든 창에서 한 번에 정리하고, 페이지마다 첫 번째 탭만 남기세요.',
+  published: '2026-12-01',
+  updated: '2026-12-01',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger의 ‘중복 탭 제거’는 열려 있는 모든 창의 중복 탭을 닫고 첫 번째 탭을 남깁니다.', source: 'TabMerger 3.16.1에서 테스트, 2026년 11월 21일' },
+    { text: '먼저 확인을 받고, 제거할 탭 수를 알려 줍니다.', source: 'TabMerger 3.16.1' },
+    { text: 'Firefox 159의 탭 메뉴에는 ‘중복 탭 닫기’가 있습니다.', source: 'Firefox 159 메뉴 문구' },
+    { text: 'Edge의 ‘Duplicate tab’은 탭을 복제할 뿐, 중복을 제거하지 않습니다.', source: 'Edge 158 메뉴 문구' },
+  ],
+  faq: [
+    {
+      question: 'Chrome에 중복 탭 제거 기능이 있나요?',
+      answer:
+        'Chrome 고객센터 페이지에는 그런 기능이 나와 있지 않습니다. TabMerger가 이 기능을 더해 줍니다. ‘현재 열린 탭’의 ⋯ 메뉴를 열고 ‘중복 탭 제거’를 선택하면 모든 창의 중복 탭이 닫힙니다.',
+    },
+    {
+      question: '어떤 탭이 남나요?',
+      answer: 'TabMerger에서는 읽는 순서로 첫 번째 탭이 남습니다. 가장 먼저 열린 창부터, 그 안에서는 왼쪽에서 오른쪽 순서입니다. 같은 주소의 이후 탭은 모두 제거됩니다.',
+    },
+    {
+      question: '#앵커가 다른 페이지도 중복인가요?',
+      answer: '아닙니다. TabMerger는 대소문자를 구분하지 않고 전체 주소를 비교하므로, page#top과 page#faq, 또는 ?매개변수만 다른 같은 페이지는 서로 다른 탭으로 남습니다.',
+    },
+    {
+      question: '저장된 그룹에서도 중복을 정리할 수 있나요?',
+      answer: '네. 같은 ‘중복 탭 제거’ 항목이 모든 그룹의 ⋯ 메뉴에 있으며, 그 그룹에 저장된 탭에 적용됩니다.',
+    },
+  ],
+  images: [
+    { src: '/blog/close-duplicate-tabs/tm-before-light.webp', alt: 'TabMerger의 Now Open(현재 열린 탭)에 창 2개와 탭 8개가 있고 그중 3개가 중복인 화면, 라이트 테마' },
+    { src: '/blog/close-duplicate-tabs/tm-before-dark.webp', alt: 'TabMerger의 Now Open(현재 열린 탭)에 창 2개와 탭 8개가 있고 그중 3개가 중복인 화면, 다크 테마' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp', alt: 'TabMerger의 Remove duplicates(중복 제거) 대화상자, 중복 탭 3개가 제거된다는 안내와 Remove 3 duplicates(중복 3개 제거) 버튼, 라이트 테마' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-dark.webp', alt: 'TabMerger의 Remove duplicates(중복 제거) 대화상자, 중복 탭 3개가 제거된다는 안내와 Remove 3 duplicates(중복 3개 제거) 버튼, 다크 테마' },
+    { src: '/blog/close-duplicate-tabs/tm-after-light.webp', alt: '중복을 제거한 뒤 TabMerger의 Now Open(현재 열린 탭): 창 2개, 탭 5개, 페이지마다 하나씩, 라이트 테마' },
+    { src: '/blog/close-duplicate-tabs/tm-after-dark.webp', alt: '중복을 제거한 뒤 TabMerger의 Now Open(현재 열린 탭): 창 2개, 탭 5개, 페이지마다 하나씩, 다크 테마' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp' },
+  ogImage: { src: '/blog/close-duplicate-tabs/og.png', alt: '중복 탭을 클릭 한 번으로 닫는 방법: Remove 3 duplicates(중복 3개 제거) 대화상자가 있는 TabMerger 가이드' },
+  toc: [
+    { id: 'quick', label: '간단한 답' },
+    { id: 'tabmerger', label: '클릭 한 번, 모든 창' },
+    { id: 'what-counts', label: '중복의 기준' },
+    { id: 'builtin', label: '브라우저 기본 기능' },
+    { id: 'prevent', label: '중복 줄이기' },
+    { id: 'faq', label: '자주 묻는 질문' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: '기본 중복 탭 닫기',
+    values: { chrome: '고객센터에 안내 없음', edge: '없음(Duplicate tab은 복제)', firefox: '마우스 오른쪽 버튼 클릭 → 중복 탭 닫기' },
+  },
+}
+
+<QuickAnswer>
+
+[TabMerger](/features)에서 **현재 열린 탭**의 **⋯** 메뉴를 열고 **중복 탭 제거**를 선택하세요. 두 번 이상 열린 페이지를 **모든 창에서** 찾아내고, 닫을 탭 수를 보여 준 뒤, 페이지마다 첫 번째 탭을 남깁니다. Firefox의 탭 메뉴에는 **중복 탭 닫기**(Close Duplicate Tabs)가 기본으로 있고, Chrome 고객센터 페이지에는 중복 탭을 제거하는 기능이 나와 있지 않습니다.
+
+</QuickAnswer>
+
+<InstallCta>모든 창의 중복 탭을 클릭 한 번으로 정리하세요. Chrome, Edge, Firefox용 무료 확장 프로그램입니다.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="모든 중복 탭을 한 번에 닫으려면?">
+
+1. TabMerger를 엽니다. **현재 열린 탭**에 열려 있는 모든 창과 탭이 표시됩니다.
+2. 이 섹션의 **⋯** 메뉴를 열고 **중복 탭 제거**를 선택합니다.
+3. 개수를 확인하고 제거 버튼을 누릅니다. 여기서는 **중복 3개 제거**입니다. 남는 브라우저 탭이 닫히고, 각 페이지의 첫 번째 탭은 원래 자리에 그대로 남습니다.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="열린 탭의 중복 제거" steps={[{ title: '전' }, { title: '확인' }, { title: '후' }]}>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-before" alt="TabMerger의 Now Open(현재 열린 탭)에 창 2개와 탭 8개가 있고 그중 3개가 중복인 화면, 라이트 테마" darkAlt="TabMerger의 Now Open(현재 열린 탭)에 창 2개와 탭 8개가 있고 그중 3개가 중복인 화면, 다크 테마" boxes={[{ id: 'summary', label: '탭 8개' }]} source="TabMerger 3.16.1">전: 창 2개, 탭 8개, 그중 3개가 중복.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-confirm" alt="TabMerger의 Remove duplicates(중복 제거) 대화상자, 중복 탭 3개가 제거된다는 안내와 Remove 3 duplicates(중복 3개 제거) 버튼, 라이트 테마" darkAlt="TabMerger의 Remove duplicates(중복 제거) 대화상자, 중복 탭 3개가 제거된다는 안내와 Remove 3 duplicates(중복 3개 제거) 버튼, 다크 테마" boxes={[{ id: 'confirm', label: '제거' }]} source="TabMerger 3.16.1">TabMerger는 닫기 전에 몇 개를 닫을지 알려 줍니다.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-after" alt="중복을 제거한 뒤 TabMerger의 Now Open(현재 열린 탭): 창 2개, 탭 5개, 페이지마다 하나씩, 라이트 테마" darkAlt="중복을 제거한 뒤 TabMerger의 Now Open(현재 열린 탭): 창 2개, 탭 5개, 페이지마다 하나씩, 다크 테마" boxes={[{ id: 'summary', label: '탭 5개' }]} source="TabMerger 3.16.1">후: 탭 5개, 페이지마다 하나씩. 브라우저 탭도 실제로 닫혔습니다.</ThemedScreenshot>
+</Carousel>
+
+같은 항목은 저장된 어떤 그룹에서도 작동하므로, 몇 주째 이어지는 리서치 그룹도 깔끔하게 유지됩니다.
+
+</Section>
+
+<Section id="what-counts" title="무엇이 중복으로 간주되나요?">
+
+TabMerger는 표준 형식의 **전체 주소**를 대소문자 구분 없이 비교합니다.
+
+<ComparisonTable
+  head={['이 두 탭', '중복인가요?']}
+  rows={[
+    [<code>example.com/page</code>, '같은 페이지가 두 번: 예, 하나를 닫습니다'],
+    [<code>example.com/Page</code>, '대소문자만 다름: 예'],
+    [<code>example.com/page#faq</code>, '앵커가 다름: 아니요, 둘 다 남습니다'],
+    [<code>example.com/page?ref=mail</code>, '매개변수가 다름: 아니요, 둘 다 남습니다'],
+  ]}
+/>
+
+의도된 동작입니다. 긴 문서의 서로 다른 섹션을 연 두 탭이나 두 개의 검색 결과는 사용자에게 다른 탭이므로 남겨 둡니다. 진짜 중복만 사라집니다.
+
+</Section>
+
+<Section id="builtin" title="브라우저가 직접 중복 탭을 닫을 수 있나요?">
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+Chrome 고객센터 페이지에는 중복 탭을 제거하는 기능이 나와 있지 않습니다. 가장 가까운 기능은 **탭 검색**(Tab Search, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>)입니다. 사이트 이름을 입력하고, 목록에서 중복을 찾아 각 행의 닫기 버튼으로 하나씩 닫으세요.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge의 탭 메뉴에는 **Duplicate tab**이 있지만, 이 기능은 사본을 하나 더 여는 것이라 원하는 것과 정반대입니다. 중복 탭은 탭 표시줄을 따라가며 직접 찾아 하나씩 닫아야 합니다.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+아무 탭이나 마우스 오른쪽 버튼으로 클릭하고 **중복 탭 닫기**(Close Duplicate Tabs)를 선택하면 중복 탭이 닫힙니다. 한 페이지의 중복만 닫는 항목(Close Duplicates of This Tab)도 한국어 메뉴에서는 같은 이름 **중복 탭 닫기**로 표시됩니다.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="prevent" title="처음부터 중복을 줄이려면?">
+
+- **열기 전에 검색하세요.** TabMerger에서 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>를 누르면 그 페이지가 이미 열려 있거나 저장되어 있는지 알 수 있습니다. 자세한 내용은 [수백 개의 탭 중에서 탭 찾기](/blog/find-a-tab-among-hundreds)를 참고하세요.
+- **창은 신중하게 합치세요.** 중복은 창을 합칠 때 만납니다. [창을 합친](/blog/merge-browser-windows) 직후에 중복을 제거하세요.
+- **저장한 다음 닫으세요.** 열린 탭이 적을수록 사본도 적어집니다. [탭이 너무 많을 때의 정리 루틴](/blog/manage-too-many-tabs)으로 습관을 만드세요.
+
+<InstallCta>Chrome, Edge, Firefox용 무료 확장 프로그램입니다. 계정 없이 시작할 수 있습니다.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="자주 묻는 질문">
+
+<Faq items={post.faq} />
+
+</Section>
