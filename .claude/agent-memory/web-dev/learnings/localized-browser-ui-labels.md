@@ -73,3 +73,9 @@ A 15 KB MDX body in a Bash heredoc failed ("unexpected EOF while looking for mat
 - **Table cells and verdict words** ("Not stated", Yes/No, "end-to-end encrypted", prices per month) already exist in `messages/<loc>/compare.json`, `blog.json` and `pricing.json`. Reuse those strings so the blog and /compare agree.
 - **`ComparisonTable` cells are single-quoted strings,** so they can't hold `<bdi>`. RTL price cells like "$3.99/شهر" follow the site's own price format with no isolation, and no invisible bidi mark may go in a cell.
 - **Don't bold a localized label where English has none.** The bold-count parity check against English fails if you do.
+
+**Chrome address-bar keywords are UI strings, not fixed syntax.** Chrome Help 2391819 gives `@tab` (id), `@タブ` (ja), `@вкладки` (ru), `@sekmeler` (tr) and `@thẻ` (vi); the other 12 locales keep `@tabs`. Use the localized keyword with "(`@tabs` in English Chrome)" after it.
+
+**Firefox tab-list and tab-search labels:** `tabs-toolbar-list-all-tabs` ("List all tabs") and `urlbar-searchmode-tabs4` (the address-bar Tabs mode) in `browser/browser/browser.ftl`. Both exist in all 17 Mozilla locales, including hi-IN and id.
+
+**RTL table cells with code:** an inline `<code>` ending in a quote (e.g. `group:"Work"`) in a ComparisonTable cell shows its closing quote on the wrong side in ar/fa/he. Wrap the element itself: `<bdi dir="ltr"><code>…</code></bdi>`; a plain string in a rows array cannot carry one.

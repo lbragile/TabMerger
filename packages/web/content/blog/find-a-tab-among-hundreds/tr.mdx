@@ -1,0 +1,187 @@
+export const post = {
+  slug: 'find-a-tab-among-hundreds',
+  title: 'Yüzlerce sekme arasında tek bir sekme nasıl bulunur?',
+  navTitle: 'Yüzlerce sekme arasında sekme bulma',
+  seoTitle: 'Chrome, Edge ve Firefox’ta açık sekmelerde arama nasıl yapılır?',
+  description:
+    'Açık sekmelerinizde saniyeler içinde arama yapın: Chrome, Edge ve Firefox’un yerleşik sekme araması ve açık, kayıtlı ve kapatılmış sekmeleri group: ve closed: gibi filtrelerle tek seferde bulan TabMerger’ın Ctrl+K araması.',
+  shareSummary: 'Chrome, Edge ve Firefox’ta açık sekmeleri arayın; kayıtlı ve kapatılanları da bulun.',
+  dek: 'Simge boyutundaki sekmeleri tek tek taramaya son. Bir kısayol, başlıktan birkaç harf ve aradığınız sekmedesiniz.',
+  published: '2026-11-29',
+  updated: '2026-11-29',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Chrome’da Ctrl+Shift+A, Sekme arama’yı açar.',
+      source: 'Chrome Yardım',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Firefox 159, Ctrl+Shift+A kısayolunu tüm sekmelerin listesine atar.', source: 'Firefox 159 klavye kısayolları' },
+    { text: 'TabMerger’da Ctrl+K; açık, kayıtlı ve son kapatılan sekmeleri birlikte arar.', source: 'TabMerger 3.16.1' },
+    { text: 'TabMerger filtreleri: group:, window:, tag: ve closed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Açık sekmelerimde nasıl arama yaparım?',
+      answer:
+        'TabMerger’da Ctrl+K tuşlarına basıp yazmaya başlayın: Açık, kayıtlı ve son kapatılan sekmelerin hepsinde birlikte arar. Yerleşik olarak Chrome’da Sekme arama (Ctrl+Shift+A veya adres çubuğunda @sekmeler) vardır, Firefox da Ctrl+Shift+A ile tüm sekmeleri listeler.',
+    },
+    {
+      question: 'Sekme aramanın bir kısayolu var mı?',
+      answer: 'Chrome ve Firefox’ta Ctrl+Shift+A (Mac’te Chrome’da ⌘+Shift+A), TabMerger’da ise Ctrl+K. Microsoft’un Edge kısayol listesinde sekme arama için bir tuş yok.',
+    },
+    {
+      question: 'Kapattığım sekmelerde arama yapabilir miyim?',
+      answer: 'Evet, TabMerger’da: Yalnızca son kapatılan sekmelerde aramak için aramanıza closed: ile başlayın. Ücretsiz sürüm bunları 2 gün, Pro 30 gün saklar.',
+    },
+    {
+      question: 'Diğer cihazlarımdaki sekmelerde arama yapabilir miyim?',
+      answer:
+        'TabMerger Pro, kayıtlı gruplarınızı cihazlar arasında uçtan uca şifreli olarak senkronize eder; böylece aynı Ctrl+K onları her yerde bulur. Yerleşik seçenekleri, sekmeleri bilgisayarlar arasında taşıma rehberimiz anlatıyor.',
+      link: { text: 'sekmeleri bilgisayarlar arasında taşıma', href: '/blog/move-tabs-between-computers' },
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'TabMerger araması açık ve boş, group:, window:, tag: ve closed: filtrelerini listeliyor, açık tema' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'TabMerger araması açık ve boş, group:, window:, tag: ve closed: filtrelerini listeliyor, koyu tema' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp', alt: 'TabMerger’da group:"Work" pull araması, Work grubundaki kayıtlı Pull requests sekmesini buluyor, açık tema' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-dark.webp', alt: 'TabMerger’da group:"Work" pull araması, Work grubundaki kayıtlı Pull requests sekmesini buluyor, koyu tema' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-light.webp', alt: 'TabMerger’da tag:Sprint araması, Sprint adlı Chrome sekme grubundaki üç açık sekmeyi listeliyor, açık tema' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-dark.webp', alt: 'TabMerger’da tag:Sprint araması, Sprint adlı Chrome sekme grubundaki üç açık sekmeyi listeliyor, koyu tema' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-21',
+      note: 'Firefox bilgileri doğrudan Firefox 159.0.1’in kendi tuş tanımlarından ve menü metinlerinden okundu; bu sayfa otomatik kontrolümüzü engelledi.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp' },
+  ogImage: { src: '/blog/find-a-tab-among-hundreds/og.png', alt: '“How to find one tab among hundreds”: filtrelenmiş bir sekme aramasıyla TabMerger rehberi' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'tabmerger', label: 'Ctrl+K ile her yerde arayın' },
+    { id: 'filters', label: 'Aramayı daraltan filtreler' },
+    { id: 'builtin', label: 'Yerleşik sekme araması' },
+    { id: 'tips', label: 'Sekmeleri kolay bulunur yapın' },
+    { id: 'faq', label: 'SSS' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Yerleşik sekme araması',
+    values: { chrome: 'Ctrl+Shift+A veya @sekmeler', edge: 'Search tabs (kısayol belirtilmemiş)', firefox: 'Ctrl+Shift+A' },
+  },
+}
+
+<QuickAnswer>
+
+[TabMerger](/features)’da <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (Mac’te <Kbd>⌘</Kbd>+<Kbd>K</Kbd>) tuşlarına basıp birkaç harf yazın: Sekme ister **açık, ister bir grupta kayıtlı, ister yakın zamanda kapatılmış** olsun bulunur; `group:` ve `closed:` gibi filtreler de yüzlerce sekmeyi teke indirir. Yerleşik olarak Chrome’un **Sekme arama** (Tab Search) özelliği (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) ve Firefox’un **Tüm sekmeleri listele** (List all tabs) komutu (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) şu anda açık olanlarda arar.
+
+</QuickAnswer>
+
+<InstallCta>Açık, kayıtlı ya da kapatılmış her sekmeyi tek tuşla bulun. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Ctrl+K ile her yerde arayın">
+
+Tarayıcının sekme araması yalnızca o tarayıcıda şu anda açık olanları bilir. Oysa aradığınız sekme çoğu zaman başka bir yerdedir: dün kaydettiğiniz bir pencerede ya da bir saat önce kapattığınız bir pencerede. TabMerger bunların hepsinde tek bir kutudan arar:
+
+1. TabMerger’ı açın ve <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> tuşlarına basın.
+2. Başlığın ya da adresin bir kısmını yazın. Sonuçlar açık, kayıtlı ve son kapatılan sekmeleri birlikte gösterir; her birinin nerede durduğu da etiketlenir.
+3. Ok tuşları ve <Kbd>Enter</Kbd> ile birini seçin.
+
+Tüm filtreler, sonuçların sıralaması ve gizleme ya da soldurma görünümü [TabMerger ile tüm sekmelerinizde arama](/blog/search-all-your-tabs-with-tabmerger) yazısında anlatılıyor.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="TabMerger araması açık ve boş, group:, window:, tag: ve closed: filtrelerini listeliyor, açık tema" darkAlt="TabMerger araması açık ve boş, group:, window:, tag: ve closed: filtrelerini listeliyor, koyu tema" boxes={[{ id: 'search-input', label: 'Arama' }]} source="TabMerger 3.16.1">Ctrl+K aramayı açar; filtreler siz yazmadan önce listelenir.</ThemedScreenshot>
+
+</Section>
+
+<Section id="filters" title="Hangi filtreler aramayı daraltır?">
+
+Doğrudan doğru yere gitmek için aramanıza bir filtreyle başlayın:
+
+<ComparisonTable
+  head={['Filtre', 'Bulduğu']}
+  rows={[
+    [<code>group:"Work"</code>, 'Adında “Work” geçen bir gruptaki sekmeler'],
+    [<code>window:"Docs"</code>, 'Adında “Docs” geçen bir penceredeki sekmeler'],
+    [<code>tag:Sprint</code>, 'Etiketinde “Sprint” geçen bir Chrome sekme grubundaki sekmeler'],
+    [<code>closed:</code>, 'Yalnızca son kapatılan sekmeleriniz'],
+  ]}
+/>
+
+Bir filtreyi kelimelerle birleştirin: `group:"Work" pull`, yüzlerce sekme arasında bile Work grubunuzdaki pull request sekmesini bulur. Ardından kelime ekleyecekseniz adı tırnak içine alın; tırnaksız bir filtre satırın geri kalanını alır.
+
+<Carousel label="Filtreli aramalar" steps={[{ title: 'group: filtresi' }, { title: 'tag: filtresi' }]}>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-group-filter" alt="TabMerger’da group:&quot;Work&quot; pull araması, Work grubundaki kayıtlı Pull requests sekmesini buluyor, açık tema" darkAlt="TabMerger’da group:&quot;Work&quot; pull araması, Work grubundaki kayıtlı Pull requests sekmesini buluyor, koyu tema" boxes={[{ id: 'search-input', label: 'grup filtresi' }]} source="TabMerger 3.16.1">Bir grup, bir kelime: aradığınız kayıtlı sekme.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-tag-filter" alt="TabMerger’da tag:Sprint araması, Sprint adlı Chrome sekme grubundaki üç açık sekmeyi listeliyor, açık tema" darkAlt="TabMerger’da tag:Sprint araması, Sprint adlı Chrome sekme grubundaki üç açık sekmeyi listeliyor, koyu tema" boxes={[{ id: 'search-input', label: 'tag:Sprint' }]} source="TabMerger 3.16.1">tag:, bir Chrome sekme grubunun sekmelerini bulur.</ThemedScreenshot>
+</Carousel>
+
+Son kapatılan sekmeler ücretsiz sürümde 2 gün, [Pro](/pricing)’da 30 gün saklanır; yani gerektiğinde `closed:` haftalarca geriye uzanır.
+
+</Section>
+
+<Section id="builtin" title="Eklenti olmadan açık sekmelerde nasıl arama yapılır?">
+
+Her tarayıcı şu anda açık olan sekmelerde arama yapabilir:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+- **Sekme arama** (Tab Search) özelliğini açmak için <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (Mac’te <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) tuşlarına basın, anahtar kelimeleri yazın ve bir sekme seçin. Her satırda bir kapatma düğmesi de vardır.
+- Ya da adres çubuğuna `@sekmeler` yazın (İngilizce Chrome’da `@tabs`), <Kbd>Tab</Kbd> veya <Kbd>Space</Kbd> tuşuna basın ve yazmaya devam edin.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge 158’in menülerinde **Search tabs** (sekmelerde ara) var, ancak Microsoft’un klavye kısayolları listesi buna bir tuş vermiyor. Çok sekme varken <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> sırasına göre bir sekmeye, <Kbd>Ctrl</Kbd>+<Kbd>9</Kbd> ise son sekmeye atlar.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- **Tüm sekmeleri listele** (List all tabs) için <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (Mac’te <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) tuşlarına basın ve listede arayın.
+- Adres çubuğunun arama kısayolları arasında bir **Sekmeler** arama modu da vardır.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>Bunlar yalnızca o tarayıcıda şu anda açık olan sekmeleri görür. Kapattığınız ya da başka bir yere kaydettiğiniz bir sekme çıkmaz.</Catch>
+
+Daha fazla tuş için [sekme klavye kısayolları rehberimize](/blog/tab-keyboard-shortcuts) bakın.
+
+</Section>
+
+<Section id="tips" title="Sekmeleri bir dahaki sefere nasıl daha kolay bulurum?">
+
+- **Göreve göre gruplayın.** Adlandırılmış gruplar “200 sekmeden biri”ni “Work grubu”na dönüştürür. [Çok fazla sekme rutinimiz](/blog/manage-too-many-tabs) nasıl yapılacağını gösteriyor.
+- **İşiniz biteni kapatın,** önce kaydedin. Daha az açık sekme, daha kısa sonuç listesi demektir.
+- **Önemli sekmeleri yeniden adlandırın.** TabMerger, kayıtlı bir sekmeye özel bir başlık vermenize izin verir; böylece başlık, arayacağınız kelimeyle eşleşir.
+
+<InstallCta>Chrome, Edge ve Firefox için ücretsiz. Başlamak için hesap gerekmez.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

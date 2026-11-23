@@ -1,0 +1,187 @@
+export const post = {
+  slug: 'find-a-tab-among-hundreds',
+  title: 'كيف تجد علامة تبويب واحدة بين المئات',
+  navTitle: 'العثور على علامة تبويب بين المئات',
+  seoTitle: 'كيفية البحث في علامات التبويب المفتوحة في Chrome وEdge وFirefox',
+  description:
+    'ابحث في علامات التبويب المفتوحة خلال ثوانٍ: البحث المدمج في علامات التبويب في Chrome وEdge وFirefox، واختصار Ctrl+K في TabMerger الذي يجد علامات التبويب المفتوحة والمحفوظة والمغلقة معًا، مع عوامل تصفية مثل group: وclosed:.',
+  shareSummary: 'ابحث في علامات التبويب المفتوحة في Chrome وEdge وFirefox، وجِد المحفوظة والمغلقة أيضًا.',
+  dek: 'كفى تفحّصًا لعلامات تبويب بحجم الأيقونة. اختصار واحد، وبضعة أحرف من العنوان، وتصل.',
+  published: '2026-11-29',
+  updated: '2026-11-29',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'يفتح Ctrl+Shift+A ميزة البحث في علامات التبويب في Chrome.',
+      source: 'مساعدة Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'يربط Firefox 159 الاختصار Ctrl+Shift+A بقائمة كل علامات التبويب.', source: 'تعريفات المفاتيح في Firefox 159' },
+    { text: 'يبحث Ctrl+K في TabMerger في علامات التبويب المفتوحة والمحفوظة والمغلقة مؤخرًا معًا.', source: 'TabMerger 3.16.1' },
+    { text: 'عوامل التصفية في TabMerger: group: وwindow: وtag: وclosed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'كيف أبحث في علامات التبويب المفتوحة؟',
+      answer:
+        'في TabMerger اضغط Ctrl+K واكتب: يبحث في علامات التبويب المفتوحة والمحفوظة والمغلقة مؤخرًا معًا. ومن الأدوات المدمجة، في Chrome ميزة البحث في علامات التبويب (Ctrl+Shift+A أو @tabs في شريط العناوين)، ويسرد Firefox كل علامات التبويب بالاختصار Ctrl+Shift+A.',
+    },
+    {
+      question: 'هل يوجد اختصار للبحث في علامات التبويب؟',
+      answer: 'Ctrl+Shift+A في Chrome وFirefox (و⌘+Shift+A في Chrome على Mac)، وCtrl+K داخل TabMerger. أما قائمة اختصارات Microsoft لمتصفح Edge فلا تخصص مفتاحًا للبحث في علامات التبويب.',
+    },
+    {
+      question: 'هل يمكنني البحث في علامات تبويب أغلقتها؟',
+      answer: 'نعم، في TabMerger: ابدأ البحث بـ closed: لتبحث في علامات التبويب المغلقة مؤخرًا فقط. تحتفظ بها الخطة المجانية يومين، وPro ثلاثين يومًا.',
+    },
+    {
+      question: 'هل يمكنني البحث في علامات التبويب على أجهزتي الأخرى؟',
+      answer:
+        'يزامن TabMerger Pro مجموعاتك المحفوظة بين الأجهزة بتشفير تام بين الطرفين، فيجدها Ctrl+K نفسه في كل مكان. ويشرح دليلنا لنقل علامات التبويب بين أجهزة الكمبيوتر الخيارات المدمجة.',
+      link: { text: 'لنقل علامات التبويب بين أجهزة الكمبيوتر', href: '/blog/move-tabs-between-computers' },
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'بحث TabMerger مفتوح وفارغ، ويعرض عوامل التصفية group: وwindow: وtag: وclosed:، المظهر الفاتح' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'بحث TabMerger مفتوح وفارغ، ويعرض عوامل التصفية group: وwindow: وtag: وclosed:، المظهر الداكن' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp', alt: 'بحث في TabMerger عن group:"Work" pull يجد علامة التبويب المحفوظة Pull requests في المجموعة Work، المظهر الفاتح' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-dark.webp', alt: 'بحث في TabMerger عن group:"Work" pull يجد علامة التبويب المحفوظة Pull requests في المجموعة Work، المظهر الداكن' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-light.webp', alt: 'بحث في TabMerger عن tag:Sprint يعرض علامات التبويب الثلاث المفتوحة في مجموعة علامات التبويب Sprint في Chrome، المظهر الفاتح' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-dark.webp', alt: 'بحث في TabMerger عن tag:Sprint يعرض علامات التبويب الثلاث المفتوحة في مجموعة علامات التبويب Sprint في Chrome، المظهر الداكن' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-21',
+      note: 'أُخذت معلومات Firefox من تعريفات المفاتيح ونصوص القوائم في Firefox 159.0.1 نفسه؛ إذ حجبت هذه الصفحة فحصنا الآلي.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp' },
+  ogImage: { src: '/blog/find-a-tab-among-hundreds/og.png', alt: '«How to find one tab among hundreds»: دليل من TabMerger، مع بحث مُصفّى في علامات التبويب' },
+  toc: [
+    { id: 'quick', label: 'إجابة سريعة' },
+    { id: 'tabmerger', label: 'ابحث في كل شيء بـ Ctrl+K' },
+    { id: 'filters', label: 'عوامل تصفية تضيّق البحث' },
+    { id: 'builtin', label: 'البحث المدمج في علامات التبويب' },
+    { id: 'tips', label: 'اجعل العثور على علامات التبويب أسهل' },
+    { id: 'faq', label: 'الأسئلة الشائعة' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'البحث المدمج في علامات التبويب',
+    values: { chrome: 'Ctrl+Shift+A أو @tabs', edge: 'Search tabs (بلا اختصار مُدرج)', firefox: 'Ctrl+Shift+A' },
+  },
+}
+
+<QuickAnswer>
+
+اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>K</Kbd></bdi> على Mac) في [TabMerger](/features) واكتب بضعة أحرف: يجد علامة التبويب سواء كانت **مفتوحة أو محفوظة في مجموعة أو مغلقة مؤخرًا**، وتضيّق عوامل التصفية مثل <bdi dir="ltr">`group:`</bdi> و<bdi dir="ltr">`closed:`</bdi> مئات علامات التبويب إلى واحدة. ومن الأدوات المدمجة، تبحث ميزة **البحث في علامات التبويب** (<bdi dir="ltr">Tab Search</bdi>) في Chrome (<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi>) والأمر **اسرد كل الألسنة** (<bdi dir="ltr">List all tabs</bdi>) في Firefox (<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi>) فيما هو مفتوح الآن.
+
+</QuickAnswer>
+
+<InstallCta>اعثر على أي علامة تبويب، مفتوحة أو محفوظة أو مغلقة، بضغطة مفتاح. مجانًا لـ Chrome وEdge وFirefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="ابحث في كل شيء بـ Ctrl+K">
+
+لا يعرف البحث في علامات التبويب في أي متصفح إلا ما هو مفتوح فيه الآن. لكن علامة التبويب التي تحتاجها تكون غالبًا في مكان آخر: في نافذة حفظتها أمس، أو في نافذة أغلقتها قبل ساعة. يبحث TabMerger في كل ذلك من مربع واحد:
+
+1. افتح TabMerger واضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi>.
+2. اكتب جزءًا من العنوان أو الرابط. تعرض النتائج علامات التبويب المفتوحة والمحفوظة والمغلقة مؤخرًا معًا، وعلى كل منها وسم يبيّن مكانها.
+3. اختر واحدة بمفاتيح الأسهم و<bdi dir="ltr"><Kbd>Enter</Kbd></bdi>.
+
+تجد كل عوامل التصفية وترتيب النتائج وطريقة العرض التي تخفي غير المطابق أو تعتّمه في دليل [ابحث في كل علامات التبويب باستخدام TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="بحث TabMerger مفتوح وفارغ، ويعرض عوامل التصفية group: وwindow: وtag: وclosed:، المظهر الفاتح" darkAlt="بحث TabMerger مفتوح وفارغ، ويعرض عوامل التصفية group: وwindow: وtag: وclosed:، المظهر الداكن" boxes={[{ id: 'search-input', label: 'البحث' }]} source="TabMerger 3.16.1">يفتح <bdi dir="ltr">Ctrl+K</bdi> البحث، وتظهر عوامل التصفية قبل أن تكتب.</ThemedScreenshot>
+
+</Section>
+
+<Section id="filters" title="ما عوامل التصفية التي تضيّق البحث؟">
+
+ابدأ البحث بعامل تصفية لتصل مباشرة إلى المكان الصحيح:
+
+<ComparisonTable
+  head={['عامل التصفية', 'ما يجده']}
+  rows={[
+    [<bdi dir="ltr"><code>group:"Work"</code></bdi>, 'علامات التبويب في مجموعة يحتوي اسمها على «Work»'],
+    [<bdi dir="ltr"><code>window:"Docs"</code></bdi>, 'علامات التبويب في نافذة يحتوي اسمها على «Docs»'],
+    [<bdi dir="ltr"><code>tag:Sprint</code></bdi>, 'علامات التبويب في مجموعة علامات تبويب في Chrome تحتوي تسميتها على «Sprint»'],
+    [<bdi dir="ltr"><code>closed:</code></bdi>, 'علامات التبويب المغلقة مؤخرًا فقط'],
+  ]}
+/>
+
+اجمع عامل تصفية مع كلمات: <bdi dir="ltr">`group:"Work" pull`</bdi> يجد علامة تبويب طلب الدمج (<bdi dir="ltr">pull request</bdi>) في مجموعتك Work، حتى بين المئات. ضع الاسم بين علامتي اقتباس إذا أضفت كلمات بعده؛ فعامل التصفية بلا علامات اقتباس يأخذ بقية السطر.
+
+<Carousel label="عمليات بحث مُصفّاة" steps={[{ title: 'عامل التصفية group:' }, { title: 'عامل التصفية tag:' }]}>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-group-filter" alt="بحث في TabMerger عن group:&quot;Work&quot; pull يجد علامة التبويب المحفوظة Pull requests في المجموعة Work، المظهر الفاتح" darkAlt="بحث في TabMerger عن group:&quot;Work&quot; pull يجد علامة التبويب المحفوظة Pull requests في المجموعة Work، المظهر الداكن" boxes={[{ id: 'search-input', label: 'تصفية المجموعة' }]} source="TabMerger 3.16.1">مجموعة واحدة وكلمة واحدة: علامة التبويب المحفوظة التي أردتها.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-tag-filter" alt="بحث في TabMerger عن tag:Sprint يعرض علامات التبويب الثلاث المفتوحة في مجموعة علامات التبويب Sprint في Chrome، المظهر الفاتح" darkAlt="بحث في TabMerger عن tag:Sprint يعرض علامات التبويب الثلاث المفتوحة في مجموعة علامات التبويب Sprint في Chrome، المظهر الداكن" boxes={[{ id: 'search-input', label: 'tag:Sprint' }]} source="TabMerger 3.16.1">يجد <bdi dir="ltr">tag:</bdi> علامات التبويب في مجموعة علامات تبويب في Chrome.</ThemedScreenshot>
+</Carousel>
+
+تُحفظ علامات التبويب المغلقة مؤخرًا يومين في الخطة المجانية وثلاثين يومًا مع [Pro](/pricing)، لذا يعود <bdi dir="ltr">`closed:`</bdi> أسابيع إلى الوراء عند الحاجة.
+
+</Section>
+
+<Section id="builtin" title="كيف أبحث في علامات التبويب المفتوحة دون إضافة؟">
+
+يستطيع كل متصفح البحث في علامات التبويب المفتوحة الآن:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+- اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi> على Mac) لفتح **البحث في علامات التبويب** (<bdi dir="ltr">Tab Search</bdi>)، واكتب كلمات رئيسية واختر علامة تبويب. وفي كل صف زر إغلاق أيضًا.
+- أو اكتب <bdi dir="ltr">`@tabs`</bdi> في شريط العناوين، واضغط <bdi dir="ltr"><Kbd>Tab</Kbd></bdi> أو <bdi dir="ltr"><Kbd>Space</Kbd></bdi>، ثم اكتب.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+تتضمن قوائم Edge 158 الأمر <bdi dir="ltr">**Search tabs**</bdi> (البحث في علامات التبويب)، لكن قائمة اختصارات لوحة المفاتيح من Microsoft لا تخصص له مفتاحًا. ومع كثرة علامات التبويب، ينقلك <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd></bdi> إلى علامة تبويب حسب موضعها، و<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>9</Kbd></bdi> إلى الأخيرة.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi> على Mac) لتنفيذ **اسرد كل الألسنة** (<bdi dir="ltr">List all tabs</bdi>) والبحث فيها. يسمّي Firefox علامات التبويب «الألسنة».
+- ولشريط العناوين أيضًا وضع بحث **الألسنة**، ضمن اختصارات البحث فيه.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>لا ترى هذه الأدوات إلا علامات التبويب المفتوحة في ذلك المتصفح الآن. أما علامة التبويب التي أغلقتها أو حفظتها في مكان آخر فلن تظهر.</Catch>
+
+المزيد من المفاتيح في مرجعنا عن [اختصارات لوحة المفاتيح لعلامات التبويب](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="tips" title="كيف أجعل العثور على علامات التبويب أسهل في المرة القادمة؟">
+
+- **جمّعها حسب المهمة.** المجموعات المسمّاة تحوّل «واحدة من 200 علامة تبويب» إلى «مجموعة Work». يشرح [روتيننا للتعامل مع كثرة علامات التبويب](/blog/manage-too-many-tabs) الطريقة.
+- **أغلق ما انتهيت منه،** بعد حفظه. علامات تبويب مفتوحة أقل تعني قوائم نتائج أقصر.
+- **أعد تسمية علامات التبويب المهمة.** يتيح لك TabMerger إعطاء علامة تبويب محفوظة عنوانًا خاصًا، ليطابق الكلمة التي ستبحث عنها.
+
+<InstallCta>مجانًا لـ Chrome وEdge وFirefox. لا حاجة إلى حساب للبدء.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="الأسئلة الشائعة">
+
+<Faq items={post.faq} />
+
+</Section>

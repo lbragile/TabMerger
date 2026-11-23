@@ -1,0 +1,187 @@
+export const post = {
+  slug: 'find-a-tab-among-hundreds',
+  title: 'Как найти одну вкладку среди сотен',
+  navTitle: 'Как найти вкладку среди сотен',
+  seoTitle: 'Поиск по открытым вкладкам в Chrome, Edge и Firefox',
+  description:
+    'Как найти нужную вкладку за секунды: встроенный поиск по вкладкам в Chrome, Edge и Firefox и Ctrl+K в TabMerger, который сразу ищет открытые, сохранённые и закрытые вкладки, с фильтрами вроде group: и closed:.',
+  shareSummary: 'Поиск по открытым вкладкам в Chrome, Edge и Firefox, а заодно по сохранённым и закрытым.',
+  dek: 'Хватит всматриваться во вкладки размером с иконку. Одно сочетание клавиш, пара букв из заголовка, и вы на месте.',
+  published: '2026-11-29',
+  updated: '2026-11-29',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Ctrl+Shift+A открывает в Chrome поиск по вкладкам.',
+      source: 'Справка Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'В Firefox 159 сочетание Ctrl+Shift+A открывает список всех вкладок.', source: 'Сочетания клавиш Firefox 159' },
+    { text: 'Ctrl+K в TabMerger ищет сразу по открытым, сохранённым и недавно закрытым вкладкам.', source: 'TabMerger 3.16.1' },
+    { text: 'Фильтры TabMerger: group:, window:, tag: и closed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Как искать по открытым вкладкам?',
+      answer:
+        'В TabMerger нажмите Ctrl+K и начните печатать: поиск идёт сразу по открытым, сохранённым и недавно закрытым вкладкам. Из встроенного: в Chrome есть поиск по вкладкам (Ctrl+Shift+A или @вкладки в адресной строке), а Firefox показывает список всех вкладок по Ctrl+Shift+A.',
+    },
+    {
+      question: 'Есть ли сочетание клавиш для поиска вкладок?',
+      answer: 'Ctrl+Shift+A в Chrome и Firefox (⌘+Shift+A в Chrome на Mac) и Ctrl+K в TabMerger. В списке сочетаний клавиш Microsoft для Edge у поиска вкладок клавиши нет.',
+    },
+    {
+      question: 'Можно ли найти уже закрытые вкладки?',
+      answer: 'Да, в TabMerger: начните запрос с closed:, и поиск пойдёт только по недавно закрытым вкладкам. В бесплатной версии они хранятся 2 дня, в Pro 30.',
+    },
+    {
+      question: 'Можно ли искать вкладки на других моих устройствах?',
+      answer:
+        'TabMerger Pro синхронизирует сохранённые группы между устройствами со сквозным шифрованием, поэтому тот же Ctrl+K находит их везде. Встроенные способы описаны в нашем руководстве о переносе вкладок между компьютерами.',
+      link: { text: 'переносе вкладок между компьютерами', href: '/blog/move-tabs-between-computers' },
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'Поиск TabMerger открыт и пуст, со списком фильтров group:, window:, tag: и closed:, светлая тема' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'Поиск TabMerger открыт и пуст, со списком фильтров group:, window:, tag: и closed:, тёмная тема' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp', alt: 'Поиск TabMerger по запросу group:"Work" pull находит сохранённую вкладку Pull requests в группе Work, светлая тема' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-dark.webp', alt: 'Поиск TabMerger по запросу group:"Work" pull находит сохранённую вкладку Pull requests в группе Work, тёмная тема' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-light.webp', alt: 'Поиск TabMerger по запросу tag:Sprint показывает три открытые вкладки из группы вкладок Chrome Sprint, светлая тема' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-dark.webp', alt: 'Поиск TabMerger по запросу tag:Sprint показывает три открытые вкладки из группы вкладок Chrome Sprint, тёмная тема' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-21',
+      note: 'Данные о Firefox взяты из определений клавиш и текстов меню самого Firefox 159.0.1: эта страница заблокировала нашу автоматическую проверку.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp' },
+  ogImage: { src: '/blog/find-a-tab-among-hundreds/og.png', alt: '«How to find one tab among hundreds»: руководство TabMerger с отфильтрованным поиском по вкладкам' },
+  toc: [
+    { id: 'quick', label: 'Коротко' },
+    { id: 'tabmerger', label: 'Поиск по всему с Ctrl+K' },
+    { id: 'filters', label: 'Фильтры, сужающие поиск' },
+    { id: 'builtin', label: 'Встроенный поиск по вкладкам' },
+    { id: 'tips', label: 'Как упростить поиск вкладок' },
+    { id: 'faq', label: 'Частые вопросы' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Встроенный поиск по вкладкам',
+    values: { chrome: 'Ctrl+Shift+A или @вкладки', edge: 'Search tabs (сочетание клавиш не указано)', firefox: 'Ctrl+Shift+A' },
+  },
+}
+
+<QuickAnswer>
+
+Нажмите <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> на Mac) в [TabMerger](/features) и введите несколько букв: нужная вкладка найдётся, будь она **открыта, сохранена в группе или недавно закрыта**, а фильтры вроде `group:` и `closed:` сужают сотни вкладок до одной. Из встроенного: **Поиск по вкладкам** (Tab Search) в Chrome (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) и **Список всех вкладок** (List all tabs) в Firefox (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) ищут среди того, что открыто прямо сейчас.
+
+</QuickAnswer>
+
+<InstallCta>Находите любую вкладку, открытую, сохранённую или закрытую, одним нажатием. Бесплатно для Chrome, Edge и Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Поиск по всему с Ctrl+K">
+
+Поиск по вкладкам в браузере знает только то, что открыто в нём прямо сейчас. А нужная вкладка часто находится в другом месте: в окне, которое вы сохранили вчера, или в том, что закрыли час назад. TabMerger ищет везде из одного поля:
+
+1. Откройте TabMerger и нажмите <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+2. Введите часть заголовка или адреса. В результатах вместе показаны открытые, сохранённые и недавно закрытые вкладки, и у каждой отмечено, где она находится.
+3. Выберите нужную стрелками и нажмите <Kbd>Enter</Kbd>.
+
+Все фильтры, порядок результатов и режим, в котором несовпадающие вкладки скрываются или приглушаются, описаны в статье [Поиск по всем вкладкам в TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="Поиск TabMerger открыт и пуст, со списком фильтров group:, window:, tag: и closed:, светлая тема" darkAlt="Поиск TabMerger открыт и пуст, со списком фильтров group:, window:, tag: и closed:, тёмная тема" boxes={[{ id: 'search-input', label: 'Поиск' }]} source="TabMerger 3.16.1">Ctrl+K открывает поиск, и фильтры видны ещё до того, как вы начнёте печатать.</ThemedScreenshot>
+
+</Section>
+
+<Section id="filters" title="Какие фильтры сужают поиск?">
+
+Начните запрос с фильтра, чтобы сразу попасть в нужное место:
+
+<ComparisonTable
+  head={['Фильтр', 'Что находит']}
+  rows={[
+    [<code>group:"Work"</code>, 'Вкладки в группе, название которой содержит «Work»'],
+    [<code>window:"Docs"</code>, 'Вкладки в окне, название которого содержит «Docs»'],
+    [<code>tag:Sprint</code>, 'Вкладки в группе вкладок Chrome, метка которой содержит «Sprint»'],
+    [<code>closed:</code>, 'Только недавно закрытые вкладки'],
+  ]}
+/>
+
+Сочетайте фильтр со словами: `group:"Work" pull` находит вкладку с pull request в группе Work даже среди сотен других. Берите название в кавычки, если после него идут ещё слова: фильтр без кавычек забирает всю оставшуюся строку.
+
+<Carousel label="Поиск с фильтрами" steps={[{ title: 'Фильтр group:' }, { title: 'Фильтр tag:' }]}>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-group-filter" alt="Поиск TabMerger по запросу group:&quot;Work&quot; pull находит сохранённую вкладку Pull requests в группе Work, светлая тема" darkAlt="Поиск TabMerger по запросу group:&quot;Work&quot; pull находит сохранённую вкладку Pull requests в группе Work, тёмная тема" boxes={[{ id: 'search-input', label: 'фильтр по группе' }]} source="TabMerger 3.16.1">Одна группа, одно слово: та самая сохранённая вкладка.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-tag-filter" alt="Поиск TabMerger по запросу tag:Sprint показывает три открытые вкладки из группы вкладок Chrome Sprint, светлая тема" darkAlt="Поиск TabMerger по запросу tag:Sprint показывает три открытые вкладки из группы вкладок Chrome Sprint, тёмная тема" boxes={[{ id: 'search-input', label: 'tag:Sprint' }]} source="TabMerger 3.16.1">tag: находит вкладки из группы вкладок Chrome.</ThemedScreenshot>
+</Carousel>
+
+Недавно закрытые вкладки хранятся 2 дня в бесплатной версии и 30 дней в [Pro](/pricing), так что при необходимости `closed:` заглядывает на недели назад.
+
+</Section>
+
+<Section id="builtin" title="Как искать по открытым вкладкам без расширения?">
+
+Каждый браузер умеет искать по вкладкам, открытым прямо сейчас:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+- Нажмите <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> на Mac), чтобы открыть **Поиск по вкладкам** (Tab Search), введите ключевые слова и выберите вкладку. В каждой строке есть и кнопка закрытия.
+- Или введите `@вкладки` в адресной строке (в английском интерфейсе Chrome это `@tabs`), нажмите <Kbd>Tab</Kbd> или <Kbd>Space</Kbd> и печатайте.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+В меню Edge 158 есть **Search tabs** (поиск по вкладкам), но в списке сочетаний клавиш Microsoft для этого нет клавиши. Когда вкладок много, <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> переключают на вкладку по её позиции, а <Kbd>Ctrl</Kbd>+<Kbd>9</Kbd> на последнюю.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- Нажмите <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> на Mac), чтобы открыть **Список всех вкладок** (List all tabs) и искать по нему.
+- В адресной строке также есть режим поиска **Вкладки**, среди её поисковых сокращений.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>эти способы видят только вкладки, открытые в этом браузере сейчас. Вкладка, которую вы закрыли или сохранили где-то ещё, не найдётся.</Catch>
+
+Больше клавиш в нашем [справочнике сочетаний клавиш для вкладок](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="tips" title="Как сделать, чтобы в следующий раз вкладки находились легче?">
+
+- **Группируйте по задачам.** Группы с названиями превращают «одну из 200 вкладок» в «группу Work». Как это сделать, показывает наш [порядок действий, когда вкладок слишком много](/blog/manage-too-many-tabs).
+- **Закрывайте то, с чем закончили,** предварительно сохранив. Меньше открытых вкладок, короче списки результатов.
+- **Переименуйте важные вкладки.** TabMerger позволяет дать сохранённой вкладке своё название, чтобы оно совпадало со словом, которое вы будете искать.
+
+<InstallCta>Бесплатно для Chrome, Edge и Firefox. Для начала не нужна учётная запись.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Частые вопросы">
+
+<Faq items={post.faq} />
+
+</Section>

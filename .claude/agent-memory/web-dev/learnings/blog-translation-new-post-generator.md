@@ -40,3 +40,5 @@ edit scratch scripts with Edit/Write.
 Related: [[blog-translation-sync-script]], [[localized-browser-ui-labels]].
 
 **Check the template before writing any locale:** fill it with the English text and diff the result against `en.mdx`. If they're byte-identical, every structural field (dates, images, props, links) is right by construction.
+
+**Alt comparison:** figure alts in JSX attributes contain `&quot;`; decode entities before comparing them with `post.images` alts, or a correct file fails the check.

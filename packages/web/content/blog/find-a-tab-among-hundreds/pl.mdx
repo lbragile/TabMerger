@@ -1,0 +1,187 @@
+export const post = {
+  slug: 'find-a-tab-among-hundreds',
+  title: 'Jak znaleźć jedną kartę wśród setek',
+  navTitle: 'Jak znaleźć kartę wśród setek',
+  seoTitle: 'Jak wyszukiwać otwarte karty w Chrome, Edge i Firefoksie',
+  description:
+    'Przeszukaj otwarte karty w kilka sekund: wbudowane wyszukiwanie kart w Chrome, Edge i Firefoksie oraz Ctrl+K w TabMerger, który naraz znajduje karty otwarte, zapisane i zamknięte, z filtrami takimi jak group: i closed:.',
+  shareSummary: 'Wyszukuj otwarte karty w Chrome, Edge i Firefoksie, a także zapisane lub zamknięte.',
+  dek: 'Koniec z przeglądaniem kart wielkości ikony. Jeden skrót, kilka liter tytułu i gotowe.',
+  published: '2026-11-29',
+  updated: '2026-11-29',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Ctrl+Shift+A otwiera w Chrome Wyszukiwanie kart.',
+      source: 'Pomoc Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Firefox 159 przypisuje Ctrl+Shift+A do listy wszystkich kart.', source: 'Skróty klawiszowe Firefoksa 159' },
+    { text: 'Ctrl+K w TabMerger przeszukuje razem karty otwarte, zapisane i ostatnio zamknięte.', source: 'TabMerger 3.16.1' },
+    { text: 'Filtry TabMerger: group:, window:, tag: i closed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Jak przeszukać otwarte karty?',
+      answer:
+        'W TabMerger naciśnij Ctrl+K i pisz: wyszukiwanie obejmuje razem karty otwarte, zapisane i ostatnio zamknięte. Bez rozszerzeń: Chrome ma Wyszukiwanie kart (Ctrl+Shift+A albo @tabs na pasku adresu), a Firefox pokazuje wszystkie karty po naciśnięciu Ctrl+Shift+A.',
+    },
+    {
+      question: 'Czy jest skrót do wyszukiwania kart?',
+      answer: 'Ctrl+Shift+A w Chrome i Firefoksie (⌘+Shift+A w Chrome na Macu) oraz Ctrl+K w TabMerger. Lista skrótów Microsoftu dla Edge nie przypisuje wyszukiwaniu kart żadnego klawisza.',
+    },
+    {
+      question: 'Czy mogę przeszukać karty, które już zamknięto?',
+      answer: 'Tak, w TabMerger: zacznij wyszukiwanie od closed:, aby szukać tylko wśród ostatnio zamkniętych kart. Wersja darmowa przechowuje je 2 dni, Pro 30.',
+    },
+    {
+      question: 'Czy mogę przeszukać karty na innych urządzeniach?',
+      answer:
+        'TabMerger Pro synchronizuje zapisane grupy między urządzeniami z pełnym szyfrowaniem, więc to samo Ctrl+K znajdzie je wszędzie. Nasz poradnik o przenoszeniu kart między komputerami opisuje wbudowane możliwości.',
+      link: { text: 'przenoszeniu kart między komputerami', href: '/blog/move-tabs-between-computers' },
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'Wyszukiwanie TabMerger otwarte i puste, z listą filtrów group:, window:, tag: i closed:, jasny motyw' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'Wyszukiwanie TabMerger otwarte i puste, z listą filtrów group:, window:, tag: i closed:, ciemny motyw' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp', alt: 'Wyszukiwanie TabMerger group:"Work" pull, które znajduje zapisaną kartę Pull requests w grupie Work, jasny motyw' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-dark.webp', alt: 'Wyszukiwanie TabMerger group:"Work" pull, które znajduje zapisaną kartę Pull requests w grupie Work, ciemny motyw' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-light.webp', alt: 'Wyszukiwanie TabMerger tag:Sprint z trzema otwartymi kartami z grupy kart Chrome Sprint, jasny motyw' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-dark.webp', alt: 'Wyszukiwanie TabMerger tag:Sprint z trzema otwartymi kartami z grupy kart Chrome Sprint, ciemny motyw' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-21',
+      note: 'Informacje o Firefoksie odczytaliśmy z definicji klawiszy i tekstów menu samego Firefoksa 159.0.1; ta strona zablokowała nasze automatyczne sprawdzenie.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp' },
+  ogImage: { src: '/blog/find-a-tab-among-hundreds/og.png', alt: '„How to find one tab among hundreds”: poradnik TabMerger z filtrowanym wyszukiwaniem kart' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'tabmerger', label: 'Szukaj wszędzie z Ctrl+K' },
+    { id: 'filters', label: 'Filtry zawężające wyniki' },
+    { id: 'builtin', label: 'Wbudowane wyszukiwanie' },
+    { id: 'tips', label: 'Łatwiejsze szukanie kart' },
+    { id: 'faq', label: 'Najczęstsze pytania' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Wbudowane wyszukiwanie kart',
+    values: { chrome: 'Ctrl+Shift+A albo @tabs', edge: 'Search tabs (brak podanego skrótu)', firefox: 'Ctrl+Shift+A' },
+  },
+}
+
+<QuickAnswer>
+
+Naciśnij <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> na Macu) w [TabMerger](/features) i wpisz kilka liter: znajdzie kartę bez względu na to, czy jest **otwarta, zapisana w grupie czy niedawno zamknięta**, a filtry takie jak `group:` i `closed:` zawężą setki kart do jednej. Wbudowane **Wyszukiwanie kart** („Tab Search”) w Chrome (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) i **Pokaż wszystkie karty** („List all tabs”) w Firefoksie (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) przeszukują to, co jest otwarte w tej chwili.
+
+</QuickAnswer>
+
+<InstallCta>Znajdź każdą kartę, otwartą, zapisaną lub zamkniętą, jednym skrótem. Za darmo dla Chrome, Edge i Firefoksa.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Szukaj wszędzie z Ctrl+K">
+
+Wyszukiwanie kart w przeglądarce zna tylko to, co jest w niej otwarte w tej chwili. A potrzebna karta często jest gdzie indziej: w oknie zapisanym wczoraj albo w oknie zamkniętym godzinę temu. TabMerger przeszukuje to wszystko z jednego pola:
+
+1. Otwórz TabMerger i naciśnij <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+2. Wpisz fragment tytułu lub adresu. Wyniki pokazują razem karty otwarte, zapisane i ostatnio zamknięte, każdą z oznaczeniem, gdzie się znajduje.
+3. Wybierz jedną strzałkami i <Kbd>Enter</Kbd>.
+
+Wszystkie filtry, kolejność wyników i widok, który ukrywa lub przyciemnia, opisujemy w poradniku [przeszukuj wszystkie karty w TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="Wyszukiwanie TabMerger otwarte i puste, z listą filtrów group:, window:, tag: i closed:, jasny motyw" darkAlt="Wyszukiwanie TabMerger otwarte i puste, z listą filtrów group:, window:, tag: i closed:, ciemny motyw" boxes={[{ id: 'search-input', label: 'Wyszukiwanie' }]} source="TabMerger 3.16.1">Ctrl+K otwiera wyszukiwanie z listą filtrów, zanim zaczniesz pisać.</ThemedScreenshot>
+
+</Section>
+
+<Section id="filters" title="Które filtry zawężają wyszukiwanie?">
+
+Zacznij wyszukiwanie od filtra, żeby trafić prosto we właściwe miejsce:
+
+<ComparisonTable
+  head={['Filtr', 'Znajduje']}
+  rows={[
+    [<code>group:"Work"</code>, 'Karty w grupie, której nazwa zawiera „Work”'],
+    [<code>window:"Docs"</code>, 'Karty w oknie, którego nazwa zawiera „Docs”'],
+    [<code>tag:Sprint</code>, 'Karty w grupie kart Chrome, której etykieta zawiera „Sprint”'],
+    [<code>closed:</code>, 'Tylko ostatnio zamknięte karty'],
+  ]}
+/>
+
+Połącz filtr ze słowami: `group:"Work" pull` znajdzie kartę z pull requestem w grupie Work, nawet wśród setek. Ujmij nazwę w cudzysłów, gdy dodajesz po niej słowa; filtr bez cudzysłowu bierze całą resztę wiersza.
+
+<Carousel label="Wyszukiwanie z filtrem" steps={[{ title: 'Filtr group:' }, { title: 'Filtr tag:' }]}>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-group-filter" alt="Wyszukiwanie TabMerger group:&quot;Work&quot; pull, które znajduje zapisaną kartę Pull requests w grupie Work, jasny motyw" darkAlt="Wyszukiwanie TabMerger group:&quot;Work&quot; pull, które znajduje zapisaną kartę Pull requests w grupie Work, ciemny motyw" boxes={[{ id: 'search-input', label: 'filtr grupy' }]} source="TabMerger 3.16.1">Jedna grupa, jedno słowo: zapisana karta, której szukasz.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-tag-filter" alt="Wyszukiwanie TabMerger tag:Sprint z trzema otwartymi kartami z grupy kart Chrome Sprint, jasny motyw" darkAlt="Wyszukiwanie TabMerger tag:Sprint z trzema otwartymi kartami z grupy kart Chrome Sprint, ciemny motyw" boxes={[{ id: 'search-input', label: 'tag:Sprint' }]} source="TabMerger 3.16.1">tag: znajduje karty z grupy kart Chrome.</ThemedScreenshot>
+</Carousel>
+
+Ostatnio zamknięte karty są przechowywane przez 2 dni w wersji darmowej i 30 w [Pro](/pricing), więc `closed:` w razie potrzeby sięga tygodnie wstecz.
+
+</Section>
+
+<Section id="builtin" title="Jak przeszukać otwarte karty bez rozszerzenia?">
+
+Każda przeglądarka potrafi przeszukać karty otwarte w tej chwili:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+- Naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> na Macu), żeby otworzyć **Wyszukiwanie kart** („Tab Search”), wpisz słowa kluczowe i wybierz kartę. Każdy wiersz ma też przycisk zamykania.
+- Możesz też wpisać `@tabs` na pasku adresu, nacisnąć <Kbd>Tab</Kbd> lub <Kbd>Space</Kbd> i pisać dalej.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Menu Edge 158 zawierają **Search tabs** (wyszukaj karty), ale lista skrótów klawiszowych Microsoftu nie przypisuje temu żadnego klawisza. Przy wielu kartach <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> przeskakują do karty według pozycji, a <Kbd>Ctrl</Kbd>+<Kbd>9</Kbd> do ostatniej.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- Naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> na Macu), żeby otworzyć **Pokaż wszystkie karty** („List all tabs”) i je przeszukać.
+- Pasek adresu ma też tryb wyszukiwania **Karty**, wśród swoich skrótów wyszukiwania.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>te funkcje widzą tylko karty otwarte w danej przeglądarce, teraz. Karta zamknięta lub zapisana gdzie indziej się nie pojawi.</Catch>
+
+Więcej klawiszy znajdziesz w naszym [zestawieniu skrótów klawiszowych do kart](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="tips" title="Jak sprawić, żeby następnym razem karty łatwiej się znajdowały?">
+
+- **Grupuj według zadań.** Nazwane grupy zamieniają „jedną z 200 kart” w „grupę Work”. Nasza [metoda na zbyt wiele kart](/blog/manage-too-many-tabs) pokazuje, jak to zrobić.
+- **Zamykaj to, co skończone,** po zapisaniu. Mniej otwartych kart to krótsze listy wyników.
+- **Zmień nazwy ważnych kart.** TabMerger pozwala nadać zapisanej karcie własny tytuł, żeby pasował do słowa, którego będziesz szukać.
+
+<InstallCta>Za darmo dla Chrome, Edge i Firefoksa. Na start nie potrzebujesz konta.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Najczęstsze pytania">
+
+<Faq items={post.faq} />
+
+</Section>

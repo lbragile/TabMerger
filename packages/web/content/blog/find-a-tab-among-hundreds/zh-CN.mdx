@@ -1,0 +1,187 @@
+export const post = {
+  slug: 'find-a-tab-among-hundreds',
+  title: '如何在几百个标签页中找到想要的那一个',
+  navTitle: '在几百个标签页中找到一个',
+  seoTitle: '如何在 Chrome、Edge 和 Firefox 中搜索已打开的标签页',
+  description:
+    '几秒钟搜索已打开的标签页：Chrome、Edge 和 Firefox 自带的标签页搜索，以及 TabMerger 的 Ctrl+K，它能用 group:、closed: 等筛选器一次找到已打开、已保存和已关闭的标签页。',
+  shareSummary: '在 Chrome、Edge 和 Firefox 中搜索已打开的标签页，已保存或已关闭的也能找到。',
+  dek: '别再在图标大小的标签页里一个个找了。一个快捷键，输入标题里的几个字，就能直达。',
+  published: '2026-11-29',
+  updated: '2026-11-29',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: '在 Chrome 中，Ctrl+Shift+A 会打开标签页搜索。',
+      source: 'Chrome 帮助',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Firefox 159 将 Ctrl+Shift+A 绑定到所有标签页的列表。', source: 'Firefox 159 快捷键定义' },
+    { text: 'TabMerger 的 Ctrl+K 会同时搜索已打开、已保存和最近关闭的标签页。', source: 'TabMerger 3.16.1' },
+    { text: 'TabMerger 筛选器：group:、window:、tag: 和 closed:。', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: '怎样搜索已打开的标签页？',
+      answer:
+        '在 TabMerger 中按 Ctrl+K 然后输入：它会同时搜索已打开、已保存和最近关闭的标签页。浏览器自带的功能里，Chrome 有标签页搜索（Ctrl+Shift+A，或在地址栏输入 @tabs），Firefox 则用 Ctrl+Shift+A 列出所有标签页。',
+    },
+    {
+      question: '有搜索标签页的快捷键吗？',
+      answer: 'Chrome 和 Firefox 中是 Ctrl+Shift+A（Mac 上的 Chrome 为 ⌘+Shift+A），TabMerger 中是 Ctrl+K。Microsoft 的 Edge 快捷键列表没有为标签页搜索提供按键。',
+    },
+    {
+      question: '能搜索已经关闭的标签页吗？',
+      answer: '可以，在 TabMerger 中以 closed: 开头搜索，就只在最近关闭的标签页中查找。免费版保留 2 天，Pro 保留 30 天。',
+    },
+    {
+      question: '能搜索其他设备上的标签页吗？',
+      answer:
+        'TabMerger Pro 会以端到端加密在设备之间同步你保存的分组，所以同一个 Ctrl+K 在任何设备上都能找到它们。浏览器自带的方法见我们的在电脑之间转移标签页指南。',
+      link: { text: '在电脑之间转移标签页', href: '/blog/move-tabs-between-computers' },
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'TabMerger 搜索已打开且为空，列出了筛选器 group:、window:、tag: 和 closed:，浅色主题' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'TabMerger 搜索已打开且为空，列出了筛选器 group:、window:、tag: 和 closed:，深色主题' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp', alt: '在 TabMerger 中搜索 group:"Work" pull，找到 Work 分组中已保存的标签页 Pull requests，浅色主题' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-dark.webp', alt: '在 TabMerger 中搜索 group:"Work" pull，找到 Work 分组中已保存的标签页 Pull requests，深色主题' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-light.webp', alt: '在 TabMerger 中搜索 tag:Sprint，列出 Chrome 标签页分组 Sprint 中的三个已打开标签页，浅色主题' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-dark.webp', alt: '在 TabMerger 中搜索 tag:Sprint，列出 Chrome 标签页分组 Sprint 中的三个已打开标签页，深色主题' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-21',
+      note: 'Firefox 的信息直接读取自 Firefox 159.0.1 自身的按键定义和菜单文字；该页面拦截了我们的自动检查。',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp' },
+  ogImage: { src: '/blog/find-a-tab-among-hundreds/og.png', alt: '“How to find one tab among hundreds”：一篇 TabMerger 指南，附有一次带筛选器的标签页搜索' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'tabmerger', label: '用 Ctrl+K 搜索一切' },
+    { id: 'filters', label: '缩小范围的筛选器' },
+    { id: 'builtin', label: '浏览器自带的标签页搜索' },
+    { id: 'tips', label: '让标签页更容易找到' },
+    { id: 'faq', label: '常见问题' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: '自带的标签页搜索',
+    values: { chrome: 'Ctrl+Shift+A 或 @tabs', edge: 'Search tabs（未列出快捷键）', firefox: 'Ctrl+Shift+A' },
+  },
+}
+
+<QuickAnswer>
+
+在 [TabMerger](/features) 中按 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>（Mac 上为 <Kbd>⌘</Kbd>+<Kbd>K</Kbd>）并输入几个字，无论标签页是**已打开、保存在分组中还是最近关闭的**，都能找到；`group:` 和 `closed:` 等筛选器能把几百个标签页缩小到一个。浏览器自带的功能中，Chrome 的**标签页搜索**（Tab Search，<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>）和 Firefox 的**列出所有标签页**（List all tabs，<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>）可以搜索当前打开的标签页。
+
+</QuickAnswer>
+
+<InstallCta>无论已打开、已保存还是已关闭，按一下键就能找到任何标签页。适用于 Chrome、Edge 和 Firefox，免费。</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="用 Ctrl+K 搜索一切">
+
+浏览器的标签页搜索只知道这个浏览器当前打开了什么。可你要找的标签页常常在别处：在你昨天保存的窗口里，或者在一小时前关掉的窗口里。TabMerger 用一个搜索框就能把这些全部搜一遍：
+
+1. 打开 TabMerger，按 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>。
+2. 输入标题或网址的一部分。结果会同时显示已打开、已保存和最近关闭的标签页，每一项都标明它在哪里。
+3. 用方向键选择一项，然后按 <Kbd>Enter</Kbd>。
+
+所有筛选器、结果排序以及隐藏或变淡的显示方式，详见[用 TabMerger 搜索所有标签页](/blog/search-all-your-tabs-with-tabmerger)。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="TabMerger 搜索已打开且为空，列出了筛选器 group:、window:、tag: 和 closed:，浅色主题" darkAlt="TabMerger 搜索已打开且为空，列出了筛选器 group:、window:、tag: 和 closed:，深色主题" boxes={[{ id: 'search-input', label: '搜索' }]} source="TabMerger 3.16.1">按 Ctrl+K 打开搜索，输入之前就会列出筛选器。</ThemedScreenshot>
+
+</Section>
+
+<Section id="filters" title="哪些筛选器能缩小搜索范围？">
+
+在搜索开头加上筛选器，就能直接跳到正确的位置：
+
+<ComparisonTable
+  head={['筛选器', '查找范围']}
+  rows={[
+    [<code>group:"Work"</code>, '名称包含“Work”的分组中的标签页'],
+    [<code>window:"Docs"</code>, '名称包含“Docs”的窗口中的标签页'],
+    [<code>tag:Sprint</code>, '标签包含“Sprint”的 Chrome 标签页分组中的标签页'],
+    [<code>closed:</code>, '只看最近关闭的标签页'],
+  ]}
+/>
+
+筛选器可以和关键词组合：`group:"Work" pull` 能在几百个标签页中找到 Work 分组里的拉取请求标签页。如果名称后面还要加关键词，请给名称加上引号；不带引号的筛选器会把这一行剩下的内容都当作名称。
+
+<Carousel label="带筛选器的搜索" steps={[{ title: 'group: 筛选器' }, { title: 'tag: 筛选器' }]}>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-group-filter" alt="在 TabMerger 中搜索 group:&quot;Work&quot; pull，找到 Work 分组中已保存的标签页 Pull requests，浅色主题" darkAlt="在 TabMerger 中搜索 group:&quot;Work&quot; pull，找到 Work 分组中已保存的标签页 Pull requests，深色主题" boxes={[{ id: 'search-input', label: '分组筛选器' }]} source="TabMerger 3.16.1">一个分组加一个词，就找到了想要的已保存标签页。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-tag-filter" alt="在 TabMerger 中搜索 tag:Sprint，列出 Chrome 标签页分组 Sprint 中的三个已打开标签页，浅色主题" darkAlt="在 TabMerger 中搜索 tag:Sprint，列出 Chrome 标签页分组 Sprint 中的三个已打开标签页，深色主题" boxes={[{ id: 'search-input', label: 'tag:Sprint' }]} source="TabMerger 3.16.1">tag: 可以找到 Chrome 标签页分组中的标签页。</ThemedScreenshot>
+</Carousel>
+
+最近关闭的标签页在免费版中保留 2 天，在 [Pro](/pricing) 中保留 30 天，所以需要时 `closed:` 能往回找好几周。
+
+</Section>
+
+<Section id="builtin" title="不装扩展程序，怎样搜索已打开的标签页？">
+
+每个浏览器都能搜索当前打开的标签页：
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+- 按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>（Mac 上为 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>）打开**标签页搜索**（Tab Search），输入关键字后选择标签页。每一行还有关闭按钮。
+- 也可以在地址栏中输入 `@tabs`，按 <Kbd>Tab</Kbd> 或 <Kbd>Space</Kbd>，然后输入。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge 158 的菜单中有 **Search tabs**（搜索标签页），但 Microsoft 的键盘快捷键列表没有为它分配按键。标签页很多时，<Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> 可按位置跳到某个标签页，<Kbd>Ctrl</Kbd>+<Kbd>9</Kbd> 跳到最后一个。
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- 按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>（Mac 上为 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>）可**列出所有标签页**（List all tabs）并在其中搜索。
+- 地址栏的搜索快捷方式中也有一个**标签页**搜索模式。
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>这些功能只能看到该浏览器当前打开的标签页。你关闭的或保存在别处的标签页不会出现。</Catch>
+
+更多按键见我们的[标签页键盘快捷键速查](/blog/tab-keyboard-shortcuts)。
+
+</Section>
+
+<Section id="tips" title="下次怎样让标签页更容易找到？">
+
+- **按任务分组**。有名称的分组能把“200 个标签页中的一个”变成“Work 分组”。我们的[标签页太多时的整理流程](/blog/manage-too-many-tabs)介绍了做法。
+- **用完就关**，关之前先保存。打开的标签页越少，结果列表就越短。
+- **给重要的标签页改名**。TabMerger 可以为已保存的标签页设置自定义标题，让它和你以后要搜索的词对上。
+
+<InstallCta>适用于 Chrome、Edge 和 Firefox，免费。无需账号即可开始。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

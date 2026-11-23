@@ -1,0 +1,187 @@
+export const post = {
+  slug: 'find-a-tab-among-hundreds',
+  title: 'چطور یک زبانه را میان صدها زبانه پیدا کنیم',
+  navTitle: 'پیدا کردن یک زبانه میان صدها زبانه',
+  seoTitle: 'جست‌وجو در زبانه‌های باز در Chrome و Edge و Firefox',
+  description:
+    'در چند ثانیه میان زبانه‌های باز جست‌وجو کنید: جست‌وجوی داخلی زبانه‌ها در Chrome و Edge و Firefox، و Ctrl+K در TabMerger که زبانه‌های باز، ذخیره‌شده و بسته‌شده را یک‌جا و با فیلترهایی مثل group: و closed: پیدا می‌کند.',
+  shareSummary: 'جست‌وجو در زبانه‌های باز در Chrome و Edge و Firefox، و پیدا کردن زبانه‌های ذخیره‌شده یا بسته‌شده.',
+  dek: 'دیگر لازم نیست زبانه‌های هم‌اندازهٔ یک آیکون را یکی‌یکی نگاه کنید. یک میان‌بر، چند حرف از عنوان، و رسیدید.',
+  published: '2026-11-29',
+  updated: '2026-11-29',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'در Chrome، کلید Ctrl+Shift+A جستجوی زبانه‌ها را باز می‌کند.',
+      source: 'راهنمای Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'در Firefox 159 کلید Ctrl+Shift+A فهرست همهٔ زبانه‌ها را باز می‌کند.', source: 'تعریف کلیدهای Firefox 159' },
+    { text: 'Ctrl+K در TabMerger زبانه‌های باز، ذخیره‌شده و اخیراً بسته‌شده را با هم جست‌وجو می‌کند.', source: 'TabMerger 3.16.1' },
+    { text: 'فیلترهای TabMerger: group: و window: و tag: و closed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'چطور در زبانه‌های باز جست‌وجو کنم؟',
+      answer:
+        'در TabMerger کلید Ctrl+K را بزنید و تایپ کنید: زبانه‌های باز، ذخیره‌شده و اخیراً بسته‌شده را با هم جست‌وجو می‌کند. در ابزارهای داخلی مرورگر، Chrome جستجوی زبانه‌ها را دارد (Ctrl+Shift+A یا @tabs در نوار نشانی) و Firefox با Ctrl+Shift+A همهٔ زبانه‌ها را فهرست می‌کند.',
+    },
+    {
+      question: 'آیا برای جست‌وجوی زبانه‌ها میان‌بری هست؟',
+      answer: 'Ctrl+Shift+A در Chrome و Firefox (در Chrome روی Mac کلید ⌘+Shift+A)، و Ctrl+K درون TabMerger. فهرست میان‌برهای Microsoft برای Edge هیچ کلیدی برای جست‌وجوی زبانه‌ها ذکر نکرده است.',
+    },
+    {
+      question: 'آیا می‌توانم زبانه‌هایی را که بسته‌ام جست‌وجو کنم؟',
+      answer: 'بله، در TabMerger: جست‌وجو را با closed: شروع کنید تا فقط در زبانه‌های اخیراً بسته‌شده بگردد. طرح رایگان آن‌ها را ۲ روز نگه می‌دارد و Pro تا ۳۰ روز.',
+    },
+    {
+      question: 'آیا می‌توانم زبانه‌های دستگاه‌های دیگرم را جست‌وجو کنم؟',
+      answer:
+        'TabMerger Pro گروه‌های ذخیره‌شدهٔ شما را با رمزنگاری سرتاسری میان دستگاه‌ها همگام می‌کند، پس همان Ctrl+K همه‌جا پیدایشان می‌کند. راه‌های داخلی مرورگرها را در راهنمای ما دربارهٔ انتقال زبانه‌ها بین رایانه‌ها توضیح داده‌ایم.',
+      link: { text: 'انتقال زبانه‌ها بین رایانه‌ها', href: '/blog/move-tabs-between-computers' },
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'جست‌وجوی TabMerger، باز و خالی، با فهرست فیلترهای group: و window: و tag: و closed:، پوستهٔ روشن' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'جست‌وجوی TabMerger، باز و خالی، با فهرست فیلترهای group: و window: و tag: و closed:، پوستهٔ تیره' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp', alt: 'جست‌وجوی group:"Work" pull در TabMerger که زبانهٔ ذخیره‌شدهٔ Pull requests را در گروه Work پیدا می‌کند، پوستهٔ روشن' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-dark.webp', alt: 'جست‌وجوی group:"Work" pull در TabMerger که زبانهٔ ذخیره‌شدهٔ Pull requests را در گروه Work پیدا می‌کند، پوستهٔ تیره' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-light.webp', alt: 'جست‌وجوی tag:Sprint در TabMerger که سه زبانهٔ باز گروه زبانهٔ Sprint در Chrome را فهرست می‌کند، پوستهٔ روشن' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-dark.webp', alt: 'جست‌وجوی tag:Sprint در TabMerger که سه زبانهٔ باز گروه زبانهٔ Sprint در Chrome را فهرست می‌کند، پوستهٔ تیره' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-21',
+      note: 'اطلاعات Firefox مستقیم از تعریف کلیدها و متن منوهای خود Firefox 159.0.1 خوانده شد؛ این صفحه بررسی خودکار ما را مسدود کرد.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp' },
+  ogImage: { src: '/blog/find-a-tab-among-hundreds/og.png', alt: '«How to find one tab among hundreds»: راهنمای TabMerger، همراه با یک جست‌وجوی فیلترشدهٔ زبانه‌ها' },
+  toc: [
+    { id: 'quick', label: 'پاسخ کوتاه' },
+    { id: 'tabmerger', label: 'جست‌وجو در همه‌چیز با Ctrl+K' },
+    { id: 'filters', label: 'فیلترهایی که دامنه را تنگ می‌کنند' },
+    { id: 'builtin', label: 'جست‌وجوی داخلی زبانه‌ها' },
+    { id: 'tips', label: 'زبانه‌هایی که آسان‌تر پیدا می‌شوند' },
+    { id: 'faq', label: 'پرسش‌های متداول' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'جست‌وجوی داخلی زبانه‌ها',
+    values: { chrome: 'Ctrl+Shift+A یا @tabs', edge: 'Search tabs (میان‌بری ذکر نشده)', firefox: 'Ctrl+Shift+A' },
+  },
+}
+
+<QuickAnswer>
+
+در [TabMerger](/features) کلید <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> (در Mac، <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>K</Kbd></bdi>) را بزنید و چند حرف تایپ کنید: زبانه را پیدا می‌کند، چه **باز باشد، چه در یک گروه ذخیره شده باشد و چه اخیراً بسته شده باشد**، و فیلترهایی مثل <bdi dir="ltr">`group:`</bdi> و <bdi dir="ltr">`closed:`</bdi> صدها زبانه را به یکی می‌رسانند. در ابزارهای داخلی مرورگر، **جستجوی زبانه‌ها** (<bdi dir="ltr">Tab Search</bdi>) در Chrome (<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi>) و **فهرست کردن همهٔ زبانه‌ها** (<bdi dir="ltr">List all tabs</bdi>) در Firefox (<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi>) در همان چیزی جست‌وجو می‌کنند که همین حالا باز است.
+
+</QuickAnswer>
+
+<InstallCta>هر زبانه‌ای را، باز یا ذخیره‌شده یا بسته‌شده، با یک کلید پیدا کنید. رایگان برای Chrome و Edge و Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="جست‌وجو در همه‌چیز با Ctrl+K">
+
+جست‌وجوی زبانه‌های هر مرورگر فقط چیزی را می‌شناسد که همین حالا در همان مرورگر باز است. اما زبانه‌ای که لازم دارید اغلب جای دیگری است: در پنجره‌ای که دیروز ذخیره کرده‌اید، یا پنجره‌ای که یک ساعت پیش بسته‌اید. TabMerger همهٔ این‌ها را از یک کادر جست‌وجو می‌کند:
+
+1. TabMerger را باز کنید و <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> را بزنید.
+2. بخشی از عنوان یا نشانی را تایپ کنید. نتیجه‌ها زبانه‌های باز، ذخیره‌شده و اخیراً بسته‌شده را با هم نشان می‌دهند و کنار هر کدام نوشته شده که کجاست.
+3. با کلیدهای جهت‌نما و <bdi dir="ltr"><Kbd>Enter</Kbd></bdi> یکی را انتخاب کنید.
+
+همهٔ فیلترها، ترتیب نتیجه‌ها و نمایی که زبانه‌های نامرتبط را پنهان یا کم‌رنگ می‌کند در [جست‌وجو در همهٔ زبانه‌ها با TabMerger](/blog/search-all-your-tabs-with-tabmerger) توضیح داده شده است.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="جست‌وجوی TabMerger، باز و خالی، با فهرست فیلترهای group: و window: و tag: و closed:، پوستهٔ روشن" darkAlt="جست‌وجوی TabMerger، باز و خالی، با فهرست فیلترهای group: و window: و tag: و closed:، پوستهٔ تیره" boxes={[{ id: 'search-input', label: 'جست‌وجو' }]} source="TabMerger 3.16.1"><bdi dir="ltr">Ctrl+K</bdi> جست‌وجو را باز می‌کند و فیلترها پیش از تایپ کردن فهرست می‌شوند.</ThemedScreenshot>
+
+</Section>
+
+<Section id="filters" title="کدام فیلترها جست‌وجو را محدود می‌کنند؟">
+
+جست‌وجو را با یک فیلتر شروع کنید تا مستقیم به جای درست بروید:
+
+<ComparisonTable
+  head={['فیلتر', 'چه چیزی پیدا می‌کند']}
+  rows={[
+    [<bdi dir="ltr"><code>group:"Work"</code></bdi>, 'زبانه‌های گروهی که نامش «Work» دارد'],
+    [<bdi dir="ltr"><code>window:"Docs"</code></bdi>, 'زبانه‌های پنجره‌ای که نامش «Docs» دارد'],
+    [<bdi dir="ltr"><code>tag:Sprint</code></bdi>, 'زبانه‌های گروه زبانه‌ای در Chrome که برچسبش «Sprint» دارد'],
+    [<bdi dir="ltr"><code>closed:</code></bdi>, 'فقط زبانه‌های اخیراً بسته‌شده'],
+  ]}
+/>
+
+فیلتر را با کلمه ترکیب کنید: <bdi dir="ltr">`group:"Work" pull`</bdi> زبانهٔ درخواست ادغام (<bdi dir="ltr">pull request</bdi>) را در گروه Work پیدا می‌کند، حتی میان صدها زبانه. اگر بعد از نام کلمه‌ای اضافه می‌کنید، نام را در گیومه بگذارید؛ فیلتر بدون گیومه باقی سطر را برمی‌دارد.
+
+<Carousel label="جست‌وجوهای فیلترشده" steps={[{ title: 'فیلتر group:' }, { title: 'فیلتر tag:' }]}>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-group-filter" alt="جست‌وجوی group:&quot;Work&quot; pull در TabMerger که زبانهٔ ذخیره‌شدهٔ Pull requests را در گروه Work پیدا می‌کند، پوستهٔ روشن" darkAlt="جست‌وجوی group:&quot;Work&quot; pull در TabMerger که زبانهٔ ذخیره‌شدهٔ Pull requests را در گروه Work پیدا می‌کند، پوستهٔ تیره" boxes={[{ id: 'search-input', label: 'فیلتر گروه' }]} source="TabMerger 3.16.1">یک گروه، یک کلمه: همان زبانهٔ ذخیره‌شده‌ای که می‌خواستید.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-tag-filter" alt="جست‌وجوی tag:Sprint در TabMerger که سه زبانهٔ باز گروه زبانهٔ Sprint در Chrome را فهرست می‌کند، پوستهٔ روشن" darkAlt="جست‌وجوی tag:Sprint در TabMerger که سه زبانهٔ باز گروه زبانهٔ Sprint در Chrome را فهرست می‌کند، پوستهٔ تیره" boxes={[{ id: 'search-input', label: 'tag:Sprint' }]} source="TabMerger 3.16.1"><bdi dir="ltr">tag:</bdi> زبانه‌های یک گروه زبانه در Chrome را پیدا می‌کند.</ThemedScreenshot>
+</Carousel>
+
+زبانه‌های اخیراً بسته‌شده در طرح رایگان ۲ روز و در [Pro](/pricing) تا ۳۰ روز نگه داشته می‌شوند، پس <bdi dir="ltr">`closed:`</bdi> در صورت نیاز تا چند هفته عقب می‌رود.
+
+</Section>
+
+<Section id="builtin" title="بدون افزونه چطور در زبانه‌های باز جست‌وجو کنیم؟">
+
+هر مرورگری می‌تواند در زبانه‌هایی که همین حالا باز هستند جست‌وجو کند:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+- <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi> (در Mac، <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi>) را بزنید تا **جستجوی زبانه‌ها** (<bdi dir="ltr">Tab Search</bdi>) باز شود، کلیدواژه‌ها را تایپ کنید و یک زبانه را انتخاب کنید. هر ردیف دکمهٔ بستن هم دارد.
+- یا در نوار نشانی <bdi dir="ltr">`@tabs`</bdi> را تایپ کنید، <bdi dir="ltr"><Kbd>Tab</Kbd></bdi> یا <bdi dir="ltr"><Kbd>Space</Kbd></bdi> را بزنید و ادامه دهید.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+منوهای Edge 158 گزینهٔ <bdi dir="ltr">**Search tabs**</bdi> (جست‌وجوی زبانه‌ها) را دارند، اما فهرست میان‌برهای صفحه‌کلید Microsoft هیچ کلیدی برایش ذکر نمی‌کند. وقتی زبانه‌ها زیادند، <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd></bdi> شما را بر اساس جایگاه به یک زبانه می‌برد و <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>9</Kbd></bdi> به آخرین زبانه.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi> (در Mac، <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi>) را بزنید تا **فهرست کردن همهٔ زبانه‌ها** (<bdi dir="ltr">List all tabs</bdi>) باز شود و در آن جست‌وجو کنید.
+- نوار نشانی هم میان میان‌برهای جست‌وجویش یک حالت جست‌وجوی **زبانه‌ها** دارد.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>این ابزارها فقط زبانه‌هایی را می‌بینند که همین حالا در همان مرورگر باز هستند. زبانه‌ای که بسته‌اید یا جای دیگری ذخیره کرده‌اید پیدا نمی‌شود.</Catch>
+
+کلیدهای بیشتر در فهرست [میان‌برهای صفحه‌کلید برای زبانه‌ها](/blog/tab-keyboard-shortcuts) آمده است.
+
+</Section>
+
+<Section id="tips" title="چطور زبانه‌ها را دفعهٔ بعد آسان‌تر پیدا کنیم؟">
+
+- **بر اساس کار گروه‌بندی کنید.** گروه‌های نام‌دار «یکی از ۲۰۰ زبانه» را به «گروه Work» تبدیل می‌کنند. [روال ما برای زبانه‌های بیش از حد](/blog/manage-too-many-tabs) روشش را نشان می‌دهد.
+- **آنچه تمام شده را ببندید،** البته بعد از ذخیره کردن. زبانه‌های باز کمتر یعنی فهرست نتیجه‌های کوتاه‌تر.
+- **نام زبانه‌های مهم را عوض کنید.** TabMerger اجازه می‌دهد به زبانهٔ ذخیره‌شده عنوان دلخواه بدهید تا با کلمه‌ای که بعداً جست‌وجو می‌کنید جور دربیاید.
+
+<InstallCta>رایگان برای Chrome و Edge و Firefox. برای شروع به حساب کاربری نیاز نیست.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="پرسش‌های متداول">
+
+<Faq items={post.faq} />
+
+</Section>

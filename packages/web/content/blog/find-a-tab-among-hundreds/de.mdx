@@ -1,0 +1,187 @@
+export const post = {
+  slug: 'find-a-tab-among-hundreds',
+  title: 'So findest du einen Tab unter Hunderten',
+  navTitle: 'Einen Tab unter Hunderten finden',
+  seoTitle: 'Offene Tabs durchsuchen in Chrome, Edge und Firefox',
+  description:
+    'Offene Tabs in Sekunden durchsuchen: die eingebaute Tab-Suche in Chrome, Edge und Firefox und Ctrl+K in TabMerger, das offene, gespeicherte und geschlossene Tabs auf einmal findet, mit Filtern wie group: und closed:.',
+  shareSummary: 'Offene Tabs in Chrome, Edge und Firefox durchsuchen, auch gespeicherte und geschlossene.',
+  dek: 'Schluss mit dem Absuchen winziger Tabs. Ein Tastenkürzel, ein paar Buchstaben des Titels, und du bist da.',
+  published: '2026-11-29',
+  updated: '2026-11-29',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Ctrl+Shift+A öffnet in Chrome die Tab-Suche.',
+      source: 'Chrome-Hilfe',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Firefox 159 belegt Ctrl+Shift+A mit einer Liste aller Tabs.', source: 'Tastenbelegung von Firefox 159' },
+    { text: 'Ctrl+K in TabMerger durchsucht offene, gespeicherte und kürzlich geschlossene Tabs zusammen.', source: 'TabMerger 3.16.1' },
+    { text: 'Filter in TabMerger: group:, window:, tag: und closed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Wie durchsuche ich meine offenen Tabs?',
+      answer:
+        'Drück in TabMerger Ctrl+K und tippe los: Die Suche umfasst offene, gespeicherte und kürzlich geschlossene Tabs zusammen. Eingebaut hat Chrome die Tab-Suche (Ctrl+Shift+A oder @tabs in der Adressleiste), und Firefox listet mit Ctrl+Shift+A alle Tabs auf.',
+    },
+    {
+      question: 'Gibt es ein Tastenkürzel für die Tab-Suche?',
+      answer: 'Ctrl+Shift+A in Chrome und Firefox (⌘+Shift+A in Chrome auf dem Mac) und Ctrl+K in TabMerger. Die Tastenkürzel-Liste von Microsoft nennt für die Tab-Suche in Edge keine Taste.',
+    },
+    {
+      question: 'Kann ich Tabs durchsuchen, die ich schon geschlossen habe?',
+      answer: 'Ja, in TabMerger: Beginne die Suche mit closed:, dann durchsucht sie nur kürzlich geschlossene Tabs. In der kostenlosen Version bleiben sie 2 Tage erhalten, mit Pro 30.',
+    },
+    {
+      question: 'Kann ich Tabs auf meinen anderen Geräten durchsuchen?',
+      answer:
+        'TabMerger Pro synchronisiert deine gespeicherten Gruppen Ende-zu-Ende-verschlüsselt zwischen deinen Geräten, sodass dasselbe Ctrl+K sie überall findet. Unsere Anleitung zum Übertragen von Tabs auf einen anderen Computer erklärt die eingebauten Möglichkeiten.',
+      link: { text: 'Übertragen von Tabs auf einen anderen Computer', href: '/blog/move-tabs-between-computers' },
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'TabMerger-Suche geöffnet und leer, mit den Filtern group:, window:, tag: und closed:, helles Design' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'TabMerger-Suche geöffnet und leer, mit den Filtern group:, window:, tag: und closed:, dunkles Design' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp', alt: 'TabMerger-Suche nach group:"Work" pull, die den gespeicherten Tab Pull requests in der Gruppe Work findet, helles Design' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-dark.webp', alt: 'TabMerger-Suche nach group:"Work" pull, die den gespeicherten Tab Pull requests in der Gruppe Work findet, dunkles Design' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-light.webp', alt: 'TabMerger-Suche nach tag:Sprint mit den drei offenen Tabs der Chrome-Tabgruppe Sprint, helles Design' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-dark.webp', alt: 'TabMerger-Suche nach tag:Sprint mit den drei offenen Tabs der Chrome-Tabgruppe Sprint, dunkles Design' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-21',
+      note: 'Die Firefox-Angaben stammen aus den Tastendefinitionen und Menütexten von Firefox 159.0.1 selbst; diese Seite hat unsere automatische Prüfung blockiert.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp' },
+  ogImage: { src: '/blog/find-a-tab-among-hundreds/og.png', alt: '„How to find one tab among hundreds“: eine TabMerger-Anleitung mit einer gefilterten Tab-Suche' },
+  toc: [
+    { id: 'quick', label: 'Kurze Antwort' },
+    { id: 'tabmerger', label: 'Alles durchsuchen mit Ctrl+K' },
+    { id: 'filters', label: 'Filter, die eingrenzen' },
+    { id: 'builtin', label: 'Eingebaute Tab-Suche' },
+    { id: 'tips', label: 'Tabs leichter wiederfinden' },
+    { id: 'faq', label: 'Häufige Fragen' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Eingebaute Tab-Suche',
+    values: { chrome: 'Ctrl+Shift+A oder @tabs', edge: 'Search tabs (kein Tastenkürzel angegeben)', firefox: 'Ctrl+Shift+A' },
+  },
+}
+
+<QuickAnswer>
+
+Drück in [TabMerger](/features) <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> auf dem Mac) und tippe ein paar Buchstaben: Es findet den Tab, ob er **offen, in einer Gruppe gespeichert oder kürzlich geschlossen** ist, und Filter wie `group:` und `closed:` grenzen Hunderte Tabs auf einen ein. Eingebaut durchsuchen die **Tab-Suche** („Tab Search“) von Chrome (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) und **Alle Tabs auflisten** („List all tabs“) in Firefox (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) das, was gerade offen ist.
+
+</QuickAnswer>
+
+<InstallCta>Finde jeden Tab, ob offen, gespeichert oder geschlossen, mit einem Tastendruck. Kostenlos für Chrome, Edge und Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Alles durchsuchen mit Ctrl+K">
+
+Die Tab-Suche eines Browsers kennt nur das, was gerade in diesem Browser offen ist. Der Tab, den du brauchst, ist aber oft woanders: in einem Fenster, das du gestern gespeichert hast, oder in einem, das du vor einer Stunde geschlossen hast. TabMerger durchsucht all das aus einem einzigen Feld:
+
+1. Öffne TabMerger und drück <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+2. Tippe einen Teil des Titels oder der Adresse. Die Ergebnisse zeigen offene, gespeicherte und kürzlich geschlossene Tabs zusammen, jeweils mit dem Hinweis, wo sie liegen.
+3. Wähle einen mit den Pfeiltasten und <Kbd>Enter</Kbd>.
+
+Alle Filter, die Reihenfolge der Treffer und die Ansicht zum Ausblenden oder Abblenden erklärt [Alle Tabs mit TabMerger durchsuchen](/blog/search-all-your-tabs-with-tabmerger).
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="TabMerger-Suche geöffnet und leer, mit den Filtern group:, window:, tag: und closed:, helles Design" darkAlt="TabMerger-Suche geöffnet und leer, mit den Filtern group:, window:, tag: und closed:, dunkles Design" boxes={[{ id: 'search-input', label: 'Suche' }]} source="TabMerger 3.16.1">Ctrl+K öffnet die Suche und zeigt die Filter, bevor du tippst.</ThemedScreenshot>
+
+</Section>
+
+<Section id="filters" title="Welche Filter grenzen die Suche ein?">
+
+Beginne die Suche mit einem Filter, um direkt an der richtigen Stelle zu landen:
+
+<ComparisonTable
+  head={['Filter', 'Findet']}
+  rows={[
+    [<code>group:"Work"</code>, 'Tabs in einer Gruppe, deren Name „Work“ enthält'],
+    [<code>window:"Docs"</code>, 'Tabs in einem Fenster, dessen Name „Docs“ enthält'],
+    [<code>tag:Sprint</code>, 'Tabs in einer Chrome-Tabgruppe, deren Bezeichnung „Sprint“ enthält'],
+    [<code>closed:</code>, 'Nur deine kürzlich geschlossenen Tabs'],
+  ]}
+/>
+
+Kombiniere einen Filter mit Wörtern: `group:"Work" pull` findet den Pull-Request-Tab in deiner Gruppe Work, auch unter Hunderten. Setz den Namen in Anführungszeichen, wenn danach noch Wörter folgen; ein Filter ohne Anführungszeichen nimmt den Rest der Zeile.
+
+<Carousel label="Gefilterte Suchen" steps={[{ title: 'Filter group:' }, { title: 'Filter tag:' }]}>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-group-filter" alt="TabMerger-Suche nach group:&quot;Work&quot; pull, die den gespeicherten Tab Pull requests in der Gruppe Work findet, helles Design" darkAlt="TabMerger-Suche nach group:&quot;Work&quot; pull, die den gespeicherten Tab Pull requests in der Gruppe Work findet, dunkles Design" boxes={[{ id: 'search-input', label: 'Gruppenfilter' }]} source="TabMerger 3.16.1">Eine Gruppe, ein Wort: der gespeicherte Tab, den du gesucht hast.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-tag-filter" alt="TabMerger-Suche nach tag:Sprint mit den drei offenen Tabs der Chrome-Tabgruppe Sprint, helles Design" darkAlt="TabMerger-Suche nach tag:Sprint mit den drei offenen Tabs der Chrome-Tabgruppe Sprint, dunkles Design" boxes={[{ id: 'search-input', label: 'tag:Sprint' }]} source="TabMerger 3.16.1">tag: findet die Tabs einer Chrome-Tabgruppe.</ThemedScreenshot>
+</Carousel>
+
+Kürzlich geschlossene Tabs bleiben in der kostenlosen Version 2 Tage erhalten und mit [Pro](/pricing) 30, sodass `closed:` bei Bedarf Wochen zurückreicht.
+
+</Section>
+
+<Section id="builtin" title="Wie durchsuche ich offene Tabs ohne Erweiterung?">
+
+Jeder Browser kann die Tabs durchsuchen, die gerade offen sind:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+- Drück <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> auf dem Mac), um die **Tab-Suche** („Tab Search“) zu öffnen, gib Suchbegriffe ein und wähle einen Tab. Jede Zeile hat außerdem eine Schließen-Schaltfläche.
+- Oder tippe `@tabs` in die Adressleiste, drück <Kbd>Tab</Kbd> oder <Kbd>Space</Kbd> und tippe weiter.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Die Menüs von Edge 158 enthalten **Search tabs** (Tabs durchsuchen), aber die Tastenkürzel-Liste von Microsoft nennt dafür keine Taste. Bei vielen Tabs springst du mit <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> zu einem Tab nach seiner Position und mit <Kbd>Ctrl</Kbd>+<Kbd>9</Kbd> zum letzten.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- Drück <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> auf dem Mac), um **Alle Tabs auflisten** („List all tabs“) zu öffnen und sie zu durchsuchen.
+- Die Adressleiste hat unter ihren Suchkürzeln außerdem einen Suchmodus **Tabs**.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>Diese Suchen sehen nur die Tabs, die gerade in diesem Browser offen sind. Ein Tab, den du geschlossen oder anderswo gespeichert hast, taucht nicht auf.</Catch>
+
+Weitere Tasten findest du in unserer [Übersicht der Tastenkürzel für Tabs](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="tips" title="Wie finde ich Tabs beim nächsten Mal leichter?">
+
+- **Nach Aufgabe gruppieren.** Benannte Gruppen machen aus „einem von 200 Tabs“ „die Gruppe Work“. Unsere [Routine gegen zu viele Tabs](/blog/manage-too-many-tabs) zeigt, wie das geht.
+- **Schließ, was erledigt ist,** nachdem du es gespeichert hast. Weniger offene Tabs heißt kürzere Trefferlisten.
+- **Benenne die wichtigen Tabs um.** In TabMerger kannst du einem gespeicherten Tab einen eigenen Titel geben, damit er zu dem Wort passt, nach dem du suchen wirst.
+
+<InstallCta>Kostenlos für Chrome, Edge und Firefox. Zum Start ist kein Konto nötig.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Häufige Fragen">
+
+<Faq items={post.faq} />
+
+</Section>
