@@ -1,0 +1,270 @@
+export const post = {
+  slug: 'restore-tabs-after-crash',
+  title: 'Как вернуть вкладки после сбоя, обновления или случайного закрытия браузера',
+  navTitle: 'Как вернуть вкладки после сбоя',
+  seoTitle: 'Как восстановить вкладки после сбоя в Chrome, Edge и Firefox',
+  description:
+    'Браузер закрылся и унёс с собой все вкладки? Чтобы восстановить вкладки после сбоя, пройдите шаги по порядку: повторный запуск, история, другие устройства, а затем настройки, которые не дадут этому повториться.',
+  shareSummary: 'Вкладки пропали после сбоя или перезапуска? Шаги восстановления по порядку, для каждого браузера.',
+  dek: 'Сначала попробуйте быстрые способы, по порядку. Большинство потерянных сессий возвращается меньше чем за минуту.',
+  published: '2026-11-24',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'По справке Chrome о сбоях, Ctrl+Shift+T снова открывает вкладки, которые были у вас открыты.',
+      source: 'Справка Chrome',
+      href: 'https://support.google.com/chrome/answer/142063',
+    },
+    { text: 'В меню «Журнал» в Firefox есть пункт «Восстановить предыдущую сессию».', source: 'Firefox 159' },
+    {
+      text: 'Chrome показывает вкладки с других устройств, только если включена синхронизация «История и вкладки».',
+      source: 'Справка Chrome',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'На странице истории Edge есть свой список «Recently closed».', source: 'edge://history, Edge 157' },
+  ],
+  faq: [
+    {
+      question: 'Как вернуть вкладки после закрытия Chrome?',
+      answer:
+        'Снова откройте Chrome и нажмите Ctrl+Shift+T (⌘+Shift+T на Mac), при необходимости несколько раз. Если вкладки не вернулись, откройте историю сочетанием Ctrl+H и посмотрите недавно закрытые.',
+    },
+    {
+      question: 'Почему мои вкладки не восстановились?',
+      answer:
+        'Обычно потому, что при запуске открывается новая вкладка, вкладки были в приватном окне, перед выходом вы закрывали окна по одному или открыли другой профиль.',
+    },
+    {
+      question: 'Можно ли восстановить вчерашние вкладки?',
+      answer: 'Не как сессию, но каждая посещённая страница есть в истории (Ctrl+H), если вы её не очищали. Надёжный способ — сохранённая сессия или автосохранение.',
+    },
+    {
+      question: 'Как сделать, чтобы это не повторилось?',
+      answer: 'Включите восстановление при запуске и сохраняйте открытые вкладки перед рискованными моментами вроде обновлений. В нашем руководстве о сохранении всех открытых вкладок описано и то и другое.',
+      link: { text: 'сохранении всех открытых вкладок', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Страница истории Edge с пунктами All, Recently closed и Tabs from other devices на боковой панели' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Настройки Chrome, раздел On startup (Запуск Chrome), выбран вариант Continue where you left off (Ранее открытые вкладки)' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Настройки Edge, раздел Start, home, and new tab page, выбран вариант Open tabs from the previous session' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Настройки Firefox, раздел Home and startup (Домашняя страница и запуск), отмечен пункт Open previous windows and tabs (Открывать предыдущие окна и вкладки)' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-light.webp', alt: 'Настройки TabMerger, раздел Data (Данные): Auto-save open tabs (Автосохранение открытых вкладок) включено, расписание Every 30 minutes (Каждые 30 минут), светлая тема' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-dark.webp', alt: 'Настройки TabMerger, раздел Data (Данные): Auto-save open tabs (Автосохранение открытых вкладок) включено, расписание Every 30 minutes (Каждые 30 минут), тёмная тема' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-light.webp', alt: 'TabMerger, Recently closed (Недавно закрытые) за сегодня: три закрытые вкладки и время закрытия каждой, светлая тема' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-dark.webp', alt: 'TabMerger, Recently closed (Недавно закрытые) за сегодня: три закрытые вкладки и время закрытия каждой, тёмная тема' },
+  ],
+  tags: ['restore-closed-tabs', 'session-management', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-20',
+      note: 'Названия меню Firefox взяты из самого Firefox 159.0.1: эта страница заблокировала нашу автоматическую проверку.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/restore-tabs-after-crash/tm-recently-closed-light.webp' },
+  ogImage: { src: '/blog/restore-tabs-after-crash/og.png', alt: 'Титульная карточка «How to get your tabs back after a crash, an update or an accidental quit»: руководство TabMerger со списком недавно закрытых вкладок' },
+  toc: [
+    { id: 'quick', label: 'Коротко' },
+    { id: 'first', label: '1. Перезапуск и Ctrl+Shift+T' },
+    { id: 'recover', label: '2. История в каждом браузере' },
+    { id: 'devices', label: '3. Другие устройства' },
+    { id: 'why', label: 'Почему вкладки не вернулись' },
+    { id: 'prevent', label: 'В следующий раз' },
+    { id: 'faq', label: 'Частые вопросы' },
+  ],
+  browserSections: ['first', 'recover', 'devices', 'prevent'],
+  browserFact: {
+    label: 'История',
+    values: { chrome: 'chrome://history', edge: 'edge://history', firefox: 'Ctrl+Shift+H (Библиотека)' },
+  },
+}
+
+<QuickAnswer>
+
+Снова откройте браузер и нажимайте <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> на Mac) снова и снова, пока окна не вернутся. Если не помогло, откройте историю (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) и восстановите их из **недавно закрытых**; в Firefox выберите **Журнал → Восстановить предыдущую сессию** (History → Restore Previous Session). Чего-то всё ещё нет? Проверьте **вкладки с других устройств**, а затем поищите сами страницы в истории. В следующий раз доверьте [TabMerger](/features) автоматически сохранять открытые вкладки по расписанию, и сбой никогда не будет стоить вам больше нескольких минут.
+
+</QuickAnswer>
+
+<InstallCta>Больше ни одного потерянного окна: автоматически сохраняйте открытые вкладки по расписанию. Бесплатно для Chrome, Edge и Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="first" title="1. Снова откройте браузер и нажмите Ctrl+Shift+T">
+
+Не открывайте сначала новые вкладки: начните с чистого окна, чтобы вернуть именно то, что лежит в списке последних закрытых.
+
+<BrowserPanels section="first">
+<BrowserPanel browser="chrome">
+
+1. Запустите Chrome. Если он предложит восстановить страницы, согласитесь.
+2. Нажмите <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> на Mac). Именно это советует справка Chrome о сбоях: сочетание снова открывает вкладки, которые были открыты раньше.
+3. Нажмите его ещё раз для каждого потерянного окна. Chrome открывает вкладки и окна в том порядке, в котором их закрыли.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Запустите Edge. Если он предложит восстановить страницы, согласитесь.
+2. Нажмите <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> на Mac), чтобы снова открыть последнюю закрытую вкладку, и ещё раз, чтобы идти дальше назад.
+3. Пропало целое окно? Сразу переходите к шагу 2, к истории.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Запустите Firefox. Если он предложит восстановить страницы, согласитесь.
+2. Нажмите <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> на Mac). В Firefox 159 это сочетание привязано к команде, которая восстанавливает последнюю закрытую вкладку, окно или сессию, поэтому после перезапуска оно может вернуть всю предыдущую сессию.
+3. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> снова открывает закрытое окно; нажмите его по разу на каждое окно.
+
+</BrowserPanel>
+</BrowserPanels>
+
+Полный список сочетаний клавиш — в нашем [справочнике горячих клавиш для вкладок](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="recover" title="2. Восстановите из истории">
+
+Если сочетание ничего не вернуло, история браузера всё ещё помнит, что было открыто.
+
+<BrowserPanels section="recover">
+<BrowserPanel browser="chrome">
+
+1. Нажмите **⋮ → История** (History). В подменю перечислены недавно закрытые вкладки и окна.
+2. Нажмите на окно, чтобы снова открыть все его вкладки.
+3. Ничего нет? Нажмите <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> и найдите страницу, которую помните.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Нажмите <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>, чтобы открыть **историю**.
+2. Выберите **Recently closed** (недавно закрытые) и откройте потерянное окно или вкладки.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Страница истории Edge с пунктами All, Recently closed и Tabs from other devices на боковой панели" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60">Страница истории Edge с пунктом «Recently closed» на боковой панели.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Откройте меню **Журнал** (History; нажмите <Kbd>Alt</Kbd>, чтобы показать строку меню) или **☰ → Журнал**.
+2. Выберите **Восстановить предыдущую сессию** (Restore Previous Session), чтобы вернуть все окна с прошлого раза.
+3. Или выберите нужное в **Недавно закрытые окна** и **Недавно закрытые вкладки**.
+
+Если сбой случился в самом Firefox, он может открыть страницу **Восстановление сессии** (Restore Session) с сообщением «Извините. Нам не удалось восстановить ваши страницы.». Кнопка **Показать предыдущие вкладки** (View Previous Tabs) позволяет снять отметку с вкладки, которая может вызывать сбой, прежде чем нажать **Восстановить сессию**.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with Restore Previous Session. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="devices" title="3. Проверьте другие устройства">
+
+Если вы были авторизованы и синхронизация работала, потерянные вкладки, возможно, ещё видны на другом устройстве.
+
+<BrowserPanels section="devices">
+<BrowserPanel browser="chrome">
+
+Chrome показывает вкладки с других устройств в истории, но только при включённой синхронизации **История и вкладки** (History and tabs): **Настройки → Я и Google** (Settings → You and Google), выберите имя своего аккаунта и включите **История и вкладки**.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Откройте историю (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) и выберите на боковой панели **Tabs from other devices** (вкладки с других устройств).
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Откройте **Firefox View** и загляните в раздел **Вкладки с других устройств** (Tabs from other devices). Для этого нужен Firefox Sync с включённой синхронизацией открытых вкладок.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox View, Tabs from other devices. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="why" title="Почему мои вкладки не восстановились?">
+
+- **При запуске открывается новая вкладка.** Только вариант запуска с «предыдущей сессией» открывает вкладки при каждом старте; в следующем разделе показано, где он находится в вашем браузере.
+- **Вкладки были в приватном окне.** Окна Incognito и InPrivate никогда не восстанавливаются.
+- **Вы закрывали окна по одному.** При запуске возвращается то, что было открыто в момент *выхода* из браузера. Окна, закрытые раньше, есть только в истории.
+- **Вы открыли другой профиль.** У каждого профиля своя сессия; проверьте значок профиля.
+
+</Section>
+
+<Section id="prevent" title="Сделайте так, чтобы в следующий раз этого не случилось">
+
+Включите восстановление при запуске прямо сейчас: одна эта настройка защищает от обновлений и перезапусков.
+
+<BrowserPanels section="prevent">
+<BrowserPanel browser="chrome">
+
+**Настройки → Запуск Chrome → Ранее открытые вкладки** (Settings → On startup → Continue where you left off). Или вставьте `chrome://settings/onStartup` в адресную строку.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Настройки Chrome, раздел On startup (Запуск Chrome), выбран вариант Continue where you left off (Ранее открытые вкладки)" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">Раздел «Запуск Chrome» настроен так, чтобы открывать последний сеанс.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+**Параметры → Start, home, and new tab page → On startup → Open tabs from the previous session**. Или вставьте `edge://settings/startHomeNTP` в адресную строку.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Настройки Edge, раздел Start, home, and new tab page, выбран вариант Open tabs from the previous session" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">Раздел «Start, home, and new tab page» в Edge настроен так, чтобы открывать последний сеанс.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+**Настройки → Домашняя страница и запуск → Запуск → Открывать предыдущие окна и вкладки** (Settings → Home and startup → Startup → Open previous windows and tabs). Или вставьте `about:preferences#home` в адресную строку.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Настройки Firefox, раздел Home and startup (Домашняя страница и запуск), отмечен пункт Open previous windows and tabs (Открывать предыдущие окна и вкладки)" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Настройки Firefox в разделе «Домашняя страница и запуск», отмечен пункт «Открывать предыдущие окна и вкладки».</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+Восстановление при запуске не поможет с окном, которое вы случайно закрыли на прошлой неделе. Для этого нужна сохранённая копия: добавьте окна в закладки или воспользуйтесь [менеджером сессий](/blog/browser-session-manager). В руководстве о [сохранении всех открытых вкладок](/blog/save-all-open-tabs) мы сравниваем варианты.
+
+[TabMerger](/features), наше бесплатное расширение для Chrome, Edge и Firefox, может сохранять вкладки за вас. **Настройки → Данные → Автосохранение открытых вкладок** сохраняет открытые вкладки группой по расписанию (от каждых 15 минут до ежедневно). **Недавно закрытые** хранит каждую закрытую вкладку и каждое окно, по дням: бесплатно 2 дня, с Pro 30. Как работают обе функции и как их настроить, рассказываем в статье [больше никогда не теряйте вкладки](/blog/never-lose-a-tab-again).
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Сохранение по расписанию и поиск закрытых вкладок" steps={[{ title: 'Автосохранение' }, { title: 'Недавно закрытые' }]}>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-auto-save-schedule" alt="Настройки TabMerger, раздел Data (Данные): Auto-save open tabs (Автосохранение открытых вкладок) включено, расписание Every 30 minutes (Каждые 30 минут), светлая тема" darkAlt="Настройки TabMerger, раздел Data (Данные): Auto-save open tabs (Автосохранение открытых вкладок) включено, расписание Every 30 minutes (Каждые 30 минут), тёмная тема" boxes={[{ id: 'schedule', label: 'Расписание' }]} source="TabMerger 3.16.1">Auto-save open tabs (Автосохранение открытых вкладок) каждые 30 минут: свежая копия открытых вкладок, что бы ни случилось с браузером.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-recently-closed" alt="TabMerger, Recently closed (Недавно закрытые) за сегодня: три закрытые вкладки и время закрытия каждой, светлая тема" darkAlt="TabMerger, Recently closed (Недавно закрытые) за сегодня: три закрытые вкладки и время закрытия каждой, тёмная тема" boxes={[{ id: 'today-row', label: 'Сегодня' }]} source="TabMerger 3.16.1">Recently closed (Недавно закрытые): вкладки, закрытые сегодня, и время закрытия каждой.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Бесплатно для Chrome, Edge и Firefox. Для начала аккаунт не нужен.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Частые вопросы">
+
+<Faq items={post.faq} />
+
+</Section>

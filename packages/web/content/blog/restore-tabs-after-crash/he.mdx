@@ -1,0 +1,270 @@
+export const post = {
+  slug: 'restore-tabs-after-crash',
+  title: 'איך מחזירים את הכרטיסיות אחרי קריסה, עדכון או סגירה בטעות',
+  navTitle: 'החזרת כרטיסיות אחרי קריסה',
+  seoTitle: 'שחזור כרטיסיות אחרי קריסה ב-Chrome, ב-Edge וב-Firefox',
+  description:
+    'הדפדפן נסגר ולקח איתו את כל הכרטיסיות? כך משחזרים כרטיסיות אחרי קריסה, צעד אחר צעד: פותחים מחדש, בודקים בהיסטוריה ובמכשירים אחרים, ואז מפעילים את ההגדרות שימנעו את זה בפעם הבאה.',
+  shareSummary: 'איבדתם כרטיסיות בקריסה או בהפעלה מחדש? שלבי השחזור לפי הסדר, לכל דפדפן.',
+  dek: 'מתחילים מהפתרונות המהירים, לפי הסדר. רוב הסשנים שאבדו חוזרים תוך פחות מדקה.',
+  published: '2026-11-24',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'לפי העזרה של Chrome בנושא קריסות, Ctrl+Shift+T פותח מחדש את הכרטיסיות שהיו פתוחות.',
+      source: 'העזרה של Chrome',
+      href: 'https://support.google.com/chrome/answer/142063',
+    },
+    { text: 'בתפריט ההיסטוריה של Firefox יש את האפשרות "שחזור הפעלה קודמת".', source: 'Firefox 159' },
+    {
+      text: 'Chrome מציג כרטיסיות ממכשירים אחרים רק כשהסנכרון של "היסטוריה וכרטיסיות" מופעל.',
+      source: 'העזרה של Chrome',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'בדף ההיסטוריה של Edge יש רשימת Recently closed משלו.', source: 'edge://history, Edge 157' },
+  ],
+  faq: [
+    {
+      question: 'איך מחזירים כרטיסיות אחרי ש-Chrome נסגר?',
+      answer:
+        'פותחים שוב את Chrome ולוחצים על Ctrl+Shift+T (או ⌘+Shift+T ב-Mac), כמה פעמים אם צריך. אם הכרטיסיות לא חוזרות, פותחים את ההיסטוריה עם Ctrl+H ומחפשים ברשימה של מה שנסגר לאחרונה.',
+    },
+    {
+      question: 'למה הכרטיסיות שלי לא שוחזרו?',
+      answer:
+        'בדרך כלל כי הגדרת ההפעלה פותחת דף כרטיסייה חדשה, הכרטיסיות היו בחלון פרטי, סגרתם את החלונות אחד אחד לפני היציאה, או שפתחתם פרופיל אחר.',
+    },
+    {
+      question: 'אפשר לשחזר כרטיסיות מאתמול?',
+      answer: 'לא כסשן, אבל כל דף שביקרתם בו נמצא בהיסטוריה (Ctrl+H), אלא אם מחקתם אותה. הדרך האמינה היא סשן שמור או שמירה אוטומטית.',
+    },
+    {
+      question: 'איך מונעים מזה לקרות שוב?',
+      answer: 'מפעילים את הגדרת ההפעלה ושומרים את הכרטיסיות הפתוחות לפני רגעים מסוכנים כמו עדכונים. המדריך שלנו לשמירת כל הכרטיסיות הפתוחות מסביר את שני הדברים.',
+      link: { text: 'שמירת כל הכרטיסיות הפתוחות', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'דף ההיסטוריה של Edge, ובסרגל הצד All, Recently closed ו-Tabs from other devices' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'ההגדרות של Chrome בקטע On startup (כשפותחים את הדפדפן), כשהאפשרות Continue where you left off (אני רוצה להמשיך מהמקום שבו הפסקתי) מסומנת' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'ההגדרות של Edge בקטע Start, home, and new tab page, כשהאפשרות Open tabs from the previous session מסומנת' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'ההגדרות של Firefox בקטע Home and startup (בית והפעלה), כשהאפשרות Open previous windows and tabs (פתיחת חלונות ולשוניות קודמות) מסומנת' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-light.webp', alt: 'ההגדרות של TabMerger בלשונית Data (נתונים): Auto-save open tabs (שמירה אוטומטית של כרטיסיות פתוחות) מופעלת, ולוח הזמנים מוגדר ל-Every 30 minutes (כל 30 דקות), ערכת נושא בהירה' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-dark.webp', alt: 'ההגדרות של TabMerger בלשונית Data (נתונים): Auto-save open tabs (שמירה אוטומטית של כרטיסיות פתוחות) מופעלת, ולוח הזמנים מוגדר ל-Every 30 minutes (כל 30 דקות), ערכת נושא כהה' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-light.webp', alt: 'הקטע Recently closed (נסגרו לאחרונה) ב-TabMerger להיום: שלוש כרטיסיות שנסגרו והשעה שבה כל אחת נסגרה, ערכת נושא בהירה' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-dark.webp', alt: 'הקטע Recently closed (נסגרו לאחרונה) ב-TabMerger להיום: שלוש כרטיסיות שנסגרו והשעה שבה כל אחת נסגרה, ערכת נושא כהה' },
+  ],
+  tags: ['restore-closed-tabs', 'session-management', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-20',
+      note: 'שמות התפריטים של Firefox נלקחו ישירות מ-Firefox 159.0.1; הדף הזה חסם את הבדיקה האוטומטית שלנו.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/restore-tabs-after-crash/tm-recently-closed-light.webp' },
+  ogImage: { src: '/blog/restore-tabs-after-crash/og.png', alt: 'כרטיס הכותרת "How to get your tabs back after a crash, an update or an accidental quit": מדריך של TabMerger, עם רשימה של כרטיסיות שנסגרו לאחרונה' },
+  toc: [
+    { id: 'quick', label: 'תשובה קצרה' },
+    { id: 'first', label: '1. פותחים מחדש, ואז Ctrl+Shift+T' },
+    { id: 'recover', label: '2. ההיסטוריה בכל דפדפן' },
+    { id: 'devices', label: '3. מכשירים אחרים' },
+    { id: 'why', label: 'למה הכרטיסיות לא חזרו' },
+    { id: 'prevent', label: 'בפעם הבאה' },
+    { id: 'faq', label: 'שאלות נפוצות' },
+  ],
+  browserSections: ['first', 'recover', 'devices', 'prevent'],
+  browserFact: {
+    label: 'היסטוריה',
+    values: { chrome: 'chrome://history', edge: 'edge://history', firefox: 'Ctrl+Shift+H (ספרייה)' },
+  },
+}
+
+<QuickAnswer>
+
+פותחים שוב את הדפדפן ולוחצים על <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> (או <bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> ב-Mac) שוב ושוב, עד שכל החלונות חוזרים. אם זה לא עובד, פותחים את ההיסטוריה (<bdi><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi>) ופותחים מחדש מתוך מה ש**נסגר לאחרונה**; ב-Firefox משתמשים ב-**היסטוריה ← שחזור הפעלה קודמת** (<bdi dir="ltr">History → Restore Previous Session</bdi>). עדיין חסר משהו? בודקים את **הכרטיסיות ממכשירים אחרים**, ואז מחפשים בהיסטוריה את הדפים עצמם. בפעם הבאה כדאי לתת ל-[TabMerger](/features) לשמור אוטומטית את הכרטיסיות הפתוחות לפי לוח זמנים, כך שקריסה לא תעלה לכם יותר מכמה דקות.
+
+</QuickAnswer>
+
+<InstallCta>לא מאבדים יותר אף חלון: שומרים אוטומטית את הכרטיסיות הפתוחות לפי לוח זמנים. חינם ל-Chrome, ל-Edge ול-Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="first" title="1. פותחים מחדש את הדפדפן ולוחצים על Ctrl+Shift+T">
+
+לא פותחים קודם כרטיסיות חדשות: מתחילים מחלון נקי, כדי לקבל בחזרה בדיוק את מה שיש ברשימת "נסגרו לאחרונה" של הדפדפן.
+
+<BrowserPanels section="first">
+<BrowserPanel browser="chrome">
+
+1. מפעילים את Chrome. אם הוא מציע לשחזר את הדפים, מאשרים.
+2. לוחצים על <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> (או <bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> ב-Mac). גם העזרה של Chrome בנושא קריסות מפנה לכאן: הקיצור פותח מחדש את הכרטיסיות שהיו פתוחות קודם.
+3. לוחצים על הקיצור שוב עבור כל חלון שאבד. Chrome פותח מחדש כרטיסיות וחלונות לפי הסדר שבו הם נסגרו.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. מפעילים את Edge. אם הוא מציע לשחזר את הדפים, מאשרים.
+2. לוחצים על <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> (או <bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> ב-Mac) כדי לפתוח מחדש את הכרטיסייה האחרונה שנסגרה, ושוב כדי להמשיך אחורה.
+3. חסר חלון שלם? עוברים ישר לשלב 2, ההיסטוריה.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. מפעילים את Firefox. אם הוא מציע לשחזר את הדפים, מאשרים.
+2. לוחצים על <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> (או <bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> ב-Mac). ב-Firefox 159 הקיצור מחובר לפקודה שמשחזרת את הכרטיסייה, החלון או הסשן האחרונים שנסגרו, כך שאחרי הפעלה מחדש הוא יכול להחזיר את כל הסשן הקודם.
+3. <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd></bdi> פותח מחדש חלון שנסגר; לוחצים פעם אחת לכל חלון.
+
+</BrowserPanel>
+</BrowserPanels>
+
+הרשימה המלאה של קיצורי המקשים נמצאת ב[מדריך קיצורי המקשים לכרטיסיות](/blog/tab-keyboard-shortcuts) שלנו.
+
+</Section>
+
+<Section id="recover" title="2. פותחים מחדש מההיסטוריה">
+
+גם אם הקיצור לא החזיר כלום, ההיסטוריה של הדפדפן עדיין יודעת מה היה פתוח.
+
+<BrowserPanels section="recover">
+<BrowserPanel browser="chrome">
+
+1. לוחצים על **⋮ ← היסטוריה** (<bdi dir="ltr">History</bdi>). בתפריט המשנה מופיעים כרטיסיות וחלונות שנסגרו לאחרונה.
+2. לוחצים על חלון כדי לפתוח מחדש את כל הכרטיסיות שלו.
+3. אין שם כלום? לוחצים על <bdi><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi> ומחפשים דף שאתם זוכרים.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. לוחצים על <bdi><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi> כדי לפתוח את **ההיסטוריה**.
+2. בוחרים ב-<bdi dir="ltr">**Recently closed**</bdi> (נסגרו לאחרונה) ופותחים מחדש את החלון או הכרטיסיות שאבדו.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="דף ההיסטוריה של Edge, ובסרגל הצד All, Recently closed ו-Tabs from other devices" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60">דף ההיסטוריה של Edge, עם <bdi dir="ltr">Recently closed</bdi> בסרגל הצד.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. פותחים את התפריט **היסטוריה** (<bdi dir="ltr">History</bdi>; לוחצים על <bdi><Kbd>Alt</Kbd></bdi> כדי להציג את שורת התפריטים) או **☰ ← היסטוריה**.
+2. בוחרים ב**שחזור הפעלה קודמת** (<bdi dir="ltr">Restore Previous Session</bdi>) כדי להחזיר את כל החלונות מהפעם הקודמת.
+3. או בוחרים מתוך **חלונות שנסגרו לאחרונה** ו**לשוניות שנסגרו לאחרונה**.
+
+אם Firefox עצמו קרס, ייתכן שייפתח דף **שחזור הפעלה** (<bdi dir="ltr">Restore Session</bdi>) עם ההודעה "אנו מצטערים, אך אירעה תקלה בעת שחזור הדפים שלך בחזרה.". האפשרות **הצגת הלשוניות הקודמות** (<bdi dir="ltr">View Previous Tabs</bdi>) מאפשרת לבטל את הסימון של כרטיסייה שאולי גורמת לקריסה, לפני שלוחצים על **שחזור הפעלה**.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with Restore Previous Session. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="devices" title="3. בודקים במכשירים האחרים">
+
+אם הייתם מחוברים והסנכרון היה פעיל, ייתכן שהכרטיסיות שאבדו עדיין מופיעות במכשיר אחר.
+
+<BrowserPanels section="devices">
+<BrowserPanel browser="chrome">
+
+Chrome מציג בהיסטוריה כרטיסיות ממכשירים אחרים, אבל רק כשהסנכרון של **היסטוריה וכרטיסיות** (<bdi dir="ltr">History and tabs</bdi>) מופעל: **הגדרות ← ההגדרות שלך ב-Google** (<bdi dir="ltr">Settings → You and Google</bdi>), בוחרים את שם החשבון ומפעילים את **היסטוריה וכרטיסיות**.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+פותחים את ההיסטוריה (<bdi><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi>) ובוחרים בסרגל הצד ב-<bdi dir="ltr">**Tabs from other devices**</bdi> (כרטיסיות ממכשירים אחרים).
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+פותחים את **Firefox View** ומחפשים תחת **לשוניות ממכשירים אחרים** (<bdi dir="ltr">Tabs from other devices</bdi>). צריך לשם כך את Firefox Sync, עם סנכרון של הכרטיסיות הפתוחות.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox View, Tabs from other devices. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="why" title="למה הכרטיסיות שלי לא שוחזרו?">
+
+- **הגדרת ההפעלה פותחת דף כרטיסייה חדשה.** רק אפשרות ההפעלה של "הסשן הקודם" פותחת מחדש את הכרטיסיות בכל הפעלה; בקטע הבא מוסבר איפה היא נמצאת בדפדפן שלכם.
+- **הכרטיסיות היו בחלון פרטי.** חלונות <bdi dir="ltr">Incognito</bdi> ו-<bdi dir="ltr">InPrivate</bdi> אף פעם לא משוחזרים.
+- **סגרתם את החלונות אחד אחד.** בהפעלה משוחזר מה שהיה פתוח כשהדפדפן *נסגר*. חלונות שסגרתם לפני כן נמצאים רק בהיסטוריה.
+- **פתחתם פרופיל אחר.** לכל פרופיל יש סשן משלו; כדאי לבדוק את סמל הפרופיל.
+
+</Section>
+
+<Section id="prevent" title="דואגים שזה לא יקרה בפעם הבאה">
+
+מפעילים עכשיו את הגדרת ההפעלה; השינוי האחד הזה מכסה עדכונים והפעלות מחדש.
+
+<BrowserPanels section="prevent">
+<BrowserPanel browser="chrome">
+
+**הגדרות ← כשפותחים את הדפדפן ← אני רוצה להמשיך מהמקום שבו הפסקתי** (<bdi dir="ltr">Settings → On startup → Continue where you left off</bdi>). אפשר גם להדביק את `chrome://settings/onStartup` בשורת הכתובת.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="ההגדרות של Chrome בקטע On startup (כשפותחים את הדפדפן), כשהאפשרות Continue where you left off (אני רוצה להמשיך מהמקום שבו הפסקתי) מסומנת" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">ההגדרה On startup (כשפותחים את הדפדפן) ב-Chrome, כשהיא מוגדרת לפתוח מחדש את הסשן האחרון.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+**הגדרות** ← <bdi dir="ltr">**Start, home, and new tab page → On startup → Open tabs from the previous session**</bdi>. אפשר גם להדביק את `edge://settings/startHomeNTP` בשורת הכתובת.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="ההגדרות של Edge בקטע Start, home, and new tab page, כשהאפשרות Open tabs from the previous session מסומנת" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">ההגדרות Start, home, and new tab page ב-Edge, כשהן מוגדרות לפתוח מחדש את הסשן האחרון.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+**הגדרות ← בית והפעלה ← הפעלה ← פתיחת חלונות ולשוניות קודמות** (<bdi dir="ltr">Settings → Home and startup → Startup → Open previous windows and tabs</bdi>). אפשר גם להדביק את `about:preferences#home` בשורת הכתובת.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="ההגדרות של Firefox בקטע Home and startup (בית והפעלה), כשהאפשרות Open previous windows and tabs (פתיחת חלונות ולשוניות קודמות) מסומנת" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">ההגדרות "בית והפעלה" של Firefox, כשהאפשרות "פתיחת חלונות ולשוניות קודמות" מסומנת.</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+שחזור בהפעלה עדיין לא יעזור עם חלון שסגרתם בטעות בשבוע שעבר. בשביל זה צריך עותק שמור: שומרים את החלונות כסימניות, או משתמשים ב[מנהל סשנים](/blog/browser-session-manager). המדריך שלנו ל[שמירת כל הכרטיסיות הפתוחות](/blog/save-all-open-tabs) משווה בין האפשרויות.
+
+[TabMerger](/features), התוסף החינמי שלנו ל-Chrome, ל-Edge ול-Firefox, יכול לשמור בשבילכם. **הגדרות ← נתונים ← שמירה אוטומטית של כרטיסיות פתוחות** שומרת את הכרטיסיות הפתוחות כקבוצה לפי לוח זמנים (מכל 15 דקות ועד פעם ביום). **נסגרו לאחרונה** שומר כל כרטיסייה וכל חלון שסוגרים, לפי ימים: בחינם 2 ימים, ב-Pro יש 30. איך שניהם עובדים ואיך מכווננים אותם מוסבר ב[לא מאבדים יותר אף כרטיסייה](/blog/never-lose-a-tab-again).
+
+<ScreenshotThemeToggle />
+
+<Carousel label="שמירה לפי לוח זמנים ומציאת כרטיסיות שנסגרו" steps={[{ title: 'שמירה אוטומטית' }, { title: 'נסגרו לאחרונה' }]}>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-auto-save-schedule" alt="ההגדרות של TabMerger בלשונית Data (נתונים): Auto-save open tabs (שמירה אוטומטית של כרטיסיות פתוחות) מופעלת, ולוח הזמנים מוגדר ל-Every 30 minutes (כל 30 דקות), ערכת נושא בהירה" darkAlt="ההגדרות של TabMerger בלשונית Data (נתונים): Auto-save open tabs (שמירה אוטומטית של כרטיסיות פתוחות) מופעלת, ולוח הזמנים מוגדר ל-Every 30 minutes (כל 30 דקות), ערכת נושא כהה" boxes={[{ id: 'schedule', label: 'לוח זמנים' }]} source="TabMerger 3.16.1"><bdi dir="ltr">Auto-save open tabs</bdi> (שמירה אוטומטית של כרטיסיות פתוחות) כל 30 דקות: עותק עדכני של הכרטיסיות הפתוחות, לא משנה מה קורה לדפדפן.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-recently-closed" alt="הקטע Recently closed (נסגרו לאחרונה) ב-TabMerger להיום: שלוש כרטיסיות שנסגרו והשעה שבה כל אחת נסגרה, ערכת נושא בהירה" darkAlt="הקטע Recently closed (נסגרו לאחרונה) ב-TabMerger להיום: שלוש כרטיסיות שנסגרו והשעה שבה כל אחת נסגרה, ערכת נושא כהה" boxes={[{ id: 'today-row', label: 'היום' }]} source="TabMerger 3.16.1"><bdi dir="ltr">Recently closed</bdi> (נסגרו לאחרונה): הכרטיסיות שנסגרו היום, עם השעה שבה כל אחת נסגרה.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>חינם ל-Chrome, ל-Edge ול-Firefox. אין צורך בחשבון כדי להתחיל.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="שאלות נפוצות">
+
+<Faq items={post.faq} />
+
+</Section>

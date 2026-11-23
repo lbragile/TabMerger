@@ -1,0 +1,270 @@
+export const post = {
+  slug: 'restore-tabs-after-crash',
+  title: 'क्रैश, अपडेट या गलती से ब्राउज़र बंद होने के बाद अपने टैब वापस कैसे पाएँ',
+  navTitle: 'क्रैश के बाद टैब वापस पाएँ',
+  seoTitle: 'Chrome, Edge और Firefox में क्रैश के बाद टैब रीस्टोर करें',
+  description:
+    'ब्राउज़र बंद हुआ और सारे टैब भी चले गए? क्रैश के बाद टैब रीस्टोर करने के लिए ये कदम क्रम से आज़माएँ: फिर से खोलें, इतिहास देखें, दूसरे डिवाइस देखें, फिर वे सेटिंग चालू करें जिनसे ऐसा दोबारा न हो।',
+  shareSummary: 'क्रैश या रीस्टार्ट में टैब खो गए? हर ब्राउज़र के लिए उन्हें वापस पाने के कदम, क्रम से।',
+  dek: 'पहले आसान तरीके आज़माएँ, क्रम से। ज़्यादातर खोए हुए सेशन एक मिनट से कम में वापस आ जाते हैं।',
+  published: '2026-11-24',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Chrome की क्रैश सहायता के मुताबिक Ctrl+Shift+T आपके खुले टैब फिर से खोल देता है।',
+      source: 'Chrome सहायता',
+      href: 'https://support.google.com/chrome/answer/142063',
+    },
+    { text: 'Firefox के इतिहास मेन्यू में “पिछला सत्र पुनर्बहाल करें” है।', source: 'Firefox 159' },
+    {
+      text: 'Chrome दूसरे डिवाइस के टैब तभी दिखाता है जब “इतिहास और टैब” सिंक चालू हो।',
+      source: 'Chrome सहायता',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'Edge के History पेज में अपनी अलग Recently closed सूची है।', source: 'edge://history, Edge 157' },
+  ],
+  faq: [
+    {
+      question: 'Chrome बंद होने के बाद अपने टैब वापस कैसे पाऊँ?',
+      answer:
+        'Chrome फिर से खोलें और Ctrl+Shift+T (Mac पर ⌘+Shift+T) दबाएँ, ज़रूरत हो तो कई बार। अगर इससे टैब वापस न आएँ, तो Ctrl+H से इतिहास खोलें और हाल में बंद किए गए टैब देखें।',
+    },
+    {
+      question: 'मेरे टैब रीस्टोर क्यों नहीं हुए?',
+      answer:
+        'आम तौर पर इसलिए कि स्टार्टअप सेटिंग नया टैब पेज खोलती है, टैब किसी निजी विंडो में थे, आपने बंद करने से पहले विंडो एक-एक करके बंद कीं, या आपने कोई दूसरी प्रोफ़ाइल खोली।',
+    },
+    {
+      question: 'क्या मैं कल के टैब रीस्टोर कर सकता हूँ?',
+      answer: 'सेशन के रूप में नहीं, लेकिन आपने जो भी पेज देखा है वह इतिहास (Ctrl+H) में है, जब तक आपने उसे मिटाया न हो। भरोसेमंद तरीका सेव किया हुआ सेशन या ऑटो-सेव है।',
+    },
+    {
+      question: 'ऐसा दोबारा होने से कैसे रोकूँ?',
+      answer: 'स्टार्टअप सेटिंग चालू करें और अपडेट जैसे जोखिम वाले मौकों से पहले खुले टैब सेव करें। सभी खुले टैब सेव करने पर हमारी गाइड में दोनों बातें हैं।',
+      link: { text: 'सभी खुले टैब सेव करने', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Edge का History पेज, साइडबार में All, Recently closed और Tabs from other devices' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Chrome सेटिंग्स, On startup (शुरुआत करने पर) में Continue where you left off (वहीं से जारी रखें जहां मैंने छोड़ा था) चुना हुआ' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Edge सेटिंग्स, Start, home, and new tab page में Open tabs from the previous session चुना हुआ' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Firefox सेटिंग्स, Home and startup में Open previous windows and tabs पर सही का निशान' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-light.webp', alt: 'TabMerger सेटिंग्स, Data (डेटा): Auto-save open tabs (खुले टैब ऑटो-सेव करें) चालू, शेड्यूल Every 30 minutes (हर 30 मिनट) पर, लाइट थीम' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-dark.webp', alt: 'TabMerger सेटिंग्स, Data (डेटा): Auto-save open tabs (खुले टैब ऑटो-सेव करें) चालू, शेड्यूल Every 30 minutes (हर 30 मिनट) पर, डार्क थीम' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-light.webp', alt: 'TabMerger का Recently closed (हाल ही में बंद किए गए), आज: बंद किए गए तीन टैब और हर टैब के बंद होने का समय, लाइट थीम' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-dark.webp', alt: 'TabMerger का Recently closed (हाल ही में बंद किए गए), आज: बंद किए गए तीन टैब और हर टैब के बंद होने का समय, डार्क थीम' },
+  ],
+  tags: ['restore-closed-tabs', 'session-management', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-20',
+      note: 'Firefox के मेन्यू नाम सीधे Firefox 159.0.1 से लिए गए हैं; इस पेज ने हमारी स्वचालित जाँच को रोक दिया।',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/restore-tabs-after-crash/tm-recently-closed-light.webp' },
+  ogImage: { src: '/blog/restore-tabs-after-crash/og.png', alt: '“How to get your tabs back after a crash, an update or an accidental quit” टाइटल कार्ड: हाल में बंद किए गए टैब की सूची के साथ एक TabMerger गाइड' },
+  toc: [
+    { id: 'quick', label: 'छोटा जवाब' },
+    { id: 'first', label: '1. फिर से खोलें, फिर Ctrl+Shift+T' },
+    { id: 'recover', label: '2. हर ब्राउज़र में इतिहास' },
+    { id: 'devices', label: '3. दूसरे डिवाइस' },
+    { id: 'why', label: 'टैब वापस क्यों नहीं आए' },
+    { id: 'prevent', label: 'अगली बार के लिए' },
+    { id: 'faq', label: 'अक्सर पूछे जाने वाले प्रश्न' },
+  ],
+  browserSections: ['first', 'recover', 'devices', 'prevent'],
+  browserFact: {
+    label: 'इतिहास',
+    values: { chrome: 'chrome://history', edge: 'edge://history', firefox: 'Ctrl+Shift+H (लाइब्रे‌री)' },
+  },
+}
+
+<QuickAnswer>
+
+ब्राउज़र फिर से खोलें और <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (Mac पर <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) बार-बार दबाएँ, जब तक आपकी विंडो वापस न आ जाएँ। अगर यह काम न करे, तो इतिहास (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) खोलें और **हाल में बंद** टैब से उन्हें फिर से खोलें; Firefox में **इतिहास → पिछला सत्र पुनर्बहाल करें** (“History → Restore Previous Session”) इस्तेमाल करें। अब भी कुछ गायब है? **दूसरे डिवाइस के टैब** देखें, फिर इतिहास में उन पेजों को खुद खोजें। अगली बार [TabMerger](/features) को अपने खुले टैब तय शेड्यूल पर अपने-आप सेव करने दें, ताकि किसी क्रैश में आपके कुछ मिनट से ज़्यादा का काम न जाए।
+
+</QuickAnswer>
+
+<InstallCta>अब कभी कोई विंडो न खोएँ: अपने खुले टैब तय शेड्यूल पर अपने-आप सेव करें। Chrome, Edge और Firefox के लिए मुफ़्त।</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="first" title="1. ब्राउज़र फिर से खोलें, फिर Ctrl+Shift+T दबाएँ">
+
+पहले नए टैब न खोलें: एक खाली विंडो से शुरू करें, ताकि आपको ठीक वही वापस मिले जो ब्राउज़र की “हाल में बंद” सूची में है।
+
+<BrowserPanels section="first">
+<BrowserPanel browser="chrome">
+
+1. Chrome शुरू करें। अगर यह आपके पेज रीस्टोर करने का विकल्प दे, तो उसे स्वीकार करें।
+2. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (Mac पर <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) दबाएँ। Chrome की अपनी क्रैश सहायता भी यही बताती है: इससे पहले खुले टैब फिर से खुल जाते हैं।
+3. हर खोई हुई विंडो के लिए इसे फिर दबाएँ। Chrome टैब और विंडो उसी क्रम में खोलता है जिसमें वे बंद हुए थे।
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Edge शुरू करें। अगर यह आपके पेज रीस्टोर करने का विकल्प दे, तो उसे स्वीकार करें।
+2. आख़िरी बार बंद किया गया टैब फिर से खोलने के लिए <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (Mac पर <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) दबाएँ, और पीछे जाते रहने के लिए फिर दबाएँ।
+3. पूरी विंडो गायब है? सीधे कदम 2, इतिहास, पर जाएँ।
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Firefox शुरू करें। अगर यह आपके पेज रीस्टोर करने का विकल्प दे, तो उसे स्वीकार करें।
+2. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (Mac पर <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) दबाएँ। Firefox 159 इसे एक ऐसे कमांड से जोड़ता है जो आख़िरी बार बंद किया गया टैब, विंडो या सेशन रीस्टोर करता है, इसलिए रीस्टार्ट के बाद यह पूरा पिछला सेशन वापस ला सकता है।
+3. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> बंद की गई विंडो फिर से खोलता है; हर विंडो के लिए एक बार दबाएँ।
+
+</BrowserPanel>
+</BrowserPanels>
+
+सभी शॉर्टकट की पूरी सूची हमारी [टैब कीबोर्ड शॉर्टकट गाइड](/blog/tab-keyboard-shortcuts) में है।
+
+</Section>
+
+<Section id="recover" title="2. इतिहास से फिर से खोलें">
+
+अगर शॉर्टकट से कुछ वापस न आए, तब भी ब्राउज़र के इतिहास को पता है कि क्या खुला था।
+
+<BrowserPanels section="recover">
+<BrowserPanel browser="chrome">
+
+1. **⋮ → इतिहास** (“History”) पर क्लिक करें। सबमेन्यू में हाल में बंद किए गए टैब और विंडो दिखते हैं।
+2. किसी विंडो पर क्लिक करके उसके सारे टैब फिर से खोलें।
+3. वहाँ कुछ नहीं? <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> दबाएँ और कोई ऐसा पेज खोजें जो आपको याद हो।
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. History खोलने के लिए <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> दबाएँ।
+2. **Recently closed** (हाल में बंद) चुनें और खोई हुई विंडो या टैब फिर से खोलें।
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Edge का History पेज, साइडबार में All, Recently closed और Tabs from other devices" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60">Edge का History पेज, साइडबार में Recently closed के साथ।</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. **इतिहास** (“History”) मेन्यू खोलें (मेन्यू बार दिखाने के लिए <Kbd>Alt</Kbd> दबाएँ) या **☰ → इतिहास** पर जाएँ।
+2. पिछली बार की सारी विंडो वापस लाने के लिए **पिछला सत्र पुनर्बहाल करें** (“Restore Previous Session”) चुनें।
+3. या **हाल में बंद विंडो** और **हाल में बंद टैब** में से चुनें।
+
+अगर Firefox खुद क्रैश हुआ था, तो यह **सत्र पुनर्स्थापित करें** (“Restore Session”) पेज खोल सकता है, जिस पर लिखा होता है “माफ़ कीजिये. हमें आपके पृष्ठों को वापस लाने में समस्या हो रही है.”। **पिछला टैब देखें** (“View Previous Tabs”) से आप **सत्र पुनर्स्थापित करें** दबाने से पहले उस टैब का निशान हटा सकते हैं जिसकी वजह से क्रैश हो रहा हो।
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with Restore Previous Session. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="devices" title="3. अपने दूसरे डिवाइस देखें">
+
+अगर आप साइन इन थे और सिंक चालू था, तो खोए हुए टैब शायद अब भी किसी दूसरे डिवाइस पर दिख रहे हों।
+
+<BrowserPanels section="devices">
+<BrowserPanel browser="chrome">
+
+Chrome दूसरे डिवाइस के टैब इतिहास में दिखाता है, लेकिन सिर्फ़ तब जब **इतिहास और टैब** (“History and tabs”) सिंक चालू हो: **सेटिंग → आप और Google** (“Settings → You and Google”) पर जाएँ, अपने खाते का नाम चुनें, फिर **इतिहास और टैब** चालू करें।
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+History (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) खोलें और साइडबार में **Tabs from other devices** (दूसरे डिवाइस के टैब) चुनें।
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+**Firefox व्यू** (“Firefox View”) खोलें और **Tabs from other devices** (दूसरे डिवाइस के टैब) में देखें। इसके लिए Firefox Sync में खुले टैब का सिंक चालू होना चाहिए।
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox View, Tabs from other devices. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="why" title="मेरे टैब रीस्टोर क्यों नहीं हुए?">
+
+- **स्टार्टअप सेटिंग नया टैब पेज खोलती है।** हर स्टार्ट पर आपके टैब सिर्फ़ “पिछला सेशन” वाला स्टार्टअप विकल्प फिर से खोलता है; अगले हिस्से में बताया गया है कि यह आपके ब्राउज़र में कहाँ है।
+- **टैब निजी विंडो में थे।** Incognito और InPrivate विंडो कभी रीस्टोर नहीं होतीं।
+- **आपने विंडो एक-एक करके बंद कीं।** स्टार्टअप रीस्टोर वही वापस लाता है जो ब्राउज़र के *बंद* होने के समय खुला था। पहले बंद की गई विंडो सिर्फ़ इतिहास में मिलती हैं।
+- **आपने कोई दूसरी प्रोफ़ाइल खोली।** हर प्रोफ़ाइल का अपना सेशन होता है; प्रोफ़ाइल आइकन देखें।
+
+</Section>
+
+<Section id="prevent" title="अगली बार ऐसा न हो, यह पक्का करें">
+
+स्टार्टअप सेटिंग अभी चालू करें; अपडेट और रीस्टार्ट, दोनों के लिए यही एक बदलाव काफ़ी है।
+
+<BrowserPanels section="prevent">
+<BrowserPanel browser="chrome">
+
+**सेटिंग → शुरुआत करने पर → वहीं से जारी रखें जहां मैंने छोड़ा था** (“Settings → On startup → Continue where you left off”)। या एड्रेस बार में `chrome://settings/onStartup` पेस्ट करें।
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Chrome सेटिंग्स, On startup (शुरुआत करने पर) में Continue where you left off (वहीं से जारी रखें जहां मैंने छोड़ा था) चुना हुआ" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">Chrome की On startup (शुरुआत करने पर) सेटिंग, पिछला सेशन फिर से खोलने पर सेट।</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+**Settings → Start, home, and new tab page → On startup → Open tabs from the previous session**। या एड्रेस बार में `edge://settings/startHomeNTP` पेस्ट करें।
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Edge सेटिंग्स, Start, home, and new tab page में Open tabs from the previous session चुना हुआ" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">Edge की Start, home, and new tab page सेटिंग्स, पिछला सेशन फिर से खोलने पर सेट।</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+**सेटिंग → Home and startup → आरंभन → Open previous windows and tabs** (“Settings → Home and startup → Startup → Open previous windows and tabs”)। या एड्रेस बार में `about:preferences#home` पेस्ट करें।
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Firefox सेटिंग्स, Home and startup में Open previous windows and tabs पर सही का निशान" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Firefox की Home and startup सेटिंग, जिसमें Open previous windows and tabs पर सही का निशान है।</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+स्टार्टअप रीस्टोर उस विंडो के लिए फिर भी कुछ नहीं कर सकता जिसे आपने पिछले हफ़्ते गलती से बंद कर दिया था। उसके लिए सेव की हुई कॉपी चाहिए: विंडो को बुकमार्क करें, या कोई [सेशन मैनेजर](/blog/browser-session-manager) इस्तेमाल करें। [सभी खुले टैब सेव करने](/blog/save-all-open-tabs) पर हमारी गाइड इन विकल्पों की तुलना करती है।
+
+[TabMerger](/features), Chrome, Edge और Firefox के लिए हमारा मुफ़्त एक्सटेंशन, आपके लिए सेव करने का काम कर सकता है। **सेटिंग्स → डेटा → खुले टैब ऑटो-सेव करें** आपके खुले टैब को तय शेड्यूल पर एक ग्रुप के रूप में सेव करता है (हर 15 मिनट से लेकर रोज़ तक)। **हाल ही में बंद किए गए** आपके बंद किए हर टैब और विंडो को दिन के हिसाब से रखता है: मुफ़्त में 2 दिन, Pro में 30। ये दोनों कैसे काम करते हैं और इन्हें कैसे सेट करें, यह [अब कभी टैब न खोएँ](/blog/never-lose-a-tab-again) में बताया गया है।
+
+<ScreenshotThemeToggle />
+
+<Carousel label="शेड्यूल पर सेव करना और बंद टैब ढूँढना" steps={[{ title: 'ऑटो-सेव' }, { title: 'हाल ही में बंद किए गए' }]}>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-auto-save-schedule" alt="TabMerger सेटिंग्स, Data (डेटा): Auto-save open tabs (खुले टैब ऑटो-सेव करें) चालू, शेड्यूल Every 30 minutes (हर 30 मिनट) पर, लाइट थीम" darkAlt="TabMerger सेटिंग्स, Data (डेटा): Auto-save open tabs (खुले टैब ऑटो-सेव करें) चालू, शेड्यूल Every 30 minutes (हर 30 मिनट) पर, डार्क थीम" boxes={[{ id: 'schedule', label: 'शेड्यूल' }]} source="TabMerger 3.16.1">हर 30 मिनट पर Auto-save open tabs (खुले टैब ऑटो-सेव करें): आपके खुले टैब की ताज़ा कॉपी, ब्राउज़र के साथ कुछ भी हो।</ThemedScreenshot>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-recently-closed" alt="TabMerger का Recently closed (हाल ही में बंद किए गए), आज: बंद किए गए तीन टैब और हर टैब के बंद होने का समय, लाइट थीम" darkAlt="TabMerger का Recently closed (हाल ही में बंद किए गए), आज: बंद किए गए तीन टैब और हर टैब के बंद होने का समय, डार्क थीम" boxes={[{ id: 'today-row', label: 'आज' }]} source="TabMerger 3.16.1">Recently closed (हाल ही में बंद किए गए): आज बंद किए गए टैब, हर एक के बंद होने के समय के साथ।</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Chrome, Edge और Firefox के लिए मुफ़्त। शुरू करने के लिए किसी खाते की ज़रूरत नहीं।</InstallCta>
+
+</Section>
+
+<Section id="faq" title="अक्सर पूछे जाने वाले प्रश्न">
+
+<Faq items={post.faq} />
+
+</Section>

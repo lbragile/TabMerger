@@ -1,0 +1,270 @@
+export const post = {
+  slug: 'restore-tabs-after-crash',
+  title: 'Cómo recuperar tus pestañas tras un bloqueo, una actualización o un cierre accidental',
+  navTitle: 'Recupera tus pestañas tras un bloqueo',
+  seoTitle: 'Restaurar pestañas tras un bloqueo en Chrome, Edge y Firefox',
+  description:
+    '¿Se cerró el navegador y se llevó tus pestañas? Para restaurar las pestañas tras un bloqueo, sigue estos pasos en orden: reabrir, el historial, otros dispositivos y, por último, los ajustes que evitan que vuelva a pasar.',
+  shareSummary: '¿Perdiste tus pestañas por un bloqueo o un reinicio? Los pasos para recuperarlas, en orden.',
+  dek: 'Prueba primero las soluciones rápidas, en orden. La mayoría de las sesiones perdidas vuelven en menos de un minuto.',
+  published: '2026-11-24',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Según la ayuda de Chrome sobre bloqueos, Ctrl+Shift+T reabre las pestañas que tenías abiertas.',
+      source: 'Ayuda de Chrome',
+      href: 'https://support.google.com/chrome/answer/142063',
+    },
+    { text: 'El menú Historial de Firefox incluye «Restaurar sesión anterior».', source: 'Firefox 159' },
+    {
+      text: 'Chrome solo muestra las pestañas de otros dispositivos con la sincronización de «Historial y pestañas» activada.',
+      source: 'Ayuda de Chrome',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'La página Historial de Edge tiene su propia lista «Recently closed».', source: 'edge://history, Edge 157' },
+  ],
+  faq: [
+    {
+      question: '¿Cómo recupero mis pestañas después de que Chrome se cierre?',
+      answer:
+        'Vuelve a abrir Chrome y pulsa Ctrl+Shift+T (⌘+Shift+T en Mac), varias veces si hace falta. Si así no vuelven, abre el historial con Ctrl+H y busca entre las pestañas cerradas recientemente.',
+    },
+    {
+      question: '¿Por qué no se restauraron mis pestañas?',
+      answer:
+        'Normalmente porque el ajuste de inicio abre una página de nueva pestaña, las pestañas estaban en una ventana privada, cerraste las ventanas una a una antes de salir o abriste otro perfil.',
+    },
+    {
+      question: '¿Puedo restaurar las pestañas de ayer?',
+      answer: 'No como sesión, pero todas las páginas que visitaste están en el historial (Ctrl+H), salvo que lo hayas borrado. Una sesión guardada o el guardado automático es la forma fiable.',
+    },
+    {
+      question: '¿Cómo evito que vuelva a pasar?',
+      answer: 'Activa el ajuste de inicio y guarda tus pestañas abiertas antes de momentos de riesgo, como las actualizaciones. Nuestra guía para guardar todas las pestañas abiertas explica las dos cosas.',
+      link: { text: 'guardar todas las pestañas abiertas', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Historial de Edge con «All», «Recently closed» y «Tabs from other devices» en la barra lateral' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Configuración de Chrome, «On startup» (Al iniciar), con «Continue where you left off» (Continuar donde lo dejaste) seleccionado' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Configuración de Edge, «Start, home, and new tab page», con «Open tabs from the previous session» seleccionado' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Ajustes de Firefox, «Home and startup» (Inicio), con «Open previous windows and tabs» (Abrir ventanas y pestañas anteriores) marcado' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-light.webp', alt: 'Ajustes de TabMerger, «Data» (Datos): «Auto-save open tabs» (Guardar pestañas abiertas automáticamente) activado, con el horario en «Every 30 minutes» (Cada 30 minutos), tema claro' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-dark.webp', alt: 'Ajustes de TabMerger, «Data» (Datos): «Auto-save open tabs» (Guardar pestañas abiertas automáticamente) activado, con el horario en «Every 30 minutes» (Cada 30 minutos), tema oscuro' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-light.webp', alt: 'TabMerger, «Recently closed» (Cerrado recientemente), hoy: tres pestañas cerradas con la hora en que se cerró cada una, tema claro' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-dark.webp', alt: 'TabMerger, «Recently closed» (Cerrado recientemente), hoy: tres pestañas cerradas con la hora en que se cerró cada una, tema oscuro' },
+  ],
+  tags: ['restore-closed-tabs', 'session-management', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-20',
+      note: 'Los nombres de los menús de Firefox se tomaron del propio Firefox 159.0.1; esta página bloqueó nuestra comprobación automática.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/restore-tabs-after-crash/tm-recently-closed-light.webp' },
+  ogImage: { src: '/blog/restore-tabs-after-crash/og.png', alt: 'Tarjeta de título «How to get your tabs back after a crash, an update or an accidental quit»: una guía de TabMerger, con una lista de pestañas cerradas recientemente' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'first', label: '1. Reabrir y Ctrl+Shift+T' },
+    { id: 'recover', label: '2. El historial, por navegador' },
+    { id: 'devices', label: '3. Otros dispositivos' },
+    { id: 'why', label: 'Por qué no se restauraron' },
+    { id: 'prevent', label: 'La próxima vez' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+  browserSections: ['first', 'recover', 'devices', 'prevent'],
+  browserFact: {
+    label: 'Historial',
+    values: { chrome: 'chrome://history', edge: 'edge://history', firefox: 'Ctrl+Shift+H (Catálogo)' },
+  },
+}
+
+<QuickAnswer>
+
+Vuelve a abrir el navegador y pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> en Mac), una y otra vez, hasta que vuelvan tus ventanas. Si no funciona, abre el historial (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) y reábrelas desde las pestañas **cerradas recientemente**; en Firefox, usa **Historial → Restaurar sesión anterior** («History → Restore Previous Session»). ¿Sigue faltando algo? Mira las **pestañas de otros dispositivos** y luego busca las propias páginas en el historial. La próxima vez, deja que [TabMerger](/features) guarde tus pestañas abiertas automáticamente según un horario, para que un bloqueo nunca te cueste más de unos minutos.
+
+</QuickAnswer>
+
+<InstallCta>No vuelvas a perder una ventana: guarda tus pestañas abiertas automáticamente según un horario. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="first" title="1. Vuelve a abrir el navegador y pulsa Ctrl+Shift+T">
+
+No abras pestañas nuevas antes: empieza desde una ventana limpia, para recuperar justo lo que hay en la lista de «cerrado por última vez» del navegador.
+
+<BrowserPanels section="first">
+<BrowserPanel browser="chrome">
+
+1. Abre Chrome. Si te ofrece restaurar tus páginas, acepta.
+2. Pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> en Mac). La propia ayuda de Chrome sobre bloqueos indica este paso: reabre las pestañas que estaban abiertas antes.
+3. Vuelve a pulsarlo por cada ventana que perdiste. Chrome reabre las pestañas y ventanas en el orden en que se cerraron.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Abre Edge. Si te ofrece restaurar tus páginas, acepta.
+2. Pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> en Mac) para reabrir la última pestaña cerrada, y otra vez para seguir retrocediendo.
+3. ¿Te falta una ventana entera? Ve directamente al paso 2, el historial.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Abre Firefox. Si te ofrece restaurar tus páginas, acepta.
+2. Pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> en Mac). Firefox 159 lo asocia a un comando que restaura la última pestaña, ventana o sesión cerrada, así que tras un reinicio puede recuperar toda la sesión anterior.
+3. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> reabre una ventana cerrada; púlsalo una vez por ventana.
+
+</BrowserPanel>
+</BrowserPanels>
+
+La lista completa de atajos está en nuestra [guía de atajos de teclado para pestañas](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="recover" title="2. Reabre desde el historial">
+
+Si el atajo no te devuelve nada, el historial del navegador todavía sabe qué estaba abierto.
+
+<BrowserPanels section="recover">
+<BrowserPanel browser="chrome">
+
+1. Haz clic en **⋮ → Historial** («History»). El submenú muestra las pestañas y ventanas cerradas recientemente.
+2. Haz clic en una ventana para reabrir todas sus pestañas.
+3. ¿No aparece nada? Pulsa <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> y busca una página que recuerdes.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Pulsa <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> para abrir el **Historial**.
+2. Elige **Recently closed** (cerradas recientemente) y reabre la ventana o las pestañas que perdiste.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Historial de Edge con «All», «Recently closed» y «Tabs from other devices» en la barra lateral" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60">La página Historial de Edge, con «Recently closed» en la barra lateral.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Abre el menú **Historial** («History»; pulsa <Kbd>Alt</Kbd> para mostrar la barra de menús) o **☰ → Historial**.
+2. Elige **Restaurar sesión anterior** («Restore Previous Session») para recuperar todas las ventanas de la última vez.
+3. O elige entre **Ventanas cerradas recientemente** y **Pestañas cerradas recientemente**.
+
+Si el que se bloqueó fue Firefox, puede que abra una página **Restaurar sesión** («Restore Session») con el aviso «Lo sentimos. Tenemos problemas para recuperar sus páginas.». **Ver pestañas anteriores** («View Previous Tabs») te deja desmarcar una pestaña que pueda estar causando el bloqueo antes de pulsar **Restaurar sesión**.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with Restore Previous Session. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="devices" title="3. Mira en tus otros dispositivos">
+
+Si tenías la sesión iniciada y la sincronización activada, puede que las pestañas perdidas sigan apareciendo en otro dispositivo.
+
+<BrowserPanels section="devices">
+<BrowserPanel browser="chrome">
+
+Chrome muestra las pestañas de otros dispositivos en el historial, pero solo con la sincronización de **Historial y pestañas** («History and tabs») activada: **Configuración → Tú y Google** («Settings → You and Google»), selecciona el nombre de tu cuenta y activa **Historial y pestañas**.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Abre el historial (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) y elige **Tabs from other devices** (pestañas de otros dispositivos) en la barra lateral.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Abre **Firefox View** y mira en **Pestañas de otros dispositivos** («Tabs from other devices»). Necesitas Firefox Sync con la sincronización de pestañas abiertas activada.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox View, Tabs from other devices. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="why" title="¿Por qué no se restauraron mis pestañas?">
+
+- **El ajuste de inicio abre una página de nueva pestaña.** Solo la opción de inicio de «sesión anterior» reabre tus pestañas cada vez que arrancas; la sección siguiente muestra dónde está en tu navegador.
+- **Estaban en una ventana privada.** Las ventanas Incognito e InPrivate nunca se restauran.
+- **Cerraste las ventanas una a una.** Al iniciar se restaura lo que estaba abierto cuando el navegador se *cerró*. Las ventanas que cerraste antes solo están en el historial.
+- **Abriste otro perfil.** Cada perfil tiene su propia sesión; revisa el icono del perfil.
+
+</Section>
+
+<Section id="prevent" title="Haz que no vuelva a pasar">
+
+Activa ahora el ajuste de inicio: es el único cambio que cubre las actualizaciones y los reinicios.
+
+<BrowserPanels section="prevent">
+<BrowserPanel browser="chrome">
+
+**Configuración → Al iniciar → Continuar donde lo dejaste** («Settings → On startup → Continue where you left off»). O pega `chrome://settings/onStartup` en la barra de direcciones.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Configuración de Chrome, «On startup» (Al iniciar), con «Continue where you left off» (Continuar donde lo dejaste) seleccionado" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">El ajuste Al iniciar de Chrome, configurado para reabrir la última sesión.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+**Configuración → Start, home, and new tab page → On startup → Open tabs from the previous session**. O pega `edge://settings/startHomeNTP` en la barra de direcciones.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Configuración de Edge, «Start, home, and new tab page», con «Open tabs from the previous session» seleccionado" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">La sección «Start, home, and new tab page» de Edge, configurada para reabrir la última sesión.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+**Ajustes → Inicio → Abrir ventanas y pestañas anteriores** («Settings → Home and startup → Startup → Open previous windows and tabs»). O pega `about:preferences#home` en la barra de direcciones.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Ajustes de Firefox, «Home and startup» (Inicio), con «Open previous windows and tabs» (Abrir ventanas y pestañas anteriores) marcado" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Los ajustes de Inicio de Firefox, con «Abrir ventanas y pestañas anteriores» marcado.</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+La restauración al iniciar no sirve para una ventana que cerraste sin querer la semana pasada. Para eso necesitas una copia guardada: guarda las ventanas como marcadores o usa un [gestor de sesiones](/blog/browser-session-manager). Nuestra guía para [guardar todas las pestañas abiertas](/blog/save-all-open-tabs) compara las opciones.
+
+[TabMerger](/features), nuestra extensión gratuita para Chrome, Edge y Firefox, puede guardar por ti. **Ajustes → Datos → Guardar pestañas abiertas automáticamente** guarda tus pestañas abiertas como un grupo según un horario (desde cada 15 minutos hasta una vez al día). **Cerrado recientemente** conserva cada pestaña y ventana que cierras, ordenadas por día: 2 días en la versión gratuita y 30 con Pro. Cómo funcionan las dos funciones y cómo ajustarlas lo explicamos en [no vuelvas a perder una pestaña](/blog/never-lose-a-tab-again).
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Guardar según un horario y encontrar pestañas cerradas" steps={[{ title: 'Guardado automático' }, { title: 'Cerrado recientemente' }]}>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-auto-save-schedule" alt="Ajustes de TabMerger, «Data» (Datos): «Auto-save open tabs» (Guardar pestañas abiertas automáticamente) activado, con el horario en «Every 30 minutes» (Cada 30 minutos), tema claro" darkAlt="Ajustes de TabMerger, «Data» (Datos): «Auto-save open tabs» (Guardar pestañas abiertas automáticamente) activado, con el horario en «Every 30 minutes» (Cada 30 minutos), tema oscuro" boxes={[{ id: 'schedule', label: 'Horario' }]} source="TabMerger 3.16.1">«Auto-save open tabs» (Guardar pestañas abiertas automáticamente) cada 30 minutos: una copia reciente de tus pestañas abiertas, pase lo que pase con el navegador.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-recently-closed" alt="TabMerger, «Recently closed» (Cerrado recientemente), hoy: tres pestañas cerradas con la hora en que se cerró cada una, tema claro" darkAlt="TabMerger, «Recently closed» (Cerrado recientemente), hoy: tres pestañas cerradas con la hora en que se cerró cada una, tema oscuro" boxes={[{ id: 'today-row', label: 'Hoy' }]} source="TabMerger 3.16.1">«Recently closed» (Cerrado recientemente): las pestañas cerradas hoy, con la hora en que se fue cada una.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Gratis para Chrome, Edge y Firefox. No necesitas cuenta para empezar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

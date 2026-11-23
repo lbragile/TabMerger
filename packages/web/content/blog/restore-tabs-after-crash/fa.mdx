@@ -1,0 +1,270 @@
+export const post = {
+  slug: 'restore-tabs-after-crash',
+  title: 'چطور زبانه‌ها را پس از خرابی مرورگر، به‌روزرسانی یا بستن ناخواسته برگردانیم',
+  navTitle: 'برگرداندن زبانه‌ها پس از خرابی مرورگر',
+  seoTitle: 'بازیابی زبانه‌ها پس از خرابی مرورگر در Chrome و Edge و Firefox',
+  description:
+    'مرورگر بسته شد و زبانه‌ها را هم با خودش برد؟ برای بازیابی زبانه‌ها پس از خرابی مرورگر، این مراحل را به ترتیب انجام دهید: باز کردن دوباره، تاریخچه، دستگاه‌های دیگر و در آخر تنظیماتی که جلوی تکرارش را می‌گیرد.',
+  shareSummary: 'زبانه‌ها در خرابی یا راه‌اندازی دوباره از دست رفت؟ مراحل بازیابی به ترتیب، برای هر مرورگر.',
+  dek: 'اول راه‌حل‌های سریع را به ترتیب امتحان کنید. بیشتر نشست‌های ازدست‌رفته در کمتر از یک دقیقه برمی‌گردند.',
+  published: '2026-11-24',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'طبق راهنمای Chrome دربارهٔ خرابی، Ctrl+Shift+T زبانه‌هایی را که باز بودند دوباره باز می‌کند.',
+      source: 'راهنمای Chrome',
+      href: 'https://support.google.com/chrome/answer/142063',
+    },
+    { text: 'منوی «تاریخچه» در Firefox گزینهٔ «بازیابی نشست قبلی» را دارد.', source: 'Firefox 159' },
+    {
+      text: 'Chrome زبانه‌های دستگاه‌های دیگر را فقط وقتی همگام‌سازی «سابقه و زبانه‌ها» روشن باشد نشان می‌دهد.',
+      source: 'راهنمای Chrome',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'صفحهٔ تاریخچهٔ Edge فهرست Recently closed خودش را دارد.', source: 'edge://history, Edge 157' },
+  ],
+  faq: [
+    {
+      question: 'بعد از بسته شدن Chrome چطور زبانه‌ها را برگردانم؟',
+      answer:
+        'Chrome را دوباره باز کنید و Ctrl+Shift+T را بزنید (در Mac، ⌘+Shift+T)، اگر لازم بود چند بار. اگر برنگشتند، تاریخچه را با Ctrl+H باز کنید و در موارد اخیراً بسته‌شده بگردید.',
+    },
+    {
+      question: 'چرا زبانه‌هایم بازیابی نشدند؟',
+      answer:
+        'معمولاً چون تنظیم راه‌اندازی صفحهٔ زبانهٔ جدید را باز می‌کند، زبانه‌ها در پنجرهٔ خصوصی بودند، پیش از خروج پنجره‌ها را یکی‌یکی بستید یا نمایهٔ دیگری را باز کردید.',
+    },
+    {
+      question: 'می‌توانم زبانه‌های دیروز را بازیابی کنم؟',
+      answer: 'به شکل یک نشست نه، اما هر صفحه‌ای که دیده‌اید در تاریخچه (Ctrl+H) هست، مگر اینکه پاکش کرده باشید. راه مطمئن، نشست ذخیره‌شده یا ذخیرهٔ خودکار است.',
+    },
+    {
+      question: 'چطور جلوی تکرارش را بگیرم؟',
+      answer: 'تنظیم راه‌اندازی را روشن کنید و پیش از لحظه‌های پرخطر مثل به‌روزرسانی، زبانه‌های باز را ذخیره کنید. راهنمای ما برای ذخیرهٔ همهٔ زبانه‌های باز هر دو را توضیح می‌دهد.',
+      link: { text: 'ذخیرهٔ همهٔ زبانه‌های باز', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'صفحهٔ تاریخچهٔ Edge با گزینه‌های All، Recently closed و Tabs from other devices در نوار کناری' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'تنظیمات Chrome، بخش On startup (هنگام راه‌اندازی)، با گزینهٔ انتخاب‌شدهٔ Continue where you left off (ادامه از جایی که ترک کردید)' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'تنظیمات Edge، بخش Start, home, and new tab page، با گزینهٔ انتخاب‌شدهٔ Open tabs from the previous session' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'تنظیمات Firefox، بخش Home and startup (خانه و راه‌اندازی)، با گزینهٔ تیک‌خوردهٔ Open previous windows and tabs (باز کردن پنجره‌ها و زبانه‌های قبلی)' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-light.webp', alt: 'تنظیمات TabMerger، زبانهٔ Data (داده‌ها): گزینهٔ Auto-save open tabs (ذخیرهٔ خودکار زبانه‌های باز) روشن است و زمان‌بندی روی Every 30 minutes (هر ۳۰ دقیقه) است، پوستهٔ روشن' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-dark.webp', alt: 'تنظیمات TabMerger، زبانهٔ Data (داده‌ها): گزینهٔ Auto-save open tabs (ذخیرهٔ خودکار زبانه‌های باز) روشن است و زمان‌بندی روی Every 30 minutes (هر ۳۰ دقیقه) است، پوستهٔ تیره' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-light.webp', alt: 'بخش Recently closed (اخیراً بسته‌شده) در TabMerger برای امروز: سه زبانهٔ بسته‌شده و ساعت بسته شدن هر کدام، پوستهٔ روشن' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-dark.webp', alt: 'بخش Recently closed (اخیراً بسته‌شده) در TabMerger برای امروز: سه زبانهٔ بسته‌شده و ساعت بسته شدن هر کدام، پوستهٔ تیره' },
+  ],
+  tags: ['restore-closed-tabs', 'session-management', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-20',
+      note: 'نام منوهای Firefox مستقیم از خود Firefox 159.0.1 خوانده شد؛ این صفحه بررسی خودکار ما را مسدود کرد.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/restore-tabs-after-crash/tm-recently-closed-light.webp' },
+  ogImage: { src: '/blog/restore-tabs-after-crash/og.png', alt: 'کارت عنوان «How to get your tabs back after a crash, an update or an accidental quit»: راهنمای TabMerger، همراه با فهرستی از زبانه‌های اخیراً بسته‌شده' },
+  toc: [
+    { id: 'quick', label: 'پاسخ کوتاه' },
+    { id: 'first', label: '۱. باز کردن دوباره، سپس Ctrl+Shift+T' },
+    { id: 'recover', label: '۲. تاریخچه در هر مرورگر' },
+    { id: 'devices', label: '۳. دستگاه‌های دیگر' },
+    { id: 'why', label: 'چرا زبانه‌ها برنگشتند' },
+    { id: 'prevent', label: 'برای دفعهٔ بعد' },
+    { id: 'faq', label: 'پرسش‌های متداول' },
+  ],
+  browserSections: ['first', 'recover', 'devices', 'prevent'],
+  browserFact: {
+    label: 'تاریخچه',
+    values: { chrome: 'chrome://history', edge: 'edge://history', firefox: 'Ctrl+Shift+H (مخزن)' },
+  },
+}
+
+<QuickAnswer>
+
+مرورگر را دوباره باز کنید و <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> را بزنید (در Mac، <bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi>)، بارها و بارها، تا پنجره‌هایتان برگردند. اگر جواب نداد، تاریخچه را باز کنید (<bdi><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi>) و از بخش **اخیراً بسته‌شده** دوباره بازشان کنید؛ در Firefox از **تاریخچه ← بازیابی نشست قبلی** (<bdi dir="ltr">History → Restore Previous Session</bdi>) استفاده کنید. هنوز چیزی کم است؟ **زبانه‌های دستگاه‌های دیگر** را ببینید، بعد خود صفحه‌ها را در تاریخچه جست‌وجو کنید. دفعهٔ بعد بگذارید [TabMerger](/features) زبانه‌های بازتان را طبق زمان‌بندی خودکار ذخیره کند، تا هیچ خرابی‌ای بیش از چند دقیقه برایتان هزینه نداشته باشد.
+
+</QuickAnswer>
+
+<InstallCta>دیگر هیچ پنجره‌ای را از دست ندهید: زبانه‌های باز را طبق زمان‌بندی خودکار ذخیره کنید. رایگان برای Chrome و Edge و Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="first" title="۱. مرورگر را دوباره باز کنید، سپس Ctrl+Shift+T را بزنید">
+
+اول زبانهٔ تازه باز نکنید: از یک پنجرهٔ خالی شروع کنید تا دقیقاً همان چیزی برگردد که در فهرست «آخرین بسته‌شده‌ها»ی مرورگر است.
+
+<BrowserPanels section="first">
+<BrowserPanel browser="chrome">
+
+1. Chrome را اجرا کنید. اگر پیشنهاد داد صفحه‌هایتان را بازیابی کند، بپذیرید.
+2. <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> را بزنید (در Mac، <bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi>). راهنمای خود Chrome دربارهٔ خرابی هم همین را پیشنهاد می‌کند: این میان‌بر زبانه‌هایی را که قبلاً باز بودند دوباره باز می‌کند.
+3. برای هر پنجره‌ای که از دست رفته، دوباره بزنید. Chrome زبانه‌ها و پنجره‌ها را به همان ترتیبی که بسته شده‌اند دوباره باز می‌کند.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Edge را اجرا کنید. اگر پیشنهاد داد صفحه‌هایتان را بازیابی کند، بپذیرید.
+2. <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> را بزنید (در Mac، <bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi>) تا آخرین زبانهٔ بسته‌شده دوباره باز شود؛ دوباره بزنید تا عقب‌تر بروید.
+3. یک پنجرهٔ کامل گم شده؟ مستقیم به مرحلهٔ ۲، یعنی تاریخچه، بروید.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Firefox را اجرا کنید. اگر پیشنهاد داد صفحه‌هایتان را بازیابی کند، بپذیرید.
+2. <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> را بزنید (در Mac، <bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi>). Firefox 159 این میان‌بر را به فرمانی وصل کرده که آخرین زبانه، پنجره یا نشست بسته‌شده را بازیابی می‌کند؛ پس بعد از راه‌اندازی دوباره می‌تواند کل نشست قبلی را برگرداند.
+3. <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd></bdi> یک پنجرهٔ بسته‌شده را دوباره باز می‌کند؛ برای هر پنجره یک بار بزنید.
+
+</BrowserPanel>
+</BrowserPanels>
+
+فهرست کامل میان‌برها در [راهنمای میان‌برهای صفحه‌کلید برای زبانه‌ها](/blog/tab-keyboard-shortcuts) آمده است.
+
+</Section>
+
+<Section id="recover" title="۲. از تاریخچه دوباره باز کنید">
+
+اگر میان‌بر چیزی برنگرداند، تاریخچهٔ مرورگر هنوز می‌داند چه چیزهایی باز بوده است.
+
+<BrowserPanels section="recover">
+<BrowserPanel browser="chrome">
+
+1. روی **⋮ ← سابقه** (<bdi dir="ltr">History</bdi>) کلیک کنید. زیرمنو زبانه‌ها و پنجره‌های اخیراً بسته‌شده را فهرست می‌کند.
+2. روی یک پنجره کلیک کنید تا همهٔ زبانه‌هایش دوباره باز شوند.
+3. چیزی نبود؟ <bdi><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi> را بزنید و صفحه‌ای را که به یاد دارید جست‌وجو کنید.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. <bdi><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi> را بزنید تا **تاریخچه** باز شود.
+2. <bdi dir="ltr">**Recently closed**</bdi> (اخیراً بسته‌شده) را انتخاب کنید و پنجره یا زبانه‌های ازدست‌رفته را دوباره باز کنید.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="صفحهٔ تاریخچهٔ Edge با گزینه‌های All، Recently closed و Tabs from other devices در نوار کناری" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60">صفحهٔ تاریخچهٔ Edge، با <bdi dir="ltr">Recently closed</bdi> در نوار کناری.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. منوی **تاریخچه** (<bdi dir="ltr">History</bdi>؛ برای نمایش نوار منو <bdi><Kbd>Alt</Kbd></bdi> را بزنید) یا **☰ ← تاریخچه** را باز کنید.
+2. **بازیابی نشست قبلی** (<bdi dir="ltr">Restore Previous Session</bdi>) را انتخاب کنید تا همهٔ پنجره‌های دفعهٔ قبل برگردند.
+3. یا از **پنجره‌های تازه بسته شده** و **زبانه‌های تازه بسته شده** انتخاب کنید.
+
+اگر خود Firefox خراب شده باشد، ممکن است صفحهٔ **بازیابی نشست** (<bdi dir="ltr">Restore Session</bdi>) را باز کند، با پیام «متاسفیم. برای برگرداندن صفحه‌های شما مشکل داریم.». با **دیدن زبانه‌های قبلی** (<bdi dir="ltr">View Previous Tabs</bdi>) می‌توانید پیش از زدن **بازیابی نشست**، تیک زبانه‌ای را که شاید باعث خرابی است بردارید.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with Restore Previous Session. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="devices" title="۳. در دستگاه‌های دیگرتان بگردید">
+
+اگر وارد حساب شده بودید و همگام‌سازی روشن بود، شاید زبانه‌های ازدست‌رفته هنوز روی دستگاه دیگری دیده شوند.
+
+<BrowserPanels section="devices">
+<BrowserPanel browser="chrome">
+
+Chrome زبانه‌های دستگاه‌های دیگر را در سابقه نشان می‌دهد، اما فقط وقتی همگام‌سازی **سابقه و زبانه‌ها** (<bdi dir="ltr">History and tabs</bdi>) روشن باشد: به **تنظیمات ← شما و Google** (<bdi dir="ltr">Settings → You and Google</bdi>) بروید، نام حسابتان را انتخاب کنید و سپس **سابقه و زبانه‌ها** را روشن کنید.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+تاریخچه (<bdi><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi>) را باز کنید و در نوار کناری <bdi dir="ltr">**Tabs from other devices**</bdi> (زبانه‌های دستگاه‌های دیگر) را انتخاب کنید.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+**نمای Firefox** (<bdi dir="ltr">Firefox View</bdi>) را باز کنید و زیر **زبانه‌ها از دستگاه‌های دیگر** (<bdi dir="ltr">Tabs from other devices</bdi>) را ببینید. برای این کار Firefox Sync باید با همگام‌سازی زبانه‌های باز روشن باشد.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox View, Tabs from other devices. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="why" title="چرا زبانه‌هایم بازیابی نشدند؟">
+
+- **تنظیم راه‌اندازی صفحهٔ زبانهٔ جدید را باز می‌کند.** فقط گزینهٔ راه‌اندازی «نشست قبلی» زبانه‌هایتان را در هر بار اجرا دوباره باز می‌کند؛ بخش بعدی نشان می‌دهد این گزینه در مرورگر شما کجاست.
+- **زبانه‌ها در پنجرهٔ خصوصی بودند.** پنجره‌های <bdi dir="ltr">Incognito</bdi> و <bdi dir="ltr">InPrivate</bdi> هیچ‌وقت بازیابی نمی‌شوند.
+- **پنجره‌ها را یکی‌یکی بستید.** هنگام راه‌اندازی، همان چیزی برمی‌گردد که موقع *بستن* مرورگر باز بود. پنجره‌هایی که پیش از آن بسته‌اید فقط در تاریخچه هستند.
+- **نمایهٔ دیگری را باز کردید.** هر نمایه نشست خودش را دارد؛ نماد نمایه را بررسی کنید.
+
+</Section>
+
+<Section id="prevent" title="مطمئن شوید دفعهٔ بعد تکرار نمی‌شود">
+
+همین حالا تنظیم راه‌اندازی را روشن کنید؛ همین یک تغییر، به‌روزرسانی‌ها و راه‌اندازی‌های دوباره را پوشش می‌دهد.
+
+<BrowserPanels section="prevent">
+<BrowserPanel browser="chrome">
+
+**تنظیمات ← هنگام راه‌اندازی ← ادامه از جایی که ترک کردید** (<bdi dir="ltr">Settings → On startup → Continue where you left off</bdi>). یا `chrome://settings/onStartup` را در نوار نشانی بچسبانید.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="تنظیمات Chrome، بخش On startup (هنگام راه‌اندازی)، با گزینهٔ انتخاب‌شدهٔ Continue where you left off (ادامه از جایی که ترک کردید)" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">تنظیم On startup (هنگام راه‌اندازی) در Chrome، روی باز کردن دوبارهٔ جلسهٔ قبل.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+<bdi dir="ltr">**Settings → Start, home, and new tab page → On startup → Open tabs from the previous session**</bdi>. یا `edge://settings/startHomeNTP` را در نوار نشانی بچسبانید.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="تنظیمات Edge، بخش Start, home, and new tab page، با گزینهٔ انتخاب‌شدهٔ Open tabs from the previous session" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">تنظیمات Start, home, and new tab page در Edge، روی باز کردن دوبارهٔ جلسهٔ قبل.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+**تنظیمات ← خانه و راه‌اندازی ← راه‌اندازی ← باز کردن پنجره‌ها و زبانه‌های قبلی** (<bdi dir="ltr">Settings → Home and startup → Startup → Open previous windows and tabs</bdi>). یا `about:preferences#home` را در نوار نشانی بچسبانید.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="تنظیمات Firefox، بخش Home and startup (خانه و راه‌اندازی)، با گزینهٔ تیک‌خوردهٔ Open previous windows and tabs (باز کردن پنجره‌ها و زبانه‌های قبلی)" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">تنظیمات «خانه و راه‌اندازی» در Firefox، با گزینهٔ تیک‌خوردهٔ «باز کردن پنجره‌ها و زبانه‌های قبلی».</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+بازیابی هنگام راه‌اندازی برای پنجره‌ای که هفتهٔ پیش ناخواسته بستید کاری نمی‌کند. برای آن به یک نسخهٔ ذخیره‌شده نیاز دارید: پنجره‌ها را نشانک‌گذاری کنید یا از یک [مدیر نشست](/blog/browser-session-manager) استفاده کنید. راهنمای ما برای [ذخیرهٔ همهٔ زبانه‌های باز](/blog/save-all-open-tabs) گزینه‌ها را مقایسه می‌کند.
+
+[TabMerger](/features)، افزونهٔ رایگان ما برای Chrome و Edge و Firefox، می‌تواند ذخیره کردن را به جای شما انجام دهد. **تنظیمات ← داده‌ها ← ذخیرهٔ خودکار زبانه‌های باز** زبانه‌های باز را طبق زمان‌بندی به شکل یک گروه ذخیره می‌کند (از هر ۱۵ دقیقه تا روزانه). **اخیراً بسته‌شده** هر زبانه و پنجره‌ای را که می‌بندید، روزبه‌روز نگه می‌دارد: طرح رایگان ۲ روز و طرح Pro تا ۳۰ روز. طرز کار هر دو و تنظیمشان را در [دیگر هیچ زبانه‌ای را از دست ندهید](/blog/never-lose-a-tab-again) توضیح داده‌ایم.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="ذخیره طبق زمان‌بندی و پیدا کردن زبانه‌های بسته‌شده" steps={[{ title: 'ذخیرهٔ خودکار' }, { title: 'اخیراً بسته‌شده' }]}>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-auto-save-schedule" alt="تنظیمات TabMerger، زبانهٔ Data (داده‌ها): گزینهٔ Auto-save open tabs (ذخیرهٔ خودکار زبانه‌های باز) روشن است و زمان‌بندی روی Every 30 minutes (هر ۳۰ دقیقه) است، پوستهٔ روشن" darkAlt="تنظیمات TabMerger، زبانهٔ Data (داده‌ها): گزینهٔ Auto-save open tabs (ذخیرهٔ خودکار زبانه‌های باز) روشن است و زمان‌بندی روی Every 30 minutes (هر ۳۰ دقیقه) است، پوستهٔ تیره" boxes={[{ id: 'schedule', label: 'زمان‌بندی' }]} source="TabMerger 3.16.1"><bdi dir="ltr">Auto-save open tabs</bdi> (ذخیرهٔ خودکار زبانه‌های باز) هر ۳۰ دقیقه: نسخه‌ای تازه از زبانه‌های باز، هر اتفاقی هم که برای مرورگر بیفتد.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-recently-closed" alt="بخش Recently closed (اخیراً بسته‌شده) در TabMerger برای امروز: سه زبانهٔ بسته‌شده و ساعت بسته شدن هر کدام، پوستهٔ روشن" darkAlt="بخش Recently closed (اخیراً بسته‌شده) در TabMerger برای امروز: سه زبانهٔ بسته‌شده و ساعت بسته شدن هر کدام، پوستهٔ تیره" boxes={[{ id: 'today-row', label: 'امروز' }]} source="TabMerger 3.16.1"><bdi dir="ltr">Recently closed</bdi> (اخیراً بسته‌شده): زبانه‌هایی که امروز بسته شده‌اند، با ساعت بسته شدن هر کدام.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>رایگان برای Chrome و Edge و Firefox. برای شروع به حساب کاربری نیاز ندارید.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="پرسش‌های متداول">
+
+<Faq items={post.faq} />
+
+</Section>
