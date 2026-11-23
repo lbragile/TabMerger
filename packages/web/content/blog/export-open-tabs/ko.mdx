@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'export-open-tabs',
+  title: '열린 탭을 내보내는 방법',
+  navTitle: '열린 탭 내보내기',
+  seoTitle: 'Chrome, Edge, Firefox에서 열린 탭 내보내기 방법',
+  description:
+    '열려 있는 모든 탭을 제목과 주소까지 내 파일로 내보내세요. TabMerger의 원클릭 JSON 내보내기(열린 탭과 저장한 그룹을 한 번에)와 브라우저의 북마크 내보내기를 단계별로 정리했습니다.',
+  shareSummary: '열린 탭을 한 번의 클릭으로 파일로 내보내고, 어디서든 다시 가져오세요.',
+  dek: '살아남기를 바라는 세션보다 내 손에 있는 파일이 낫습니다. TabMerger에서는 한 번, 브라우저에서는 몇 번의 클릭이면 됩니다.',
+  published: '2026-12-02',
+  updated: '2026-12-02',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger의 ‘JSON 내보내기’는 열린 탭과 저장한 모든 그룹을 파일 하나에 저장합니다.', source: 'TabMerger 3.16.1에서 테스트, 2026년 11월 21일' },
+    { text: 'TabMerger는 JSON, 북마크 HTML, OneTab 텍스트 파일을 가져올 수 있습니다.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome은 북마크 관리자의 메뉴에서 북마크를 내보냅니다.',
+      source: 'Chrome 고객센터',
+      href: 'https://support.google.com/chrome/answer/96816',
+    },
+    { text: '세 브라우저 모두에서 Ctrl+Shift+D를 누르면 창의 모든 탭이 북마크에 추가됩니다.', source: 'Chrome 및 Edge 도움말, Firefox 159 단축키' },
+  ],
+  faq: [
+    {
+      question: '모든 탭의 URL을 복사하려면 어떻게 하나요?',
+      answer:
+        '가장 빠르고 빠짐없는 방법은 TabMerger의 설정 → 데이터 → JSON 내보내기입니다. 열린 모든 탭과 저장한 모든 그룹의 제목과 주소가 파일 하나에 담깁니다. 확장 프로그램 없이 하려면 창의 탭을 북마크에 추가하고(Ctrl+Shift+D) 북마크를 HTML로 내보내세요.',
+    },
+    {
+      question: '모든 창의 탭을 한 번에 내보낼 수 있나요?',
+      answer: '네, TabMerger라면 가능합니다. ‘현재 열린 탭’은 열린 모든 창을 포함하고, JSON 내보내기에도 들어갑니다. 북마크를 이용하는 방법은 창마다 따로 해야 합니다.',
+    },
+    {
+      question: '파일을 다시 가져오려면 어떻게 하나요?',
+      answer: 'TabMerger에서 설정 → 데이터 → 파일 가져오기를 사용하세요. TabMerger JSON, 북마크 HTML, OneTab 텍스트 파일을 읽어 그룹으로 추가합니다.',
+    },
+    {
+      question: '내보내기는 비공개인가요?',
+      answer: '네. 파일은 브라우저 안에서 만들어져 내 컴퓨터에 저장되며, 아무것도 업로드되지 않습니다. 방문한 페이지 목록이 들어 있으니 안전한 곳에 보관하세요.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: 'TabMerger ‘Settings’(설정)의 ‘Data’(데이터) 탭. ‘Import & export’(가져오기 및 내보내기) 아래에 ‘Export JSON’(JSON 내보내기) 버튼과 ‘Import file’(파일 가져오기) 버튼. 라이트 테마' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: 'TabMerger ‘Settings’(설정)의 ‘Data’(데이터) 탭. ‘Import & export’(가져오기 및 내보내기) 아래에 ‘Export JSON’(JSON 내보내기) 버튼과 ‘Import file’(파일 가져오기) 버튼. 다크 테마' },
+  ],
+  tags: ['save-tabs', 'bookmarks', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Import Chrome bookmarks & settings (export section)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/export-open-tabs/tm-settings-export-light.webp' },
+  ogImage: { src: '/blog/export-open-tabs/og.png', alt: '열린 탭을 내보내는 방법: ‘Export JSON’(JSON 내보내기) 버튼을 소개하는 TabMerger 가이드' },
+  toc: [
+    { id: 'quick', label: '간단한 답' },
+    { id: 'tabmerger', label: '한 번의 클릭으로 내보내기' },
+    { id: 'inside', label: '파일에 들어 있는 것' },
+    { id: 'builtin', label: '북마크를 이용하는 방법' },
+    { id: 'import', label: '다시 가져오기' },
+    { id: 'faq', label: '자주 묻는 질문' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: '북마크 내보내기',
+    values: { chrome: '북마크 관리자 → ⋮ → 북마크 내보내기', edge: 'Favorites → Export favorites', firefox: '라이브러리 → 북마크를 HTML로 내보내기…' },
+  },
+}
+
+<QuickAnswer>
+
+[TabMerger](/features)를 열고 **설정 → 데이터**(Settings → Data)로 이동해 **JSON 내보내기**(Export JSON)를 누르세요. 한 번의 클릭으로 **모든 창에 열린 모든 탭**의 제목과 주소, 그리고 저장해 둔 모든 그룹이 담긴 파일이 저장됩니다. 확장 프로그램 없이도 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>로 창의 탭을 북마크에 추가하고 북마크를 HTML 파일로 내보낼 수 있지만, 한 번에 창 하나씩입니다.
+
+</QuickAnswer>
+
+<InstallCta>모든 창의 열린 탭을 한 번의 클릭으로 내보내세요. Chrome, Edge, Firefox에서 무료입니다.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="열린 탭을 한 번의 클릭으로 모두 내보내려면?">
+
+1. TabMerger를 열고 계정 아이콘 → **설정**을 클릭합니다.
+2. **데이터** 탭을 엽니다.
+3. **가져오기 및 내보내기** 아래에서 **JSON 내보내기**를 누릅니다. 파일은 `tabmerger-backup-2026-11-21.json` 같은 이름으로 바로 다운로드됩니다.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="TabMerger ‘Settings’(설정)의 ‘Data’(데이터) 탭. ‘Import & export’(가져오기 및 내보내기) 아래에 ‘Export JSON’(JSON 내보내기) 버튼과 ‘Import file’(파일 가져오기) 버튼. 라이트 테마" darkAlt="TabMerger ‘Settings’(설정)의 ‘Data’(데이터) 탭. ‘Import & export’(가져오기 및 내보내기) 아래에 ‘Export JSON’(JSON 내보내기) 버튼과 ‘Import file’(파일 가져오기) 버튼. 다크 테마" boxes={[{ id: 'export-json', label: 'JSON 내보내기' }, { id: 'import-file', label: '파일 가져오기' }]} source="TabMerger 3.16.1">Settings → Data(설정 → 데이터): 내보내는 버튼 하나, 다시 가져오는 버튼 하나.</ThemedScreenshot>
+
+Free를 포함한 모든 요금제에서 쓸 수 있고, 파일은 브라우저 안에서 만들어집니다. 아무것도 업로드되지 않습니다.
+
+</Section>
+
+<Section id="inside" title="내보낸 파일에는 무엇이 들어 있나요?">
+
+그룹의 JSON 목록입니다. 맨 앞에 **현재 열린 탭**(Now Open), 즉 지금 열려 있는 창과 탭이 오고, 그 뒤에 저장한 그룹이 하나씩 이어집니다. 실제 내보내기 파일의 예:
+
+<ComparisonTable
+  head={['필드', '내보내기 파일의 예']}
+  rows={[
+    [<code>name</code>, '‘Now Open’, ‘Work’, ‘Reading list’'],
+    [<code>windows[]</code>, '창마다 항목 하나, 각각 그 창의 탭 포함'],
+    [<code>tabs[].title</code>, '‘Spaced repetition - Wikipedia’'],
+    [<code>tabs[].url</code>, <code>https://en.wikipedia.org/wiki/Spaced_repetition</code>],
+    [<code>color</code>, <code>rgba(59, 130, 246, 1)</code>],
+  ]}
+/>
+
+JSON은 일반 텍스트라서 어떤 스크립트나 텍스트 편집기로도 읽을 수 있습니다. 주소만 뽑아내거나, Markdown 목록으로 바꾸거나, 백업으로 보관하세요.
+
+</Section>
+
+<Section id="builtin" title="확장 프로그램 없이 탭을 내보내려면?">
+
+브라우저는 열린 탭을 바로 내보내지 못하지만 북마크는 내보낼 수 있습니다. 그러니 먼저 탭을 북마크에 추가한 다음 내보내세요.
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. 창마다 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>(Mac에서는 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>)를 누르고 탭을 새 폴더에 저장합니다.
+2. **⋮ → 북마크 및 목록 → 북마크 관리자**(Bookmarks and lists → Bookmark Manager)를 엽니다.
+3. 상단에서 **⋮ → 북마크 내보내기**(Export bookmarks)를 엽니다. Chrome이 모든 북마크를 HTML 파일로 저장합니다.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. 창마다 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>를 눌러 모든 탭을 새 폴더의 즐겨찾기에 추가합니다.
+2. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>를 눌러 즐겨찾기(Favorites)를 엽니다.
+3. 페이지 메뉴에서 **Export favorites**를 선택하고 HTML 파일을 저장합니다.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. 창마다 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>를 눌러 모든 탭을 새 폴더에 북마크합니다.
+2. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>를 눌러 ‘라이브러리’(Library) 창을 엽니다.
+3. **북마크를 HTML로 내보내기…**(Export Bookmarks to HTML…)를 선택하고 파일을 저장합니다.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>한 번에 창 하나씩만 되고, 그 탭들만이 아니라 *모든* 북마크를 내보내며, 어떤 탭이 함께 열려 있었는지는 파일에 남지 않습니다.</Catch>
+
+</Section>
+
+<Section id="import" title="탭을 다시 가져오려면?">
+
+TabMerger의 **설정 → 데이터 → 파일 가져오기**(Settings → Data → Import file)는 세 종류의 파일을 모두 읽어, 기존 그룹 옆에 그룹으로 추가합니다.
+
+- **TabMerger JSON**: ‘JSON 내보내기’로 만든 파일로, 저장한 그룹과 창이 그대로 들어 있습니다. 파일의 ‘현재 열린 탭’은 추가되지 않으므로(내보낸 브라우저에서 열려 있던 탭이기 때문), 열린 창도 되살리고 싶다면 내보내기 전에 그룹으로 저장해 두세요.
+- **북마크 HTML**: 어느 브라우저의 것이든 되며, 최상위 폴더마다 그룹 하나가 됩니다.
+- **OneTab 텍스트**: OneTab 목록마다 그룹 하나가 됩니다. [OneTab 대안 가이드](/blog/onetab-alternatives)를 참고하세요.
+
+그래서 계정 없이 [다른 컴퓨터로 탭을 옮기는](/blog/move-tabs-between-computers) 가장 간단한 방법이 내보내기입니다. 자동으로 하고 싶다면 [Pro](/pricing)가 최신 자동 백업 10개를 보관하고, 그룹을 기기 간에 엔드투엔드 암호화로 동기화합니다. 파일 없이 탭을 나중을 위해 저장하려면 [열린 탭을 모두 저장하는 방법](/blog/save-all-open-tabs)을, 탭 묶음을 다른 사람에게 보내려면 [탭 묶음을 공유하는 방법](/blog/share-a-set-of-tabs)을 참고하세요.
+
+<InstallCta>Chrome, Edge, Firefox에서 무료입니다. 계정 없이 바로 시작할 수 있습니다.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="자주 묻는 질문">
+
+<Faq items={post.faq} />
+
+</Section>

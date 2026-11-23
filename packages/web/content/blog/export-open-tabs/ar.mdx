@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'export-open-tabs',
+  title: 'كيف تصدّر علامات التبويب المفتوحة',
+  navTitle: 'تصدير علامات التبويب المفتوحة',
+  seoTitle: 'كيفية تصدير علامات التبويب المفتوحة في Chrome وEdge وFirefox',
+  description:
+    'صدّر كل علامات التبويب المفتوحة، بعناوينها وروابطها، إلى ملف تحتفظ به: تصدير JSON بنقرة واحدة في TabMerger (علامات التبويب المفتوحة والمجموعات المحفوظة معًا)، أو تصدير الإشارات المرجعية المدمج في المتصفح، خطوة بخطوة.',
+  shareSummary: 'صدّر كل علامات التبويب المفتوحة إلى ملف بنقرة واحدة، واستوردها من جديد أينما شئت.',
+  dek: 'ملف تملكه أفضل من جلسة تأمل أن تصمد. نقرة واحدة في TabMerger، وبضع نقرات في المتصفح.',
+  published: '2026-12-02',
+  updated: '2026-12-02',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'يحفظ «تصدير JSON» في TabMerger علامات التبويب المفتوحة وكل مجموعة محفوظة في ملف واحد.', source: 'جرّبناه في TabMerger 3.16.1، 21 نوفمبر 2026' },
+    { text: 'يستورد TabMerger ملفات JSON وملفات HTML للإشارات المرجعية وملفات OneTab النصية.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'يصدّر Chrome الإشارات المرجعية من قائمة مدير الإشارات.',
+      source: 'مساعدة Chrome',
+      href: 'https://support.google.com/chrome/answer/96816',
+    },
+    { text: 'يضيف Ctrl+Shift+D كل علامات التبويب في النافذة إلى الإشارات المرجعية، في المتصفحات الثلاثة.', source: 'مساعدة Chrome وEdge؛ اختصارات Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'كيف أنسخ روابط كل علامات التبويب؟',
+      answer:
+        'أسرع نسخة كاملة هي الإعدادات ← البيانات ← تصدير JSON في TabMerger: ملف واحد فيه عنوان ورابط كل علامة تبويب مفتوحة وكل مجموعة محفوظة. ومن دون إضافة، أضف علامات تبويب النافذة إلى الإشارات المرجعية (Ctrl+Shift+D) ثم صدّر إشاراتك المرجعية بصيغة HTML.',
+    },
+    {
+      question: 'هل يمكنني تصدير علامات التبويب من كل النوافذ دفعة واحدة؟',
+      answer: 'نعم، مع TabMerger: تشمل «المفتوحة الآن» كل نافذة مفتوحة، ويتضمنها تصدير JSON. أما طريقة الإشارات المرجعية فتعمل نافذةً تلو الأخرى.',
+    },
+    {
+      question: 'كيف أستورد الملف مرة أخرى؟',
+      answer: 'في TabMerger، اختر الإعدادات ← البيانات ← استيراد ملف: يقرأ ملفات JSON من TabMerger وملفات HTML للإشارات المرجعية وملفات OneTab النصية، ويضيفها كمجموعات.',
+    },
+    {
+      question: 'هل التصدير خاص؟',
+      answer: 'نعم. يُنشأ الملف في متصفحك ويُحفظ على حاسوبك؛ ولا يُرفع أي شيء. احفظه في مكان آمن، فهو يسرد صفحاتك.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: 'Settings (الإعدادات) في TabMerger، تبويب Data (البيانات)، مع زرّي Export JSON (تصدير JSON) وImport file (استيراد ملف) تحت Import & export (الاستيراد والتصدير)، المظهر الفاتح' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: 'Settings (الإعدادات) في TabMerger، تبويب Data (البيانات)، مع زرّي Export JSON (تصدير JSON) وImport file (استيراد ملف) تحت Import & export (الاستيراد والتصدير)، المظهر الداكن' },
+  ],
+  tags: ['save-tabs', 'bookmarks', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Import Chrome bookmarks & settings (export section)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/export-open-tabs/tm-settings-export-light.webp' },
+  ogImage: { src: '/blog/export-open-tabs/og.png', alt: 'كيف تصدّر علامات التبويب المفتوحة: دليل من TabMerger، مع زر Export JSON (تصدير JSON)' },
+  toc: [
+    { id: 'quick', label: 'إجابة سريعة' },
+    { id: 'tabmerger', label: 'التصدير بنقرة واحدة' },
+    { id: 'inside', label: 'ما الذي في الملف' },
+    { id: 'builtin', label: 'طريقة الإشارات المرجعية' },
+    { id: 'import', label: 'استعادتها' },
+    { id: 'faq', label: 'الأسئلة الشائعة' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'تصدير الإشارات المرجعية',
+    values: { chrome: 'مدير الإشارات ← ⋮ ← تصدير الإشارات المرجعية', edge: 'Favorites → Export favorites', firefox: 'المكتبة ← صدّر العلامات إلى HTML…' },
+  },
+}
+
+<QuickAnswer>
+
+افتح [TabMerger](/features)، وانتقل إلى **الإعدادات ← البيانات** (<bdi dir="ltr">Settings → Data</bdi>) واضغط **تصدير JSON** (<bdi dir="ltr">Export JSON</bdi>). نقرة واحدة تحفظ ملفًا فيه عنوان ورابط **كل علامة تبويب مفتوحة في كل نافذة**، إضافة إلى كل مجموعة حفظتها. ومن دون إضافة، يمكنك إضافة علامات تبويب نافذة إلى الإشارات المرجعية بالاختصار <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> ثم تصدير إشاراتك المرجعية كملف HTML، نافذةً تلو الأخرى.
+
+</QuickAnswer>
+
+<InstallCta>صدّر كل علامة تبويب مفتوحة، من كل نافذة، بنقرة واحدة. مجانًا لـ Chrome وEdge وFirefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="كيف أصدّر كل علامات التبويب المفتوحة بنقرة واحدة؟">
+
+1. افتح TabMerger وانقر أيقونة الحساب ← **الإعدادات**.
+2. افتح تبويب **البيانات**.
+3. تحت **الاستيراد والتصدير**، اضغط **تصدير JSON**. يُنزَّل الملف فورًا باسم مثل `tabmerger-backup-2026-11-21.json`.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="Settings (الإعدادات) في TabMerger، تبويب Data (البيانات)، مع زرّي Export JSON (تصدير JSON) وImport file (استيراد ملف) تحت Import & export (الاستيراد والتصدير)، المظهر الفاتح" darkAlt="Settings (الإعدادات) في TabMerger، تبويب Data (البيانات)، مع زرّي Export JSON (تصدير JSON) وImport file (استيراد ملف) تحت Import & export (الاستيراد والتصدير)، المظهر الداكن" boxes={[{ id: 'export-json', label: 'تصدير JSON' }, { id: 'import-file', label: 'استيراد ملف' }]} source="TabMerger 3.16.1"><bdi dir="ltr">Settings → Data</bdi> (الإعدادات ← البيانات): زر للتصدير، وزر للاستيراد.</ThemedScreenshot>
+
+الميزة متاحة في كل الخطط، ومنها الخطة المجانية، ويُنشأ الملف في متصفحك: لا يُرفع أي شيء.
+
+</Section>
+
+<Section id="inside" title="ما الذي يحتويه الملف المُصدَّر؟">
+
+قائمة JSON بمجموعاتك. تأتي أولًا **المفتوحة الآن** (<bdi dir="ltr">Now Open</bdi>)، أي النوافذ وعلامات التبويب المفتوحة حاليًا، ثم كل مجموعة محفوظة. من تصدير حقيقي:
+
+<ComparisonTable
+  head={['الحقل', 'مثال من التصدير']}
+  rows={[
+    [<code>name</code>, '«Now Open»، «Work»، «Reading list»'],
+    [<code>windows[]</code>, 'إدخال لكل نافذة، ومع كل منها علامات تبويبها'],
+    [<code>tabs[].title</code>, '«Spaced repetition - Wikipedia»'],
+    [<code>tabs[].url</code>, <code>https://en.wikipedia.org/wiki/Spaced_repetition</code>],
+    [<code>color</code>, <code>rgba(59, 130, 246, 1)</code>],
+  ]}
+/>
+
+JSON نص عادي، فيستطيع أي سكربت أو محرر نصوص قراءته: استخرج الروابط، أو حوّلها إلى قائمة Markdown، أو احتفظ بالملف كنسخة احتياطية.
+
+</Section>
+
+<Section id="builtin" title="كيف أصدّر علامات التبويب من دون إضافة؟">
+
+لا تصدّر المتصفحات علامات التبويب المفتوحة مباشرة، لكنها تصدّر الإشارات المرجعية. لذا أضف علامات التبويب إلى الإشارات المرجعية أولًا، ثم صدّرها:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. في كل نافذة، اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> على Mac) واحفظ علامات التبويب في مجلد جديد.
+2. افتح **⋮ ← الإشارات المرجعية والقوائم ← مدير الإشارات** (<bdi dir="ltr">Bookmarks and lists → Bookmark Manager</bdi>).
+3. في الأعلى، افتح **⋮ ← تصدير الإشارات المرجعية** (<bdi dir="ltr">Export bookmarks</bdi>). يحفظ Chrome كل الإشارات المرجعية في ملف HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. في كل نافذة، اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> لإضافة كل علامات التبويب إلى المفضلة، في مجلد جديد.
+2. اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd></bdi> لفتح المفضلة (<bdi dir="ltr">Favorites</bdi>).
+3. اختر <bdi dir="ltr">**Export favorites**</bdi> من قائمة الصفحة واحفظ ملف HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. في كل نافذة، اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> لإضافة كل علامات التبويب إلى الإشارات المرجعية في مجلد جديد.
+2. اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd></bdi> لفتح نافذة «المكتبة» (<bdi dir="ltr">Library</bdi>).
+3. اختر **صدّر العلامات إلى HTML…** (<bdi dir="ltr">Export Bookmarks to HTML…</bdi>) واحفظ الملف.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>تعمل نافذةً تلو الأخرى، وتصدّر *كل* إشاراتك المرجعية لا تلك العلامات فقط، ولا يعرف الملف أي علامات التبويب كانت مفتوحة معًا.</Catch>
+
+</Section>
+
+<Section id="import" title="كيف أستعيد علامات التبويب؟">
+
+في TabMerger، يقرأ **الإعدادات ← البيانات ← استيراد ملف** (<bdi dir="ltr">Settings → Data → Import file</bdi>) الأنواع الثلاثة من الملفات ويضيفها كمجموعات بجانب مجموعاتك الحالية:
+
+- **JSON من TabMerger**، من «تصدير JSON»، فيه مجموعاتك ونوافذك المحفوظة كما كانت. لا تُضاف «المفتوحة الآن» الموجودة في الملف (فقد كانت علامات التبويب المفتوحة في المتصفح الذي صدّرها)، لذا احفظ النوافذ المفتوحة في مجموعة قبل التصدير إن أردت استعادتها.
+- **HTML الإشارات المرجعية**، من أي متصفح: يصبح كل مجلد في المستوى الأعلى مجموعة.
+- **نص OneTab**: تصبح كل قائمة في OneTab مجموعة. راجع [دليلنا لبدائل OneTab](/blog/onetab-alternatives).
+
+لهذا يُعد التصدير أبسط طريقة [لنقل علامات التبويب إلى حاسوب آخر](/blog/move-tabs-between-computers) من دون حساب. تريد ذلك تلقائيًا؟ تحتفظ خطة [Pro](/pricing) بأحدث 10 نسخ احتياطية تلقائية وتزامن مجموعاتك بين أجهزتك بتشفير تام بين الطرفين. ولحفظ علامات التبويب لوقت لاحق من دون أي ملف، راجع [كيف تحفظ جميع علامات التبويب المفتوحة](/blog/save-all-open-tabs)؛ ولإرسال مجموعة علامات إلى شخص آخر، راجع [كيف تشارك مجموعة من علامات التبويب](/blog/share-a-set-of-tabs).
+
+<InstallCta>مجاني لـ Chrome وEdge وFirefox. لا تحتاج إلى حساب للبدء.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="الأسئلة الشائعة">
+
+<Faq items={post.faq} />
+
+</Section>

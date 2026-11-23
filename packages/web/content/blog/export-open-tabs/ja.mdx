@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'export-open-tabs',
+  title: '開いているタブをエクスポートする方法',
+  navTitle: '開いているタブをエクスポートする',
+  seoTitle: 'Chrome・Edge・Firefox で開いているタブをエクスポートする方法',
+  description:
+    '開いているタブをすべて、タイトルとアドレスごと手元のファイルに書き出す方法。TabMerger のワンクリック JSON エクスポート（開いているタブと保存済みグループをまとめて）と、ブラウザのブックマークのエクスポートを手順付きで紹介します。',
+  shareSummary: '開いているタブをワンクリックでファイルにエクスポートし、どこにでも読み込み直せます。',
+  dek: '残ることを祈るセッションより、自分の手元にあるファイル。TabMerger ならワンクリック、ブラウザでも数クリックです。',
+  published: '2026-12-02',
+  updated: '2026-12-02',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger の「JSON をエクスポート」は、開いているタブと保存済みのすべてのグループを 1 つのファイルに保存します。', source: 'TabMerger 3.16.1 で検証（2026年11月21日）' },
+    { text: 'TabMerger は JSON、ブックマークの HTML、OneTab のテキストファイルをインポートできます。', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome では、ブックマーク マネージャのメニューからブックマークをエクスポートします。',
+      source: 'Chrome ヘルプ',
+      href: 'https://support.google.com/chrome/answer/96816',
+    },
+    { text: '3 つのブラウザすべてで、Ctrl+Shift+D を押すとウィンドウ内のすべてのタブをブックマークできます。', source: 'Chrome と Edge のヘルプ、Firefox 159 のキー設定' },
+  ],
+  faq: [
+    {
+      question: 'すべてのタブの URL をコピーするには？',
+      answer:
+        'いちばん早く漏れなくコピーできるのは、TabMerger の 設定 → データ → JSON をエクスポート です。開いているすべてのタブと保存済みのすべてのグループのタイトルとアドレスが、1 つのファイルに入ります。拡張機能なしなら、ウィンドウのタブをブックマークして（Ctrl+Shift+D）、ブックマークを HTML でエクスポートします。',
+    },
+    {
+      question: 'すべてのウィンドウのタブを一度にエクスポートできますか？',
+      answer: 'はい、TabMerger なら可能です。「現在開いているタブ」は開いているすべてのウィンドウを含み、JSON エクスポートにも含まれます。ブックマークを使う方法では 1 ウィンドウずつになります。',
+    },
+    {
+      question: 'ファイルをもう一度読み込むには？',
+      answer: 'TabMerger の 設定 → データ → ファイルをインポート を使います。TabMerger の JSON、ブックマークの HTML、OneTab のテキストファイルを読み込み、グループとして追加します。',
+    },
+    {
+      question: 'エクスポートは非公開ですか？',
+      answer: 'はい。ファイルはブラウザ内で作られ、パソコンに保存されます。どこにもアップロードされません。開いていたページの一覧が入っているので、安全な場所に保管してください。',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: 'TabMerger の「Settings」（設定）の「Data」（データ）タブ。「Import & export」（インポートとエクスポート）の下に「Export JSON」（JSON をエクスポート）ボタンと「Import file」（ファイルをインポート）ボタン。ライトテーマ' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: 'TabMerger の「Settings」（設定）の「Data」（データ）タブ。「Import & export」（インポートとエクスポート）の下に「Export JSON」（JSON をエクスポート）ボタンと「Import file」（ファイルをインポート）ボタン。ダークテーマ' },
+  ],
+  tags: ['save-tabs', 'bookmarks', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Import Chrome bookmarks & settings (export section)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/export-open-tabs/tm-settings-export-light.webp' },
+  ogImage: { src: '/blog/export-open-tabs/og.png', alt: '開いているタブをエクスポートする方法：「Export JSON」（JSON をエクスポート）ボタンを紹介する TabMerger のガイド' },
+  toc: [
+    { id: 'quick', label: '簡単な答え' },
+    { id: 'tabmerger', label: 'ワンクリックでエクスポート' },
+    { id: 'inside', label: 'ファイルの中身' },
+    { id: 'builtin', label: 'ブックマークを使う方法' },
+    { id: 'import', label: 'タブを元に戻す' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'ブックマークのエクスポート',
+    values: { chrome: 'ブックマーク マネージャ → ⋮ → ブックマークをエクスポート', edge: 'Favorites → Export favorites', firefox: 'ブラウジングライブラリー → HTML としてエクスポート...' },
+  },
+}
+
+<QuickAnswer>
+
+[TabMerger](/features) を開き、**設定 → データ**（Settings → Data）で **JSON をエクスポート**（Export JSON）を押します。ワンクリックで、**すべてのウィンドウの開いているタブすべて**のタイトルとアドレスに加え、保存したすべてのグループを含むファイルが保存されます。拡張機能なしでも、<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> でウィンドウのタブをブックマークし、ブックマークを HTML ファイルとしてエクスポートできます。ただし 1 ウィンドウずつです。
+
+</QuickAnswer>
+
+<InstallCta>すべてのウィンドウの開いているタブを、ワンクリックでエクスポート。Chrome、Edge、Firefox に無料で対応。</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="開いているタブをワンクリックですべてエクスポートするには？">
+
+1. TabMerger を開き、アカウントアイコン → **設定** をクリックします。
+2. **データ** タブを開きます。
+3. **インポートとエクスポート** の **JSON をエクスポート** を押します。ファイルはすぐにダウンロードされ、名前は `tabmerger-backup-2026-11-21.json` のようになります。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="TabMerger の「Settings」（設定）の「Data」（データ）タブ。「Import & export」（インポートとエクスポート）の下に「Export JSON」（JSON をエクスポート）ボタンと「Import file」（ファイルをインポート）ボタン。ライトテーマ" darkAlt="TabMerger の「Settings」（設定）の「Data」（データ）タブ。「Import & export」（インポートとエクスポート）の下に「Export JSON」（JSON をエクスポート）ボタンと「Import file」（ファイルをインポート）ボタン。ダークテーマ" boxes={[{ id: 'export-json', label: 'JSON をエクスポート' }, { id: 'import-file', label: 'ファイルをインポート' }]} source="TabMerger 3.16.1">Settings → Data（設定 → データ）：書き出すボタンと、読み込み直すボタン。</ThemedScreenshot>
+
+Free を含むすべてのプランで使え、ファイルはブラウザ内で作られます。何もアップロードされません。
+
+</Section>
+
+<Section id="inside" title="エクスポートしたファイルには何が入っている？">
+
+グループの JSON リストです。最初が **現在開いているタブ**（Now Open）、つまり今開いているウィンドウとタブで、その後に保存済みのグループが続きます。実際のエクスポートからの例：
+
+<ComparisonTable
+  head={['フィールド', 'エクスポートの例']}
+  rows={[
+    [<code>name</code>, '「Now Open」「Work」「Reading list」'],
+    [<code>windows[]</code>, 'ウィンドウごとに 1 項目、それぞれにタブが入る'],
+    [<code>tabs[].title</code>, '「Spaced repetition - Wikipedia」'],
+    [<code>tabs[].url</code>, <code>https://en.wikipedia.org/wiki/Spaced_repetition</code>],
+    [<code>color</code>, <code>rgba(59, 130, 246, 1)</code>],
+  ]}
+/>
+
+JSON はプレーンテキストなので、どんなスクリプトやテキストエディタでも読めます。アドレスだけを取り出す、Markdown のリストに変換する、バックアップとして保管する、といった使い方ができます。
+
+</Section>
+
+<Section id="builtin" title="拡張機能なしでタブをエクスポートするには？">
+
+ブラウザは開いているタブを直接エクスポートできませんが、ブックマークならエクスポートできます。そこで、まずタブをブックマークしてからエクスポートします。
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. 各ウィンドウで <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>（Mac では <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>）を押し、タブを新しいフォルダに保存します。
+2. 「**⋮ → ブックマークとリスト → ブックマーク マネージャ**」（Bookmarks and lists → Bookmark Manager）を開きます。
+3. 上部の「**⋮ → ブックマークをエクスポート**」（Export bookmarks）を選びます。Chrome はすべてのブックマークを HTML ファイルに保存します。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. 各ウィンドウで <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> を押し、すべてのタブを新しいフォルダのお気に入りに追加します。
+2. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> を押してお気に入り（Favorites）を開きます。
+3. ページのメニューから **Export favorites** を選び、HTML ファイルを保存します。
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. 各ウィンドウで <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> を押し、すべてのタブを新しいフォルダにブックマークします。
+2. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> を押して「ブラウジングライブラリー」（Library）ウィンドウを開きます。
+3. **HTML としてエクスポート...**（Export Bookmarks to HTML…）を選び、ファイルを保存します。
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>1 ウィンドウずつしかできず、そのタブだけでなくブックマークを*すべて*エクスポートしてしまい、どのタブが一緒に開いていたかはファイルに残りません。</Catch>
+
+</Section>
+
+<Section id="import" title="タブを元に戻すには？">
+
+TabMerger の **設定 → データ → ファイルをインポート**（Settings → Data → Import file）は 3 種類のファイルをすべて読み込み、既存のグループの隣にグループとして追加します。
+
+- **TabMerger の JSON**：「JSON をエクスポート」で作ったファイルで、保存済みのグループとウィンドウがそのまま入っています。ファイル内の「現在開いているタブ」は追加されません（エクスポートしたブラウザで開いていたタブのため）。開いているウィンドウも戻したい場合は、エクスポートの前にグループとして保存してください。
+- **ブックマークの HTML**：どのブラウザのものでも使え、最上位のフォルダごとに 1 つのグループになります。
+- **OneTab のテキスト**：OneTab のリストごとに 1 つのグループになります。詳しくは [OneTab の代替ツールのガイド](/blog/onetab-alternatives)をご覧ください。
+
+つまりエクスポートは、アカウントなしで[タブを別のパソコンに移す](/blog/move-tabs-between-computers)いちばん簡単な方法です。自動にしたいなら、[Pro](/pricing) が最新 10 件の自動バックアップを保管し、グループをデバイス間でエンドツーエンド暗号化して同期します。ファイルを使わずにタブを後で使うために取っておくなら[開いているタブをすべて保存する方法](/blog/save-all-open-tabs)を、タブのセットを誰かに送るなら[タブのセットを共有する方法](/blog/share-a-set-of-tabs)をご覧ください。
+
+<InstallCta>Chrome、Edge、Firefox に無料で対応。アカウントなしで始められます。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

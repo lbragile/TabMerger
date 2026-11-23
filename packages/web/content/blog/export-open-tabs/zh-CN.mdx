@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'export-open-tabs',
+  title: '如何导出已打开的标签页',
+  navTitle: '导出已打开的标签页',
+  seoTitle: '如何在 Chrome、Edge 和 Firefox 中导出已打开的标签页',
+  description:
+    '把所有已打开标签页的标题和网址导出到你自己保存的文件中：用 TabMerger 一键导出 JSON（已打开的标签页和已保存的分组一起导出），或按步骤使用浏览器自带的书签导出。',
+  shareSummary: '一键把所有已打开的标签页导出为文件，在任何地方都能重新导入。',
+  dek: '握在手里的文件，比只能祈祷别丢的会话更可靠。在 TabMerger 里点一下，在浏览器里多点几下。',
+  published: '2026-12-02',
+  updated: '2026-12-02',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger 的“导出 JSON”会把已打开的标签页和每个已保存的分组存进同一个文件。', source: '已在 TabMerger 3.16.1 中测试，2026 年 11 月 21 日' },
+    { text: 'TabMerger 可以导入 JSON、书签 HTML 和 OneTab 文本文件。', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome 通过书签管理器的菜单导出书签。',
+      source: 'Chrome 帮助',
+      href: 'https://support.google.com/chrome/answer/96816',
+    },
+    { text: '在三款浏览器中，按 Ctrl+Shift+D 都能把窗口中的所有标签页加入书签。', source: 'Chrome 和 Edge 帮助；Firefox 159 快捷键' },
+  ],
+  faq: [
+    {
+      question: '如何复制所有标签页的网址？',
+      answer:
+        '最快又最完整的方法是 TabMerger 的 设置 → 数据 → 导出 JSON：一个文件就包含每个已打开标签页和每个已保存分组的标题与网址。如果不用扩展，可以把窗口中的标签页加入书签（Ctrl+Shift+D），再把书签导出为 HTML。',
+    },
+    {
+      question: '能一次导出所有窗口的标签页吗？',
+      answer: '可以，用 TabMerger 就行：“当前打开”涵盖所有已打开的窗口，导出的 JSON 也包含它。书签的方法只能一个窗口一个窗口地来。',
+    },
+    {
+      question: '如何重新导入这个文件？',
+      answer: '在 TabMerger 中使用 设置 → 数据 → 导入文件：它能读取 TabMerger JSON、书签 HTML 和 OneTab 文本文件，并把它们添加为分组。',
+    },
+    {
+      question: '导出的文件是私密的吗？',
+      answer: '是的。文件在你的浏览器中生成并保存到你的电脑上，不会上传任何内容。文件里列着你打开过的页面，请妥善保管。',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: 'TabMerger 的“Settings”（设置）中的“Data”（数据）标签，“Import & export”（导入与导出）下方有“Export JSON”（导出 JSON）和“Import file”（导入文件）按钮，浅色主题' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: 'TabMerger 的“Settings”（设置）中的“Data”（数据）标签，“Import & export”（导入与导出）下方有“Export JSON”（导出 JSON）和“Import file”（导入文件）按钮，深色主题' },
+  ],
+  tags: ['save-tabs', 'bookmarks', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Import Chrome bookmarks & settings (export section)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/export-open-tabs/tm-settings-export-light.webp' },
+  ogImage: { src: '/blog/export-open-tabs/og.png', alt: '如何导出已打开的标签页：TabMerger 指南，附“Export JSON”（导出 JSON）按钮' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'tabmerger', label: '一键导出' },
+    { id: 'inside', label: '文件里有什么' },
+    { id: 'builtin', label: '书签的方法' },
+    { id: 'import', label: '把标签页找回来' },
+    { id: 'faq', label: '常见问题' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: '导出书签',
+    values: { chrome: '书签管理器 → ⋮ → 导出书签', edge: 'Favorites → Export favorites', firefox: '我的足迹 → 导出书签为 HTML 文件…' },
+  },
+}
+
+<QuickAnswer>
+
+打开 [TabMerger](/features)，进入 **设置 → 数据**（Settings → Data），点击 **导出 JSON**（Export JSON）。点一下就会保存一个文件，里面有**所有窗口中每个已打开标签页**的标题和网址，以及你保存过的每个分组。如果不用扩展，可以用 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> 把一个窗口的标签页加入书签，再把书签导出为 HTML 文件，但每次只能处理一个窗口。
+
+</QuickAnswer>
+
+<InstallCta>一键导出所有窗口中的每个已打开标签页。免费支持 Chrome、Edge 和 Firefox。</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="如何一键导出所有已打开的标签页？">
+
+1. 打开 TabMerger，点击账户图标 → **设置**。
+2. 打开 **数据** 标签。
+3. 在 **导入与导出** 下点击 **导出 JSON**。文件会立即下载，文件名类似 `tabmerger-backup-2026-11-21.json`。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="TabMerger 的“Settings”（设置）中的“Data”（数据）标签，“Import & export”（导入与导出）下方有“Export JSON”（导出 JSON）和“Import file”（导入文件）按钮，浅色主题" darkAlt="TabMerger 的“Settings”（设置）中的“Data”（数据）标签，“Import & export”（导入与导出）下方有“Export JSON”（导出 JSON）和“Import file”（导入文件）按钮，深色主题" boxes={[{ id: 'export-json', label: '导出 JSON' }, { id: 'import-file', label: '导入文件' }]} source="TabMerger 3.16.1">Settings → Data（设置 → 数据）：一个按钮导出，一个按钮导回。</ThemedScreenshot>
+
+所有方案都能用，包括 Free，而且文件在你的浏览器中生成：不会上传任何内容。
+
+</Section>
+
+<Section id="inside" title="导出的文件里有什么？">
+
+一个包含你所有分组的 JSON 列表。排在最前面的是 **当前打开**（Now Open），也就是你当前打开的窗口和标签页，后面依次是每个已保存的分组。以下来自一次真实导出：
+
+<ComparisonTable
+  head={['字段', '导出文件中的示例']}
+  rows={[
+    [<code>name</code>, '“Now Open”、“Work”、“Reading list”'],
+    [<code>windows[]</code>, '每个窗口一项，各自包含其标签页'],
+    [<code>tabs[].title</code>, '“Spaced repetition - Wikipedia”'],
+    [<code>tabs[].url</code>, <code>https://en.wikipedia.org/wiki/Spaced_repetition</code>],
+    [<code>color</code>, <code>rgba(59, 130, 246, 1)</code>],
+  ]}
+/>
+
+JSON 是纯文本，任何脚本或文本编辑器都能读取：你可以提取其中的网址，把它们转成 Markdown 列表，或者把文件留作备份。
+
+</Section>
+
+<Section id="builtin" title="不用扩展，如何导出标签页？">
+
+浏览器不能直接导出已打开的标签页，但可以导出书签。所以先把标签页加入书签，再导出：
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. 在每个窗口中按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>（Mac 上为 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>），把标签页保存到一个新文件夹。
+2. 打开 **⋮ → 书签和清单 → 书签管理器**（Bookmarks and lists → Bookmark Manager）。
+3. 在顶部打开 **⋮ → 导出书签**（Export bookmarks）。Chrome 会把所有书签保存为一个 HTML 文件。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. 在每个窗口中按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>，把所有标签页添加到收藏夹中的一个新文件夹。
+2. 按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> 打开收藏夹（Favorites）。
+3. 从页面的菜单中选择 **Export favorites**，然后保存 HTML 文件。
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. 在每个窗口中按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>，把所有标签页加入书签，放进一个新文件夹。
+2. 按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> 打开“我的足迹”（Library）窗口。
+3. 选择 **导出书签为 HTML 文件…**（Export Bookmarks to HTML…），然后保存文件。
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>每次只能处理一个窗口，导出的是你的*全部*书签而不只是这些标签页，而且文件不知道哪些标签页是一起打开的。</Catch>
+
+</Section>
+
+<Section id="import" title="如何把标签页找回来？">
+
+在 TabMerger 中，**设置 → 数据 → 导入文件**（Settings → Data → Import file）能读取全部三种文件，并把它们作为分组添加到你现有分组的旁边：
+
+- **TabMerger JSON**：由“导出 JSON”生成，已保存的分组和窗口都保持原样。文件中的“当前打开”不会被添加（那是导出时那个浏览器中打开的标签页），所以如果想找回当时打开的窗口，请在导出前把它们保存为分组。
+- **书签 HTML**：来自任何浏览器均可，每个顶层文件夹会成为一个分组。
+- **OneTab 文本**：每个 OneTab 列表会成为一个分组。请参阅我们的 [OneTab 替代工具指南](/blog/onetab-alternatives)。
+
+因此，导出是在不用账户的情况下[把标签页转移到另一台电脑](/blog/move-tabs-between-computers)最简单的方法。想让它自动进行？[Pro](/pricing) 会保留最新的 10 个自动备份，并通过端到端加密在设备之间同步你的分组。如果想完全不用文件、把标签页留着以后用，请参阅[如何保存所有已打开的标签页](/blog/save-all-open-tabs)；如果想把一组标签页发给别人，请参阅[如何分享一组标签页](/blog/share-a-set-of-tabs)。
+
+<InstallCta>免费支持 Chrome、Edge 和 Firefox。无需账户即可开始。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

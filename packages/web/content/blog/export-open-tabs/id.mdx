@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'export-open-tabs',
+  title: 'Cara mengekspor tab yang terbuka',
+  navTitle: 'Ekspor tab yang terbuka',
+  seoTitle: 'Cara Ekspor Tab yang Terbuka di Chrome, Edge, dan Firefox',
+  description:
+    'Ekspor semua tab yang terbuka, lengkap dengan judul dan alamatnya, ke file yang Anda simpan sendiri: ekspor JSON sekali klik di TabMerger (tab terbuka dan grup tersimpan sekaligus), atau ekspor bookmark bawaan browser, langkah demi langkah.',
+  shareSummary: 'Ekspor semua tab yang terbuka ke file dalam sekali klik, lalu impor lagi di mana saja.',
+  dek: 'File milik Anda lebih andal daripada sesi yang semoga saja bertahan. Sekali klik di TabMerger, beberapa klik di browser.',
+  published: '2026-12-02',
+  updated: '2026-12-02',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '“Ekspor JSON” di TabMerger menyimpan tab yang terbuka dan setiap grup tersimpan dalam satu file.', source: 'Diuji di TabMerger 3.16.1, 21 Nov 2026' },
+    { text: 'TabMerger mengimpor file JSON, HTML bookmark, dan file teks OneTab.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome mengekspor bookmark dari menu Pengelola Bookmark.',
+      source: 'Bantuan Chrome',
+      href: 'https://support.google.com/chrome/answer/96816',
+    },
+    { text: 'Ctrl+Shift+D mem-bookmark semua tab di jendela, di ketiga browser.', source: 'Bantuan Chrome dan Edge; pintasan Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Bagaimana cara menyalin semua URL tab?',
+      answer:
+        'Salinan lengkap tercepat adalah Pengaturan → Data → Ekspor JSON di TabMerger: satu file berisi judul dan alamat setiap tab yang terbuka dan setiap grup tersimpan. Tanpa ekstensi, bookmark tab di jendela itu (Ctrl+Shift+D) lalu ekspor bookmark Anda sebagai HTML.',
+    },
+    {
+      question: 'Bisakah saya mengekspor tab dari semua jendela sekaligus?',
+      answer: 'Bisa, dengan TabMerger: “Sedang Terbuka” mencakup setiap jendela yang terbuka, dan ekspor JSON menyertakannya. Cara bookmark hanya bisa satu jendela per kali.',
+    },
+    {
+      question: 'Bagaimana cara mengimpor file itu lagi?',
+      answer: 'Di TabMerger, buka Pengaturan → Data → Impor file: fitur ini membaca file JSON TabMerger, HTML bookmark, dan file teks OneTab, lalu menambahkannya sebagai grup.',
+    },
+    {
+      question: 'Apakah ekspornya privat?',
+      answer: 'Ya. File dibuat di browser Anda dan disimpan di komputer Anda; tidak ada yang diunggah. Simpan di tempat aman, karena file itu berisi daftar halaman Anda.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: '“Settings” (Pengaturan) TabMerger, tab “Data” (Data), dengan tombol “Export JSON” (Ekspor JSON) dan “Import file” (Impor file) di bawah “Import & export” (Impor & ekspor), tema terang' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: '“Settings” (Pengaturan) TabMerger, tab “Data” (Data), dengan tombol “Export JSON” (Ekspor JSON) dan “Import file” (Impor file) di bawah “Import & export” (Impor & ekspor), tema gelap' },
+  ],
+  tags: ['save-tabs', 'bookmarks', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Import Chrome bookmarks & settings (export section)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/export-open-tabs/tm-settings-export-light.webp' },
+  ogImage: { src: '/blog/export-open-tabs/og.png', alt: 'Cara mengekspor tab yang terbuka: panduan TabMerger, dengan tombol “Export JSON” (Ekspor JSON)' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'tabmerger', label: 'Ekspor sekali klik' },
+    { id: 'inside', label: 'Isi filenya' },
+    { id: 'builtin', label: 'Lewat bookmark' },
+    { id: 'import', label: 'Mengembalikannya' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Ekspor bookmark',
+    values: { chrome: 'Pengelola Bookmark → ⋮ → Ekspor Bookmark', edge: 'Favorites → Export favorites', firefox: 'Pustaka → Ekspor Markah ke HTML…' },
+  },
+}
+
+<QuickAnswer>
+
+Buka [TabMerger](/features), masuk ke **Pengaturan → Data** (Settings → Data), lalu tekan **Ekspor JSON** (Export JSON). Sekali klik menyimpan file berisi judul dan alamat **setiap tab yang terbuka di setiap jendela**, plus setiap grup yang sudah Anda simpan. Tanpa ekstensi, Anda bisa mem-bookmark tab di satu jendela dengan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> lalu mengekspor bookmark sebagai file HTML, satu jendela per kali.
+
+</QuickAnswer>
+
+<InstallCta>Ekspor setiap tab yang terbuka, dari setiap jendela, dalam sekali klik. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Bagaimana cara mengekspor semua tab yang terbuka dalam sekali klik?">
+
+1. Buka TabMerger dan klik ikon akun → **Pengaturan**.
+2. Buka tab **Data**.
+3. Di bawah **Impor & ekspor**, tekan **Ekspor JSON**. File langsung terunduh dengan nama seperti `tabmerger-backup-2026-11-21.json`.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="“Settings” (Pengaturan) TabMerger, tab “Data” (Data), dengan tombol “Export JSON” (Ekspor JSON) dan “Import file” (Impor file) di bawah “Import & export” (Impor & ekspor), tema terang" darkAlt="“Settings” (Pengaturan) TabMerger, tab “Data” (Data), dengan tombol “Export JSON” (Ekspor JSON) dan “Import file” (Impor file) di bawah “Import & export” (Impor & ekspor), tema gelap" boxes={[{ id: 'export-json', label: 'Ekspor JSON' }, { id: 'import-file', label: 'Impor file' }]} source="TabMerger 3.16.1">Settings → Data (Pengaturan → Data): satu tombol untuk keluar, satu tombol untuk masuk kembali.</ThemedScreenshot>
+
+Fitur ini ada di semua paket, termasuk Free, dan file dibuat di browser Anda: tidak ada yang diunggah.
+
+</Section>
+
+<Section id="inside" title="Apa isi file hasil ekspor?">
+
+Daftar JSON berisi grup-grup Anda. **Sedang Terbuka** (Now Open), yaitu jendela dan tab yang sedang terbuka, ada di urutan pertama, diikuti setiap grup tersimpan. Dari ekspor sungguhan:
+
+<ComparisonTable
+  head={['Kolom', 'Contoh dari hasil ekspor']}
+  rows={[
+    [<code>name</code>, '“Now Open”, “Work”, “Reading list”'],
+    [<code>windows[]</code>, 'Satu entri per jendela, masing-masing dengan tabnya'],
+    [<code>tabs[].title</code>, '“Spaced repetition - Wikipedia”'],
+    [<code>tabs[].url</code>, <code>https://en.wikipedia.org/wiki/Spaced_repetition</code>],
+    [<code>color</code>, <code>rgba(59, 130, 246, 1)</code>],
+  ]}
+/>
+
+JSON adalah teks biasa, jadi skrip atau editor teks apa pun bisa membacanya: ambil alamat-alamatnya, ubah menjadi daftar Markdown, atau simpan file itu sebagai cadangan.
+
+</Section>
+
+<Section id="builtin" title="Bagaimana cara mengekspor tab tanpa ekstensi?">
+
+Browser tidak bisa mengekspor tab yang terbuka secara langsung, tetapi bisa mengekspor bookmark. Jadi, bookmark dulu tab-tabnya, lalu ekspor:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. Di setiap jendela, tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> di Mac) dan simpan tab ke folder baru.
+2. Buka **⋮ → Bookmark dan daftar → Pengelola Bookmark** (Bookmarks and lists → Bookmark Manager).
+3. Di bagian atas, buka **⋮ → Ekspor Bookmark** (Export bookmarks). Chrome menyimpan semua bookmark sebagai file HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Di setiap jendela, tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> untuk menambahkan semua tab ke favorit, di folder baru.
+2. Tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> untuk membuka Favorit (Favorites).
+3. Pilih **Export favorites** dari menu halaman itu dan simpan file HTML-nya.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Di setiap jendela, tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> untuk mem-bookmark semua tab ke folder baru.
+2. Tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> untuk membuka Pustaka (Library).
+3. Pilih **Ekspor Markah ke HTML…** (Export Bookmarks to HTML…) dan simpan filenya.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>hanya satu jendela per kali, yang diekspor *semua* bookmark Anda, bukan hanya tab-tab itu, dan file tersebut tidak tahu tab mana yang terbuka bersamaan.</Catch>
+
+</Section>
+
+<Section id="import" title="Bagaimana cara mengembalikan tab-tab itu?">
+
+Di TabMerger, **Pengaturan → Data → Impor file** (Settings → Data → Import file) membaca ketiga jenis file dan menambahkannya sebagai grup di samping grup yang sudah ada:
+
+- **JSON TabMerger**, dari “Ekspor JSON”, dengan grup dan jendela tersimpan persis seperti semula. “Sedang Terbuka” dari file tidak ditambahkan (itu tab terbuka di browser yang mengekspor), jadi simpan jendela yang terbuka ke sebuah grup sebelum mengekspor jika Anda ingin mendapatkannya kembali.
+- **HTML bookmark**, dari browser apa pun: setiap folder tingkat atas menjadi satu grup.
+- **Teks OneTab**: setiap daftar OneTab menjadi satu grup. Lihat [panduan alternatif OneTab](/blog/onetab-alternatives) kami.
+
+Karena itu, ekspor adalah cara paling sederhana untuk [memindahkan tab ke komputer lain](/blog/move-tabs-between-computers) tanpa akun. Mau otomatis? [Pro](/pricing) menyimpan 10 cadangan otomatis terbaru dan menyinkronkan grup Anda antarperangkat dengan enkripsi end-to-end. Untuk menyimpan tab buat nanti tanpa file sama sekali, lihat [cara menyimpan semua tab yang terbuka](/blog/save-all-open-tabs); untuk mengirim sekumpulan tab ke orang lain, lihat [cara membagikan sekumpulan tab](/blog/share-a-set-of-tabs).
+
+<InstallCta>Gratis untuk Chrome, Edge, dan Firefox. Tidak perlu akun untuk mulai.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

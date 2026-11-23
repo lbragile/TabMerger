@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'export-open-tabs',
+  title: 'खुले टैब एक्सपोर्ट कैसे करें',
+  navTitle: 'खुले टैब एक्सपोर्ट करें',
+  seoTitle: 'Chrome, Edge और Firefox में खुले टैब एक्सपोर्ट कैसे करें',
+  description:
+    'हर खुला टैब, उसके टाइटल और पते के साथ, अपनी फ़ाइल में एक्सपोर्ट करें: TabMerger का एक क्लिक वाला JSON एक्सपोर्ट (खुले टैब और सेव किए गए ग्रुप एक साथ), या ब्राउज़र का बुकमार्क एक्सपोर्ट, स्टेप बाय स्टेप।',
+  shareSummary: 'हर खुला टैब एक क्लिक में फ़ाइल में एक्सपोर्ट करें, और कहीं भी वापस इंपोर्ट करें।',
+  dek: 'अपनी फ़ाइल उस सेशन से बेहतर है जिसके बचे रहने की आप बस उम्मीद करते हैं। TabMerger में एक क्लिक, ब्राउज़र में कुछ क्लिक।',
+  published: '2026-12-02',
+  updated: '2026-12-02',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger का “JSON निर्यात करें” आपके खुले टैब और हर सेव किया गया ग्रुप एक ही फ़ाइल में सेव करता है।', source: 'TabMerger 3.16.1 में टेस्ट किया गया, 21 नवंबर 2026' },
+    { text: 'TabMerger JSON, बुकमार्क HTML और OneTab की टेक्स्ट फ़ाइलें इंपोर्ट करता है।', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome बुकमार्क मैनेजर के मेनू से बुकमार्क एक्सपोर्ट करता है।',
+      source: 'Chrome सहायता',
+      href: 'https://support.google.com/chrome/answer/96816',
+    },
+    { text: 'Ctrl+Shift+D तीनों ब्राउज़र में विंडो के सभी टैब बुकमार्क कर देता है।', source: 'Chrome और Edge सहायता; Firefox 159 के शॉर्टकट' },
+  ],
+  faq: [
+    {
+      question: 'सभी टैब के URL कैसे कॉपी करें?',
+      answer:
+        'सबसे तेज़ पूरी कॉपी TabMerger में सेटिंग्स → डेटा → JSON निर्यात करें है: एक फ़ाइल, जिसमें हर खुले टैब और हर सेव किए गए ग्रुप का टाइटल और पता होता है। बिना एक्सटेंशन के, विंडो के टैब बुकमार्क करें (Ctrl+Shift+D) और अपने बुकमार्क HTML के रूप में एक्सपोर्ट करें।',
+    },
+    {
+      question: 'क्या मैं सभी विंडो के टैब एक साथ एक्सपोर्ट कर सकता हूँ?',
+      answer: 'हाँ, TabMerger से: “अभी खुले हुए” में हर खुली विंडो शामिल होती है, और JSON एक्सपोर्ट में यह ग्रुप भी आता है। बुकमार्क वाला तरीका एक बार में एक ही विंडो पर काम करता है।',
+    },
+    {
+      question: 'फ़ाइल को फिर से इंपोर्ट कैसे करें?',
+      answer: 'TabMerger में सेटिंग्स → डेटा → फ़ाइल आयात करें: यह TabMerger JSON, बुकमार्क HTML और OneTab की टेक्स्ट फ़ाइलें पढ़ता है और उन्हें ग्रुप के रूप में जोड़ देता है।',
+    },
+    {
+      question: 'क्या एक्सपोर्ट निजी है?',
+      answer: 'हाँ। फ़ाइल आपके ब्राउज़र में बनती है और आपके कंप्यूटर पर सेव होती है; कुछ भी अपलोड नहीं होता। इसे सुरक्षित जगह रखें, क्योंकि इसमें आपके पेजों की सूची होती है।',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: 'TabMerger की “Settings” (सेटिंग्स), “Data” (डेटा) टैब, “Import & export” (आयात और निर्यात) के नीचे “Export JSON” (JSON निर्यात करें) और “Import file” (फ़ाइल आयात करें) बटन के साथ, लाइट थीम' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: 'TabMerger की “Settings” (सेटिंग्स), “Data” (डेटा) टैब, “Import & export” (आयात और निर्यात) के नीचे “Export JSON” (JSON निर्यात करें) और “Import file” (फ़ाइल आयात करें) बटन के साथ, डार्क थीम' },
+  ],
+  tags: ['save-tabs', 'bookmarks', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Import Chrome bookmarks & settings (export section)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/export-open-tabs/tm-settings-export-light.webp' },
+  ogImage: { src: '/blog/export-open-tabs/og.png', alt: 'खुले टैब एक्सपोर्ट कैसे करें: “Export JSON” (JSON निर्यात करें) बटन के साथ TabMerger की गाइड' },
+  toc: [
+    { id: 'quick', label: 'छोटा जवाब' },
+    { id: 'tabmerger', label: 'एक क्लिक में एक्सपोर्ट' },
+    { id: 'inside', label: 'फ़ाइल में क्या होता है' },
+    { id: 'builtin', label: 'बुकमार्क वाला तरीका' },
+    { id: 'import', label: 'टैब वापस लाएँ' },
+    { id: 'faq', label: 'अक्सर पूछे जाने वाले प्रश्न' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'बुकमार्क एक्सपोर्ट',
+    values: { chrome: 'बुकमार्क मैनेजर → ⋮ → बुकमार्क एक्सपोर्ट करें', edge: 'Favorites → Export favorites', firefox: 'लाइब्रे‌री → HTML में बुकमार्क‌ निर्यात करें…' },
+  },
+}
+
+<QuickAnswer>
+
+[TabMerger](/features) खोलें, **सेटिंग्स → डेटा** (Settings → Data) पर जाएँ और **JSON निर्यात करें** (Export JSON) दबाएँ। एक क्लिक में ऐसी फ़ाइल सेव हो जाती है जिसमें **हर विंडो के हर खुले टैब** का टाइटल और पता होता है, साथ ही आपका सेव किया हर ग्रुप भी। बिना एक्सटेंशन के, आप <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> से किसी विंडो के टैब बुकमार्क करके अपने बुकमार्क HTML फ़ाइल के रूप में एक्सपोर्ट कर सकते हैं, एक बार में एक विंडो।
+
+</QuickAnswer>
+
+<InstallCta>हर विंडो का हर खुला टैब, एक क्लिक में एक्सपोर्ट करें। Chrome, Edge और Firefox के लिए मुफ़्त।</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="सभी खुले टैब एक क्लिक में कैसे एक्सपोर्ट करें?">
+
+1. TabMerger खोलें और अकाउंट आइकन → **सेटिंग्स** पर क्लिक करें।
+2. **डेटा** टैब खोलें।
+3. **आयात और निर्यात** के नीचे **JSON निर्यात करें** दबाएँ। फ़ाइल तुरंत डाउनलोड हो जाती है, जिसका नाम `tabmerger-backup-2026-11-21.json` जैसा होता है।
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="TabMerger की “Settings” (सेटिंग्स), “Data” (डेटा) टैब, “Import & export” (आयात और निर्यात) के नीचे “Export JSON” (JSON निर्यात करें) और “Import file” (फ़ाइल आयात करें) बटन के साथ, लाइट थीम" darkAlt="TabMerger की “Settings” (सेटिंग्स), “Data” (डेटा) टैब, “Import & export” (आयात और निर्यात) के नीचे “Export JSON” (JSON निर्यात करें) और “Import file” (फ़ाइल आयात करें) बटन के साथ, डार्क थीम" boxes={[{ id: 'export-json', label: 'JSON निर्यात करें' }, { id: 'import-file', label: 'फ़ाइल आयात करें' }]} source="TabMerger 3.16.1">Settings → Data (सेटिंग्स → डेटा): एक बटन बाहर ले जाने का, एक वापस लाने का।</ThemedScreenshot>
+
+यह हर प्लान में है, Free में भी, और फ़ाइल आपके ब्राउज़र में ही बनती है: कुछ भी अपलोड नहीं होता।
+
+</Section>
+
+<Section id="inside" title="एक्सपोर्ट की गई फ़ाइल में क्या होता है?">
+
+आपके ग्रुप की एक JSON सूची। सबसे पहले **अभी खुले हुए** (Now Open) आता है, यानी अभी खुली आपकी विंडो और टैब, उसके बाद हर सेव किया गया ग्रुप। एक असली एक्सपोर्ट से:
+
+<ComparisonTable
+  head={['फ़ील्ड', 'एक्सपोर्ट से उदाहरण']}
+  rows={[
+    [<code>name</code>, '“Now Open”, “Work”, “Reading list”'],
+    [<code>windows[]</code>, 'हर विंडो की एक एंट्री, उसके टैब के साथ'],
+    [<code>tabs[].title</code>, '“Spaced repetition - Wikipedia”'],
+    [<code>tabs[].url</code>, <code>https://en.wikipedia.org/wiki/Spaced_repetition</code>],
+    [<code>color</code>, <code>rgba(59, 130, 246, 1)</code>],
+  ]}
+/>
+
+JSON सादा टेक्स्ट है, इसलिए कोई भी स्क्रिप्ट या टेक्स्ट एडिटर इसे पढ़ सकता है: पते निकाल लें, उन्हें Markdown सूची में बदल दें, या फ़ाइल को बैकअप के रूप में रख लें।
+
+</Section>
+
+<Section id="builtin" title="बिना एक्सटेंशन के टैब कैसे एक्सपोर्ट करें?">
+
+ब्राउज़र खुले टैब सीधे एक्सपोर्ट नहीं करते, लेकिन बुकमार्क एक्सपोर्ट करते हैं। इसलिए पहले टैब बुकमार्क करें, फिर एक्सपोर्ट करें:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. हर विंडो में <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (Mac पर <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>) दबाएँ और टैब को एक नए फ़ोल्डर में सेव करें।
+2. **⋮ → बुकमार्क और सूचियां → बुकमार्क मैनेजर** (Bookmarks and lists → Bookmark Manager) खोलें।
+3. सबसे ऊपर **⋮ → बुकमार्क एक्सपोर्ट करें** (Export bookmarks) खोलें। Chrome सभी बुकमार्क एक HTML फ़ाइल में सेव करता है।
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. हर विंडो में <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> दबाकर सभी टैब को एक नए फ़ोल्डर में फ़ेवरिट में जोड़ें।
+2. फ़ेवरिट (Favorites) खोलने के लिए <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> दबाएँ।
+3. पेज के मेनू से **Export favorites** चुनें और HTML फ़ाइल सेव करें।
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. हर विंडो में <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> दबाकर सभी टैब को एक नए फ़ोल्डर में बुकमार्क करें।
+2. “लाइब्रे‌री” (Library) खोलने के लिए <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> दबाएँ।
+3. **HTML में बुकमार्क‌ निर्यात करें…** (Export Bookmarks to HTML…) चुनें और फ़ाइल सेव करें।
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>एक बार में एक ही विंडो, यह सिर्फ़ उन टैब के बजाय आपके *सारे* बुकमार्क एक्सपोर्ट करता है, और फ़ाइल को पता नहीं होता कि कौन-से टैब साथ खुले थे।</Catch>
+
+</Section>
+
+<Section id="import" title="टैब वापस कैसे लाएँ?">
+
+TabMerger में **सेटिंग्स → डेटा → फ़ाइल आयात करें** (Settings → Data → Import file) तीनों तरह की फ़ाइलें पढ़ता है और उन्हें आपके मौजूदा ग्रुप के बगल में ग्रुप के रूप में जोड़ देता है:
+
+- **TabMerger JSON**, “JSON निर्यात करें” से बनी, जिसमें आपके सेव किए गए ग्रुप और विंडो वैसे ही होते हैं जैसे थे। फ़ाइल का “अभी खुले हुए” नहीं जोड़ा जाता (वे एक्सपोर्ट करने वाले ब्राउज़र के खुले टैब थे), इसलिए अगर आप खुली विंडो वापस चाहते हैं, तो एक्सपोर्ट से पहले उन्हें किसी ग्रुप में सेव कर लें।
+- **बुकमार्क HTML**, किसी भी ब्राउज़र से: हर टॉप-लेवल फ़ोल्डर एक ग्रुप बन जाता है।
+- **OneTab टेक्स्ट**: हर OneTab सूची एक ग्रुप बन जाती है। हमारी [OneTab के विकल्पों वाली गाइड](/blog/onetab-alternatives) देखें।
+
+इसीलिए बिना अकाउंट के [टैब को दूसरे कंप्यूटर पर ले जाने](/blog/move-tabs-between-computers) का सबसे आसान तरीका एक्सपोर्ट है। यह अपने-आप हो, ऐसा चाहते हैं? [Pro](/pricing) सबसे नए 10 ऑटोमैटिक बैकअप रखता है और आपके ग्रुप को डिवाइसों के बीच एंड-टू-एंड एन्क्रिप्शन के साथ सिंक करता है। बिना किसी फ़ाइल के टैब बाद के लिए सेव करने के लिए [सभी खुले टैब सेव करने का तरीका](/blog/save-all-open-tabs) देखें; टैब का एक सेट किसी और को भेजने के लिए [टैब का सेट शेयर करने का तरीका](/blog/share-a-set-of-tabs) देखें।
+
+<InstallCta>Chrome, Edge और Firefox के लिए मुफ़्त। शुरू करने के लिए अकाउंट की ज़रूरत नहीं।</InstallCta>
+
+</Section>
+
+<Section id="faq" title="अक्सर पूछे जाने वाले प्रश्न">
+
+<Faq items={post.faq} />
+
+</Section>

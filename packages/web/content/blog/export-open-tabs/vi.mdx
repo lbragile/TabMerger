@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'export-open-tabs',
+  title: 'Cách xuất các tab đang mở',
+  navTitle: 'Xuất các tab đang mở',
+  seoTitle: 'Cách xuất các tab đang mở trong Chrome, Edge và Firefox',
+  description:
+    'Xuất mọi tab đang mở, kèm tiêu đề và địa chỉ, ra một tệp bạn tự giữ: xuất JSON một lần nhấp trong TabMerger (tab đang mở và nhóm đã lưu cùng lúc), hoặc xuất dấu trang có sẵn trong trình duyệt, từng bước một.',
+  shareSummary: 'Xuất mọi tab đang mở ra tệp chỉ với một lần nhấp, rồi nhập lại ở bất cứ đâu.',
+  dek: 'Một tệp của riêng bạn đáng tin hơn một phiên mà bạn chỉ mong nó còn đó. Một lần nhấp trong TabMerger, vài lần trong trình duyệt.',
+  published: '2026-12-02',
+  updated: '2026-12-02',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '“Xuất JSON” của TabMerger lưu các tab đang mở và mọi nhóm đã lưu vào một tệp.', source: 'Đã kiểm tra trên TabMerger 3.16.1, ngày 21/11/2026' },
+    { text: 'TabMerger nhập được tệp JSON, HTML dấu trang và tệp văn bản của OneTab.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome xuất dấu trang từ trình đơn của Trình quản lý dấu trang.',
+      source: 'Trợ giúp Chrome',
+      href: 'https://support.google.com/chrome/answer/96816',
+    },
+    { text: 'Ctrl+Shift+D đánh dấu trang mọi tab trong cửa sổ, ở cả ba trình duyệt.', source: 'Trợ giúp Chrome và Edge; phím tắt của Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Làm sao để sao chép URL của tất cả các tab?',
+      answer:
+        'Cách sao chép đầy đủ nhanh nhất là Cài đặt → Dữ liệu → Xuất JSON trong TabMerger: một tệp chứa tiêu đề và địa chỉ của mọi tab đang mở và mọi nhóm đã lưu. Nếu không dùng tiện ích, hãy đánh dấu trang các tab của cửa sổ (Ctrl+Shift+D) rồi xuất dấu trang dưới dạng HTML.',
+    },
+    {
+      question: 'Tôi có thể xuất tab từ mọi cửa sổ cùng lúc không?',
+      answer: 'Có, với TabMerger: “Đang Mở” bao gồm mọi cửa sổ đang mở, và bản xuất JSON có cả nhóm này. Cách dùng dấu trang chỉ làm được từng cửa sổ một.',
+    },
+    {
+      question: 'Làm sao để nhập lại tệp?',
+      answer: 'Trong TabMerger, vào Cài đặt → Dữ liệu → Nhập tệp: TabMerger đọc tệp JSON của TabMerger, HTML dấu trang và tệp văn bản của OneTab, rồi thêm chúng thành nhóm.',
+    },
+    {
+      question: 'Bản xuất có riêng tư không?',
+      answer: 'Có. Tệp được tạo trong trình duyệt và lưu vào máy tính của bạn; không có gì được tải lên. Hãy cất ở nơi an toàn, vì tệp liệt kê các trang của bạn.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: '“Settings” (Cài đặt) của TabMerger, thẻ “Data” (Dữ liệu), với các nút “Export JSON” (Xuất JSON) và “Import file” (Nhập tệp) trong “Import & export” (Nhập và xuất), giao diện sáng' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: '“Settings” (Cài đặt) của TabMerger, thẻ “Data” (Dữ liệu), với các nút “Export JSON” (Xuất JSON) và “Import file” (Nhập tệp) trong “Import & export” (Nhập và xuất), giao diện tối' },
+  ],
+  tags: ['save-tabs', 'bookmarks', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Import Chrome bookmarks & settings (export section)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/export-open-tabs/tm-settings-export-light.webp' },
+  ogImage: { src: '/blog/export-open-tabs/og.png', alt: 'Cách xuất các tab đang mở: hướng dẫn của TabMerger, với nút “Export JSON” (Xuất JSON)' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'tabmerger', label: 'Xuất bằng một lần nhấp' },
+    { id: 'inside', label: 'Trong tệp có gì' },
+    { id: 'builtin', label: 'Cách dùng dấu trang' },
+    { id: 'import', label: 'Mở lại các tab' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Xuất dấu trang',
+    values: { chrome: 'Trình quản lý dấu trang → ⋮ → Xuất dấu trang', edge: 'Favorites → Export favorites', firefox: 'Thư viện → Xuất dấu trang sang HTML…' },
+  },
+}
+
+<QuickAnswer>
+
+Mở [TabMerger](/features), vào **Cài đặt → Dữ liệu** (Settings → Data) và nhấn **Xuất JSON** (Export JSON). Một lần nhấp lưu một tệp chứa tiêu đề và địa chỉ của **mọi tab đang mở trong mọi cửa sổ**, cùng với mọi nhóm bạn đã lưu. Nếu không dùng tiện ích, bạn có thể đánh dấu trang các tab của một cửa sổ bằng <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> rồi xuất dấu trang thành tệp HTML, từng cửa sổ một.
+
+</QuickAnswer>
+
+<InstallCta>Xuất mọi tab đang mở, từ mọi cửa sổ, chỉ với một lần nhấp. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Làm sao để xuất tất cả tab đang mở chỉ với một lần nhấp?">
+
+1. Mở TabMerger và nhấp vào biểu tượng tài khoản → **Cài đặt**.
+2. Mở thẻ **Dữ liệu**.
+3. Trong **Nhập và xuất**, nhấn **Xuất JSON**. Tệp được tải xuống ngay, với tên kiểu `tabmerger-backup-2026-11-21.json`.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="“Settings” (Cài đặt) của TabMerger, thẻ “Data” (Dữ liệu), với các nút “Export JSON” (Xuất JSON) và “Import file” (Nhập tệp) trong “Import & export” (Nhập và xuất), giao diện sáng" darkAlt="“Settings” (Cài đặt) của TabMerger, thẻ “Data” (Dữ liệu), với các nút “Export JSON” (Xuất JSON) và “Import file” (Nhập tệp) trong “Import & export” (Nhập và xuất), giao diện tối" boxes={[{ id: 'export-json', label: 'Xuất JSON' }, { id: 'import-file', label: 'Nhập tệp' }]} source="TabMerger 3.16.1">Settings → Data (Cài đặt → Dữ liệu): một nút để xuất ra, một nút để nhập vào.</ThemedScreenshot>
+
+Tính năng này có ở mọi gói, kể cả gói Free, và tệp được tạo ngay trong trình duyệt: không có gì được tải lên.
+
+</Section>
+
+<Section id="inside" title="Trong tệp xuất có gì?">
+
+Một danh sách JSON gồm các nhóm của bạn. **Đang Mở** (Now Open), tức các cửa sổ và tab đang mở, đứng đầu, sau đó là từng nhóm đã lưu. Trích từ một bản xuất thật:
+
+<ComparisonTable
+  head={['Trường', 'Ví dụ từ bản xuất']}
+  rows={[
+    [<code>name</code>, '“Now Open”, “Work”, “Reading list”'],
+    [<code>windows[]</code>, 'Mỗi cửa sổ một mục, kèm các tab của nó'],
+    [<code>tabs[].title</code>, '“Spaced repetition - Wikipedia”'],
+    [<code>tabs[].url</code>, <code>https://en.wikipedia.org/wiki/Spaced_repetition</code>],
+    [<code>color</code>, <code>rgba(59, 130, 246, 1)</code>],
+  ]}
+/>
+
+JSON là văn bản thuần, nên mọi script hay trình soạn thảo văn bản đều đọc được: lấy ra các địa chỉ, biến chúng thành danh sách Markdown, hoặc giữ tệp làm bản sao lưu.
+
+</Section>
+
+<Section id="builtin" title="Làm sao để xuất tab mà không cần tiện ích?">
+
+Trình duyệt không xuất trực tiếp các tab đang mở, nhưng có xuất dấu trang. Vì vậy, hãy đánh dấu trang các tab trước, rồi xuất:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. Trong mỗi cửa sổ, nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> trên Mac) và lưu các tab vào một thư mục mới.
+2. Mở **⋮ → Dấu trang và danh sách → Trình quản lý dấu trang** (Bookmarks and lists → Bookmark Manager).
+3. Ở trên cùng, mở **⋮ → Xuất dấu trang** (Export bookmarks). Chrome lưu toàn bộ dấu trang thành một tệp HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Trong mỗi cửa sổ, nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> để thêm tất cả tab vào mục yêu thích, trong một thư mục mới.
+2. Nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> để mở mục yêu thích (Favorites).
+3. Chọn **Export favorites** trong trình đơn của trang và lưu tệp HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Trong mỗi cửa sổ, nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> để đánh dấu trang tất cả tab vào một thư mục mới.
+2. Nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> để mở Thư viện (Library).
+3. Chọn **Xuất dấu trang sang HTML…** (Export Bookmarks to HTML…) và lưu tệp.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>chỉ làm được từng cửa sổ một, nó xuất *toàn bộ* dấu trang của bạn chứ không chỉ các tab đó, và tệp không biết tab nào từng mở cùng nhau.</Catch>
+
+</Section>
+
+<Section id="import" title="Làm sao để mở lại các tab?">
+
+Trong TabMerger, **Cài đặt → Dữ liệu → Nhập tệp** (Settings → Data → Import file) đọc được cả ba loại tệp và thêm chúng thành nhóm bên cạnh các nhóm bạn đang có:
+
+- **JSON của TabMerger**, tạo từ “Xuất JSON”, với các nhóm và cửa sổ đã lưu giữ nguyên như cũ. “Đang Mở” trong tệp không được thêm vào (đó là các tab đang mở của trình duyệt đã xuất), nên nếu muốn lấy lại các cửa sổ đang mở, hãy lưu chúng vào một nhóm trước khi xuất.
+- **HTML dấu trang**, từ bất kỳ trình duyệt nào: mỗi thư mục cấp cao nhất trở thành một nhóm.
+- **Văn bản OneTab**: mỗi danh sách OneTab trở thành một nhóm. Xem [hướng dẫn về các lựa chọn thay thế OneTab](/blog/onetab-alternatives) của chúng tôi.
+
+Vì vậy, xuất tệp là cách đơn giản nhất để [chuyển tab sang máy tính khác](/blog/move-tabs-between-computers) mà không cần tài khoản. Muốn tự động? [Pro](/pricing) giữ 10 bản sao lưu tự động mới nhất và đồng bộ các nhóm giữa các thiết bị, mã hóa đầu cuối. Để lưu tab dùng sau mà không cần tệp nào, xem [cách lưu tất cả tab đang mở](/blog/save-all-open-tabs); để gửi một bộ tab cho người khác, xem [cách chia sẻ một bộ tab](/blog/share-a-set-of-tabs).
+
+<InstallCta>Miễn phí cho Chrome, Edge và Firefox. Không cần tài khoản để bắt đầu.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+</Section>

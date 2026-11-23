@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'export-open-tabs',
+  title: 'Come esportare le schede aperte',
+  navTitle: 'Esportare le schede aperte',
+  seoTitle: 'Come esportare le schede aperte in Chrome, Edge e Firefox',
+  description:
+    'Esporta tutte le schede aperte, con titolo e indirizzo, in un file che resta tuo: l’esportazione JSON di TabMerger con un clic (schede aperte e gruppi salvati insieme) o l’esportazione dei preferiti del browser, passo dopo passo.',
+  shareSummary: 'Esporta tutte le schede aperte in un file con un clic e reimportale ovunque.',
+  dek: 'Un file tuo vale più di una sessione che speri sopravviva. Un clic in TabMerger, qualcuno in più nel browser.',
+  published: '2026-12-02',
+  updated: '2026-12-02',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '«Esporta JSON» di TabMerger salva le schede aperte e ogni gruppo salvato in un unico file.', source: 'Testato in TabMerger 3.16.1, 21 nov 2026' },
+    { text: 'TabMerger importa file JSON, preferiti in HTML e file di testo di OneTab.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome esporta i preferiti dal menu di Gestione preferiti.',
+      source: 'Guida di Chrome',
+      href: 'https://support.google.com/chrome/answer/96816',
+    },
+    { text: 'Ctrl+Shift+D salva tra i preferiti tutte le schede della finestra, in tutti e tre i browser.', source: 'Guide di Chrome ed Edge; scorciatoie di Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Come copio tutti gli URL delle schede?',
+      answer:
+        'La copia completa più rapida è Impostazioni → Dati → Esporta JSON in TabMerger: un file con titolo e indirizzo di ogni scheda aperta e di ogni gruppo salvato. Senza estensioni, salva le schede della finestra tra i preferiti (Ctrl+Shift+D) ed esporta i preferiti in HTML.',
+    },
+    {
+      question: 'Posso esportare le schede di tutte le finestre insieme?',
+      answer: 'Sì, con TabMerger: «Aperte ora» comprende tutte le finestre aperte e l’esportazione JSON lo include. Con i preferiti si procede una finestra alla volta.',
+    },
+    {
+      question: 'Come reimporto il file?',
+      answer: 'In TabMerger, Impostazioni → Dati → Importa file: legge file JSON di TabMerger, preferiti in HTML e file di testo di OneTab, e li aggiunge come gruppi.',
+    },
+    {
+      question: 'L’esportazione è privata?',
+      answer: 'Sì. Il file viene creato nel browser e salvato sul tuo computer; non viene caricato nulla. Conservalo in un posto sicuro, perché elenca le tue pagine.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: '«Settings» (Impostazioni) di TabMerger, scheda «Data» (Dati), con i pulsanti «Export JSON» (Esporta JSON) e «Import file» (Importa file) sotto «Import & export» (Importa ed esporta), tema chiaro' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: '«Settings» (Impostazioni) di TabMerger, scheda «Data» (Dati), con i pulsanti «Export JSON» (Esporta JSON) e «Import file» (Importa file) sotto «Import & export» (Importa ed esporta), tema scuro' },
+  ],
+  tags: ['save-tabs', 'bookmarks', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Import Chrome bookmarks & settings (export section)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/export-open-tabs/tm-settings-export-light.webp' },
+  ogImage: { src: '/blog/export-open-tabs/og.png', alt: 'Come esportare le schede aperte: una guida di TabMerger, con il pulsante «Export JSON» (Esporta JSON)' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'tabmerger', label: 'Esportare con un clic' },
+    { id: 'inside', label: 'Cosa contiene il file' },
+    { id: 'builtin', label: 'La via dei preferiti' },
+    { id: 'import', label: 'Riportarle indietro' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Esportare i preferiti',
+    values: { chrome: 'Gestione preferiti → ⋮ → Esporta preferiti', edge: 'Favorites → Export favorites', firefox: 'Libreria → Esporta segnalibri in HTML…' },
+  },
+}
+
+<QuickAnswer>
+
+Apri [TabMerger](/features), vai in **Impostazioni → Dati** (Settings → Data) e premi **Esporta JSON** (Export JSON). Un clic salva un file con titolo e indirizzo di **ogni scheda aperta in ogni finestra**, più ogni gruppo che hai salvato. Senza estensioni puoi salvare tra i preferiti le schede di una finestra con <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> ed esportare i preferiti in un file HTML, una finestra alla volta.
+
+</QuickAnswer>
+
+<InstallCta>Esporta ogni scheda aperta, da ogni finestra, con un clic. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Come esporto tutte le schede aperte con un clic?">
+
+1. Apri TabMerger e fai clic sull’icona dell’account → **Impostazioni**.
+2. Apri la scheda **Dati**.
+3. In **Importa ed esporta**, premi **Esporta JSON**. Il file si scarica subito, con un nome come `tabmerger-backup-2026-11-21.json`.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="«Settings» (Impostazioni) di TabMerger, scheda «Data» (Dati), con i pulsanti «Export JSON» (Esporta JSON) e «Import file» (Importa file) sotto «Import & export» (Importa ed esporta), tema chiaro" darkAlt="«Settings» (Impostazioni) di TabMerger, scheda «Data» (Dati), con i pulsanti «Export JSON» (Esporta JSON) e «Import file» (Importa file) sotto «Import & export» (Importa ed esporta), tema scuro" boxes={[{ id: 'export-json', label: 'Esporta JSON' }, { id: 'import-file', label: 'Importa file' }]} source="TabMerger 3.16.1">Settings → Data (Impostazioni → Dati): un pulsante per uscire, uno per rientrare.</ThemedScreenshot>
+
+È incluso in ogni piano, anche in quello gratuito, e il file viene creato nel browser: non viene caricato nulla.
+
+</Section>
+
+<Section id="inside" title="Cosa contiene il file esportato?">
+
+Un elenco JSON dei tuoi gruppi. Per primo c’è **Aperte ora** (Now Open), cioè le finestre e le schede aperte in questo momento, seguito da ogni gruppo salvato. Da un’esportazione reale:
+
+<ComparisonTable
+  head={['Campo', 'Esempio dall’esportazione']}
+  rows={[
+    [<code>name</code>, '«Now Open», «Work», «Reading list»'],
+    [<code>windows[]</code>, 'Una voce per finestra, ciascuna con le sue schede'],
+    [<code>tabs[].title</code>, '«Spaced repetition - Wikipedia»'],
+    [<code>tabs[].url</code>, <code>https://en.wikipedia.org/wiki/Spaced_repetition</code>],
+    [<code>color</code>, <code>rgba(59, 130, 246, 1)</code>],
+  ]}
+/>
+
+JSON è testo semplice, quindi qualsiasi script o editor di testo può leggerlo: estrai gli indirizzi, trasformali in un elenco Markdown o conserva il file come backup.
+
+</Section>
+
+<Section id="builtin" title="Come esporto le schede senza un’estensione?">
+
+I browser non esportano direttamente le schede aperte, ma esportano i preferiti. Quindi prima salva le schede tra i preferiti, poi esporta:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. In ogni finestra, premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> su Mac) e salva le schede in una nuova cartella.
+2. Apri **⋮ → Preferiti ed elenchi → Gestione preferiti** (Bookmarks and lists → Bookmark Manager).
+3. In alto, apri **⋮ → Esporta preferiti** (Export bookmarks). Chrome salva tutti i preferiti in un file HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. In ogni finestra, premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> per aggiungere tutte le schede ai preferiti, in una nuova cartella.
+2. Premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> per aprire i preferiti (Favorites).
+3. Scegli **Export favorites** dal menu della pagina e salva il file HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. In ogni finestra, premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> per salvare tutte le schede come segnalibri in una nuova cartella.
+2. Premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> per aprire la Libreria (Library).
+3. Scegli **Esporta segnalibri in HTML…** (Export Bookmarks to HTML…) e salva il file.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>si va una finestra alla volta, esporta *tutti* i tuoi preferiti invece delle sole schede, e il file non sa quali schede erano aperte insieme.</Catch>
+
+</Section>
+
+<Section id="import" title="Come riporto indietro le schede?">
+
+In TabMerger, **Impostazioni → Dati → Importa file** (Settings → Data → Import file) legge tutti e tre i tipi di file e li aggiunge come gruppi accanto a quelli che hai già:
+
+- **JSON di TabMerger**, da «Esporta JSON», con i gruppi e le finestre salvati così com’erano. «Aperte ora» del file non viene aggiunto (erano le schede aperte del browser che ha esportato), quindi salva le finestre aperte in un gruppo prima di esportare se vuoi riaverle.
+- **HTML dei preferiti**, da qualsiasi browser: ogni cartella di primo livello diventa un gruppo.
+- **Testo di OneTab**: ogni elenco di OneTab diventa un gruppo. Vedi la nostra [guida alle alternative a OneTab](/blog/onetab-alternatives).
+
+Per questo l’esportazione è il modo più semplice per [spostare le schede su un altro computer](/blog/move-tabs-between-computers) senza un account. Lo vuoi automatico? [Pro](/pricing) conserva i 10 backup automatici più recenti e sincronizza i tuoi gruppi tra i dispositivi, con crittografia end-to-end. Per salvare le schede per dopo senza alcun file, vedi [come salvare tutte le schede aperte](/blog/save-all-open-tabs); per inviare un insieme a qualcun altro, vedi [come condividere un insieme di schede](/blog/share-a-set-of-tabs).
+
+<InstallCta>Gratis per Chrome, Edge e Firefox. Non serve un account per iniziare.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

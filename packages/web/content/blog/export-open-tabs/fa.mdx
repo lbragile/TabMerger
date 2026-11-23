@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'export-open-tabs',
+  title: 'چطور زبانه‌های باز را خروجی بگیریم',
+  navTitle: 'خروجی گرفتن از زبانه‌های باز',
+  seoTitle: 'خروجی گرفتن از زبانه‌های باز در Chrome و Edge و Firefox',
+  description:
+    'از همهٔ زبانه‌های باز، با عنوان و نشانی‌شان، در فایلی که پیش خودتان می‌ماند خروجی بگیرید: برون‌بری JSON با یک کلیک در TabMerger (زبانه‌های باز و گروه‌های ذخیره‌شده با هم)، یا خروجی نشانک‌های خود مرورگر، قدم به قدم.',
+  shareSummary: 'با یک کلیک از همهٔ زبانه‌های باز فایل بگیرید و هر جا خواستید دوباره درون‌ریزی کنید.',
+  dek: 'فایلی که مال خودتان است بهتر از نشستی است که امیدوارید سالم بماند. یک کلیک در TabMerger، چند کلیک در مرورگر.',
+  published: '2026-12-02',
+  updated: '2026-12-02',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '«برون‌بری JSON» در TabMerger زبانه‌های باز و همهٔ گروه‌های ذخیره‌شده را در یک فایل ذخیره می‌کند.', source: 'آزموده در TabMerger 3.16.1، ۲۱ نوامبر ۲۰۲۶' },
+    { text: 'TabMerger فایل‌های JSON، فایل HTML نشانک‌ها و فایل‌های متنی OneTab را درون‌ریزی می‌کند.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome نشانک‌ها را از منوی مدیر نشانک خروجی می‌گیرد.',
+      source: 'راهنمای Chrome',
+      href: 'https://support.google.com/chrome/answer/96816',
+    },
+    { text: 'در هر سه مرورگر، Ctrl+Shift+D همهٔ زبانه‌های پنجره را نشانک می‌کند.', source: 'راهنمای Chrome و Edge؛ میان‌برهای Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'چطور نشانی همهٔ زبانه‌ها را کپی کنم؟',
+      answer:
+        'سریع‌ترین نسخهٔ کامل، تنظیمات ← داده‌ها ← برون‌بری JSON در TabMerger است: یک فایل با عنوان و نشانی همهٔ زبانه‌های باز و همهٔ گروه‌های ذخیره‌شده. بدون افزونه، زبانه‌های پنجره را نشانک کنید (Ctrl+Shift+D) و نشانک‌هایتان را به شکل HTML خروجی بگیرید.',
+    },
+    {
+      question: 'می‌توانم از زبانه‌های همهٔ پنجره‌ها یک‌جا خروجی بگیرم؟',
+      answer: 'بله، با TabMerger: «هم‌اکنون باز» همهٔ پنجره‌های باز را در بر می‌گیرد و برون‌بری JSON آن را هم شامل می‌شود. روش نشانک‌ها فقط پنجره به پنجره کار می‌کند.',
+    },
+    {
+      question: 'چطور فایل را دوباره درون‌ریزی کنم؟',
+      answer: 'در TabMerger از تنظیمات ← داده‌ها ← درون‌ریزی فایل استفاده کنید: فایل‌های JSON خود TabMerger، فایل HTML نشانک‌ها و فایل‌های متنی OneTab را می‌خواند و آن‌ها را به شکل گروه اضافه می‌کند.',
+    },
+    {
+      question: 'آیا خروجی خصوصی است؟',
+      answer: 'بله. فایل در مرورگر خودتان ساخته و روی رایانه‌تان ذخیره می‌شود؛ چیزی بارگذاری نمی‌شود. آن را جای امنی نگه دارید، چون فهرست صفحه‌هایتان در آن است.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: 'Settings (تنظیمات) در TabMerger، زبانهٔ Data (داده‌ها)، با دکمه‌های Export JSON (برون‌بری JSON) و Import file (درون‌ریزی فایل) زیر Import & export (درون‌ریزی و برون‌بری)، پوستهٔ روشن' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: 'Settings (تنظیمات) در TabMerger، زبانهٔ Data (داده‌ها)، با دکمه‌های Export JSON (برون‌بری JSON) و Import file (درون‌ریزی فایل) زیر Import & export (درون‌ریزی و برون‌بری)، پوستهٔ تیره' },
+  ],
+  tags: ['save-tabs', 'bookmarks', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Import Chrome bookmarks & settings (export section)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/export-open-tabs/tm-settings-export-light.webp' },
+  ogImage: { src: '/blog/export-open-tabs/og.png', alt: 'چطور زبانه‌های باز را خروجی بگیریم: راهنمای TabMerger، با دکمهٔ Export JSON (برون‌بری JSON)' },
+  toc: [
+    { id: 'quick', label: 'پاسخ کوتاه' },
+    { id: 'tabmerger', label: 'خروجی با یک کلیک' },
+    { id: 'inside', label: 'در فایل چه هست' },
+    { id: 'builtin', label: 'روش نشانک‌ها' },
+    { id: 'import', label: 'برگرداندن زبانه‌ها' },
+    { id: 'faq', label: 'پرسش‌های متداول' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'خروجی نشانک‌ها',
+    values: { chrome: 'مدیر نشانک ← ⋮ ← صادر کردن نشانک‌ها', edge: 'Favorites → Export favorites', firefox: 'مخزن ← فرستادن نشانک‌ها به HTML...' },
+  },
+}
+
+<QuickAnswer>
+
+[TabMerger](/features) را باز کنید، به **تنظیمات ← داده‌ها** (<bdi dir="ltr">Settings → Data</bdi>) بروید و **برون‌بری JSON** (<bdi dir="ltr">Export JSON</bdi>) را بزنید. یک کلیک فایلی ذخیره می‌کند با عنوان و نشانی **همهٔ زبانه‌های باز در همهٔ پنجره‌ها**، به‌علاوهٔ همهٔ گروه‌هایی که ذخیره کرده‌اید. بدون افزونه، می‌توانید زبانه‌های یک پنجره را با <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> نشانک کنید و نشانک‌هایتان را به شکل فایل HTML خروجی بگیرید، هر بار یک پنجره.
+
+</QuickAnswer>
+
+<InstallCta>از همهٔ زبانه‌های باز، در همهٔ پنجره‌ها، با یک کلیک خروجی بگیرید. رایگان برای Chrome و Edge و Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="چطور با یک کلیک از همهٔ زبانه‌های باز خروجی بگیرم؟">
+
+1. TabMerger را باز کنید و روی نماد حساب ← **تنظیمات** کلیک کنید.
+2. زبانهٔ **داده‌ها** را باز کنید.
+3. زیر **درون‌ریزی و برون‌بری**، **برون‌بری JSON** را بزنید. فایل بی‌درنگ با نامی مثل `tabmerger-backup-2026-11-21.json` دانلود می‌شود.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="Settings (تنظیمات) در TabMerger، زبانهٔ Data (داده‌ها)، با دکمه‌های Export JSON (برون‌بری JSON) و Import file (درون‌ریزی فایل) زیر Import & export (درون‌ریزی و برون‌بری)، پوستهٔ روشن" darkAlt="Settings (تنظیمات) در TabMerger، زبانهٔ Data (داده‌ها)، با دکمه‌های Export JSON (برون‌بری JSON) و Import file (درون‌ریزی فایل) زیر Import & export (درون‌ریزی و برون‌بری)، پوستهٔ تیره" boxes={[{ id: 'export-json', label: 'برون‌بری JSON' }, { id: 'import-file', label: 'درون‌ریزی فایل' }]} source="TabMerger 3.16.1"><bdi dir="ltr">Settings → Data</bdi> (تنظیمات ← داده‌ها): یک دکمه برای بیرون بردن، یک دکمه برای برگرداندن.</ThemedScreenshot>
+
+این امکان در همهٔ طرح‌ها هست، از جمله طرح رایگان، و فایل در مرورگر خودتان ساخته می‌شود: چیزی بارگذاری نمی‌شود.
+
+</Section>
+
+<Section id="inside" title="در فایل خروجی چه هست؟">
+
+فهرستی JSON از گروه‌هایتان. اول **هم‌اکنون باز** (<bdi dir="ltr">Now Open</bdi>) می‌آید، یعنی پنجره‌ها و زبانه‌هایی که الان باز است، و بعد هر گروه ذخیره‌شده. از یک خروجی واقعی:
+
+<ComparisonTable
+  head={['فیلد', 'نمونه از خروجی']}
+  rows={[
+    [<code>name</code>, '«Now Open»، «Work»، «Reading list»'],
+    [<code>windows[]</code>, 'یک مدخل برای هر پنجره، هر کدام با زبانه‌هایش'],
+    [<code>tabs[].title</code>, '«Spaced repetition - Wikipedia»'],
+    [<code>tabs[].url</code>, <code>https://en.wikipedia.org/wiki/Spaced_repetition</code>],
+    [<code>color</code>, <code>rgba(59, 130, 246, 1)</code>],
+  ]}
+/>
+
+JSON متن ساده است، پس هر اسکریپت یا ویرایشگر متنی می‌تواند آن را بخواند: نشانی‌ها را بیرون بکشید، آن‌ها را به فهرست Markdown تبدیل کنید یا فایل را به عنوان نسخهٔ پشتیبان نگه دارید.
+
+</Section>
+
+<Section id="builtin" title="چطور بدون افزونه از زبانه‌ها خروجی بگیرم؟">
+
+مرورگرها از زبانه‌های باز مستقیم خروجی نمی‌گیرند، اما از نشانک‌ها می‌گیرند. پس اول زبانه‌ها را نشانک کنید، بعد خروجی بگیرید:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. در هر پنجره <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> را بزنید (در Mac، <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi>) و زبانه‌ها را در پوشه‌ای تازه ذخیره کنید.
+2. **⋮ ← نشانک‌ها و فهرست‌ها ← مدیر نشانک** (<bdi dir="ltr">Bookmarks and lists → Bookmark Manager</bdi>) را باز کنید.
+3. در بالا، **⋮ ← صادر کردن نشانک‌ها** (<bdi dir="ltr">Export bookmarks</bdi>) را باز کنید. Chrome همهٔ نشانک‌ها را در یک فایل HTML ذخیره می‌کند.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. در هر پنجره <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> را بزنید تا همهٔ زبانه‌ها در پوشه‌ای تازه به علاقه‌مندی‌ها اضافه شوند.
+2. <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd></bdi> را بزنید تا علاقه‌مندی‌ها (<bdi dir="ltr">Favorites</bdi>) باز شود.
+3. از منوی صفحه <bdi dir="ltr">**Export favorites**</bdi> را انتخاب کنید و فایل HTML را ذخیره کنید.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. در هر پنجره <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> را بزنید تا همهٔ زبانه‌ها در پوشه‌ای تازه نشانک شوند.
+2. <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd></bdi> را بزنید تا پنجرهٔ «مخزن» (<bdi dir="ltr">Library</bdi>) باز شود.
+3. **فرستادن نشانک‌ها به HTML...** (<bdi dir="ltr">Export Bookmarks to HTML…</bdi>) را انتخاب کنید و فایل را ذخیره کنید.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>هر بار فقط یک پنجره، به جای همان زبانه‌ها *همهٔ* نشانک‌هایتان را خروجی می‌گیرد، و فایل نمی‌داند کدام زبانه‌ها با هم باز بوده‌اند.</Catch>
+
+</Section>
+
+<Section id="import" title="چطور زبانه‌ها را برگردانم؟">
+
+در TabMerger، **تنظیمات ← داده‌ها ← درون‌ریزی فایل** (<bdi dir="ltr">Settings → Data → Import file</bdi>) هر سه نوع فایل را می‌خواند و آن‌ها را به شکل گروه کنار گروه‌های فعلی‌تان اضافه می‌کند:
+
+- **JSON خود TabMerger**، ساخته‌شده با «برون‌بری JSON»، با گروه‌ها و پنجره‌های ذخیره‌شده همان‌طور که بودند. «هم‌اکنون باز» فایل اضافه نمی‌شود (آن‌ها زبانه‌های باز مرورگرِ خروجی‌گیرنده بودند)، پس اگر پنجره‌های باز را هم می‌خواهید، پیش از خروجی گرفتن آن‌ها را در یک گروه ذخیره کنید.
+- **HTML نشانک‌ها**، از هر مرورگری: هر پوشهٔ سطح بالا یک گروه می‌شود.
+- **متن OneTab**: هر فهرست OneTab یک گروه می‌شود. [راهنمای جایگزین‌های OneTab](/blog/onetab-alternatives) ما را ببینید.
+
+برای همین خروجی گرفتن ساده‌ترین راه برای [بردن زبانه‌ها به رایانه‌ای دیگر](/blog/move-tabs-between-computers) بدون حساب کاربری است. می‌خواهید خودکار باشد؟ [Pro](/pricing) ۱۰ نسخهٔ پشتیبان خودکار آخر را نگه می‌دارد و گروه‌هایتان را با رمزگذاری سرتاسری بین دستگاه‌هایتان همگام می‌کند. برای نگه داشتن زبانه‌ها برای بعد بدون هیچ فایلی، [چطور همهٔ زبانه‌های باز را ذخیره کنیم](/blog/save-all-open-tabs) را ببینید؛ برای فرستادن مجموعه‌ای از زبانه‌ها به کسی دیگر، [چطور مجموعه‌ای از زبانه‌ها را هم‌رسانی کنیم](/blog/share-a-set-of-tabs) را ببینید.
+
+<InstallCta>رایگان برای Chrome و Edge و Firefox. برای شروع حساب کاربری لازم نیست.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="پرسش‌های متداول">
+
+<Faq items={post.faq} />
+
+</Section>

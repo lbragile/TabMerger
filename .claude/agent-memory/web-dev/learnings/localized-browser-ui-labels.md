@@ -49,7 +49,7 @@ Translated posts name browser settings and menus. Every localized label must com
 
 ## CJK bold (ja, zh-CN, ko)
 
-CommonMark treats symbols such as `⋯` (U+22EF) and full-width `）` as punctuation for emphasis flanking, so `の**⋯**メニュー` or `**…（3個）**を` with no spaces leaves literal asterisks. Write ` **⋯** ` with spaces, or end the clause after the bold.
+CommonMark treats symbols such as `⋯` (U+22EF) and full-width `）` as punctuation for emphasis flanking, so `の**⋯**メニュー` or `**…（3個）**を` with no spaces leaves literal asterisks. Write ` **⋯** ` with spaces, or end the clause after the bold. In ja, a bold that starts with a symbol can be wrapped in brackets instead: `「**⋮ → …**」`.
 
 CommonMark won't close `**` that comes right after punctuation and right before a letter: `**使用会话管理器。**它能` renders with literal asterisks, and MDX compiles it without complaint. Put the full stop outside (`**使用会话管理器**。它能`). To catch it, compile each locale and look for `**` inside the compiled string literals. Bold before `（`, `、` or `<Kbd>` is fine.
 
@@ -87,3 +87,9 @@ A 15 KB MDX body in a Bash heredoc failed ("unexpected EOF while looking for mat
 **Chrome Help 2391819 outside English has no Ctrl+Shift+A paragraph** (checked 2026-11-23). Take the Tab Search label from the "From the tab strip, select Tab Search" step; Hebrew words it as an icon ("סמל החיפוש בכרטיסיות").
 
 **Plural catalog labels quoted with a number** ("Remove {{count}} duplicates"): pick the key with `new Intl.PluralRules(loc).select(n)`. For 3, ar/ru/pl use `_few`, not `_other`. The extension renders the count in Latin digits, so a quoted fa label keeps "3" even where the prose uses Persian digits.
+
+**Bookmark export labels.** Chrome Help 96816: the export steps are the last two `<li>`s with `<strong>` ("Bookmarks and lists" / "Bookmark Manager", then "Export Bookmarks"). Firefox: `places-export-bookmarks-to-html` (.label) and `places-library3` (.title) in `places.ftl`; es-ES drops "HTML" from the label, and zh-CN calls the Library 我的足迹.
+
+**Extract labels by script, never by typing:** build a `labels.json` from the help HTML, ftl files and catalogs, and reference labels from the data files by token. Every label is then verbatim, and the verifier reads the same file.
+
+**Korean particles after a quoted label** depend on its last syllable (파일 가져오기**를**, 설정**을**); check each one. **Hebrew posts use ASCII `"` quotes**, not „…”.

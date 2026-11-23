@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'export-open-tabs',
+  title: 'So exportierst du deine offenen Tabs',
+  navTitle: 'Offene Tabs exportieren',
+  seoTitle: 'Offene Tabs exportieren in Chrome, Edge und Firefox: So geht’s',
+  description:
+    'Exportiere alle offenen Tabs mit Titel und Adresse in eine Datei, die dir gehört: per Klick mit dem JSON-Export von TabMerger (offene Tabs und gespeicherte Gruppen zusammen) oder Schritt für Schritt über den Lesezeichen-Export des Browsers.',
+  shareSummary: 'Alle offenen Tabs mit einem Klick in eine Datei exportieren und überall wieder importieren.',
+  dek: 'Eine Datei, die dir gehört, ist besser als eine Sitzung, die hoffentlich überlebt. Ein Klick in TabMerger, ein paar im Browser.',
+  published: '2026-12-02',
+  updated: '2026-12-02',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '„JSON exportieren“ in TabMerger speichert deine offenen Tabs und jede gespeicherte Gruppe in einer Datei.', source: 'Getestet in TabMerger 3.16.1, 21. Nov. 2026' },
+    { text: 'TabMerger importiert JSON-Dateien, Lesezeichen-HTML und Textdateien von OneTab.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome exportiert Lesezeichen über das Menü des Lesezeichenmanagers.',
+      source: 'Chrome-Hilfe',
+      href: 'https://support.google.com/chrome/answer/96816',
+    },
+    { text: 'Ctrl+Shift+D speichert alle Tabs des Fensters als Lesezeichen, in allen drei Browsern.', source: 'Hilfe von Chrome und Edge; Tastenbelegung von Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Wie kopiere ich alle Tab-URLs?',
+      answer:
+        'Die schnellste vollständige Kopie ist in TabMerger Einstellungen → Daten → JSON exportieren: eine Datei mit Titel und Adresse jedes offenen Tabs und jeder gespeicherten Gruppe. Ohne Erweiterung speicherst du die Tabs des Fensters als Lesezeichen (Ctrl+Shift+D) und exportierst deine Lesezeichen als HTML.',
+    },
+    {
+      question: 'Kann ich die Tabs aller Fenster auf einmal exportieren?',
+      answer: 'Ja, mit TabMerger: „Jetzt geöffnet“ umfasst jedes offene Fenster, und der JSON-Export enthält es. Der Weg über Lesezeichen funktioniert nur Fenster für Fenster.',
+    },
+    {
+      question: 'Wie importiere ich die Datei wieder?',
+      answer: 'In TabMerger unter Einstellungen → Daten → Datei importieren: Es liest JSON-Dateien von TabMerger, Lesezeichen-HTML und Textdateien von OneTab und fügt sie als Gruppen hinzu.',
+    },
+    {
+      question: 'Ist der Export privat?',
+      answer: 'Ja. Die Datei entsteht in deinem Browser und wird auf deinem Computer gespeichert; nichts wird hochgeladen. Bewahre sie sicher auf, denn sie listet deine Seiten auf.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: 'TabMerger „Settings“ (Einstellungen), Tab „Data“ (Daten), mit den Schaltflächen „Export JSON“ (JSON exportieren) und „Import file“ (Datei importieren) unter „Import & export“ (Import & Export), helles Design' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: 'TabMerger „Settings“ (Einstellungen), Tab „Data“ (Daten), mit den Schaltflächen „Export JSON“ (JSON exportieren) und „Import file“ (Datei importieren) unter „Import & export“ (Import & Export), dunkles Design' },
+  ],
+  tags: ['save-tabs', 'bookmarks', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Import Chrome bookmarks & settings (export section)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/export-open-tabs/tm-settings-export-light.webp' },
+  ogImage: { src: '/blog/export-open-tabs/og.png', alt: 'So exportierst du deine offenen Tabs: ein TabMerger-Ratgeber mit der Schaltfläche „Export JSON“ (JSON exportieren)' },
+  toc: [
+    { id: 'quick', label: 'Kurze Antwort' },
+    { id: 'tabmerger', label: 'Export mit einem Klick' },
+    { id: 'inside', label: 'Was in der Datei steht' },
+    { id: 'builtin', label: 'Der Weg über Lesezeichen' },
+    { id: 'import', label: 'Wieder importieren' },
+    { id: 'faq', label: 'Häufige Fragen' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Lesezeichen exportieren',
+    values: { chrome: 'Lesezeichenmanager → ⋮ → Lesezeichen exportieren', edge: 'Favorites → Export favorites', firefox: 'Bibliothek → Lesezeichen nach HTML exportieren…' },
+  },
+}
+
+<QuickAnswer>
+
+Öffne [TabMerger](/features), geh zu **Einstellungen → Daten** (Settings → Data) und klicke auf **JSON exportieren** (Export JSON). Ein Klick speichert eine Datei mit Titel und Adresse **jedes offenen Tabs in jedem Fenster**, dazu jede Gruppe, die du gespeichert hast. Ohne Erweiterung kannst du die Tabs eines Fensters mit <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> als Lesezeichen speichern und deine Lesezeichen als HTML-Datei exportieren, ein Fenster nach dem anderen.
+
+</QuickAnswer>
+
+<InstallCta>Exportiere jeden offenen Tab aus jedem Fenster mit einem Klick. Kostenlos für Chrome, Edge und Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Wie exportiere ich alle offenen Tabs mit einem Klick?">
+
+1. Öffne TabMerger und klicke auf das Kontosymbol → **Einstellungen**.
+2. Öffne den Tab **Daten**.
+3. Klicke unter **Import & Export** auf **JSON exportieren**. Die Datei wird sofort heruntergeladen und heißt zum Beispiel `tabmerger-backup-2026-11-21.json`.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="TabMerger „Settings“ (Einstellungen), Tab „Data“ (Daten), mit den Schaltflächen „Export JSON“ (JSON exportieren) und „Import file“ (Datei importieren) unter „Import & export“ (Import & Export), helles Design" darkAlt="TabMerger „Settings“ (Einstellungen), Tab „Data“ (Daten), mit den Schaltflächen „Export JSON“ (JSON exportieren) und „Import file“ (Datei importieren) unter „Import & export“ (Import & Export), dunkles Design" boxes={[{ id: 'export-json', label: 'JSON exportieren' }, { id: 'import-file', label: 'Datei importieren' }]} source="TabMerger 3.16.1">Settings → Data (Einstellungen → Daten): ein Knopf für den Export, einer für den Import.</ThemedScreenshot>
+
+Das geht in jedem Tarif, auch im kostenlosen, und die Datei entsteht in deinem Browser: Nichts wird hochgeladen.
+
+</Section>
+
+<Section id="inside" title="Was steht in der exportierten Datei?">
+
+Eine JSON-Liste deiner Gruppen. Zuerst kommt **Jetzt geöffnet** (Now Open), also deine aktuell offenen Fenster und Tabs, danach jede gespeicherte Gruppe. Aus einem echten Export:
+
+<ComparisonTable
+  head={['Feld', 'Beispiel aus dem Export']}
+  rows={[
+    [<code>name</code>, '„Now Open“, „Work“, „Reading list“'],
+    [<code>windows[]</code>, 'Ein Eintrag pro Fenster, jeweils mit seinen Tabs'],
+    [<code>tabs[].title</code>, '„Spaced repetition - Wikipedia“'],
+    [<code>tabs[].url</code>, <code>https://en.wikipedia.org/wiki/Spaced_repetition</code>],
+    [<code>color</code>, <code>rgba(59, 130, 246, 1)</code>],
+  ]}
+/>
+
+JSON ist reiner Text, also kann jedes Skript und jeder Texteditor die Datei lesen: Zieh die Adressen heraus, mach eine Markdown-Liste daraus oder heb die Datei als Sicherung auf.
+
+</Section>
+
+<Section id="builtin" title="Wie exportiere ich Tabs ohne Erweiterung?">
+
+Browser exportieren offene Tabs nicht direkt, wohl aber Lesezeichen. Speichere die Tabs also zuerst als Lesezeichen und exportiere dann:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. Drücke in jedem Fenster <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> auf dem Mac) und speichere die Tabs in einem neuen Ordner.
+2. Öffne **⋮ → Lesezeichen und Listen → Lesezeichenmanager** (Bookmarks and lists → Bookmark Manager).
+3. Öffne oben **⋮ → Lesezeichen exportieren** (Export bookmarks). Chrome speichert alle Lesezeichen als HTML-Datei.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Drücke in jedem Fenster <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>, um alle Tabs als Favoriten in einem neuen Ordner zu speichern.
+2. Drücke <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>, um die Favoriten (Favorites) zu öffnen.
+3. Wähle im Menü der Seite **Export favorites** und speichere die HTML-Datei.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Drücke in jedem Fenster <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>, um alle Tabs als Lesezeichen in einem neuen Ordner zu speichern.
+2. Drücke <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>, um die Bibliothek (Library) zu öffnen.
+3. Wähle **Lesezeichen nach HTML exportieren…** (Export Bookmarks to HTML…) und speichere die Datei.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>Es geht nur Fenster für Fenster, es exportiert *alle* deine Lesezeichen statt nur dieser Tabs, und die Datei weiß nicht, welche Tabs zusammen offen waren.</Catch>
+
+</Section>
+
+<Section id="import" title="Wie hole ich die Tabs zurück?">
+
+In TabMerger liest **Einstellungen → Daten → Datei importieren** (Settings → Data → Import file) alle drei Dateiarten und fügt sie als Gruppen neben deinen vorhandenen hinzu:
+
+- **TabMerger-JSON** aus „JSON exportieren“, mit deinen gespeicherten Gruppen und Fenstern, so wie sie waren. „Jetzt geöffnet“ aus der Datei wird nicht hinzugefügt (das waren die offenen Tabs des exportierenden Browsers). Speichere offene Fenster also vor dem Export in einer Gruppe, wenn du sie zurückhaben willst.
+- **Lesezeichen-HTML** aus jedem Browser: Jeder Ordner der obersten Ebene wird zu einer Gruppe.
+- **OneTab-Text**: Jede OneTab-Liste wird zu einer Gruppe. Mehr dazu in unserem [Ratgeber zu OneTab-Alternativen](/blog/onetab-alternatives).
+
+Damit ist ein Export der einfachste Weg, [Tabs auf einen anderen Computer zu bringen](/blog/move-tabs-between-computers), ganz ohne Konto. Lieber automatisch? [Pro](/pricing) behält die neuesten 10 automatischen Sicherungen und synchronisiert deine Gruppen zwischen Geräten, Ende-zu-Ende-verschlüsselt. Um Tabs ganz ohne Datei für später zu speichern, lies [wie du alle offenen Tabs speicherst](/blog/save-all-open-tabs); um eine Tab-Sammlung an jemand anderen zu schicken, lies [wie du eine Tab-Sammlung teilst](/blog/share-a-set-of-tabs).
+
+<InstallCta>Kostenlos für Chrome, Edge und Firefox. Zum Start ist kein Konto nötig.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Häufige Fragen">
+
+<Faq items={post.faq} />
+
+</Section>
