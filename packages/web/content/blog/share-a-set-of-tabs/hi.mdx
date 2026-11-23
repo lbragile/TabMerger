@@ -1,0 +1,141 @@
+export const post = {
+  slug: 'share-a-set-of-tabs',
+  title: 'किसी के साथ एक साथ कई टैब कैसे शेयर करें',
+  navTitle: 'एक साथ कई टैब शेयर करें',
+  seoTitle: 'एक साथ कई टैब कैसे शेयर करें (Chrome, Edge, Firefox)',
+  description:
+    'किसी साथी या दोस्त को टैब का पूरा सेट भेजें: लिंक कॉपी करें, बुकमार्क फ़ाइल शेयर करें, या TabMerger का एंड-टू-एंड एन्क्रिप्टेड शेयर लिंक बनाएं, जो एक क्लिक में खुलता है और जिसके लिए किसी अकाउंट की ज़रूरत नहीं।',
+  shareSummary: 'एक साथ कई टैब शेयर करें: लिंक, बुकमार्क फ़ाइल या एक क्लिक वाला एन्क्रिप्टेड लिंक।',
+  dek: 'चैट में बारह लिंक चिपकाना दोनों के लिए झंझट है। पूरे सेट का एक लिंक नहीं।',
+  published: '2026-12-10',
+  updated: '2026-12-10',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger का शेयर लिंक एक रीड-ओनली पेज खोलता है; उसे देखने के लिए अकाउंट की ज़रूरत नहीं।', source: 'TabMerger का शेयर पेज' },
+    { text: 'डिक्रिप्शन की कुंजी लिंक के #fragment में रहती है, जिसे ब्राउज़र कभी सर्वर पर नहीं भेजते।', source: 'TabMerger का सोर्स कोड', href: 'https://github.com/lbragile/TabMerger' },
+    { text: 'शेयर लिंक बनाने के लिए Pro चाहिए।', source: 'TabMerger की कीमतें', href: '/pricing' },
+    { text: 'Firefox 159 किसी टैब ग्रुप के सभी लिंक कॉपी कर सकता है।', source: 'Firefox 159 के मेन्यू का टेक्स्ट' },
+  ],
+  faq: [
+    {
+      question: 'एक साथ कई टैब कैसे शेयर करें?',
+      answer:
+        'TabMerger Pro में ग्रुप चुनें और साझा करें दबाएं: एक एन्क्रिप्टेड लिंक उन सभी को एक रीड-ओनली पेज पर खोलता है। ब्राउज़र के अपने टूल से आप टैब बुकमार्क करके एक्सपोर्ट की गई बुकमार्क फ़ाइल भेज सकते हैं, या Firefox में किसी टैब ग्रुप के सभी लिंक कॉपी कर सकते हैं।',
+    },
+    {
+      question: 'क्या सामने वाले को TabMerger चाहिए?',
+      answer: 'नहीं। शेयर लिंक किसी भी ब्राउज़र में खुलता है, और वे एक टैब, एक विंडो या सब कुछ खोल सकते हैं। TabMerger इंस्टॉल हो, तो वे बाद में टैब को अपने ग्रुप के रूप में सेव कर सकते हैं।',
+    },
+    {
+      question: 'क्या TabMerger मेरे शेयर किए गए टैब पढ़ सकता है?',
+      answer: 'नहीं। टैब अपलोड से पहले आपके ब्राउज़र में एन्क्रिप्ट होते हैं, और कुंजी सिर्फ़ लिंक के #fragment में होती है, जो कभी सर्वर तक नहीं पहुंचता।',
+    },
+    {
+      question: 'क्या शेयर करना मुफ़्त है?',
+      answer: 'शेयर लिंक बनाना Pro का हिस्सा है। लिंक कॉपी करना और बुकमार्क या JSON फ़ाइल शेयर करना मुफ़्त है।',
+    },
+  ],
+  images: [
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp', alt: 'TabMerger, जिसमें “Work” और “Reading list” ग्रुप चुने गए हैं और सिलेक्शन बार में Star (स्टार करें), Unstar (अनस्टार करें), Share (साझा करें) और Delete (हटाएं) दिख रहे हैं, लाइट थीम' },
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-dark.webp', alt: 'TabMerger, जिसमें “Work” और “Reading list” ग्रुप चुने गए हैं और सिलेक्शन बार में Star (स्टार करें), Unstar (अनस्टार करें), Share (साझा करें) और Delete (हटाएं) दिख रहे हैं, डार्क थीम' },
+    { src: '/blog/share-a-set-of-tabs/share-page-light.webp', alt: 'TabMerger का रीड-ओनली Shared Groups (साझा ग्रुप) पेज, जिसमें दो ग्रुप और Open window (विंडो खोलें) व Open all tabs (सभी टैब खोलें) बटन हैं, लाइट थीम' },
+    { src: '/blog/share-a-set-of-tabs/share-page-dark.webp', alt: 'TabMerger का रीड-ओनली Shared Groups (साझा ग्रुप) पेज, जिसमें दो ग्रुप और Open window (विंडो खोलें) व Open all tabs (सभी टैब खोलें) बटन हैं, डार्क थीम' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'bookmarks', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Import Chrome bookmarks & settings (export section)', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/96816', checked: '2026-11-21' },
+    {
+      title: 'TabMerger source code (sharing)',
+      publisher: 'GitHub',
+      url: 'https://github.com/lbragile/TabMerger',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp' },
+  ogImage: { src: '/blog/share-a-set-of-tabs/og.png', alt: 'किसी के साथ एक साथ कई टैब कैसे शेयर करें: TabMerger की गाइड, जिसमें शेयर करने के लिए दो ग्रुप चुने गए हैं' },
+  toc: [
+    { id: 'quick', label: 'झटपट जवाब' },
+    { id: 'manual', label: 'एक्सटेंशन के बिना' },
+    { id: 'tabmerger', label: 'एक एन्क्रिप्टेड लिंक' },
+    { id: 'what-they-see', label: 'सामने वाले को क्या दिखता है' },
+    { id: 'faq', label: 'अक्सर पूछे जाने वाले सवाल' },
+  ],
+  browserSections: ['manual'],
+  browserFact: {
+    label: 'लिंक कॉपी या एक्सपोर्ट करें',
+    values: { chrome: 'बुकमार्क मैनेजर → बुकमार्क एक्सपोर्ट करें', edge: 'Favorites → Export favorites', firefox: 'टैब ग्रुप → Copy links in group' },
+  },
+}
+
+<QuickAnswer>
+
+एक क्लिक वाला तरीका है [TabMerger](/features) का शेयर लिंक: अपने ग्रुप चुनें, **साझा करें** (Share) दबाएं और लिंक चिपका दें। जो भी इसे खोलेगा, उसे सारे टैब एक रीड-ओनली पेज पर दिखेंगे, और वह बिना अकाउंट के एक टैब, एक विंडो या सब कुछ खोल सकता है। टैब **एंड-टू-एंड एन्क्रिप्टेड** होते हैं, इसलिए TabMerger भी उन्हें नहीं पढ़ सकता। एक्सटेंशन के बिना, टैब बुकमार्क करें और एक्सपोर्ट की गई बुकमार्क फ़ाइल भेजें, या Firefox में किसी टैब ग्रुप के सभी लिंक कॉपी करें।
+
+</QuickAnswer>
+
+<InstallCta>टैब का पूरा सेट एक एन्क्रिप्टेड लिंक से शेयर करें। शुरुआत मुफ़्त; शेयर करना Pro का हिस्सा है।</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="manual" title="एक्सटेंशन के बिना टैब कैसे शेयर करें?">
+
+<BrowserPanels section="manual">
+<BrowserPanel browser="chrome">
+
+1. विंडो के टैब को एक नए फ़ोल्डर में बुकमार्क करने के लिए <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> दबाएं।
+2. **⋮ → बुकमार्क और सूचियां → बुकमार्क मैनेजर** (Bookmark Manager) खोलें, फिर **⋮ (ज़्यादा) → बुकमार्क एक्सपोर्ट करें** (Export bookmarks) चुनें।
+3. HTML फ़ाइल भेजें। सामने वाला उसे अपने ब्राउज़र में (या TabMerger में) इंपोर्ट कर लेता है।
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. विंडो के टैब को एक नए फ़ोल्डर में पसंदीदा में जोड़ने के लिए <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> दबाएं।
+2. पसंदीदा खोलें (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>) और **Export favorites** चुनें।
+3. HTML फ़ाइल भेजें।
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. टैब को एक टैब ग्रुप में रखें (एक टैब को दूसरे पर खींचकर छोड़ें)।
+2. ग्रुप के लेबल पर राइट-क्लिक करें और **Copy links in group** चुनें।
+3. लिंक किसी मैसेज या दस्तावेज़ में चिपका दें।
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>बुकमार्क फ़ाइल आपके *सारे* बुकमार्क एक्सपोर्ट करती है, और चिपकाए गए लिंक पतों की एक लंबी दीवार बनकर पहुंचते हैं, जिन्हें सामने वाले को एक-एक करके खोलना पड़ता है।</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="एक लिंक से टैब कैसे शेयर करें?">
+
+1. TabMerger में टैब को एक ग्रुप में सेव करें (**वर्तमान के साथ विलय करें**, Merge with current, सभी खुली विंडो सेव करता है)।
+2. साइडबार में जिस-जिस ग्रुप को शेयर करना है, उस पर **Ctrl-क्लिक** (Mac पर <Kbd>⌘</Kbd>-क्लिक) करें।
+3. सिलेक्शन बार में **साझा करें** दबाएं। लिंक आपके क्लिपबोर्ड पर कॉपी हो जाता है; उसे कहीं भी चिपकाएं।
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/tm-selection-share" alt="TabMerger, जिसमें “Work” और “Reading list” ग्रुप चुने गए हैं और सिलेक्शन बार में Star (स्टार करें), Unstar (अनस्टार करें), Share (साझा करें) और Delete (हटाएं) दिख रहे हैं, लाइट थीम" darkAlt="TabMerger, जिसमें “Work” और “Reading list” ग्रुप चुने गए हैं और सिलेक्शन बार में Star (स्टार करें), Unstar (अनस्टार करें), Share (साझा करें) और Delete (हटाएं) दिख रहे हैं, डार्क थीम" boxes={[{ id: 'share', label: 'Share' }]} source="TabMerger 3.16.1">दो ग्रुप चुने गए हैं; Share (साझा करें) दोनों के लिए एक लिंक बनाता है (यहां Free अकाउंट पर, जहां यह बटन बंद है)।</ThemedScreenshot>
+
+यह निजी कैसे रहता है: TabMerger आपके ब्राउज़र में एक नई कुंजी बनाता है, उससे ग्रुप एन्क्रिप्ट करता है और सिर्फ़ एन्क्रिप्टेड कॉपी अपलोड करता है। कुंजी लिंक में `#` के बाद जाती है, पते का वह हिस्सा जिसे ब्राउज़र कभी किसी सर्वर पर नहीं भेजते, इसलिए टैब सिर्फ़ वही पढ़ सकते हैं जिनके पास पूरा लिंक है। लिंक बनाना [Pro](/pricing) का हिस्सा है।
+
+</Section>
+
+<Section id="what-they-see" title="सामने वाले को क्या दिखता है?">
+
+एक रीड-ओनली पेज, जिसमें हर ग्रुप और विंडो, टैब की संख्या, और किसी विंडो के लिए **सभी टैब खोलें** (Open all tabs), पूरे ग्रुप के लिए **विंडो खोलें** (Open window) या अलग-अलग टैब खोलने के बटन होते हैं। उन्हें न अकाउंट चाहिए, न TabMerger। अगर वे TabMerger इस्तेमाल करते हैं, तो टैब खोलकर **वर्तमान के साथ विलय करें** से उन्हें अपने ग्रुप के रूप में सेव कर सकते हैं।
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/share-page" width={1600} height={1115} alt="TabMerger का रीड-ओनली Shared Groups (साझा ग्रुप) पेज, जिसमें दो ग्रुप और Open window (विंडो खोलें) व Open all tabs (सभी टैब खोलें) बटन हैं, लाइट थीम" darkAlt="TabMerger का रीड-ओनली Shared Groups (साझा ग्रुप) पेज, जिसमें दो ग्रुप और Open window (विंडो खोलें) व Open all tabs (सभी टैब खोलें) बटन हैं, डार्क थीम" source="tabmerger.com/share/demo">TabMerger के सार्वजनिक डेमो लिंक से खुला शेयर पेज।</ThemedScreenshot>
+
+फ़ाइल चाहिए? TabMerger का [JSON निर्यात करें](/blog/export-open-tabs) (Export JSON) Free प्लान पर भी चलता है, और [टैब को दूसरे कंप्यूटर पर ले जाना](/blog/move-tabs-between-computers) आपके अपने डिवाइसों के बीच का तरीका बताता है।
+
+<InstallCta>Chrome, Edge और Firefox के लिए मुफ़्त। शुरू करने के लिए अकाउंट की ज़रूरत नहीं।</InstallCta>
+
+</Section>
+
+<Section id="faq" title="अक्सर पूछे जाने वाले सवाल">
+
+<Faq items={post.faq} />
+
+</Section>

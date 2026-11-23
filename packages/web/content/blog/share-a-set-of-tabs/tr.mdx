@@ -1,0 +1,141 @@
+export const post = {
+  slug: 'share-a-set-of-tabs',
+  title: 'Birden fazla sekmeyi biriyle tek seferde paylaşma',
+  navTitle: 'Birden fazla sekmeyi paylaşma',
+  seoTitle: 'Birden Fazla Sekme Tek Seferde Nasıl Paylaşılır (Chrome, Edge, Firefox)',
+  description:
+    'Bir iş arkadaşınıza ya da arkadaşınıza bir sekme setinin tamamını gönderin: bağlantıları kopyalayın, bir yer işaretleri dosyası paylaşın ya da tek tıkla açılan, hesap gerektirmeyen, uçtan uca şifreli bir TabMerger paylaşım bağlantısı oluşturun.',
+  shareSummary: 'Birden fazla sekmeyi paylaşın: bağlantılar, yer işaretleri dosyası veya tek tıklık şifreli bağlantı.',
+  dek: 'Bir sohbete on iki bağlantı yapıştırmak ikiniz için de zahmetli. Setin tamamına giden tek bir bağlantı ise değil.',
+  published: '2026-12-10',
+  updated: '2026-12-10',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger paylaşım bağlantısı salt okunur bir sayfa açar; görüntülemek için hesap gerekmez.', source: 'TabMerger paylaşım sayfası' },
+    { text: 'Şifre çözme anahtarı bağlantının #parçasında kalır ve tarayıcılar bu kısmı sunucuya hiç göndermez.', source: 'TabMerger kaynak kodu', href: 'https://github.com/lbragile/TabMerger' },
+    { text: 'Paylaşım bağlantısı oluşturmak için Pro gerekir.', source: 'TabMerger fiyatlandırması', href: '/pricing' },
+    { text: 'Firefox 159, bir sekme grubundaki tüm bağlantıları kopyalayabilir.', source: 'Firefox 159 menü metni' },
+  ],
+  faq: [
+    {
+      question: 'Birden fazla sekmeyi tek seferde nasıl paylaşırım?',
+      answer:
+        'TabMerger Pro ile grupları seçip Paylaş’a basın: şifreli tek bir bağlantı hepsini salt okunur bir sayfada açar. Tarayıcının kendi araçlarıyla sekmeleri yer işaretlerine ekleyip dışa aktarılan yer işaretleri dosyasını gönderebilir ya da Firefox’ta bir sekme grubundaki tüm bağlantıları kopyalayabilirsiniz.',
+    },
+    {
+      question: 'Karşı tarafın TabMerger’a ihtiyacı var mı?',
+      answer: 'Hayır. Paylaşım bağlantısı her tarayıcıda açılır; tek bir sekmeyi, tek bir pencereyi ya da hepsini açabilirler. TabMerger yüklüyse sekmeleri ardından kendi grupları olarak kaydedebilirler.',
+    },
+    {
+      question: 'TabMerger paylaştığım sekmeleri okuyabilir mi?',
+      answer: 'Hayır. Sekmeler yüklenmeden önce tarayıcınızda şifrelenir ve anahtar yalnızca bağlantının #parçasındadır; bu kısım sunucuya hiç ulaşmaz.',
+    },
+    {
+      question: 'Paylaşım ücretsiz mi?',
+      answer: 'Paylaşım bağlantısı oluşturmak Pro’nun bir parçasıdır. Bağlantıları kopyalamak ve bir yer işaretleri ya da JSON dosyası paylaşmak ücretsizdir.',
+    },
+  ],
+  images: [
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp', alt: '“Work” ve “Reading list” grupları seçili TabMerger; seçim çubuğunda Star (Yıldızla), Unstar (Yıldızı kaldır), Share (Paylaş) ve Delete (Sil) görünüyor, açık tema' },
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-dark.webp', alt: '“Work” ve “Reading list” grupları seçili TabMerger; seçim çubuğunda Star (Yıldızla), Unstar (Yıldızı kaldır), Share (Paylaş) ve Delete (Sil) görünüyor, koyu tema' },
+    { src: '/blog/share-a-set-of-tabs/share-page-light.webp', alt: 'TabMerger’ın salt okunur Shared Groups (Paylaşılan Gruplar) sayfası; iki grup ile Open window (Pencereyi aç) ve Open all tabs (Tüm sekmeleri aç) düğmeleri, açık tema' },
+    { src: '/blog/share-a-set-of-tabs/share-page-dark.webp', alt: 'TabMerger’ın salt okunur Shared Groups (Paylaşılan Gruplar) sayfası; iki grup ile Open window (Pencereyi aç) ve Open all tabs (Tüm sekmeleri aç) düğmeleri, koyu tema' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'bookmarks', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Import Chrome bookmarks & settings (export section)', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/96816', checked: '2026-11-21' },
+    {
+      title: 'TabMerger source code (sharing)',
+      publisher: 'GitHub',
+      url: 'https://github.com/lbragile/TabMerger',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp' },
+  ogImage: { src: '/blog/share-a-set-of-tabs/og.png', alt: 'Birden fazla sekmeyi biriyle tek seferde paylaşma: paylaşım için seçilmiş iki grupla bir TabMerger rehberi' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'manual', label: 'Uzantı olmadan' },
+    { id: 'tabmerger', label: 'Şifreli tek bağlantı' },
+    { id: 'what-they-see', label: 'Karşı taraf ne görür' },
+    { id: 'faq', label: 'SSS' },
+  ],
+  browserSections: ['manual'],
+  browserFact: {
+    label: 'Bağlantıları kopyalama veya dışa aktarma',
+    values: { chrome: 'Yer imi yöneticisi → Yer İşaretlerini Dışa Aktar', edge: 'Favorites → Export favorites', firefox: 'Sekme grubu → Gruptaki bağlantıyı kopyala' },
+  },
+}
+
+<QuickAnswer>
+
+Tek tıkla yapmanın yolu bir [TabMerger](/features) paylaşım bağlantısı: gruplarınızı seçin, **Paylaş**’a (Share) basın ve bağlantıyı yapıştırın. Bağlantıyı açan kişi tüm sekmeleri salt okunur bir sayfada görür ve hesap gerekmeden tek bir sekmeyi, bir pencereyi ya da hepsini açabilir. Sekmeler **uçtan uca şifrelidir**, yani TabMerger bile onları okuyamaz. Uzantı olmadan sekmeleri yer işaretlerine ekleyip dışa aktarılan yer işaretleri dosyasını gönderin ya da Firefox’ta bir sekme grubundaki tüm bağlantıları kopyalayın.
+
+</QuickAnswer>
+
+<InstallCta>Bir sekme setinin tamamını şifreli tek bir bağlantıyla paylaşın. Başlamak ücretsiz; paylaşım Pro’nun bir parçası.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="manual" title="Sekmeleri uzantı olmadan nasıl paylaşırım?">
+
+<BrowserPanels section="manual">
+<BrowserPanel browser="chrome">
+
+1. Penceredeki sekmeleri yeni bir klasöre yer işareti olarak eklemek için <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> tuşlarına basın.
+2. **⋮ → Yer işaretleri ve listeler → Yer imi yöneticisi** (Bookmark Manager) menüsünü, ardından **⋮ (Diğer) → Yer İşaretlerini Dışa Aktar** (Export bookmarks) seçeneğini açın.
+3. HTML dosyasını gönderin. Karşı taraf dosyayı kendi tarayıcısına (ya da TabMerger’a) içe aktarır.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Penceredeki sekmeleri yeni bir klasörde sık kullanılanlara eklemek için <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> tuşlarına basın.
+2. Sık kullanılanları açın (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>) ve **Export favorites** seçeneğini seçin.
+3. HTML dosyasını gönderin.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Sekmeleri bir sekme grubuna koyun (bir sekmeyi başka birinin üzerine sürükleyin).
+2. Grubun etiketine sağ tıklayın ve **Gruptaki bağlantıyı kopyala** (Copy links in group) seçeneğini seçin.
+3. Bağlantıları bir mesaja ya da belgeye yapıştırın.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>yer işaretleri dosyası *tüm* yer işaretlerinizi dışa aktarır, yapıştırılan bağlantılar ise karşı tarafın tek tek açması gereken bir adres yığını olarak gelir.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="Sekmeleri tek bir bağlantıyla nasıl paylaşırım?">
+
+1. TabMerger’da sekmeleri bir gruba kaydedin: **Mevcutla birleştir** (Merge with current) açık olan tüm pencereleri kaydeder.
+2. Kenar çubuğunda paylaşmak istediğiniz her gruba **Ctrl+tık** (Mac’te <Kbd>⌘</Kbd>+tık) yapın.
+3. Seçim çubuğunda **Paylaş**’a basın. Bağlantı panonuza kopyalanır; istediğiniz yere yapıştırın.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/tm-selection-share" alt="“Work” ve “Reading list” grupları seçili TabMerger; seçim çubuğunda Star (Yıldızla), Unstar (Yıldızı kaldır), Share (Paylaş) ve Delete (Sil) görünüyor, açık tema" darkAlt="“Work” ve “Reading list” grupları seçili TabMerger; seçim çubuğunda Star (Yıldızla), Unstar (Yıldızı kaldır), Share (Paylaş) ve Delete (Sil) görünüyor, koyu tema" boxes={[{ id: 'share', label: 'Share' }]} source="TabMerger 3.16.1">İki grup seçili; Share (Paylaş) ikisi için tek bir bağlantı oluşturur (burada düğmenin kapalı olduğu ücretsiz bir hesapta gösteriliyor).</ThemedScreenshot>
+
+Gizlilik nasıl korunur: TabMerger tarayıcınızda yeni bir anahtar oluşturur, grupları bu anahtarla şifreler ve yalnızca şifreli kopyayı yükler. Anahtar, bağlantıda `#` işaretinden sonraki kısma, yani tarayıcıların bir sunucuya hiç göndermediği bölüme yerleşir; böylece sekmeleri yalnızca bağlantının tamamına sahip olanlar okuyabilir. Bağlantı oluşturmak [Pro](/pricing)’nun bir parçasıdır.
+
+</Section>
+
+<Section id="what-they-see" title="Karşı taraf ne görür?">
+
+Her grubu ve pencereyi, sekme sayısını ve bir penceredeki **Tüm sekmeleri aç** (Open all tabs), bütün bir grup için **Pencereyi aç** (Open window) ya da tek tek sekmeleri açma düğmelerini gösteren salt okunur bir sayfa. Hesaba da TabMerger’a da ihtiyaçları yoktur. TabMerger kullanıyorlarsa sekmeleri açıp **Mevcutla birleştir** ile kendi grupları olarak kaydedebilirler.
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/share-page" width={1600} height={1115} alt="TabMerger’ın salt okunur Shared Groups (Paylaşılan Gruplar) sayfası; iki grup ile Open window (Pencereyi aç) ve Open all tabs (Tüm sekmeleri aç) düğmeleri, açık tema" darkAlt="TabMerger’ın salt okunur Shared Groups (Paylaşılan Gruplar) sayfası; iki grup ile Open window (Pencereyi aç) ve Open all tabs (Tüm sekmeleri aç) düğmeleri, koyu tema" source="tabmerger.com/share/demo">TabMerger’ın herkese açık demo bağlantısından paylaşım sayfası.</ThemedScreenshot>
+
+Dosya mı tercih edersiniz? TabMerger’ın [JSON olarak dışa aktar](/blog/export-open-tabs) (Export JSON) özelliği ücretsiz planda da çalışır; [sekmeleri başka bir bilgisayara taşıma](/blog/move-tabs-between-computers) rehberi de kendi cihazlarınız arasındaki yolu anlatır.
+
+<InstallCta>Chrome, Edge ve Firefox için ücretsiz. Başlamak için hesap gerekmez.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

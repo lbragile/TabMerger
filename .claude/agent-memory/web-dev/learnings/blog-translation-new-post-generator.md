@@ -62,3 +62,6 @@ Run the template check again just before writing into the repo, to confirm en.md
 - FAQ link text: PostBody links the first occurrence of `link.text` in the answer, so keep it to the bare word (hi "बुकमार्क", ko "북마크"), not a clause.
 - Invisible marks: in Git Bash `grep $'‌'` does not expand the escape; scan with node, e.g. `/[​-‏⁦-⁩]/`.
 - Korean particles after a glossed label follow the Korean label's last syllable, not the English: "**JSON 내보내기**(Export JSON)를".
+- Posts with several figures: collect every `<ThemedScreenshot` alt/darkAlt (match `[^>]*? alt=` since width/height may come first) and compare the list to `post.images`.
+- A `` in a JS template literal written through a bash heredoc became a literal backspace byte (0x08) and silently broke a regex. Check edited scripts with `grep -c $''`, or write them with Write.
+- Seed the verifier once with deliberate faults (missing bdi, changed cover, stray CJK bold) to prove it catches them.

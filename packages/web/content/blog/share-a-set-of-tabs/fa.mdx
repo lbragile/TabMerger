@@ -1,0 +1,141 @@
+export const post = {
+  slug: 'share-a-set-of-tabs',
+  title: 'چطور چند زبانه را یک‌جا با کسی به اشتراک بگذاریم',
+  navTitle: 'اشتراک‌گذاری چند زبانه با هم',
+  seoTitle: 'اشتراک‌گذاری چند زبانه به‌صورت یک‌جا (Chrome و Edge و Firefox)',
+  description:
+    'یک مجموعهٔ کامل از زبانه‌ها را برای همکار یا دوستتان بفرستید: پیوندها را کپی کنید، یک فایل نشانک هم‌رسانی کنید، یا یک پیوند اشتراک‌گذاری TabMerger با رمزگذاری سرتاسری بسازید که با یک کلیک و بدون حساب کاربری باز می‌شود.',
+  shareSummary: 'چند زبانه را یک‌جا هم‌رسانی کنید: پیوندها، فایل نشانک یا پیوند رمزگذاری‌شدهٔ یک‌کلیکی.',
+  dek: 'چسباندن دوازده پیوند در یک گفت‌وگو برای هر دو طرف دردسر است. یک پیوند برای کل مجموعه نه.',
+  published: '2026-12-10',
+  updated: '2026-12-10',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'پیوند اشتراک‌گذاری TabMerger صفحه‌ای فقط خواندنی باز می‌کند و برای دیدنش حساب کاربری لازم نیست.', source: 'صفحهٔ هم‌رسانی TabMerger' },
+    { text: 'کلید رمزگشایی در بخش #fragment پیوند می‌ماند؛ بخشی که مرورگرها هرگز به سرور نمی‌فرستند.', source: 'کد منبع TabMerger', href: 'https://github.com/lbragile/TabMerger' },
+    { text: 'ساختن پیوند اشتراک‌گذاری به Pro نیاز دارد.', source: 'قیمت‌های TabMerger', href: '/pricing' },
+    { text: 'Firefox 159 می‌تواند همهٔ پیوندهای یک گروه زبانه را کپی کند.', source: 'متن منوی Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'چطور چند زبانه را یک‌جا به اشتراک بگذارم؟',
+      answer:
+        'در TabMerger Pro گروه‌ها را انتخاب کنید و هم‌رسانی را بزنید: یک پیوند رمزگذاری‌شده همهٔ آن‌ها را در یک صفحهٔ فقط خواندنی باز می‌کند. با ابزارهای خود مرورگر هم می‌توانید زبانه‌ها را نشانک کنید و فایل نشانک صادرشده را بفرستید، یا در Firefox همهٔ پیوندهای یک گروه زبانه را کپی کنید.',
+    },
+    {
+      question: 'آیا طرف مقابل به TabMerger نیاز دارد؟',
+      answer: 'نه. پیوند اشتراک‌گذاری در هر مرورگری باز می‌شود و طرف مقابل می‌تواند یک زبانه، یک پنجره یا همه را باز کند. اگر TabMerger را نصب داشته باشد، بعد می‌تواند زبانه‌ها را به‌عنوان گروه خودش ذخیره کند.',
+    },
+    {
+      question: 'آیا TabMerger می‌تواند زبانه‌هایی را که هم‌رسانی می‌کنم بخواند؟',
+      answer: 'نه. زبانه‌ها پیش از بارگذاری در مرورگر خودتان رمزگذاری می‌شوند و کلید فقط در بخش #fragment پیوند است؛ بخشی که هرگز به سرور نمی‌رسد.',
+    },
+    {
+      question: 'آیا اشتراک‌گذاری رایگان است؟',
+      answer: 'ساختن پیوند اشتراک‌گذاری بخشی از Pro است. کپی کردن پیوندها و هم‌رسانی فایل نشانک یا فایل JSON رایگان است.',
+    },
+  ],
+  images: [
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp', alt: 'TabMerger با گروه‌های Work و Reading list انتخاب‌شده؛ نوار انتخاب Star (ستاره‌دار کردن) و Unstar (برداشتن ستاره) و Share (هم‌رسانی) و Delete (حذف) را نشان می‌دهد، پوستهٔ روشن' },
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-dark.webp', alt: 'TabMerger با گروه‌های Work و Reading list انتخاب‌شده؛ نوار انتخاب Star (ستاره‌دار کردن) و Unstar (برداشتن ستاره) و Share (هم‌رسانی) و Delete (حذف) را نشان می‌دهد، پوستهٔ تیره' },
+    { src: '/blog/share-a-set-of-tabs/share-page-light.webp', alt: 'صفحهٔ فقط خواندنی Shared Groups (گروه‌های هم‌رسانی‌شده) در TabMerger با دو گروه و دکمه‌های Open window (باز کردن پنجره) و Open all tabs (باز کردن همهٔ زبانه‌ها)، پوستهٔ روشن' },
+    { src: '/blog/share-a-set-of-tabs/share-page-dark.webp', alt: 'صفحهٔ فقط خواندنی Shared Groups (گروه‌های هم‌رسانی‌شده) در TabMerger با دو گروه و دکمه‌های Open window (باز کردن پنجره) و Open all tabs (باز کردن همهٔ زبانه‌ها)، پوستهٔ تیره' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'bookmarks', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Import Chrome bookmarks & settings (export section)', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/96816', checked: '2026-11-21' },
+    {
+      title: 'TabMerger source code (sharing)',
+      publisher: 'GitHub',
+      url: 'https://github.com/lbragile/TabMerger',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp' },
+  ogImage: { src: '/blog/share-a-set-of-tabs/og.png', alt: 'چطور چند زبانه را یک‌جا با کسی به اشتراک بگذاریم: راهنمای TabMerger، با دو گروه انتخاب‌شده برای هم‌رسانی' },
+  toc: [
+    { id: 'quick', label: 'پاسخ کوتاه' },
+    { id: 'manual', label: 'بدون افزونه' },
+    { id: 'tabmerger', label: 'یک پیوند رمزگذاری‌شده' },
+    { id: 'what-they-see', label: 'طرف مقابل چه می‌بیند' },
+    { id: 'faq', label: 'پرسش‌های رایج' },
+  ],
+  browserSections: ['manual'],
+  browserFact: {
+    label: 'کپی یا صادر کردن پیوندها',
+    values: { chrome: 'مدیر نشانک ← صادر کردن نشانک‌ها', edge: 'Favorites → Export favorites', firefox: 'گروه زبانه ← کپی پیوند در گروه' },
+  },
+}
+
+<QuickAnswer>
+
+راه یک‌کلیکی، پیوند اشتراک‌گذاری [TabMerger](/features) است: گروه‌هایتان را انتخاب کنید، **هم‌رسانی** (<bdi dir="ltr">Share</bdi>) را بزنید و پیوند را بچسبانید. هر کسی آن را باز کند، همهٔ زبانه‌ها را در یک صفحهٔ فقط خواندنی می‌بیند و بدون حساب کاربری می‌تواند یک زبانه، یک پنجره یا همه را باز کند. زبانه‌ها **رمزگذاری سرتاسری** دارند، پس حتی TabMerger هم نمی‌تواند آن‌ها را بخواند. بدون افزونه، زبانه‌ها را نشانک کنید و فایل نشانک صادرشده را بفرستید، یا در Firefox همهٔ پیوندهای یک گروه زبانه را کپی کنید.
+
+</QuickAnswer>
+
+<InstallCta>یک مجموعهٔ کامل از زبانه‌ها را با یک پیوند رمزگذاری‌شده هم‌رسانی کنید. شروعش رایگان است؛ هم‌رسانی بخشی از Pro است.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="manual" title="چطور بدون افزونه زبانه‌ها را به اشتراک بگذاریم؟">
+
+<BrowserPanels section="manual">
+<BrowserPanel browser="chrome">
+
+1. <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> را بزنید تا زبانه‌های پنجره در یک پوشهٔ تازه نشانک شوند.
+2. **⋮ ← نشانک‌ها و فهرست‌ها ← مدیر نشانک** (<bdi dir="ltr">Bookmark Manager</bdi>) را باز کنید و بعد **⋮ (بیشتر) ← صادر کردن نشانک‌ها** (<bdi dir="ltr">Export bookmarks</bdi>) را بزنید.
+3. فایل HTML را بفرستید. طرف مقابل آن را به مرورگر خودش (یا به TabMerger) وارد می‌کند.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> را بزنید تا زبانه‌های پنجره در یک پوشهٔ تازه به علاقه‌مندی‌ها اضافه شوند.
+2. علاقه‌مندی‌ها را باز کنید (<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd></bdi>) و <bdi dir="ltr">**Export favorites**</bdi> را انتخاب کنید.
+3. فایل HTML را بفرستید.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. زبانه‌ها را در یک گروه زبانه بگذارید (یک زبانه را روی زبانهٔ دیگر بکشید).
+2. روی برچسب گروه راست‌کلیک کنید و **کپی پیوند در گروه** (<bdi dir="ltr">Copy links in group</bdi>) را انتخاب کنید.
+3. پیوندها را در یک پیام یا سند بچسبانید.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>فایل نشانک *همهٔ* نشانک‌هایتان را صادر می‌کند، و پیوندهای چسبانده‌شده مثل دیواری از نشانی‌ها می‌رسند که طرف مقابل باید یکی‌یکی بازشان کند.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="چطور با یک پیوند زبانه‌ها را به اشتراک بگذاریم؟">
+
+1. در TabMerger زبانه‌ها را در یک گروه ذخیره کنید (**ادغام با وضعیت فعلی**، <bdi dir="ltr">Merge with current</bdi>، همهٔ پنجره‌های باز را ذخیره می‌کند).
+2. در نوار کناری روی هر گروهی که می‌خواهید هم‌رسانی کنید **با نگه داشتن <bdi dir="ltr">Ctrl</bdi>** کلیک کنید (در Mac با <bdi dir="ltr"><Kbd>⌘</Kbd></bdi>).
+3. در نوار انتخاب **هم‌رسانی** را بزنید. پیوند در کلیپ‌بورد کپی می‌شود؛ هر جا خواستید بچسبانیدش.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/tm-selection-share" alt="TabMerger با گروه‌های Work و Reading list انتخاب‌شده؛ نوار انتخاب Star (ستاره‌دار کردن) و Unstar (برداشتن ستاره) و Share (هم‌رسانی) و Delete (حذف) را نشان می‌دهد، پوستهٔ روشن" darkAlt="TabMerger با گروه‌های Work و Reading list انتخاب‌شده؛ نوار انتخاب Star (ستاره‌دار کردن) و Unstar (برداشتن ستاره) و Share (هم‌رسانی) و Delete (حذف) را نشان می‌دهد، پوستهٔ تیره" boxes={[{ id: 'share', label: 'Share' }]} source="TabMerger 3.16.1">دو گروه انتخاب شده‌اند؛ <bdi dir="ltr">Share</bdi> (هم‌رسانی) یک پیوند برای هر دو می‌سازد (اینجا در یک حساب Free، که دکمه در آن غیرفعال است).</ThemedScreenshot>
+
+چطور خصوصی می‌ماند: TabMerger در مرورگر شما یک کلید تازه می‌سازد، گروه‌ها را با آن رمزگذاری می‌کند و فقط نسخهٔ رمزگذاری‌شده را بارگذاری می‌کند. کلید در پیوند بعد از `#` قرار می‌گیرد، بخشی از نشانی که مرورگرها هرگز به سرور نمی‌فرستند، پس فقط کسی که پیوند کامل را دارد می‌تواند زبانه‌ها را بخواند. ساختن پیوند بخشی از [Pro](/pricing) است.
+
+</Section>
+
+<Section id="what-they-see" title="طرف مقابل چه می‌بیند؟">
+
+یک صفحهٔ فقط خواندنی با هر گروه و پنجره، تعداد زبانه‌ها و دکمه‌هایی برای **باز کردن همهٔ زبانه‌ها** (<bdi dir="ltr">Open all tabs</bdi>) در یک پنجره، **باز کردن پنجره** (<bdi dir="ltr">Open window</bdi>) برای کل یک گروه، یا باز کردن تک‌تک زبانه‌ها. نه حساب کاربری لازم دارد و نه TabMerger. اگر از TabMerger استفاده کند، می‌تواند زبانه‌ها را باز کند و با **ادغام با وضعیت فعلی** به‌عنوان گروه خودش ذخیره کند.
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/share-page" width={1600} height={1115} alt="صفحهٔ فقط خواندنی Shared Groups (گروه‌های هم‌رسانی‌شده) در TabMerger با دو گروه و دکمه‌های Open window (باز کردن پنجره) و Open all tabs (باز کردن همهٔ زبانه‌ها)، پوستهٔ روشن" darkAlt="صفحهٔ فقط خواندنی Shared Groups (گروه‌های هم‌رسانی‌شده) در TabMerger با دو گروه و دکمه‌های Open window (باز کردن پنجره) و Open all tabs (باز کردن همهٔ زبانه‌ها)، پوستهٔ تیره" source="tabmerger.com/share/demo">صفحهٔ هم‌رسانی، از پیوند نمایشی عمومی TabMerger.</ThemedScreenshot>
+
+فایل را ترجیح می‌دهید؟ [برون‌بری JSON](/blog/export-open-tabs) (<bdi dir="ltr">Export JSON</bdi>) در TabMerger در طرح رایگان هم کار می‌کند، و راهنمای [انتقال زبانه‌ها به رایانهٔ دیگر](/blog/move-tabs-between-computers) روش انتقال میان دستگاه‌های خودتان را توضیح می‌دهد.
+
+<InstallCta>رایگان برای Chrome و Edge و Firefox. برای شروع حساب کاربری لازم نیست.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="پرسش‌های رایج">
+
+<Faq items={post.faq} />
+
+</Section>

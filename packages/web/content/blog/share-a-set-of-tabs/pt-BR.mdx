@@ -1,0 +1,141 @@
+export const post = {
+  slug: 'share-a-set-of-tabs',
+  title: 'Como compartilhar várias abas de uma vez com alguém',
+  navTitle: 'Compartilhar várias abas',
+  seoTitle: 'Como compartilhar várias abas de uma vez (Chrome, Edge, Firefox)',
+  description:
+    'Envie a um colega ou amigo um conjunto inteiro de abas: copie os links, compartilhe um arquivo de favoritos ou crie um link de compartilhamento do TabMerger com criptografia de ponta a ponta, que abre com um clique, sem precisar de conta.',
+  shareSummary: 'Compartilhe várias abas de uma vez: links, arquivo de favoritos ou link criptografado de um clique.',
+  dek: 'Colar doze links num chat dá trabalho para os dois. Um único link para o conjunto todo, não.',
+  published: '2026-12-10',
+  updated: '2026-12-10',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Um link de compartilhamento do TabMerger abre uma página somente leitura; não é preciso conta para ver.', source: 'Página de compartilhamento do TabMerger' },
+    { text: 'A chave de descriptografia fica no #fragmento do link, que os navegadores nunca enviam ao servidor.', source: 'Código-fonte do TabMerger', href: 'https://github.com/lbragile/TabMerger' },
+    { text: 'Criar links de compartilhamento exige o Pro.', source: 'Preços do TabMerger', href: '/pricing' },
+    { text: 'O Firefox 159 consegue copiar todos os links de um grupo de abas.', source: 'Texto do menu do Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Como compartilho várias abas de uma vez?',
+      answer:
+        'Com o TabMerger Pro, selecione os grupos e clique em Compartilhar: um único link criptografado abre todos eles numa página somente leitura. Com os recursos do próprio navegador, você pode adicionar as abas aos favoritos e enviar o arquivo de favoritos exportado ou, no Firefox, copiar todos os links de um grupo de abas.',
+    },
+    {
+      question: 'A outra pessoa precisa do TabMerger?',
+      answer: 'Não. Um link de compartilhamento abre em qualquer navegador, e dá para abrir uma aba, uma janela ou tudo. Com o TabMerger instalado, a pessoa pode depois salvar as abas como um grupo próprio.',
+    },
+    {
+      question: 'O TabMerger consegue ler as abas que eu compartilho?',
+      answer: 'Não. As abas são criptografadas no seu navegador antes do envio, e a chave fica só no #fragmento do link, que nunca chega ao servidor.',
+    },
+    {
+      question: 'Compartilhar é grátis?',
+      answer: 'Criar links de compartilhamento faz parte do Pro. Copiar links e compartilhar um arquivo de favoritos ou JSON é grátis.',
+    },
+  ],
+  images: [
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp', alt: 'TabMerger com os grupos “Work” e “Reading list” selecionados e a barra de seleção mostrando Star (Marcar com estrela), Unstar (Desmarcar estrela), Share (Compartilhar) e Delete (Excluir), tema claro' },
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-dark.webp', alt: 'TabMerger com os grupos “Work” e “Reading list” selecionados e a barra de seleção mostrando Star (Marcar com estrela), Unstar (Desmarcar estrela), Share (Compartilhar) e Delete (Excluir), tema escuro' },
+    { src: '/blog/share-a-set-of-tabs/share-page-light.webp', alt: 'A página Shared Groups (Grupos compartilhados) do TabMerger, somente leitura, com dois grupos e os botões Open window (Abrir janela) e Open all tabs (Abrir todas as abas), tema claro' },
+    { src: '/blog/share-a-set-of-tabs/share-page-dark.webp', alt: 'A página Shared Groups (Grupos compartilhados) do TabMerger, somente leitura, com dois grupos e os botões Open window (Abrir janela) e Open all tabs (Abrir todas as abas), tema escuro' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'bookmarks', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Import Chrome bookmarks & settings (export section)', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/96816', checked: '2026-11-21' },
+    {
+      title: 'TabMerger source code (sharing)',
+      publisher: 'GitHub',
+      url: 'https://github.com/lbragile/TabMerger',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp' },
+  ogImage: { src: '/blog/share-a-set-of-tabs/og.png', alt: 'Como compartilhar várias abas de uma vez com alguém: um guia do TabMerger, com dois grupos selecionados para compartilhar' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'manual', label: 'Sem extensão' },
+    { id: 'tabmerger', label: 'Um único link criptografado' },
+    { id: 'what-they-see', label: 'O que a outra pessoa vê' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+  browserSections: ['manual'],
+  browserFact: {
+    label: 'Copiar ou exportar links',
+    values: { chrome: 'Gerenciador de favoritos → Exportar favoritos', edge: 'Favorites → Export favorites', firefox: 'Grupo de abas → Copiar links em grupo' },
+  },
+}
+
+<QuickAnswer>
+
+O jeito de um clique é um link de compartilhamento do [TabMerger](/features): selecione seus grupos, clique em **Compartilhar** (Share) e cole o link. Quem abrir vê todas as abas numa página somente leitura e pode abrir uma aba, uma janela ou tudo, sem precisar de conta. E as abas têm **criptografia de ponta a ponta**, então nem o TabMerger consegue lê-las. Sem extensão, adicione as abas aos favoritos e envie o arquivo de favoritos exportado ou, no Firefox, copie todos os links de um grupo de abas.
+
+</QuickAnswer>
+
+<InstallCta>Compartilhe um conjunto inteiro de abas com um único link criptografado. Comece grátis; compartilhar faz parte do Pro.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="manual" title="Como compartilhar abas sem extensão?">
+
+<BrowserPanels section="manual">
+<BrowserPanel browser="chrome">
+
+1. Pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> para adicionar as abas da janela aos favoritos, numa pasta nova.
+2. Abra **⋮ → Favoritos e listas → Gerenciador de favoritos** (Bookmark Manager) e depois **⋮ (Mais) → Exportar favoritos** (Export bookmarks).
+3. Envie o arquivo HTML. A outra pessoa importa o arquivo no navegador dela (ou no TabMerger).
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> para adicionar as abas da janela aos favoritos, numa pasta nova.
+2. Abra os Favoritos (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>) e escolha **Export favorites**.
+3. Envie o arquivo HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Coloque as abas num grupo de abas (arraste uma aba sobre outra).
+2. Clique com o botão direito no rótulo do grupo e escolha **Copiar links em grupo** (Copy links in group).
+3. Cole os links numa mensagem ou num documento.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>um arquivo de favoritos exporta *todos* os seus favoritos, e links colados chegam como uma parede de endereços que a outra pessoa precisa abrir um por um.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="Como compartilhar abas com um único link?">
+
+1. No TabMerger, salve as abas num grupo (**Mesclar com as atuais**, Merge with current, salva todas as janelas abertas).
+2. Dê **Ctrl+clique** (<Kbd>⌘</Kbd>+clique no Mac) na barra lateral em cada grupo que você quer compartilhar.
+3. Clique em **Compartilhar** na barra de seleção. O link é copiado para a área de transferência; cole onde quiser.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/tm-selection-share" alt="TabMerger com os grupos “Work” e “Reading list” selecionados e a barra de seleção mostrando Star (Marcar com estrela), Unstar (Desmarcar estrela), Share (Compartilhar) e Delete (Excluir), tema claro" darkAlt="TabMerger com os grupos “Work” e “Reading list” selecionados e a barra de seleção mostrando Star (Marcar com estrela), Unstar (Desmarcar estrela), Share (Compartilhar) e Delete (Excluir), tema escuro" boxes={[{ id: 'share', label: 'Share' }]} source="TabMerger 3.16.1">Dois grupos selecionados; Share (Compartilhar) cria um único link para os dois (aqui numa conta gratuita, em que o botão fica desativado).</ThemedScreenshot>
+
+Como continua privado: o TabMerger gera uma chave nova no seu navegador, criptografa os grupos com ela e envia só a cópia criptografada. A chave vai no link depois do `#`, uma parte do endereço que os navegadores nunca enviam a um servidor, então só quem tem o link completo consegue ler as abas. Criar links faz parte do [Pro](/pricing).
+
+</Section>
+
+<Section id="what-they-see" title="O que a outra pessoa vê?">
+
+Uma página somente leitura com cada grupo e janela, o número de abas e botões para **Abrir todas as abas** (Open all tabs) de uma janela, **Abrir janela** (Open window) para um grupo inteiro ou abrir abas avulsas. Ela não precisa de conta nem do TabMerger. Se usar o TabMerger, pode abrir as abas e salvá-las como um grupo próprio com **Mesclar com as atuais**.
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/share-page" width={1600} height={1115} alt="A página Shared Groups (Grupos compartilhados) do TabMerger, somente leitura, com dois grupos e os botões Open window (Abrir janela) e Open all tabs (Abrir todas as abas), tema claro" darkAlt="A página Shared Groups (Grupos compartilhados) do TabMerger, somente leitura, com dois grupos e os botões Open window (Abrir janela) e Open all tabs (Abrir todas as abas), tema escuro" source="tabmerger.com/share/demo">A página de compartilhamento, a partir do link de demonstração público do TabMerger.</ThemedScreenshot>
+
+Prefere um arquivo? O [Exportar JSON](/blog/export-open-tabs) (Export JSON) do TabMerger funciona no plano gratuito, e [mover abas para outro computador](/blog/move-tabs-between-computers) mostra como levar abas entre os seus próprios dispositivos.
+
+<InstallCta>Grátis para Chrome, Edge e Firefox. Não precisa de conta para começar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

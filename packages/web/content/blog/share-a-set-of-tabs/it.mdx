@@ -1,0 +1,141 @@
+export const post = {
+  slug: 'share-a-set-of-tabs',
+  title: 'Come condividere più schede insieme con qualcuno',
+  navTitle: 'Condividere più schede',
+  seoTitle: 'Come condividere più schede insieme (Chrome, Edge, Firefox)',
+  description:
+    'Invia a un collega o a un amico un intero gruppo di schede: copia i link, condividi un file di preferiti o crea un link di condivisione TabMerger crittografato end-to-end che si apre con un clic, senza account.',
+  shareSummary: 'Condividi più schede insieme: link, file di preferiti o un link crittografato da aprire in un clic.',
+  dek: 'Incollare dodici link in una chat è una seccatura per entrambi. Un solo link a tutto l’insieme no.',
+  published: '2026-12-10',
+  updated: '2026-12-10',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Un link di condivisione TabMerger apre una pagina di sola lettura; per vederla non serve un account.', source: 'Pagina di condivisione di TabMerger' },
+    { text: 'La chiave di decrittografia resta nel #frammento del link, che i browser non inviano mai al server.', source: 'Codice sorgente di TabMerger', href: 'https://github.com/lbragile/TabMerger' },
+    { text: 'Per creare link di condivisione serve Pro.', source: 'Prezzi di TabMerger', href: '/pricing' },
+    { text: 'Firefox 159 può copiare tutti i link di un gruppo di schede.', source: 'Testo del menu di Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Come condivido più schede insieme?',
+      answer:
+        'Con TabMerger Pro, seleziona i gruppi e premi Condividi: un solo link crittografato li apre tutti in una pagina di sola lettura. Con gli strumenti del browser, puoi salvare le schede nei preferiti e inviare il file dei preferiti esportato, oppure in Firefox copiare tutti i link di un gruppo di schede.',
+    },
+    {
+      question: 'L’altra persona deve avere TabMerger?',
+      answer: 'No. Un link di condivisione si apre in qualsiasi browser, e si può aprire una scheda, una finestra o tutto. Con TabMerger installato, si possono poi salvare le schede come un proprio gruppo.',
+    },
+    {
+      question: 'TabMerger può leggere le schede che condivido?',
+      answer: 'No. Le schede vengono crittografate nel tuo browser prima del caricamento, e la chiave si trova solo nel #frammento del link, che non arriva mai al server.',
+    },
+    {
+      question: 'La condivisione è gratuita?',
+      answer: 'La creazione di link di condivisione fa parte di Pro. Copiare i link e condividere un file di preferiti o JSON è gratuito.',
+    },
+  ],
+  images: [
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp', alt: 'TabMerger con i gruppi «Work» e «Reading list» selezionati e la barra di selezione con Star (Aggiungi stella), Unstar (Rimuovi stella), Share (Condividi) e Delete (Elimina), tema chiaro' },
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-dark.webp', alt: 'TabMerger con i gruppi «Work» e «Reading list» selezionati e la barra di selezione con Star (Aggiungi stella), Unstar (Rimuovi stella), Share (Condividi) e Delete (Elimina), tema scuro' },
+    { src: '/blog/share-a-set-of-tabs/share-page-light.webp', alt: 'La pagina Shared Groups (Gruppi condivisi) di TabMerger, in sola lettura, con due gruppi e i pulsanti Open window (Apri finestra) e Open all tabs (Apri tutte le schede), tema chiaro' },
+    { src: '/blog/share-a-set-of-tabs/share-page-dark.webp', alt: 'La pagina Shared Groups (Gruppi condivisi) di TabMerger, in sola lettura, con due gruppi e i pulsanti Open window (Apri finestra) e Open all tabs (Apri tutte le schede), tema scuro' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'bookmarks', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Import Chrome bookmarks & settings (export section)', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/96816', checked: '2026-11-21' },
+    {
+      title: 'TabMerger source code (sharing)',
+      publisher: 'GitHub',
+      url: 'https://github.com/lbragile/TabMerger',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp' },
+  ogImage: { src: '/blog/share-a-set-of-tabs/og.png', alt: 'Come condividere più schede insieme con qualcuno: una guida TabMerger, con due gruppi selezionati per la condivisione' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'manual', label: 'Senza estensioni' },
+    { id: 'tabmerger', label: 'Un solo link crittografato' },
+    { id: 'what-they-see', label: 'Cosa vede l’altra persona' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+  browserSections: ['manual'],
+  browserFact: {
+    label: 'Copiare o esportare i link',
+    values: { chrome: 'Gestione preferiti → Esporta preferiti', edge: 'Favorites → Export favorites', firefox: 'Gruppo di schede → Copia link nel gruppo' },
+  },
+}
+
+<QuickAnswer>
+
+Il modo più rapido è un link di condivisione di [TabMerger](/features): seleziona i gruppi, premi **Condividi** (Share) e incolla il link. Chi lo apre vede tutte le schede in una pagina di sola lettura e può aprire una scheda, una finestra o tutto, senza account. Le schede sono **crittografate end-to-end**, quindi nemmeno TabMerger può leggerle. Senza estensioni, salva le schede nei preferiti e invia il file dei preferiti esportato, oppure in Firefox copia tutti i link di un gruppo di schede.
+
+</QuickAnswer>
+
+<InstallCta>Condividi un intero gruppo di schede con un solo link crittografato. Si inizia gratis; la condivisione fa parte di Pro.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="manual" title="Come condivido le schede senza un’estensione?">
+
+<BrowserPanels section="manual">
+<BrowserPanel browser="chrome">
+
+1. Premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> per salvare le schede della finestra nei preferiti, in una nuova cartella.
+2. Apri **⋮ → Preferiti ed elenchi → Gestione preferiti** (Bookmark Manager), poi **⋮ (Altro) → Esporta preferiti** (Export bookmarks).
+3. Invia il file HTML. L’altra persona lo importa nel suo browser (o in TabMerger).
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> per aggiungere le schede della finestra ai preferiti, in una nuova cartella.
+2. Apri i Preferiti (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>) e scegli **Export favorites**.
+3. Invia il file HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Metti le schede in un gruppo di schede (trascina una scheda su un’altra).
+2. Fai clic destro sull’etichetta del gruppo e scegli **Copia link nel gruppo** (Copy links in group).
+3. Incolla i link in un messaggio o in un documento.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>un file di preferiti esporta *tutti* i tuoi preferiti, e i link incollati arrivano come un muro di indirizzi che l’altra persona deve aprire uno per uno.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="Come condivido le schede con un solo link?">
+
+1. In TabMerger, salva le schede in un gruppo (**Unisci con l'attuale**, Merge with current, salva tutte le finestre aperte).
+2. Fai **Ctrl+clic** (<Kbd>⌘</Kbd>+clic su Mac) nella barra laterale su ogni gruppo che vuoi condividere.
+3. Premi **Condividi** nella barra di selezione. Il link viene copiato negli appunti; incollalo dove vuoi.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/tm-selection-share" alt="TabMerger con i gruppi «Work» e «Reading list» selezionati e la barra di selezione con Star (Aggiungi stella), Unstar (Rimuovi stella), Share (Condividi) e Delete (Elimina), tema chiaro" darkAlt="TabMerger con i gruppi «Work» e «Reading list» selezionati e la barra di selezione con Star (Aggiungi stella), Unstar (Rimuovi stella), Share (Condividi) e Delete (Elimina), tema scuro" boxes={[{ id: 'share', label: 'Share' }]} source="TabMerger 3.16.1">Due gruppi selezionati; Share (Condividi) crea un solo link per entrambi (qui con un account gratuito, dove il pulsante è disattivato).</ThemedScreenshot>
+
+Come resta privato: TabMerger genera una nuova chiave nel tuo browser, crittografa i gruppi con quella chiave e carica solo la copia crittografata. La chiave va nel link dopo il `#`, una parte dell’indirizzo che i browser non inviano mai a un server, quindi solo chi ha il link completo può leggere le schede. La creazione di link fa parte di [Pro](/pricing).
+
+</Section>
+
+<Section id="what-they-see" title="Cosa vede l’altra persona?">
+
+Una pagina di sola lettura con ogni gruppo e ogni finestra, il numero di schede e i pulsanti per **Apri tutte le schede** (Open all tabs) di una finestra, **Apri finestra** (Open window) per un gruppo intero, oppure per aprire singole schede. Non servono un account né TabMerger. Chi usa TabMerger può aprire le schede e salvarle come un proprio gruppo con **Unisci con l'attuale**.
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/share-page" width={1600} height={1115} alt="La pagina Shared Groups (Gruppi condivisi) di TabMerger, in sola lettura, con due gruppi e i pulsanti Open window (Apri finestra) e Open all tabs (Apri tutte le schede), tema chiaro" darkAlt="La pagina Shared Groups (Gruppi condivisi) di TabMerger, in sola lettura, con due gruppi e i pulsanti Open window (Apri finestra) e Open all tabs (Apri tutte le schede), tema scuro" source="tabmerger.com/share/demo">La pagina di condivisione, dal link demo pubblico di TabMerger.</ThemedScreenshot>
+
+Preferisci un file? [Esporta JSON](/blog/export-open-tabs) (Export JSON) di TabMerger funziona anche nel piano gratuito, e [spostare le schede su un altro computer](/blog/move-tabs-between-computers) spiega come farlo tra i tuoi dispositivi.
+
+<InstallCta>Gratis per Chrome, Edge e Firefox. Per iniziare non serve un account.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

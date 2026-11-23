@@ -1,0 +1,141 @@
+export const post = {
+  slug: 'share-a-set-of-tabs',
+  title: 'Jak udostępnić komuś kilka kart naraz',
+  navTitle: 'Udostępnianie kilku kart naraz',
+  seoTitle: 'Jak udostępnić kilka kart naraz (Chrome, Edge, Firefox)',
+  description:
+    'Wyślij współpracownikowi lub znajomemu cały zestaw kart: skopiuj linki, udostępnij plik zakładek albo utwórz zaszyfrowany end-to-end link TabMerger, który otworzy jednym kliknięciem, bez zakładania konta.',
+  shareSummary: 'Udostępnij kilka kart naraz: linki, plik zakładek albo zaszyfrowany link na jedno kliknięcie.',
+  dek: 'Wklejanie dwunastu linków na czacie to męczarnia dla obu stron. Jeden link do całego zestawu już nie.',
+  published: '2026-12-10',
+  updated: '2026-12-10',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Link udostępniania TabMerger otwiera stronę tylko do odczytu; do jej obejrzenia nie trzeba konta.', source: 'Strona udostępniania TabMerger' },
+    { text: 'Klucz do odszyfrowania zostaje we #fragmencie linku, którego przeglądarki nigdy nie wysyłają na serwer.', source: 'Kod źródłowy TabMerger', href: 'https://github.com/lbragile/TabMerger' },
+    { text: 'Tworzenie linków udostępniania wymaga planu Pro.', source: 'Cennik TabMerger', href: '/pricing' },
+    { text: 'Firefox 159 potrafi skopiować wszystkie linki z grupy kart.', source: 'Tekst menu Firefoksa 159' },
+  ],
+  faq: [
+    {
+      question: 'Jak udostępnić kilka kart naraz?',
+      answer:
+        'W TabMerger Pro zaznacz grupy i naciśnij Udostępnij: jeden zaszyfrowany link otwiera je wszystkie na stronie tylko do odczytu. Wbudowanymi narzędziami możesz dodać karty do zakładek i wysłać wyeksportowany plik zakładek albo w Firefoksie skopiować wszystkie linki z grupy kart.',
+    },
+    {
+      question: 'Czy druga osoba potrzebuje TabMerger?',
+      answer: 'Nie. Link udostępniania otwiera się w każdej przeglądarce, a odbiorca może otworzyć jedną kartę, jedno okno albo wszystko. Jeśli ma zainstalowany TabMerger, może potem zapisać karty jako własną grupę.',
+    },
+    {
+      question: 'Czy TabMerger może odczytać karty, które udostępniam?',
+      answer: 'Nie. Karty są szyfrowane w Twojej przeglądarce przed wysłaniem, a klucz jest tylko we #fragmencie linku, który nigdy nie trafia na serwer.',
+    },
+    {
+      question: 'Czy udostępnianie jest darmowe?',
+      answer: 'Tworzenie linków udostępniania należy do planu Pro. Kopiowanie linków i udostępnianie pliku zakładek lub pliku JSON jest darmowe.',
+    },
+  ],
+  images: [
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp', alt: 'TabMerger z zaznaczonymi grupami „Work” i „Reading list” oraz paskiem zaznaczenia z przyciskami Star (Oznacz gwiazdką), Unstar (Usuń gwiazdkę), Share (Udostępnij) i Delete (Usuń), jasny motyw' },
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-dark.webp', alt: 'TabMerger z zaznaczonymi grupami „Work” i „Reading list” oraz paskiem zaznaczenia z przyciskami Star (Oznacz gwiazdką), Unstar (Usuń gwiazdkę), Share (Udostępnij) i Delete (Usuń), ciemny motyw' },
+    { src: '/blog/share-a-set-of-tabs/share-page-light.webp', alt: 'Strona Shared Groups (Udostępnione grupy) w TabMerger, tylko do odczytu, z dwiema grupami i przyciskami Open window (Otwórz okno) i Open all tabs (Otwórz wszystkie karty), jasny motyw' },
+    { src: '/blog/share-a-set-of-tabs/share-page-dark.webp', alt: 'Strona Shared Groups (Udostępnione grupy) w TabMerger, tylko do odczytu, z dwiema grupami i przyciskami Open window (Otwórz okno) i Open all tabs (Otwórz wszystkie karty), ciemny motyw' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'bookmarks', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Import Chrome bookmarks & settings (export section)', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/96816', checked: '2026-11-21' },
+    {
+      title: 'TabMerger source code (sharing)',
+      publisher: 'GitHub',
+      url: 'https://github.com/lbragile/TabMerger',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp' },
+  ogImage: { src: '/blog/share-a-set-of-tabs/og.png', alt: 'Jak udostępnić komuś kilka kart naraz: poradnik TabMerger, z dwiema grupami zaznaczonymi do udostępnienia' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'manual', label: 'Bez rozszerzenia' },
+    { id: 'tabmerger', label: 'Jeden zaszyfrowany link' },
+    { id: 'what-they-see', label: 'Co widzi odbiorca' },
+    { id: 'faq', label: 'Najczęstsze pytania' },
+  ],
+  browserSections: ['manual'],
+  browserFact: {
+    label: 'Kopiowanie lub eksport linków',
+    values: { chrome: 'Menedżer zakładek → Eksportuj zakładki', edge: 'Favorites → Export favorites', firefox: 'Grupa kart → Kopiuj odnośniki w grupie' },
+  },
+}
+
+<QuickAnswer>
+
+Najszybciej zrobisz to linkiem udostępniania z [TabMerger](/features): zaznacz grupy, naciśnij **Udostępnij** (Share) i wklej link. Kto go otworzy, zobaczy wszystkie karty na stronie tylko do odczytu i może otworzyć jedną kartę, okno albo wszystko, bez zakładania konta. Karty są przy tym **szyfrowane end-to-end**, więc nawet TabMerger nie może ich odczytać. Bez rozszerzenia dodaj karty do zakładek i wyślij wyeksportowany plik zakładek albo w Firefoksie skopiuj wszystkie linki z grupy kart.
+
+</QuickAnswer>
+
+<InstallCta>Udostępnij cały zestaw kart jednym zaszyfrowanym linkiem. Na start za darmo; udostępnianie należy do planu Pro.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="manual" title="Jak udostępnić karty bez rozszerzenia?">
+
+<BrowserPanels section="manual">
+<BrowserPanel browser="chrome">
+
+1. Naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>, aby dodać karty z okna do zakładek w nowym folderze.
+2. Otwórz **⋮ → Zakładki i listy → Menedżer zakładek** (Bookmark Manager), a potem **⋮ (Więcej) → Eksportuj zakładki** (Export bookmarks).
+3. Wyślij plik HTML. Odbiorca importuje go do swojej przeglądarki (albo do TabMerger).
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>, aby dodać karty z okna do ulubionych w nowym folderze.
+2. Otwórz Ulubione (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>) i wybierz **Export favorites**.
+3. Wyślij plik HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Umieść karty w grupie kart (przeciągnij jedną kartę na drugą).
+2. Kliknij prawym przyciskiem etykietę grupy i wybierz **Kopiuj odnośniki w grupie** (Copy links in group).
+3. Wklej linki do wiadomości lub dokumentu.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>plik zakładek eksportuje *wszystkie* Twoje zakładki, a wklejone linki docierają jako ściana adresów, które odbiorca musi otwierać po kolei.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="Jak udostępnić karty jednym linkiem?">
+
+1. W TabMerger zapisz karty w grupie (**Scal z bieżącą sesją**, Merge with current, zapisuje wszystkie otwarte okna).
+2. Na pasku bocznym zaznacz **Ctrl+kliknięciem** (<Kbd>⌘</Kbd>+kliknięciem na Macu) każdą grupę, którą chcesz udostępnić.
+3. Naciśnij **Udostępnij** na pasku zaznaczenia. Link trafi do schowka; wklej go, gdzie chcesz.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/tm-selection-share" alt="TabMerger z zaznaczonymi grupami „Work” i „Reading list” oraz paskiem zaznaczenia z przyciskami Star (Oznacz gwiazdką), Unstar (Usuń gwiazdkę), Share (Udostępnij) i Delete (Usuń), jasny motyw" darkAlt="TabMerger z zaznaczonymi grupami „Work” i „Reading list” oraz paskiem zaznaczenia z przyciskami Star (Oznacz gwiazdką), Unstar (Usuń gwiazdkę), Share (Udostępnij) i Delete (Usuń), ciemny motyw" boxes={[{ id: 'share', label: 'Share' }]} source="TabMerger 3.16.1">Zaznaczone dwie grupy; Share (Udostępnij) tworzy jeden link dla obu (tu na darmowym koncie, gdzie przycisk jest wyłączony).</ThemedScreenshot>
+
+Jak to zostaje prywatne: TabMerger generuje w Twojej przeglądarce nowy klucz, szyfruje nim grupy i wysyła tylko zaszyfrowaną kopię. Klucz trafia do linku po znaku `#`, czyli do części adresu, której przeglądarki nigdy nie wysyłają na serwer, więc karty odczyta tylko ktoś, kto ma pełny link. Tworzenie linków należy do planu [Pro](/pricing).
+
+</Section>
+
+<Section id="what-they-see" title="Co widzi odbiorca?">
+
+Stronę tylko do odczytu z każdą grupą i każdym oknem, liczbą kart i przyciskami **Otwórz wszystkie karty** (Open all tabs) dla okna, **Otwórz okno** (Open window) dla całej grupy albo do otwierania pojedynczych kart. Nie potrzebuje konta ani TabMerger. Jeśli korzysta z TabMerger, może otworzyć karty i zapisać je jako własną grupę opcją **Scal z bieżącą sesją**.
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/share-page" width={1600} height={1115} alt="Strona Shared Groups (Udostępnione grupy) w TabMerger, tylko do odczytu, z dwiema grupami i przyciskami Open window (Otwórz okno) i Open all tabs (Otwórz wszystkie karty), jasny motyw" darkAlt="Strona Shared Groups (Udostępnione grupy) w TabMerger, tylko do odczytu, z dwiema grupami i przyciskami Open window (Otwórz okno) i Open all tabs (Otwórz wszystkie karty), ciemny motyw" source="tabmerger.com/share/demo">Strona udostępniania z publicznego linku demonstracyjnego TabMerger.</ThemedScreenshot>
+
+Wolisz plik? [Eksportuj JSON](/blog/export-open-tabs) (Export JSON) w TabMerger działa w darmowym planie, a [przenoszenie kart na inny komputer](/blog/move-tabs-between-computers) opisuje, jak to zrobić między własnymi urządzeniami.
+
+<InstallCta>Za darmo dla Chrome, Edge i Firefoksa. Na start konto nie jest potrzebne.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Najczęstsze pytania">
+
+<Faq items={post.faq} />
+
+</Section>

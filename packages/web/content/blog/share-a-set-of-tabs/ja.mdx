@@ -1,0 +1,141 @@
+export const post = {
+  slug: 'share-a-set-of-tabs',
+  title: '複数のタブをまとめて共有する方法',
+  navTitle: '複数のタブをまとめて共有',
+  seoTitle: '複数のタブをまとめて共有する方法（Chrome・Edge・Firefox）',
+  description:
+    '同僚や友人にタブ一式を送る方法。リンクをコピーする、ブックマーク ファイルを共有する、またはアカウント不要・ワンクリックで開けるエンドツーエンド暗号化の TabMerger 共有リンクを作る方法を紹介します。',
+  shareSummary: '複数のタブをまとめて共有：リンク、ブックマーク ファイル、ワンクリックで開ける暗号化リンク。',
+  dek: 'チャットにリンクを 12 個貼るのは、送る側にも受け取る側にも面倒です。タブ一式へのリンク 1 つなら、そうはなりません。',
+  published: '2026-12-10',
+  updated: '2026-12-10',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger の共有リンクは読み取り専用のページを開きます。閲覧にアカウントは不要です。', source: 'TabMerger の共有ページ' },
+    { text: '復号鍵はリンクの #フラグメントに入っていて、ブラウザはこの部分をサーバーに送りません。', source: 'TabMerger のソースコード', href: 'https://github.com/lbragile/TabMerger' },
+    { text: '共有リンクの作成には Pro が必要です。', source: 'TabMerger の料金', href: '/pricing' },
+    { text: 'Firefox 159 では、タブグループ内のリンクをすべてコピーできます。', source: 'Firefox 159 のメニュー表記' },
+  ],
+  faq: [
+    {
+      question: '複数のタブをまとめて共有するには？',
+      answer:
+        'TabMerger Pro なら、グループを選んで「共有」を押すだけです。暗号化されたリンク 1 つで、すべてのタブが読み取り専用のページに開きます。ブラウザの標準機能では、タブをブックマークしてエクスポートしたブックマーク ファイルを送るか、Firefox ならタブグループ内のリンクをすべてコピーできます。',
+    },
+    {
+      question: '相手にも TabMerger が必要ですか？',
+      answer: 'いいえ。共有リンクはどのブラウザでも開け、相手はタブ 1 つ、ウィンドウ 1 つ、またはすべてを開けます。TabMerger を入れていれば、そのタブを自分のグループとして保存することもできます。',
+    },
+    {
+      question: '共有したタブを TabMerger が読むことはできますか？',
+      answer: 'いいえ。タブはアップロード前にお使いのブラウザで暗号化され、鍵はリンクの #フラグメントにしかありません。この部分がサーバーに届くことはありません。',
+    },
+    {
+      question: '共有は無料ですか？',
+      answer: '共有リンクの作成は Pro の機能です。リンクのコピーや、ブックマーク ファイル・JSON ファイルの共有は無料です。',
+    },
+  ],
+  images: [
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp', alt: 'TabMerger でグループ「Work」と「Reading list」を選択した状態。選択バーに Star（スターを付ける）、Unstar（スターを外す）、Share（共有）、Delete（削除）が並んでいる。ライトテーマ' },
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-dark.webp', alt: 'TabMerger でグループ「Work」と「Reading list」を選択した状態。選択バーに Star（スターを付ける）、Unstar（スターを外す）、Share（共有）、Delete（削除）が並んでいる。ダークテーマ' },
+    { src: '/blog/share-a-set-of-tabs/share-page-light.webp', alt: 'TabMerger の読み取り専用ページ Shared Groups（共有グループ）。2 つのグループと、Open window（ウィンドウを開く）・Open all tabs（すべてのタブを開く）ボタンが表示されている。ライトテーマ' },
+    { src: '/blog/share-a-set-of-tabs/share-page-dark.webp', alt: 'TabMerger の読み取り専用ページ Shared Groups（共有グループ）。2 つのグループと、Open window（ウィンドウを開く）・Open all tabs（すべてのタブを開く）ボタンが表示されている。ダークテーマ' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'bookmarks', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Import Chrome bookmarks & settings (export section)', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/96816', checked: '2026-11-21' },
+    {
+      title: 'TabMerger source code (sharing)',
+      publisher: 'GitHub',
+      url: 'https://github.com/lbragile/TabMerger',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp' },
+  ogImage: { src: '/blog/share-a-set-of-tabs/og.png', alt: '複数のタブをまとめて共有する方法：TabMerger ガイド。共有するグループを 2 つ選択した画面' },
+  toc: [
+    { id: 'quick', label: '結論' },
+    { id: 'manual', label: '拡張機能なしの方法' },
+    { id: 'tabmerger', label: '暗号化リンク 1 つで共有' },
+    { id: 'what-they-see', label: '相手に見える画面' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+  browserSections: ['manual'],
+  browserFact: {
+    label: 'リンクのコピー・エクスポート',
+    values: { chrome: 'ブックマーク マネージャ → ブックマークをエクスポート', edge: 'Favorites → Export favorites', firefox: 'タブグループ → グループ内のリンクをコピー' },
+  },
+}
+
+<QuickAnswer>
+
+ワンクリックで済ませるなら [TabMerger](/features) の共有リンクです。グループを選び、「**共有**」（Share）を押して、リンクを貼り付けるだけ。開いた人には全タブが読み取り専用のページに表示され、アカウントなしでタブ 1 つ、ウィンドウ 1 つ、またはすべてを開けます。しかもタブは**エンドツーエンドで暗号化**されるので、TabMerger でさえ中身を読めません。拡張機能を使わない場合は、タブをブックマークしてエクスポートしたブックマーク ファイルを送るか、Firefox ならタブグループ内のリンクをすべてコピーします。
+
+</QuickAnswer>
+
+<InstallCta>タブ一式を、暗号化されたリンク 1 つで共有。無料で始められます。共有は Pro の機能です。</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="manual" title="拡張機能なしでタブを共有するには？">
+
+<BrowserPanels section="manual">
+<BrowserPanel browser="chrome">
+
+1. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> を押して、ウィンドウのタブを新しいフォルダにブックマークします。
+2. **⋮ →「ブックマークとリスト」→「ブックマーク マネージャ」**（Bookmark Manager）を開き、次に **⋮（その他）→「ブックマークをエクスポート」**（Export bookmarks）を選びます。
+3. HTML ファイルを送ります。受け取った人は、自分のブラウザ（または TabMerger）にインポートします。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> を押して、ウィンドウのタブを新しいフォルダにお気に入りとして追加します。
+2. お気に入り（<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>）を開き、**Export favorites** を選びます。
+3. HTML ファイルを送ります。
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. タブをタブグループにまとめます（タブを別のタブの上にドラッグ）。
+2. グループのラベルを右クリックし、「**グループ内のリンクをコピー**」（Copy links in group）を選びます。
+3. リンクをメッセージや文書に貼り付けます。
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>ブックマーク ファイルには*すべての*ブックマークが書き出されます。また、貼り付けたリンクはアドレスの羅列として届き、相手は 1 つずつ開かなければなりません。</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="リンク 1 つでタブを共有するには？">
+
+1. TabMerger で、タブをグループに保存します（「**現在の内容と統合**」（Merge with current）で、開いているウィンドウをすべて保存できます）。
+2. サイドバーで、共有したいグループを **Ctrl キーを押しながらクリック**（Mac では <Kbd>⌘</Kbd> を押しながらクリック）します。
+3. 選択バーの「**共有**」を押します。リンクがクリップボードにコピーされるので、どこにでも貼り付けられます。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/tm-selection-share" alt="TabMerger でグループ「Work」と「Reading list」を選択した状態。選択バーに Star（スターを付ける）、Unstar（スターを外す）、Share（共有）、Delete（削除）が並んでいる。ライトテーマ" darkAlt="TabMerger でグループ「Work」と「Reading list」を選択した状態。選択バーに Star（スターを付ける）、Unstar（スターを外す）、Share（共有）、Delete（削除）が並んでいる。ダークテーマ" boxes={[{ id: 'share', label: 'Share' }]} source="TabMerger 3.16.1">2 つのグループを選択した状態。Share（共有）で、両方をまとめたリンクが 1 つ作られます（ここでは Free アカウントのため、ボタンは無効になっています）。</ThemedScreenshot>
+
+プライバシーが守られる仕組み：TabMerger はお使いのブラウザで新しい鍵を生成し、その鍵でグループを暗号化して、暗号化したコピーだけをアップロードします。鍵はリンクの `#` より後ろに入ります。ここはブラウザがサーバーに送らない部分なので、タブを読めるのは完全なリンクを持つ人だけです。リンクの作成は [Pro](/pricing) の機能です。
+
+</Section>
+
+<Section id="what-they-see" title="相手にはどう見える？">
+
+各グループとウィンドウ、タブの数が並ぶ読み取り専用のページです。ウィンドウ単位で開く「**すべてのタブを開く**」（Open all tabs）、グループ全体を開く「**ウィンドウを開く**」（Open window）のボタンがあり、タブを 1 つずつ開くこともできます。アカウントも TabMerger も不要です。TabMerger を使っている人なら、タブを開いてから「**現在の内容と統合**」で自分のグループとして保存できます。
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/share-page" width={1600} height={1115} alt="TabMerger の読み取り専用ページ Shared Groups（共有グループ）。2 つのグループと、Open window（ウィンドウを開く）・Open all tabs（すべてのタブを開く）ボタンが表示されている。ライトテーマ" darkAlt="TabMerger の読み取り専用ページ Shared Groups（共有グループ）。2 つのグループと、Open window（ウィンドウを開く）・Open all tabs（すべてのタブを開く）ボタンが表示されている。ダークテーマ" source="tabmerger.com/share/demo">TabMerger の公開デモリンクで開いた共有ページ。</ThemedScreenshot>
+
+ファイルで渡したい場合は、TabMerger の [JSON をエクスポート](/blog/export-open-tabs)（Export JSON）が Free でも使えます。自分のデバイス間で移すなら、[タブを別のパソコンに移す方法](/blog/move-tabs-between-computers)をご覧ください。
+
+<InstallCta>Chrome・Edge・Firefox 向けに無料。始めるのにアカウントは不要です。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

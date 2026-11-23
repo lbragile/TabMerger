@@ -1,0 +1,141 @@
+export const post = {
+  slug: 'share-a-set-of-tabs',
+  title: '如何一次把多个标签页分享给别人',
+  navTitle: '一次分享多个标签页',
+  seoTitle: '如何一次分享多个标签页（Chrome、Edge、Firefox）',
+  description:
+    '把一整组标签页发给同事或朋友：复制链接、分享书签文件，或者创建一个端到端加密的 TabMerger 分享链接，对方点一下就能打开，无需账号。',
+  shareSummary: '一次分享多个标签页：复制链接、书签文件，或一键打开的加密链接。',
+  dek: '往聊天里粘贴十二个链接，对双方都是件麻烦事。一个链接打包整组标签页就不会。',
+  published: '2026-12-10',
+  updated: '2026-12-10',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger 分享链接会打开一个只读页面，查看无需账号。', source: 'TabMerger 分享页面' },
+    { text: '解密密钥保存在链接的 #片段中，浏览器从不把这部分发送给服务器。', source: 'TabMerger 源代码', href: 'https://github.com/lbragile/TabMerger' },
+    { text: '创建分享链接需要 Pro。', source: 'TabMerger 价格', href: '/pricing' },
+    { text: 'Firefox 159 可以复制一个标签页组里的所有链接。', source: 'Firefox 159 菜单文字' },
+  ],
+  faq: [
+    {
+      question: '如何一次分享多个标签页？',
+      answer:
+        '使用 TabMerger Pro，选中分组后点击分享：一个加密链接就能在只读页面上打开所有标签页。用浏览器自带的功能，可以把标签页加入书签并发送导出的书签文件，或者在 Firefox 中复制一个标签页组里的所有链接。',
+    },
+    {
+      question: '对方需要安装 TabMerger 吗？',
+      answer: '不需要。分享链接在任何浏览器中都能打开，对方可以打开一个标签页、一个窗口或全部。如果装了 TabMerger，还可以把这些标签页保存为自己的分组。',
+    },
+    {
+      question: 'TabMerger 能看到我分享的标签页吗？',
+      answer: '不能。标签页在上传前就在你的浏览器中加密，密钥只存在于链接的 #片段中，而这部分永远不会到达服务器。',
+    },
+    {
+      question: '分享是免费的吗？',
+      answer: '创建分享链接属于 Pro 功能。复制链接、分享书签文件或 JSON 文件都是免费的。',
+    },
+  ],
+  images: [
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp', alt: 'TabMerger 中选中了“Work”和“Reading list”两个分组，选择栏显示 Star（加星标）、Unstar（取消星标）、Share（分享）和 Delete（删除），浅色主题' },
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-dark.webp', alt: 'TabMerger 中选中了“Work”和“Reading list”两个分组，选择栏显示 Star（加星标）、Unstar（取消星标）、Share（分享）和 Delete（删除），深色主题' },
+    { src: '/blog/share-a-set-of-tabs/share-page-light.webp', alt: 'TabMerger 的只读页面 Shared Groups（共享分组），列出两个分组以及 Open window（打开窗口）和 Open all tabs（打开所有标签页）按钮，浅色主题' },
+    { src: '/blog/share-a-set-of-tabs/share-page-dark.webp', alt: 'TabMerger 的只读页面 Shared Groups（共享分组），列出两个分组以及 Open window（打开窗口）和 Open all tabs（打开所有标签页）按钮，深色主题' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'bookmarks', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Import Chrome bookmarks & settings (export section)', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/96816', checked: '2026-11-21' },
+    {
+      title: 'TabMerger source code (sharing)',
+      publisher: 'GitHub',
+      url: 'https://github.com/lbragile/TabMerger',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp' },
+  ogImage: { src: '/blog/share-a-set-of-tabs/og.png', alt: '如何一次把多个标签页分享给别人：TabMerger 指南，图中选中了两个要分享的分组' },
+  toc: [
+    { id: 'quick', label: '快速回答' },
+    { id: 'manual', label: '不用扩展程序' },
+    { id: 'tabmerger', label: '一个加密链接' },
+    { id: 'what-they-see', label: '对方会看到什么' },
+    { id: 'faq', label: '常见问题' },
+  ],
+  browserSections: ['manual'],
+  browserFact: {
+    label: '复制或导出链接',
+    values: { chrome: '书签管理器 → 导出书签', edge: 'Favorites → Export favorites', firefox: '标签页组 → 复制群组中的链接' },
+  },
+}
+
+<QuickAnswer>
+
+一键分享的办法是 [TabMerger](/features) 分享链接：选中分组，点击**分享**（Share），然后粘贴链接即可。打开链接的人会在一个只读页面上看到所有标签页，无需账号就能打开一个标签页、一个窗口或全部。而且这些标签页是**端到端加密**的，连 TabMerger 也读不到。如果不用扩展程序，可以把标签页加入书签并发送导出的书签文件，或者在 Firefox 中复制一个标签页组里的所有链接。
+
+</QuickAnswer>
+
+<InstallCta>用一个加密链接分享整组标签页。免费开始使用；分享属于 Pro 功能。</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="manual" title="不用扩展程序，如何分享标签页？">
+
+<BrowserPanels section="manual">
+<BrowserPanel browser="chrome">
+
+1. 按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>，把当前窗口的标签页加入书签，存进一个新文件夹。
+2. 打开 **⋮ → 书签和清单 → 书签管理器**（Bookmark Manager），然后选择 **⋮（更多）→ 导出书签**（Export bookmarks）。
+3. 发送这个 HTML 文件。对方把它导入自己的浏览器（或导入 TabMerger）。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. 按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>，把当前窗口的标签页添加到收藏夹，存进一个新文件夹。
+2. 打开收藏夹（<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>），选择 **Export favorites**。
+3. 发送这个 HTML 文件。
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. 把标签页放进一个标签页组（把一个标签页拖到另一个上面）。
+2. 右键点击分组的标签，选择**复制群组中的链接**（Copy links in group）。
+3. 把链接粘贴到消息或文档里。
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>书签文件会导出你*所有的*书签，而粘贴过去的链接到了对方那里就是一堵地址墙，只能一个一个地打开。</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="如何用一个链接分享标签页？">
+
+1. 在 TabMerger 中把标签页保存到一个分组（**与当前合并**（Merge with current）会保存所有打开的窗口）。
+2. 在侧边栏中 **Ctrl+点击**（Mac 上为 <Kbd>⌘</Kbd>+点击）每个要分享的分组。
+3. 点击选择栏中的**分享**。链接会复制到剪贴板，粘贴到任何地方都可以。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/tm-selection-share" alt="TabMerger 中选中了“Work”和“Reading list”两个分组，选择栏显示 Star（加星标）、Unstar（取消星标）、Share（分享）和 Delete（删除），浅色主题" darkAlt="TabMerger 中选中了“Work”和“Reading list”两个分组，选择栏显示 Star（加星标）、Unstar（取消星标）、Share（分享）和 Delete（删除），深色主题" boxes={[{ id: 'share', label: 'Share' }]} source="TabMerger 3.16.1">选中了两个分组；Share（分享）会为它们生成一个链接（此处为 Free 账号，按钮处于停用状态）。</ThemedScreenshot>
+
+如何保证私密：TabMerger 在你的浏览器中生成一个新密钥，用它加密分组，只上传加密后的副本。密钥放在链接的 `#` 之后，这部分地址浏览器从不发送给服务器，所以只有拿到完整链接的人才能读取这些标签页。创建链接属于 [Pro](/pricing) 功能。
+
+</Section>
+
+<Section id="what-they-see" title="对方会看到什么？">
+
+一个只读页面，列出每个分组和窗口、标签页数量，以及按钮：**打开所有标签页**（Open all tabs）打开一个窗口的标签页，**打开窗口**（Open window）打开整个分组，也可以单独打开某个标签页。对方不需要账号，也不需要 TabMerger。如果对方在用 TabMerger，可以打开这些标签页，再用**与当前合并**保存为自己的分组。
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/share-page" width={1600} height={1115} alt="TabMerger 的只读页面 Shared Groups（共享分组），列出两个分组以及 Open window（打开窗口）和 Open all tabs（打开所有标签页）按钮，浅色主题" darkAlt="TabMerger 的只读页面 Shared Groups（共享分组），列出两个分组以及 Open window（打开窗口）和 Open all tabs（打开所有标签页）按钮，深色主题" source="tabmerger.com/share/demo">通过 TabMerger 公开演示链接打开的分享页面。</ThemedScreenshot>
+
+更想用文件？TabMerger 的[导出 JSON](/blog/export-open-tabs)（Export JSON）在 Free 版中也能用；如果是在自己的设备之间转移，请看[把标签页移到另一台电脑](/blog/move-tabs-between-computers)。
+
+<InstallCta>支持 Chrome、Edge 和 Firefox，免费使用。开始使用无需账号。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>
