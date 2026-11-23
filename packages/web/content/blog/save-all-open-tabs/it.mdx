@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'Una scorciatoia, il ripristino all’avvio e le schede chiuse recuperate in Chrome, Edge e Firefox.',
   dek: 'Cinque modi per tenere tutte le schede aperte, e cosa ognuno trascura senza dirtelo.',
   published: '2026-11-19',
-  updated: '2026-11-19',
+  updated: '2026-11-21',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D salva solo la finestra attuale.', source: 'Testato in tutti e tre, 19 nov 2026' },
@@ -117,9 +117,11 @@ export const post = {
 
 <QuickAnswer>
 
-Per salvare tutte le schede aperte, premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> su Mac): ogni scheda della finestra attuale diventa un preferito in una nuova cartella. Funziona in Chrome, Edge e Firefox. Per far riaprire le schede da sole, attiva **Continua dal punto in cui avevi interrotto** («Continue where you left off», Chrome), **Open tabs from the previous session** (Edge) o **Apri finestre e schede esistenti** («Open previous windows and tabs», Firefox).
+Per salvare tutte le schede aperte, premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> su Mac): ogni scheda della finestra attuale diventa un preferito in una nuova cartella. Funziona in Chrome, Edge e Firefox. Per far riaprire le schede da sole, attiva **Continua dal punto in cui avevi interrotto** («Continue where you left off», Chrome), **Open tabs from the previous session** (Edge) o **Apri finestre e schede esistenti** («Open previous windows and tabs», Firefox). Per salvare **tutte le finestre in una volta** e cercare le schede in seguito, usa [TabMerger](/features): un clic salva tutte le finestre aperte in un gruppo con un nome.
 
 </QuickAnswer>
+
+<InstallCta>Salva tutte le finestre aperte con un clic. Gratis per Chrome, Edge e Firefox.</InstallCta>
 
 <BrowserSwitcher />
 
@@ -200,7 +202,7 @@ In Firefox: **Impostazioni → Pagina iniziale e avvio → Avvio → Apri finest
 
 <Section id="closed" title="3. Recupera le schede che hai già chiuso">
 
-Premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) per riaprire l’ultima scheda o finestra chiusa; premilo ancora per tornare più indietro. Per qualcosa di più vecchio, apri la cronologia con <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>.
+Premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) per riaprire l’ultima scheda o finestra chiusa; premilo ancora per tornare più indietro. Per qualcosa di più vecchio, apri la cronologia con <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>. Se si è bloccato o chiuso l’intero browser, segui la guida su [come ripristinare le schede dopo un crash](/blog/restore-tabs-after-crash).
 
 <BrowserPanels section="closed">
 <BrowserPanel browser="chrome">
@@ -232,7 +234,9 @@ Firefox elenca le schede e le finestre chiuse di recente nel menu **Cronologia**
 
 - **Chrome** può salvare un gruppo e riaprirlo, ma le estensioni non vedono un gruppo salvato una volta chiuso ([API tabGroups](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
 - I gruppi di **Firefox** restano sul dispositivo e non viaggiano con Firefox Sync.
-- **Edge** non ha più le Raccolte («Collections») a partire da Edge 149.
+- **Edge** non ha più le Raccolte («Collections») a partire da Edge 149 ([cosa usare al loro posto](/blog/edge-collections-replacement)).
+
+Come salvare, riaprire e sincronizzare i gruppi, passo per passo, lo spiega la nostra [guida ai gruppi di schede di Chrome](/blog/chrome-tab-groups).
 
 {/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
 
@@ -267,7 +271,7 @@ Ognuno dei metodi integrati copre una finestra, un riavvio o una scheda chiusa a
   ]}
 />
 
-Su Mac usa <Kbd>⌘</Kbd>. Ogni scorciatoia chiede dove salvare; **Salvataggio rapido (nuovo gruppo)** crea subito un gruppo. In Firefox <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> apre una finestra anonima, quindi scegli un altro tasto in `about:addons` → «Manage Extension Shortcuts».
+Su Mac usa <Kbd>⌘</Kbd>. Ogni scorciatoia chiede dove salvare; **Salvataggio rapido (nuovo gruppo)** crea subito un gruppo. In Firefox <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> apre una finestra anonima, quindi scegli un altro tasto in `about:addons` → «Manage Extension Shortcuts». Edge riserva <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd>, <Kbd>U</Kbd> e <Kbd>P</Kbd> ai propri comandi, quindi assegna a queste tre scorciatoie tasti diversi in `edge://extensions/shortcuts`; la nostra [guida alle scorciatoie da tastiera per le schede](/blog/tab-keyboard-shortcuts) spiega come.
 
 ### Hai chiuso qualcosa per sbaglio?
 
@@ -308,7 +312,7 @@ Su Mac usa <Kbd>⌘</Kbd>. Ogni scorciatoia chiede dove salvare; **Salvataggio r
   ]}
 />
 
-Attiva l’impostazione di avvio, qualunque cosa tu scelga. Aggiungi ai preferiti una singola finestra che vale la pena tenere. Usa un’estensione quando lavori con più finestre o ti serve una scheda chiusa giorni dopo. Altri dettagli nella nostra [pagina di confronto](/compare).
+Attiva l’impostazione di avvio, qualunque cosa tu scelga. Aggiungi ai preferiti una singola finestra che vale la pena tenere. Per più finestre, o per una scheda chiusa giorni fa, TabMerger lo fa con un clic e può anche [esportare tutto in un file](/blog/export-open-tabs). Altri dettagli nella nostra [pagina di confronto](/compare) e nel [confronto tra le migliori estensioni per gestire le schede](/blog/best-tab-manager-extensions).
 
 </Section>
 

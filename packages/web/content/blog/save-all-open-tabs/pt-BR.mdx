@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'Um atalho, restauração ao iniciar e recuperação de abas fechadas no Chrome, Edge e Firefox.',
   dek: 'Cinco jeitos de manter todas as abas abertas, e o que cada um deixa passar sem avisar.',
   published: '2026-11-19',
-  updated: '2026-11-19',
+  updated: '2026-11-21',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D salva só a janela atual.', source: 'Testado nos três, 19 nov. 2026' },
@@ -117,9 +117,11 @@ export const post = {
 
 <QuickAnswer>
 
-Para salvar todas as abas abertas, pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> no Mac): cada aba da janela atual vira um favorito em uma pasta nova. Funciona no Chrome, Edge e Firefox. Para as abas reabrirem sozinhas, ative **Continuar de onde você parou** (“Continue where you left off”, Chrome), **Open tabs from the previous session** (Edge) ou **Abrir janelas e abas anteriores** (“Open previous windows and tabs”, Firefox).
+Para salvar todas as abas abertas, pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> no Mac): cada aba da janela atual vira um favorito em uma pasta nova. Funciona no Chrome, Edge e Firefox. Para as abas reabrirem sozinhas, ative **Continuar de onde você parou** (“Continue where you left off”, Chrome), **Open tabs from the previous session** (Edge) ou **Abrir janelas e abas anteriores** (“Open previous windows and tabs”, Firefox). Para salvar **todas as janelas de uma vez** e pesquisar as abas depois, use o [TabMerger](/features): um clique salva todas as suas janelas abertas em um grupo com nome.
 
 </QuickAnswer>
+
+<InstallCta>Salve todas as janelas abertas com um clique. Grátis para Chrome, Edge e Firefox.</InstallCta>
 
 <BrowserSwitcher />
 
@@ -200,7 +202,7 @@ No Firefox: **Configurações → Página inicial e início → Iniciar → Abri
 
 <Section id="closed" title="3. Recupere abas que você já fechou">
 
-Pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) para reabrir a última aba ou janela fechada; pressione de novo para continuar voltando. Para algo mais antigo, abra o histórico com <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>.
+Pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) para reabrir a última aba ou janela fechada; pressione de novo para continuar voltando. Para algo mais antigo, abra o histórico com <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>. Se o navegador inteiro travou ou foi fechado, siga nosso guia de [como restaurar abas depois de uma falha](/blog/restore-tabs-after-crash).
 
 <BrowserPanels section="closed">
 <BrowserPanel browser="chrome">
@@ -232,7 +234,9 @@ O Firefox lista abas e janelas fechadas recentemente no menu **Histórico** (“
 
 - O **Chrome** consegue salvar um grupo e reabri-lo, mas as extensões não enxergam um grupo salvo depois que ele é fechado ([API tabGroups](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
 - Os grupos do **Firefox** ficam no dispositivo e não vão junto com o Firefox Sync.
-- O **Edge** não tem mais Coleções (“Collections”) desde o Edge 149.
+- O **Edge** não tem mais Coleções (“Collections”) desde o Edge 149 ([o que usar no lugar](/blog/edge-collections-replacement)).
+
+Como salvar, reabrir e sincronizar grupos, passo a passo, está no nosso [guia de grupos de abas do Chrome](/blog/chrome-tab-groups).
 
 {/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
 
@@ -267,7 +271,7 @@ Cada método nativo cobre uma janela, uma reinicialização ou uma aba fechada p
   ]}
 />
 
-No Mac, use <Kbd>⌘</Kbd>. Cada atalho pergunta onde salvar; **Salvar rápido (novo grupo)** cria um grupo na hora. No Firefox, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> abre uma janela privativa, então escolha outra tecla em `about:addons` → “Manage Extension Shortcuts”.
+No Mac, use <Kbd>⌘</Kbd>. Cada atalho pergunta onde salvar; **Salvar rápido (novo grupo)** cria um grupo na hora. No Firefox, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> abre uma janela privativa, então escolha outra tecla em `about:addons` → “Manage Extension Shortcuts”. O Edge reserva <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd>, <Kbd>U</Kbd> e <Kbd>P</Kbd> para comandos próprios, então dê a esses três atalhos outras teclas em `edge://extensions/shortcuts`; nossa [referência de atalhos de teclado para abas](/blog/tab-keyboard-shortcuts) mostra como.
 
 ### Fechou algo sem querer?
 
@@ -308,7 +312,7 @@ No Mac, use <Kbd>⌘</Kbd>. Cada atalho pergunta onde salvar; **Salvar rápido (
   ]}
 />
 
-Ative a configuração de inicialização, seja qual for sua escolha. Adicione aos favoritos uma janela avulsa que valha a pena. Use uma extensão quando você trabalha com várias janelas ou precisa de uma aba fechada dias depois. Mais na nossa [página de comparação](/compare).
+Ative a configuração de inicialização, seja qual for sua escolha. Adicione aos favoritos uma janela avulsa que valha a pena. Para várias janelas, ou uma aba fechada há dias, o TabMerger resolve com um clique e ainda pode [exportar tudo para um arquivo](/blog/export-open-tabs). Mais na nossa [página de comparação](/compare) e no [comparativo das melhores extensões de gerenciamento de abas](/blog/best-tab-manager-extensions).
 
 </Section>
 

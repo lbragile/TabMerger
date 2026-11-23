@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'یک میان‌بر، بازگردانی هنگام راه‌اندازی و پس گرفتن زبانه‌های بسته‌شده در Chrome،‏ Edge و Firefox.',
   dek: 'پنج راه برای نگه داشتن همهٔ زبانه‌های باز، و چیزی که هرکدام بی‌سروصدا از قلم می‌اندازد.',
   published: '2026-11-19',
-  updated: '2026-11-19',
+  updated: '2026-11-21',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'میان‌بر Ctrl+Shift+D فقط پنجرهٔ فعلی را ذخیره می‌کند.', source: 'آزموده در هر سه مرورگر، ۱۹ نوامبر ۲۰۲۶' },
@@ -115,9 +115,11 @@ export const post = {
 
 <QuickAnswer>
 
-برای ذخیرهٔ همهٔ زبانه‌های باز (تب‌های باز) پنجرهٔ فعلی در یک پوشهٔ نشانک تازه، <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> را بزنید (در Mac، <bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi>). این میان‌بر در Chrome،‏ Edge و Firefox کار می‌کند. برای اینکه زبانه‌ها خودکار دوباره باز شوند، در Chrome گزینهٔ **ادامه از جایی که ترک کردید** (<bdi dir="ltr">Continue where you left off</bdi>)، در Edge گزینهٔ **Open tabs from the previous session** و در Firefox گزینهٔ **باز کردن پنجره‌ها و زبانه‌های قبلی** (<bdi dir="ltr">Open previous windows and tabs</bdi>) را روشن کنید.
+برای ذخیرهٔ همهٔ زبانه‌های باز (تب‌های باز) پنجرهٔ فعلی در یک پوشهٔ نشانک تازه، <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> را بزنید (در Mac، <bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi>). این میان‌بر در Chrome،‏ Edge و Firefox کار می‌کند. برای اینکه زبانه‌ها خودکار دوباره باز شوند، در Chrome گزینهٔ **ادامه از جایی که ترک کردید** (<bdi dir="ltr">Continue where you left off</bdi>)، در Edge گزینهٔ **Open tabs from the previous session** و در Firefox گزینهٔ **باز کردن پنجره‌ها و زبانه‌های قبلی** (<bdi dir="ltr">Open previous windows and tabs</bdi>) را روشن کنید. برای ذخیرهٔ **همهٔ پنجره‌ها با هم** و جست‌وجوی زبانه‌ها در آینده، از [TabMerger](/features) استفاده کنید: با یک کلیک همهٔ پنجره‌های باز در یک گروه نام‌دار ذخیره می‌شوند.
 
 </QuickAnswer>
+
+<InstallCta>همهٔ پنجره‌های باز را با یک کلیک ذخیره کنید. رایگان برای Chrome،‏ Edge و Firefox.</InstallCta>
 
 <BrowserSwitcher />
 
@@ -196,7 +198,7 @@ export const post = {
 
 <Section id="closed" title="۳. زبانه‌هایی را که بسته‌اید برگردانید">
 
-<bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> را بزنید (<bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi>) تا آخرین زبانه یا پنجره‌ای که بسته‌اید دوباره باز شود؛ دوباره بزنید تا عقب‌تر بروید. برای موارد قدیمی‌تر، تاریخچه را با <bdi><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi> باز کنید.
+<bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> را بزنید (<bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi>) تا آخرین زبانه یا پنجره‌ای که بسته‌اید دوباره باز شود؛ دوباره بزنید تا عقب‌تر بروید. برای موارد قدیمی‌تر، تاریخچه را با <bdi><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi> باز کنید. اگر کل مرورگر از کار افتاد یا بسته شد، مراحل [بازیابی زبانه‌ها پس از خرابی مرورگر](/blog/restore-tabs-after-crash) را دنبال کنید.
 
 <BrowserPanels section="closed">
 <BrowserPanel browser="chrome">
@@ -228,7 +230,9 @@ Firefox زبانه‌ها و پنجره‌های اخیراً بسته‌شده 
 
 - **Chrome** می‌تواند یک گروه را ذخیره و دوباره باز کند، اما افزونه‌ها گروه ذخیره‌شده‌ای را که بسته شده نمی‌بینند ([tabGroups API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
 - گروه‌های **Firefox** روی همان دستگاه می‌مانند و با Firefox Sync به دستگاه‌های دیگر نمی‌روند.
-- **Edge** از نسخهٔ 149 دیگر Collections ندارد.
+- **Edge** از نسخهٔ 149 دیگر Collections ندارد ([جایگزین آن چیست](/blog/edge-collections-replacement)).
+
+روش ذخیره، باز کردن دوباره و همگام‌سازی گروه‌ها را گام‌به‌گام در [راهنمای گروه‌های زبانه در Chrome](/blog/chrome-tab-groups) توضیح داده‌ایم.
 
 {/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
 
@@ -263,7 +267,7 @@ Firefox زبانه‌ها و پنجره‌های اخیراً بسته‌شده 
   ]}
 />
 
-در Mac از <Kbd>⌘</Kbd> استفاده کنید. هرکدام می‌پرسد کجا ذخیره شود؛ **ذخیرهٔ سریع (گروه جدید)** همان لحظه گروهی تازه می‌سازد. در Firefox، <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd></bdi> پنجرهٔ خصوصی باز می‌کند، پس در `about:addons`، از «مدیریت میانبرهای افزودنی» (<bdi dir="ltr">Manage Extension Shortcuts</bdi>) کلید دیگری انتخاب کنید.
+در Mac از <Kbd>⌘</Kbd> استفاده کنید. هرکدام می‌پرسد کجا ذخیره شود؛ **ذخیرهٔ سریع (گروه جدید)** همان لحظه گروهی تازه می‌سازد. در Firefox، <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd></bdi> پنجرهٔ خصوصی باز می‌کند، پس در `about:addons`، از «مدیریت میانبرهای افزودنی» (<bdi dir="ltr">Manage Extension Shortcuts</bdi>) کلید دیگری انتخاب کنید. Edge کلیدهای <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd></bdi>،‏ <Kbd>U</Kbd> و <Kbd>P</Kbd> را برای فرمان‌های خودش نگه می‌دارد، پس در <bdi dir="ltr">`edge://extensions/shortcuts`</bdi> برای این سه، کلیدهای دیگری تعیین کنید؛ [فهرست میان‌برهای صفحه‌کلید برای زبانه‌ها](/blog/tab-keyboard-shortcuts) روش کار را نشان می‌دهد.
 
 ### چیزی را اشتباهی بستید؟
 
@@ -304,7 +308,7 @@ Firefox زبانه‌ها و پنجره‌های اخیراً بسته‌شده 
   ]}
 />
 
-هر روش دیگری هم که انتخاب کنید، تنظیم راه‌اندازی را روشن کنید. پنجره‌ای را که ارزش نگه داشتن دارد نشانک‌گذاری کنید. وقتی با چند پنجره کار می‌کنید یا چند روز بعد به زبانه‌ای بسته‌شده نیاز دارید، از یک افزونه استفاده کنید. توضیح بیشتر در [صفحهٔ مقایسه](/compare).
+هر روش دیگری هم که انتخاب کنید، تنظیم راه‌اندازی را روشن کنید. پنجره‌ای را که ارزش نگه داشتن دارد نشانک‌گذاری کنید. برای چند پنجره، یا زبانه‌ای که چند روز پیش بسته شده، TabMerger کار را با یک کلیک انجام می‌دهد و می‌تواند [همه چیز را در یک فایل صادر کند](/blog/export-open-tabs). توضیح بیشتر در [صفحهٔ مقایسه](/compare) و در [مقایسهٔ بهترین افزونه‌های مدیریت زبانه](/blog/best-tab-manager-extensions).
 
 </Section>
 

@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'Un raccourci, la reprise au démarrage et les onglets fermés retrouvés : Chrome, Edge, Firefox.',
   dek: 'Cinq façons de garder tous vos onglets ouverts, et ce que chacune laisse passer sans prévenir.',
   published: '2026-11-19',
-  updated: '2026-11-19',
+  updated: '2026-11-21',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D enregistre la fenêtre active seulement.', source: 'Testé dans les trois, 19 nov. 2026' },
@@ -117,9 +117,11 @@ export const post = {
 
 <QuickAnswer>
 
-Pour enregistrer tous les onglets ouverts, appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> sur Mac) : chaque onglet de la fenêtre active devient un favori dans un nouveau dossier. Cela fonctionne dans Chrome, Edge et Firefox. Pour que les onglets se rouvrent tout seuls, activez **Reprendre où vous avez arrêté** (« Continue where you left off », Chrome), **Open tabs from the previous session** (Edge) ou **Ouvrir les fenêtres et onglets précédents** (« Open previous windows and tabs », Firefox).
+Pour enregistrer tous les onglets ouverts, appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> sur Mac) : chaque onglet de la fenêtre active devient un favori dans un nouveau dossier. Cela fonctionne dans Chrome, Edge et Firefox. Pour que les onglets se rouvrent tout seuls, activez **Reprendre où vous avez arrêté** (« Continue where you left off », Chrome), **Open tabs from the previous session** (Edge) ou **Ouvrir les fenêtres et onglets précédents** (« Open previous windows and tabs », Firefox). Pour enregistrer **toutes les fenêtres d’un coup** et retrouver les onglets plus tard par une recherche, utilisez [TabMerger](/features) : un clic enregistre toutes vos fenêtres ouvertes dans un groupe nommé.
 
 </QuickAnswer>
+
+<InstallCta>Enregistrez toutes vos fenêtres ouvertes en un clic. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
 
 <BrowserSwitcher />
 
@@ -200,7 +202,7 @@ Dans Firefox : **Paramètres → Accueil et démarrage → Démarrage → Ouvrir
 
 <Section id="closed" title="3. Récupérer des onglets déjà fermés">
 
-Appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) pour rouvrir le dernier onglet ou la dernière fenêtre fermés ; appuyez de nouveau pour remonter plus loin. Pour quelque chose de plus ancien, ouvrez l’historique avec <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>.
+Appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) pour rouvrir le dernier onglet ou la dernière fenêtre fermés ; appuyez de nouveau pour remonter plus loin. Pour quelque chose de plus ancien, ouvrez l’historique avec <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>. Si tout le navigateur a planté ou s’est fermé, suivez notre guide pour [restaurer les onglets après un plantage](/blog/restore-tabs-after-crash).
 
 <BrowserPanels section="closed">
 <BrowserPanel browser="chrome">
@@ -232,7 +234,9 @@ Firefox liste les onglets et fenêtres récemment fermés dans le menu **Histori
 
 - **Chrome** peut enregistrer un groupe et le rouvrir, mais les extensions ne voient pas un groupe enregistré une fois fermé ([API tabGroups](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
 - Les groupes de **Firefox** restent sur l’appareil et ne passent pas par Firefox Sync.
-- **Edge** n’a plus de Collections depuis Edge 149.
+- **Edge** n’a plus de Collections depuis Edge 149 ([par quoi les remplacer](/blog/edge-collections-replacement)).
+
+Notre [guide des groupes d’onglets de Chrome](/blog/chrome-tab-groups) explique pas à pas comment enregistrer, rouvrir et synchroniser des groupes.
 
 {/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
 
@@ -267,7 +271,7 @@ Les méthodes intégrées couvrent chacune une fenêtre, un redémarrage ou un o
   ]}
 />
 
-Sur Mac, utilisez <Kbd>⌘</Kbd>. Chaque raccourci demande où enregistrer ; **Enregistrement rapide (nouveau groupe)** crée un groupe sur-le-champ. Dans Firefox, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> ouvre une fenêtre privée : choisissez une autre touche dans `about:addons` → « Manage Extension Shortcuts ».
+Sur Mac, utilisez <Kbd>⌘</Kbd>. Chaque raccourci demande où enregistrer ; **Enregistrement rapide (nouveau groupe)** crée un groupe sur-le-champ. Dans Firefox, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> ouvre une fenêtre privée : choisissez une autre touche dans `about:addons` → « Manage Extension Shortcuts ». Edge réserve <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd>, <Kbd>U</Kbd> et <Kbd>P</Kbd> à ses propres commandes : attribuez à ces trois raccourcis d’autres touches dans `edge://extensions/shortcuts` ; notre [mémo des raccourcis clavier pour les onglets](/blog/tab-keyboard-shortcuts) montre comment faire.
 
 ### Fermé par erreur ?
 
@@ -308,7 +312,7 @@ Sur Mac, utilisez <Kbd>⌘</Kbd>. Chaque raccourci demande où enregistrer ; **E
   ]}
 />
 
-Activez le réglage de démarrage, quel que soit votre choix. Mettez en favoris une fenêtre isolée qui en vaut la peine. Passez à une extension quand vous jonglez avec plusieurs fenêtres ou qu’il vous faut un onglet fermé des jours plus tard. Plus de détails sur notre [page de comparaison](/compare).
+Activez le réglage de démarrage, quel que soit votre choix. Mettez en favoris une fenêtre isolée qui en vaut la peine. Pour plusieurs fenêtres, ou un onglet fermé il y a plusieurs jours, TabMerger s’en charge en un clic et peut aussi [tout exporter dans un fichier](/blog/export-open-tabs). Plus de détails sur notre [page de comparaison](/compare) et dans [notre comparatif des meilleures extensions de gestion d’onglets](/blog/best-tab-manager-extensions).
 
 </Section>
 

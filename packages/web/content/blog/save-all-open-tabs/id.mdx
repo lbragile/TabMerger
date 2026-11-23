@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'Satu pintasan, pemulihan saat startup, dan pengembalian tab tertutup di Chrome, Edge, dan Firefox.',
   dek: 'Lima cara menyimpan semua tab yang Anda buka, dan satu hal yang diam-diam terlewat oleh masing-masing.',
   published: '2026-11-19',
-  updated: '2026-11-19',
+  updated: '2026-11-21',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D hanya menyimpan jendela saat ini.', source: 'Diuji di ketiganya, 19 November 2026' },
@@ -117,9 +117,11 @@ export const post = {
 
 <QuickAnswer>
 
-Untuk menyimpan semua tab yang terbuka di jendela saat ini, tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> di Mac). Semua tab masuk ke folder bookmark baru. Cara ini berfungsi di Chrome, Edge, dan Firefox. Agar tab terbuka lagi secara otomatis, aktifkan **Lanjutkan dari halaman terakhir yang dibuka** (“Continue where you left off”, Chrome), **Open tabs from the previous session** (Edge), atau **Buka jendela dan tab sebelumnya** (“Open previous windows and tabs”, Firefox).
+Untuk menyimpan semua tab yang terbuka di jendela saat ini, tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> di Mac). Semua tab masuk ke folder bookmark baru. Cara ini berfungsi di Chrome, Edge, dan Firefox. Agar tab terbuka lagi secara otomatis, aktifkan **Lanjutkan dari halaman terakhir yang dibuka** (“Continue where you left off”, Chrome), **Open tabs from the previous session** (Edge), atau **Buka jendela dan tab sebelumnya** (“Open previous windows and tabs”, Firefox). Untuk menyimpan **semua jendela sekaligus** dan mencari tab-tabnya nanti, gunakan [TabMerger](/features): sekali klik menyimpan semua jendela yang terbuka ke dalam satu grup yang diberi nama.
 
 </QuickAnswer>
+
+<InstallCta>Simpan semua jendela yang terbuka dengan sekali klik. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
 
 <BrowserSwitcher />
 
@@ -200,7 +202,7 @@ Di Firefox: **Pengaturan → Home and startup → Memulai → Buka jendela dan t
 
 <Section id="closed" title="3. Kembalikan tab yang sudah Anda tutup">
 
-Tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) untuk membuka lagi tab atau jendela terakhir yang Anda tutup; tekan lagi untuk terus mundur. Untuk yang lebih lama, buka riwayat dengan <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>.
+Tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) untuk membuka lagi tab atau jendela terakhir yang Anda tutup; tekan lagi untuk terus mundur. Untuk yang lebih lama, buka riwayat dengan <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>. Jika seluruh browser mogok atau tertutup, ikuti panduan [cara memulihkan tab setelah browser mogok](/blog/restore-tabs-after-crash).
 
 <BrowserPanels section="closed">
 <BrowserPanel browser="chrome">
@@ -232,7 +234,9 @@ Firefox mencantumkan tab dan jendela yang baru ditutup di menu **Riwayat** (“H
 
 - **Chrome** bisa menyimpan grup dan membukanya lagi, tetapi ekstensi tidak bisa melihat grup tersimpan yang sudah ditutup ([tabGroups API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
 - Grup di **Firefox** tetap di perangkat dan tidak ikut tersinkron lewat Firefox Sync.
-- **Edge** tidak lagi punya Koleksi, mulai Edge 149.
+- **Edge** tidak lagi punya Koleksi, mulai Edge 149 ([apa penggantinya](/blog/edge-collections-replacement)).
+
+Cara menyimpan, membuka lagi, dan menyinkronkan grup, langkah demi langkah, ada di [panduan grup tab Chrome](/blog/chrome-tab-groups) kami.
 
 {/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
 
@@ -267,7 +271,7 @@ Cara bawaan masing-masing hanya mencakup satu jendela, satu restart, atau satu t
   ]}
 />
 
-Di Mac, gunakan <Kbd>⌘</Kbd>. Setiap pintasan menanyakan lokasi penyimpanan; **Simpan Cepat (grup baru)** langsung membuat grup. Di Firefox, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> membuka jendela pribadi, jadi pilih tombol lain di `about:addons` → “Kelola Pintasan Ekstensi” (“Manage Extension Shortcuts”).
+Di Mac, gunakan <Kbd>⌘</Kbd>. Setiap pintasan menanyakan lokasi penyimpanan; **Simpan Cepat (grup baru)** langsung membuat grup. Di Firefox, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> membuka jendela pribadi, jadi pilih tombol lain di `about:addons` → “Kelola Pintasan Ekstensi” (“Manage Extension Shortcuts”). Edge memakai <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd>, <Kbd>U</Kbd>, dan <Kbd>P</Kbd> untuk perintahnya sendiri, jadi beri ketiganya tombol lain di `edge://extensions/shortcuts`; [referensi pintasan keyboard untuk tab](/blog/tab-keyboard-shortcuts) kami menunjukkan caranya.
 
 ### Tidak sengaja menutup sesuatu?
 
@@ -308,7 +312,7 @@ Di Mac, gunakan <Kbd>⌘</Kbd>. Setiap pintasan menanyakan lokasi penyimpanan; *
   ]}
 />
 
-Apa pun pilihan Anda, aktifkan pengaturan startup. Bookmark satu jendela yang layak disimpan. Gunakan ekstensi jika Anda bekerja dengan beberapa jendela atau butuh tab yang ditutup beberapa hari kemudian. Selengkapnya di [halaman perbandingan](/compare) kami.
+Apa pun pilihan Anda, aktifkan pengaturan startup. Bookmark satu jendela yang layak disimpan. Untuk beberapa jendela, atau tab yang ditutup beberapa hari lalu, TabMerger melakukannya dengan sekali klik, dan juga bisa [mengekspor semuanya ke file](/blog/export-open-tabs). Selengkapnya di [halaman perbandingan](/compare) kami dan di [perbandingan ekstensi pengelola tab terbaik](/blog/best-tab-manager-extensions).
 
 </Section>
 

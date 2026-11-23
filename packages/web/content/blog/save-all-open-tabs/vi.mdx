@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'Một phím tắt, khôi phục khi khởi động và lấy lại tab đã đóng trong Chrome, Edge và Firefox.',
   dek: 'Năm cách giữ lại mọi tab đang mở, và điều mà mỗi cách lặng lẽ bỏ sót.',
   published: '2026-11-19',
-  updated: '2026-11-19',
+  updated: '2026-11-21',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D chỉ lưu cửa sổ hiện tại.', source: 'Đã kiểm tra trên cả ba, ngày 19/11/2026' },
@@ -117,9 +117,11 @@ export const post = {
 
 <QuickAnswer>
 
-Để lưu tất cả các tab đang mở trong cửa sổ hiện tại, nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> trên Mac): trình duyệt sẽ lưu chúng thành dấu trang trong một thư mục mới. Cách này dùng được trong Chrome, Edge và Firefox. Để tab tự mở lại, hãy bật **Tiếp tục từ nơi bạn đã dừng lại** (“Continue where you left off”, Chrome), **Open tabs from the previous session** (Edge) hoặc **Mở các cửa sổ và thẻ trước đó** (“Open previous windows and tabs”, Firefox).
+Để lưu tất cả các tab đang mở trong cửa sổ hiện tại, nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> trên Mac): trình duyệt sẽ lưu chúng thành dấu trang trong một thư mục mới. Cách này dùng được trong Chrome, Edge và Firefox. Để tab tự mở lại, hãy bật **Tiếp tục từ nơi bạn đã dừng lại** (“Continue where you left off”, Chrome), **Open tabs from the previous session** (Edge) hoặc **Mở các cửa sổ và thẻ trước đó** (“Open previous windows and tabs”, Firefox). Để lưu **mọi cửa sổ cùng lúc** và tìm lại các tab sau này, hãy dùng [TabMerger](/features): một cú nhấp sẽ lưu tất cả cửa sổ đang mở vào một nhóm có tên.
 
 </QuickAnswer>
+
+<InstallCta>Lưu mọi cửa sổ đang mở chỉ với một cú nhấp. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
 
 <BrowserSwitcher />
 
@@ -200,7 +202,7 @@ Trong Firefox: **Cài đặt → Trang chủ và khởi động → Khởi độ
 
 <Section id="closed" title="3. Lấy lại các tab bạn đã đóng">
 
-Nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) để mở lại tab hoặc cửa sổ vừa đóng; nhấn tiếp để lùi xa hơn. Với những gì cũ hơn, mở Lịch sử (History) bằng <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>.
+Nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) để mở lại tab hoặc cửa sổ vừa đóng; nhấn tiếp để lùi xa hơn. Với những gì cũ hơn, mở Lịch sử (History) bằng <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>. Nếu cả trình duyệt bị sập hoặc đã thoát, hãy làm theo hướng dẫn [cách khôi phục tab sau khi trình duyệt bị sập](/blog/restore-tabs-after-crash).
 
 <BrowserPanels section="closed">
 <BrowserPanel browser="chrome">
@@ -232,7 +234,9 @@ Firefox liệt kê các tab và cửa sổ vừa đóng trong menu **Lịch sử
 
 - **Chrome** có thể lưu một nhóm và mở lại, nhưng tiện ích không thấy được nhóm đã lưu khi nhóm đó đã đóng ([tabGroups API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
 - Nhóm trong **Firefox** chỉ nằm trên thiết bị và không đi theo Firefox Sync.
-- **Edge** không còn Bộ sưu tập, kể từ Edge 149.
+- **Edge** không còn Bộ sưu tập, kể từ Edge 149 ([nên dùng gì thay thế](/blog/edge-collections-replacement)).
+
+Cách lưu, mở lại và đồng bộ nhóm, từng bước một, có trong [hướng dẫn về nhóm tab trong Chrome](/blog/chrome-tab-groups) của chúng tôi.
 
 {/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
 
@@ -267,7 +271,7 @@ Mỗi cách có sẵn chỉ xử lý một cửa sổ, một lần khởi độn
   ]}
 />
 
-Trên Mac, dùng <Kbd>⌘</Kbd>. Mỗi phím tắt sẽ hỏi lưu vào đâu; **Lưu Nhanh (nhóm mới)** tạo ngay một nhóm. Trong Firefox, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> mở cửa sổ riêng tư, vì vậy hãy chọn phím khác trong `about:addons` → “Quản lý phím tắt tiện ích mở rộng” (“Manage Extension Shortcuts”).
+Trên Mac, dùng <Kbd>⌘</Kbd>. Mỗi phím tắt sẽ hỏi lưu vào đâu; **Lưu Nhanh (nhóm mới)** tạo ngay một nhóm. Trong Firefox, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> mở cửa sổ riêng tư, vì vậy hãy chọn phím khác trong `about:addons` → “Quản lý phím tắt tiện ích mở rộng” (“Manage Extension Shortcuts”). Edge giữ <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd>, <Kbd>U</Kbd> và <Kbd>P</Kbd> cho các lệnh riêng của nó, vì vậy hãy gán phím khác cho ba phím tắt này tại `edge://extensions/shortcuts`; [bảng tra phím tắt cho tab](/blog/tab-keyboard-shortcuts) của chúng tôi chỉ cách làm.
 
 ### Lỡ đóng nhầm?
 
@@ -308,7 +312,7 @@ Trên Mac, dùng <Kbd>⌘</Kbd>. Mỗi phím tắt sẽ hỏi lưu vào đâu; *
   ]}
 />
 
-Dù chọn cách nào, hãy bật cài đặt khởi động. Đánh dấu trang cho một cửa sổ đáng giữ lại. Dùng tiện ích khi bạn làm việc với nhiều cửa sổ hoặc cần lại một tab đã đóng vài ngày sau. Xem thêm tại [trang so sánh](/compare) của chúng tôi.
+Dù chọn cách nào, hãy bật cài đặt khởi động. Đánh dấu trang cho một cửa sổ đáng giữ lại. Với nhiều cửa sổ, hoặc một tab đã đóng từ vài ngày trước, TabMerger làm được chỉ với một cú nhấp, và còn có thể [xuất mọi thứ ra tệp](/blog/export-open-tabs). Xem thêm tại [trang so sánh](/compare) của chúng tôi và trong bài [so sánh các tiện ích quản lý tab tốt nhất](/blog/best-tab-manager-extensions).
 
 </Section>
 

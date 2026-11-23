@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'اختصار واحد، واستعادة عند بدء التشغيل، واسترجاع علامات التبويب المغلقة في Chrome وEdge وFirefox.',
   dek: 'خمس طرق للاحتفاظ بكل علامات التبويب المفتوحة، والشيء الوحيد الذي تفوّته كل طريقة منها دون أن تنتبه.',
   published: '2026-11-19',
-  updated: '2026-11-19',
+  updated: '2026-11-21',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'الاختصار Ctrl+Shift+D يحفظ النافذة الحالية فقط.', source: 'جرّبناه في المتصفحات الثلاثة، 19 نوفمبر 2026' },
@@ -117,9 +117,11 @@ export const post = {
 
 <QuickAnswer>
 
-لحفظ جميع علامات التبويب المفتوحة في النافذة الحالية، اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> على Mac)، فتُضاف كلها إلى مجلد جديد في الإشارات المرجعية. تعمل هذه الطريقة في Chrome وEdge وFirefox. ولكي تُفتح علامات التبويب تلقائيًا من جديد، فعّل **المتابعة من حيث توقفت** (<bdi dir="ltr">Continue where you left off</bdi>) في Chrome، أو <bdi dir="ltr">**Open tabs from the previous session**</bdi> في Edge، أو **افتح النوافذ والألسنة السابقة** (<bdi dir="ltr">Open previous windows and tabs</bdi>) في Firefox.
+لحفظ جميع علامات التبويب المفتوحة في النافذة الحالية، اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> على Mac)، فتُضاف كلها إلى مجلد جديد في الإشارات المرجعية. تعمل هذه الطريقة في Chrome وEdge وFirefox. ولكي تُفتح علامات التبويب تلقائيًا من جديد، فعّل **المتابعة من حيث توقفت** (<bdi dir="ltr">Continue where you left off</bdi>) في Chrome، أو <bdi dir="ltr">**Open tabs from the previous session**</bdi> في Edge، أو **افتح النوافذ والألسنة السابقة** (<bdi dir="ltr">Open previous windows and tabs</bdi>) في Firefox. ولحفظ **كل النوافذ دفعة واحدة** والبحث في علامات التبويب لاحقًا، استخدم [TabMerger](/features): نقرة واحدة تحفظ كل نوافذك المفتوحة في مجموعة تحمل اسمًا.
 
 </QuickAnswer>
+
+<InstallCta>احفظ كل النوافذ المفتوحة بنقرة واحدة. مجانية لـ Chrome وEdge وFirefox.</InstallCta>
 
 <BrowserSwitcher />
 
@@ -200,7 +202,7 @@ export const post = {
 
 <Section id="closed" title="3. استعد علامات التبويب التي أغلقتها">
 
-اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi>) لإعادة فتح آخر علامة تبويب أو نافذة أغلقتها، واضغطه مرة أخرى لتعود أبعد. ولما هو أقدم، افتح السجلّ (History) بالاختصار <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi>.
+اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi>) لإعادة فتح آخر علامة تبويب أو نافذة أغلقتها، واضغطه مرة أخرى لتعود أبعد. ولما هو أقدم، افتح السجلّ (History) بالاختصار <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi>. وإذا تعطّل المتصفح كله أو أُغلق، فاتبع [طريقة استعادة علامات التبويب بعد تعطّل المتصفح](/blog/restore-tabs-after-crash).
 
 <BrowserPanels section="closed">
 <BrowserPanel browser="chrome">
@@ -232,7 +234,9 @@ export const post = {
 
 - يستطيع **Chrome** حفظ مجموعة وإعادة فتحها، لكن الإضافات لا ترى المجموعة المحفوظة بعد إغلاقها ([tabGroups API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
 - تبقى مجموعات **Firefox** على الجهاز ولا تنتقل مع Firefox Sync.
-- لم تعد ميزة Collections موجودة في **Edge** بدءًا من Edge 149.
+- لم تعد ميزة Collections موجودة في **Edge** بدءًا من Edge 149 ([ما البديل](/blog/edge-collections-replacement)).
+
+وتجد شرح حفظ المجموعات وإعادة فتحها ومزامنتها خطوة بخطوة في [دليلنا إلى مجموعات علامات التبويب في Chrome](/blog/chrome-tab-groups).
 
 {/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
 
@@ -267,7 +271,7 @@ export const post = {
   ]}
 />
 
-استخدم <Kbd>⌘</Kbd> على Mac. يسألك كل اختصار أين تحفظ، و**حفظ سريع (مجموعة جديدة)** ينشئ مجموعة فورًا. في Firefox يفتح <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd></bdi> نافذة خاصة، لذا اختر مفتاحًا آخر من <bdi dir="ltr">`about:addons`</bdi> ← «أدِر اختصارات الامتدادات» (<bdi dir="ltr">Manage Extension Shortcuts</bdi>).
+استخدم <Kbd>⌘</Kbd> على Mac. يسألك كل اختصار أين تحفظ، و**حفظ سريع (مجموعة جديدة)** ينشئ مجموعة فورًا. في Firefox يفتح <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd></bdi> نافذة خاصة، لذا اختر مفتاحًا آخر من <bdi dir="ltr">`about:addons`</bdi> ← «أدِر اختصارات الامتدادات» (<bdi dir="ltr">Manage Extension Shortcuts</bdi>). ويحجز Edge الاختصارات <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd></bdi> و<Kbd>U</Kbd> و<Kbd>P</Kbd> لأوامره الخاصة، لذا خصّص لهذه الثلاثة مفاتيح أخرى من <bdi dir="ltr">`edge://extensions/shortcuts`</bdi>، ويشرح [مرجعنا لاختصارات لوحة المفاتيح الخاصة بعلامات التبويب](/blog/tab-keyboard-shortcuts) الطريقة.
 
 ### أغلقت شيئًا بالخطأ؟
 
@@ -308,7 +312,7 @@ export const post = {
   ]}
 />
 
-أيًّا كان اختيارك، فعّل إعداد بدء التشغيل. أضف إلى الإشارات المرجعية أي نافذة واحدة تستحق الحفظ. واستخدم إضافة عندما تتعامل مع عدة نوافذ أو تحتاج إلى علامة تبويب مغلقة بعد أيام. المزيد في [صفحة المقارنة](/compare).
+أيًّا كان اختيارك، فعّل إعداد بدء التشغيل. أضف إلى الإشارات المرجعية أي نافذة واحدة تستحق الحفظ. ولعدة نوافذ، أو لعلامة تبويب أغلقتها قبل أيام، يتولى TabMerger الأمر بنقرة واحدة، ويمكنه أيضًا [تصدير كل شيء إلى ملف](/blog/export-open-tabs). المزيد في [صفحة المقارنة](/compare) وفي [مقارنة أفضل إضافات إدارة علامات التبويب](/blog/best-tab-manager-extensions).
 
 </Section>
 

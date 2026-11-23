@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'Jeden skrót, przywracanie przy starcie i odzyskiwanie zamkniętych kart w Chrome, Edge i Firefoksie.',
   dek: 'Pięć sposobów na zachowanie wszystkich otwartych kart i to, co każdy z nich po cichu pomija.',
   published: '2026-11-19',
-  updated: '2026-11-19',
+  updated: '2026-11-21',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D zapisuje tylko bieżące okno.', source: 'Sprawdzone we wszystkich trzech, 19 lis 2026' },
@@ -117,9 +117,11 @@ export const post = {
 
 <QuickAnswer>
 
-Aby zapisać wszystkie otwarte karty, naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> na Macu): każda karta z bieżącego okna trafi jako zakładka do nowego folderu. Działa to w Chrome, Edge i Firefoksie. Żeby karty otwierały się same, włącz **Kontynuuj od tego samego miejsca** („Continue where you left off”, Chrome), **Open tabs from the previous session** (Edge) lub **Otwieraj poprzednie okna i karty** („Open previous windows and tabs”, Firefox).
+Aby zapisać wszystkie otwarte karty, naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> na Macu): każda karta z bieżącego okna trafi jako zakładka do nowego folderu. Działa to w Chrome, Edge i Firefoksie. Żeby karty otwierały się same, włącz **Kontynuuj od tego samego miejsca** („Continue where you left off”, Chrome), **Open tabs from the previous session** (Edge) lub **Otwieraj poprzednie okna i karty** („Open previous windows and tabs”, Firefox). Aby zapisać **wszystkie okna naraz** i później przeszukiwać karty, użyj [TabMerger](/features): jedno kliknięcie zapisuje wszystkie otwarte okna w nazwanej grupie.
 
 </QuickAnswer>
+
+<InstallCta>Zapisz wszystkie otwarte okna jednym kliknięciem. Za darmo dla Chrome, Edge i Firefoksa.</InstallCta>
 
 <BrowserSwitcher />
 
@@ -200,7 +202,7 @@ W Firefoksie: **Ustawienia → Strona startowa i uruchamianie → Uruchamianie �
 
 <Section id="closed" title="3. Odzyskaj już zamknięte karty">
 
-Naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>), aby ponownie otworzyć ostatnio zamkniętą kartę lub okno; naciskaj dalej, aby cofać się wstecz. Starsze rzeczy znajdziesz w historii, otwieranej skrótem <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>.
+Naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>), aby ponownie otworzyć ostatnio zamkniętą kartę lub okno; naciskaj dalej, aby cofać się wstecz. Starsze rzeczy znajdziesz w historii, otwieranej skrótem <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>. Jeśli cała przeglądarka uległa awarii lub się zamknęła, zajrzyj do poradnika, [jak przywrócić karty po awarii](/blog/restore-tabs-after-crash).
 
 <BrowserPanels section="closed">
 <BrowserPanel browser="chrome">
@@ -232,7 +234,9 @@ Firefox pokazuje ostatnio zamknięte karty i okna w menu **Historia** („Histor
 
 - **Chrome** potrafi zapisać grupę i otworzyć ją ponownie, ale rozszerzenia nie widzą zapisanej grupy, gdy jest zamknięta ([API tabGroups](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
 - Grupy w **Firefoksie** zostają na urządzeniu i nie są przenoszone przez Firefox Sync.
-- **Edge** od wersji 149 nie ma już Kolekcji („Collections”).
+- **Edge** od wersji 149 nie ma już Kolekcji („Collections”) ([czego używać zamiast nich](/blog/edge-collections-replacement)).
+
+Jak krok po kroku zapisywać, ponownie otwierać i synchronizować grupy, opisujemy w [przewodniku po grupach kart w Chrome](/blog/chrome-tab-groups).
 
 {/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
 
@@ -267,7 +271,7 @@ Każda z wbudowanych metod obejmuje jedno okno, jedno ponowne uruchomienie albo 
   ]}
 />
 
-Na Macu użyj <Kbd>⌘</Kbd>. Każdy skrót pyta, gdzie zapisać; **Szybki Zapis (nowa grupa)** od razu tworzy grupę. W Firefoksie <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> otwiera okno prywatne, więc wybierz inny klawisz w `about:addons` → „Manage Extension Shortcuts”.
+Na Macu użyj <Kbd>⌘</Kbd>. Każdy skrót pyta, gdzie zapisać; **Szybki Zapis (nowa grupa)** od razu tworzy grupę. W Firefoksie <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> otwiera okno prywatne, więc wybierz inny klawisz w `about:addons` → „Manage Extension Shortcuts”. Edge rezerwuje <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd>, <Kbd>U</Kbd> i <Kbd>P</Kbd> dla własnych poleceń, więc przypisz tym trzem skrótom inne klawisze w `edge://extensions/shortcuts`; jak to zrobić, pokazuje nasza [ściągawka skrótów klawiszowych do kart](/blog/tab-keyboard-shortcuts).
 
 ### Coś zamknięte przez pomyłkę?
 
@@ -308,7 +312,7 @@ Na Macu użyj <Kbd>⌘</Kbd>. Każdy skrót pyta, gdzie zapisać; **Szybki Zapis
   ]}
 />
 
-Włącz ustawienie uruchamiania niezależnie od tego, co wybierzesz. Pojedyncze okno, które warto zachować, dodaj do zakładek. Po rozszerzenie sięgnij, gdy żonglujesz kilkoma oknami albo potrzebujesz zamkniętej karty jeszcze po kilku dniach. Więcej na naszej [stronie porównania](/compare).
+Włącz ustawienie uruchamiania niezależnie od tego, co wybierzesz. Pojedyncze okno, które warto zachować, dodaj do zakładek. Przy kilku oknach albo karcie zamkniętej kilka dni temu TabMerger zrobi to jednym kliknięciem, a do tego potrafi [wyeksportować wszystko do pliku](/blog/export-open-tabs). Więcej na naszej [stronie porównania](/compare) i w [porównaniu najlepszych rozszerzeń do zarządzania kartami](/blog/best-tab-manager-extensions).
 
 </Section>
 

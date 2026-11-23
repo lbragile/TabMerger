@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'ショートカット一つで保存、起動時に復元、閉じたタブも取り戻す。Chrome・Edge・Firefox 対応。',
   dek: '開いているタブをすべて残す5つの方法と、それぞれが見落としがちな点。',
   published: '2026-11-19',
-  updated: '2026-11-19',
+  updated: '2026-11-21',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D で保存されるのは現在のウィンドウだけです。', source: '3つのブラウザで検証（2026年11月19日）' },
@@ -115,9 +115,11 @@ export const post = {
 
 <QuickAnswer>
 
-開いているタブをすべて保存するには、<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>（Mac では <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>）を押します。現在のウィンドウのタブがすべて、新しいブックマーク フォルダに保存されます。Chrome、Edge、Firefox のどれでも使えます。タブを自動で開き直したい場合は、Chrome の「前回開いていたページを開く」（Continue where you left off）、Edge の「Open tabs from the previous session」、Firefox の「前回のウィンドウとタブを開く」（Open previous windows and tabs）をオンにします。
+開いているタブをすべて保存するには、<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>（Mac では <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>）を押します。現在のウィンドウのタブがすべて、新しいブックマーク フォルダに保存されます。Chrome、Edge、Firefox のどれでも使えます。タブを自動で開き直したい場合は、Chrome の「前回開いていたページを開く」（Continue where you left off）、Edge の「Open tabs from the previous session」、Firefox の「前回のウィンドウとタブを開く」（Open previous windows and tabs）をオンにします。**すべてのウィンドウを一度に** 保存して、あとでタブを検索したいなら、[TabMerger](/features) を使いましょう。クリック一つで、開いているウィンドウをすべて名前付きのグループに保存できます。
 
 </QuickAnswer>
+
+<InstallCta>開いているウィンドウをワンクリックですべて保存。Chrome、Edge、Firefox 向けに無料です。</InstallCta>
 
 <BrowserSwitcher />
 
@@ -196,7 +198,7 @@ Firefox では **設定 → ホームと起動 → 起動 → 前回のウィン
 
 <Section id="closed" title="3. 閉じてしまったタブを取り戻す">
 
-<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>（<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>）を押すと、最後に閉じたタブかウィンドウが開き直します。続けて押すと、さらに前に閉じたものへさかのぼります。もっと前のものは <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> で履歴を開いて探します。
+<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>（<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>）を押すと、最後に閉じたタブかウィンドウが開き直します。続けて押すと、さらに前に閉じたものへさかのぼります。もっと前のものは <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> で履歴を開いて探します。ブラウザ全体がクラッシュしたり終了したりした場合は、[クラッシュ後にタブを復元する方法](/blog/restore-tabs-after-crash)の手順に沿って進めてください。
 
 <BrowserPanels section="closed">
 <BrowserPanel browser="chrome">
@@ -228,7 +230,9 @@ Firefox では「履歴」（History）メニューの「最近閉じたタブ�
 
 - **Chrome** ではグループを保存して開き直せますが、閉じた保存済みグループは拡張機能からは見えません（[tabGroups API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)）。
 - **Firefox** のグループはそのデバイスにだけ残り、Firefox Sync では同期されません。
-- **Edge** のコレクションは Edge 149 で廃止されました。
+- **Edge** のコレクションは Edge 149 で廃止されました（[代わりに使えるもの](/blog/edge-collections-replacement)）。
+
+グループの保存、開き直し、同期のしかたは、[Chrome のタブグループ ガイド](/blog/chrome-tab-groups)で順を追って説明しています。
 
 {/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
 
@@ -263,7 +267,7 @@ Firefox では「履歴」（History）メニューの「最近閉じたタブ�
   ]}
 />
 
-Mac では <Kbd>⌘</Kbd> を使います。どのショートカットも保存先を尋ねてきます。**クイック保存（新しいグループ）** を選ぶと、その場でグループが作られます。Firefox では <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> がプライベートウィンドウを開くキーなので、`about:addons` の「拡張機能のショートカットキーの管理」（Manage Extension Shortcuts）で別のキーを割り当ててください。
+Mac では <Kbd>⌘</Kbd> を使います。どのショートカットも保存先を尋ねてきます。**クイック保存（新しいグループ）** を選ぶと、その場でグループが作られます。Firefox では <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> がプライベートウィンドウを開くキーなので、`about:addons` の「拡張機能のショートカットキーの管理」（Manage Extension Shortcuts）で別のキーを割り当ててください。Edge は <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd>、<Kbd>U</Kbd>、<Kbd>P</Kbd> を独自のコマンドに使っているため、`edge://extensions/shortcuts` でこの 3 つに別のキーを設定してください。やり方は[タブのキーボード ショートカット一覧](/blog/tab-keyboard-shortcuts)で紹介しています。
 
 ### うっかり閉じてしまったら
 
@@ -304,7 +308,7 @@ Mac では <Kbd>⌘</Kbd> を使います。どのショートカットも保存
   ]}
 />
 
-ほかに何を選ぶにしても、起動時の設定はオンにしておきましょう。残しておきたいウィンドウが一つだけなら、ブックマークで十分です。複数のウィンドウを使い分けている場合や、何日も後に閉じたタブが必要になる場合は、拡張機能を使います。詳しくは[比較ページ](/compare)をご覧ください。
+ほかに何を選ぶにしても、起動時の設定はオンにしておきましょう。残しておきたいウィンドウが一つだけなら、ブックマークで十分です。複数のウィンドウや、何日も前に閉じたタブなら、TabMerger がクリック一つで対応し、[すべてをファイルにエクスポート](/blog/export-open-tabs)することもできます。詳しくは[比較ページ](/compare)と[おすすめのタブ管理拡張機能の比較](/blog/best-tab-manager-extensions)をご覧ください。
 
 </Section>
 
