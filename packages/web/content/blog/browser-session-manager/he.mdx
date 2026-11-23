@@ -1,0 +1,197 @@
+export const post = {
+  slug: 'browser-session-manager',
+  title: 'מה זה מנהל סשנים לדפדפן, והאם אתם צריכים אחד?',
+  navTitle: 'מה זה מנהל סשנים?',
+  seoTitle: 'תוספי ניהול סשנים: ההבדל בין שמירת סשן לסימניות',
+  description:
+    'מה זה סשן של כרטיסיות, מה תוסף לשמירת סשן בדפדפן עושה שסימניות והיסטוריה לא עושות, על מה להסתכל כשבוחרים אחד, ומתי הדפדפן לבדו מספיק.',
+  shareSummary: 'סשנים, מנהלי סשנים וסימניות: מה כל אחד שומר, ומתי צריך מה.',
+  dek: 'הדפדפן שלכם כבר זוכר סשן אחד. מנהל סשנים זוכר כמה שתרצו, עם שמות.',
+  published: '2026-11-25',
+  updated: '2026-11-25',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'תוספים יכולים להציג לכל היותר 25 כרטיסיות וחלונות שנסגרו לאחרונה.',
+      source: 'התיעוד של chrome.sessions',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+    },
+    { text: 'Session Buddy שומר את הנתונים במכשיר ואין לו סנכרון.', source: 'דף החנות של Session Buddy, 20 בנובמבר 2026' },
+    { text: 'Tab Session Manager שומר אוטומטית כשחלון נסגר ולפי טיימר.', source: 'דף החנות שלו, 20 בנובמבר 2026' },
+    { text: 'שחזור בהפעלה שומר רק את הסשן האחרון.', source: 'ההגדרות של Chrome, Edge ו-Firefox' },
+  ],
+  faq: [
+    {
+      question: 'מה זה סשן של כרטיסיות?',
+      answer:
+        'החלונות והכרטיסיות שפתוחים אצלכם ברגע מסוים, לפי הסדר. הדפדפן זוכר את הסשן הנוכחי כדי לפתוח אותו שוב אחרי הפעלה מחדש; מנהל סשנים שומר אותו בשם.',
+    },
+    {
+      question: 'מה ההבדל בין מנהל סשנים לסימניות?',
+      answer:
+        'סימניות שומרות דפים בודדים בתיקיות. מנהל סשנים שומר חלונות שלמים, שומר על המבנה שלהם ויכול לעשות את זה אוטומטית, ואחר כך פותח אותם מחדש כחלונות.',
+    },
+    {
+      question: 'האם אני צריך תוסף לניהול סשנים?',
+      answer:
+        'לא, אם אתם עובדים בחלון אחד וההגדרה של ההפעלה מופעלת. כן, אם אתם מתמרנים בין כמה פרויקטים, מאבדים כרטיסיות בקריסות או רוצים את החלונות של אתמול בחזרה.',
+    },
+    {
+      question: 'האם מנהלי סשנים שומרים על פרטיות?',
+      answer:
+        'זה תלוי איפה הם שומרים את הנתונים. חלקם שומרים הכול במכשיר שלכם; אלה שמסנכרנים שולחים אותם לשרת, אז כדאי לבדוק אם יש הצפנה מקצה לקצה.',
+    },
+  ],
+  images: [
+    { src: '/blog/browser-session-manager/tm-save-session-light.webp', alt: 'חלון Save Session (שמירת סשן) ב-TabMerger עם השם Friday wrap-up, ערכת נושא בהירה' },
+    { src: '/blog/browser-session-manager/tm-save-session-dark.webp', alt: 'חלון Save Session (שמירת סשן) ב-TabMerger עם השם Friday wrap-up, ערכת נושא כהה' },
+    { src: '/blog/browser-session-manager/tm-session-view-light.webp', alt: 'הסשן השמור Friday wrap-up עם רשימת הקבוצות שלו וכפתור Restore session (שחזור הסשן), ערכת נושא בהירה' },
+    { src: '/blog/browser-session-manager/tm-session-view-dark.webp', alt: 'הסשן השמור Friday wrap-up עם רשימת הקבוצות שלו וכפתור Restore session (שחזור הסשן), ערכת נושא כהה' },
+  ],
+  tags: ['session-management', 'tab-manager', 'save-tabs', 'comparison'],
+  sources: [
+    {
+      title: 'chrome.sessions API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'sessions (WebExtensions API)',
+      publisher: 'MDN Web Docs',
+      url: 'https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Session Buddy',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/session-buddy-tab-bookmar/edacconmaakjimmfgnblocblbcdcpbko',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tab Session Manager',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/tab-session-manager/iaiomicjabeggjcfkbimgmglanimpnae',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tabs Outliner',
+      publisher: 'tabsoutliner.com',
+      url: 'https://tabsoutliner.com/',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/browser-session-manager/tm-session-view-light.webp' },
+  ogImage: { src: '/blog/browser-session-manager/og.png', alt: 'מה זה מנהל סשנים לדפדפן, והאם אתם צריכים אחד? מדריך של TabMerger, עם סשן שמור וכפתור השחזור שלו' },
+  toc: [
+    { id: 'quick', label: 'תשובה קצרה' },
+    { id: 'session', label: 'מה זה סשן של כרטיסיות?' },
+    { id: 'vs', label: 'סשנים לעומת סימניות' },
+    { id: 'need', label: 'האם צריך אחד?' },
+    { id: 'look-for', label: 'על מה להסתכל' },
+    { id: 'examples', label: 'דוגמאות' },
+    { id: 'tabmerger', label: 'סשנים ב-TabMerger' },
+    { id: 'faq', label: 'שאלות נפוצות' },
+  ],
+}
+
+<QuickAnswer>
+
+**סשן** הוא כל החלונות והכרטיסיות שפתוחים אצלכם ברגע מסוים. הדפדפן זוכר את הסשן הנוכחי כדי שיוכל לפתוח אותו שוב אחרי הפעלה מחדש. **מנהל סשנים** הוא תוסף ששומר סשנים בשמות, לרוב אוטומטית, ופותח אותם מחדש כחלונות בהמשך. סימניות שומרות דפים; מנהל סשנים שומר את כל סביבת העבודה. [TabMerger](/features) עושה את שני הדברים יחד: כל החלונות הפתוחים נשמרים בקבוצות עם שם בלחיצה אחת, סשנים עם שם שאפשר לשחזר יחד, שמירה אוטומטית לפי לוח זמנים, וסנכרון עם הצפנה מקצה לקצה ב-Pro.
+
+</QuickAnswer>
+
+<InstallCta>שומרים כל חלון כקבוצה עם שם, וסשנים שלמים בלחיצה אחת. חינם ל-Chrome, ל-Edge ול-Firefox.</InstallCta>
+
+<Section id="session" title="מה זה סשן של כרטיסיות?">
+
+כל מה שפתוח כרגע: כל חלון, הכרטיסיות שבו לפי הסדר, ואיזו כרטיסייה פעילה. דפדפנים עוקבים אחרי זה כל הזמן, לשתי מטרות:
+
+- **שחזור בהפעלה.** כשאפשרות ההפעלה שפותחת מחדש את הסשן הקודם מופעלת, הדפדפן פותח את הסשן האחרון כשהוא עולה. איפה האפשרות הזאת נמצאת בכל דפדפן מוסבר במדריך [איך משחזרים כרטיסיות אחרי קריסה](/blog/restore-tabs-after-crash#prevent).
+- **נסגרו לאחרונה.** <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> מחזיר אחורה, אחת אחרי השנייה, כרטיסיות וחלונות שסגרתם.
+
+שניהם שומרים רק את המצב *העדכני ביותר*. החלונות מיום שלישי שעבר הם לא סשן שהדפדפן יכול להחזיר לכם; הם רק שורות בהיסטוריה. את הפער הזה ממלאים מנהלי סשנים. אם כבר איבדתם כרטיסיות, התחילו מהמדריך [איך משחזרים כרטיסיות אחרי קריסה](/blog/restore-tabs-after-crash).
+
+</Section>
+
+<Section id="vs" title="מנהל סשנים לעומת סימניות לעומת היסטוריה">
+
+<ComparisonTable
+  head={['', 'סימניות', 'היסטוריה', 'מנהל סשנים']}
+  rowHeaders
+  highlight={3}
+  minWidth="36rem"
+  rows={[
+    ['מה נשמר', 'דפים שבחרתם', 'כל דף שביקרתם בו', 'חלונות שלמים והכרטיסיות שלהם'],
+    ['שומר על הפרדה בין חלונות', 'תיקייה אחת לכל שמירה', 'לא', 'כן'],
+    ['שומר אוטומטית', 'לא', 'כן, דף אחרי דף', 'בדרך כלל, לפי טיימר או בסגירה'],
+    ['פותח מחדש', 'תיקייה אחת בכל פעם', 'דף אחד בכל פעם', 'חלונות, בלחיצה אחת'],
+    ['מובנה בדפדפן', 'כן', 'כן', 'לא, זה תוסף'],
+  ]}
+/>
+
+סימניות מנצחות בדפים שתשמרו שנים. מנהל סשנים מנצח בעבודה שבתהליך: שתים־עשרה הכרטיסיות של משימה שנעצרה באמצע, שאתם רוצים בחזרה בדיוק כמו שהן, כחלון, בלי לתייק אותן אחת אחת. עוד במדריך [כרטיסיות לעומת סימניות](/blog/tabs-vs-bookmarks).
+
+</Section>
+
+<Section id="need" title="האם צריך אחד?">
+
+כנראה שלא, אם אתם עובדים בחלון אחד, מחזיקים פחות מכמה עשרות כרטיסיות וההגדרה של ההפעלה מופעלת. [השגרה למצב של יותר מדי כרטיסיות](/blog/manage-too-many-tabs) ותיקיית סימניות מדי פעם יספיקו לכם.
+
+כנראה שכן, אם משהו מזה מוכר לכם:
+
+- אתם עוברים בין פרויקטים ורוצים את החלונות של כל אחד מהם בחזרה בשלמותם.
+- קריסה, עדכון או הפעלה מחדש כפויה כבר עלו לכם בכרטיסיות.
+- אתם רוצים לסגור הכול בסוף היום בלי לאבד כלום.
+- אתם צריכים כרטיסיות מלפני כמה ימים, לא רק מהסשן האחרון.
+
+</Section>
+
+<Section id="look-for" title="מה מנהל סשנים טוב צריך לעשות?">
+
+- **לשמור אוטומטית**, לא רק כשנזכרים: לפי טיימר, כשחלון נסגר, או גם וגם.
+- **לשמור על המבנה**: חלונות, סדר הכרטיסיות, ובמקרה הטוב גם קבוצות כרטיסיות.
+- **לשחזר בגמישות**: את כל הסשן, חלון אחד או כרטיסייה אחת.
+- **לחפש** בכל הסשנים השמורים, כדי שאפשר יהיה למצוא כרטיסייה משבוע שעבר.
+- **לייצא** לקובץ שאפשר לקרוא גם במקום אחר, כדי שלעולם לא תהיו נעולים. (TabMerger מייצא JSON בלחיצה אחת: [הנה מה שיש בו](/blog/export-open-tabs).)
+- **להבהיר איפה הנתונים נמצאים.** מקומי בלבד זה פרטי, אבל נעלם יחד עם הפרופיל; מסונכרן בטוח יותר מאובדן נתונים, וצריך להיות מוצפן מקצה לקצה.
+
+הערה טכנית אחת: ה-API שדפדפנים נותנים לתוספים עבור כרטיסיות סגורות הוא מצומצם. `chrome.sessions` מחזיר לכל היותר 25 פריטים שנסגרו לאחרונה (`MAX_SESSION_RESULTS`). מנהלי סשנים שמגיעים רחוק יותר מנהלים רישום משלהם.
+
+</Section>
+
+<Section id="examples" title="אילו מנהלי סשנים יש?">
+
+כמה כלים ותיקים, לפי דפי החנות והאתרים שלהם עצמם (נבדק ב-20 בנובמבר 2026):
+
+- **Session Buddy** (ל-Chrome) שומר ומשחזר סשנים ומנהל היסטוריה של סשנים קודמים לשחזור אחרי קריסות. הנתונים נשארים במכשיר; לפי דף החנות שלו אין סנכרון. חינם.
+- **Tab Session Manager** (ל-Chrome, ל-Firefox ול-Edge) שומר סשנים עם שמות ותגיות, שומר אוטומטית כשחלון נסגר ולפי טיימר, ומציע סנכרון בענן. חינם.
+- **Tabs Outliner** (ל-Chrome) מחזיק חלונות פתוחים ושמורים בעץ אחד, עם הערות ושחזור אחרי קריסות. חינם, עם שדרוג Pro בתשלום חד־פעמי.
+
+להשוואה זה לצד זה של תשעה כלים לפי מחיר, סנכרון והצפנה, ראו [השוואה של תוספי ניהול הכרטיסיות הטובים ביותר](/blog/best-tab-manager-extensions) או את [דף ההשוואה](/compare) שלנו.
+
+</Section>
+
+<Section id="tabmerger" title="איך סשנים עובדים ב-TabMerger">
+
+[TabMerger](/features), התוסף החינמי שלנו ל-Chrome, ל-Edge ול-Firefox, הוא מנהל כרטיסיות עם סשנים מובנים. הכרטיסיות הפתוחות נשמרות ב**קבוצות** עם שם; לאחר מכן **שמירת הסשן הנוכחי** (<bdi dir="ltr">Save current session</bdi>) יוצרת תמונת מצב עם שם של הקבוצות השמורות האלה, שאפשר לשחזר יחד בהמשך. בתוכנית החינמית נשמרים 3 סשנים בדפדפן; Pro שומר סשנים ללא הגבלה ומסנכרן אותם בין המכשירים שלכם, עם הצפנה מקצה לקצה.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="שמירה ושחזור של סשן" steps={[{ title: 'שמירת סשן' }, { title: 'תצוגת הסשן' }]}>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-save-session" alt="חלון Save Session (שמירת סשן) ב-TabMerger עם השם Friday wrap-up, ערכת נושא בהירה" darkAlt="חלון Save Session (שמירת סשן) ב-TabMerger עם השם Friday wrap-up, ערכת נושא כהה" boxes={[{ id: 'session-name', label: 'שם הסשן' }]} source="TabMerger 3.16.1"><bdi dir="ltr">Save current session</bdi> (שמירת הסשן הנוכחי) מבקש שם.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-session-view" alt="הסשן השמור Friday wrap-up עם רשימת הקבוצות שלו וכפתור Restore session (שחזור הסשן), ערכת נושא בהירה" darkAlt="הסשן השמור Friday wrap-up עם רשימת הקבוצות שלו וכפתור Restore session (שחזור הסשן), ערכת נושא כהה" boxes={[{ id: 'restore-session', label: 'שחזור הסשן' }]} source="TabMerger 3.16.1">הסשן השמור מציג את הקבוצות שלו; <bdi dir="ltr">Restore session</bdi> (שחזור הסשן) מחזיר את כולן.</ThemedScreenshot>
+</Carousel>
+
+בצד האוטומטי, **הגדרות ← נתונים ← שמירה אוטומטית של כרטיסיות פתוחות** (<bdi dir="ltr">Settings → Data → Auto-save open tabs</bdi>) שומרת את הכרטיסיות הפתוחות כקבוצה חדשה לפי לוח זמנים או כשעוברים מספר מסוים של כרטיסיות. הייצוא הוא JSON פשוט. כדי להפוך סשן לשגרת הבוקר שלכם, ראו [איך מתחילים את יום העבודה עם כרטיסיות שמורות](/blog/start-your-workday-with-saved-tabs).
+
+<InstallCta>חינם ל-Chrome, ל-Edge ול-Firefox. אין צורך בחשבון כדי להתחיל.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="שאלות נפוצות">
+
+<Faq items={post.faq} />
+
+</Section>

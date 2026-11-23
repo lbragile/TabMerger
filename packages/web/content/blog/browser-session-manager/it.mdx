@@ -1,0 +1,197 @@
+export const post = {
+  slug: 'browser-session-manager',
+  title: 'Cos’è un gestore di sessioni per il browser, e ti serve davvero?',
+  navTitle: 'Cos’è un gestore di sessioni?',
+  seoTitle: 'Estensioni session manager: sessioni o preferiti?',
+  description:
+    'Cos’è una sessione di schede, cosa fa un’estensione per salvare la sessione del browser che i preferiti e la cronologia non fanno, cosa cercare in una e quando basta il browser.',
+  shareSummary: 'Sessioni, gestori di sessioni e preferiti: cosa salva ciascuno e quando ti serve quale.',
+  dek: 'Il tuo browser tiene già una sessione. Un gestore di sessioni ne tiene quante ne vuoi, con un nome.',
+  published: '2026-11-25',
+  updated: '2026-11-25',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Le estensioni possono elencare al massimo 25 schede e finestre chiuse di recente.',
+      source: 'Documentazione di chrome.sessions',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+    },
+    { text: 'Session Buddy conserva i dati sul dispositivo e non ha la sincronizzazione.', source: 'Scheda di Session Buddy nello store, 20 nov 2026' },
+    { text: 'Tab Session Manager salva in automatico alla chiusura di una finestra e a intervalli regolari.', source: 'La sua scheda nello store, 20 nov 2026' },
+    { text: 'Il ripristino all’avvio conserva solo l’ultima sessione.', source: 'Impostazioni di Chrome, Edge e Firefox' },
+  ],
+  faq: [
+    {
+      question: 'Cos’è una sessione di schede?',
+      answer:
+        'Le finestre e le schede che hai aperte in un dato momento, nel loro ordine. Il browser conserva quella attuale per riaprirla dopo un riavvio; un gestore di sessioni la salva con un nome.',
+    },
+    {
+      question: 'Che differenza c’è tra un gestore di sessioni e i preferiti?',
+      answer:
+        'I preferiti salvano singole pagine in cartelle. Un gestore di sessioni salva finestre intere, ne mantiene la struttura e può farlo in automatico, poi le riapre come finestre.',
+    },
+    {
+      question: 'Mi serve un’estensione per gestire le sessioni?',
+      answer:
+        'No, se lavori in una sola finestra e l’impostazione di avvio è attiva. Sì, se ti destreggi tra più progetti, perdi schede per i crash o vuoi ritrovare le finestre di ieri.',
+    },
+    {
+      question: 'I gestori di sessioni rispettano la privacy?',
+      answer:
+        'Dipende da dove conservano i dati. Alcuni tengono tutto sul tuo dispositivo; quelli sincronizzati li inviano a un server, quindi controlla che siano crittografati end-to-end.',
+    },
+  ],
+  images: [
+    { src: '/blog/browser-session-manager/tm-save-session-light.webp', alt: 'Finestra «Save Session» (Salva sessione) di TabMerger con il nome «Friday wrap-up», tema chiaro' },
+    { src: '/blog/browser-session-manager/tm-save-session-dark.webp', alt: 'Finestra «Save Session» (Salva sessione) di TabMerger con il nome «Friday wrap-up», tema scuro' },
+    { src: '/blog/browser-session-manager/tm-session-view-light.webp', alt: 'La sessione salvata «Friday wrap-up» con i suoi gruppi e il pulsante «Restore session» (Ripristina sessione), tema chiaro' },
+    { src: '/blog/browser-session-manager/tm-session-view-dark.webp', alt: 'La sessione salvata «Friday wrap-up» con i suoi gruppi e il pulsante «Restore session» (Ripristina sessione), tema scuro' },
+  ],
+  tags: ['session-management', 'tab-manager', 'save-tabs', 'comparison'],
+  sources: [
+    {
+      title: 'chrome.sessions API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'sessions (WebExtensions API)',
+      publisher: 'MDN Web Docs',
+      url: 'https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Session Buddy',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/session-buddy-tab-bookmar/edacconmaakjimmfgnblocblbcdcpbko',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tab Session Manager',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/tab-session-manager/iaiomicjabeggjcfkbimgmglanimpnae',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tabs Outliner',
+      publisher: 'tabsoutliner.com',
+      url: 'https://tabsoutliner.com/',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/browser-session-manager/tm-session-view-light.webp' },
+  ogImage: { src: '/blog/browser-session-manager/og.png', alt: 'Cos’è un gestore di sessioni per il browser, e ti serve davvero? Una guida di TabMerger, con una sessione salvata e il suo pulsante di ripristino' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'session', label: 'Cos’è una sessione di schede?' },
+    { id: 'vs', label: 'Sessioni o preferiti' },
+    { id: 'need', label: 'Ti serve?' },
+    { id: 'look-for', label: 'Cosa cercare' },
+    { id: 'examples', label: 'Esempi' },
+    { id: 'tabmerger', label: 'Le sessioni in TabMerger' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+}
+
+<QuickAnswer>
+
+Una **sessione** è l’insieme delle finestre e delle schede che hai aperte in un dato momento. Il tuo browser conserva quella attuale per poterla riaprire dopo un riavvio. Un **gestore di sessioni** (session manager) è un’estensione che salva le sessioni con un nome, spesso in automatico, e più tardi le riapre come finestre. I preferiti salvano pagine; un gestore di sessioni salva l’intero spazio di lavoro. [TabMerger](/features) fa entrambe le cose: tutte le finestre aperte salvate in gruppi con nome con un clic, sessioni con nome da ripristinare insieme, salvataggio automatico programmato e sincronizzazione crittografata end-to-end con Pro.
+
+</QuickAnswer>
+
+<InstallCta>Salva ogni finestra come gruppo con nome, e sessioni intere con un clic. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="session" title="Cos’è una sessione di schede?">
+
+Tutto ciò che è aperto in questo momento: ogni finestra, le sue schede in ordine e quale scheda è attiva. I browser lo tengono sempre sotto controllo, per due compiti:
+
+- **Ripristino all’avvio.** Se è attiva l’opzione di avvio che riprende la sessione precedente, il browser riapre l’ultima sessione quando si avvia. Dove si trova questa opzione in ogni browser lo trovi in [come ripristinare le schede dopo un crash](/blog/restore-tabs-after-crash#prevent).
+- **Chiuse di recente.** <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> ripercorre all’indietro le schede e le finestre che hai chiuso.
+
+Entrambi conservano solo lo stato *più recente*. Le finestre di martedì scorso non sono una sessione che il browser può restituirti: sono solo righe nella cronologia. È proprio questo il vuoto che riempiono i gestori di sessioni. Se hai già perso delle schede, parti da [come ripristinare le schede dopo un crash](/blog/restore-tabs-after-crash).
+
+</Section>
+
+<Section id="vs" title="Gestore di sessioni, preferiti o cronologia?">
+
+<ComparisonTable
+  head={['', 'Preferiti', 'Cronologia', 'Gestore di sessioni']}
+  rowHeaders
+  highlight={3}
+  minWidth="36rem"
+  rows={[
+    ['Salva', 'Le pagine che scegli', 'Ogni pagina che visiti', 'Finestre intere con le loro schede'],
+    ['Tiene separate le finestre', 'Una cartella per salvataggio', 'No', 'Sì'],
+    ['Salva in automatico', 'No', 'Sì, pagina per pagina', 'Di solito, a intervalli o alla chiusura'],
+    ['Riapre', 'Una cartella alla volta', 'Una pagina alla volta', 'Finestre, con un clic'],
+    ['Integrato', 'Sì', 'Sì', 'No, è un’estensione'],
+  ]}
+/>
+
+I preferiti vincono per le pagine che terrai per anni. Un gestore di sessioni vince per il lavoro in corso: le dodici schede di un compito a metà che vuoi ritrovare esattamente così, come finestra, senza archiviarle una per una. Approfondisci in [schede o preferiti](/blog/tabs-vs-bookmarks).
+
+</Section>
+
+<Section id="need" title="Ti serve?">
+
+Probabilmente no, se lavori in una sola finestra, resti sotto un paio di dozzine di schede e hai attivato l’impostazione di avvio. Ti bastano la [routine per le troppe schede](/blog/manage-too-many-tabs) e ogni tanto una cartella di preferiti.
+
+Probabilmente sì, se ti riconosci in una di queste situazioni:
+
+- Passi da un progetto all’altro e vuoi ritrovare intatte le finestre di ciascuno.
+- Un crash, un aggiornamento o un riavvio forzato ti ha già fatto perdere delle schede.
+- Vuoi chiudere tutto a fine giornata senza perdere nulla.
+- Ti servono schede di giorni fa, non solo dell’ultima sessione.
+
+</Section>
+
+<Section id="look-for" title="Cosa dovrebbe fare un buon gestore di sessioni?">
+
+- **Salvare in automatico**, non solo quando te ne ricordi: a intervalli regolari, quando si chiude una finestra o in entrambi i casi.
+- **Mantenere la struttura**: finestre, ordine delle schede e, idealmente, gruppi di schede.
+- **Ripristinare in modo flessibile**: l’intera sessione, una finestra o una scheda.
+- **Cercare** in tutte le sessioni salvate, così ritrovi una scheda della settimana scorsa.
+- **Esportare** in un file leggibile altrove, così non resti mai vincolato. (TabMerger esporta in JSON con un clic: [ecco cosa contiene](/blog/export-open-tabs).)
+- **Essere chiaro su dove stanno i dati.** Solo in locale è privato ma sparisce con il profilo; sincronizzato è più al sicuro dalla perdita di dati, e dovrebbe essere crittografato end-to-end.
+
+Una nota tecnica: l’API che i browser offrono alle estensioni per le schede chiuse è limitata. `chrome.sessions` restituisce al massimo 25 elementi chiusi di recente (`MAX_SESSION_RESULTS`). I gestori di sessioni che vanno oltre tengono un proprio archivio.
+
+</Section>
+
+<Section id="examples" title="Quali gestori di sessioni esistono?">
+
+Alcuni dei più affermati, descritti in base alle loro schede negli store e ai loro siti (verificati il 20 nov 2026):
+
+- **Session Buddy** (Chrome) salva e ripristina le sessioni e tiene una cronologia delle sessioni passate per il recupero dopo un crash. I dati restano sul dispositivo; la sua scheda dice che non c’è sincronizzazione. Gratis.
+- **Tab Session Manager** (Chrome, Firefox, Edge) salva le sessioni con nomi ed etichette, salva in automatico alla chiusura di una finestra e a intervalli regolari, e offre la sincronizzazione nel cloud. Gratis.
+- **Tabs Outliner** (Chrome) tiene le finestre aperte e salvate in un unico albero, con note e recupero dopo un crash. Gratis, con un upgrade Pro a pagamento unico.
+
+Per un confronto fianco a fianco di nove strumenti su prezzo, sincronizzazione e crittografia, leggi [le migliori estensioni per gestire le schede a confronto](/blog/best-tab-manager-extensions) o la nostra [pagina di confronto](/compare).
+
+</Section>
+
+<Section id="tabmerger" title="Come funzionano le sessioni in TabMerger">
+
+[TabMerger](/features), la nostra estensione gratuita per Chrome, Edge e Firefox, è un gestore di schede con le sessioni integrate. Le tue schede aperte vengono salvate in **gruppi** con nome; poi **Salva la sessione attuale** (Save current session) crea un’istantanea con nome di quei gruppi salvati, da ripristinare tutta insieme più tardi. Il piano gratuito tiene 3 sessioni nel browser; Pro tiene sessioni illimitate e le sincronizza tra i tuoi dispositivi, crittografate end-to-end.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Salvare e ripristinare una sessione" steps={[{ title: 'Salva sessione' }, { title: 'Vista della sessione' }]}>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-save-session" alt="Finestra «Save Session» (Salva sessione) di TabMerger con il nome «Friday wrap-up», tema chiaro" darkAlt="Finestra «Save Session» (Salva sessione) di TabMerger con il nome «Friday wrap-up», tema scuro" boxes={[{ id: 'session-name', label: 'Nome della sessione' }]} source="TabMerger 3.16.1">«Save current session» (Salva la sessione attuale) chiede un nome.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-session-view" alt="La sessione salvata «Friday wrap-up» con i suoi gruppi e il pulsante «Restore session» (Ripristina sessione), tema chiaro" darkAlt="La sessione salvata «Friday wrap-up» con i suoi gruppi e il pulsante «Restore session» (Ripristina sessione), tema scuro" boxes={[{ id: 'restore-session', label: 'Ripristina sessione' }]} source="TabMerger 3.16.1">La sessione salvata elenca i suoi gruppi; «Restore session» (Ripristina sessione) li riporta tutti indietro.</ThemedScreenshot>
+</Carousel>
+
+Per la parte automatica, **Impostazioni → Dati → Salva automaticamente le schede aperte** (Settings → Data → Auto-save open tabs) salva le schede aperte come nuovo gruppo secondo una pianificazione o quando superi un certo numero di schede. Le esportazioni sono semplice JSON. Per fare di una sessione la tua routine del mattino, leggi [inizia la giornata con le schede salvate](/blog/start-your-workday-with-saved-tabs).
+
+<InstallCta>Gratis per Chrome, Edge e Firefox. Non serve un account per iniziare.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

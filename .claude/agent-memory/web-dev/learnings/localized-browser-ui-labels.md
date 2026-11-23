@@ -28,12 +28,17 @@ Translated posts name browser settings and menus. Every localized label must com
 
 - First body mention: localized label plus the English in parentheses; later mentions use the localized label only. Settings paths use localized segments plus the English path in parentheses.
 - Captions and alt text keep the on-screen English name (screenshots are English UI) with the localized label in parentheses. The alt in the `post.images` array and on the figure must stay identical, so edit both.
+- **A quoted English phrase isn't always a UI label.** browser-session-manager quotes the “previous session” startup option, which matches no browser's real label (Chrome: Continue where you left off; Edge: Open tabs from the previous session; Firefox: Open previous windows and tabs). Translate it as a description without quotes; quoting an invented phrase (a zh-CN draft did: “启动时恢复上次会话”) presents it as a label.
+- **Search term vs catalog term:** ru searchers say "сессия" and hi "सेशन", but the extension catalogs say "сеанс" / "सत्र". Use the search term in title, description and prose, the catalog strings verbatim for TabMerger labels, and say once that the TabMerger UI calls it "сеанс" / "सत्र".
+- **TabMerger labels** for sessions live in `sidePanel.json` (`saveSession`, `restoreSession`), `modals.json` (`saveSession.title`, `.name`), `header.json` `settings`, `settings.json` `tabs.data` and `autoSave.json` `settings.title`. A verifier can load them from the catalogs instead of a hand-copied table.
 
 ## RTL (ar, fa, he)
 
 - Keep existing `<bdi>` / `<bdi dir="ltr">` wrappers. A localized RTL label needs none; any English label, path or shortcut inside RTL text gets `<bdi dir="ltr">…</bdi>`, including new English glosses.
 - Arabic, Persian and Hebrew localized paths use ← between segments. A mixed Edge path reads `**الإعدادات** ← <bdi dir="ltr">**Start, home, … → Open tabs from the previous session**</bdi>`.
 - Persian strings contain ZWNJ (U+200C). Copy them from the .ftl/help source byte for byte; an edit script can use a `‌` constant.
+- Drafting a whole Persian file: write it with visible placeholders (`^` for ZWNJ, `¶` for the RLM after `،` before a Latin word, `{SAVE}`-style keys for catalog labels) and build the real file with a small script that fills the labels from `src/locales/fa/*.json`, swaps the placeholders and refuses a `¶` inside the `post` block. Persian prose uses Persian digits for counts (۲۵, ۳, dates) but Latin digits for versions, so digit checks must normalise ۰-۹ first.
+- A competitor line like "**Session Buddy** (Chrome)" leaves a bare English run in parentheses. Write the browser with a preposition inside the parentheses instead: he "(ל-Chrome)", ar "(لـ Chrome)", fa "(برای Chrome)".
 - Don't add U+200E/U+200F inside `export const post` fields (title, description, faq, images alt, …): they caused a generated-index mismatch before. Marks already there (fa uses U+200F after the Persian comma) are left alone. Body text may use them.
 
 ## CJK bold (ja, zh-CN, ko)
@@ -51,4 +56,6 @@ A 15 KB MDX body in a Bash heredoc failed ("unexpected EOF while looking for mat
 - Import the compiler by absolute path from `node_modules/.pnpm/@mdx-js+mdx@<ver>_.../node_modules/@mdx-js/mdx/index.js` (the web package only links `@mdx-js/loader`).
 - `compile()` succeeds even when `**` fails to become bold (CJK or Arabic text next to punctuation). Count `_components.strong` in the output against the `**` pairs in the body; they should match.
 - A scratch verifier that evaluates the `export const post` block, compares the fixed fields with English, checks each figure alt against `post.images`, and checks that every help label exists verbatim in both the file and the extracted help text caught label drift (verb forms used where the label was meant) and broken Persian ZWNJ before any repo hook ran.
+- Fact-token checks must not assume a space after a number: ko writes "3개", ja "3 つ", zh "3 个", fa "۳". Match a standalone digit (`(^|[^0-9.])3(?![0-9.])`, after digit normalisation) inside the relevant section, not the substring `'3 '`.
+- `shareSummary` (≤100) is the field most likely to overflow in tr and id; check it before anything else.
 - Working-tree `.mdx` files are CRLF (`core.autocrlf=true`, LF in the index). Normalise `\r\n` before splitting on `\n}\n`, and write new files with CRLF to match their neighbours.

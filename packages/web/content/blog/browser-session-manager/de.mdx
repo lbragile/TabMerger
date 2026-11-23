@@ -1,0 +1,197 @@
+export const post = {
+  slug: 'browser-session-manager',
+  title: 'Was ist ein Session-Manager für den Browser, und brauchst du einen?',
+  navTitle: 'Was ist ein Session-Manager?',
+  seoTitle: 'Session-Manager-Erweiterungen erklärt: Sitzungen vs. Lesezeichen',
+  description:
+    'Was eine Tab-Sitzung ist, was eine Session-Manager-Erweiterung beim Speichern von Sitzungen kann, was Lesezeichen und der Verlauf nicht können, worauf du achten solltest und wann der Browser allein reicht.',
+  shareSummary: 'Tab-Sitzungen, Session-Manager, Lesezeichen: was sie speichern und wann du was brauchst.',
+  dek: 'Dein Browser merkt sich schon eine Sitzung. Ein Session-Manager merkt sich so viele, wie du willst, mit Namen.',
+  published: '2026-11-25',
+  updated: '2026-11-25',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Erweiterungen können höchstens 25 zuletzt geschlossene Tabs und Fenster abrufen.',
+      source: 'Doku zu chrome.sessions',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+    },
+    { text: 'Session Buddy speichert die Daten auf dem Gerät und hat keine Synchronisierung.', source: 'Store-Eintrag von Session Buddy, 20. Nov. 2026' },
+    { text: 'Tab Session Manager speichert automatisch, wenn ein Fenster geschlossen wird, und in festen Abständen.', source: 'Store-Eintrag von Tab Session Manager, 20. Nov. 2026' },
+    { text: 'Die Wiederherstellung beim Start behält nur die letzte Sitzung.', source: 'Einstellungen von Chrome, Edge und Firefox' },
+  ],
+  faq: [
+    {
+      question: 'Was ist eine Tab-Sitzung?',
+      answer:
+        'Die Fenster und Tabs, die du in einem Moment geöffnet hast, in ihrer Reihenfolge. Der Browser merkt sich die aktuelle, um sie nach einem Neustart wieder zu öffnen; ein Session-Manager speichert sie unter einem Namen.',
+    },
+    {
+      question: 'Was ist der Unterschied zwischen einem Session-Manager und Lesezeichen?',
+      answer:
+        'Lesezeichen speichern einzelne Seiten in Ordnern. Ein Session-Manager speichert ganze Fenster, behält ihre Struktur, kann das automatisch tun und öffnet sie später wieder als Fenster.',
+    },
+    {
+      question: 'Brauche ich eine Session-Manager-Erweiterung?',
+      answer:
+        'Nicht, wenn du in einem Fenster arbeitest und die Starteinstellung aktiv ist. Schon, wenn du mehrere Projekte gleichzeitig jonglierst, Tabs durch Abstürze verlierst oder die Fenster von gestern zurückhaben willst.',
+    },
+    {
+      question: 'Sind Session-Manager privat?',
+      answer:
+        'Das hängt davon ab, wo sie die Daten ablegen. Manche speichern alles auf deinem Gerät; synchronisierende schicken die Daten an einen Server, also prüfe, ob sie Ende-zu-Ende-verschlüsselt sind.',
+    },
+  ],
+  images: [
+    { src: '/blog/browser-session-manager/tm-save-session-light.webp', alt: 'TabMerger-Dialog „Save Session“ (Sitzung speichern) mit dem Namen „Friday wrap-up“, helles Design' },
+    { src: '/blog/browser-session-manager/tm-save-session-dark.webp', alt: 'TabMerger-Dialog „Save Session“ (Sitzung speichern) mit dem Namen „Friday wrap-up“, dunkles Design' },
+    { src: '/blog/browser-session-manager/tm-session-view-light.webp', alt: 'Die gespeicherte Sitzung „Friday wrap-up“ mit ihren Gruppen und der Schaltfläche „Restore session“ (Sitzung wiederherstellen), helles Design' },
+    { src: '/blog/browser-session-manager/tm-session-view-dark.webp', alt: 'Die gespeicherte Sitzung „Friday wrap-up“ mit ihren Gruppen und der Schaltfläche „Restore session“ (Sitzung wiederherstellen), dunkles Design' },
+  ],
+  tags: ['session-management', 'tab-manager', 'save-tabs', 'comparison'],
+  sources: [
+    {
+      title: 'chrome.sessions API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'sessions (WebExtensions API)',
+      publisher: 'MDN Web Docs',
+      url: 'https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Session Buddy',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/session-buddy-tab-bookmar/edacconmaakjimmfgnblocblbcdcpbko',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tab Session Manager',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/tab-session-manager/iaiomicjabeggjcfkbimgmglanimpnae',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tabs Outliner',
+      publisher: 'tabsoutliner.com',
+      url: 'https://tabsoutliner.com/',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/browser-session-manager/tm-session-view-light.webp' },
+  ogImage: { src: '/blog/browser-session-manager/og.png', alt: 'Was ist ein Session-Manager für den Browser, und brauchst du einen? Ein TabMerger-Ratgeber mit einer gespeicherten Sitzung und ihrer Schaltfläche zum Wiederherstellen' },
+  toc: [
+    { id: 'quick', label: 'Kurze Antwort' },
+    { id: 'session', label: 'Was ist eine Tab-Sitzung?' },
+    { id: 'vs', label: 'Sitzungen vs. Lesezeichen' },
+    { id: 'need', label: 'Brauchst du einen?' },
+    { id: 'look-for', label: 'Worauf es ankommt' },
+    { id: 'examples', label: 'Beispiele' },
+    { id: 'tabmerger', label: 'Sitzungen in TabMerger' },
+    { id: 'faq', label: 'Häufige Fragen' },
+  ],
+}
+
+<QuickAnswer>
+
+Eine **Sitzung** ist die Gesamtheit der Fenster und Tabs, die du in einem Moment geöffnet hast. Dein Browser merkt sich die aktuelle, damit er sie nach einem Neustart wieder öffnen kann. Ein **Session-Manager** ist eine Erweiterung, die Sitzungen unter Namen speichert, oft automatisch, und sie später wieder als Fenster öffnet. Lesezeichen speichern Seiten; ein Session-Manager speichert den ganzen Arbeitsplatz. [TabMerger](/features) erledigt beides in einem: alle offenen Fenster mit einem Klick in benannten Gruppen gespeichert, benannte Sitzungen, die du gemeinsam wiederherstellst, automatisches Speichern nach Zeitplan und Ende-zu-Ende-verschlüsselte Synchronisierung mit Pro.
+
+</QuickAnswer>
+
+<InstallCta>Speichere jedes Fenster als benannte Gruppe und ganze Sitzungen mit einem Klick. Kostenlos für Chrome, Edge und Firefox.</InstallCta>
+
+<Section id="session" title="Was ist eine Tab-Sitzung?">
+
+Alles, was gerade offen ist: jedes Fenster, seine Tabs in ihrer Reihenfolge und welcher Tab aktiv ist. Browser verfolgen das ständig, für zwei Aufgaben:
+
+- **Wiederherstellung beim Start.** Ist die Startoption aktiv, die die vorherige Sitzung wieder öffnet, stellt der Browser beim Start die letzte Sitzung her. Wo diese Option in jedem Browser steckt, steht in [Tabs nach einem Absturz wiederherstellen](/blog/restore-tabs-after-crash#prevent).
+- **Zuletzt geschlossen.** <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> geht Schritt für Schritt durch die Tabs und Fenster zurück, die du geschlossen hast.
+
+Beide behalten nur den *neuesten* Stand. Die Fenster vom letzten Dienstag sind keine Sitzung, die dir der Browser zurückgeben kann; sie sind nur noch Zeilen im Verlauf. Genau diese Lücke füllen Session-Manager. Hast du schon Tabs verloren, fang mit [Tabs nach einem Absturz wiederherstellen](/blog/restore-tabs-after-crash) an.
+
+</Section>
+
+<Section id="vs" title="Session-Manager vs. Lesezeichen vs. Verlauf">
+
+<ComparisonTable
+  head={['', 'Lesezeichen', 'Verlauf', 'Session-Manager']}
+  rowHeaders
+  highlight={3}
+  minWidth="36rem"
+  rows={[
+    ['Speichert', 'Seiten, die du auswählst', 'Jede besuchte Seite', 'Ganze Fenster mit ihren Tabs'],
+    ['Hält Fenster getrennt', 'Ein Ordner pro Speichern', 'Nein', 'Ja'],
+    ['Speichert automatisch', 'Nein', 'Ja, Seite für Seite', 'Meist, nach Zeitplan oder beim Schließen'],
+    ['Öffnet wieder', 'Einen Ordner nach dem anderen', 'Eine Seite nach der anderen', 'Fenster, mit einem Klick'],
+    ['Eingebaut', 'Ja', 'Ja', 'Nein, eine Erweiterung'],
+  ]}
+/>
+
+Lesezeichen gewinnen bei Seiten, die du jahrelang behalten willst. Ein Session-Manager gewinnt bei laufender Arbeit: die zwölf Tabs einer halb erledigten Aufgabe, die du genau so als Fenster zurückhaben willst, statt sie einzeln abzulegen. Mehr dazu in [Tabs vs. Lesezeichen](/blog/tabs-vs-bookmarks).
+
+</Section>
+
+<Section id="need" title="Brauchst du einen?">
+
+Wahrscheinlich nicht, wenn du in einem Fenster arbeitest, unter ein paar Dutzend Tabs bleibst und die Starteinstellung aktiv ist. Die [Routine gegen zu viele Tabs](/blog/manage-too-many-tabs) und ab und zu ein Lesezeichenordner reichen dann.
+
+Wahrscheinlich schon, wenn dir etwas davon bekannt vorkommt:
+
+- Du wechselst zwischen Projekten und willst die Fenster jedes Projekts unverändert zurück.
+- Ein Absturz, ein Update oder ein erzwungener Neustart hat dich schon einmal Tabs gekostet.
+- Du willst am Ende des Tages alles schließen, ohne etwas zu verlieren.
+- Du brauchst Tabs von vor ein paar Tagen, nicht nur aus der letzten Sitzung.
+
+</Section>
+
+<Section id="look-for" title="Was sollte ein guter Session-Manager können?">
+
+- **Automatisch speichern**, nicht nur, wenn du daran denkst: in festen Abständen, wenn ein Fenster geschlossen wird, oder beides.
+- **Die Struktur behalten**: Fenster, Tab-Reihenfolge und idealerweise Tabgruppen.
+- **Flexibel wiederherstellen**: die ganze Sitzung, ein Fenster oder einen Tab.
+- **Suchen** über alle gespeicherten Sitzungen, damit du einen Tab von letzter Woche wiederfindest.
+- **Exportieren** in eine Datei, die du auch anderswo lesen kannst, damit du nie festsitzt. (TabMerger exportiert JSON mit einem Klick: [das steckt drin](/blog/export-open-tabs).)
+- **Klar sagen, wo die Daten liegen.** Nur lokal ist privat, geht aber mit dem Profil verloren; synchronisiert ist sicherer vor Datenverlust und sollte Ende-zu-Ende-verschlüsselt sein.
+
+Ein technischer Hinweis: Die Erweiterungs-API, die Browser für geschlossene Tabs anbieten, ist klein. `chrome.sessions` liefert höchstens 25 zuletzt geschlossene Einträge (`MAX_SESSION_RESULTS`). Session-Manager, die weiter zurückreichen, führen eigene Aufzeichnungen.
+
+</Section>
+
+<Section id="examples" title="Welche Session-Manager gibt es?">
+
+Ein paar etablierte, beschrieben nach ihren eigenen Store-Einträgen und Websites (Stand 20. Nov. 2026):
+
+- **Session Buddy** (Chrome) speichert und stellt Sitzungen wieder her und führt einen Verlauf früherer Sitzungen für die Wiederherstellung nach Abstürzen. Die Daten bleiben auf dem Gerät; laut Store-Eintrag gibt es keine Synchronisierung. Kostenlos.
+- **Tab Session Manager** (Chrome, Firefox, Edge) speichert Sitzungen mit Namen und Tags, speichert automatisch, wenn ein Fenster geschlossen wird, und in festen Abständen, und bietet Cloud-Synchronisierung. Kostenlos.
+- **Tabs Outliner** (Chrome) hält offene und gespeicherte Fenster in einem Baum mit Notizen und Wiederherstellung nach Abstürzen. Kostenlos, mit einem einmaligen Pro-Upgrade.
+
+Einen direkten Vergleich von neun Tools nach Preis, Synchronisierung und Verschlüsselung findest du in [die besten Tab-Manager-Erweiterungen im Vergleich](/blog/best-tab-manager-extensions) oder auf unserer [Vergleichsseite](/compare).
+
+</Section>
+
+<Section id="tabmerger" title="So funktionieren Sitzungen in TabMerger">
+
+[TabMerger](/features), unsere kostenlose Erweiterung für Chrome, Edge und Firefox, ist ein Tab-Manager mit eingebauten Sitzungen. Deine offenen Tabs werden in benannten **Gruppen** gespeichert; **Aktuelle Sitzung speichern** (Save current session) legt dann eine benannte Momentaufnahme dieser gespeicherten Gruppen an, die du später gemeinsam wiederherstellen kannst. Kostenlos bleiben 3 Sitzungen im Browser; Pro behält unbegrenzt viele Sitzungen und synchronisiert sie Ende-zu-Ende-verschlüsselt zwischen deinen Geräten.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Eine Sitzung speichern und wiederherstellen" steps={[{ title: 'Sitzung speichern' }, { title: 'Sitzungsansicht' }]}>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-save-session" alt="TabMerger-Dialog „Save Session“ (Sitzung speichern) mit dem Namen „Friday wrap-up“, helles Design" darkAlt="TabMerger-Dialog „Save Session“ (Sitzung speichern) mit dem Namen „Friday wrap-up“, dunkles Design" boxes={[{ id: 'session-name', label: 'Sitzungsname' }]} source="TabMerger 3.16.1">„Save current session“ (Aktuelle Sitzung speichern) fragt nach einem Namen.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-session-view" alt="Die gespeicherte Sitzung „Friday wrap-up“ mit ihren Gruppen und der Schaltfläche „Restore session“ (Sitzung wiederherstellen), helles Design" darkAlt="Die gespeicherte Sitzung „Friday wrap-up“ mit ihren Gruppen und der Schaltfläche „Restore session“ (Sitzung wiederherstellen), dunkles Design" boxes={[{ id: 'restore-session', label: 'Sitzung wiederherstellen' }]} source="TabMerger 3.16.1">Die gespeicherte Sitzung zeigt ihre Gruppen; „Restore session“ (Sitzung wiederherstellen) holt sie alle zurück.</ThemedScreenshot>
+</Carousel>
+
+Für die automatische Seite speichert **Einstellungen → Daten → Offene Tabs automatisch speichern** (Settings → Data → Auto-save open tabs) deine offenen Tabs als neue Gruppe, nach Zeitplan oder sobald du eine bestimmte Tab-Zahl überschreitest. Exporte sind reines JSON. Wie du eine Sitzung zu deiner Morgenroutine machst, steht in [Den Arbeitstag mit gespeicherten Tabs beginnen](/blog/start-your-workday-with-saved-tabs).
+
+<InstallCta>Kostenlos für Chrome, Edge und Firefox. Kein Konto nötig, um loszulegen.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Häufige Fragen">
+
+<Faq items={post.faq} />
+
+</Section>

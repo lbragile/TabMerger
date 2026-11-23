@@ -1,0 +1,197 @@
+export const post = {
+  slug: 'browser-session-manager',
+  title: 'O que é um gerenciador de sessões do navegador, e você precisa de um?',
+  navTitle: 'O que é um gerenciador de sessões?',
+  seoTitle: 'Extensões gerenciadoras de sessões: sessões vs. favoritos',
+  description:
+    'O que é uma sessão de abas, o que uma extensão para salvar a sessão do navegador faz que os favoritos e o histórico não fazem, o que procurar em uma e quando o próprio navegador basta.',
+  shareSummary: 'Sessões, gerenciadores de sessões e favoritos: o que cada um salva e quando usar cada um.',
+  dek: 'Seu navegador já guarda uma sessão. Um gerenciador de sessões guarda quantas você quiser, com nome.',
+  published: '2026-11-25',
+  updated: '2026-11-25',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Extensões podem listar no máximo 25 abas e janelas fechadas recentemente.',
+      source: 'Documentação do chrome.sessions',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+    },
+    { text: 'O Session Buddy guarda os dados no dispositivo e não tem sincronização.', source: 'Página do Session Buddy na loja, 20 nov. 2026' },
+    { text: 'O Tab Session Manager salva automaticamente ao fechar uma janela e em intervalos regulares.', source: 'Página dele na loja, 20 nov. 2026' },
+    { text: 'A restauração ao iniciar guarda só a última sessão.', source: 'Configurações do Chrome, Edge e Firefox' },
+  ],
+  faq: [
+    {
+      question: 'O que é uma sessão de abas?',
+      answer:
+        'As janelas e abas que você tem abertas em um dado momento, na ordem. O navegador guarda a atual para reabri-la depois de reiniciar; um gerenciador de sessões a salva com um nome.',
+    },
+    {
+      question: 'Qual é a diferença entre um gerenciador de sessões e os favoritos?',
+      answer:
+        'Os favoritos salvam páginas soltas em pastas. Um gerenciador de sessões salva janelas inteiras, mantém a estrutura delas e pode fazer isso sozinho, depois as reabre como janelas.',
+    },
+    {
+      question: 'Preciso de uma extensão gerenciadora de sessões?',
+      answer:
+        'Não, se você trabalha em uma janela só e a configuração de inicialização está ativada. Sim, se você alterna entre vários projetos, perde abas quando o navegador trava ou quer as janelas de ontem de volta.',
+    },
+    {
+      question: 'Os gerenciadores de sessões são privados?',
+      answer:
+        'Depende de onde eles guardam os dados. Alguns guardam tudo no seu dispositivo; os que sincronizam enviam para um servidor, então confira se há criptografia de ponta a ponta.',
+    },
+  ],
+  images: [
+    { src: '/blog/browser-session-manager/tm-save-session-light.webp', alt: 'Caixa de diálogo “Save Session” (Salvar sessão) do TabMerger com o nome “Friday wrap-up”, tema claro' },
+    { src: '/blog/browser-session-manager/tm-save-session-dark.webp', alt: 'Caixa de diálogo “Save Session” (Salvar sessão) do TabMerger com o nome “Friday wrap-up”, tema escuro' },
+    { src: '/blog/browser-session-manager/tm-session-view-light.webp', alt: 'A sessão salva “Friday wrap-up” com seus grupos e o botão “Restore session” (Restaurar sessão), tema claro' },
+    { src: '/blog/browser-session-manager/tm-session-view-dark.webp', alt: 'A sessão salva “Friday wrap-up” com seus grupos e o botão “Restore session” (Restaurar sessão), tema escuro' },
+  ],
+  tags: ['session-management', 'tab-manager', 'save-tabs', 'comparison'],
+  sources: [
+    {
+      title: 'chrome.sessions API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'sessions (WebExtensions API)',
+      publisher: 'MDN Web Docs',
+      url: 'https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Session Buddy',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/session-buddy-tab-bookmar/edacconmaakjimmfgnblocblbcdcpbko',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tab Session Manager',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/tab-session-manager/iaiomicjabeggjcfkbimgmglanimpnae',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tabs Outliner',
+      publisher: 'tabsoutliner.com',
+      url: 'https://tabsoutliner.com/',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/browser-session-manager/tm-session-view-light.webp' },
+  ogImage: { src: '/blog/browser-session-manager/og.png', alt: 'O que é um gerenciador de sessões do navegador, e você precisa de um? Um guia do TabMerger, com uma sessão salva e seu botão de restaurar' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'session', label: 'O que é uma sessão de abas?' },
+    { id: 'vs', label: 'Sessões vs. favoritos' },
+    { id: 'need', label: 'Você precisa de um?' },
+    { id: 'look-for', label: 'O que procurar' },
+    { id: 'examples', label: 'Exemplos' },
+    { id: 'tabmerger', label: 'Sessões no TabMerger' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Uma **sessão** é o conjunto de janelas e abas que você tem abertas em um dado momento. Seu navegador guarda a atual para reabri-la depois de reiniciar. Um **gerenciador de sessões** é uma extensão que salva sessões com nome, muitas vezes automaticamente, e depois as reabre como janelas. Favoritos salvam páginas; um gerenciador de sessões salva o espaço de trabalho inteiro. O [TabMerger](/features) faz as duas coisas: todas as janelas abertas salvas em grupos com nome com um clique, sessões com nome que você restaura juntas, salvamento automático programado e sincronização com criptografia de ponta a ponta no Pro.
+
+</QuickAnswer>
+
+<InstallCta>Salve cada janela como um grupo com nome, e sessões inteiras com um clique. Grátis para Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="session" title="O que é uma sessão de abas?">
+
+Tudo o que está aberto agora: cada janela, suas abas na ordem e qual aba está ativa. Os navegadores acompanham isso o tempo todo, para duas tarefas:
+
+- **Restauração ao iniciar.** Com a opção de inicialização que retoma a sessão anterior ativada, o navegador reabre a última sessão ao abrir. Onde fica essa opção em cada navegador está em [como restaurar abas depois de um travamento](/blog/restore-tabs-after-crash#prevent).
+- **Fechadas recentemente.** <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> volta, uma a uma, pelas abas e janelas que você fechou.
+
+As duas guardam só o estado *mais recente*. As janelas da terça passada não são uma sessão que o navegador consegue devolver; são só linhas no histórico. É essa lacuna que os gerenciadores de sessões preenchem. Se você já perdeu abas, comece por [como restaurar abas depois de um travamento](/blog/restore-tabs-after-crash).
+
+</Section>
+
+<Section id="vs" title="Gerenciador de sessões vs. favoritos vs. histórico">
+
+<ComparisonTable
+  head={['', 'Favoritos', 'Histórico', 'Gerenciador de sessões']}
+  rowHeaders
+  highlight={3}
+  minWidth="36rem"
+  rows={[
+    ['Salva', 'As páginas que você escolhe', 'Cada página que você visita', 'Janelas inteiras e suas abas'],
+    ['Mantém as janelas separadas', 'Uma pasta por salvamento', 'Não', 'Sim'],
+    ['Salva automaticamente', 'Não', 'Sim, página por página', 'Em geral, em intervalos ou ao fechar'],
+    ['Reabre', 'Uma pasta por vez', 'Uma página por vez', 'Janelas, com um clique'],
+    ['Já vem no navegador', 'Sim', 'Sim', 'Não, é uma extensão'],
+  ]}
+/>
+
+Os favoritos ganham para páginas que você vai guardar por anos. Um gerenciador de sessões ganha para trabalho em andamento: as doze abas de uma tarefa pela metade que você quer de volta exatamente como uma janela, sem arquivar uma por uma. Mais em [abas vs. favoritos](/blog/tabs-vs-bookmarks).
+
+</Section>
+
+<Section id="need" title="Você precisa de um?">
+
+Provavelmente não, se você trabalha em uma janela só, fica abaixo de umas duas dúzias de abas e deixa a configuração de inicialização ativada. A [rotina para quem tem abas demais](/blog/manage-too-many-tabs) e uma pasta de favoritos de vez em quando já resolvem.
+
+Provavelmente sim, se alguma destas situações parece familiar:
+
+- Você alterna entre projetos e quer as janelas de cada um de volta intactas.
+- Um travamento, uma atualização ou uma reinicialização forçada já fez você perder abas.
+- Você quer fechar tudo no fim do dia sem perder nada.
+- Você precisa de abas de dias atrás, não só da última sessão.
+
+</Section>
+
+<Section id="look-for" title="O que um bom gerenciador de sessões deve fazer?">
+
+- **Salvar automaticamente**, não só quando você lembra: em intervalos, quando uma janela fecha, ou os dois.
+- **Manter a estrutura**: janelas, ordem das abas e, de preferência, grupos de abas.
+- **Restaurar com flexibilidade**: a sessão inteira, uma janela ou uma aba.
+- **Pesquisar** em todas as sessões salvas, para encontrar uma aba da semana passada.
+- **Exportar** para um arquivo que você consiga ler em outro lugar, para nunca ficar preso. (O TabMerger exporta JSON com um clique: [veja o que tem dentro](/blog/export-open-tabs).)
+- **Deixar claro onde os dados ficam.** Só local é privado, mas se perde junto com o perfil; sincronizado é mais seguro contra perda de dados, e deve ter criptografia de ponta a ponta.
+
+Uma observação técnica: a API que os navegadores oferecem às extensões para abas fechadas é pequena. O `chrome.sessions` retorna no máximo 25 itens fechados recentemente (`MAX_SESSION_RESULTS`). Os gerenciadores de sessões que vão além mantêm os próprios registros.
+
+</Section>
+
+<Section id="examples" title="Quais gerenciadores de sessões existem?">
+
+Alguns dos mais conhecidos, descritos a partir das próprias páginas nas lojas e sites (consultados em 20 nov. 2026):
+
+- **Session Buddy** (Chrome) salva e restaura sessões e mantém um histórico de sessões anteriores para recuperar depois de travamentos. Os dados ficam no dispositivo; a página dele diz que não há sincronização. Grátis.
+- **Tab Session Manager** (Chrome, Firefox, Edge) salva sessões com nomes e tags, salva automaticamente ao fechar uma janela e em intervalos regulares, e oferece sincronização na nuvem. Grátis.
+- **Tabs Outliner** (Chrome) reúne as janelas abertas e salvas em uma árvore, com notas e recuperação depois de travamentos. Grátis, com um upgrade Pro de pagamento único.
+
+Para comparar lado a lado nove ferramentas em preço, sincronização e criptografia, veja [as melhores extensões de gerenciamento de abas comparadas](/blog/best-tab-manager-extensions) ou nossa [página de comparação](/compare).
+
+</Section>
+
+<Section id="tabmerger" title="Como as sessões funcionam no TabMerger">
+
+O [TabMerger](/features), nossa extensão gratuita para Chrome, Edge e Firefox, é um gerenciador de abas com sessões integradas. Suas abas abertas são salvas em **grupos** com nome; depois, **Salvar sessão atual** (Save current session) tira um snapshot com nome desses grupos salvos, que você pode restaurar de uma vez mais tarde. O plano grátis guarda 3 sessões no navegador; o Pro guarda sessões ilimitadas e as sincroniza entre dispositivos, com criptografia de ponta a ponta.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Salvar e restaurar uma sessão" steps={[{ title: 'Salvar sessão' }, { title: 'Visualização da sessão' }]}>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-save-session" alt="Caixa de diálogo “Save Session” (Salvar sessão) do TabMerger com o nome “Friday wrap-up”, tema claro" darkAlt="Caixa de diálogo “Save Session” (Salvar sessão) do TabMerger com o nome “Friday wrap-up”, tema escuro" boxes={[{ id: 'session-name', label: 'Nome da sessão' }]} source="TabMerger 3.16.1">“Save current session” (Salvar sessão atual) pede um nome.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-session-view" alt="A sessão salva “Friday wrap-up” com seus grupos e o botão “Restore session” (Restaurar sessão), tema claro" darkAlt="A sessão salva “Friday wrap-up” com seus grupos e o botão “Restore session” (Restaurar sessão), tema escuro" boxes={[{ id: 'restore-session', label: 'Restaurar sessão' }]} source="TabMerger 3.16.1">A sessão salva lista seus grupos; “Restore session” (Restaurar sessão) traz todos de volta.</ThemedScreenshot>
+</Carousel>
+
+Para a parte automática, **Configurações → Dados → Salvar abas abertas automaticamente** (Settings → Data → Auto-save open tabs) salva suas abas abertas como um grupo novo em um horário programado ou quando você passa de um certo número de abas. As exportações são JSON puro. Para transformar uma sessão na sua rotina da manhã, veja [comece o dia de trabalho com abas salvas](/blog/start-your-workday-with-saved-tabs).
+
+<InstallCta>Grátis para Chrome, Edge e Firefox. Não precisa de conta para começar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

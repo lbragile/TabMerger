@@ -1,0 +1,197 @@
+export const post = {
+  slug: 'browser-session-manager',
+  title: 'Qu’est-ce qu’un gestionnaire de sessions pour navigateur, et en avez-vous besoin ?',
+  navTitle: 'Qu’est-ce qu’un gestionnaire de sessions ?',
+  seoTitle: 'Extensions de gestion de sessions : sessions ou favoris ?',
+  description:
+    'Ce qu’est une session d’onglets, ce qu’une extension pour enregistrer la session du navigateur fait que les favoris et l’historique ne font pas, quoi regarder pour en choisir une, et quand le navigateur suffit.',
+  shareSummary: 'Sessions, gestionnaires de sessions et favoris : ce que chacun enregistre, et quand utiliser lequel.',
+  dek: 'Votre navigateur garde déjà une session. Un gestionnaire de sessions en garde autant que vous voulez, avec un nom.',
+  published: '2026-11-25',
+  updated: '2026-11-25',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Les extensions peuvent lister au maximum 25 onglets et fenêtres récemment fermés.',
+      source: 'Documentation de chrome.sessions',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+    },
+    { text: 'Session Buddy stocke les données sur l’appareil et n’a pas de synchronisation.', source: 'Fiche de Session Buddy sur le store, 20 nov. 2026' },
+    { text: 'Tab Session Manager enregistre automatiquement à la fermeture d’une fenêtre et à intervalles réguliers.', source: 'Sa fiche sur le store, 20 nov. 2026' },
+    { text: 'La restauration au démarrage ne garde que la dernière session.', source: 'Paramètres de Chrome, Edge et Firefox' },
+  ],
+  faq: [
+    {
+      question: 'Qu’est-ce qu’une session d’onglets ?',
+      answer:
+        'Les fenêtres et les onglets ouverts à un instant donné, dans leur ordre. Le navigateur garde la session en cours pour pouvoir la rouvrir après un redémarrage ; un gestionnaire de sessions l’enregistre sous un nom.',
+    },
+    {
+      question: 'Quelle est la différence entre un gestionnaire de sessions et les favoris ?',
+      answer:
+        'Les favoris enregistrent des pages isolées dans des dossiers. Un gestionnaire de sessions enregistre des fenêtres entières, garde leur structure, peut le faire automatiquement, puis les rouvre sous forme de fenêtres.',
+    },
+    {
+      question: 'Ai-je besoin d’une extension de gestion de sessions ?',
+      answer:
+        'Pas si vous travaillez dans une seule fenêtre et que le réglage de démarrage est activé. Oui si vous jonglez entre plusieurs projets, perdez des onglets lors de plantages ou voulez retrouver les fenêtres de la veille.',
+    },
+    {
+      question: 'Les gestionnaires de sessions sont-ils privés ?',
+      answer:
+        'Tout dépend de l’endroit où ils gardent les données. Certains stockent tout sur votre appareil ; ceux qui synchronisent les envoient à un serveur, alors vérifiez qu’elles sont chiffrées de bout en bout.',
+    },
+  ],
+  images: [
+    { src: '/blog/browser-session-manager/tm-save-session-light.webp', alt: 'Fenêtre « Save Session » (Enregistrer la session) de TabMerger avec le nom « Friday wrap-up », thème clair' },
+    { src: '/blog/browser-session-manager/tm-save-session-dark.webp', alt: 'Fenêtre « Save Session » (Enregistrer la session) de TabMerger avec le nom « Friday wrap-up », thème sombre' },
+    { src: '/blog/browser-session-manager/tm-session-view-light.webp', alt: 'La session enregistrée « Friday wrap-up » avec ses groupes et un bouton « Restore session » (Restaurer la session), thème clair' },
+    { src: '/blog/browser-session-manager/tm-session-view-dark.webp', alt: 'La session enregistrée « Friday wrap-up » avec ses groupes et un bouton « Restore session » (Restaurer la session), thème sombre' },
+  ],
+  tags: ['session-management', 'tab-manager', 'save-tabs', 'comparison'],
+  sources: [
+    {
+      title: 'chrome.sessions API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'sessions (WebExtensions API)',
+      publisher: 'MDN Web Docs',
+      url: 'https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Session Buddy',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/session-buddy-tab-bookmar/edacconmaakjimmfgnblocblbcdcpbko',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tab Session Manager',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/tab-session-manager/iaiomicjabeggjcfkbimgmglanimpnae',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tabs Outliner',
+      publisher: 'tabsoutliner.com',
+      url: 'https://tabsoutliner.com/',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/browser-session-manager/tm-session-view-light.webp' },
+  ogImage: { src: '/blog/browser-session-manager/og.png', alt: 'Qu’est-ce qu’un gestionnaire de sessions pour navigateur, et en avez-vous besoin ? Un guide TabMerger, avec une session enregistrée et son bouton de restauration' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'session', label: 'Qu’est-ce qu’une session d’onglets ?' },
+    { id: 'vs', label: 'Sessions ou favoris' },
+    { id: 'need', label: 'En avez-vous besoin ?' },
+    { id: 'look-for', label: 'Les critères' },
+    { id: 'examples', label: 'Exemples' },
+    { id: 'tabmerger', label: 'Les sessions dans TabMerger' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Une **session** est l’ensemble des fenêtres et des onglets ouverts à un instant donné. Votre navigateur garde la session en cours pour pouvoir la rouvrir après un redémarrage. Un **gestionnaire de sessions** est une extension qui enregistre des sessions sous un nom, souvent automatiquement, et les rouvre plus tard sous forme de fenêtres. Les favoris enregistrent des pages ; un gestionnaire de sessions enregistre tout l’espace de travail. [TabMerger](/features) fait les deux : toutes les fenêtres ouvertes enregistrées dans des groupes nommés en un clic, des sessions nommées à restaurer d’un coup, un enregistrement automatique planifié et une synchronisation chiffrée de bout en bout avec Pro.
+
+</QuickAnswer>
+
+<InstallCta>Enregistrez chaque fenêtre dans un groupe nommé, et des sessions entières en un clic. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+<Section id="session" title="Qu’est-ce qu’une session d’onglets ?">
+
+Tout ce qui est ouvert en ce moment : chaque fenêtre, ses onglets dans l’ordre, et l’onglet actif. Les navigateurs le suivent en permanence, pour deux usages :
+
+- **La restauration au démarrage.** Si l’option de démarrage qui reprend la session précédente est activée, le navigateur rouvre la dernière session à son lancement. L’emplacement de cette option dans chaque navigateur est expliqué dans [comment restaurer ses onglets après un plantage](/blog/restore-tabs-after-crash#prevent).
+- **Les éléments récemment fermés.** <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> remonte un par un les onglets et les fenêtres que vous avez fermés.
+
+Les deux ne gardent que l’état le *plus récent*. Les fenêtres de mardi dernier ne sont pas une session que le navigateur peut vous rendre : ce ne sont plus que des lignes dans l’historique. C’est ce manque que comblent les gestionnaires de sessions. Si vous avez déjà perdu des onglets, commencez par [comment restaurer ses onglets après un plantage](/blog/restore-tabs-after-crash).
+
+</Section>
+
+<Section id="vs" title="Gestionnaire de sessions, favoris ou historique ?">
+
+<ComparisonTable
+  head={['', 'Favoris', 'Historique', 'Gestionnaire de sessions']}
+  rowHeaders
+  highlight={3}
+  minWidth="36rem"
+  rows={[
+    ['Enregistre', 'Les pages que vous choisissez', 'Chaque page visitée', 'Des fenêtres entières et leurs onglets'],
+    ['Sépare les fenêtres', 'Un dossier par enregistrement', 'Non', 'Oui'],
+    ['Enregistre automatiquement', 'Non', 'Oui, page par page', 'En général, à intervalles ou à la fermeture'],
+    ['Rouvre', 'Un dossier à la fois', 'Une page à la fois', 'Des fenêtres, en un clic'],
+    ['Intégré', 'Oui', 'Oui', 'Non, c’est une extension'],
+  ]}
+/>
+
+Les favoris l’emportent pour les pages que vous garderez des années. Un gestionnaire de sessions l’emporte pour le travail en cours : les douze onglets d’une tâche à moitié finie que vous voulez retrouver tels quels, dans une fenêtre, sans les classer un par un. Pour aller plus loin : [onglets ou favoris](/blog/tabs-vs-bookmarks).
+
+</Section>
+
+<Section id="need" title="En avez-vous besoin ?">
+
+Sans doute pas si vous travaillez dans une seule fenêtre, ne dépassez pas une vingtaine d’onglets et avez activé le réglage de démarrage. La [routine contre les onglets trop nombreux](/blog/manage-too-many-tabs) et un dossier de favoris de temps en temps suffisent.
+
+Sans doute oui si l’une de ces situations vous parle :
+
+- Vous passez d’un projet à l’autre et voulez retrouver intactes les fenêtres de chacun.
+- Un plantage, une mise à jour ou un redémarrage forcé vous a déjà fait perdre des onglets.
+- Vous voulez tout fermer en fin de journée sans rien perdre.
+- Vous avez besoin d’onglets d’il y a plusieurs jours, pas seulement de la dernière session.
+
+</Section>
+
+<Section id="look-for" title="Que doit faire un bon gestionnaire de sessions ?">
+
+- **Enregistrer automatiquement**, pas seulement quand vous y pensez : à intervalles réguliers, à la fermeture d’une fenêtre, ou les deux.
+- **Garder la structure** : les fenêtres, l’ordre des onglets et, idéalement, les groupes d’onglets.
+- **Restaurer avec souplesse** : la session entière, une fenêtre ou un seul onglet.
+- **Chercher** dans toutes les sessions enregistrées, pour retrouver un onglet de la semaine dernière.
+- **Exporter** dans un fichier lisible ailleurs, pour ne jamais être enfermé. (TabMerger exporte en JSON en un clic : [voici ce qu’il contient](/blog/export-open-tabs).)
+- **Dire clairement où sont les données.** En local uniquement, c’est privé mais ça disparaît avec le profil ; synchronisé, c’est plus sûr contre la perte de données, et ça devrait être chiffré de bout en bout.
+
+Une remarque technique : l’API que les navigateurs proposent aux extensions pour les onglets fermés est limitée. `chrome.sessions` renvoie au maximum 25 éléments récemment fermés (`MAX_SESSION_RESULTS`). Les gestionnaires de sessions qui vont plus loin tiennent leurs propres archives.
+
+</Section>
+
+<Section id="examples" title="Quels gestionnaires de sessions existe-t-il ?">
+
+Quelques outils bien établis, décrits d’après leurs propres fiches sur les stores et leurs sites (consultés le 20 nov. 2026) :
+
+- **Session Buddy** (Chrome) enregistre et restaure des sessions, et garde un historique des sessions passées pour récupérer après un plantage. Les données restent sur l’appareil ; sa fiche indique qu’il n’y a pas de synchronisation. Gratuit.
+- **Tab Session Manager** (Chrome, Firefox, Edge) enregistre des sessions avec des noms et des étiquettes, enregistre automatiquement à la fermeture d’une fenêtre et à intervalles réguliers, et propose une synchronisation dans le cloud. Gratuit.
+- **Tabs Outliner** (Chrome) réunit les fenêtres ouvertes et enregistrées dans une arborescence, avec des notes et la récupération après un plantage. Gratuit, avec une mise à niveau Pro payée une seule fois.
+
+Pour comparer côte à côte neuf outils sur le prix, la synchronisation et le chiffrement, consultez [les meilleures extensions de gestion d’onglets comparées](/blog/best-tab-manager-extensions) ou notre [page comparative](/compare).
+
+</Section>
+
+<Section id="tabmerger" title="Comment fonctionnent les sessions dans TabMerger">
+
+[TabMerger](/features), notre extension gratuite pour Chrome, Edge et Firefox, est un gestionnaire d’onglets avec des sessions intégrées. Vos onglets ouverts sont enregistrés dans des **groupes** nommés ; **Enregistrer la session actuelle** (Save current session) prend ensuite un instantané nommé de ces groupes enregistrés, que vous pourrez restaurer d’un coup plus tard. L’offre gratuite garde 3 sessions dans le navigateur ; Pro garde un nombre illimité de sessions et les synchronise entre vos appareils, chiffrées de bout en bout.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Enregistrer et restaurer une session" steps={[{ title: 'Enregistrer la session' }, { title: 'Vue de la session' }]}>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-save-session" alt="Fenêtre « Save Session » (Enregistrer la session) de TabMerger avec le nom « Friday wrap-up », thème clair" darkAlt="Fenêtre « Save Session » (Enregistrer la session) de TabMerger avec le nom « Friday wrap-up », thème sombre" boxes={[{ id: 'session-name', label: 'Nom de la session' }]} source="TabMerger 3.16.1">« Save current session » (Enregistrer la session actuelle) demande un nom.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-session-view" alt="La session enregistrée « Friday wrap-up » avec ses groupes et un bouton « Restore session » (Restaurer la session), thème clair" darkAlt="La session enregistrée « Friday wrap-up » avec ses groupes et un bouton « Restore session » (Restaurer la session), thème sombre" boxes={[{ id: 'restore-session', label: 'Restaurer la session' }]} source="TabMerger 3.16.1">La session enregistrée liste ses groupes ; « Restore session » (Restaurer la session) les rouvre tous.</ThemedScreenshot>
+</Carousel>
+
+Côté automatique, **Paramètres → Données → Enregistrer automatiquement les onglets ouverts** (Settings → Data → Auto-save open tabs) enregistre vos onglets ouverts dans un nouveau groupe selon un planning ou dès que vous dépassez un certain nombre d’onglets. Les exports sont du JSON tout simple. Pour faire d’une session votre rituel du matin, voyez [commencer sa journée avec des onglets enregistrés](/blog/start-your-workday-with-saved-tabs).
+
+<InstallCta>Gratuit pour Chrome, Edge et Firefox. Aucun compte nécessaire pour commencer.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

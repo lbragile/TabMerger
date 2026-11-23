@@ -1,0 +1,197 @@
+export const post = {
+  slug: 'browser-session-manager',
+  title: 'ブラウザのセッションマネージャーとは？ 本当に必要か',
+  navTitle: 'セッションマネージャーとは？',
+  seoTitle: 'セッションマネージャー拡張機能とは：セッション保存とブックマークの違い',
+  description:
+    'タブのセッションとは何か、ブラウザのセッションを保存する拡張機能にできてブックマークや履歴にできないこと、選ぶときのポイント、そしてブラウザだけで十分な場合を解説します。',
+  shareSummary: 'タブのセッション、セッションマネージャー、ブックマーク。それぞれ何を保存し、いつどれが必要かを解説。',
+  dek: 'ブラウザはすでにセッションを 1 つ覚えています。セッションマネージャーなら、好きなだけ名前付きで残せます。',
+  published: '2026-11-25',
+  updated: '2026-11-25',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: '拡張機能が一覧できる最近閉じたタブとウィンドウは最大 25 件です。',
+      source: 'chrome.sessions のドキュメント',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+    },
+    { text: 'Session Buddy はデータをデバイスに保存し、同期機能はありません。', source: 'Session Buddy のストア掲載ページ、2026年11月20日' },
+    { text: 'Tab Session Manager はウィンドウを閉じたときと一定間隔で自動保存します。', source: '同拡張機能のストア掲載ページ、2026年11月20日' },
+    { text: '起動時の復元で戻せるのは直前のセッションだけです。', source: 'Chrome、Edge、Firefox の設定' },
+  ],
+  faq: [
+    {
+      question: 'タブのセッションとは何ですか？',
+      answer:
+        'ある時点で開いているウィンドウとタブを、その並び順ごとまとめたものです。ブラウザは再起動後に開き直せるよう現在のセッションを覚えておき、セッションマネージャーはそれに名前を付けて保存します。',
+    },
+    {
+      question: 'セッションマネージャーとブックマークの違いは何ですか？',
+      answer:
+        'ブックマークは個々のページをフォルダに保存します。セッションマネージャーはウィンドウ単位で丸ごと保存し、その構成を保ち、自動で保存することもでき、あとでウィンドウとして開き直します。',
+    },
+    {
+      question: 'セッションマネージャーの拡張機能は必要ですか？',
+      answer:
+        '1 つのウィンドウで作業し、起動時の設定をオンにしているなら不要です。複数のプロジェクトを並行して進めている、クラッシュでタブを失うことがある、昨日のウィンドウを取り戻したい、という場合は必要です。',
+    },
+    {
+      question: 'セッションマネージャーのプライバシーは大丈夫ですか？',
+      answer:
+        'データの保存場所によります。すべてをデバイス内に保存するものもあれば、同期するものはサーバーにデータを送るので、エンドツーエンドで暗号化されているかを確認しましょう。',
+    },
+  ],
+  images: [
+    { src: '/blog/browser-session-manager/tm-save-session-light.webp', alt: 'TabMerger の「Save Session」（セッションを保存）ダイアログ。名前は「Friday wrap-up」。ライトテーマ' },
+    { src: '/blog/browser-session-manager/tm-save-session-dark.webp', alt: 'TabMerger の「Save Session」（セッションを保存）ダイアログ。名前は「Friday wrap-up」。ダークテーマ' },
+    { src: '/blog/browser-session-manager/tm-session-view-light.webp', alt: '保存したセッション「Friday wrap-up」。グループの一覧と「Restore session」（セッションを復元）ボタン。ライトテーマ' },
+    { src: '/blog/browser-session-manager/tm-session-view-dark.webp', alt: '保存したセッション「Friday wrap-up」。グループの一覧と「Restore session」（セッションを復元）ボタン。ダークテーマ' },
+  ],
+  tags: ['session-management', 'tab-manager', 'save-tabs', 'comparison'],
+  sources: [
+    {
+      title: 'chrome.sessions API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'sessions (WebExtensions API)',
+      publisher: 'MDN Web Docs',
+      url: 'https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Session Buddy',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/session-buddy-tab-bookmar/edacconmaakjimmfgnblocblbcdcpbko',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tab Session Manager',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/tab-session-manager/iaiomicjabeggjcfkbimgmglanimpnae',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tabs Outliner',
+      publisher: 'tabsoutliner.com',
+      url: 'https://tabsoutliner.com/',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/browser-session-manager/tm-session-view-light.webp' },
+  ogImage: { src: '/blog/browser-session-manager/og.png', alt: 'ブラウザのセッションマネージャーとは？ 本当に必要か。保存したセッションと復元ボタンを紹介する TabMerger のガイド' },
+  toc: [
+    { id: 'quick', label: '簡単な答え' },
+    { id: 'session', label: 'タブのセッションとは？' },
+    { id: 'vs', label: 'セッションとブックマーク' },
+    { id: 'need', label: '必要かどうか' },
+    { id: 'look-for', label: '選ぶときのポイント' },
+    { id: 'examples', label: '主なツール' },
+    { id: 'tabmerger', label: 'TabMerger のセッション' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+}
+
+<QuickAnswer>
+
+**セッション**とは、ある時点で開いているウィンドウとタブのまとまりです。ブラウザは再起動後に開き直せるよう、現在のセッションを覚えています。**セッションマネージャー**は、セッションに名前を付けて（多くは自動で）保存し、あとでウィンドウとして開き直せる拡張機能です。ブックマークが保存するのはページ、セッションマネージャーが保存するのは作業環境まるごとです。[TabMerger](/features) はその両方をこなします。開いているウィンドウをワンクリックで名前付きのグループに保存し、名前付きのセッションをまとめて復元でき、スケジュールで自動保存し、Pro ではエンドツーエンド暗号化で同期します。
+
+</QuickAnswer>
+
+<InstallCta>ウィンドウごとに名前付きのグループとして、セッションはまるごとワンクリックで保存。Chrome、Edge、Firefox に無料で追加できます。</InstallCta>
+
+<Section id="session" title="タブのセッションとは？">
+
+いま開いているものすべてです。各ウィンドウ、その中のタブの並び順、どのタブがアクティブか。ブラウザはこれを常に記録していて、用途は 2 つあります。
+
+- **起動時の復元**：前回のセッションを開く起動時のオプションをオンにしていると、ブラウザは起動時に直前のセッションを開き直します。このオプションが各ブラウザのどこにあるかは、[クラッシュ後にタブを復元する方法](/blog/restore-tabs-after-crash#prevent)で説明しています。
+- **最近閉じたタブ**：<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> を押すと、閉じたタブやウィンドウを新しい順にさかのぼって開き直せます。
+
+どちらも残るのは*最新の*状態だけです。先週火曜日のウィンドウは、ブラウザが返してくれるセッションではなく、履歴に並ぶ行にすぎません。この隙間を埋めるのがセッションマネージャーです。すでにタブを失ってしまった場合は、まず[クラッシュ後にタブを復元する方法](/blog/restore-tabs-after-crash)をご覧ください。
+
+</Section>
+
+<Section id="vs" title="セッションマネージャーとブックマーク、履歴の違い">
+
+<ComparisonTable
+  head={['', 'ブックマーク', '履歴', 'セッションマネージャー']}
+  rowHeaders
+  highlight={3}
+  minWidth="36rem"
+  rows={[
+    ['保存するもの', '自分で選んだページ', '訪れたすべてのページ', 'ウィンドウとそのタブを丸ごと'],
+    ['ウィンドウを分けて保存', '保存ごとにフォルダ 1 つ', 'いいえ', 'はい'],
+    ['自動保存', 'いいえ', 'はい、ページ単位で', 'たいていは一定間隔か閉じたときに'],
+    ['開き直し方', 'フォルダ 1 つずつ', 'ページ 1 つずつ', 'ウィンドウ単位でワンクリック'],
+    ['ブラウザに標準搭載', 'はい', 'はい', 'いいえ、拡張機能'],
+  ]}
+/>
+
+何年も残しておくページならブックマークが向いています。進行中の作業ならセッションマネージャーです。やりかけの作業で開いている 12 個のタブを、1 つずつ整理せずに、そのままウィンドウとして取り戻せます。詳しくは[タブとブックマークの使い分け](/blog/tabs-vs-bookmarks)をご覧ください。
+
+</Section>
+
+<Section id="need" title="必要かどうか">
+
+1 つのウィンドウで作業し、タブは 20 数個まで、起動時の設定もオンにしているなら、おそらく不要です。[タブが多すぎるときの整理術](/blog/manage-too-many-tabs)と、ときどきブックマークフォルダを作るくらいで十分です。
+
+次のどれかに心当たりがあるなら、おそらく必要です。
+
+- プロジェクトを切り替えるたびに、それぞれのウィンドウをそのまま取り戻したい。
+- クラッシュやアップデート、強制再起動でタブを失ったことがある。
+- 1 日の終わりに、何も失わずにすべてを閉じたい。
+- 直前のセッションだけでなく、数日前のタブも必要になる。
+
+</Section>
+
+<Section id="look-for" title="良いセッションマネージャーに必要なことは？">
+
+- **自動で保存する**こと。思い出したときだけでなく、一定間隔で、ウィンドウを閉じたときに、またはその両方で。
+- **構成を保つ**こと。ウィンドウ、タブの順序、できればタブグループも。
+- **柔軟に復元できる**こと。セッション全体、1 つのウィンドウ、1 つのタブのどれでも。
+- 保存したセッションを横断して**検索できる**こと。先週のタブも見つけられます。
+- ほかの場所でも読めるファイルに**エクスポートできる**こと。特定のツールに縛られません（TabMerger はワンクリックで JSON をエクスポートできます。[中身はこちら](/blog/export-open-tabs)）。
+- **データの保存場所が明確である**こと。ローカルのみならプライバシーは守られますが、プロファイルと一緒に消えます。同期すればデータ消失に強くなりますが、エンドツーエンド暗号化は必須です。
+
+技術的な補足：閉じたタブについてブラウザが拡張機能に提供している API はごく限られています。`chrome.sessions` が返すのは、最近閉じた項目のうち最大 25 件です（`MAX_SESSION_RESULTS`）。それより前までさかのぼれるセッションマネージャーは、独自に記録を残しています。
+
+</Section>
+
+<Section id="examples" title="どんなセッションマネージャーがある？">
+
+定番のものをいくつか、各ツールのストア掲載ページとサイトの記載に基づいて紹介します（2026年11月20日時点）。
+
+- **Session Buddy**（Chrome）：セッションを保存・復元し、クラッシュからの復旧用に過去のセッションの履歴も残します。データはデバイス内にとどまり、掲載ページによると同期機能はありません。無料。
+- **Tab Session Manager**（Chrome、Firefox、Edge）：セッションを名前とタグ付きで保存し、ウィンドウを閉じたときと一定間隔で自動保存し、クラウド同期にも対応しています。無料。
+- **Tabs Outliner**（Chrome）：開いているウィンドウと保存したウィンドウを 1 つのツリーにまとめ、メモやクラッシュからの復旧にも対応しています。無料で、買い切りの Pro アップグレードがあります。
+
+9 つのツールを価格、同期、暗号化で並べて比べるなら、[おすすめのタブ管理拡張機能の比較](/blog/best-tab-manager-extensions)または[比較ページ](/compare)をご覧ください。
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger のセッションの仕組み">
+
+[TabMerger](/features) は、Chrome、Edge、Firefox 向けの無料拡張機能で、セッション機能を内蔵したタブマネージャーです。開いているタブは名前付きの**グループ**に保存され、さらに**現在のセッションを保存**（Save current session）で、保存済みのグループに名前を付けてスナップショットとして残し、あとでまとめて復元できます。無料プランではブラウザに 3 つのセッションを保存でき、Pro ではセッション数が無制限になり、デバイス間でエンドツーエンド暗号化して同期します。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="セッションの保存と復元" steps={[{ title: 'セッションを保存' }, { title: 'セッションの表示' }]}>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-save-session" alt="TabMerger の「Save Session」（セッションを保存）ダイアログ。名前は「Friday wrap-up」。ライトテーマ" darkAlt="TabMerger の「Save Session」（セッションを保存）ダイアログ。名前は「Friday wrap-up」。ダークテーマ" boxes={[{ id: 'session-name', label: 'セッション名' }]} source="TabMerger 3.16.1">「Save current session」（現在のセッションを保存）では名前を入力します。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-session-view" alt="保存したセッション「Friday wrap-up」。グループの一覧と「Restore session」（セッションを復元）ボタン。ライトテーマ" darkAlt="保存したセッション「Friday wrap-up」。グループの一覧と「Restore session」（セッションを復元）ボタン。ダークテーマ" boxes={[{ id: 'restore-session', label: 'セッションを復元' }]} source="TabMerger 3.16.1">保存したセッションにはグループが一覧表示され、「Restore session」（セッションを復元）ですべてを元に戻せます。</ThemedScreenshot>
+</Carousel>
+
+自動保存は、**設定 → データ → 開いているタブを自動保存**（Settings → Data → Auto-save open tabs）で設定できます。スケジュールに沿って、またはタブ数が一定を超えたときに、開いているタブを新しいグループとして保存します。エクスポートはプレーンな JSON です。セッションを毎朝の習慣にするには、[保存したタブで 1 日の仕事を始める](/blog/start-your-workday-with-saved-tabs)をご覧ください。
+
+<InstallCta>Chrome、Edge、Firefox に無料で追加できます。使い始めるのにアカウントは不要です。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>
