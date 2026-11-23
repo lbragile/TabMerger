@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'move-tabs-between-computers',
+  title: 'Cómo pasar tus pestañas a otro ordenador',
+  navTitle: 'Pasar pestañas a otro ordenador',
+  seoTitle: 'Cómo transferir pestañas a otro ordenador (Chrome, Edge, Firefox)',
+  description:
+    'Pasa tus pestañas abiertas de un ordenador a otro: la sincronización del navegador y las pestañas de otros dispositivos, las funciones para enviar pestañas, un archivo que llevas contigo o la sincronización cifrada de extremo a extremo de TabMerger Pro en Chrome, Edge y Firefox.',
+  shareSummary: 'Tus pestañas de un ordenador a otro: sincronización, enviar pestaña, un archivo o sync cifrada.',
+  dek: 'Del portátil al sobremesa, del trabajo a casa, del PC viejo al nuevo: cuatro formas de llevarte tus pestañas.',
+  published: '2026-12-03',
+  updated: '2026-12-03',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger Pro sincroniza grupos y sesiones con cifrado de extremo a extremo entre Chrome, Edge y Firefox.', source: 'Precios y funciones de TabMerger', href: '/pricing' },
+    { text: '«Exportar JSON» e «Importar archivo» de TabMerger lo trasladan todo con el plan gratuito.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome muestra las pestañas de otros dispositivos solo con la sincronización de «Historial y pestañas» activada.',
+      source: 'Ayuda de Chrome',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'Firefox puede enviar una pestaña a otro dispositivo desde el menú de la pestaña.', source: 'Texto del menú de Firefox 159' },
+  ],
+  faq: [
+    {
+      question: '¿Cómo envío pestañas a mi móvil o a mi portátil?',
+      answer:
+        'Dentro de un mismo navegador, inicia sesión en los dos dispositivos y usa su sincronización: Chrome y Edge muestran las pestañas de otros dispositivos en el historial, y Firefox puede enviar una pestaña desde su menú contextual. Entre navegadores distintos, TabMerger Pro sincroniza tus grupos guardados.',
+    },
+    {
+      question: '¿Puedo pasar pestañas de Chrome a Firefox?',
+      answer:
+        'La sincronización del navegador no sale de ese navegador. TabMerger funciona en Chrome, Edge y Firefox: exporta un archivo JSON e impórtalo en el otro lado gratis, o deja que la sincronización de Pro los mantenga al día.',
+    },
+    {
+      question: '¿Necesito una cuenta?',
+      answer: 'Para un archivo, no: «Exportar JSON» e «Importar archivo» de TabMerger no necesitan cuenta. La sincronización del navegador y la de TabMerger Pro, sí.',
+    },
+    {
+      question: '¿Son privados los datos de las pestañas sincronizadas?',
+      answer:
+        'TabMerger Pro cifra los grupos y las sesiones en tu dispositivo antes de sincronizarlos, así que el servidor no puede leerlos. La privacidad de la sincronización del navegador depende de la configuración del propio navegador.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: 'Ajustes de TabMerger, «Data» (Datos), con los botones «Export JSON» (Exportar JSON) e «Import file» (Importar archivo) en «Import & export» (Importar y exportar), tema claro' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: 'Ajustes de TabMerger, «Data» (Datos), con los botones «Export JSON» (Exportar JSON) e «Import file» (Importar archivo) en «Import & export» (Importar y exportar), tema oscuro' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'session-management', 'cross-browser', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/move-tabs-between-computers/tm-merge-menu-light.webp' },
+  ogImage: { src: '/blog/move-tabs-between-computers/og.png', alt: 'Cómo pasar tus pestañas a otro ordenador: una guía de TabMerger, con los botones «Export JSON» e «Import file»' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'pick', label: 'Qué método usar' },
+    { id: 'tabmerger', label: 'Con TabMerger' },
+    { id: 'browser', label: 'Con la sincronización del navegador' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'Pestañas de otros dispositivos',
+    values: { chrome: 'Historial → Pestañas de otros dispositivos', edge: 'History → Tabs from other devices', firefox: 'Firefox View → Pestañas de otros dispositivos' },
+  },
+}
+
+<QuickAnswer>
+
+Para una mudanza puntual, usa en [TabMerger](/features) **Ajustes → Datos → Exportar JSON** (Settings → Data → Export JSON) en el ordenador viejo e **Importar archivo** (Import file) en el nuevo: se pasan todos los grupos guardados (antes guarda tus ventanas abiertas en un grupo), gratis, sin cuenta, en Chrome, Edge o Firefox. Para mantener dos ordenadores al día, **TabMerger Pro** sincroniza tus grupos y sesiones automáticamente, con cifrado de extremo a extremo. ¿Te quedas en un solo navegador? Inicia sesión en los dos y usa su sincronización.
+
+</QuickAnswer>
+
+<InstallCta>Lleva todas tus pestañas a tu ordenador nuevo en dos clics. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="pick" title="¿Qué método deberías usar?">
+
+<ComparisonTable
+  head={['Quieres…', 'Mejor opción']}
+  rowHeaders
+  minWidth="34rem"
+  rows={[
+    ['Pasarlo todo una vez a un ordenador nuevo', 'TabMerger: Exportar JSON → Importar archivo (gratis)'],
+    ['Mantener dos o más ordenadores al día', 'Sincronización de TabMerger Pro, cifrada de extremo a extremo'],
+    ['Pasar de un navegador a otro distinto', 'TabMerger (archivo gratis, sincronización con Pro)'],
+    ['Traer una pestaña de tu otro dispositivo, en el mismo navegador', 'Sincronización del navegador o enviar pestaña'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabmerger" title="¿Cómo paso pestañas con TabMerger?">
+
+**Una vez, con un archivo (gratis):**
+
+1. En el ordenador viejo, guarda en un grupo las ventanas abiertas que quieras llevarte: en el menú **⋯** de un grupo, elige **Combinar con lo actual** («Merge with current»). La importación añade grupos guardados; «Abiertas ahora» («Now Open») del archivo se queda fuera, porque eran las pestañas abiertas del navegador viejo.
+2. Abre TabMerger → **Ajustes → Datos** → **Exportar JSON**.
+3. Copia el archivo al ordenador nuevo (con una memoria USB, por correo a ti mismo o en una nube).
+4. En el ordenador nuevo, instala TabMerger y luego ve a **Ajustes → Datos** → **Importar archivo**. Tus grupos aparecen junto a los que ya tengas.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="Ajustes de TabMerger, «Data» (Datos), con los botones «Export JSON» (Exportar JSON) e «Import file» (Importar archivo) en «Import & export» (Importar y exportar), tema claro" darkAlt="Ajustes de TabMerger, «Data» (Datos), con los botones «Export JSON» (Exportar JSON) e «Import file» (Importar archivo) en «Import & export» (Importar y exportar), tema oscuro" boxes={[{ id: 'export-json', label: 'Exportar JSON' }, { id: 'import-file', label: 'Importar archivo' }]} source="TabMerger 3.16.1">Exporta en un ordenador e importa en el otro.</ThemedScreenshot>
+
+**Siempre, con sincronización ([Pro](/pricing)):** inicia sesión en TabMerger en cada ordenador y tus grupos y sesiones te siguen, en Chrome, Edge o Firefox. Todo se cifra en tu dispositivo antes de sincronizarse, así que el servidor no puede leer tus pestañas. Pro también muestra las pestañas abiertas en tus otros dispositivos y las restaura aquí, y guarda copias de seguridad automáticas. Cómo funciona, y qué puede ver nuestro servidor y qué no: [sincronizar pestañas entre dispositivos](/blog/sync-tabs-between-devices-with-tabmerger).
+
+Qué contiene el archivo, en [cómo exportar tus pestañas abiertas](/blog/export-open-tabs).
+
+</Section>
+
+<Section id="browser" title="¿Cómo paso pestañas con la sincronización del propio navegador?">
+
+Funciona cuando los dos ordenadores usan el mismo navegador y has iniciado sesión en él en ambos:
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+1. Inicia sesión en Chrome en los dos ordenadores.
+2. Activa **Historial y pestañas** («History and tabs»): **Configuración → Tú y Google** («Settings → You and Google»), selecciona el nombre de tu cuenta y actívalo.
+3. En el otro ordenador, abre el historial (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) y elige **Pestañas de otros dispositivos** («Tabs from other devices»).
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Inicia sesión en Edge en los dos ordenadores y activa la sincronización.
+2. En el otro ordenador, abre el historial (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) y elige **Tabs from other devices** (pestañas de otros dispositivos).
+3. Edge 158 también tiene **Send tab to your devices** (enviar pestaña a tus dispositivos) para una sola página.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Inicia sesión en Firefox en los dos ordenadores, con la sincronización de pestañas abiertas activada.
+2. Haz clic derecho en una pestaña y elige **Enviar a dispositivo** («Send to Device») para mandarla al otro ordenador.
+3. O abre allí **Firefox View** y mira en **Pestañas de otros dispositivos** («Tabs from other devices»).
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>la sincronización del navegador solo funciona dentro de un mismo navegador, solo muestra lo que está abierto ahora mismo en el otro dispositivo y no conserva las pestañas que has cerrado. Para todas tus pestañas, y entre navegadores distintos, usa TabMerger.</Catch>
+
+¿Perdiste pestañas por un fallo en el ordenador viejo? Empieza por [cómo restaurar pestañas tras un fallo](/blog/restore-tabs-after-crash). Para el panorama completo, mira [qué hace un gestor de sesiones](/blog/browser-session-manager).
+
+<InstallCta>Gratis para Chrome, Edge y Firefox. No necesitas cuenta para empezar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'move-tabs-between-computers',
+  title: 'Jak przenieść karty na inny komputer',
+  navTitle: 'Przenoszenie kart na inny komputer',
+  seoTitle: 'Jak przenieść karty na inny komputer (Chrome, Edge, Firefox)',
+  description:
+    'Przenieś otwarte karty z jednego komputera na drugi: synchronizacja przeglądarki i karty z innych urządzeń, wysyłanie kart, plik, który zabierasz ze sobą, albo szyfrowana end-to-end synchronizacja TabMerger Pro w Chrome, Edge i Firefoksie.',
+  shareSummary: 'Karty z jednego komputera na drugi: synchronizacja, wysłanie karty, plik lub szyfrowana sync.',
+  dek: 'Z laptopa na stacjonarny, z pracy do domu, ze starego peceta na nowy: cztery sposoby, by zabrać karty ze sobą.',
+  published: '2026-12-03',
+  updated: '2026-12-03',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger Pro synchronizuje grupy i sesje z szyfrowaniem end-to-end w Chrome, Edge i Firefoksie.', source: 'Cennik i funkcje TabMerger', href: '/pricing' },
+    { text: '„Eksportuj JSON” i „Importuj plik” w TabMerger przenoszą wszystko w planie darmowym.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome pokazuje karty z innych urządzeń tylko przy włączonej synchronizacji „Historia i karty”.',
+      source: 'Pomoc Chrome',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'Firefox może wysłać kartę na inne urządzenie z menu karty.', source: 'Tekst menu Firefoksa 159' },
+  ],
+  faq: [
+    {
+      question: 'Jak wysłać karty na telefon albo laptop?',
+      answer:
+        'W jednej przeglądarce zaloguj się na obu urządzeniach i użyj jej synchronizacji: Chrome i Edge pokazują karty z innych urządzeń w historii, a Firefox potrafi wysłać kartę z menu pod prawym przyciskiem myszy. Między różnymi przeglądarkami TabMerger Pro synchronizuje Twoje zapisane grupy.',
+    },
+    {
+      question: 'Czy mogę przenieść karty z Chrome do Firefoksa?',
+      answer:
+        'Synchronizacja przeglądarki nie wychodzi poza jedną przeglądarkę. TabMerger działa w Chrome, Edge i Firefoksie: wyeksportuj plik JSON i zaimportuj go po drugiej stronie za darmo albo pozwól, by synchronizacja Pro trzymała je w zgodzie.',
+    },
+    {
+      question: 'Czy potrzebuję konta?',
+      answer: 'Nie do pliku: „Eksportuj JSON” i „Importuj plik” w TabMerger nie wymagają konta. Synchronizacja przeglądarki i synchronizacja TabMerger Pro już tak.',
+    },
+    {
+      question: 'Czy dane synchronizowanych kart są prywatne?',
+      answer:
+        'TabMerger Pro szyfruje grupy i sesje na Twoim urządzeniu, zanim zostaną zsynchronizowane, więc serwer nie może ich odczytać. Prywatność synchronizacji przeglądarki zależy od ustawień samej przeglądarki.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: 'Ustawienia TabMerger, „Data” (Dane), z przyciskami „Export JSON” (Eksportuj JSON) i „Import file” (Importuj plik) w sekcji „Import & export” (Import i eksport), jasny motyw' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: 'Ustawienia TabMerger, „Data” (Dane), z przyciskami „Export JSON” (Eksportuj JSON) i „Import file” (Importuj plik) w sekcji „Import & export” (Import i eksport), ciemny motyw' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'session-management', 'cross-browser', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/move-tabs-between-computers/tm-merge-menu-light.webp' },
+  ogImage: { src: '/blog/move-tabs-between-computers/og.png', alt: 'Jak przenieść karty na inny komputer: poradnik TabMergera z przyciskami „Export JSON” i „Import file”' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'pick', label: 'Który sposób wybrać' },
+    { id: 'tabmerger', label: 'Z TabMergerem' },
+    { id: 'browser', label: 'Z synchronizacją przeglądarki' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'Karty z innych urządzeń',
+    values: { chrome: 'Historia → Karty z innych urządzeń', edge: 'History → Tabs from other devices', firefox: 'Firefox View → Karty z innych urządzeń' },
+  },
+}
+
+<QuickAnswer>
+
+Przy jednorazowej przeprowadzce użyj w [TabMerger](/features) opcji **Ustawienia → Dane → Eksportuj JSON** (Settings → Data → Export JSON) na starym komputerze i **Importuj plik** (Import file) na nowym: przechodzą wszystkie zapisane grupy (najpierw zapisz otwarte okna w grupie), za darmo, bez konta, w Chrome, Edge i Firefoksie. Żeby dwa komputery były zawsze zgodne, **TabMerger Pro** automatycznie synchronizuje Twoje grupy i sesje z szyfrowaniem end-to-end. Zostajesz przy jednej przeglądarce? Zaloguj się w niej na obu komputerach i użyj jej synchronizacji.
+
+</QuickAnswer>
+
+<InstallCta>Przenieś każdą kartę na nowy komputer w dwóch kliknięciach. Za darmo dla Chrome, Edge i Firefoksa.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="pick" title="Który sposób wybrać?">
+
+<ComparisonTable
+  head={['Chcesz…', 'Najlepszy sposób']}
+  rowHeaders
+  minWidth="34rem"
+  rows={[
+    ['Raz przenieść wszystko na nowy komputer', 'TabMerger: Eksportuj JSON → Importuj plik (za darmo)'],
+    ['Utrzymać zgodność dwóch lub więcej komputerów', 'Synchronizacja TabMerger Pro z szyfrowaniem end-to-end'],
+    ['Przenosić karty między różnymi przeglądarkami', 'TabMerger (plik za darmo, synchronizacja w Pro)'],
+    ['Wziąć jedną kartę z drugiego urządzenia, w tej samej przeglądarce', 'Synchronizacja przeglądarki lub wysłanie karty'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabmerger" title="Jak przenieść karty za pomocą TabMergera?">
+
+**Raz, za pomocą pliku (za darmo):**
+
+1. Na starym komputerze zapisz w grupie otwarte okna, które chcesz przenieść: w menu **⋯** grupy wybierz **Scal z bieżącą sesją** („Merge with current”). Import dodaje zapisane grupy; „Teraz Otwarte” („Now Open”) z pliku jest pomijane, bo to były otwarte karty starej przeglądarki.
+2. Otwórz TabMerger → **Ustawienia → Dane** → **Eksportuj JSON**.
+3. Skopiuj plik na nowy komputer (pendrive USB, e-mail do siebie, dysk w chmurze).
+4. Na nowym komputerze zainstaluj TabMerger, a potem **Ustawienia → Dane** → **Importuj plik**. Twoje grupy pojawią się obok tych, które już masz.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="Ustawienia TabMerger, „Data” (Dane), z przyciskami „Export JSON” (Eksportuj JSON) i „Import file” (Importuj plik) w sekcji „Import & export” (Import i eksport), jasny motyw" darkAlt="Ustawienia TabMerger, „Data” (Dane), z przyciskami „Export JSON” (Eksportuj JSON) i „Import file” (Importuj plik) w sekcji „Import & export” (Import i eksport), ciemny motyw" boxes={[{ id: 'export-json', label: 'Eksportuj JSON' }, { id: 'import-file', label: 'Importuj plik' }]} source="TabMerger 3.16.1">Eksport na jednym komputerze, import na drugim.</ThemedScreenshot>
+
+**Zawsze, z synchronizacją ([Pro](/pricing)):** zaloguj się do TabMergera na każdym komputerze, a Twoje grupy i sesje pójdą za Tobą, w Chrome, Edge lub Firefoksie. Wszystko jest szyfrowane na Twoim urządzeniu przed synchronizacją, więc serwer nie może odczytać Twoich kart. Pro pokazuje też karty otwarte na innych Twoich urządzeniach i przywraca je tutaj, a do tego tworzy automatyczne kopie zapasowe. Jak to działa i co nasz serwer widzi, a czego nie: [synchronizacja kart między urządzeniami](/blog/sync-tabs-between-devices-with-tabmerger).
+
+Co zawiera plik, opisuje [jak wyeksportować otwarte karty](/blog/export-open-tabs).
+
+</Section>
+
+<Section id="browser" title="Jak przenieść karty za pomocą synchronizacji przeglądarki?">
+
+To działa, gdy oba komputery używają tej samej przeglądarki i jesteś w niej zalogowany na obu:
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+1. Zaloguj się do Chrome na obu komputerach.
+2. Włącz **Historia i karty** („History and tabs”): **Ustawienia → Ty i Google** („Settings → You and Google”), wybierz nazwę swojego konta, a potem włącz tę opcję.
+3. Na drugim komputerze otwórz historię (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) i wybierz **Karty z innych urządzeń** („Tabs from other devices”).
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Zaloguj się do Edge na obu komputerach i włącz synchronizację.
+2. Na drugim komputerze otwórz historię (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) i wybierz **Tabs from other devices** (karty z innych urządzeń).
+3. Edge 158 ma też **Send tab to your devices** (wyślij kartę na swoje urządzenia) dla pojedynczej strony.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Zaloguj się do Firefoksa na obu komputerach i włącz synchronizację otwartych kart.
+2. Kliknij kartę prawym przyciskiem myszy i wybierz **Wyślij na urządzenie** („Send to Device”), żeby wysłać ją na drugi komputer.
+3. Albo otwórz tam **Firefox View** i zajrzyj do sekcji **Karty z innych urządzeń** („Tabs from other devices”).
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>synchronizacja przeglądarki działa tylko w obrębie jednej przeglądarki, pokazuje tylko to, co jest teraz otwarte na drugim urządzeniu, i nie zachowuje zamkniętych kart. Do wszystkich kart, także między przeglądarkami, użyj TabMergera.</Catch>
+
+Straciłeś karty po awarii na starym komputerze? Zacznij od [jak przywrócić karty po awarii](/blog/restore-tabs-after-crash). Szerszy obraz daje [co robi menedżer sesji](/blog/browser-session-manager).
+
+<InstallCta>Za darmo dla Chrome, Edge i Firefoksa. Na start nie potrzebujesz konta.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

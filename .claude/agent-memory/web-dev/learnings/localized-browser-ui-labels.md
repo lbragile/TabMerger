@@ -97,3 +97,11 @@ A 15 KB MDX body in a Bash heredoc failed ("unexpected EOF while looking for mat
 **Moving tabs between windows.** Chrome Help 2391819: the five `<strong>` items after the Shift/F6 multi-select step are the right-click actions, and the second is "Move tabs to another window" (ru puts a full stop inside the label; drop it). Firefox `tabContextMenu.ftl`: `tab-context-move-tabs` is a plural choice, so take the `[1]` form (ja has only one label); hi-IN lacks it but has `move-to-start`, `move-to-end` and `move-to-new-window`.
 
 **TabMerger window labels** live in `groupMenu.json` (`mergeWithCurrent`, `openAll`, `uniteWindows`, `splitWindows`), `sidePanel.json` (`addGroup`) and `common.json` (`nowOpen`). Copy apostrophes exactly: it uses a straight `'` ("Unisci con l'attuale").
+
+**Firefox labels that only exist with a count** (`tab-group-editor-action-copy-links`, "Copy { $linkCount } links in group"): when English drops the count, take the plural variant minus the count and verify it against the ftl variants by script; pl and ru need the few-form (the many-form is ungrammatical without a number). hi-IN and id lack this key.
+
+**Chrome Help "More" is not bold text:** it is the alt of the ⋮ icon image right before the last bold label. ja's alt (もっと見る) differs from its step text (その他アイコン); use the step text.
+
+**Chrome Help 165139 (other devices):** with scripts and styles removed, bold runs 24 and 28 are "History" and "Tabs from other devices" in every language. Firefox "Send to Device" is `tab-context-send-to-device` `[1]` (pl only `[one]`; Firefox 159 doesn't use `…device2`), missing in ar, hi-IN and id. Firefox View's "Tabs from other devices" is `firefoxview-synced-tabs-nav`; the pl string contains a no-break space, so normalize spaces in byte-exact label checks.
+
+**More CJK bold placement:** put brackets and colons outside the bold: `「**…**」`, and `**…（[Pro](/pricing)）**：`.

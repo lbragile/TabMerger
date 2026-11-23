@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'move-tabs-between-computers',
+  title: 'Cara memindahkan tab ke komputer lain',
+  navTitle: 'Memindahkan tab ke komputer lain',
+  seoTitle: 'Cara Memindahkan Tab ke Komputer Lain (Chrome, Edge, Firefox)',
+  description:
+    'Pindahkan tab yang terbuka dari satu komputer ke komputer lain: sinkronisasi browser dan tab dari perangkat lain, fitur kirim tab, file yang Anda bawa, atau sinkronisasi terenkripsi end-to-end TabMerger Pro di Chrome, Edge, dan Firefox.',
+  shareSummary: 'Pindahkan tab antarkomputer: sinkronisasi, kirim tab, sebuah file, atau sinkronisasi terenkripsi.',
+  dek: 'Dari laptop ke desktop, dari kantor ke rumah, dari PC lama ke yang baru: empat cara membawa tab Anda.',
+  published: '2026-12-03',
+  updated: '2026-12-03',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger Pro menyinkronkan grup dan sesi dengan enkripsi end-to-end di Chrome, Edge, dan Firefox.', source: 'Harga dan fitur TabMerger', href: '/pricing' },
+    { text: 'Ekspor JSON dan Impor file di TabMerger memindahkan semuanya di paket gratis.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome hanya menampilkan tab dari perangkat lain jika sinkronisasi Histori dan tab aktif.',
+      source: 'Bantuan Chrome',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'Firefox bisa mengirim tab ke perangkat lain dari menu tab tersebut.', source: 'Teks menu Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Bagaimana cara mengirim tab ke ponsel atau laptop saya?',
+      answer:
+        'Dalam satu browser, login di kedua perangkat dan gunakan sinkronisasinya: Chrome dan Edge menampilkan tab dari perangkat lain di histori, dan Firefox bisa mengirim tab dari menu klik kanannya. Antarbrowser, TabMerger Pro menyinkronkan grup tersimpan Anda.',
+    },
+    {
+      question: 'Bisakah saya memindahkan tab dari Chrome ke Firefox?',
+      answer:
+        'Sinkronisasi browser hanya berlaku di dalam satu browser. TabMerger berjalan di Chrome, Edge, dan Firefox: ekspor file JSON lalu impor di sisi lain secara gratis, atau biarkan sinkronisasi Pro menjaga keduanya tetap sama.',
+    },
+    {
+      question: 'Apakah saya perlu akun?',
+      answer: 'Tidak untuk file: Ekspor JSON dan Impor file di TabMerger tidak perlu akun. Sinkronisasi browser dan sinkronisasi TabMerger Pro memerlukannya.',
+    },
+    {
+      question: 'Apakah data tab yang disinkronkan bersifat pribadi?',
+      answer:
+        'TabMerger Pro mengenkripsi grup dan sesi di perangkat Anda sebelum disinkronkan, sehingga server tidak bisa membacanya. Privasi sinkronisasi browser bergantung pada pengaturan browser itu sendiri.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: 'Pengaturan TabMerger, Data, dengan tombol Export JSON (Ekspor JSON) dan Import file (Impor file) di bawah Import & export (Impor & ekspor), tema terang' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: 'Pengaturan TabMerger, Data, dengan tombol Export JSON (Ekspor JSON) dan Import file (Impor file) di bawah Import & export (Impor & ekspor), tema gelap' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'session-management', 'cross-browser', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/move-tabs-between-computers/tm-merge-menu-light.webp' },
+  ogImage: { src: '/blog/move-tabs-between-computers/og.png', alt: 'Cara memindahkan tab ke komputer lain: panduan TabMerger, dengan tombol Export JSON dan Import file' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'pick', label: 'Cara mana yang dipakai' },
+    { id: 'tabmerger', label: 'Dengan TabMerger' },
+    { id: 'browser', label: 'Dengan sinkronisasi browser' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'Tab dari perangkat lain',
+    values: { chrome: 'Histori → Tab dari perangkat lain', edge: 'History → Tabs from other devices', firefox: 'Firefox View → Tab dari perangkat lain' },
+  },
+}
+
+<QuickAnswer>
+
+Untuk pindah sekali saja, gunakan **Pengaturan → Data → Ekspor JSON** (Settings → Data → Export JSON) di [TabMerger](/features) pada komputer lama dan **Impor file** (Import file) pada komputer baru: setiap grup tersimpan ikut pindah (simpan dulu jendela yang terbuka ke dalam grup), gratis, tanpa akun, di Chrome, Edge, maupun Firefox. Agar dua komputer tetap sama, **TabMerger Pro** menyinkronkan grup dan sesi Anda secara otomatis, dengan enkripsi end-to-end. Tetap di satu browser? Login di keduanya dan gunakan sinkronisasinya.
+
+</QuickAnswer>
+
+<InstallCta>Bawa semua tab ke komputer baru Anda dengan dua klik. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="pick" title="Cara mana yang sebaiknya Anda pakai?">
+
+<ComparisonTable
+  head={['Anda ingin…', 'Cara terbaik']}
+  rowHeaders
+  minWidth="34rem"
+  rows={[
+    ['Memindahkan semuanya sekali, ke komputer baru', 'TabMerger Ekspor JSON → Impor file (gratis)'],
+    ['Menjaga dua komputer atau lebih tetap sama', 'Sinkronisasi TabMerger Pro, terenkripsi end-to-end'],
+    ['Berpindah antara browser yang berbeda', 'TabMerger (file di paket gratis, sinkronisasi di Pro)'],
+    ['Mengambil satu tab dari perangkat lain Anda, di browser yang sama', 'Sinkronisasi browser atau kirim tab'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabmerger" title="Bagaimana cara memindahkan tab dengan TabMerger?">
+
+**Sekali, dengan file (gratis):**
+
+1. Di komputer lama, simpan jendela terbuka yang ingin Anda pindahkan ke dalam sebuah grup: di menu **⋯** sebuah grup, pilih **Gabungkan dengan sesi saat ini** (Merge with current). Impor menambahkan grup tersimpan; bagian Sedang Terbuka (Now Open) dari file tidak ikut, karena itu adalah tab yang terbuka di browser lama.
+2. Buka TabMerger → **Pengaturan → Data** → **Ekspor JSON**.
+3. Salin file ke komputer baru (lewat flashdisk USB, email ke diri sendiri, atau penyimpanan cloud).
+4. Di komputer baru, instal TabMerger, lalu **Pengaturan → Data** → **Impor file**. Grup Anda muncul di samping grup yang sudah ada.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="Pengaturan TabMerger, Data, dengan tombol Export JSON (Ekspor JSON) dan Import file (Impor file) di bawah Import & export (Impor & ekspor), tema terang" darkAlt="Pengaturan TabMerger, Data, dengan tombol Export JSON (Ekspor JSON) dan Import file (Impor file) di bawah Import & export (Impor & ekspor), tema gelap" boxes={[{ id: 'export-json', label: 'Ekspor JSON' }, { id: 'import-file', label: 'Impor file' }]} source="TabMerger 3.16.1">Ekspor di satu komputer, impor di komputer lainnya.</ThemedScreenshot>
+
+**Selalu, dengan sinkronisasi ([Pro](/pricing)):** login ke TabMerger di setiap komputer, dan grup serta sesi Anda ikut ke mana pun, di Chrome, Edge, atau Firefox. Semuanya dienkripsi di perangkat Anda sebelum disinkronkan, sehingga server tidak bisa membaca tab Anda. Pro juga menampilkan tab yang terbuka di perangkat Anda yang lain dan memulihkannya di sini, serta menyimpan cadangan otomatis. Cara kerjanya, dan apa yang bisa dan tidak bisa dilihat server kami: [sinkronkan tab antarperangkat](/blog/sync-tabs-between-devices-with-tabmerger).
+
+Isi file tersebut dijelaskan di [cara mengekspor tab yang terbuka](/blog/export-open-tabs).
+
+</Section>
+
+<Section id="browser" title="Bagaimana cara memindahkan tab dengan sinkronisasi bawaan browser?">
+
+Cara ini berhasil jika kedua komputer memakai browser yang sama dan Anda login ke browser itu di keduanya:
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+1. Login ke Chrome di kedua komputer.
+2. Aktifkan **Histori dan tab** (History and tabs): **Setelan → Anda dan Google** (Settings → You and Google), pilih nama akun Anda, lalu aktifkan opsinya.
+3. Di komputer lain, buka histori (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) dan pilih **Tab dari perangkat lain** (Tabs from other devices).
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Login ke Edge di kedua komputer dan aktifkan sinkronisasi.
+2. Di komputer lain, buka histori (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) dan pilih **Tabs from other devices** (tab dari perangkat lain).
+3. Edge 158 juga punya **Send tab to your devices** (kirim tab ke perangkat Anda) untuk satu halaman.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Login ke Firefox di kedua komputer, dengan sinkronisasi tab terbuka aktif.
+2. Klik kanan sebuah tab dan pilih **Send to Device** (kirim ke perangkat) untuk mengirimnya ke komputer lain.
+3. Atau buka **Firefox View** di sana dan lihat di bagian **Tab dari perangkat lain** (Tabs from other devices).
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>sinkronisasi browser hanya bekerja di dalam satu browser, hanya menampilkan apa yang sedang terbuka di perangkat lain saat ini, dan tidak menyimpan tab yang sudah Anda tutup. Untuk seluruh tab Anda, lintas browser, gunakan TabMerger.</Catch>
+
+Kehilangan tab setelah browser mogok di mesin lama? Mulailah dengan [cara memulihkan tab setelah browser mogok](/blog/restore-tabs-after-crash). Untuk gambaran yang lebih besar, lihat [apa yang dilakukan pengelola sesi](/blog/browser-session-manager).
+
+<InstallCta>Gratis untuk Chrome, Edge, dan Firefox. Tidak perlu akun untuk mulai.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

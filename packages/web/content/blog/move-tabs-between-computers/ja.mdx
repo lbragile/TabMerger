@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'move-tabs-between-computers',
+  title: 'タブを別のパソコンに移す方法',
+  navTitle: 'タブを別のパソコンに移す',
+  seoTitle: 'タブを別のパソコンに移行する方法（Chrome、Edge、Firefox）',
+  description:
+    '開いているタブを別のパソコンに移す方法：ブラウザの同期とほかのデバイスのタブ、タブの送信機能、持ち運べるファイル、そして Chrome、Edge、Firefox で使える TabMerger Pro のエンドツーエンド暗号化同期。',
+  shareSummary: 'パソコンからパソコンへタブを移す：同期、タブの送信、ファイル、暗号化同期。',
+  dek: 'ノートパソコンからデスクトップへ、職場から自宅へ、古い PC から新しい PC へ。タブを持っていく 4 つの方法。',
+  published: '2026-12-03',
+  updated: '2026-12-03',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger Pro はグループとセッションをエンドツーエンド暗号化して、Chrome、Edge、Firefox の間で同期します。', source: 'TabMerger の料金と機能', href: '/pricing' },
+    { text: 'TabMerger の「JSON をエクスポート」と「ファイルをインポート」なら、無料プランですべてを移せます。', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome がほかのデバイスのタブを表示するのは、「履歴とタブ」の同期がオンの場合だけです。',
+      source: 'Chrome ヘルプ',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'Firefox はタブのメニューから、そのタブを別の端末に送信できます。', source: 'Firefox 159 のメニュー表記' },
+  ],
+  faq: [
+    {
+      question: 'タブをスマートフォンやノートパソコンに送るには？',
+      answer:
+        '同じブラウザなら、両方のデバイスでログインしてそのブラウザの同期を使います。Chrome と Edge は履歴にほかのデバイスのタブを表示し、Firefox は右クリックメニューからタブを送信できます。異なるブラウザの間では、TabMerger Pro が保存したグループを同期します。',
+    },
+    {
+      question: 'Chrome から Firefox にタブを移せますか？',
+      answer:
+        'ブラウザの同期は同じブラウザの中でしか働きません。TabMerger は Chrome、Edge、Firefox で動くので、JSON ファイルをエクスポートして移行先で無料でインポートするか、Pro の同期で両方を同じ状態に保てます。',
+    },
+    {
+      question: 'アカウントは必要ですか？',
+      answer: 'ファイルなら不要です。TabMerger の「JSON をエクスポート」と「ファイルをインポート」にアカウントはいりません。ブラウザの同期と TabMerger Pro の同期には必要です。',
+    },
+    {
+      question: '同期したタブのデータはプライベートですか？',
+      answer:
+        'TabMerger Pro はグループとセッションを同期する前にデバイス上で暗号化するので、サーバーはその内容を読めません。ブラウザの同期のプライバシーは、ブラウザ自体の設定によって決まります。',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: 'TabMerger の設定の「Data」（データ）。「Import & export」（インポートとエクスポート）の下に「Export JSON」（JSON をエクスポート）と「Import file」（ファイルをインポート）のボタンがある。ライトテーマ' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: 'TabMerger の設定の「Data」（データ）。「Import & export」（インポートとエクスポート）の下に「Export JSON」（JSON をエクスポート）と「Import file」（ファイルをインポート）のボタンがある。ダークテーマ' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'session-management', 'cross-browser', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/move-tabs-between-computers/tm-merge-menu-light.webp' },
+  ogImage: { src: '/blog/move-tabs-between-computers/og.png', alt: 'タブを別のパソコンに移す方法：「Export JSON」と「Import file」のボタンを紹介する TabMerger のガイド' },
+  toc: [
+    { id: 'quick', label: '簡単な答え' },
+    { id: 'pick', label: 'どの方法を使うか' },
+    { id: 'tabmerger', label: 'TabMerger で移す' },
+    { id: 'browser', label: 'ブラウザの同期で移す' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'ほかのデバイスのタブ',
+    values: { chrome: '履歴 → 他のデバイスからのタブ', edge: 'History → Tabs from other devices', firefox: 'Firefox View → 他の端末のタブ' },
+  },
+}
+
+<QuickAnswer>
+
+一度だけ移すなら、[TabMerger](/features) の **設定 → データ → JSON をエクスポート**（Settings → Data → Export JSON）を古いパソコンで、**ファイルをインポート**（Import file）を新しいパソコンで使います。保存したグループがすべて移ります（先に開いているウィンドウをグループに保存しておきます）。無料で、アカウントも不要で、Chrome、Edge、Firefox のどれでも使えます。2 台のパソコンを常に同じ状態にしたいなら、**TabMerger Pro** がグループとセッションをエンドツーエンド暗号化して自動で同期します。同じブラウザしか使わないなら、両方でログインしてそのブラウザの同期を使いましょう。
+
+</QuickAnswer>
+
+<InstallCta>新しいパソコンへ、すべてのタブを 2 クリックで。Chrome、Edge、Firefox で無料。</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="pick" title="どの方法を使えばいい？">
+
+<ComparisonTable
+  head={['したいこと', 'おすすめの方法']}
+  rowHeaders
+  minWidth="34rem"
+  rows={[
+    ['新しいパソコンへ一度にすべて移す', 'TabMerger の JSON をエクスポート → ファイルをインポート（無料）'],
+    ['2 台以上のパソコンを常に同じ状態に保つ', 'TabMerger Pro の同期（エンドツーエンド暗号化）'],
+    ['異なるブラウザの間で移す', 'TabMerger（無料ならファイル、Pro なら同期）'],
+    ['同じブラウザで、もう一方のデバイスのタブを 1 つ取ってくる', 'ブラウザの同期またはタブの送信'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger でタブを移すには？">
+
+**一度だけ、ファイルで（無料）：**
+
+1. 古いパソコンで、移したい開いているウィンドウをグループに保存します（グループの **⋯** メニューで **現在の内容と統合**（Merge with current）を選びます）。インポートで追加されるのは保存済みのグループで、ファイル内の「現在開いているタブ」（Now Open）は含まれません。それは古いブラウザで開いていたタブだからです。
+2. TabMerger を開き → **設定 → データ** → **JSON をエクスポート** を選びます。
+3. ファイルを新しいパソコンにコピーします（USB メモリ、自分宛てのメール、クラウドドライブなど）。
+4. 新しいパソコンに TabMerger をインストールし、**設定 → データ** → **ファイルをインポート** を選びます。グループは、すでにあるグループの横に追加されます。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="TabMerger の設定の「Data」（データ）。「Import & export」（インポートとエクスポート）の下に「Export JSON」（JSON をエクスポート）と「Import file」（ファイルをインポート）のボタンがある。ライトテーマ" darkAlt="TabMerger の設定の「Data」（データ）。「Import & export」（インポートとエクスポート）の下に「Export JSON」（JSON をエクスポート）と「Import file」（ファイルをインポート）のボタンがある。ダークテーマ" boxes={[{ id: 'export-json', label: 'JSON をエクスポート' }, { id: 'import-file', label: 'ファイルをインポート' }]} source="TabMerger 3.16.1">一方のパソコンでエクスポートし、もう一方でインポートします。</ThemedScreenshot>
+
+**いつでも、同期で（[Pro](/pricing)）**：各パソコンで TabMerger にログインすれば、Chrome、Edge、Firefox のどれでもグループとセッションがついてきます。すべてはデバイス上で暗号化されてから同期されるので、サーバーはあなたのタブを読めません。Pro ではほかのデバイスで開いているタブを表示してこのパソコンで復元でき、自動バックアップも残ります。仕組みと、当社のサーバーに見えるもの・見えないものは [デバイス間でタブを同期する](/blog/sync-tabs-between-devices-with-tabmerger) で説明しています。
+
+ファイルの中身については [開いているタブをエクスポートする方法](/blog/export-open-tabs) をご覧ください。
+
+</Section>
+
+<Section id="browser" title="ブラウザ自体の同期でタブを移すには？">
+
+両方のパソコンで同じブラウザを使い、どちらでもそのブラウザにログインしている場合に使える方法です。
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+1. 両方のパソコンで Chrome にログインします。
+2. **履歴とタブ**（History and tabs）をオンにします。**設定 → Google の設定**（Settings → You and Google）でアカウント名を選び、オンにします。
+3. もう一方のパソコンで履歴（<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>）を開き、**他のデバイスからのタブ**（Tabs from other devices）を選びます。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. 両方のパソコンで Edge にログインし、同期をオンにします。
+2. もう一方のパソコンで履歴（<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>）を開き、**Tabs from other devices**（ほかのデバイスのタブ）を選びます。
+3. Edge 158 には、1 ページだけを送る **Send tab to your devices**（タブをデバイスに送信）もあります。
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. 両方のパソコンで Firefox にログインし、開いているタブの同期をオンにしておきます。
+2. タブを右クリックして **端末へ送信**（Send to Device）を選ぶと、もう一方のパソコンに送れます。
+3. または、そちらで **Firefox View** を開き、**他の端末のタブ**（Tabs from other devices）を確認します。
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>ブラウザの同期は同じブラウザの中でしか使えず、もう一方のデバイスで今開いているものしか表示されず、閉じたタブは残りません。すべてのタブを、ブラウザをまたいで移すなら TabMerger を使いましょう。</Catch>
+
+古いパソコンのクラッシュでタブを失った場合は、まず [クラッシュ後にタブを復元する方法](/blog/restore-tabs-after-crash) をご覧ください。全体像は [セッションマネージャーでできること](/blog/browser-session-manager) で紹介しています。
+
+<InstallCta>Chrome、Edge、Firefox に無料で追加できます。使い始めるのにアカウントは不要です。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>
