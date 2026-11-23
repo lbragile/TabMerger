@@ -1,0 +1,173 @@
+export const post = {
+  slug: 'onetab-alternatives',
+  title: 'Các lựa chọn thay thế OneTab, và cách chuyển danh sách mà không mất tab nào',
+  navTitle: 'Thay thế OneTab và cách chuyển đổi',
+  seoTitle: 'Thay thế OneTab (có đồng bộ) và cách xuất danh sách của bạn',
+  description:
+    'Đang tìm ứng dụng thay thế OneTab? OneTab hiện làm được gì (giờ đã có đồng bộ), công cụ nào làm được những việc nó không làm, và cách xuất danh sách để nhập vào nơi khác.',
+  shareSummary: 'Các lựa chọn thay thế OneTab, tính năng đồng bộ mới của OneTab và cách chuyển danh sách an toàn.',
+  dek: 'Hãy xuất trước khi gỡ bất cứ thứ gì: gỡ OneTab sẽ xóa danh sách của nó.',
+  published: '2026-11-27',
+  updated: '2026-11-27',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'OneTab có Backup & Sync trả phí, mã hóa đầu cuối.',
+      source: 'one-tab.com/sync',
+      href: 'https://www.one-tab.com/sync',
+    },
+    {
+      text: 'Gỡ cài đặt OneTab sẽ xóa các tab bạn đã lưu.',
+      source: 'one-tab.com',
+      href: 'https://www.one-tab.com/',
+    },
+    { text: 'Một giấy phép OneTab đồng bộ tối đa 100 trình duyệt hoặc hồ sơ.', source: 'one-tab.com/sync' },
+    { text: 'TabMerger biến mỗi danh sách OneTab thành một nhóm riêng.', source: 'Đã kiểm tra trên TabMerger 3.16.1, ngày 20/11/2026' },
+  ],
+  faq: [
+    {
+      question: 'Có lựa chọn thay thế OneTab nào có đồng bộ không?',
+      answer:
+        'Có. TabMerger Pro đồng bộ các nhóm và phiên của bạn với mã hóa đầu cuối, trên Chrome, Edge và Firefox. Toby, Workona và Tab Session Manager cũng có đồng bộ, và OneTab giờ cũng có Backup & Sync trả phí.',
+    },
+    {
+      question: 'Làm cách nào để xuất từ OneTab?',
+      answer:
+        'Mở OneTab, chọn “Nhập & Xuất” rồi sao chép văn bản. Mỗi dòng gồm một địa chỉ và một tiêu đề; một dòng trống ngăn cách các danh sách. Lưu thành tệp .txt.',
+    },
+    {
+      question: 'Gỡ OneTab thì tôi có mất tab không?',
+      answer: 'Có. Chính trang web của OneTab cảnh báo rằng gỡ cài đặt sẽ xóa các tab đã lưu. Hãy xuất trước và giữ lại tệp.',
+    },
+    {
+      question: 'Tôi có thể nhập OneTab vào TabMerger không?',
+      answer: 'Có. Cài đặt → Dữ liệu → Nhập tệp, chọn tệp .txt đã xuất rồi xác nhận. Mỗi danh sách OneTab trở thành một nhóm TabMerger, giữ nguyên tiêu đề.',
+    },
+  ],
+  images: [
+    { src: '/blog/onetab-alternatives/tm-settings-import-light.webp', alt: 'Cài đặt TabMerger, Data (Dữ liệu), với nút Import file (Nhập tệp) trong mục Import & export (Nhập và xuất), giao diện sáng' },
+    { src: '/blog/onetab-alternatives/tm-settings-import-dark.webp', alt: 'Cài đặt TabMerger, Data (Dữ liệu), với nút Import file (Nhập tệp) trong mục Import & export (Nhập và xuất), giao diện tối' },
+    { src: '/blog/onetab-alternatives/tm-import-confirm-light.webp', alt: 'Hộp thoại TabMerger hỏi Import 2 groups? (Nhập 2 nhóm?) cho tệp onetab.txt, giao diện sáng' },
+    { src: '/blog/onetab-alternatives/tm-import-confirm-dark.webp', alt: 'Hộp thoại TabMerger hỏi Import 2 groups? (Nhập 2 nhóm?) cho tệp onetab.txt, giao diện tối' },
+    { src: '/blog/onetab-alternatives/tm-imported-groups-light.webp', alt: 'Thanh bên TabMerger với hai nhóm mới Imported 1 và Imported 2, nhóm thứ hai có bốn tab, giao diện sáng' },
+    { src: '/blog/onetab-alternatives/tm-imported-groups-dark.webp', alt: 'Thanh bên TabMerger với hai nhóm mới Imported 1 và Imported 2, nhóm thứ hai có bốn tab, giao diện tối' },
+  ],
+  tags: ['comparison', 'tab-manager', 'save-tabs', 'session-management'],
+  sources: [
+    { title: 'OneTab', publisher: 'one-tab.com', url: 'https://www.one-tab.com/', checked: '2026-11-20' },
+    { title: 'OneTab Backup & Sync', publisher: 'one-tab.com', url: 'https://www.one-tab.com/sync', checked: '2026-11-20' },
+    {
+      title: 'OneTab',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/onetab/chphlpgkkbolifaimnlloiipkdnihall',
+      checked: '2026-11-20',
+    },
+    { title: 'Session Buddy', publisher: 'sessionbuddy.com', url: 'https://sessionbuddy.com/', checked: '2026-11-20' },
+    {
+      title: 'Tab Session Manager',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/tab-session-manager/iaiomicjabeggjcfkbimgmglanimpnae',
+      checked: '2026-11-20',
+    },
+    { title: 'Toby pricing', publisher: 'gettoby.com', url: 'https://www.gettoby.com/pricing', checked: '2026-11-20' },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/onetab-alternatives/tm-imported-groups-light.webp' },
+  ogImage: { src: '/blog/onetab-alternatives/og.png', alt: 'Thẻ tiêu đề “OneTab alternatives, and how to move your lists without losing a tab”: hướng dẫn của TabMerger, kèm hai danh sách OneTab đã nhập' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'today', label: 'OneTab hiện làm được gì' },
+    { id: 'alternatives', label: 'Các lựa chọn thay thế' },
+    { id: 'export', label: 'Xuất từ OneTab' },
+    { id: 'import', label: 'Nhập vào TabMerger' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+}
+
+<QuickAnswer>
+
+Trước hết, hãy xuất: trong OneTab, chọn **Nhập & Xuất** (Import & Export), sao chép văn bản và lưu thành tệp `.txt`, vì gỡ cài đặt OneTab sẽ xóa danh sách của nó. Sau đó nhập tệp vào **TabMerger**, công cụ biến mỗi danh sách thành một nhóm có tên và bổ sung những gì một danh sách đơn lẻ không làm được: các cửa sổ được giữ tách biệt, một ô tìm kiếm cho tab đang mở, đã lưu và vừa đóng, tự động lưu, cùng đồng bộ mã hóa đầu cuối trên Chrome, Edge và Firefox. Lựa chọn khác: **Tab Session Manager** để tự động lưu phiên, **Session Buddy** để khôi phục cục bộ sau sự cố, **Toby** cho một bảng trực quan.
+
+</QuickAnswer>
+
+<InstallCta>Đưa danh sách OneTab vào các nhóm có tên và tìm kiếm được. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+<Section id="today" title="OneTab hiện làm được gì?">
+
+Nhiều bài viết về OneTab đã lỗi thời, nên đây là những gì chính trang web của nó nói (kiểm tra ngày 20/11/2026):
+
+- Một cú nhấp biến các tab của bạn thành một danh sách để tiết kiệm bộ nhớ. Bạn khôi phục từng tab hoặc tất cả cùng lúc.
+- Danh sách vẫn còn sau khi đóng OneTab, khởi động lại trình duyệt hay máy tính, và khi trình duyệt gặp sự cố.
+- Chạy trên Chrome, Firefox, Edge và Safari, có thư mục, ghi chú, cùng nhập và xuất.
+- **Giờ đã có đồng bộ.** Backup & Sync là gói đăng ký trả phí theo năm: thay đổi xuất hiện trên các trình duyệt khác của bạn, kèm bản sao lưu đám mây tự động được mã hóa đầu cuối. Một giấy phép dùng cho tối đa 100 trình duyệt hoặc hồ sơ, và nếu bạn ngừng đăng ký thì tab vẫn còn; chỉ việc đồng bộ dừng lại.
+- **Gỡ cài đặt sẽ xóa các tab của bạn.** Chính vì vậy, ghi chú khắc phục sự cố của OneTab khuyên không nên cài lại để sửa lỗi.
+
+Vì vậy, chỉ riêng đồng bộ không còn tạo nên khác biệt giữa hai công cụ. Điều TabMerger bổ sung là cấu trúc: các nhóm giữ cửa sổ tách biệt, một ô tìm kiếm cho tab đang mở, đã lưu và vừa đóng, tự động lưu các tab đang mở, và cùng một công cụ trên Chrome, Edge và Firefox.
+
+</Section>
+
+<Section id="alternatives" title="Nên chọn công cụ thay thế OneTab nào?">
+
+<ComparisonTable
+  head={['Nếu bạn muốn', 'Hãy xem', 'Lý do']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['Nhóm trải trên nhiều cửa sổ, một ô tìm kiếm, đồng bộ mã hóa', 'TabMerger', 'Nhóm có tên, tìm kiếm tab đang mở, đã lưu và đã đóng, tự động lưu; đồng bộ ở gói Pro, luôn mã hóa đầu cuối'],
+    ['Đồng bộ miễn phí', 'Tab Session Manager', 'Đồng bộ đám mây, tự động lưu khi đóng và theo lịch; không có gói trả phí'],
+    ['Khôi phục sau sự cố miễn phí, không cần tài khoản', 'Session Buddy', 'Lịch sử phiên trên thiết bị của bạn; không đồng bộ'],
+    ['Một bảng trực quan', 'Toby', 'Bộ sưu tập trên trang thẻ mới; miễn phí đến 60 tab đã lưu'],
+    ['Tự đóng giúp bạn các tab không dùng', 'Tab Wrangler', 'Đóng các tab không dùng đến, giữ lại để mở lại'],
+  ]}
+/>
+
+Mỗi công cụ được mô tả theo trang web hoặc trang cửa hàng của chính nó. Để xem mười công cụ đặt cạnh nhau, hãy đọc [so sánh các tiện ích quản lý tab tốt nhất](/blog/best-tab-manager-extensions); để hiểu phiên là gì và vì sao quan trọng, hãy đọc [trình quản lý phiên của trình duyệt làm gì](/blog/browser-session-manager). Giá có trên [trang so sánh](/compare) của chúng tôi.
+
+</Section>
+
+<Section id="export" title="Làm cách nào để xuất danh sách từ OneTab?">
+
+1. Mở OneTab (bằng biểu tượng trên thanh công cụ, hoặc trang OneTab nếu bạn đã ghim nó).
+2. Chọn **Nhập & Xuất** (Import & Export).
+3. Sao chép văn bản trong ô xuất. OneTab có nút **Sao chép vào bảng tạm** (Copy to clipboard).
+4. Dán vào trình soạn thảo văn bản thuần (Notepad, hoặc TextEdit ở chế độ văn bản thuần) và lưu thành `onetab.txt`.
+
+Định dạng rất đơn giản: mỗi dòng một tab theo dạng `address | title`, và một dòng trống giữa các danh sách. Một dòng trông như sau: `https://nodejs.org/en/docs | Documentation | Node.js`.
+
+<Catch>Tệp xuất chứa địa chỉ và tiêu đề. Tên danh sách, ghi chú và thư mục không được chuyển theo, vì vậy hãy ghi lại danh sách nào là danh sách nào trước khi chuyển.</Catch>
+
+{/* Screenshot still to capture by hand (needs OneTab installed): OneTab's Import & Export page. */}
+
+</Section>
+
+<Section id="import" title="Làm cách nào để nhập tệp xuất từ OneTab vào TabMerger?">
+
+[TabMerger](/features), tiện ích miễn phí của chúng tôi cho Chrome, Edge và Firefox, đọc trực tiếp tệp OneTab. Không có gì được tải lên: tệp được đọc ngay trong trình duyệt của bạn.
+
+1. Mở TabMerger, rồi vào **Cài đặt → Dữ liệu** (Settings → Data).
+2. Trong mục **Nhập và xuất** (Import & export), nhấn **Nhập tệp** (Import file) và chọn tệp `.txt` của bạn.
+3. Xác nhận. Mỗi danh sách OneTab trở thành một nhóm riêng, có tên “Imported 1”, “Imported 2”, v.v., với tiêu đề tab được giữ nguyên.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Nhập tệp xuất từ OneTab" steps={[{ title: 'Nhập tệp' }, { title: 'Xác nhận' }, { title: 'Các nhóm của bạn' }]}>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-settings-import" alt="Cài đặt TabMerger, Data (Dữ liệu), với nút Import file (Nhập tệp) trong mục Import & export (Nhập và xuất), giao diện sáng" darkAlt="Cài đặt TabMerger, Data (Dữ liệu), với nút Import file (Nhập tệp) trong mục Import & export (Nhập và xuất), giao diện tối" boxes={[{ id: 'import-file', label: 'Nhập tệp' }]} source="TabMerger 3.16.1">Settings → Data (Cài đặt → Dữ liệu): Import file (Nhập tệp) nhận tệp .txt của OneTab, tệp dấu trang .html và tệp .json của TabMerger.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-import-confirm" alt="Hộp thoại TabMerger hỏi Import 2 groups? (Nhập 2 nhóm?) cho tệp onetab.txt, giao diện sáng" darkAlt="Hộp thoại TabMerger hỏi Import 2 groups? (Nhập 2 nhóm?) cho tệp onetab.txt, giao diện tối" boxes={[{ id: 'import-confirm', label: 'Nhập' }]} source="TabMerger 3.16.1">Hai danh sách OneTab, hai nhóm, được thêm cạnh các nhóm bạn đã có.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-imported-groups" alt="Thanh bên TabMerger với hai nhóm mới Imported 1 và Imported 2, nhóm thứ hai có bốn tab, giao diện sáng" darkAlt="Thanh bên TabMerger với hai nhóm mới Imported 1 và Imported 2, nhóm thứ hai có bốn tab, giao diện tối" boxes={[{ id: 'imported', label: 'Các nhóm đã nhập' }]} source="TabMerger 3.16.1">Các danh sách đã nhập dưới dạng nhóm. Đổi tên từ menu của từng nhóm.</ThemedScreenshot>
+</Carousel>
+
+Mọi định dạng TabMerger nhập được đều có trong [nhập tab vào TabMerger](/blog/import-tabs-into-tabmerger). Một vài chi tiết nên biết:
+
+- Những dòng không phải địa chỉ web đầy đủ (hoặc sẽ chạy một đoạn mã) sẽ bị bỏ qua, và TabMerger cho bạn biết số lượng khi nhập xong.
+- Ở gói Free, lần nhập nào khiến bạn vượt quá 5 nhóm hoặc 50 tab sẽ bị dừng trước khi thêm bất cứ thứ gì. Gói Pro không giới hạn.
+- Giữ OneTab cho đến khi bạn đã kiểm tra các nhóm. Sau đó có thể gỡ nó.
+
+<InstallCta>Miễn phí cho Chrome, Edge và Firefox. Mang theo các danh sách OneTab của bạn.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+</Section>

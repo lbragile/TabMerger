@@ -1,0 +1,173 @@
+export const post = {
+  slug: 'onetab-alternatives',
+  title: 'OneTab 替代品，以及如何一个标签页都不丢地迁移你的列表',
+  navTitle: 'OneTab 替代品与迁移方法',
+  seoTitle: 'OneTab 替代品（支持同步）及如何导出你的列表',
+  description:
+    '在找 OneTab 替代品？OneTab 现在能做什么（它已经支持同步）、哪些工具能做到它做不到的事，以及如何导出列表并导入到别处。',
+  shareSummary: 'OneTab 替代品、OneTab 新增的同步功能，以及安全迁移列表的方法。',
+  dek: '卸载任何东西之前先导出：移除 OneTab 会删除它的列表。',
+  published: '2026-11-27',
+  updated: '2026-11-27',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'OneTab 提供付费、端到端加密的 Backup & Sync。',
+      source: 'one-tab.com/sync',
+      href: 'https://www.one-tab.com/sync',
+    },
+    {
+      text: '卸载 OneTab 会删除你保存的标签页。',
+      source: 'one-tab.com',
+      href: 'https://www.one-tab.com/',
+    },
+    { text: '一个 OneTab 许可证最多可同步 100 个浏览器或配置文件。', source: 'one-tab.com/sync' },
+    { text: 'TabMerger 会把每个 OneTab 列表变成单独的分组。', source: '已在 TabMerger 3.16.1 中测试，2026 年 11 月 20 日' },
+  ],
+  faq: [
+    {
+      question: '有支持同步的 OneTab 替代品吗？',
+      answer:
+        '有。TabMerger Pro 会在 Chrome、Edge 和 Firefox 上以端到端加密同步你的分组和会话。Toby、Workona 和 Tab Session Manager 也支持同步，OneTab 现在也提供付费的 Backup & Sync。',
+    },
+    {
+      question: '如何从 OneTab 导出？',
+      answer:
+        '打开 OneTab，选择“导入与导出”，然后复制文本。每一行是一个地址和一个标题，列表之间用空行分隔。把它保存为 .txt 文件。',
+    },
+    {
+      question: '卸载 OneTab 会丢失我的标签页吗？',
+      answer: '会。OneTab 官网自己就提醒，卸载会删除你保存的标签页。请先导出，并保留好文件。',
+    },
+    {
+      question: '可以把 OneTab 导入 TabMerger 吗？',
+      answer: '可以。打开 设置 → 数据 → 导入文件，选择导出的 .txt 文件并确认。每个 OneTab 列表都会连同标题变成一个 TabMerger 分组。',
+    },
+  ],
+  images: [
+    { src: '/blog/onetab-alternatives/tm-settings-import-light.webp', alt: 'TabMerger 设置中的 Data（数据），Import & export（导入与导出）下方有 Import file（导入文件）按钮，浅色主题' },
+    { src: '/blog/onetab-alternatives/tm-settings-import-dark.webp', alt: 'TabMerger 设置中的 Data（数据），Import & export（导入与导出）下方有 Import file（导入文件）按钮，深色主题' },
+    { src: '/blog/onetab-alternatives/tm-import-confirm-light.webp', alt: 'TabMerger 对话框针对文件 onetab.txt 询问 Import 2 groups?（导入 2 个分组？），浅色主题' },
+    { src: '/blog/onetab-alternatives/tm-import-confirm-dark.webp', alt: 'TabMerger 对话框针对文件 onetab.txt 询问 Import 2 groups?（导入 2 个分组？），深色主题' },
+    { src: '/blog/onetab-alternatives/tm-imported-groups-light.webp', alt: 'TabMerger 侧边栏显示新分组 Imported 1 和 Imported 2，第二个分组中有四个标签页，浅色主题' },
+    { src: '/blog/onetab-alternatives/tm-imported-groups-dark.webp', alt: 'TabMerger 侧边栏显示新分组 Imported 1 和 Imported 2，第二个分组中有四个标签页，深色主题' },
+  ],
+  tags: ['comparison', 'tab-manager', 'save-tabs', 'session-management'],
+  sources: [
+    { title: 'OneTab', publisher: 'one-tab.com', url: 'https://www.one-tab.com/', checked: '2026-11-20' },
+    { title: 'OneTab Backup & Sync', publisher: 'one-tab.com', url: 'https://www.one-tab.com/sync', checked: '2026-11-20' },
+    {
+      title: 'OneTab',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/onetab/chphlpgkkbolifaimnlloiipkdnihall',
+      checked: '2026-11-20',
+    },
+    { title: 'Session Buddy', publisher: 'sessionbuddy.com', url: 'https://sessionbuddy.com/', checked: '2026-11-20' },
+    {
+      title: 'Tab Session Manager',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/tab-session-manager/iaiomicjabeggjcfkbimgmglanimpnae',
+      checked: '2026-11-20',
+    },
+    { title: 'Toby pricing', publisher: 'gettoby.com', url: 'https://www.gettoby.com/pricing', checked: '2026-11-20' },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/onetab-alternatives/tm-imported-groups-light.webp' },
+  ogImage: { src: '/blog/onetab-alternatives/og.png', alt: '标题卡片“OneTab alternatives, and how to move your lists without losing a tab”：一篇 TabMerger 指南，附有两个已导入的 OneTab 列表' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'today', label: 'OneTab 现在能做什么' },
+    { id: 'alternatives', label: '替代工具' },
+    { id: 'export', label: '从 OneTab 导出' },
+    { id: 'import', label: '导入 TabMerger' },
+    { id: 'faq', label: '常见问题' },
+  ],
+}
+
+<QuickAnswer>
+
+第一步先导出：在 OneTab 中选择 **导入与导出**（Import & Export），复制文本并保存为 `.txt` 文件，因为卸载 OneTab 会删除它的列表。然后把它导入 **TabMerger**。TabMerger 会把每个列表变成一个有名称的分组，并补上单个列表做不到的功能：窗口彼此分开、一次搜索就能覆盖打开的、已保存的和最近关闭的标签页、自动保存，以及在 Chrome、Edge 和 Firefox 上的端到端加密同步。其他选择：想自动保存会话用 **Tab Session Manager**，想在本地从崩溃中恢复用 **Session Buddy**，想要可视化看板用 **Toby**。
+
+</QuickAnswer>
+
+<InstallCta>把你的 OneTab 列表变成有名称、可搜索的分组。Chrome、Edge 和 Firefox 均可免费使用。</InstallCta>
+
+<Section id="today" title="OneTab 现在能做什么？">
+
+很多介绍 OneTab 的文章已经过时，所以下面是它官网上的说法（2026 年 11 月 20 日核实）：
+
+- 点一下就把标签页变成一个列表，以节省内存。可以逐个恢复，也可以一次全部恢复。
+- 关闭 OneTab、重启浏览器或电脑、浏览器崩溃之后，列表都还在。
+- 支持 Chrome、Firefox、Edge 和 Safari，带有文件夹、备注以及导入和导出功能。
+- **它现在支持同步了**。Backup & Sync 是按年付费的订阅：更改会出现在你的其他浏览器中，并自动在云端做一份端到端加密的备份。一个许可证最多覆盖 100 个浏览器或配置文件；停止订阅后标签页仍会保留，只是不再同步。
+- **卸载会删除你的标签页**。正因如此，OneTab 的故障排除说明特别提醒，不要靠重新安装来解决问题。
+
+所以，单靠同步已经无法区分两者。TabMerger 带来的是结构：让窗口保持分开的分组、一次覆盖打开的、已保存的和最近关闭的标签页的搜索、自动保存打开的标签页，以及在 Chrome、Edge 和 Firefox 上都能用的同一款工具。
+
+</Section>
+
+<Section id="alternatives" title="该选哪款 OneTab 替代品？">
+
+<ComparisonTable
+  head={['如果你想要', '推荐', '原因']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['跨窗口的分组、一次搜索、加密同步', 'TabMerger', '有名称的分组，搜索打开的、已保存的和已关闭的标签页，自动保存；Pro 版提供同步，始终端到端加密'],
+    ['免费同步', 'Tab Session Manager', '云同步，关闭时和定时自动保存；没有付费方案'],
+    ['免费的崩溃恢复，无需账号', 'Session Buddy', '会话历史保存在你的设备上；不同步'],
+    ['可视化看板', 'Toby', '在新标签页上显示收藏集；最多 60 个已保存标签页免费'],
+    ['自动帮你关闭闲置标签页', 'Tab Wrangler', '关闭不用的标签页，并保留下来以便重新打开'],
+  ]}
+/>
+
+以上每款工具都根据其官网或商店页面介绍。想并排比较十款工具，请看 [最佳标签页管理扩展对比](/blog/best-tab-manager-extensions)；想了解会话是什么、为什么重要，请看 [浏览器会话管理器能做什么](/blog/browser-session-manager)。价格见我们的 [对比页面](/compare)。
+
+</Section>
+
+<Section id="export" title="如何从 OneTab 导出我的列表？">
+
+1. 打开 OneTab（点工具栏上的图标，或者如果已固定，就打开 OneTab 页面）。
+2. 选择 **导入与导出**（Import & Export）。
+3. 复制导出框中的文本。OneTab 有一个 **复制到剪贴板**（Copy to clipboard）按钮。
+4. 把它粘贴到纯文本编辑器（Notepad，或设为纯文本模式的 TextEdit），并保存为 `onetab.txt`。
+
+格式很简单：每行一个标签页，写作 `address | title`，列表之间空一行。一行看起来是这样的：`https://nodejs.org/en/docs | Documentation | Node.js`。
+
+<Catch>导出文件包含地址和标题。列表名称、备注和文件夹不会带过来，所以迁移前请先记下哪个列表是哪个。</Catch>
+
+{/* Screenshot still to capture by hand (needs OneTab installed): OneTab's Import & Export page. */}
+
+</Section>
+
+<Section id="import" title="如何把 OneTab 导出文件导入 TabMerger？">
+
+[TabMerger](/features) 是我们为 Chrome、Edge 和 Firefox 提供的免费扩展，可以直接读取 OneTab 文件。不会上传任何内容：文件在你的浏览器中读取。
+
+1. 打开 TabMerger，然后进入 **设置 → 数据**（Settings → Data）。
+2. 在 **导入与导出**（Import & export）下点击 **导入文件**（Import file），选择你的 `.txt` 文件。
+3. 确认。每个 OneTab 列表都会成为单独的分组，名称依次为“Imported 1”“Imported 2”等，标签页标题保持不变。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="导入 OneTab 导出文件" steps={[{ title: '导入文件' }, { title: '确认' }, { title: '你的分组' }]}>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-settings-import" alt="TabMerger 设置中的 Data（数据），Import & export（导入与导出）下方有 Import file（导入文件）按钮，浅色主题" darkAlt="TabMerger 设置中的 Data（数据），Import & export（导入与导出）下方有 Import file（导入文件）按钮，深色主题" boxes={[{ id: 'import-file', label: '导入文件' }]} source="TabMerger 3.16.1">Settings → Data（设置 → 数据）：Import file（导入文件）支持 OneTab 的 .txt、书签的 .html 和 TabMerger 的 .json 文件。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-import-confirm" alt="TabMerger 对话框针对文件 onetab.txt 询问 Import 2 groups?（导入 2 个分组？），浅色主题" darkAlt="TabMerger 对话框针对文件 onetab.txt 询问 Import 2 groups?（导入 2 个分组？），深色主题" boxes={[{ id: 'import-confirm', label: '导入' }]} source="TabMerger 3.16.1">两个 OneTab 列表，两个分组，添加在你已有的分组旁边。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-imported-groups" alt="TabMerger 侧边栏显示新分组 Imported 1 和 Imported 2，第二个分组中有四个标签页，浅色主题" darkAlt="TabMerger 侧边栏显示新分组 Imported 1 和 Imported 2，第二个分组中有四个标签页，深色主题" boxes={[{ id: 'imported', label: '已导入的分组' }]} source="TabMerger 3.16.1">导入后成为分组的列表。可以在每个分组的菜单中重命名。</ThemedScreenshot>
+</Carousel>
+
+TabMerger 能导入的所有格式都在 [将标签页导入 TabMerger](/blog/import-tabs-into-tabmerger) 中有介绍。有几点值得了解：
+
+- 不是完整网址的行（或会运行脚本的行）会被跳过，导入完成时 TabMerger 会告诉你跳过了多少行。
+- 在 Free 版中，如果导入会让你超过 5 个分组或 50 个标签页，导入会在添加任何内容之前停止。Pro 版没有限制。
+- 在检查完分组之前，先保留 OneTab。之后就可以移除它了。
+
+<InstallCta>Chrome、Edge 和 Firefox 均可免费使用。把你的 OneTab 列表一起带过来。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

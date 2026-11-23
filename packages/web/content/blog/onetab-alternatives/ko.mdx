@@ -1,0 +1,173 @@
+export const post = {
+  slug: 'onetab-alternatives',
+  title: 'OneTab 대안, 그리고 탭 하나 잃지 않고 목록을 옮기는 방법',
+  navTitle: 'OneTab 대안과 갈아타는 방법',
+  seoTitle: 'OneTab 대안(동기화 지원)과 목록 내보내기 방법',
+  description:
+    'OneTab 대안을 찾고 있나요? 지금의 OneTab이 하는 일(이제 동기화도 됩니다), OneTab이 못 하는 일을 해 주는 도구, 그리고 목록을 내보내 다른 곳으로 가져오는 방법을 알려 드립니다.',
+  shareSummary: 'OneTab 대안, OneTab의 새 동기화 기능, 그리고 목록을 안전하게 옮기는 방법.',
+  dek: '무엇이든 삭제하기 전에 먼저 내보내세요. OneTab을 삭제하면 목록도 함께 지워집니다.',
+  published: '2026-11-27',
+  updated: '2026-11-27',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'OneTab에는 유료이며 엔드투엔드 암호화되는 Backup & Sync가 있습니다.',
+      source: 'one-tab.com/sync',
+      href: 'https://www.one-tab.com/sync',
+    },
+    {
+      text: 'OneTab을 삭제하면 저장된 탭이 지워집니다.',
+      source: 'one-tab.com',
+      href: 'https://www.one-tab.com/',
+    },
+    { text: 'OneTab 라이선스 하나로 브라우저나 프로필을 최대 100개까지 동기화합니다.', source: 'one-tab.com/sync' },
+    { text: 'TabMerger는 OneTab 목록을 각각 별도의 그룹으로 만듭니다.', source: 'TabMerger 3.16.1에서 테스트, 2026년 11월 20일' },
+  ],
+  faq: [
+    {
+      question: '동기화되는 OneTab 대안이 있나요?',
+      answer:
+        '네. TabMerger Pro는 Chrome, Edge, Firefox에서 그룹과 세션을 엔드투엔드 암호화로 동기화합니다. Toby, Workona, Tab Session Manager도 동기화를 지원하며, OneTab도 이제 유료 Backup & Sync를 제공합니다.',
+    },
+    {
+      question: 'OneTab에서 어떻게 내보내나요?',
+      answer:
+        'OneTab을 열고 ‘가져오기 & 내보내기’를 선택한 뒤 텍스트를 복사하세요. 각 줄은 주소와 제목이고, 빈 줄로 목록이 구분됩니다. .txt 파일로 저장하세요.',
+    },
+    {
+      question: 'OneTab을 삭제하면 탭이 사라지나요?',
+      answer: '네. OneTab 사이트에서도 삭제하면 저장된 탭이 지워진다고 경고합니다. 먼저 내보내고 파일을 보관하세요.',
+    },
+    {
+      question: 'OneTab을 TabMerger로 가져올 수 있나요?',
+      answer: '네. 설정 → 데이터 → 파일 가져오기에서 내보낸 .txt 파일을 고르고 확인하세요. OneTab 목록 하나하나가 제목까지 그대로 TabMerger 그룹이 됩니다.',
+    },
+  ],
+  images: [
+    { src: '/blog/onetab-alternatives/tm-settings-import-light.webp', alt: 'TabMerger 설정의 Data(데이터)에서 Import & export(가져오기 및 내보내기) 아래 Import file(파일 가져오기) 버튼이 있는 화면, 밝은 테마' },
+    { src: '/blog/onetab-alternatives/tm-settings-import-dark.webp', alt: 'TabMerger 설정의 Data(데이터)에서 Import & export(가져오기 및 내보내기) 아래 Import file(파일 가져오기) 버튼이 있는 화면, 어두운 테마' },
+    { src: '/blog/onetab-alternatives/tm-import-confirm-light.webp', alt: 'onetab.txt 파일에 대해 Import 2 groups?(그룹 2개를 가져오시겠습니까?)라고 묻는 TabMerger 대화상자, 밝은 테마' },
+    { src: '/blog/onetab-alternatives/tm-import-confirm-dark.webp', alt: 'onetab.txt 파일에 대해 Import 2 groups?(그룹 2개를 가져오시겠습니까?)라고 묻는 TabMerger 대화상자, 어두운 테마' },
+    { src: '/blog/onetab-alternatives/tm-imported-groups-light.webp', alt: '새 그룹 Imported 1과 Imported 2가 있는 TabMerger 사이드바, 두 번째 그룹에 탭 4개가 보임, 밝은 테마' },
+    { src: '/blog/onetab-alternatives/tm-imported-groups-dark.webp', alt: '새 그룹 Imported 1과 Imported 2가 있는 TabMerger 사이드바, 두 번째 그룹에 탭 4개가 보임, 어두운 테마' },
+  ],
+  tags: ['comparison', 'tab-manager', 'save-tabs', 'session-management'],
+  sources: [
+    { title: 'OneTab', publisher: 'one-tab.com', url: 'https://www.one-tab.com/', checked: '2026-11-20' },
+    { title: 'OneTab Backup & Sync', publisher: 'one-tab.com', url: 'https://www.one-tab.com/sync', checked: '2026-11-20' },
+    {
+      title: 'OneTab',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/onetab/chphlpgkkbolifaimnlloiipkdnihall',
+      checked: '2026-11-20',
+    },
+    { title: 'Session Buddy', publisher: 'sessionbuddy.com', url: 'https://sessionbuddy.com/', checked: '2026-11-20' },
+    {
+      title: 'Tab Session Manager',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/tab-session-manager/iaiomicjabeggjcfkbimgmglanimpnae',
+      checked: '2026-11-20',
+    },
+    { title: 'Toby pricing', publisher: 'gettoby.com', url: 'https://www.gettoby.com/pricing', checked: '2026-11-20' },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/onetab-alternatives/tm-imported-groups-light.webp' },
+  ogImage: { src: '/blog/onetab-alternatives/og.png', alt: '\'OneTab alternatives, and how to move your lists without losing a tab\' 제목 카드: 가져온 OneTab 목록 두 개가 담긴 TabMerger 가이드' },
+  toc: [
+    { id: 'quick', label: '간단한 답변' },
+    { id: 'today', label: '지금의 OneTab이 하는 일' },
+    { id: 'alternatives', label: '대안 도구' },
+    { id: 'export', label: 'OneTab에서 내보내기' },
+    { id: 'import', label: 'TabMerger로 가져오기' },
+    { id: 'faq', label: '자주 묻는 질문' },
+  ],
+}
+
+<QuickAnswer>
+
+먼저 내보내세요. OneTab을 삭제하면 목록이 지워지므로, OneTab에서 **가져오기 & 내보내기**(Import & Export)를 선택하고 텍스트를 복사해 `.txt` 파일로 저장합니다. 그런 다음 **TabMerger**로 가져오세요. TabMerger는 각 목록을 이름 있는 그룹으로 만들고, 목록 하나로는 할 수 없는 기능을 더합니다. 창을 나눈 채로 유지하고, 열린 탭·저장된 탭·최근에 닫은 탭을 한 번에 검색하며, 자동 저장과 Chrome, Edge, Firefox에서의 엔드투엔드 암호화 동기화를 제공합니다. 다른 선택지로는 자동 저장되는 세션이 필요하면 **Tab Session Manager**, 비정상 종료 후 로컬 복구가 필요하면 **Session Buddy**, 시각적인 보드가 필요하면 **Toby**가 있습니다.
+
+</QuickAnswer>
+
+<InstallCta>OneTab 목록을 이름 있고 검색되는 그룹으로 옮기세요. Chrome, Edge, Firefox에서 무료.</InstallCta>
+
+<Section id="today" title="지금의 OneTab은 무엇을 하나요?">
+
+OneTab에 관한 글 중에는 오래된 내용이 많습니다. 그래서 OneTab 사이트에 직접 적힌 내용을 정리했습니다(2026년 11월 20일 확인).
+
+- 클릭 한 번으로 탭을 목록으로 바꿔 메모리를 아낍니다. 탭은 하나씩 또는 한꺼번에 복원할 수 있습니다.
+- 목록은 OneTab을 닫거나, 브라우저나 컴퓨터를 다시 시작하거나, 브라우저가 비정상 종료되어도 남아 있습니다.
+- Chrome, Firefox, Edge, Safari에서 작동하며 폴더, 메모, 가져오기와 내보내기를 지원합니다.
+- **이제 동기화도 됩니다**. Backup & Sync는 유료 연간 구독으로, 변경 사항이 다른 브라우저에도 나타나고 엔드투엔드 암호화된 클라우드 자동 백업도 제공됩니다. 라이선스 하나로 브라우저나 프로필을 최대 100개까지 쓸 수 있고, 구독을 중단해도 탭은 남으며 동기화만 멈춥니다.
+- **삭제하면 탭이 지워집니다**. OneTab의 문제 해결 안내에서 문제를 고치려고 다시 설치하지 말라고 경고하는 것도 바로 이 때문입니다.
+
+그러니 이제 동기화만으로는 둘을 구분할 수 없습니다. TabMerger가 더하는 것은 구조입니다. 창을 나눠 두는 그룹, 열린 탭·저장된 탭·최근에 닫은 탭을 한 번에 찾는 검색, 열린 탭 자동 저장, 그리고 Chrome, Edge, Firefox에서 똑같이 쓰는 하나의 도구입니다.
+
+</Section>
+
+<Section id="alternatives" title="어떤 OneTab 대안을 골라야 할까요?">
+
+<ComparisonTable
+  head={['원하는 것', '추천 도구', '이유']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['여러 창을 아우르는 그룹, 하나의 검색, 암호화 동기화', 'TabMerger', '이름 있는 그룹, 열린·저장된·닫은 탭 검색, 자동 저장. 동기화는 Pro에서, 항상 엔드투엔드 암호화'],
+    ['무료 동기화', 'Tab Session Manager', '클라우드 동기화, 닫을 때와 일정 간격의 자동 저장. 유료 요금제 없음'],
+    ['계정 없이 무료로 비정상 종료 복구', 'Session Buddy', '기기에 세션 기록 저장. 동기화 없음'],
+    ['시각적인 보드', 'Toby', '새 탭 페이지의 컬렉션. 저장된 탭 60개까지 무료'],
+    ['안 쓰는 탭 자동으로 닫기', 'Tab Wrangler', '쓰지 않는 탭을 닫고, 다시 열 수 있게 보관'],
+  ]}
+/>
+
+각 도구는 해당 도구의 공식 사이트나 스토어 페이지를 바탕으로 설명했습니다. 도구 10개를 나란히 비교하려면 [최고의 탭 관리 확장 프로그램 비교](/blog/best-tab-manager-extensions)를, 세션이 무엇이고 왜 중요한지는 [브라우저 세션 관리자가 하는 일](/blog/browser-session-manager)을 참고하세요. 가격은 [비교 페이지](/compare)에 있습니다.
+
+</Section>
+
+<Section id="export" title="OneTab에서 목록을 어떻게 내보내나요?">
+
+1. OneTab을 엽니다(툴바 아이콘을 누르거나, 고정해 두었다면 OneTab 페이지에서).
+2. **가져오기 & 내보내기**(Import & Export)를 선택합니다.
+3. 내보내기 상자의 텍스트를 복사합니다. OneTab에는 **클립보드에 복사**(Copy to clipboard) 버튼이 있습니다.
+4. 일반 텍스트 편집기(Notepad, 또는 일반 텍스트로 설정한 TextEdit)에 붙여 넣고 `onetab.txt`로 저장합니다.
+
+형식은 간단합니다. 한 줄에 탭 하나를 `address | title` 형태로 적고, 목록 사이에는 빈 줄이 들어갑니다. 한 줄은 `https://nodejs.org/en/docs | Documentation | Node.js`처럼 생겼습니다.
+
+<Catch>내보낸 파일에는 주소와 제목이 들어 있습니다. 목록 이름, 메모, 폴더는 옮겨지지 않으니, 옮기기 전에 어떤 목록이 무엇이었는지 적어 두세요.</Catch>
+
+{/* Screenshot still to capture by hand (needs OneTab installed): OneTab's Import & Export page. */}
+
+</Section>
+
+<Section id="import" title="OneTab에서 내보낸 파일을 TabMerger로 어떻게 가져오나요?">
+
+Chrome, Edge, Firefox용 무료 확장 프로그램인 [TabMerger](/features)는 OneTab 파일을 바로 읽습니다. 업로드되는 것은 없으며, 파일은 브라우저 안에서 읽힙니다.
+
+1. TabMerger를 열고 **설정 → 데이터**(Settings → Data)로 이동합니다.
+2. **가져오기 및 내보내기**(Import & export) 아래에서 **파일 가져오기**(Import file)를 누르고 `.txt` 파일을 고릅니다.
+3. 확인합니다. OneTab 목록이 각각 별도의 그룹이 되며, 이름은 “Imported 1”, “Imported 2”와 같이 붙고 탭 제목은 그대로 유지됩니다.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="OneTab 내보내기 파일 가져오기" steps={[{ title: '파일 가져오기' }, { title: '확인' }, { title: '완성된 그룹' }]}>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-settings-import" alt="TabMerger 설정의 Data(데이터)에서 Import & export(가져오기 및 내보내기) 아래 Import file(파일 가져오기) 버튼이 있는 화면, 밝은 테마" darkAlt="TabMerger 설정의 Data(데이터)에서 Import & export(가져오기 및 내보내기) 아래 Import file(파일 가져오기) 버튼이 있는 화면, 어두운 테마" boxes={[{ id: 'import-file', label: '파일 가져오기' }]} source="TabMerger 3.16.1">Settings → Data(설정 → 데이터): Import file(파일 가져오기)은 OneTab .txt, 북마크 .html, TabMerger .json 파일을 받습니다.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-import-confirm" alt="onetab.txt 파일에 대해 Import 2 groups?(그룹 2개를 가져오시겠습니까?)라고 묻는 TabMerger 대화상자, 밝은 테마" darkAlt="onetab.txt 파일에 대해 Import 2 groups?(그룹 2개를 가져오시겠습니까?)라고 묻는 TabMerger 대화상자, 어두운 테마" boxes={[{ id: 'import-confirm', label: '가져오기' }]} source="TabMerger 3.16.1">OneTab 목록 두 개가 그룹 두 개가 되어 기존 그룹 옆에 추가됩니다.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-imported-groups" alt="새 그룹 Imported 1과 Imported 2가 있는 TabMerger 사이드바, 두 번째 그룹에 탭 4개가 보임, 밝은 테마" darkAlt="새 그룹 Imported 1과 Imported 2가 있는 TabMerger 사이드바, 두 번째 그룹에 탭 4개가 보임, 어두운 테마" boxes={[{ id: 'imported', label: '가져온 그룹' }]} source="TabMerger 3.16.1">그룹으로 가져온 목록. 이름은 각 그룹의 메뉴에서 바꿀 수 있습니다.</ThemedScreenshot>
+</Carousel>
+
+TabMerger가 가져올 수 있는 모든 형식은 [TabMerger로 탭 가져오기](/blog/import-tabs-into-tabmerger)에서 다룹니다. 알아 두면 좋은 점이 몇 가지 있습니다.
+
+- 완전한 웹 주소가 아닌 줄(또는 스크립트를 실행할 수 있는 줄)은 건너뛰며, 가져오기가 끝나면 TabMerger가 몇 줄인지 알려 줍니다.
+- Free에서는 그룹 5개나 탭 50개를 넘게 되는 가져오기는 무엇이든 추가되기 전에 중단됩니다. Pro에는 제한이 없습니다.
+- 그룹을 확인할 때까지 OneTab은 설치해 두세요. 확인한 뒤에 삭제하면 됩니다.
+
+<InstallCta>Chrome, Edge, Firefox에서 무료. OneTab 목록도 그대로 가져오세요.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="자주 묻는 질문">
+
+<Faq items={post.faq} />
+
+</Section>

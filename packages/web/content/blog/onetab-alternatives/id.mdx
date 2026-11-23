@@ -1,0 +1,173 @@
+export const post = {
+  slug: 'onetab-alternatives',
+  title: 'Alternatif OneTab, dan cara memindahkan daftar Anda tanpa kehilangan satu tab pun',
+  navTitle: 'Alternatif OneTab dan cara pindah',
+  seoTitle: 'Alternatif OneTab (dengan Sinkronisasi) dan Cara Mengekspor Daftar',
+  description:
+    'Mencari alternatif OneTab? Apa yang bisa dilakukan OneTab sekarang (kini ada sinkronisasi), alat mana yang bisa melakukan yang tidak bisa dilakukannya, dan cara mengekspor daftar Anda lalu mengimpornya di tempat lain.',
+  shareSummary: 'Alternatif OneTab, sinkronisasi baru OneTab, dan cara aman memindahkan daftar Anda.',
+  dek: 'Ekspor dulu sebelum menghapus apa pun: menghapus OneTab ikut menghapus daftarnya.',
+  published: '2026-11-27',
+  updated: '2026-11-27',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'OneTab punya Backup & Sync berbayar dengan enkripsi end-to-end.',
+      source: 'one-tab.com/sync',
+      href: 'https://www.one-tab.com/sync',
+    },
+    {
+      text: 'Menghapus OneTab ikut menghapus tab yang tersimpan.',
+      source: 'one-tab.com',
+      href: 'https://www.one-tab.com/',
+    },
+    { text: 'Satu lisensi OneTab menyinkronkan hingga 100 browser atau profil.', source: 'one-tab.com/sync' },
+    { text: 'TabMerger mengubah setiap daftar OneTab menjadi grupnya sendiri.', source: 'Diuji di TabMerger 3.16.1, 20 November 2026' },
+  ],
+  faq: [
+    {
+      question: 'Adakah alternatif OneTab yang punya sinkronisasi?',
+      answer:
+        'Ada. TabMerger Pro menyinkronkan grup dan sesi Anda dengan enkripsi end-to-end, di Chrome, Edge, dan Firefox. Toby, Workona, dan Tab Session Manager juga bisa sinkronisasi, dan OneTab kini menawarkan Backup & Sync berbayar.',
+    },
+    {
+      question: 'Bagaimana cara mengekspor dari OneTab?',
+      answer:
+        'Buka OneTab, pilih “Impor & Ekspor”, lalu salin teksnya. Setiap baris berisi alamat dan judul; baris kosong memisahkan daftar Anda. Simpan sebagai file .txt.',
+    },
+    {
+      question: 'Apakah tab saya hilang jika OneTab dihapus?',
+      answer: 'Ya. Situs OneTab sendiri memperingatkan bahwa menghapusnya akan menghapus tab yang tersimpan. Ekspor dulu, dan simpan filenya.',
+    },
+    {
+      question: 'Bisakah saya mengimpor OneTab ke TabMerger?',
+      answer: 'Bisa. Pengaturan → Data → Impor file, pilih file ekspor .txt, lalu konfirmasi. Setiap daftar OneTab menjadi grup TabMerger, lengkap dengan judulnya.',
+    },
+  ],
+  images: [
+    { src: '/blog/onetab-alternatives/tm-settings-import-light.webp', alt: 'Pengaturan TabMerger, Data, dengan tombol Import file (Impor file) di bawah Import & export (Impor & ekspor), tema terang' },
+    { src: '/blog/onetab-alternatives/tm-settings-import-dark.webp', alt: 'Pengaturan TabMerger, Data, dengan tombol Import file (Impor file) di bawah Import & export (Impor & ekspor), tema gelap' },
+    { src: '/blog/onetab-alternatives/tm-import-confirm-light.webp', alt: 'Dialog TabMerger yang menanyakan Import 2 groups? (Impor 2 grup?) untuk file onetab.txt, tema terang' },
+    { src: '/blog/onetab-alternatives/tm-import-confirm-dark.webp', alt: 'Dialog TabMerger yang menanyakan Import 2 groups? (Impor 2 grup?) untuk file onetab.txt, tema gelap' },
+    { src: '/blog/onetab-alternatives/tm-imported-groups-light.webp', alt: 'Sidebar TabMerger dengan grup baru Imported 1 dan Imported 2, grup kedua menampilkan empat tab, tema terang' },
+    { src: '/blog/onetab-alternatives/tm-imported-groups-dark.webp', alt: 'Sidebar TabMerger dengan grup baru Imported 1 dan Imported 2, grup kedua menampilkan empat tab, tema gelap' },
+  ],
+  tags: ['comparison', 'tab-manager', 'save-tabs', 'session-management'],
+  sources: [
+    { title: 'OneTab', publisher: 'one-tab.com', url: 'https://www.one-tab.com/', checked: '2026-11-20' },
+    { title: 'OneTab Backup & Sync', publisher: 'one-tab.com', url: 'https://www.one-tab.com/sync', checked: '2026-11-20' },
+    {
+      title: 'OneTab',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/onetab/chphlpgkkbolifaimnlloiipkdnihall',
+      checked: '2026-11-20',
+    },
+    { title: 'Session Buddy', publisher: 'sessionbuddy.com', url: 'https://sessionbuddy.com/', checked: '2026-11-20' },
+    {
+      title: 'Tab Session Manager',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/tab-session-manager/iaiomicjabeggjcfkbimgmglanimpnae',
+      checked: '2026-11-20',
+    },
+    { title: 'Toby pricing', publisher: 'gettoby.com', url: 'https://www.gettoby.com/pricing', checked: '2026-11-20' },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/onetab-alternatives/tm-imported-groups-light.webp' },
+  ogImage: { src: '/blog/onetab-alternatives/og.png', alt: 'Kartu judul “OneTab alternatives, and how to move your lists without losing a tab”: panduan TabMerger, dengan dua daftar OneTab yang telah diimpor' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'today', label: 'Apa yang dilakukan OneTab sekarang' },
+    { id: 'alternatives', label: 'Alternatifnya' },
+    { id: 'export', label: 'Ekspor dari OneTab' },
+    { id: 'import', label: 'Impor ke TabMerger' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Pertama, ekspor: di OneTab pilih **Impor & Ekspor** (Import & Export), salin teksnya, lalu simpan sebagai file `.txt`, karena menghapus OneTab ikut menghapus daftarnya. Lalu impor ke **TabMerger**, yang mengubah setiap daftar menjadi grup bernama dan menambahkan hal yang tidak bisa diberikan satu daftar: jendela tetap terpisah, satu pencarian untuk tab yang terbuka, tersimpan, dan baru ditutup, penyimpanan otomatis, serta sinkronisasi terenkripsi end-to-end di Chrome, Edge, dan Firefox. Pilihan lain: **Tab Session Manager** untuk sesi yang tersimpan otomatis, **Session Buddy** untuk pemulihan lokal setelah crash, **Toby** untuk papan visual.
+
+</QuickAnswer>
+
+<InstallCta>Pindahkan daftar OneTab Anda ke grup bernama yang bisa dicari. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+<Section id="today" title="Apa yang bisa dilakukan OneTab sekarang?">
+
+Banyak artikel tentang OneTab sudah ketinggalan zaman, jadi inilah yang dikatakan situsnya sendiri (dicek 20 November 2026):
+
+- Sekali klik mengubah tab Anda menjadi daftar, untuk menghemat memori. Pulihkan satu per satu atau sekaligus.
+- Daftar tetap ada meski OneTab ditutup, browser atau komputer dimulai ulang, dan browser crash.
+- Berjalan di Chrome, Firefox, Edge, dan Safari, dengan folder, catatan, serta impor dan ekspor.
+- **Kini ada sinkronisasi.** Backup & Sync adalah langganan tahunan berbayar: perubahan muncul di browser Anda yang lain, dengan cadangan cloud otomatis yang terenkripsi end-to-end. Satu lisensi mencakup hingga 100 browser atau profil, dan jika Anda berhenti berlangganan, tab Anda tetap ada; hanya sinkronisasinya yang berhenti.
+- **Menghapusnya ikut menghapus tab Anda.** Justru karena itulah catatan pemecahan masalah OneTab memperingatkan agar tidak memasangnya ulang untuk memperbaiki masalah.
+
+Jadi sinkronisasi saja tidak lagi membedakan keduanya. Yang ditambahkan TabMerger adalah struktur: grup yang menjaga jendela tetap terpisah, satu pencarian untuk tab yang terbuka, tersimpan, dan baru ditutup, penyimpanan otomatis tab yang terbuka, dan alat yang sama di Chrome, Edge, dan Firefox.
+
+</Section>
+
+<Section id="alternatives" title="Alternatif OneTab mana yang sebaiknya dipilih?">
+
+<ComparisonTable
+  head={['Jika Anda ingin', 'Coba', 'Alasannya']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['Grup lintas jendela, satu pencarian, sinkronisasi terenkripsi', 'TabMerger', 'Grup bernama, pencarian di tab terbuka, tersimpan, dan tertutup, simpan otomatis; sinkronisasi di Pro, selalu terenkripsi end-to-end'],
+    ['Sinkronisasi gratis', 'Tab Session Manager', 'Sinkronisasi cloud, simpan otomatis saat ditutup dan sesuai jadwal; tanpa paket berbayar'],
+    ['Pemulihan crash gratis, tanpa akun', 'Session Buddy', 'Riwayat sesi di perangkat Anda; tanpa sinkronisasi'],
+    ['Papan visual', 'Toby', 'Koleksi di halaman tab baru; gratis hingga 60 tab tersimpan'],
+    ['Tab yang menganggur ditutup otomatis', 'Tab Wrangler', 'Menutup tab yang tidak dipakai, menyimpannya untuk dibuka lagi'],
+  ]}
+/>
+
+Masing-masing dijelaskan berdasarkan situs atau halaman tokonya sendiri. Untuk sepuluh alat berdampingan, lihat [perbandingan ekstensi pengelola tab terbaik](/blog/best-tab-manager-extensions); untuk memahami apa itu sesi dan mengapa penting, lihat [apa fungsi pengelola sesi browser](/blog/browser-session-manager). Harga ada di [halaman perbandingan](/compare) kami.
+
+</Section>
+
+<Section id="export" title="Bagaimana cara mengekspor daftar saya dari OneTab?">
+
+1. Buka OneTab (lewat ikonnya di toolbar, atau halaman OneTab jika disematkan).
+2. Pilih **Impor & Ekspor** (Import & Export).
+3. Salin teks di kotak ekspor. OneTab punya tombol **Salin ke papan klip** (Copy to clipboard).
+4. Tempel ke editor teks biasa (Notepad, atau TextEdit dalam mode teks biasa) dan simpan sebagai `onetab.txt`.
+
+Formatnya sederhana: satu tab per baris sebagai `address | title`, dan satu baris kosong di antara daftar. Satu baris terlihat seperti `https://nodejs.org/en/docs | Documentation | Node.js`.
+
+<Catch>Hasil ekspor berisi alamat dan judul. Nama daftar, catatan, dan folder tidak ikut terbawa, jadi catat daftar mana yang mana sebelum pindah.</Catch>
+
+{/* Screenshot still to capture by hand (needs OneTab installed): OneTab's Import & Export page. */}
+
+</Section>
+
+<Section id="import" title="Bagaimana cara mengimpor ekspor OneTab ke TabMerger?">
+
+[TabMerger](/features), ekstensi gratis kami untuk Chrome, Edge, dan Firefox, membaca file OneTab secara langsung. Tidak ada yang diunggah: file dibaca di browser Anda.
+
+1. Buka TabMerger, lalu **Pengaturan → Data** (Settings → Data).
+2. Di bagian **Impor & ekspor** (Import & export), tekan **Impor file** (Import file) dan pilih file `.txt` Anda.
+3. Konfirmasi. Setiap daftar OneTab menjadi grupnya sendiri, bernama “Imported 1”, “Imported 2”, dan seterusnya, dengan judul tab tetap ada.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Mengimpor ekspor OneTab" steps={[{ title: 'Impor file' }, { title: 'Konfirmasi' }, { title: 'Grup Anda' }]}>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-settings-import" alt="Pengaturan TabMerger, Data, dengan tombol Import file (Impor file) di bawah Import & export (Impor & ekspor), tema terang" darkAlt="Pengaturan TabMerger, Data, dengan tombol Import file (Impor file) di bawah Import & export (Impor & ekspor), tema gelap" boxes={[{ id: 'import-file', label: 'Impor file' }]} source="TabMerger 3.16.1">Settings → Data (Pengaturan → Data): Import file (Impor file) menerima file .txt OneTab, .html bookmark, dan .json TabMerger.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-import-confirm" alt="Dialog TabMerger yang menanyakan Import 2 groups? (Impor 2 grup?) untuk file onetab.txt, tema terang" darkAlt="Dialog TabMerger yang menanyakan Import 2 groups? (Impor 2 grup?) untuk file onetab.txt, tema gelap" boxes={[{ id: 'import-confirm', label: 'Impor' }]} source="TabMerger 3.16.1">Dua daftar OneTab, dua grup, ditambahkan di samping grup yang sudah Anda punya.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-imported-groups" alt="Sidebar TabMerger dengan grup baru Imported 1 dan Imported 2, grup kedua menampilkan empat tab, tema terang" darkAlt="Sidebar TabMerger dengan grup baru Imported 1 dan Imported 2, grup kedua menampilkan empat tab, tema gelap" boxes={[{ id: 'imported', label: 'Grup yang diimpor' }]} source="TabMerger 3.16.1">Daftar yang diimpor sebagai grup. Ganti namanya dari menu masing-masing grup.</ThemedScreenshot>
+</Carousel>
+
+Semua format yang bisa diimpor TabMerger dibahas di [mengimpor tab ke TabMerger](/blog/import-tabs-into-tabmerger). Beberapa detail yang perlu diketahui:
+
+- Baris yang bukan alamat web lengkap (atau yang akan menjalankan skrip) dilewati, dan TabMerger memberi tahu jumlahnya saat impor selesai.
+- Di paket Free, impor yang akan membuat Anda melewati 5 grup atau 50 tab dihentikan sebelum apa pun ditambahkan. Pro tidak punya batas.
+- Biarkan OneTab tetap terpasang sampai Anda memeriksa grupnya. Setelah itu, Anda bisa menghapusnya.
+
+<InstallCta>Gratis untuk Chrome, Edge, dan Firefox. Bawa serta daftar OneTab Anda.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,173 @@
+export const post = {
+  slug: 'onetab-alternatives',
+  title: 'OneTab の代替ツールと、タブを 1 つも失わずにリストを移す方法',
+  navTitle: 'OneTab の代替ツールと乗り換え方',
+  seoTitle: 'OneTab の代替ツール（同期対応）とリストのエクスポート方法',
+  description:
+    'OneTab の代替を探していますか？OneTab に今できること（今は同期もできます）、OneTab にできないことをこなすツール、そしてリストをエクスポートして別のツールにインポートする方法を紹介します。',
+  shareSummary: 'OneTab の代替ツール、OneTab の新しい同期機能、そしてリストを安全に移す方法。',
+  dek: '何かをアンインストールする前にエクスポートを。OneTab を削除すると、そのリストも消えます。',
+  published: '2026-11-27',
+  updated: '2026-11-27',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'OneTab には、有料でエンドツーエンド暗号化の Backup & Sync があります。',
+      source: 'one-tab.com/sync',
+      href: 'https://www.one-tab.com/sync',
+    },
+    {
+      text: 'OneTab をアンインストールすると、保存したタブは削除されます。',
+      source: 'one-tab.com',
+      href: 'https://www.one-tab.com/',
+    },
+    { text: 'OneTab の 1 ライセンスで、最大 100 のブラウザまたはプロファイルを同期できます。', source: 'one-tab.com/sync' },
+    { text: 'TabMerger は、OneTab のリストを 1 つずつ別のグループにします。', source: 'TabMerger 3.16.1 で検証（2026年11月20日）' },
+  ],
+  faq: [
+    {
+      question: '同期できる OneTab の代替ツールはありますか？',
+      answer:
+        'あります。TabMerger Pro は、グループとセッションをエンドツーエンド暗号化で Chrome、Edge、Firefox 間で同期します。Toby、Workona、Tab Session Manager も同期でき、OneTab も今は有料の Backup & Sync を提供しています。',
+    },
+    {
+      question: 'OneTab からエクスポートするには？',
+      answer:
+        'OneTab を開き、「インポートとエクスポート」を選んでテキストをコピーします。各行がアドレスとタイトルで、リストの間は空行で区切られます。.txt ファイルとして保存してください。',
+    },
+    {
+      question: 'OneTab をアンインストールするとタブは消えますか？',
+      answer: 'はい。OneTab 自身のサイトが、アンインストールすると保存したタブが削除されると警告しています。先にエクスポートして、ファイルを残しておきましょう。',
+    },
+    {
+      question: 'OneTab のデータを TabMerger にインポートできますか？',
+      answer: 'できます。設定 → データ → ファイルをインポート で .txt のエクスポートを選び、確定します。OneTab の各リストは、タイトルも含めて TabMerger のグループになります。',
+    },
+  ],
+  images: [
+    { src: '/blog/onetab-alternatives/tm-settings-import-light.webp', alt: 'TabMerger の設定の「Data」（データ）。「Import & export」（インポートとエクスポート）の下に「Import file」（ファイルをインポート）ボタンがある。ライトテーマ' },
+    { src: '/blog/onetab-alternatives/tm-settings-import-dark.webp', alt: 'TabMerger の設定の「Data」（データ）。「Import & export」（インポートとエクスポート）の下に「Import file」（ファイルをインポート）ボタンがある。ダークテーマ' },
+    { src: '/blog/onetab-alternatives/tm-import-confirm-light.webp', alt: 'ファイル onetab.txt について「Import 2 groups?」（2個のグループをインポートしますか？）と尋ねる TabMerger のダイアログ。ライトテーマ' },
+    { src: '/blog/onetab-alternatives/tm-import-confirm-dark.webp', alt: 'ファイル onetab.txt について「Import 2 groups?」（2個のグループをインポートしますか？）と尋ねる TabMerger のダイアログ。ダークテーマ' },
+    { src: '/blog/onetab-alternatives/tm-imported-groups-light.webp', alt: '新しいグループ「Imported 1」と「Imported 2」が並ぶ TabMerger のサイドバー。2 つ目には 4 つのタブがある。ライトテーマ' },
+    { src: '/blog/onetab-alternatives/tm-imported-groups-dark.webp', alt: '新しいグループ「Imported 1」と「Imported 2」が並ぶ TabMerger のサイドバー。2 つ目には 4 つのタブがある。ダークテーマ' },
+  ],
+  tags: ['comparison', 'tab-manager', 'save-tabs', 'session-management'],
+  sources: [
+    { title: 'OneTab', publisher: 'one-tab.com', url: 'https://www.one-tab.com/', checked: '2026-11-20' },
+    { title: 'OneTab Backup & Sync', publisher: 'one-tab.com', url: 'https://www.one-tab.com/sync', checked: '2026-11-20' },
+    {
+      title: 'OneTab',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/onetab/chphlpgkkbolifaimnlloiipkdnihall',
+      checked: '2026-11-20',
+    },
+    { title: 'Session Buddy', publisher: 'sessionbuddy.com', url: 'https://sessionbuddy.com/', checked: '2026-11-20' },
+    {
+      title: 'Tab Session Manager',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/tab-session-manager/iaiomicjabeggjcfkbimgmglanimpnae',
+      checked: '2026-11-20',
+    },
+    { title: 'Toby pricing', publisher: 'gettoby.com', url: 'https://www.gettoby.com/pricing', checked: '2026-11-20' },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/onetab-alternatives/tm-imported-groups-light.webp' },
+  ogImage: { src: '/blog/onetab-alternatives/og.png', alt: 'タイトルカード「OneTab alternatives, and how to move your lists without losing a tab」。インポートした 2 つの OneTab リストを添えた TabMerger のガイド' },
+  toc: [
+    { id: 'quick', label: '結論' },
+    { id: 'today', label: 'OneTab に今できること' },
+    { id: 'alternatives', label: '代替ツール' },
+    { id: 'export', label: 'OneTab からエクスポート' },
+    { id: 'import', label: 'TabMerger にインポート' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+}
+
+<QuickAnswer>
+
+まずエクスポートします。OneTab をアンインストールするとリストが消えるので、OneTab で **インポートとエクスポート**（Import & Export）を選び、テキストをコピーして `.txt` ファイルとして保存します。次にそれを **TabMerger** にインポートします。TabMerger は各リストを名前付きのグループにし、1 つのリストではできないことを加えます。ウィンドウを分けたまま保存でき、開いているタブ・保存したタブ・最近閉じたタブを 1 か所で検索でき、自動保存と、Chrome・Edge・Firefox でのエンドツーエンド暗号化同期も使えます。ほかの選択肢としては、セッションを自動保存するなら **Tab Session Manager**、クラッシュからローカルで復元するなら **Session Buddy**、ビジュアルなボードなら **Toby** があります。
+
+</QuickAnswer>
+
+<InstallCta>OneTab のリストを、名前付きで検索できるグループに。Chrome、Edge、Firefox で無料。</InstallCta>
+
+<Section id="today" title="OneTab に今できることは？">
+
+OneTab に関する記事には古いものが多いので、OneTab 自身のサイトに書かれていることをまとめます（2026年11月20日に確認）。
+
+- クリック 1 回でタブをリストにまとめ、メモリを節約します。タブは 1 つずつでも、まとめてでも復元できます。
+- リストは、OneTab を閉じても、ブラウザやパソコンを再起動しても、ブラウザがクラッシュしても残ります。
+- Chrome、Firefox、Edge、Safari で動作し、フォルダ、メモ、インポートとエクスポートに対応しています。
+- **今は同期もできます**。Backup & Sync は有料の年間サブスクリプションで、変更がほかのブラウザにも反映され、エンドツーエンド暗号化されたクラウドへの自動バックアップも付きます。1 ライセンスで最大 100 のブラウザまたはプロファイルに対応し、サブスクリプションをやめてもタブは残ります。止まるのは同期だけです。
+- **アンインストールするとタブが削除されます**。OneTab のトラブルシューティングの注意書きが、問題を直すために再インストールしないよう警告しているのは、まさにこのためです。
+
+つまり、同期だけではもう両者の違いになりません。TabMerger が加えるのは構造です。ウィンドウを分けたまま保てるグループ、開いているタブ・保存したタブ・最近閉じたタブをまとめて探せる検索、開いているタブの自動保存、そして Chrome、Edge、Firefox で同じツールが使えること。
+
+</Section>
+
+<Section id="alternatives" title="どの OneTab 代替ツールを選ぶべき？">
+
+<ComparisonTable
+  head={['こんなときは', 'おすすめ', '理由']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['複数ウィンドウにまたがるグループ、1 つの検索、暗号化された同期', 'TabMerger', '名前付きグループ、開いている・保存した・閉じたタブの検索、自動保存。同期は Pro で、常にエンドツーエンド暗号化'],
+    ['無料の同期', 'Tab Session Manager', 'クラウド同期、閉じたときと一定間隔での自動保存。有料プランなし'],
+    ['アカウント不要の無料クラッシュ復元', 'Session Buddy', 'セッション履歴をデバイス内に保存。同期なし'],
+    ['ビジュアルなボード', 'Toby', '新しいタブページにコレクションを表示。保存タブ 60 個まで無料'],
+    ['使っていないタブを自動で閉じたい', 'Tab Wrangler', '使っていないタブを閉じ、あとで開き直せるよう保管'],
+  ]}
+/>
+
+いずれも、各ツールの公式サイトやストアの掲載情報をもとに説明しています。10 個のツールを並べて比べるなら [おすすめのタブ管理拡張機能の比較](/blog/best-tab-manager-extensions) を、セッションとは何か、なぜ大切かは [ブラウザのセッションマネージャーでできること](/blog/browser-session-manager) をご覧ください。価格は [比較ページ](/compare) にあります。
+
+</Section>
+
+<Section id="export" title="OneTab からリストをエクスポートするには？">
+
+1. OneTab を開きます（ツールバーのアイコンから、または固定している場合は OneTab のページから）。
+2. **インポートとエクスポート**（Import & Export）を選びます。
+3. エクスポート欄のテキストをコピーします。OneTab には **クリップボードにコピー**（Copy to clipboard）ボタンがあります。
+4. プレーンテキストのエディタ（Notepad、またはプレーンテキストに設定した TextEdit）に貼り付け、`onetab.txt` として保存します。
+
+形式はシンプルです。1 行に 1 タブを `address | title` の形で書き、リストの間に空行が入ります。1 行はたとえば `https://nodejs.org/en/docs | Documentation | Node.js` のようになります。
+
+<Catch>エクスポートに含まれるのはアドレスとタイトルです。リスト名、メモ、フォルダは引き継がれないので、移行する前にどのリストが何だったかをメモしておきましょう。</Catch>
+
+{/* Screenshot still to capture by hand (needs OneTab installed): OneTab's Import & Export page. */}
+
+</Section>
+
+<Section id="import" title="OneTab のエクスポートを TabMerger にインポートするには？">
+
+[TabMerger](/features) は、Chrome、Edge、Firefox 向けの無料拡張機能で、OneTab のファイルを直接読み込めます。アップロードは一切なく、ファイルはブラウザ内で読み込まれます。
+
+1. TabMerger を開き、**設定 → データ**（Settings → Data）を開きます。
+2. **インポートとエクスポート**（Import & export）の下にある **ファイルをインポート**（Import file）を押し、`.txt` ファイルを選びます。
+3. 確定します。OneTab の各リストがそれぞれ 1 つのグループになり、「Imported 1」「Imported 2」のように名前が付きます。タブのタイトルもそのまま残ります。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="OneTab のエクスポートをインポートする" steps={[{ title: 'ファイルをインポート' }, { title: '確定' }, { title: 'グループの完成' }]}>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-settings-import" alt="TabMerger の設定の「Data」（データ）。「Import & export」（インポートとエクスポート）の下に「Import file」（ファイルをインポート）ボタンがある。ライトテーマ" darkAlt="TabMerger の設定の「Data」（データ）。「Import & export」（インポートとエクスポート）の下に「Import file」（ファイルをインポート）ボタンがある。ダークテーマ" boxes={[{ id: 'import-file', label: 'ファイルをインポート' }]} source="TabMerger 3.16.1">「Settings → Data」（設定 → データ）。「Import file」（ファイルをインポート）は、OneTab の .txt、ブックマークの .html、TabMerger の .json ファイルを読み込めます。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-import-confirm" alt="ファイル onetab.txt について「Import 2 groups?」（2個のグループをインポートしますか？）と尋ねる TabMerger のダイアログ。ライトテーマ" darkAlt="ファイル onetab.txt について「Import 2 groups?」（2個のグループをインポートしますか？）と尋ねる TabMerger のダイアログ。ダークテーマ" boxes={[{ id: 'import-confirm', label: 'インポート' }]} source="TabMerger 3.16.1">2 つの OneTab リストが 2 つのグループになり、既存のグループの隣に追加されます。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-imported-groups" alt="新しいグループ「Imported 1」と「Imported 2」が並ぶ TabMerger のサイドバー。2 つ目には 4 つのタブがある。ライトテーマ" darkAlt="新しいグループ「Imported 1」と「Imported 2」が並ぶ TabMerger のサイドバー。2 つ目には 4 つのタブがある。ダークテーマ" boxes={[{ id: 'imported', label: 'インポートしたグループ' }]} source="TabMerger 3.16.1">グループとしてインポートされたリスト。名前は各グループのメニューから変更できます。</ThemedScreenshot>
+</Carousel>
+
+TabMerger がインポートできるすべての形式は [TabMerger にタブをインポートする](/blog/import-tabs-into-tabmerger) で解説しています。知っておきたい点をいくつか挙げます。
+
+- 完全なウェブアドレスではない行（またはスクリプトを実行しうる行）はスキップされ、インポートが終わると TabMerger がその件数を知らせます。
+- Free では、5 グループまたは 50 タブを超えてしまうインポートは、何も追加される前に止まります。Pro には上限がありません。
+- グループを確認するまで OneTab はインストールしたままにしておきましょう。確認できたら削除してかまいません。
+
+<InstallCta>Chrome、Edge、Firefox で無料。OneTab のリストもそのまま持っていけます。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

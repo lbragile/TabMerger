@@ -24,6 +24,12 @@ Translated posts name browser settings and menus. Every localized label must com
 - **Chrome's word for "tab" isn't always the searched word:** pt-BR Chrome says "guia" (search and our prose: "aba"), vi "thẻ" ("tab"), fa "برگه" ("زبانه"). Keep the help label verbatim for UI names and name the Chrome term once in the prose.
 - **Firefox tab groups** (`browser/browser/tabbrowser.ftl`): `tab-group-editor-action-save` ("Save and close group"), `tab-context-move-tab-to-group-saved-groups` ("Closed Groups"). hi-IN lacks both (English); ar renders "Closed Groups" as الألسنة المغلقة.
 
+## Third-party extension labels (OneTab and others)
+
+- A competitor extension's own `_locales/<lang>/messages.json` is the official source for its localized UI. Download the package into its own scratch folder: Chrome CRX via `https://clients2.google.com/service/update2/crx?response=redirect&prodversion=157.0&acceptformat=crx2,crx3&x=id%3D<id>%26uc` (then `unzip`, which warns about the CRX header), Firefox via `https://addons.mozilla.org/firefox/downloads/latest/<slug>/latest.xpi`. Locale folders use underscores (`pt_BR`, `zh_CN`).
+- **Catalogs keep dead keys.** Before you use a key's translation, grep the bundled JS for the key name (`c("importAndExport")`-style calls) to check that the UI still shows it. OneTab 2.24/2.25 still has `exportImportUrls` ("Export / Import URLs") in every catalog, but nothing references it any more: the menu item and page header use `importAndExport` ("Import & Export"). The English posts were corrected to match.
+- The Chrome Web Store listing's language list (e.g. "48 languages") tells you a catalog exists, but not which strings it holds.
+
 ## Writing convention (from de/es/fr)
 
 - First body mention: localized label plus the English in parentheses; later mentions use the localized label only. Settings paths use localized segments plus the English path in parentheses.
