@@ -281,7 +281,7 @@
     "title": "قادم من OneTab؟",
     "lead": "تصل قوائمك كمجموعات، مع عناوينها. لا شيء يغادر متصفحك.",
     "steps": {
-      "export": "في OneTab، افتح <b>Export / Import URLs</b> واضغط <b>Copy to clipboard</b>.",
+      "export": "في OneTab، افتح <b>استيراد وتصدير</b> واضغط <b>نسخ إلى الحافظة</b>.",
       "save": "الصقه في ملف نصي عادي (Notepad، أو TextEdit في وضع النص العادي) واحفظه بامتداد <b><code>.txt</code></b>.",
       "open": "في TabMerger، افتح <b>الإعدادات ← البيانات</b>، واضغط <b>استيراد</b> واختر ملف <code>.txt</code>.",
       "import": "أكّد. تصبح كل مجموعة من OneTab مجموعة مستقلة باسم ⁨\"Imported 1\"⁩ و⁨\"Imported 2\"⁩ وهكذا.",

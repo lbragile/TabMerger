@@ -281,7 +281,7 @@
     "title": "OneTab から乗り換えますか？",
     "lead": "リストはタイトルも含めてグループとして取り込まれます。データがブラウザの外に出ることはありません。",
     "steps": {
-      "export": "OneTab で <b>Export / Import URLs</b> を開き、<b>Copy to clipboard</b> を押します。",
+      "export": "OneTab で <b>インポートとエクスポート</b> を開き、<b>クリップボードにコピー</b> を押します。",
       "save": "プレーンテキストのファイル（メモ帳、またはプレーンテキストに設定したテキストエディット）に貼り付けて、<b><code>.txt</code></b> として保存します。",
       "open": "TabMerger で <b>設定 → データ</b> を開き、<b>インポート</b> を押して <code>.txt</code> ファイルを選びます。",
       "import": "確定します。OneTab のグループはそれぞれ独立したグループになり、「Imported 1」「Imported 2」…と名前が付きます。",
