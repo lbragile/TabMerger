@@ -1,0 +1,162 @@
+export const post = {
+  slug: 'merge-browser-windows',
+  title: 'कई ब्राउज़र विंडो को एक विंडो में कैसे मर्ज करें',
+  navTitle: 'ब्राउज़र विंडो मर्ज करें',
+  seoTitle: 'Chrome की कई विंडो को एक में कैसे मर्ज करें (Edge, Firefox में भी)',
+  description:
+    'पाँच विंडो और हर तरफ़ टैब? Chrome, Edge और Firefox में टैब को एक विंडो से दूसरी में ले जाएँ, या TabMerger से सारी खुली विंडो इकट्ठा करवाएँ और तीन क्लिक में उन्हें एक ही विंडो में फिर से खोलें।',
+  shareSummary: 'Chrome, Edge और Firefox में सारी खुली ब्राउज़र विंडो को एक विंडो में मर्ज करें।',
+  dek: 'दो विंडो हों तो टैब एक-एक करके खींचना चल जाता है। पाँच हों तो इकट्ठा करने का काम TabMerger पर छोड़ दें।',
+  published: '2026-11-30',
+  updated: '2026-11-30',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger सारी खुली विंडो को एक ग्रुप में सेव करता है, फिर उसे एक ही विंडो के रूप में दोबारा खोलता है।', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome चुने गए टैब को “टैब को किसी दूसरी विंडो पर ले जाएं” से ले जाता है।',
+      source: 'Chrome सहायता',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Edge 158 के टैब मेन्यू में “Move tab to another window” है।', source: 'Edge 158 के मेन्यू का टेक्स्ट' },
+    { text: 'Firefox 159 के “Move Tab” मेन्यू में सिर्फ़ शुरुआत, अंत या नई विंडो के विकल्प हैं।', source: 'Firefox 159 के मेन्यू का टेक्स्ट' },
+  ],
+  faq: [
+    {
+      question: 'Chrome की दो विंडो को एक कैसे करें?',
+      answer:
+        'एक विंडो में टैब चुनें (Ctrl-क्लिक या Shift-क्लिक), उनमें से किसी एक पर राइट-क्लिक करें, “टैब को किसी दूसरी विंडो पर ले जाएं” चुनें और फिर दूसरी विंडो चुनें। एक साथ कई विंडो के लिए TabMerger तीन क्लिक में सबको मर्ज कर देता है।',
+    },
+    {
+      question: 'क्या सारी विंडो एक साथ मर्ज हो सकती हैं?',
+      answer:
+        'हाँ, TabMerger से: एक ग्रुप जोड़ें, सारी खुली विंडो उसमें सेव करने के लिए “वर्तमान के साथ विलय करें” चुनें, फिर ग्रुप पर राइट-क्लिक करके “सभी को नई विंडो में खोलें” चुनें। पुरानी विंडो बंद कर दें, बस एक विंडो बचेगी।',
+    },
+    {
+      question: 'क्या विंडो मर्ज करने से मेरे टैब खो जाएँगे?',
+      answer: 'TabMerger के साथ नहीं: ग्रुप हर टैब को रखता है, इसलिए आप पुरानी विंडो बेफ़िक्र होकर बंद कर सकते हैं और पूरा सेट कभी भी दोबारा खोल सकते हैं।',
+    },
+    {
+      question: 'क्या यह Firefox में काम करता है?',
+      answer: 'हाँ। TabMerger Chrome, Edge और Firefox में एक जैसा काम करता है। Firefox का अपना “Move Tab” मेन्यू टैब को सिर्फ़ शुरुआत में, अंत में या नई विंडो में ले जा सकता है।',
+    },
+  ],
+  images: [
+    { src: '/blog/merge-browser-windows/tm-three-windows-light.webp', alt: 'TabMerger में Now Open (अभी खुले हुए): तीन ब्राउज़र विंडो, हर एक में तीन टैब, लाइट थीम' },
+    { src: '/blog/merge-browser-windows/tm-three-windows-dark.webp', alt: 'TabMerger में Now Open (अभी खुले हुए): तीन ब्राउज़र विंडो, हर एक में तीन टैब, डार्क थीम' },
+    { src: '/blog/merge-browser-windows/tm-open-all-menu-light.webp', alt: 'TabMerger में All in one ग्रुप का मेन्यू, जिसमें Open all in new window (सभी को नई विंडो में खोलें) हाइलाइट है, लाइट थीम' },
+    { src: '/blog/merge-browser-windows/tm-open-all-menu-dark.webp', alt: 'TabMerger में All in one ग्रुप का मेन्यू, जिसमें Open all in new window (सभी को नई विंडो में खोलें) हाइलाइट है, डार्क थीम' },
+    { src: '/blog/merge-browser-windows/tm-one-window-light.webp', alt: 'TabMerger में Now Open (अभी खुले हुए): एक ही ब्राउज़र विंडो, जिसमें सभी नौ टैब हैं, लाइट थीम' },
+    { src: '/blog/merge-browser-windows/tm-one-window-dark.webp', alt: 'TabMerger में Now Open (अभी खुले हुए): एक ही ब्राउज़र विंडो, जिसमें सभी नौ टैब हैं, डार्क थीम' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (mouse shortcuts)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/merge-browser-windows/tm-one-window-light.webp' },
+  ogImage: { src: '/blog/merge-browser-windows/og.png', alt: 'कई ब्राउज़र विंडो को एक विंडो में कैसे मर्ज करें: TabMerger की गाइड, एक ही विंडो में नौ टैब के साथ' },
+  toc: [
+    { id: 'quick', label: 'छोटा जवाब' },
+    { id: 'tabmerger', label: 'सारी विंडो एक साथ मर्ज करें' },
+    { id: 'builtin', label: 'टैब हाथ से ले जाएँ' },
+    { id: 'after', label: 'सब व्यवस्थित रखें' },
+    { id: 'faq', label: 'अक्सर पूछे जाने वाले प्रश्न' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'चुने गए टैब ले जाएँ',
+    values: {
+      chrome: 'राइट-क्लिक → टैब को किसी दूसरी विंडो पर ले जाएं',
+      edge: 'राइट-क्लिक → Move tab to another window',
+      firefox: 'राइट-क्लिक → Move Tab → नए विंडो में खिसकाएँ',
+    },
+  },
+}
+
+<QuickAnswer>
+
+**सारी** विंडो एक साथ मर्ज करने के लिए [TabMerger](/features) इस्तेमाल करें: **समूह जोड़ें** पर क्लिक करें, उसके **⋯** मेन्यू में **वर्तमान के साथ विलय करें** चुनें ताकि सारी खुली विंडो उसमें सेव हो जाएँ, फिर ग्रुप पर राइट-क्लिक करके **सभी को नई विंडो में खोलें** चुनें। पुरानी विंडो बंद कर दें, बस एक विंडो बचेगी, और हर टैब सेव रहेगा, ताकि ज़रूरत पड़ने पर आप उसे वापस ला सकें। कुछ टैब हाथ से ले जाने हों, तो उन्हें चुनें, राइट-क्लिक करें और **टैब को किसी दूसरी विंडो पर ले जाएं** (Move tabs to another window; Chrome, Edge) चुनें।
+
+</QuickAnswer>
+
+<InstallCta>तीन क्लिक में सारी खुली विंडो को एक में मर्ज करें। Chrome, Edge और Firefox के लिए मुफ़्त।</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="सारी विंडो एक साथ कैसे मर्ज करें?">
+
+ब्राउज़र एक बार में एक ही विंडो के टैब ले जाते हैं। TabMerger **अभी खुले हुए** में आपकी सारी विंडो एक साथ देखता है, इसलिए वह उन्हें एक ही बार में इकट्ठा कर सकता है:
+
+1. **समूह जोड़ें** पर क्लिक करें और उसे कोई नाम दें, जैसे “सब एक में” (स्क्रीनशॉट में “All in one”)।
+2. ग्रुप का **⋯** मेन्यू खोलें और **वर्तमान के साथ विलय करें** चुनें: हर खुली विंडो अपने टैब के साथ ग्रुप में सेव हो जाती है।
+3. साइडबार में ग्रुप पर राइट-क्लिक करें और **सभी को नई विंडो में खोलें** चुनें: सारे टैब के साथ एक नई विंडो खुल जाती है।
+4. पुरानी विंडो बंद कर दें। कुछ भी नहीं खोता: ग्रुप में अब भी सब कुछ है।
+
+<ScreenshotThemeToggle />
+
+<Carousel label="तीन विंडो को एक में मर्ज करना" steps={[{ title: 'तीन विंडो' }, { title: 'सभी खोलें' }, { title: 'एक विंडो' }]}>
+<ThemedScreenshot src="/blog/merge-browser-windows/tm-three-windows" alt="TabMerger में Now Open (अभी खुले हुए): तीन ब्राउज़र विंडो, हर एक में तीन टैब, लाइट थीम" darkAlt="TabMerger में Now Open (अभी खुले हुए): तीन ब्राउज़र विंडो, हर एक में तीन टैब, डार्क थीम" boxes={[{ id: 'summary', label: 'तीन विंडो' }]} source="TabMerger 3.16.1">पहले: तीन विंडो, नौ टैब।</ThemedScreenshot>
+<ThemedScreenshot src="/blog/merge-browser-windows/tm-open-all-menu" alt="TabMerger में All in one ग्रुप का मेन्यू, जिसमें Open all in new window (सभी को नई विंडो में खोलें) हाइलाइट है, लाइट थीम" darkAlt="TabMerger में All in one ग्रुप का मेन्यू, जिसमें Open all in new window (सभी को नई विंडो में खोलें) हाइलाइट है, डार्क थीम" boxes={[{ id: 'open-all', label: 'सभी को नई विंडो में खोलें' }]} source="TabMerger 3.16.1">Merge with current (वर्तमान के साथ विलय करें) के बाद, ग्रुप का राइट-क्लिक मेन्यू सब कुछ एक ही विंडो में खोल देता है।</ThemedScreenshot>
+<ThemedScreenshot src="/blog/merge-browser-windows/tm-one-window" alt="TabMerger में Now Open (अभी खुले हुए): एक ही ब्राउज़र विंडो, जिसमें सभी नौ टैब हैं, लाइट थीम" darkAlt="TabMerger में Now Open (अभी खुले हुए): एक ही ब्राउज़र विंडो, जिसमें सभी नौ टैब हैं, डार्क थीम" boxes={[{ id: 'summary', label: 'एक विंडो' }]} source="TabMerger 3.16.1">पुरानी विंडो बंद करने के बाद: एक विंडो, सभी नौ टैब।</ThemedScreenshot>
+</Carousel>
+
+चाहते हैं कि सेव की गई कॉपी भी साफ़-सुथरी रहे? ग्रुप के **⋯** मेन्यू में **विंडो एकजुट करें** भी है, जो उसकी सेव की गई विंडो को एक में जोड़ देता है (और इसे पलटने के लिए **विंडो विभाजित करें**)।
+
+</Section>
+
+<Section id="builtin" title="विंडो के बीच टैब हाथ से कैसे ले जाएँ?">
+
+दो विंडो और गिने-चुने टैब के लिए यह ठीक है:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. टैब चुनें: हर टैब पर <Kbd>Ctrl</Kbd>-क्लिक करें, या पहले टैब पर क्लिक करके आख़िरी पर <Kbd>Shift</Kbd>-क्लिक करें।
+2. चुने गए किसी टैब पर राइट-क्लिक करें, **टैब को किसी दूसरी विंडो पर ले जाएं** (Move tabs to another window) चुनें, फिर विंडो चुनें।
+3. या किसी टैब को खींचकर दूसरी विंडो की टैब पट्टी में छोड़ दें।
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. <Kbd>Ctrl</Kbd>-क्लिक या <Kbd>Shift</Kbd>-क्लिक से टैब चुनें।
+2. चुने गए किसी टैब पर राइट-क्लिक करें, **Move tab to another window** चुनें (कई टैब चुने हों तो **Move tabs…**), फिर विंडो चुनें।
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+किसी टैब (या चुने गए कई टैब) पर राइट-क्लिक करें और **Move Tab** खोलें: Firefox 159 में **शुरू करने के लिए ले जाएँ** (Move to Start), **अंत में ले जाएँ** (Move to End) और **नए विंडो में खिसकाएँ** (Move to New Window) हैं, लेकिन पहले से खुली किसी दूसरी विंडो के लिए कोई विकल्प नहीं है। Firefox में कई विंडो को एक में मर्ज करने के लिए ऊपर दिए गए TabMerger के चरण अपनाएँ।
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>हर बार सिर्फ़ एक विंडो के टैब जाते हैं। पाँच विंडो हों तो बहुत सारे राइट-क्लिक करने पड़ते हैं, और खाली हुई विंडो भी ख़ुद बंद करनी पड़ती हैं।</Catch>
+
+</Section>
+
+<Section id="after" title="एक ही विंडो कैसे बनाए रखें?">
+
+- **बंद करने से पहले सेव करें।** वर्तमान के साथ विलय करें में एक सेकंड लगता है, और उसके बाद आप कोई भी विंडो बिना सोचे बंद कर सकते हैं।
+- **हर प्रोजेक्ट के लिए एक ग्रुप।** अगर मर्ज की गई विंडो अब भी बहुत लंबी है, तो उसे फिर से नाम वाले ग्रुप में बाँट दें; हमारा [बहुत सारे टैब वाला रूटीन](/blog/manage-too-many-tabs) बताता है कि कैसे।
+- **डुप्लिकेट हटाएँ।** मर्ज की गई विंडो में अक्सर एक ही पेज दो बार खुला होता है; TabMerger में [डुप्लिकेट टैब बंद करना](/blog/close-duplicate-tabs) बस एक और क्लिक का काम है।
+- **सब कुछ रखें।** पूरे सेट को रोककर बाद में वहीं से शुरू करने के लिए देखें [सारे खुले टैब कैसे सेव करें](/blog/save-all-open-tabs)।
+
+<InstallCta>Chrome, Edge और Firefox के लिए मुफ़्त। शुरू करने के लिए किसी खाते की ज़रूरत नहीं।</InstallCta>
+
+</Section>
+
+<Section id="faq" title="अक्सर पूछे जाने वाले प्रश्न">
+
+<Faq items={post.faq} />
+
+</Section>

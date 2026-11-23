@@ -1,0 +1,162 @@
+export const post = {
+  slug: 'merge-browser-windows',
+  title: 'Como juntar várias janelas do navegador em uma só',
+  navTitle: 'Juntar janelas do navegador',
+  seoTitle: 'Como juntar janelas do Chrome (e do Edge e Firefox) em uma só',
+  description:
+    'Cinco janelas e abas para todo lado? Mova abas entre janelas no Chrome, Edge e Firefox, ou deixe o TabMerger reunir todas as janelas abertas e reabri-las como uma só, em três cliques.',
+  shareSummary: 'Junte todas as janelas abertas do navegador em uma só, no Chrome, Edge e Firefox.',
+  dek: 'Arrastar abas uma a uma funciona com duas janelas. Com cinco, deixe o TabMerger juntar tudo.',
+  published: '2026-11-30',
+  updated: '2026-11-30',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'O TabMerger salva todas as janelas abertas em um grupo e depois o reabre como uma única janela.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'O Chrome move as guias selecionadas com “Mover guias para outra janela”.',
+      source: 'Ajuda do Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'O menu de abas do Edge 158 tem “Move tab to another window”.', source: 'Texto do menu do Edge 158' },
+    { text: 'O menu “Mover aba” do Firefox 159 só oferece início, final ou nova janela.', source: 'Texto do menu do Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Como juntar duas janelas do Chrome?',
+      answer:
+        'Selecione as abas em uma janela (Ctrl + clique ou Shift + clique), clique com o botão direito em uma delas, escolha “Mover guias para outra janela” e depois a outra janela. Para muitas janelas de uma vez, o TabMerger junta todas em três cliques.',
+    },
+    {
+      question: 'Dá para juntar todas as janelas de uma vez?',
+      answer:
+        'Sim, com o TabMerger: adicione um grupo, escolha “Mesclar com as atuais” para salvar nele todas as janelas abertas e, depois, clique com o botão direito no grupo e escolha “Abrir tudo em nova janela”. Feche as janelas antigas e sobra uma só.',
+    },
+    {
+      question: 'Juntar janelas faz perder abas?',
+      answer: 'Não com o TabMerger: o grupo guarda todas as abas, então você pode fechar as janelas antigas com segurança e reabrir o conjunto quando quiser.',
+    },
+    {
+      question: 'Funciona no Firefox?',
+      answer: 'Sim. O TabMerger funciona do mesmo jeito no Chrome, Edge e Firefox. O próprio menu “Mover aba” do Firefox só consegue mover abas para o início, para o final ou para uma nova janela.',
+    },
+  ],
+  images: [
+    { src: '/blog/merge-browser-windows/tm-three-windows-light.webp', alt: 'TabMerger, “Now Open” (Abertas agora), com três janelas do navegador de três abas cada, tema claro' },
+    { src: '/blog/merge-browser-windows/tm-three-windows-dark.webp', alt: 'TabMerger, “Now Open” (Abertas agora), com três janelas do navegador de três abas cada, tema escuro' },
+    { src: '/blog/merge-browser-windows/tm-open-all-menu-light.webp', alt: 'Menu do grupo “All in one” do TabMerger com “Open all in new window” (Abrir tudo em nova janela) destacado, tema claro' },
+    { src: '/blog/merge-browser-windows/tm-open-all-menu-dark.webp', alt: 'Menu do grupo “All in one” do TabMerger com “Open all in new window” (Abrir tudo em nova janela) destacado, tema escuro' },
+    { src: '/blog/merge-browser-windows/tm-one-window-light.webp', alt: 'TabMerger, “Now Open” (Abertas agora), com uma única janela do navegador e todas as nove abas, tema claro' },
+    { src: '/blog/merge-browser-windows/tm-one-window-dark.webp', alt: 'TabMerger, “Now Open” (Abertas agora), com uma única janela do navegador e todas as nove abas, tema escuro' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (mouse shortcuts)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/merge-browser-windows/tm-one-window-light.webp' },
+  ogImage: { src: '/blog/merge-browser-windows/og.png', alt: 'Como juntar várias janelas do navegador em uma só: um guia do TabMerger, com nove abas em uma única janela' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'tabmerger', label: 'Juntar todas as janelas de uma vez' },
+    { id: 'builtin', label: 'Mover abas manualmente' },
+    { id: 'after', label: 'Manter tudo organizado' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Mover as abas selecionadas',
+    values: {
+      chrome: 'Botão direito → Mover guias para outra janela',
+      edge: 'Botão direito → Move tab to another window',
+      firefox: 'Botão direito → Mover aba → Mover para nova janela',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Para juntar **todas** as janelas de uma vez, use o [TabMerger](/features): clique em **Adicionar grupo**, escolha **Mesclar com as atuais** no menu **⋯** do grupo para salvar nele todas as janelas abertas e, depois, clique com o botão direito no grupo e escolha **Abrir tudo em nova janela**. Feche as janelas antigas e sobra só uma, com todas as abas salvas caso você queira recuperá-las. Para mover algumas abas manualmente, selecione-as, clique com o botão direito e escolha **Mover guias para outra janela** (Move tabs to another window; Chrome, Edge). O Chrome chama as abas de “guias”.
+
+</QuickAnswer>
+
+<InstallCta>Junte todas as janelas abertas em uma só em três cliques. Grátis para Chrome, Edge e Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Como juntar todas as janelas de uma vez?">
+
+Os navegadores movem abas uma janela por vez. O TabMerger vê todas as suas janelas juntas em **Abertas agora**, então consegue reuni-las de uma só vez:
+
+1. Clique em **Adicionar grupo** e dê um nome a ele, como “Tudo em um” (nas capturas de tela, “All in one”).
+2. Abra o menu **⋯** do grupo e escolha **Mesclar com as atuais**: todas as janelas abertas, com suas abas, são salvas no grupo.
+3. Clique com o botão direito no grupo na barra lateral e escolha **Abrir tudo em nova janela**: uma nova janela se abre com todas as abas.
+4. Feche as janelas antigas. Nada se perde: o grupo continua com todas elas.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Juntar três janelas em uma" steps={[{ title: 'Três janelas' }, { title: 'Abrir tudo' }, { title: 'Uma janela' }]}>
+<ThemedScreenshot src="/blog/merge-browser-windows/tm-three-windows" alt="TabMerger, “Now Open” (Abertas agora), com três janelas do navegador de três abas cada, tema claro" darkAlt="TabMerger, “Now Open” (Abertas agora), com três janelas do navegador de três abas cada, tema escuro" boxes={[{ id: 'summary', label: 'Três janelas' }]} source="TabMerger 3.16.1">Antes: três janelas, nove abas.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/merge-browser-windows/tm-open-all-menu" alt="Menu do grupo “All in one” do TabMerger com “Open all in new window” (Abrir tudo em nova janela) destacado, tema claro" darkAlt="Menu do grupo “All in one” do TabMerger com “Open all in new window” (Abrir tudo em nova janela) destacado, tema escuro" boxes={[{ id: 'open-all', label: 'Abrir tudo em nova janela' }]} source="TabMerger 3.16.1">Depois de “Merge with current” (Mesclar com as atuais), o menu de contexto do grupo abre tudo em uma única janela.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/merge-browser-windows/tm-one-window" alt="TabMerger, “Now Open” (Abertas agora), com uma única janela do navegador e todas as nove abas, tema claro" darkAlt="TabMerger, “Now Open” (Abertas agora), com uma única janela do navegador e todas as nove abas, tema escuro" boxes={[{ id: 'summary', label: 'Uma janela' }]} source="TabMerger 3.16.1">Depois de fechar as janelas antigas: uma janela, todas as nove abas.</ThemedScreenshot>
+</Carousel>
+
+Quer a cópia salva organizada também? O menu **⋯** do grupo tem ainda **Unir janelas**, que junta as janelas salvas dele em uma só (e **Dividir janelas** para desfazer).
+
+</Section>
+
+<Section id="builtin" title="Como mover abas entre janelas manualmente?">
+
+Serve para duas janelas e um punhado de abas:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. Selecione as abas: <Kbd>Ctrl</Kbd> + clique em cada uma, ou clique na primeira e <Kbd>Shift</Kbd> + clique na última.
+2. Clique com o botão direito em uma aba selecionada, escolha **Mover guias para outra janela** (Move tabs to another window) e depois a janela.
+3. Ou arraste uma aba para a barra de abas da outra janela.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Selecione as abas com <Kbd>Ctrl</Kbd> + clique ou <Kbd>Shift</Kbd> + clique.
+2. Clique com o botão direito em uma aba selecionada, escolha **Move tab to another window** (ou **Move tabs…** com várias selecionadas) e depois a janela.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Clique com o botão direito em uma aba (ou em várias abas selecionadas) e abra **Mover aba** (Move Tab): o Firefox 159 oferece **Mover para o início**, **Mover para o final** e **Mover para nova janela**, mas nenhuma opção para outra janela que já esteja aberta. Para juntar várias janelas em uma no Firefox, siga os passos do TabMerger acima.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>cada movimento vale para uma janela por vez. Com cinco janelas, são muitos cliques com o botão direito, e você ainda precisa fechar as janelas que ficaram vazias.</Catch>
+
+</Section>
+
+<Section id="after" title="Como ficar com uma janela só?">
+
+- **Salve antes de fechar.** “Mesclar com as atuais” leva um segundo e permite fechar qualquer janela sem pensar duas vezes.
+- **Um grupo por projeto.** Se a janela unida ainda estiver comprida demais, divida-a de novo em grupos com nome; nossa [rotina para quem tem abas demais](/blog/manage-too-many-tabs) mostra como.
+- **Elimine as duplicadas.** Janelas juntadas costumam ter a mesma página duas vezes; [fechar abas duplicadas](/blog/close-duplicate-tabs) é só mais um clique no TabMerger.
+- **Guarde tudo.** Para pausar o conjunto inteiro e voltar mais tarde, veja [como salvar todas as abas abertas](/blog/save-all-open-tabs).
+
+<InstallCta>Grátis para Chrome, Edge e Firefox. Não precisa de conta para começar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

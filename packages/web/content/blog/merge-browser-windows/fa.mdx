@@ -1,0 +1,162 @@
+export const post = {
+  slug: 'merge-browser-windows',
+  title: 'چطور چند پنجرهٔ مرورگر را در یک پنجره ادغام کنیم',
+  navTitle: 'ادغام پنجره‌های مرورگر',
+  seoTitle: 'ادغام پنجره‌های Chrome (و Edge و Firefox) در یک پنجره',
+  description:
+    'پنج پنجره و زبانه در همه جا؟ زبانه‌ها را در Chrome و Edge و Firefox بین پنجره‌ها جابه‌جا کنید، یا بگذارید TabMerger همهٔ پنجره‌های باز را جمع کند و با سه کلیک همه را در یک پنجره دوباره باز کند.',
+  shareSummary: 'همهٔ پنجره‌های باز مرورگر را در یک پنجره ادغام کنید، در Chrome و Edge و Firefox.',
+  dek: 'کشیدن زبانه‌ها یکی‌یکی برای دو پنجره جواب می‌دهد. برای پنج پنجره، جمع کردنشان را به TabMerger بسپارید.',
+  published: '2026-11-30',
+  updated: '2026-11-30',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger همهٔ پنجره‌های باز را در یک گروه ذخیره می‌کند و بعد آن را به شکل یک پنجرهٔ واحد دوباره باز می‌کند.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome زبانه‌های انتخاب‌شده را با «انتقال دادن زبانه به پنجره‌ای دیگر» جابه‌جا می‌کند.',
+      source: 'راهنمای Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'منوی زبانه در Edge 158 گزینهٔ Move tab to another window را دارد.', source: 'متن منوی Edge 158' },
+    { text: 'منوی «جابه‌جایی زبانه» در Firefox 159 فقط ابتدا، انتها یا پنجرهٔ جدید را پیشنهاد می‌دهد.', source: 'متن منوی Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'چطور دو پنجرهٔ Chrome را ادغام کنم؟',
+      answer:
+        'زبانه‌های یک پنجره را انتخاب کنید (کلیک همراه با Ctrl یا Shift)، روی یکی از آن‌ها کلیک راست کنید و «انتقال دادن زبانه به پنجره‌ای دیگر» را بزنید، سپس پنجرهٔ دیگر را انتخاب کنید. برای ادغام تعداد زیادی پنجره با هم، TabMerger همه را با سه کلیک ادغام می‌کند.',
+    },
+    {
+      question: 'می‌شود همهٔ پنجره‌ها را یک‌جا ادغام کرد؟',
+      answer:
+        'بله، با TabMerger: یک گروه اضافه کنید، «ادغام با وضعیت فعلی» را بزنید تا همهٔ پنجره‌های باز در آن ذخیره شوند، سپس روی گروه کلیک راست کنید و «باز کردن همه در پنجرهٔ جدید» را انتخاب کنید. پنجره‌های قدیمی را ببندید تا فقط یکی بماند.',
+    },
+    {
+      question: 'آیا با ادغام پنجره‌ها زبانه‌هایم از دست می‌روند؟',
+      answer: 'با TabMerger نه: گروه همهٔ زبانه‌ها را نگه می‌دارد، پس می‌توانید پنجره‌های قدیمی را با خیال راحت ببندید و هر وقت خواستید کل مجموعه را دوباره باز کنید.',
+    },
+    {
+      question: 'در Firefox هم کار می‌کند؟',
+      answer: 'بله. TabMerger در Chrome و Edge و Firefox یکسان کار می‌کند. منوی «جابه‌جایی زبانه» خود Firefox فقط می‌تواند زبانه‌ها را به ابتدا، انتها یا یک پنجرهٔ جدید ببرد.',
+    },
+  ],
+  images: [
+    { src: '/blog/merge-browser-windows/tm-three-windows-light.webp', alt: 'بخش Now Open (هم‌اکنون باز) در TabMerger با سه پنجرهٔ مرورگر که هر کدام سه زبانه دارد، پوستهٔ روشن' },
+    { src: '/blog/merge-browser-windows/tm-three-windows-dark.webp', alt: 'بخش Now Open (هم‌اکنون باز) در TabMerger با سه پنجرهٔ مرورگر که هر کدام سه زبانه دارد، پوستهٔ تیره' },
+    { src: '/blog/merge-browser-windows/tm-open-all-menu-light.webp', alt: 'منوی گروه All in one در TabMerger که گزینهٔ Open all in new window (باز کردن همه در پنجرهٔ جدید) در آن برجسته شده، پوستهٔ روشن' },
+    { src: '/blog/merge-browser-windows/tm-open-all-menu-dark.webp', alt: 'منوی گروه All in one در TabMerger که گزینهٔ Open all in new window (باز کردن همه در پنجرهٔ جدید) در آن برجسته شده، پوستهٔ تیره' },
+    { src: '/blog/merge-browser-windows/tm-one-window-light.webp', alt: 'بخش Now Open (هم‌اکنون باز) در TabMerger با یک پنجرهٔ مرورگر که هر نُه زبانه در آن است، پوستهٔ روشن' },
+    { src: '/blog/merge-browser-windows/tm-one-window-dark.webp', alt: 'بخش Now Open (هم‌اکنون باز) در TabMerger با یک پنجرهٔ مرورگر که هر نُه زبانه در آن است، پوستهٔ تیره' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (mouse shortcuts)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/merge-browser-windows/tm-one-window-light.webp' },
+  ogImage: { src: '/blog/merge-browser-windows/og.png', alt: 'چطور چند پنجرهٔ مرورگر را در یک پنجره ادغام کنیم: راهنمای TabMerger، با نُه زبانه در یک پنجره' },
+  toc: [
+    { id: 'quick', label: 'پاسخ کوتاه' },
+    { id: 'tabmerger', label: 'ادغام همهٔ پنجره‌ها یک‌جا' },
+    { id: 'builtin', label: 'جابه‌جایی دستی زبانه‌ها' },
+    { id: 'after', label: 'مرتب نگه داشتن' },
+    { id: 'faq', label: 'پرسش‌های متداول' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'جابه‌جایی زبانه‌های انتخاب‌شده',
+    values: {
+      chrome: 'کلیک راست ← انتقال دادن زبانه به پنجره‌ای دیگر',
+      edge: 'کلیک راست ← Move tab to another window',
+      firefox: 'کلیک راست ← جابه‌جایی زبانه ← انتقال به پنجرهٔ جدید',
+    },
+  },
+}
+
+<QuickAnswer>
+
+برای ادغام **همهٔ** پنجره‌ها یک‌جا، از [TabMerger](/features) استفاده کنید: روی **افزودن گروه** کلیک کنید، از منوی **⋯** آن گروه **ادغام با وضعیت فعلی** را بزنید تا همهٔ پنجره‌های بازتان در آن ذخیره شوند، سپس روی گروه کلیک راست کنید و **باز کردن همه در پنجرهٔ جدید** را انتخاب کنید. پنجره‌های قدیمی را ببندید تا فقط یک پنجره بماند، و همهٔ زبانه‌ها ذخیره شده‌اند اگر خواستید برشان گردانید. برای جابه‌جا کردن دستی چند زبانه، آن‌ها را انتخاب کنید، کلیک راست کنید و **انتقال دادن زبانه به پنجره‌ای دیگر** (<bdi dir="ltr">Move tabs to another window</bdi>؛ در Chrome و Edge) را بزنید.
+
+</QuickAnswer>
+
+<InstallCta>همهٔ پنجره‌های باز را با سه کلیک در یک پنجره ادغام کنید. رایگان برای Chrome و Edge و Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="چطور همهٔ پنجره‌ها را یک‌جا ادغام کنم؟">
+
+مرورگرها زبانه‌ها را هر بار فقط برای یک پنجره جابه‌جا می‌کنند. TabMerger همهٔ پنجره‌هایتان را با هم در **هم‌اکنون باز** می‌بیند، پس می‌تواند همه را یک‌باره جمع کند:
+
+1. روی **افزودن گروه** کلیک کنید و نامی برایش بگذارید، مثلاً «همه در یکی» (در تصویرها: <bdi dir="ltr">All in one</bdi>).
+2. منوی **⋯** گروه را باز کنید و **ادغام با وضعیت فعلی** را بزنید: همهٔ پنجره‌های باز همراه زبانه‌هایشان در گروه ذخیره می‌شوند.
+3. در نوار کناری روی گروه کلیک راست کنید و **باز کردن همه در پنجرهٔ جدید** را انتخاب کنید: یک پنجرهٔ جدید با همهٔ زبانه‌ها باز می‌شود.
+4. پنجره‌های قدیمی را ببندید. چیزی از دست نمی‌رود: گروه هنوز همه را نگه داشته است.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="ادغام سه پنجره در یک پنجره" steps={[{ title: 'سه پنجره' }, { title: 'باز کردن همه' }, { title: 'یک پنجره' }]}>
+<ThemedScreenshot src="/blog/merge-browser-windows/tm-three-windows" alt="بخش Now Open (هم‌اکنون باز) در TabMerger با سه پنجرهٔ مرورگر که هر کدام سه زبانه دارد، پوستهٔ روشن" darkAlt="بخش Now Open (هم‌اکنون باز) در TabMerger با سه پنجرهٔ مرورگر که هر کدام سه زبانه دارد، پوستهٔ تیره" boxes={[{ id: 'summary', label: 'سه پنجره' }]} source="TabMerger 3.16.1">قبل: سه پنجره، نُه زبانه.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/merge-browser-windows/tm-open-all-menu" alt="منوی گروه All in one در TabMerger که گزینهٔ Open all in new window (باز کردن همه در پنجرهٔ جدید) در آن برجسته شده، پوستهٔ روشن" darkAlt="منوی گروه All in one در TabMerger که گزینهٔ Open all in new window (باز کردن همه در پنجرهٔ جدید) در آن برجسته شده، پوستهٔ تیره" boxes={[{ id: 'open-all', label: 'باز کردن همه در پنجرهٔ جدید' }]} source="TabMerger 3.16.1">بعد از <bdi dir="ltr">Merge with current</bdi> (ادغام با وضعیت فعلی)، منوی کلیک راست گروه همه چیز را در یک پنجره باز می‌کند.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/merge-browser-windows/tm-one-window" alt="بخش Now Open (هم‌اکنون باز) در TabMerger با یک پنجرهٔ مرورگر که هر نُه زبانه در آن است، پوستهٔ روشن" darkAlt="بخش Now Open (هم‌اکنون باز) در TabMerger با یک پنجرهٔ مرورگر که هر نُه زبانه در آن است، پوستهٔ تیره" boxes={[{ id: 'summary', label: 'یک پنجره' }]} source="TabMerger 3.16.1">بعد از بستن پنجره‌های قدیمی: یک پنجره، هر نُه زبانه.</ThemedScreenshot>
+</Carousel>
+
+می‌خواهید نسخهٔ ذخیره‌شده هم مرتب باشد؟ منوی **⋯** گروه گزینهٔ **یکی کردن پنجره‌ها** را هم دارد که پنجره‌های ذخیره‌شدهٔ گروه را در یک پنجره یکی می‌کند (و **جدا کردن پنجره‌ها** برای برگرداندن آن).
+
+</Section>
+
+<Section id="builtin" title="چطور زبانه‌ها را دستی بین پنجره‌ها جابه‌جا کنم؟">
+
+برای دو پنجره و چند زبانه کافی است:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. زبانه‌ها را انتخاب کنید: با نگه داشتن <bdi dir="ltr"><Kbd>Ctrl</Kbd></bdi> روی تک‌تک آن‌ها کلیک کنید، یا روی اولی کلیک کنید و با نگه داشتن <bdi dir="ltr"><Kbd>Shift</Kbd></bdi> روی آخری کلیک کنید.
+2. روی یک زبانهٔ انتخاب‌شده کلیک راست کنید، **انتقال دادن زبانه به پنجره‌ای دیگر** (<bdi dir="ltr">Move tabs to another window</bdi>) را بزنید و بعد پنجره را انتخاب کنید.
+3. یا یک زبانه را به نوار زبانه‌های پنجرهٔ دیگر بکشید.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. زبانه‌ها را با کلیک همراه با <bdi dir="ltr"><Kbd>Ctrl</Kbd></bdi> یا <bdi dir="ltr"><Kbd>Shift</Kbd></bdi> انتخاب کنید.
+2. روی یک زبانهٔ انتخاب‌شده کلیک راست کنید، <bdi dir="ltr">**Move tab to another window**</bdi> را بزنید (یا <bdi dir="ltr">**Move tabs…**</bdi> وقتی چند زبانه انتخاب شده) و بعد پنجره را انتخاب کنید.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+روی یک زبانه (یا چند زبانهٔ انتخاب‌شده) کلیک راست کنید و **جابه‌جایی زبانه** (<bdi dir="ltr">Move Tab</bdi>) را باز کنید: Firefox 159 گزینه‌های **انتقال به ابتدا**، **انتقال به انتها** و **انتقال به پنجرهٔ جدید** را دارد، اما گزینه‌ای برای پنجرهٔ دیگری که از قبل باز است ندارد. برای ادغام چند پنجره در یک پنجره در Firefox، از مراحل TabMerger در بالا استفاده کنید.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>هر جابه‌جایی فقط یک پنجره را در بر می‌گیرد. با پنج پنجره یعنی کلی کلیک راست، و پنجره‌های خالی‌شده را هم باید خودتان ببندید.</Catch>
+
+</Section>
+
+<Section id="after" title="چطور فقط یک پنجره داشته باشم؟">
+
+- **قبل از بستن ذخیره کنید.** ادغام با وضعیت فعلی یک ثانیه طول می‌کشد و بعد از آن می‌توانید هر پنجره‌ای را بدون دودلی ببندید.
+- **برای هر پروژه یک گروه.** اگر پنجرهٔ ادغام‌شده هنوز خیلی شلوغ است، آن را دوباره به گروه‌های نام‌دار تقسیم کنید؛ [روال ما برای زبانه‌های زیاد](/blog/manage-too-many-tabs) روشش را نشان می‌دهد.
+- **تکراری‌ها را پاک کنید.** پنجره‌های ادغام‌شده اغلب یک صفحه را دو بار دارند؛ [بستن زبانه‌های تکراری](/blog/close-duplicate-tabs) در TabMerger فقط یک کلیک بیشتر است.
+- **همه را نگه دارید.** برای اینکه کل مجموعه را کنار بگذارید و بعداً سراغش برگردید، ببینید [چطور همهٔ زبانه‌های باز را ذخیره کنید](/blog/save-all-open-tabs).
+
+<InstallCta>رایگان برای Chrome و Edge و Firefox. برای شروع به حساب کاربری نیازی نیست.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="پرسش‌های متداول">
+
+<Faq items={post.faq} />
+
+</Section>

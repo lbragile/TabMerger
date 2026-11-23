@@ -1,0 +1,162 @@
+export const post = {
+  slug: 'merge-browser-windows',
+  title: 'Comment fusionner plusieurs fenêtres du navigateur en une seule',
+  navTitle: 'Fusionner les fenêtres du navigateur',
+  seoTitle: 'Comment fusionner des fenêtres Chrome (et Edge, Firefox) en une seule',
+  description:
+    'Cinq fenêtres et des onglets partout ? Déplacez des onglets d’une fenêtre à l’autre dans Chrome, Edge et Firefox, ou laissez TabMerger rassembler toutes les fenêtres ouvertes et les rouvrir en une seule, en trois clics.',
+  shareSummary: 'Fusionnez toutes les fenêtres ouvertes du navigateur en une seule, dans Chrome, Edge et Firefox.',
+  dek: 'Glisser les onglets un par un, ça va pour deux fenêtres. Pour cinq, laissez TabMerger tout rassembler.',
+  published: '2026-11-30',
+  updated: '2026-11-30',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger enregistre toutes les fenêtres ouvertes dans un groupe, puis le rouvre en une seule fenêtre.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome déplace les onglets sélectionnés avec « Déplacer les onglets vers une autre fenêtre ».',
+      source: 'Aide Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Le menu d’onglet d’Edge 158 propose « Move tab to another window ».', source: 'Texte du menu d’Edge 158' },
+    { text: 'Le menu « Déplacer l’onglet » de Firefox 159 ne propose que le début, la fin ou une nouvelle fenêtre.', source: 'Texte du menu de Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Comment fusionner deux fenêtres Chrome ?',
+      answer:
+        'Sélectionnez les onglets d’une fenêtre (Ctrl + clic ou Shift + clic), faites un clic droit sur l’un d’eux, choisissez « Déplacer les onglets vers une autre fenêtre », puis l’autre fenêtre. Pour beaucoup de fenêtres à la fois, TabMerger les fusionne toutes en trois clics.',
+    },
+    {
+      question: 'Peut-on fusionner toutes les fenêtres d’un coup ?',
+      answer:
+        'Oui, avec TabMerger : ajoutez un groupe, choisissez « Fusionner avec l’actuel » pour y enregistrer toutes les fenêtres ouvertes, puis faites un clic droit sur le groupe et choisissez « Tout ouvrir dans une nouvelle fenêtre ». Fermez les anciennes fenêtres et il n’en reste qu’une.',
+    },
+    {
+      question: 'Est-ce que je risque de perdre des onglets en fusionnant les fenêtres ?',
+      answer: 'Pas avec TabMerger : le groupe conserve chaque onglet, vous pouvez donc fermer les anciennes fenêtres sans crainte et rouvrir l’ensemble à tout moment.',
+    },
+    {
+      question: 'Est-ce que ça marche dans Firefox ?',
+      answer: 'Oui. TabMerger fonctionne de la même façon dans Chrome, Edge et Firefox. Le menu « Déplacer l’onglet » de Firefox ne peut déplacer les onglets qu’au début, à la fin ou dans une nouvelle fenêtre.',
+    },
+  ],
+  images: [
+    { src: '/blog/merge-browser-windows/tm-three-windows-light.webp', alt: 'TabMerger, « Now Open » (Ouverts maintenant), avec trois fenêtres de navigateur de trois onglets chacune, thème clair' },
+    { src: '/blog/merge-browser-windows/tm-three-windows-dark.webp', alt: 'TabMerger, « Now Open » (Ouverts maintenant), avec trois fenêtres de navigateur de trois onglets chacune, thème sombre' },
+    { src: '/blog/merge-browser-windows/tm-open-all-menu-light.webp', alt: 'Menu du groupe « All in one » de TabMerger, avec « Open all in new window » (Tout ouvrir dans une nouvelle fenêtre) en surbrillance, thème clair' },
+    { src: '/blog/merge-browser-windows/tm-open-all-menu-dark.webp', alt: 'Menu du groupe « All in one » de TabMerger, avec « Open all in new window » (Tout ouvrir dans une nouvelle fenêtre) en surbrillance, thème sombre' },
+    { src: '/blog/merge-browser-windows/tm-one-window-light.webp', alt: 'TabMerger, « Now Open » (Ouverts maintenant), avec une seule fenêtre de navigateur et les neuf onglets, thème clair' },
+    { src: '/blog/merge-browser-windows/tm-one-window-dark.webp', alt: 'TabMerger, « Now Open » (Ouverts maintenant), avec une seule fenêtre de navigateur et les neuf onglets, thème sombre' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (mouse shortcuts)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/merge-browser-windows/tm-one-window-light.webp' },
+  ogImage: { src: '/blog/merge-browser-windows/og.png', alt: 'Comment fusionner plusieurs fenêtres du navigateur en une seule : un guide TabMerger, avec neuf onglets dans une seule fenêtre' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'tabmerger', label: 'Fusionner toutes les fenêtres d’un coup' },
+    { id: 'builtin', label: 'Déplacer les onglets à la main' },
+    { id: 'after', label: 'Garder une seule fenêtre' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Déplacer les onglets sélectionnés',
+    values: {
+      chrome: 'Clic droit → Déplacer les onglets vers une autre fenêtre',
+      edge: 'Clic droit → Move tab to another window',
+      firefox: 'Clic droit → Déplacer l’onglet → Déplacer vers une nouvelle fenêtre',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Pour fusionner **toutes** les fenêtres d’un coup, utilisez [TabMerger](/features) : cliquez sur **Ajouter un groupe**, choisissez **Fusionner avec l’actuel** dans son menu **⋯** pour y enregistrer toutes vos fenêtres ouvertes, puis faites un clic droit sur le groupe et choisissez **Tout ouvrir dans une nouvelle fenêtre**. Fermez les anciennes fenêtres : il n’en reste qu’une, et chaque onglet est enregistré au cas où vous voudriez le retrouver. Pour déplacer quelques onglets à la main, sélectionnez-les, faites un clic droit et choisissez **Déplacer les onglets vers une autre fenêtre** (Move tabs to another window ; Chrome, Edge).
+
+</QuickAnswer>
+
+<InstallCta>Fusionnez toutes les fenêtres ouvertes en une seule en trois clics. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Comment fusionner toutes les fenêtres d’un coup ?">
+
+Les navigateurs déplacent les onglets une fenêtre à la fois. TabMerger voit toutes vos fenêtres ensemble dans **Ouverts maintenant**, il peut donc les rassembler d’un seul coup :
+
+1. Cliquez sur **Ajouter un groupe** et donnez-lui un nom, par exemple « Tout en un » (« All in one » sur les captures).
+2. Ouvrez le menu **⋯** du groupe et choisissez **Fusionner avec l’actuel** : toutes les fenêtres ouvertes et leurs onglets sont enregistrés dans le groupe.
+3. Faites un clic droit sur le groupe dans la barre latérale et choisissez **Tout ouvrir dans une nouvelle fenêtre** : une nouvelle fenêtre s’ouvre avec tous les onglets.
+4. Fermez les anciennes fenêtres. Rien n’est perdu : le groupe les contient toujours.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Fusionner trois fenêtres en une" steps={[{ title: 'Trois fenêtres' }, { title: 'Tout ouvrir' }, { title: 'Une fenêtre' }]}>
+<ThemedScreenshot src="/blog/merge-browser-windows/tm-three-windows" alt="TabMerger, « Now Open » (Ouverts maintenant), avec trois fenêtres de navigateur de trois onglets chacune, thème clair" darkAlt="TabMerger, « Now Open » (Ouverts maintenant), avec trois fenêtres de navigateur de trois onglets chacune, thème sombre" boxes={[{ id: 'summary', label: 'Trois fenêtres' }]} source="TabMerger 3.16.1">Avant : trois fenêtres, neuf onglets.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/merge-browser-windows/tm-open-all-menu" alt="Menu du groupe « All in one » de TabMerger, avec « Open all in new window » (Tout ouvrir dans une nouvelle fenêtre) en surbrillance, thème clair" darkAlt="Menu du groupe « All in one » de TabMerger, avec « Open all in new window » (Tout ouvrir dans une nouvelle fenêtre) en surbrillance, thème sombre" boxes={[{ id: 'open-all', label: 'Tout ouvrir dans une nouvelle fenêtre' }]} source="TabMerger 3.16.1">Après « Merge with current » (Fusionner avec l’actuel), le menu contextuel du groupe ouvre tout dans une seule fenêtre.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/merge-browser-windows/tm-one-window" alt="TabMerger, « Now Open » (Ouverts maintenant), avec une seule fenêtre de navigateur et les neuf onglets, thème clair" darkAlt="TabMerger, « Now Open » (Ouverts maintenant), avec une seule fenêtre de navigateur et les neuf onglets, thème sombre" boxes={[{ id: 'summary', label: 'Une fenêtre' }]} source="TabMerger 3.16.1">Après la fermeture des anciennes fenêtres : une fenêtre, les neuf onglets.</ThemedScreenshot>
+</Carousel>
+
+Vous voulez aussi une copie enregistrée bien rangée ? Le menu **⋯** du groupe propose aussi **Réunir les fenêtres**, qui regroupe ses fenêtres enregistrées en une seule (et **Séparer les fenêtres** pour revenir en arrière).
+
+</Section>
+
+<Section id="builtin" title="Comment déplacer des onglets d’une fenêtre à l’autre à la main ?">
+
+Pratique pour deux fenêtres et une poignée d’onglets :
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. Sélectionnez les onglets : <Kbd>Ctrl</Kbd> + clic sur chacun, ou cliquez sur le premier puis <Kbd>Shift</Kbd> + clic sur le dernier.
+2. Faites un clic droit sur un onglet sélectionné, choisissez **Déplacer les onglets vers une autre fenêtre** (Move tabs to another window), puis la fenêtre.
+3. Ou faites glisser un onglet dans la barre d’onglets de l’autre fenêtre.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Sélectionnez les onglets avec <Kbd>Ctrl</Kbd> + clic ou <Kbd>Shift</Kbd> + clic.
+2. Faites un clic droit sur un onglet sélectionné, choisissez **Move tab to another window** (ou **Move tabs…** s’il y en a plusieurs), puis la fenêtre.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Faites un clic droit sur un onglet (ou sur plusieurs onglets sélectionnés) et ouvrez **Déplacer l’onglet** (Move Tab) : Firefox 159 propose **Déplacer vers le début**, **Déplacer vers la fin** et **Déplacer vers une nouvelle fenêtre**, mais aucune option pour une autre fenêtre déjà ouverte. Pour fusionner plusieurs fenêtres en une dans Firefox, suivez les étapes TabMerger ci-dessus.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>chaque déplacement ne concerne qu’une fenêtre. Avec cinq fenêtres, cela fait beaucoup de clics droits, et il faut encore fermer vous-même les fenêtres vidées.</Catch>
+
+</Section>
+
+<Section id="after" title="Comment s’en tenir à une seule fenêtre ?">
+
+- **Enregistrez avant de fermer.** « Fusionner avec l’actuel » prend une seconde, et vous pouvez ensuite fermer n’importe quelle fenêtre sans arrière-pensée.
+- **Un groupe par projet.** Si la fenêtre fusionnée est encore trop longue, répartissez-la à nouveau en groupes nommés ; notre [routine contre l’excès d’onglets](/blog/manage-too-many-tabs) montre comment.
+- **Supprimez les doublons.** Les fenêtres fusionnées contiennent souvent la même page deux fois ; [fermer les onglets en double](/blog/close-duplicate-tabs) ne demande qu’un clic de plus dans TabMerger.
+- **Gardez tout.** Pour mettre l’ensemble en pause et y revenir plus tard, voyez [comment enregistrer tous les onglets ouverts](/blog/save-all-open-tabs).
+
+<InstallCta>Gratuit pour Chrome, Edge et Firefox. Aucun compte nécessaire pour commencer.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

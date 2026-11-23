@@ -93,3 +93,7 @@ A 15 KB MDX body in a Bash heredoc failed ("unexpected EOF while looking for mat
 **Extract labels by script, never by typing:** build a `labels.json` from the help HTML, ftl files and catalogs, and reference labels from the data files by token. Every label is then verbatim, and the verifier reads the same file.
 
 **Korean particles after a quoted label** depend on its last syllable (파일 가져오기**를**, 설정**을**); check each one. **Hebrew posts use ASCII `"` quotes**, not „…”.
+
+**Moving tabs between windows.** Chrome Help 2391819: the five `<strong>` items after the Shift/F6 multi-select step are the right-click actions, and the second is "Move tabs to another window" (ru puts a full stop inside the label; drop it). Firefox `tabContextMenu.ftl`: `tab-context-move-tabs` is a plural choice, so take the `[1]` form (ja has only one label); hi-IN lacks it but has `move-to-start`, `move-to-end` and `move-to-new-window`.
+
+**TabMerger window labels** live in `groupMenu.json` (`mergeWithCurrent`, `openAll`, `uniteWindows`, `splitWindows`), `sidePanel.json` (`addGroup`) and `common.json` (`nowOpen`). Copy apostrophes exactly: it uses a straight `'` ("Unisci con l'attuale").

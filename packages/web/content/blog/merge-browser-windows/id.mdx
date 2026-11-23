@@ -1,0 +1,162 @@
+export const post = {
+  slug: 'merge-browser-windows',
+  title: 'Cara menggabungkan beberapa jendela browser menjadi satu',
+  navTitle: 'Menggabungkan jendela browser',
+  seoTitle: 'Cara Menggabungkan Jendela Chrome (juga Edge, Firefox) Menjadi Satu',
+  description:
+    'Lima jendela, tab di mana-mana? Pindahkan tab antarjendela di Chrome, Edge, dan Firefox, atau biarkan TabMerger mengumpulkan semua jendela yang terbuka lalu membukanya kembali sebagai satu jendela, dalam tiga klik.',
+  shareSummary: 'Gabungkan semua jendela browser yang terbuka menjadi satu, di Chrome, Edge, dan Firefox.',
+  dek: 'Menyeret tab satu per satu cukup untuk dua jendela. Untuk lima jendela, biarkan TabMerger yang mengumpulkannya.',
+  published: '2026-11-30',
+  updated: '2026-11-30',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger menyimpan semua jendela yang terbuka ke dalam satu grup, lalu membukanya kembali sebagai satu jendela.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome memindahkan tab yang dipilih dengan “Pindah tab ke jendela lain”.',
+      source: 'Bantuan Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Menu tab di Edge 158 memiliki “Move tab to another window”.', source: 'Teks menu Edge 158' },
+    { text: 'Menu “Pindahkan Tab” di Firefox 159 hanya menawarkan awal, akhir, atau jendela baru.', source: 'Teks menu Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Bagaimana cara menggabungkan dua jendela Chrome?',
+      answer:
+        'Pilih tab di satu jendela (Ctrl-klik atau Shift-klik), klik kanan salah satunya dan pilih “Pindah tab ke jendela lain”, lalu pilih jendela yang lain. Untuk banyak jendela sekaligus, TabMerger menggabungkan semuanya dalam tiga klik.',
+    },
+    {
+      question: 'Bisakah saya menggabungkan semua jendela sekaligus?',
+      answer:
+        'Bisa, dengan TabMerger: tambahkan grup, pilih “Gabungkan dengan sesi saat ini” untuk menyimpan semua jendela yang terbuka ke dalamnya, lalu klik kanan grup tersebut dan pilih “Buka semua di jendela baru”. Tutup jendela-jendela lama, dan tinggal satu.',
+    },
+    {
+      question: 'Apakah tab saya bisa hilang saat jendela digabungkan?',
+      answer: 'Tidak dengan TabMerger: grup menyimpan setiap tab, jadi Anda bisa menutup jendela lama dengan aman dan membuka kembali seluruh kumpulan tab kapan saja.',
+    },
+    {
+      question: 'Apakah ini bisa dipakai di Firefox?',
+      answer: 'Bisa. TabMerger bekerja sama persis di Chrome, Edge, dan Firefox. Menu “Pindahkan Tab” bawaan Firefox hanya bisa memindahkan tab ke awal, ke akhir, atau ke jendela baru.',
+    },
+  ],
+  images: [
+    { src: '/blog/merge-browser-windows/tm-three-windows-light.webp', alt: 'Now Open (Sedang Terbuka) di TabMerger berisi tiga jendela browser dengan masing-masing tiga tab, tema terang' },
+    { src: '/blog/merge-browser-windows/tm-three-windows-dark.webp', alt: 'Now Open (Sedang Terbuka) di TabMerger berisi tiga jendela browser dengan masing-masing tiga tab, tema gelap' },
+    { src: '/blog/merge-browser-windows/tm-open-all-menu-light.webp', alt: 'Menu grup All in one di TabMerger dengan Open all in new window (Buka semua di jendela baru) disorot, tema terang' },
+    { src: '/blog/merge-browser-windows/tm-open-all-menu-dark.webp', alt: 'Menu grup All in one di TabMerger dengan Open all in new window (Buka semua di jendela baru) disorot, tema gelap' },
+    { src: '/blog/merge-browser-windows/tm-one-window-light.webp', alt: 'Now Open (Sedang Terbuka) di TabMerger berisi satu jendela browser dengan kesembilan tab, tema terang' },
+    { src: '/blog/merge-browser-windows/tm-one-window-dark.webp', alt: 'Now Open (Sedang Terbuka) di TabMerger berisi satu jendela browser dengan kesembilan tab, tema gelap' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (mouse shortcuts)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/merge-browser-windows/tm-one-window-light.webp' },
+  ogImage: { src: '/blog/merge-browser-windows/og.png', alt: 'Cara menggabungkan beberapa jendela browser menjadi satu: panduan TabMerger, dengan sembilan tab dalam satu jendela' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'tabmerger', label: 'Gabungkan semua jendela sekaligus' },
+    { id: 'builtin', label: 'Pindahkan tab secara manual' },
+    { id: 'after', label: 'Tetap rapi' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Pindahkan tab yang dipilih',
+    values: {
+      chrome: 'Klik kanan → Pindah tab ke jendela lain',
+      edge: 'Klik kanan → Move tab to another window',
+      firefox: 'Klik kanan → Pindahkan Tab → Pindahkan ke Jendela Baru',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Untuk menggabungkan **semua** jendela sekaligus, gunakan [TabMerger](/features): klik **Tambah Grup**, pilih **Gabungkan dengan sesi saat ini** di menu **⋯** grup itu untuk menyimpan semua jendela yang terbuka ke dalamnya, lalu klik kanan grup tersebut dan pilih **Buka semua di jendela baru**. Tutup jendela-jendela lama, dan tinggal satu jendela, dengan setiap tab tetap tersimpan kalau Anda ingin membukanya lagi. Untuk memindahkan beberapa tab secara manual, pilih tab-tab itu, klik kanan, lalu pilih **Pindah tab ke jendela lain** (Move tabs to another window; Chrome, Edge).
+
+</QuickAnswer>
+
+<InstallCta>Gabungkan semua jendela yang terbuka menjadi satu dalam tiga klik. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Bagaimana cara menggabungkan semua jendela sekaligus?">
+
+Browser memindahkan tab satu jendela demi satu jendela. TabMerger melihat semua jendela Anda bersama-sama di **Sedang Terbuka**, jadi bisa mengumpulkan semuanya sekaligus:
+
+1. Klik **Tambah Grup** dan beri nama, misalnya “Semua jadi satu” (di tangkapan layar: “All in one”).
+2. Buka menu **⋯** grup itu dan pilih **Gabungkan dengan sesi saat ini**: semua jendela yang terbuka beserta tabnya disimpan ke dalam grup.
+3. Klik kanan grup di bilah samping dan pilih **Buka semua di jendela baru**: satu jendela baru terbuka dengan semua tab.
+4. Tutup jendela-jendela lama. Tidak ada yang hilang: grup masih menyimpan semuanya.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Menggabungkan tiga jendela menjadi satu" steps={[{ title: 'Tiga jendela' }, { title: 'Buka semua' }, { title: 'Satu jendela' }]}>
+<ThemedScreenshot src="/blog/merge-browser-windows/tm-three-windows" alt="Now Open (Sedang Terbuka) di TabMerger berisi tiga jendela browser dengan masing-masing tiga tab, tema terang" darkAlt="Now Open (Sedang Terbuka) di TabMerger berisi tiga jendela browser dengan masing-masing tiga tab, tema gelap" boxes={[{ id: 'summary', label: 'Tiga jendela' }]} source="TabMerger 3.16.1">Sebelum: tiga jendela, sembilan tab.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/merge-browser-windows/tm-open-all-menu" alt="Menu grup All in one di TabMerger dengan Open all in new window (Buka semua di jendela baru) disorot, tema terang" darkAlt="Menu grup All in one di TabMerger dengan Open all in new window (Buka semua di jendela baru) disorot, tema gelap" boxes={[{ id: 'open-all', label: 'Buka semua di jendela baru' }]} source="TabMerger 3.16.1">Setelah Merge with current (Gabungkan dengan sesi saat ini), menu klik kanan grup membuka semuanya dalam satu jendela.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/merge-browser-windows/tm-one-window" alt="Now Open (Sedang Terbuka) di TabMerger berisi satu jendela browser dengan kesembilan tab, tema terang" darkAlt="Now Open (Sedang Terbuka) di TabMerger berisi satu jendela browser dengan kesembilan tab, tema gelap" boxes={[{ id: 'summary', label: 'Satu jendela' }]} source="TabMerger 3.16.1">Setelah jendela lama ditutup: satu jendela, kesembilan tab.</ThemedScreenshot>
+</Carousel>
+
+Ingin salinan yang tersimpan juga rapi? Menu **⋯** grup juga punya **Satukan jendela**, yang menyatukan jendela-jendela tersimpannya menjadi satu (dan **Pisahkan jendela** untuk membatalkannya).
+
+</Section>
+
+<Section id="builtin" title="Bagaimana cara memindahkan tab antarjendela secara manual?">
+
+Cocok untuk dua jendela dan beberapa tab:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. Pilih tab: <Kbd>Ctrl</Kbd>-klik setiap tab, atau klik tab pertama lalu <Kbd>Shift</Kbd>-klik tab terakhir.
+2. Klik kanan tab yang dipilih dan pilih **Pindah tab ke jendela lain** (Move tabs to another window), lalu pilih jendelanya.
+3. Atau seret tab ke strip tab jendela yang lain.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Pilih tab dengan <Kbd>Ctrl</Kbd>-klik atau <Kbd>Shift</Kbd>-klik.
+2. Klik kanan tab yang dipilih dan pilih **Move tab to another window** (atau **Move tabs…** jika beberapa tab dipilih), lalu pilih jendelanya.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Klik kanan sebuah tab (atau beberapa tab yang dipilih) dan buka **Pindahkan Tab** (Move Tab): Firefox 159 menawarkan **Pindahkan ke Awal**, **Pindahkan ke Akhir**, dan **Pindahkan ke Jendela Baru**, tetapi tidak ada pilihan untuk jendela lain yang sudah terbuka. Untuk menggabungkan beberapa jendela menjadi satu di Firefox, gunakan langkah-langkah TabMerger di atas.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>setiap pemindahan hanya untuk satu jendela. Dengan lima jendela, itu berarti banyak klik kanan, ditambah menutup sendiri jendela-jendela yang sudah kosong.</Catch>
+
+</Section>
+
+<Section id="after" title="Bagaimana agar tetap satu jendela?">
+
+- **Simpan sebelum menutup.** Gabungkan dengan sesi saat ini hanya butuh sedetik, dan setelah itu jendela mana pun bisa ditutup tanpa ragu.
+- **Satu grup per proyek.** Jika jendela gabungan masih terlalu panjang, bagi lagi ke grup-grup bernama; [rutinitas untuk tab yang terlalu banyak](/blog/manage-too-many-tabs) kami menunjukkan caranya.
+- **Bersihkan duplikat.** Jendela yang digabung sering berisi halaman yang sama dua kali; [menutup tab duplikat](/blog/close-duplicate-tabs) hanya perlu satu klik lagi di TabMerger.
+- **Simpan semuanya.** Untuk menjeda seluruh kumpulan tab dan kembali lagi nanti, lihat [cara menyimpan semua tab yang terbuka](/blog/save-all-open-tabs).
+
+<InstallCta>Gratis untuk Chrome, Edge, dan Firefox. Tidak perlu akun untuk mulai.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>
