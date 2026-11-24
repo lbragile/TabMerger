@@ -1,0 +1,166 @@
+export const post = {
+  slug: 'start-your-workday-with-saved-tabs',
+  title: 'Bắt đầu ngày làm việc với các tab đã lưu',
+  navTitle: 'Bắt đầu ngày làm việc với các tab đã lưu',
+  seoTitle: 'Mở lại cùng các tab mỗi sáng với phiên của TabMerger',
+  description:
+    'Mở các tab công việc mỗi sáng chỉ với một cú nhấp: lưu các nhóm thành một phiên TabMerger, khôi phục mỗi ngày hoặc chỉ mở một nhóm. Vì sao khôi phục luôn hỏi trước, và gói Miễn phí cùng Pro có gì.',
+  shareSummary: 'Các tab buổi sáng chỉ một cú nhấp: lưu phiên một lần, khôi phục mỗi ngày.',
+  dek: 'Thiết lập một lần: email, lịch, bảng công việc và tài liệu trở lại mỗi sáng, mỗi thứ trong cửa sổ riêng.',
+  published: '2026-12-12',
+  updated: '2026-12-12',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Phiên là một bản chụp có tên của tất cả các nhóm bạn đã lưu.', source: 'Mã nguồn TabMerger 3.16.1' },
+    { text: 'Khôi phục sẽ đóng các cửa sổ đang mở (sau khi hỏi) rồi mở lại từng cửa sổ đã lưu.', source: 'TabMerger 3.16.1' },
+    { text: 'Các cửa sổ bị đóng khi khôi phục được giữ trong "Đã đóng gần đây".', source: 'Mã nguồn TabMerger 3.16.1' },
+    { text: 'Miễn phí: 3 phiên trong trình duyệt này. Pro: không giới hạn, đồng bộ giữa các thiết bị.', source: 'Bảng giá TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Làm sao để mở cùng các tab mỗi sáng?',
+      answer:
+        'Đưa các tab hằng ngày vào nhóm trong TabMerger, rồi lưu một phiên (nút dấu trang cạnh "Phiên" ở thanh bên). Mỗi sáng, hãy khôi phục phiên đó: TabMerger mở lại từng cửa sổ đã lưu với các tab theo đúng thứ tự.',
+    },
+    {
+      question: 'Vì sao khôi phục phiên lại đóng các cửa sổ của tôi?',
+      answer:
+        'Phiên được tạo ra để thay những gì đang mở bằng những gì bạn đã lưu, để bạn bắt đầu gọn gàng thay vì chồng lên các tab của hôm qua. TabMerger hỏi trước khi đóng bất cứ thứ gì, và các cửa sổ bị đóng sẽ nằm trong "Đã đóng gần đây", nên bạn có thể mở lại.',
+    },
+    {
+      question: 'Tôi có thể mở một nhóm mà không đóng gì không?',
+      answer: 'Có. Nhấp chuột phải vào nhóm ở thanh bên và chọn "Mở tất cả trong cửa sổ mới". Các cửa sổ khác vẫn giữ nguyên.',
+    },
+    {
+      question: 'Phiên có lưu các tab đang mở của tôi không?',
+      answer:
+        'Không, phiên lưu các nhóm bạn đã lưu. Muốn đưa cả những gì đang mở vào, trước tiên hãy thêm chúng vào một nhóm bằng "Hợp nhất với phiên hiện tại" (trong menu ⋯ của nhóm), rồi lưu phiên.',
+    },
+    {
+      question: 'Tôi có thể lưu bao nhiêu phiên miễn phí?',
+      answer: 'Gói Miễn phí giữ 3 phiên trong trình duyệt của bạn. Pro không giới hạn và đồng bộ các phiên giữa các thiết bị của bạn, được mã hóa đầu cuối.',
+    },
+  ],
+  images: [
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-save-session-light.webp', alt: 'Hộp thoại Save Session (Lưu Phiên) của TabMerger với tên Workday, một mô tả và màu tím, giao diện sáng' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-save-session-dark.webp', alt: 'Hộp thoại Save Session (Lưu Phiên) của TabMerger với tên Workday, một mô tả và màu lục lam, giao diện tối' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-session-view-light.webp', alt: 'Phiên Workday với ba nhóm, bốn cửa sổ và chín tab, kèm nút Restore session (Khôi phục phiên), giao diện sáng' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-session-view-dark.webp', alt: 'Phiên Workday với ba nhóm, bốn cửa sổ và chín tab, kèm nút Restore session (Khôi phục phiên), giao diện tối' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-restore-confirm-light.webp', alt: 'TabMerger hỏi Restore this session? (Khôi phục phiên này?) với các nút Cancel (Hủy) và Close all windows (Đóng tất cả cửa sổ), giao diện sáng' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-restore-confirm-dark.webp', alt: 'TabMerger hỏi Restore this session? (Khôi phục phiên này?) với các nút Cancel (Hủy) và Close all windows (Đóng tất cả cửa sổ), giao diện tối' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-open-group-light.webp', alt: 'Menu chuột phải của nhóm Work ở thanh bên với Open all in new window (Mở tất cả trong cửa sổ mới), giao diện sáng' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-open-group-dark.webp', alt: 'Menu chuột phải của nhóm Work ở thanh bên với Open all in new window (Mở tất cả trong cửa sổ mới), giao diện tối' },
+  ],
+  tags: ['tabmerger-guides', 'session-management', 'save-tabs', 'browser-productivity'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/start-your-workday-with-saved-tabs/tm-restore-confirm-light.webp' },
+  ogImage: { src: '/blog/start-your-workday-with-saved-tabs/og.png', alt: 'Bắt đầu ngày làm việc với các tab đã lưu: phiên Workday trong TabMerger với nút Restore session (Khôi phục phiên)' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'problem', label: 'Dựng lại mọi thứ mỗi sáng' },
+    { id: 'why', label: 'Vì sao phiên hoạt động như vậy' },
+    { id: 'steps', label: 'Thiết lập' },
+    { id: 'one-group', label: 'Chỉ mở một nhóm' },
+    { id: 'benefit', label: 'Bạn nhận lại được gì' },
+    { id: 'habits', label: 'Thói quen tốt' },
+    { id: 'plans', label: 'Miễn phí và Pro' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+}
+
+<QuickAnswer>
+
+Giữ các tab hằng ngày trong các nhóm của [TabMerger](/features), rồi nhấn **Lưu phiên hiện tại** (Save current session), tức là nút dấu trang cạnh **Phiên** (Sessions) ở thanh bên, và đặt tên là "Ngày làm việc". Mỗi sáng, hãy khôi phục phiên đó: TabMerger hỏi trước, đóng các cửa sổ đang mở và mở lại từng cửa sổ đã lưu với các tab theo đúng thứ tự. Chỉ cần một dự án? Nhấp chuột phải vào nhóm của dự án đó và chọn **Mở tất cả trong cửa sổ mới** (Open all in new window).
+
+</QuickAnswer>
+
+<InstallCta>Toàn bộ không gian làm việc buổi sáng chỉ với một cú nhấp. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+<Section id="problem" title="Dựng lại mọi thứ mỗi sáng">
+
+Phần lớn các buổi sáng đều bắt đầu như nhau. Email, lịch, bảng công việc của nhóm, pull request bạn đang xem xét, tài liệu bạn đang viết. Bạn mở từng cái một, từ dấu trang, từ lịch sử, từ trí nhớ. Có hôm trình duyệt lại khôi phục các cửa sổ của hôm qua, nên bạn bắt đầu với bốn mươi tab và đóng ba mươi lăm tab trong số đó.
+
+Dù thế nào, những phút đầu tiên của ngày cũng trôi qua cho việc dựng lại một không gian làm việc bạn vốn đã có. Còn tính năng khôi phục sẵn có của trình duyệt thì mang lại những gì tình cờ đang mở, không phải những gì bạn định làm.
+
+</Section>
+
+<Section id="why" title="Vì sao phiên của TabMerger hoạt động như vậy">
+
+Mỗi lựa chọn đằng sau phiên giải quyết một phần của vấn đề đó:
+
+- **Phiên lưu các nhóm của bạn, không phải bất cứ thứ gì đang mở.** Nhóm là những tab bạn đã chọn giữ lại, đã được đặt tên và sắp xếp. Phiên chụp lại tất cả dưới một cái tên, nên khi khôi phục bạn lấy lại kế hoạch của mình, không phải mớ lộn xộn của hôm qua. (Chế độ xem trực tiếp "Đang Mở", trên giao diện tiếng Anh là Now Open, và các nhóm thực hành của chuyến tham quan có hướng dẫn được cố ý loại ra.)
+- **Khôi phục sẽ thay thế, và hỏi trước.** Để bạn bắt đầu gọn gàng, khôi phục đóng các cửa sổ đang mở trước khi mở lại các cửa sổ đã lưu. Đó là một thao tác mạnh tay, nên lúc nào cũng có câu hỏi (**Đóng tất cả cửa sổ** hoặc **Hủy**, trên giao diện tiếng Anh là Close all windows / Cancel), dù từ chế độ xem phiên hay từ thanh bên.
+- **Không gì bạn đóng bị vứt đi.** Các cửa sổ bị đóng khi khôi phục sẽ vào **Đã đóng gần đây** (Recently closed, bật theo mặc định), nên một tab bạn vẫn cần chỉ cách một cú nhấp.
+- **Mỗi cửa sổ trở lại dưới dạng một cửa sổ.** Các cửa sổ đã lưu mở lại riêng biệt, các tab theo thứ tự đã lưu. Một cửa sổ được lưu từ cửa sổ riêng tư sẽ mở lại dưới dạng cửa sổ riêng tư khi tiện ích được phép chạy trong cửa sổ riêng tư; nếu không, nó mở dưới dạng cửa sổ thường và TabMerger cho bạn biết lý do.
+- **Lưu vào trình duyệt của bạn trước.** Phiên được ghi vào trình duyệt trước mọi thứ khác, nên việc lưu vẫn hoạt động khi ngoại tuyến. Với Pro, sau đó phiên được tải lên, mã hóa đầu cuối, để đến được các thiết bị khác của bạn.
+
+</Section>
+
+<Section id="steps" title="Thiết lập: lưu một lần, khôi phục mỗi ngày">
+
+1. Đưa các tab trong ngày vào nhóm. Mở menu **⋯** của một nhóm và chọn **Hợp nhất với phiên hiện tại** (Merge with current) để thêm các cửa sổ đang mở vào nhóm đó.
+2. Ở thanh bên, nhấn nút dấu trang cạnh **Phiên** (**Lưu phiên hiện tại**). Đặt tên, thêm mô tả nếu muốn và chọn màu, rồi nhấn **Lưu** (Save).
+3. Sáng mai, mở TabMerger, nhấp vào phiên trong **Phiên** và nhấn **Khôi phục phiên** (Restore session), hoặc nút khôi phục trên hàng của phiên đó.
+4. Xác nhận bằng **Đóng tất cả cửa sổ**. Các cửa sổ đã lưu sẽ mở lần lượt, với các tab theo đúng thứ tự.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Lưu và khôi phục một phiên" steps={[{ title: 'Lưu' }, { title: 'Phiên' }, { title: 'Xác nhận' }]}>
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-save-session" alt="Hộp thoại Save Session (Lưu Phiên) của TabMerger với tên Workday, một mô tả và màu tím, giao diện sáng" darkAlt="Hộp thoại Save Session (Lưu Phiên) của TabMerger với tên Workday, một mô tả và màu lục lam, giao diện tối" boxes={[{ id: 'session-name', label: 'Tên phiên' }, { id: 'description', label: 'Mô tả không bắt buộc' }]} source="TabMerger 3.16.1">Đặt tên theo thói quen mà nó mang lại.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-session-view" alt="Phiên Workday với ba nhóm, bốn cửa sổ và chín tab, kèm nút Restore session (Khôi phục phiên), giao diện sáng" darkAlt="Phiên Workday với ba nhóm, bốn cửa sổ và chín tab, kèm nút Restore session (Khôi phục phiên), giao diện tối" boxes={[{ id: 'restore-session', label: 'Khôi phục phiên' }]} source="TabMerger 3.16.1">Phiên liệt kê mọi nhóm, cửa sổ và tab mà nó sẽ mở lại.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-restore-confirm" alt="TabMerger hỏi Restore this session? (Khôi phục phiên này?) với các nút Cancel (Hủy) và Close all windows (Đóng tất cả cửa sổ), giao diện sáng" darkAlt="TabMerger hỏi Restore this session? (Khôi phục phiên này?) với các nút Cancel (Hủy) và Close all windows (Đóng tất cả cửa sổ), giao diện tối" boxes={[{ id: 'close-all', label: 'Đóng tất cả cửa sổ' }]} source="TabMerger 3.16.1">Khôi phục luôn hỏi trước, vì nó đóng những gì đang mở.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="one-group" title="Chỉ mở một nhóm">
+
+Có những buổi sáng bạn chỉ cần một dự án. Nhấp chuột phải vào nhóm của nó ở thanh bên và chọn **Mở tất cả trong cửa sổ mới**: mọi trang web trong nhóm cùng mở trong một cửa sổ mới, và không có gì khác bị đóng. Để mở một cửa sổ đã lưu, dùng **Mở trong trình duyệt** (Open in browser) trong menu **⋯** của cửa sổ đó; để mở một tab, chỉ cần nhấp vào nó.
+
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-open-group" alt="Menu chuột phải của nhóm Work ở thanh bên với Open all in new window (Mở tất cả trong cửa sổ mới), giao diện sáng" darkAlt="Menu chuột phải của nhóm Work ở thanh bên với Open all in new window (Mở tất cả trong cửa sổ mới), giao diện tối" boxes={[{ id: 'open-all', label: 'Mở tất cả trong cửa sổ mới' }]} source="TabMerger 3.16.1">Một nhóm, một cửa sổ, mọi thứ khác giữ nguyên.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Bạn nhận lại được gì">
+
+Việc dựng lại chỉ còn một cú nhấp và một lần xác nhận. Bạn bắt đầu từ những tab định dùng, trong những cửa sổ bạn đã sắp xếp, thay vì từ những gì còn sót lại từ hôm qua. Và vì khôi phục chỉ mở lại những gì bạn đã lưu, sự lộn xộn không quay lại.
+
+</Section>
+
+<Section id="habits" title="Thói quen tốt">
+
+- **Mỗi thói quen một phiên:** "Ngày làm việc", "Viết", "Lên kế hoạch thứ Hai". Ít phiên mà rõ ràng tốt hơn một danh sách dài.
+- **Làm mới phiên khi cách sắp xếp của bạn thay đổi.** Phiên là một bản chụp: những thay đổi sau đó trong nhóm không làm nó thay đổi. Hãy lưu phiên mới và xóa phiên cũ.
+- **Kết thúc ngày bằng nhóm, không phải bằng cửa sổ.** Thêm các tab mới hôm nay vào nhóm của chúng (xem [quy trình làm việc với tab hằng ngày](/blog/tabmerger-daily-workflow)), rồi đóng các cửa sổ.
+- **Dùng phiên để chuyển cả ngày, dùng nhóm cho một dự án.** Khôi phục là để "bắt đầu ngày của tôi"; **Mở tất cả trong cửa sổ mới** là để "mở dự án này cạnh những gì tôi đang có".
+
+</Section>
+
+<Section id="plans" title="Miễn phí và Pro">
+
+<ComparisonTable
+  head={['', 'Miễn phí', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Phiên', 'Tối đa 3, trong trình duyệt này', 'Không giới hạn'],
+    ['Khôi phục và "Mở tất cả trong cửa sổ mới"', 'Có', 'Có'],
+    ['Phiên trên các thiết bị khác của bạn', 'Không', 'Có, mã hóa đầu cuối'],
+    ['Nhóm và tab để đưa vào phiên', '5 nhóm, 50 tab', 'Không giới hạn'],
+  ]}
+/>
+
+Phiên miễn phí không bao giờ rời khỏi trình duyệt của bạn. Máy chủ của chúng tôi từ chối việc tải phiên lên tài khoản nếu tài khoản không có Pro, nên đồng bộ thực sự là tính năng Pro, không chỉ trong menu. Xem [trang giá](/pricing).
+
+<InstallCta>Lưu buổi sáng của bạn một lần, khôi phục mỗi ngày. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+Về phần còn lại của thói quen, xem [quy trình hằng ngày với TabMerger](/blog/tabmerger-daily-workflow); để hiểu phiên nói chung là gì, đọc [trình quản lý phiên trình duyệt là gì](/blog/browser-session-manager).
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+</Section>

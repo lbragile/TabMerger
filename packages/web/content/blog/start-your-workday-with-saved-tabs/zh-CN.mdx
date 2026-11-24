@@ -1,0 +1,166 @@
+export const post = {
+  slug: 'start-your-workday-with-saved-tabs',
+  title: '用保存的标签页开始一天的工作',
+  navTitle: '用保存的标签页开始一天的工作',
+  seoTitle: '每天早上打开同一组标签页：TabMerger 会话',
+  description:
+    '每天早上一键打开工作用的标签页：把分组保存为 TabMerger 会话，每天恢复，或者只打开一个分组。还会说明恢复前为什么要先确认，以及免费版和 Pro 各包含什么。',
+  shareSummary: '早上的标签页一键打开：会话保存一次，每天都能恢复。',
+  dek: '只需设置一次：邮件、日历、看板和文档每天早上都会回到各自的窗口里。',
+  published: '2026-12-12',
+  updated: '2026-12-12',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: '会话是你所有已保存分组的一份带名称的快照。', source: 'TabMerger 3.16.1 源代码' },
+    { text: '恢复会（先询问再）关闭已打开的窗口，并重新打开每个已保存的窗口。', source: 'TabMerger 3.16.1' },
+    { text: '恢复时关闭的窗口会保留在“最近关闭”中。', source: 'TabMerger 3.16.1 源代码' },
+    { text: '免费版：本浏览器中 3 个会话。Pro：不限数量，在设备间同步。', source: 'TabMerger 价格', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '怎样每天早上打开同一组标签页？',
+      answer:
+        '把每天要用的标签页放进 TabMerger 分组，然后保存一个会话（侧边栏“会话”旁边的书签按钮）。每天早上恢复这个会话，TabMerger 就会按原来的顺序重新打开每个已保存的窗口及其标签页。',
+    },
+    {
+      question: '为什么恢复会话会关闭我的窗口？',
+      answer:
+        '会话的用途是用你保存的内容替换当前打开的内容，让你从干净的状态开始，而不是叠在昨天的标签页上。TabMerger 在关闭任何东西之前都会先询问，被关闭的窗口会进入“最近关闭”，你可以重新打开它们。',
+    },
+    {
+      question: '能不能只打开一个分组而不关闭任何东西？',
+      answer: '可以。在侧边栏中右键点击该分组，选择“在新窗口中全部打开”。你的其他窗口保持不变。',
+    },
+    {
+      question: '会话会保存我当前打开的标签页吗？',
+      answer:
+        '不会，它保存的是你已保存的分组。要把打开的内容也包括进去，先用“与当前合并”（在分组的 ⋯ 菜单中）把它们加入某个分组，再保存会话。',
+    },
+    {
+      question: '免费可以保存多少个会话？',
+      answer: '免费版在你的浏览器中保留 3 个会话。Pro 不限数量，并以端到端加密的方式在你的设备之间同步会话。',
+    },
+  ],
+  images: [
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-save-session-light.webp', alt: 'TabMerger 的 Save Session（保存会话）对话框，名称为 Workday，带有描述和紫色，浅色主题' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-save-session-dark.webp', alt: 'TabMerger 的 Save Session（保存会话）对话框，名称为 Workday，带有描述和青色，深色主题' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-session-view-light.webp', alt: '包含三个分组、四个窗口和九个标签页的 Workday 会话，以及 Restore session（恢复会话）按钮，浅色主题' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-session-view-dark.webp', alt: '包含三个分组、四个窗口和九个标签页的 Workday 会话，以及 Restore session（恢复会话）按钮，深色主题' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-restore-confirm-light.webp', alt: 'TabMerger 询问 Restore this session?（恢复此会话？），并显示 Cancel（取消）和 Close all windows（关闭所有窗口）按钮，浅色主题' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-restore-confirm-dark.webp', alt: 'TabMerger 询问 Restore this session?（恢复此会话？），并显示 Cancel（取消）和 Close all windows（关闭所有窗口）按钮，深色主题' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-open-group-light.webp', alt: '侧边栏中 Work 分组的右键菜单，含 Open all in new window（在新窗口中全部打开），浅色主题' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-open-group-dark.webp', alt: '侧边栏中 Work 分组的右键菜单，含 Open all in new window（在新窗口中全部打开），深色主题' },
+  ],
+  tags: ['tabmerger-guides', 'session-management', 'save-tabs', 'browser-productivity'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/start-your-workday-with-saved-tabs/tm-restore-confirm-light.webp' },
+  ogImage: { src: '/blog/start-your-workday-with-saved-tabs/og.png', alt: '用保存的标签页开始一天的工作：TabMerger 中的 Workday 会话和 Restore session（恢复会话）按钮' },
+  toc: [
+    { id: 'quick', label: '快速回答' },
+    { id: 'problem', label: '每天早上的重建' },
+    { id: 'why', label: '会话为什么这样设计' },
+    { id: 'steps', label: '设置方法' },
+    { id: 'one-group', label: '只打开一个分组' },
+    { id: 'benefit', label: '你能得到什么' },
+    { id: 'habits', label: '好习惯' },
+    { id: 'plans', label: '免费版与 Pro' },
+    { id: 'faq', label: '常见问题' },
+  ],
+}
+
+<QuickAnswer>
+
+把每天要用的标签页放进 [TabMerger](/features) 分组，然后点击 **保存当前会话**（Save current session），也就是侧边栏 **会话**（Sessions）旁边的书签按钮，并把会话命名为“工作日”。每天早上恢复它：TabMerger 会先询问，再关闭已打开的窗口，并按原来的顺序重新打开每个已保存的窗口及其标签页。只需要一个项目？右键点击它的分组，选择 **在新窗口中全部打开**（Open all in new window）。
+
+</QuickAnswer>
+
+<InstallCta>一键打开整套早间工作环境。免费支持 Chrome、Edge 和 Firefox。</InstallCta>
+
+<Section id="problem" title="每天早上的重建">
+
+大多数早上的开头都一样。邮件、日历、团队看板、正在评审的拉取请求、正在写的文档。你从书签里、从历史记录里、凭记忆把它们一个个打开。有些天浏览器反而恢复了昨天的窗口，于是你从四十个标签页开始，再关掉其中三十五个。
+
+无论哪种情况，一天的头几分钟都花在了重建一个你本来就有的工作区上。而且浏览器自带的恢复只会带回碰巧开着的东西，而不是你打算处理的东西。
+
+</Section>
+
+<Section id="why" title="TabMerger 会话为什么这样设计">
+
+会话背后的每个设计都对应着这个问题的一部分：
+
+- **会话保存的是你的分组，而不是所有打开的东西**。分组是你决定留下的标签页，已经命名并整理好。会话用一个名称为它们全部拍下快照，所以恢复时你得到的是自己的计划，而不是昨天的杂乱。（实时的“当前打开”视图，即英文界面中的 Now Open，以及引导教程中的练习分组，都被有意排除在外。）
+- **恢复是替换，而且会先询问**。为了让你从干净的状态开始，恢复会先关闭已打开的窗口，再重新打开已保存的窗口。这一步影响较大，所以无论在会话视图还是在侧边栏中，它都会先询问（**关闭所有窗口** 或 **取消**，英文界面中为 Close all windows / Cancel）。
+- **你关闭的东西不会被丢掉**。恢复时关闭的窗口会进入 **最近关闭**（Recently closed，默认开启），所以还需要的标签页只需点一下就能找回。
+- **每个窗口都会以窗口的形式回来**。已保存的窗口分别重新打开，标签页保持保存时的顺序。从隐私窗口保存的窗口，在扩展获准在隐私窗口中运行时，会重新以隐私窗口打开；否则会以普通窗口打开，TabMerger 也会告诉你原因。
+- **先保存在你的浏览器中**。会话首先写入你的浏览器，所以离线也能保存。在 Pro 中，它随后会以端到端加密的方式上传，同步到你的其他设备。
+
+</Section>
+
+<Section id="steps" title="设置方法：保存一次，每天恢复">
+
+1. 把当天要用的标签页放进分组。打开分组的 **⋯** 菜单，选择 **与当前合并**（Merge with current），把已打开的窗口加入该分组。
+2. 在侧边栏中，点击 **会话** 旁边的书签按钮（**保存当前会话**）。填写名称、可选的描述并选择颜色，然后点击 **保存**（Save）。
+3. 第二天早上，打开 TabMerger，点击 **会话** 下的会话，然后点击 **恢复会话**（Restore session），或者点击该行上的恢复按钮。
+4. 点击 **关闭所有窗口** 确认。已保存的窗口会逐个打开，标签页保持原来的顺序。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="保存并恢复会话" steps={[{ title: '保存' }, { title: '会话' }, { title: '确认' }]}>
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-save-session" alt="TabMerger 的 Save Session（保存会话）对话框，名称为 Workday，带有描述和紫色，浅色主题" darkAlt="TabMerger 的 Save Session（保存会话）对话框，名称为 Workday，带有描述和青色，深色主题" boxes={[{ id: 'session-name', label: '会话名称' }, { id: 'description', label: '可选的描述' }]} source="TabMerger 3.16.1">用它要带回的日常流程来命名。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-session-view" alt="包含三个分组、四个窗口和九个标签页的 Workday 会话，以及 Restore session（恢复会话）按钮，浅色主题" darkAlt="包含三个分组、四个窗口和九个标签页的 Workday 会话，以及 Restore session（恢复会话）按钮，深色主题" boxes={[{ id: 'restore-session', label: '恢复会话' }]} source="TabMerger 3.16.1">会话会列出它将重新打开的每个分组、窗口和标签页。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-restore-confirm" alt="TabMerger 询问 Restore this session?（恢复此会话？），并显示 Cancel（取消）和 Close all windows（关闭所有窗口）按钮，浅色主题" darkAlt="TabMerger 询问 Restore this session?（恢复此会话？），并显示 Cancel（取消）和 Close all windows（关闭所有窗口）按钮，深色主题" boxes={[{ id: 'close-all', label: '关闭所有窗口' }]} source="TabMerger 3.16.1">恢复会关闭已打开的内容，所以总是先询问。</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="one-group" title="只打开一个分组">
+
+有些早上你只需要一个项目。在侧边栏中右键点击它的分组，选择 **在新窗口中全部打开**：分组中的所有网页会一起在一个新窗口中打开，其他东西都不会被关闭。要打开单个已保存的窗口，使用该窗口 **⋯** 菜单中的 **在浏览器中打开**（Open in browser）；要打开一个标签页，直接点击它即可。
+
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-open-group" alt="侧边栏中 Work 分组的右键菜单，含 Open all in new window（在新窗口中全部打开），浅色主题" darkAlt="侧边栏中 Work 分组的右键菜单，含 Open all in new window（在新窗口中全部打开），深色主题" boxes={[{ id: 'open-all', label: '在新窗口中全部打开' }]} source="TabMerger 3.16.1">一个分组，一个窗口，其他一切保持原样。</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="你能得到什么">
+
+重建变成一次点击加一次确认。你从计划要用的标签页开始，在自己安排好的窗口里，而不是从昨天残留下来的东西开始。而且恢复只会打开你保存过的内容，杂乱不会再回来。
+
+</Section>
+
+<Section id="habits" title="好习惯">
+
+- **每个日常流程一个会话**：“工作日”“写作”“周一计划”。少而清晰的会话胜过一长串列表。
+- **工作环境变化时更新会话**。会话是一份快照：之后对分组的修改不会改变它。保存一个新的，删除旧的。
+- **用分组而不是窗口结束一天**。把今天新开的标签页加入各自的分组（参见[每日标签页工作流](/blog/tabmerger-daily-workflow)），然后关闭窗口。
+- **切换整天的工作用会话，单个项目用分组**。恢复用于“开始我的一天”；**在新窗口中全部打开** 用于“在已打开的内容旁边打开这个项目”。
+
+</Section>
+
+<Section id="plans" title="免费版与 Pro">
+
+<ComparisonTable
+  head={['', '免费版', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['会话', '最多 3 个，仅限本浏览器', '不限'],
+    ['恢复和“在新窗口中全部打开”', '是', '是'],
+    ['其他设备上的会话', '否', '是，端到端加密'],
+    ['可放入会话的分组和标签页', '5 个分组，50 个标签页', '不限'],
+  ]}
+/>
+
+免费版的会话永远不会离开你的浏览器。账户没有 Pro 时，我们的服务器会拒绝把会话上传到该账户，所以同步确实是 Pro 功能，而不只是菜单上的区别。请查看[价格页面](/pricing)。
+
+<InstallCta>早上的工作环境保存一次，每天都能恢复。免费支持 Chrome、Edge 和 Firefox。</InstallCta>
+
+日常流程的其余部分，请看[用 TabMerger 管理每天的标签页](/blog/tabmerger-daily-workflow)；想了解会话本身，请看[什么是浏览器会话管理器](/blog/browser-session-manager)。
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

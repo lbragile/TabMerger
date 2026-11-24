@@ -1,0 +1,166 @@
+export const post = {
+  slug: 'start-your-workday-with-saved-tabs',
+  title: 'Zacznij dzień pracy od zapisanych kart',
+  navTitle: 'Zacznij dzień pracy od zapisanych kart',
+  seoTitle: 'Otwieraj te same karty co rano dzięki sesjom TabMerger',
+  description:
+    'Otwieraj karty do pracy co rano jednym kliknięciem: zapisz grupy jako sesję TabMerger, przywracaj ją codziennie albo otwórz tylko jedną grupę. Dlaczego przywracanie najpierw pyta i co obejmują plany Darmowy i Pro.',
+  shareSummary: 'Poranne karty jednym kliknięciem: zapisz sesję raz i przywracaj ją codziennie.',
+  dek: 'Ustaw to raz: poczta, kalendarz, tablica i dokumenty wracają co rano, każde we własnym oknie.',
+  published: '2026-12-12',
+  updated: '2026-12-12',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Sesja to nazwana migawka wszystkich Twoich zapisanych grup.', source: 'Kod źródłowy TabMerger 3.16.1' },
+    { text: 'Przywracanie zamyka otwarte okna (po pytaniu) i ponownie otwiera każde zapisane okno.', source: 'TabMerger 3.16.1' },
+    { text: 'Okna zamknięte przez przywracanie trafiają do sekcji „Ostatnio zamknięte”.', source: 'Kod źródłowy TabMerger 3.16.1' },
+    { text: 'Darmowy: 3 sesje w tej przeglądarce. Pro: bez limitu, synchronizowane między urządzeniami.', source: 'Cennik TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Jak otwierać te same karty co rano?',
+      answer:
+        'Umieść codzienne karty w grupach TabMerger, a potem zapisz sesję (przycisk zakładki obok „Sesje” na pasku bocznym). Każdego ranka przywróć tę sesję: TabMerger ponownie otworzy każde zapisane okno z kartami w tej samej kolejności.',
+    },
+    {
+      question: 'Dlaczego przywrócenie sesji zamyka moje okna?',
+      answer:
+        'Sesja ma zastąpić to, co jest otwarte, tym, co zapisałeś, żebyś zaczynał od czystej karty, a nie na wczorajszych kartach. TabMerger pyta, zanim cokolwiek zamknie, a zamknięte okna trafiają do sekcji „Ostatnio zamknięte”, skąd możesz je ponownie otworzyć.',
+    },
+    {
+      question: 'Czy mogę otworzyć jedną grupę, niczego nie zamykając?',
+      answer: 'Tak. Kliknij grupę prawym przyciskiem myszy na pasku bocznym i wybierz „Otwórz wszystkie w nowym oknie”. Pozostałe okna zostają bez zmian.',
+    },
+    {
+      question: 'Czy sesja zapisuje moje otwarte karty?',
+      answer:
+        'Nie, zapisuje Twoje zapisane grupy. Aby uwzględnić to, co jest otwarte, najpierw dodaj to do grupy poleceniem „Scal z bieżącą sesją” (w menu ⋯ grupy), a potem zapisz sesję.',
+    },
+    {
+      question: 'Ile sesji mogę zapisać za darmo?',
+      answer: 'Plan darmowy przechowuje 3 sesje w przeglądarce. Pro nie ma limitu i synchronizuje sesje między Twoimi urządzeniami, z szyfrowaniem end-to-end.',
+    },
+  ],
+  images: [
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-save-session-light.webp', alt: 'Okno „Save Session” (Zapisz Sesję) w TabMergerze z nazwą „Workday”, opisem i fioletowym kolorem, jasny motyw' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-save-session-dark.webp', alt: 'Okno „Save Session” (Zapisz Sesję) w TabMergerze z nazwą „Workday”, opisem i cyjanowym kolorem, ciemny motyw' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-session-view-light.webp', alt: 'Sesja „Workday” z trzema grupami, czterema oknami i dziewięcioma kartami oraz przyciskiem „Restore session” (Przywróć sesję), jasny motyw' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-session-view-dark.webp', alt: 'Sesja „Workday” z trzema grupami, czterema oknami i dziewięcioma kartami oraz przyciskiem „Restore session” (Przywróć sesję), ciemny motyw' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-restore-confirm-light.webp', alt: 'TabMerger pyta „Restore this session?” (Przywrócić tę sesję?), z przyciskami „Cancel” (Anuluj) i „Close all windows” (Zamknij wszystkie okna), jasny motyw' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-restore-confirm-dark.webp', alt: 'TabMerger pyta „Restore this session?” (Przywrócić tę sesję?), z przyciskami „Cancel” (Anuluj) i „Close all windows” (Zamknij wszystkie okna), ciemny motyw' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-open-group-light.webp', alt: 'Menu kontekstowe grupy „Work” na pasku bocznym z poleceniem „Open all in new window” (Otwórz wszystkie w nowym oknie), jasny motyw' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-open-group-dark.webp', alt: 'Menu kontekstowe grupy „Work” na pasku bocznym z poleceniem „Open all in new window” (Otwórz wszystkie w nowym oknie), ciemny motyw' },
+  ],
+  tags: ['tabmerger-guides', 'session-management', 'save-tabs', 'browser-productivity'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/start-your-workday-with-saved-tabs/tm-restore-confirm-light.webp' },
+  ogImage: { src: '/blog/start-your-workday-with-saved-tabs/og.png', alt: 'Zacznij dzień pracy od zapisanych kart: sesja „Workday” w TabMergerze z przyciskiem „Restore session” (Przywróć sesję)' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'problem', label: 'Poranne odtwarzanie wszystkiego' },
+    { id: 'why', label: 'Dlaczego sesje działają w ten sposób' },
+    { id: 'steps', label: 'Konfiguracja' },
+    { id: 'one-group', label: 'Otwórz tylko jedną grupę' },
+    { id: 'benefit', label: 'Co zyskujesz' },
+    { id: 'habits', label: 'Dobre nawyki' },
+    { id: 'plans', label: 'Darmowy czy Pro' },
+    { id: 'faq', label: 'Najczęstsze pytania' },
+  ],
+}
+
+<QuickAnswer>
+
+Trzymaj codzienne karty w grupach [TabMerger](/features), potem kliknij **Zapisz bieżącą sesję** (Save current session), czyli przycisk zakładki obok **Sesje** (Sessions) na pasku bocznym, i nazwij sesję „Dzień pracy”. Każdego ranka przywróć ją: TabMerger najpierw pyta, zamyka otwarte okna i ponownie otwiera każde zapisane okno z kartami w tej samej kolejności. Potrzebujesz tylko jednego projektu? Kliknij jego grupę prawym przyciskiem myszy i wybierz **Otwórz wszystkie w nowym oknie** (Open all in new window).
+
+</QuickAnswer>
+
+<InstallCta>Całe poranne stanowisko pracy jednym kliknięciem. Za darmo dla Chrome, Edge i Firefoksa.</InstallCta>
+
+<Section id="problem" title="Poranne odtwarzanie wszystkiego">
+
+Większość poranków zaczyna się tak samo. Poczta, kalendarz, tablica zespołu, pull request, który przeglądałeś, dokument, który pisałeś. Otwierasz je po kolei, z zakładek, z historii, z pamięci. Niektórego dnia przeglądarka przywróciła za to wczorajsze okna, więc zaczynasz z czterdziestoma kartami i zamykasz trzydzieści pięć.
+
+Tak czy inaczej, pierwsze minuty dnia idą na odtwarzanie miejsca pracy, które już miałeś. A wbudowane przywracanie przeglądarki przywraca to, co akurat było otwarte, a nie to, nad czym chciałeś pracować.
+
+</Section>
+
+<Section id="why" title="Dlaczego sesje TabMerger działają tak, a nie inaczej">
+
+Każda decyzja stojąca za sesjami rozwiązuje część tego problemu:
+
+- **Sesja zapisuje Twoje grupy, a nie to, co akurat jest otwarte.** Twoje grupy to karty, które postanowiłeś zatrzymać, już nazwane i uporządkowane. Sesja zapisuje migawkę ich wszystkich pod jedną nazwą, więc przywracając ją, odzyskujesz swój plan, a nie wczorajszy bałagan. (Widok na żywo „Teraz Otwarte”, po angielsku „Now Open”, oraz grupy ćwiczeniowe z samouczka są celowo pomijane.)
+- **Przywracanie zastępuje i najpierw pyta.** Żebyś zaczynał od zera, przywracanie zamyka otwarte okna, zanim otworzy zapisane. To krok o poważnych skutkach, więc zawsze pyta (**Zamknij wszystkie okna** lub **Anuluj**, po angielsku Close all windows / Cancel), zarówno w widoku sesji, jak i na pasku bocznym.
+- **Nic, co zamykasz, nie przepada.** Okna zamknięte przez przywracanie trafiają do sekcji **Ostatnio zamknięte** (Recently closed, domyślnie włączonej), więc karta, której jeszcze potrzebowałeś, jest o jedno kliknięcie.
+- **Każde okno wraca jako okno.** Zapisane okna otwierają się osobno, z kartami w zapisanej kolejności. Okno zapisane z okna prywatnego otwiera się ponownie jako prywatne, jeśli rozszerzenie ma dostęp do okien prywatnych; w przeciwnym razie otwiera się jako zwykłe okno, a TabMerger wyjaśnia dlaczego.
+- **Najpierw zapisane w przeglądarce.** Sesja trafia do Twojej przeglądarki przed czymkolwiek innym, więc zapisywanie działa offline. W Pro jest potem wysyłana, z szyfrowaniem end-to-end, na Twoje pozostałe urządzenia.
+
+</Section>
+
+<Section id="steps" title="Konfiguracja: zapisz raz, przywracaj codziennie">
+
+1. Umieść karty na dany dzień w grupach. Otwórz menu **⋯** grupy i wybierz **Scal z bieżącą sesją** (Merge with current), aby dodać do niej otwarte okna.
+2. Na pasku bocznym kliknij przycisk zakładki obok **Sesje** (**Zapisz bieżącą sesję**). Podaj nazwę, opcjonalny opis i kolor, a potem kliknij **Zapisz** (Save).
+3. Jutro rano otwórz TabMerger, kliknij sesję w sekcji **Sesje** i kliknij **Przywróć sesję** (Restore session) albo przycisk przywracania w jej wierszu.
+4. Potwierdź przyciskiem **Zamknij wszystkie okna**. Zapisane okna otwierają się jedno po drugim, z kartami w tej samej kolejności.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Zapisywanie i przywracanie sesji" steps={[{ title: 'Zapis' }, { title: 'Sesja' }, { title: 'Potwierdzenie' }]}>
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-save-session" alt="Okno „Save Session” (Zapisz Sesję) w TabMergerze z nazwą „Workday”, opisem i fioletowym kolorem, jasny motyw" darkAlt="Okno „Save Session” (Zapisz Sesję) w TabMergerze z nazwą „Workday”, opisem i cyjanowym kolorem, ciemny motyw" boxes={[{ id: 'session-name', label: 'Nazwa sesji' }, { id: 'description', label: 'Opcjonalny opis' }]} source="TabMerger 3.16.1">Nazwij ją od rutyny, którą przywraca.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-session-view" alt="Sesja „Workday” z trzema grupami, czterema oknami i dziewięcioma kartami oraz przyciskiem „Restore session” (Przywróć sesję), jasny motyw" darkAlt="Sesja „Workday” z trzema grupami, czterema oknami i dziewięcioma kartami oraz przyciskiem „Restore session” (Przywróć sesję), ciemny motyw" boxes={[{ id: 'restore-session', label: 'Przywróć sesję' }]} source="TabMerger 3.16.1">Sesja pokazuje każdą grupę, okno i kartę, które ponownie otworzy.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-restore-confirm" alt="TabMerger pyta „Restore this session?” (Przywrócić tę sesję?), z przyciskami „Cancel” (Anuluj) i „Close all windows” (Zamknij wszystkie okna), jasny motyw" darkAlt="TabMerger pyta „Restore this session?” (Przywrócić tę sesję?), z przyciskami „Cancel” (Anuluj) i „Close all windows” (Zamknij wszystkie okna), ciemny motyw" boxes={[{ id: 'close-all', label: 'Zamknij wszystkie okna' }]} source="TabMerger 3.16.1">Przywracanie zawsze najpierw pyta, bo zamyka to, co jest otwarte.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="one-group" title="Otwórz tylko jedną grupę">
+
+Niektórego ranka potrzebujesz tylko jednego projektu. Kliknij jego grupę prawym przyciskiem myszy na pasku bocznym i wybierz **Otwórz wszystkie w nowym oknie**: wszystkie strony internetowe z grupy otworzą się razem w jednym nowym oknie i nic innego nie zostanie zamknięte. Aby otworzyć jedno zapisane okno, użyj polecenia **Otwórz w przeglądarce** (Open in browser) w menu **⋯** tego okna; aby otworzyć jedną kartę, kliknij ją.
+
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-open-group" alt="Menu kontekstowe grupy „Work” na pasku bocznym z poleceniem „Open all in new window” (Otwórz wszystkie w nowym oknie), jasny motyw" darkAlt="Menu kontekstowe grupy „Work” na pasku bocznym z poleceniem „Open all in new window” (Otwórz wszystkie w nowym oknie), ciemny motyw" boxes={[{ id: 'open-all', label: 'Otwórz wszystkie w nowym oknie' }]} source="TabMerger 3.16.1">Jedna grupa, jedno okno, reszta zostaje bez zmian.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Co zyskujesz">
+
+Odtwarzanie zamienia się w jedno kliknięcie i jedno potwierdzenie. Zaczynasz od kart, których chciałeś używać, w oknach, które ułożyłeś, a nie od tego, co przetrwało z wczoraj. A ponieważ przywracanie otwiera tylko to, co zapisałeś, bałagan nie wraca.
+
+</Section>
+
+<Section id="habits" title="Dobre nawyki">
+
+- **Jedna sesja na jedną rutynę:** „Dzień pracy”, „Pisanie”, „Planowanie w poniedziałek”. Kilka przejrzystych sesji jest lepsze niż długa lista.
+- **Odświeżaj sesję, gdy zmienia się Twoje stanowisko pracy.** Sesja to migawka: późniejsze zmiany w grupach jej nie zmieniają. Zapisz nową i usuń starą.
+- **Kończ dzień grupami, a nie oknami.** Dodaj dzisiejsze nowe karty do ich grup (zobacz [codzienną rutynę z kartami](/blog/tabmerger-daily-workflow)), a potem zamknij okna.
+- **Sesja do zmiany całego dnia, grupa do jednego projektu.** Przywracanie służy do „zacznij mój dzień”; **Otwórz wszystkie w nowym oknie** do „otwórz ten projekt obok tego, co już mam”.
+
+</Section>
+
+<Section id="plans" title="Darmowy czy Pro">
+
+<ComparisonTable
+  head={['', 'Darmowy', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Sesje', 'Do 3, w tej przeglądarce', 'Bez limitu'],
+    ['Przywracanie i „Otwórz wszystkie w nowym oknie”', 'Tak', 'Tak'],
+    ['Sesje na innych urządzeniach', 'Nie', 'Tak, z szyfrowaniem end-to-end'],
+    ['Grupy i karty do umieszczenia w sesji', '5 grup, 50 kart', 'Bez limitu'],
+  ]}
+/>
+
+Darmowe sesje nigdy nie opuszczają Twojej przeglądarki. Nasz serwer odrzuca wysłanie sesji na konto, jeśli konto nie ma Pro, więc synchronizacja jest funkcją Pro naprawdę, a nie tylko w menu. Zobacz [stronę z cennikiem](/pricing).
+
+<InstallCta>Zapisz swój poranek raz i przywracaj go codziennie. Za darmo dla Chrome, Edge i Firefoksa.</InstallCta>
+
+Resztę rutyny opisuje [codzienna praca z kartami w TabMerger](/blog/tabmerger-daily-workflow); czym w ogóle są sesje, wyjaśnia tekst [czym jest menedżer sesji przeglądarki](/blog/browser-session-manager).
+
+</Section>
+
+<Section id="faq" title="Najczęstsze pytania">
+
+<Faq items={post.faq} />
+
+</Section>

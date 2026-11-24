@@ -1,0 +1,166 @@
+export const post = {
+  slug: 'start-your-workday-with-saved-tabs',
+  title: 'Inizia la giornata con le schede salvate',
+  navTitle: 'Inizia la giornata con le schede salvate',
+  seoTitle: 'Aprire le stesse schede ogni mattina con le sessioni di TabMerger',
+  description:
+    'Apri le tue schede di lavoro ogni mattina con un clic: salva i gruppi come sessione di TabMerger, ripristinala ogni giorno o apri un solo gruppo. Perché il ripristino chiede prima e cosa includono il piano gratuito e Pro.',
+  shareSummary: 'Le schede del mattino in un clic: salva una sessione una volta, ripristinala ogni giorno.',
+  dek: 'Lo configuri una volta: posta, calendario, bacheca e documenti tornano ogni mattina, ognuno nella sua finestra.',
+  published: '2026-12-12',
+  updated: '2026-12-12',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Una sessione è un\'istantanea con nome di tutti i tuoi gruppi salvati.', source: 'Codice sorgente di TabMerger 3.16.1' },
+    { text: 'Il ripristino chiude le finestre aperte (dopo aver chiesto) e riapre ogni finestra salvata.', source: 'TabMerger 3.16.1' },
+    { text: 'Le finestre chiuse da un ripristino restano in «Chiusi di recente».', source: 'Codice sorgente di TabMerger 3.16.1' },
+    { text: 'Free: 3 sessioni in questo browser. Pro: illimitate e sincronizzate tra i dispositivi.', source: 'Prezzi di TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Come apro le stesse schede ogni mattina?',
+      answer:
+        'Metti le schede di ogni giorno in gruppi di TabMerger, poi salva una sessione (il pulsante segnalibro accanto a «Sessioni» nella barra laterale). Ogni mattina ripristina quella sessione: TabMerger riapre ogni finestra salvata con le sue schede in ordine.',
+    },
+    {
+      question: 'Perché ripristinare una sessione chiude le mie finestre?',
+      answer:
+        'Una sessione serve a sostituire ciò che è aperto con ciò che hai salvato, così parti da zero invece che sopra le schede di ieri. TabMerger chiede prima di chiudere qualsiasi cosa, e le finestre che chiude finiscono in «Chiusi di recente», da dove puoi riaprirle.',
+    },
+    {
+      question: 'Posso aprire un solo gruppo senza chiudere nulla?',
+      answer: 'Sì. Fai clic destro sul gruppo nella barra laterale e scegli «Apri tutto in una nuova finestra». Le altre finestre restano come sono.',
+    },
+    {
+      question: 'Una sessione salva le mie schede aperte?',
+      answer:
+        'No, salva i tuoi gruppi salvati. Per includere ciò che è aperto, aggiungilo prima a un gruppo con «Unisci con l\'attuale» (nel menu ⋯ del gruppo), poi salva la sessione.',
+    },
+    {
+      question: 'Quante sessioni posso salvare gratis?',
+      answer: 'Il piano gratuito conserva 3 sessioni nel browser. Pro non ha limiti e sincronizza le sessioni tra i tuoi dispositivi, con crittografia end-to-end.',
+    },
+  ],
+  images: [
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-save-session-light.webp', alt: 'Finestra «Save Session» (Salva sessione) di TabMerger con il nome «Workday», una descrizione e il colore viola, tema chiaro' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-save-session-dark.webp', alt: 'Finestra «Save Session» (Salva sessione) di TabMerger con il nome «Workday», una descrizione e il colore ciano, tema scuro' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-session-view-light.webp', alt: 'La sessione «Workday» con tre gruppi, quattro finestre e nove schede, e il pulsante «Restore session» (Ripristina sessione), tema chiaro' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-session-view-dark.webp', alt: 'La sessione «Workday» con tre gruppi, quattro finestre e nove schede, e il pulsante «Restore session» (Ripristina sessione), tema scuro' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-restore-confirm-light.webp', alt: 'TabMerger chiede «Restore this session?» (Ripristinare questa sessione?) con i pulsanti «Cancel» (Annulla) e «Close all windows» (Chiudi tutte le finestre), tema chiaro' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-restore-confirm-dark.webp', alt: 'TabMerger chiede «Restore this session?» (Ripristinare questa sessione?) con i pulsanti «Cancel» (Annulla) e «Close all windows» (Chiudi tutte le finestre), tema scuro' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-open-group-light.webp', alt: 'Il menu contestuale del gruppo «Work» nella barra laterale, con «Open all in new window» (Apri tutto in una nuova finestra), tema chiaro' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-open-group-dark.webp', alt: 'Il menu contestuale del gruppo «Work» nella barra laterale, con «Open all in new window» (Apri tutto in una nuova finestra), tema scuro' },
+  ],
+  tags: ['tabmerger-guides', 'session-management', 'save-tabs', 'browser-productivity'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/start-your-workday-with-saved-tabs/tm-restore-confirm-light.webp' },
+  ogImage: { src: '/blog/start-your-workday-with-saved-tabs/og.png', alt: 'Inizia la giornata con le schede salvate: la sessione «Workday» in TabMerger con il pulsante «Restore session» (Ripristina sessione)' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'problem', label: 'Ricostruire tutto ogni mattina' },
+    { id: 'why', label: 'Perché le sessioni funzionano così' },
+    { id: 'steps', label: 'Configurazione' },
+    { id: 'one-group', label: 'Aprire un solo gruppo' },
+    { id: 'benefit', label: 'Cosa ci guadagni' },
+    { id: 'habits', label: 'Buone abitudini' },
+    { id: 'plans', label: 'Free e Pro a confronto' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+}
+
+<QuickAnswer>
+
+Tieni le schede di ogni giorno in gruppi di [TabMerger](/features), poi premi **Salva la sessione attuale** (Save current session), il pulsante segnalibro accanto a **Sessioni** (Sessions) nella barra laterale, e chiamala «Giornata». Ogni mattina ripristinala: TabMerger chiede prima, chiude le finestre aperte e riapre ogni finestra salvata con le sue schede in ordine. Ti serve un solo progetto? Fai clic destro sul suo gruppo e scegli **Apri tutto in una nuova finestra** (Open all in new window).
+
+</QuickAnswer>
+
+<InstallCta>Tutta la configurazione del mattino in un clic. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="problem" title="Ricostruire tutto ogni mattina">
+
+Quasi ogni mattina inizia allo stesso modo. La posta, il calendario, la bacheca del team, la pull request che stavi revisionando, il documento che stavi scrivendo. Li apri uno per uno, dai preferiti, dalla cronologia, a memoria. Certi giorni il browser ha invece ripristinato le finestre di ieri, così parti con quaranta schede e ne chiudi trentacinque.
+
+In entrambi i casi, i primi minuti della giornata se ne vanno a ricostruire uno spazio di lavoro che avevi già. E il ripristino integrato del browser riporta quello che era aperto per caso, non ciò su cui volevi lavorare.
+
+</Section>
+
+<Section id="why" title="Perché le sessioni di TabMerger funzionano così">
+
+Ogni scelta dietro le sessioni risponde a una parte di quel problema:
+
+- **Una sessione salva i tuoi gruppi, non quello che è aperto.** I tuoi gruppi sono le schede che hai scelto di tenere, già con un nome e in ordine. Una sessione li fotografa tutti sotto un unico nome, quindi ripristinandola ritrovi il tuo piano, non il disordine di ieri. (La vista in tempo reale «Aperte ora», «Now Open» in inglese, e i gruppi di prova del tour guidato sono esclusi di proposito.)
+- **Il ripristino sostituisce, e chiede prima.** Per partire da zero, un ripristino chiude le finestre aperte prima di riaprire quelle salvate. È un'operazione drastica, quindi chiede sempre (**Chiudi tutte le finestre** o **Annulla**, in inglese Close all windows / Cancel), sia dalla vista della sessione sia dalla barra laterale.
+- **Niente di ciò che chiudi va perso.** Le finestre chiuse da un ripristino finiscono in **Chiusi di recente** (Recently closed, attivo per impostazione predefinita), quindi una scheda che ti serviva ancora è a un clic di distanza.
+- **Ogni finestra torna come finestra.** Le finestre salvate si riaprono separatamente, con le schede nell'ordine salvato. Una finestra salvata da una finestra privata si riapre come privata se l'estensione è consentita nelle finestre private; altrimenti si apre come finestra normale e TabMerger ti spiega perché.
+- **Salvata prima nel tuo browser.** Una sessione viene scritta nel browser prima di qualsiasi altra cosa, quindi il salvataggio funziona anche offline. Con Pro viene poi caricata, con crittografia end-to-end, per raggiungere gli altri tuoi dispositivi.
+
+</Section>
+
+<Section id="steps" title="Configurazione: salva una volta, ripristina ogni giorno">
+
+1. Metti le schede del giorno in gruppi. Apri il menu **⋯** di un gruppo e scegli **Unisci con l'attuale** (Merge with current) per aggiungere le finestre aperte.
+2. Nella barra laterale, premi il pulsante segnalibro accanto a **Sessioni** (**Salva la sessione attuale**). Dagli un nome, una descrizione facoltativa e un colore, poi premi **Salva** (Save).
+3. Domattina apri TabMerger, fai clic sulla sessione sotto **Sessioni** e premi **Ripristina sessione** (Restore session), oppure il pulsante di ripristino nella sua riga.
+4. Conferma con **Chiudi tutte le finestre**. Le finestre salvate si aprono una alla volta, con le schede in ordine.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Salvare e ripristinare una sessione" steps={[{ title: 'Salva' }, { title: 'Sessione' }, { title: 'Conferma' }]}>
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-save-session" alt="Finestra «Save Session» (Salva sessione) di TabMerger con il nome «Workday», una descrizione e il colore viola, tema chiaro" darkAlt="Finestra «Save Session» (Salva sessione) di TabMerger con il nome «Workday», una descrizione e il colore ciano, tema scuro" boxes={[{ id: 'session-name', label: 'Nome della sessione' }, { id: 'description', label: 'Una descrizione facoltativa' }]} source="TabMerger 3.16.1">Chiamala come la routine che riporta.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-session-view" alt="La sessione «Workday» con tre gruppi, quattro finestre e nove schede, e il pulsante «Restore session» (Ripristina sessione), tema chiaro" darkAlt="La sessione «Workday» con tre gruppi, quattro finestre e nove schede, e il pulsante «Restore session» (Ripristina sessione), tema scuro" boxes={[{ id: 'restore-session', label: 'Ripristina sessione' }]} source="TabMerger 3.16.1">La sessione elenca ogni gruppo, finestra e scheda che riaprirà.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-restore-confirm" alt="TabMerger chiede «Restore this session?» (Ripristinare questa sessione?) con i pulsanti «Cancel» (Annulla) e «Close all windows» (Chiudi tutte le finestre), tema chiaro" darkAlt="TabMerger chiede «Restore this session?» (Ripristinare questa sessione?) con i pulsanti «Cancel» (Annulla) e «Close all windows» (Chiudi tutte le finestre), tema scuro" boxes={[{ id: 'close-all', label: 'Chiudi tutte le finestre' }]} source="TabMerger 3.16.1">Il ripristino chiede sempre prima, perché chiude ciò che è aperto.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="one-group" title="Aprire un solo gruppo">
+
+Certe mattine ti serve un solo progetto. Fai clic destro sul suo gruppo nella barra laterale e scegli **Apri tutto in una nuova finestra**: tutte le pagine web del gruppo si aprono insieme in una nuova finestra e non si chiude nient'altro. Per aprire una sola finestra salvata, usa **Apri nel browser** (Open in browser) nel menu **⋯** di quella finestra; per aprire una scheda, fai clic su di essa.
+
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-open-group" alt="Il menu contestuale del gruppo «Work» nella barra laterale, con «Open all in new window» (Apri tutto in una nuova finestra), tema chiaro" darkAlt="Il menu contestuale del gruppo «Work» nella barra laterale, con «Open all in new window» (Apri tutto in una nuova finestra), tema scuro" boxes={[{ id: 'open-all', label: 'Apri tutto in una nuova finestra' }]} source="TabMerger 3.16.1">Un gruppo, una finestra, il resto resta com'è.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Cosa ci guadagni">
+
+La ricostruzione diventa un clic e una conferma. Parti dalle schede che volevi usare, nelle finestre che avevi organizzato, invece che da ciò che è sopravvissuto a ieri. E poiché un ripristino riapre solo ciò che hai salvato, il disordine non torna.
+
+</Section>
+
+<Section id="habits" title="Buone abitudini">
+
+- **Una sessione per routine:** «Giornata», «Scrittura», «Pianificazione del lunedì». Poche sessioni chiare sono meglio di una lunga lista.
+- **Aggiorna una sessione quando la tua configurazione cambia.** Una sessione è un'istantanea: le modifiche successive ai gruppi non la cambiano. Salvane una nuova ed elimina la vecchia.
+- **Chiudi la giornata con i gruppi, non con le finestre.** Aggiungi le nuove schede di oggi ai rispettivi gruppi (vedi [una routine quotidiana per le schede](/blog/tabmerger-daily-workflow)), poi chiudi le finestre.
+- **Usa una sessione per cambiare l'intera giornata, un gruppo per un progetto.** Il ripristino serve per «inizia la mia giornata»; **Apri tutto in una nuova finestra** per «apri questo progetto accanto a ciò che ho già».
+
+</Section>
+
+<Section id="plans" title="Free e Pro a confronto">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Sessioni', 'Fino a 3, in questo browser', 'Illimitato'],
+    ['Ripristino e «Apri tutto in una nuova finestra»', 'Sì', 'Sì'],
+    ['Sessioni sugli altri tuoi dispositivi', 'No', 'Sì, con crittografia end-to-end'],
+    ['Gruppi e schede da mettere in una sessione', '5 gruppi, 50 schede', 'Illimitato'],
+  ]}
+/>
+
+Le sessioni gratuite non lasciano mai il tuo browser. Il nostro server rifiuta il caricamento di una sessione sul tuo account se l'account non ha Pro, quindi la sincronizzazione è una funzione Pro nei fatti, non solo nei menu. Vedi la [pagina dei prezzi](/pricing).
+
+<InstallCta>Salva la tua mattina una volta, ripristinala ogni giorno. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+Per il resto della routine, vedi [una routine quotidiana con TabMerger](/blog/tabmerger-daily-workflow); per sapere cosa sono le sessioni in generale, [che cos'è un gestore di sessioni del browser](/blog/browser-session-manager).
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

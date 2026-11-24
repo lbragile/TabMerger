@@ -78,3 +78,7 @@ Run the template check again just before writing into the repo, to confirm en.md
 **Plan names in tables and prose** come from `messages/<loc>/pricing.json` `tierNames` (a `{M:file.key}` token). he, hi, it and ru keep "Free" there, so "Gratis o Pro" would disagree with the pricing page.
 
 - Verifier English-token checks must test names one by one, not a comma-joined list (ar writes "Design وBuild"); a keyFacts check must not assume every source label starts with "TabMerger 3" once source labels are translated.
+- The "Sessions" name in normal case is the first quoted run in `tour.json`'s sessions body (trim it: fr has `« Sessions »`); check it against `sidePanel.sessions` ignoring case. id, pl, pt-BR and vi quote it in capitals there too.
+- The restore confirm's Cancel is `modals.confirmDialog.cancel` (ConfirmDialog's default), not `common.cancel`.
+- Convert real ZWNJ in fa drafts to `{z}` by script before generating rather than typing hundreds of tokens; then grep the output for `(^|s)می ` and ` ها ` to catch missing ones.
+- Fact-token checks must accept inflected product names (pl "Firefoksa": match `Firefo`).

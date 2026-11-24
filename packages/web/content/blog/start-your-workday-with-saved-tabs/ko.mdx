@@ -1,0 +1,166 @@
+export const post = {
+  slug: 'start-your-workday-with-saved-tabs',
+  title: '저장한 탭으로 업무 하루 시작하기',
+  navTitle: '저장한 탭으로 업무 하루 시작하기',
+  seoTitle: '매일 아침 같은 탭 열기: TabMerger 세션 활용법',
+  description:
+    '매일 아침 업무용 탭을 클릭 한 번으로 여세요. 그룹을 TabMerger 세션으로 저장해 매일 복원하거나 그룹 하나만 열 수 있습니다. 복원 전에 먼저 묻는 이유와 무료·Pro 플랜에 포함된 기능도 정리했습니다.',
+  shareSummary: '아침 탭을 클릭 한 번으로: 세션을 한 번 저장하고 매일 복원하세요.',
+  dek: '한 번만 설정하면 메일, 캘린더, 보드, 문서가 매일 아침 각자의 창으로 돌아옵니다.',
+  published: '2026-12-12',
+  updated: '2026-12-12',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: '세션은 저장한 모든 그룹을 이름을 붙여 담아 둔 스냅샷입니다.', source: 'TabMerger 3.16.1 소스 코드' },
+    { text: '복원하면 열린 창을 (확인 후) 닫고 저장한 창을 하나씩 다시 엽니다.', source: 'TabMerger 3.16.1' },
+    { text: '복원으로 닫힌 창은 \'최근에 닫은 탭\'에 남습니다.', source: 'TabMerger 3.16.1 소스 코드' },
+    { text: '무료: 이 브라우저에 세션 3개. Pro: 무제한, 기기 간 동기화.', source: 'TabMerger 요금제', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '매일 아침 같은 탭을 열려면 어떻게 하나요?',
+      answer:
+        '매일 쓰는 탭을 TabMerger 그룹에 넣은 다음 세션을 저장하세요(사이드바의 \'세션\' 옆 북마크 버튼). 매일 아침 그 세션을 복원하면 TabMerger가 저장한 창을 하나씩, 탭 순서 그대로 다시 엽니다.',
+    },
+    {
+      question: '세션을 복원하면 왜 창이 닫히나요?',
+      answer:
+        '세션은 지금 열려 있는 것을 저장해 둔 것으로 바꾸기 위한 기능입니다. 어제 탭 위에 쌓는 대신 깔끔하게 시작할 수 있죠. TabMerger는 무엇이든 닫기 전에 먼저 묻고, 닫은 창은 \'최근에 닫은 탭\'으로 가므로 다시 열 수 있습니다.',
+    },
+    {
+      question: '아무것도 닫지 않고 그룹 하나만 열 수 있나요?',
+      answer: '네. 사이드바에서 그룹을 오른쪽 클릭하고 \'모두 새 창에서 열기\'를 선택하세요. 다른 창은 그대로 남습니다.',
+    },
+    {
+      question: '세션이 열린 탭을 저장하나요?',
+      answer:
+        '아니요, 세션은 저장된 그룹을 저장합니다. 열린 탭도 넣으려면 먼저 그룹의 ⋯ 메뉴에 있는 \'현재 상태와 합치기\'로 그룹에 추가한 다음 세션을 저장하세요.',
+    },
+    {
+      question: '무료로 세션을 몇 개까지 저장할 수 있나요?',
+      answer: '무료 플랜은 브라우저에 세션 3개를 보관합니다. Pro는 제한이 없고, 세션을 종단 간 암호화해 모든 기기에 동기화합니다.',
+    },
+  ],
+  images: [
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-save-session-light.webp', alt: 'TabMerger의 Save Session(세션 저장) 대화상자에 Workday라는 이름, 설명, 보라색이 입력된 화면, 라이트 테마' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-save-session-dark.webp', alt: 'TabMerger의 Save Session(세션 저장) 대화상자에 Workday라는 이름, 설명, 청록색이 입력된 화면, 다크 테마' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-session-view-light.webp', alt: '그룹 3개, 창 4개, 탭 9개가 담긴 Workday 세션과 Restore session(세션 복원) 버튼, 라이트 테마' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-session-view-dark.webp', alt: '그룹 3개, 창 4개, 탭 9개가 담긴 Workday 세션과 Restore session(세션 복원) 버튼, 다크 테마' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-restore-confirm-light.webp', alt: 'TabMerger가 Restore this session?(이 세션을 복원하시겠습니까?)라고 묻고 Cancel(취소)와 Close all windows(모든 창 닫기) 버튼을 보여 주는 화면, 라이트 테마' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-restore-confirm-dark.webp', alt: 'TabMerger가 Restore this session?(이 세션을 복원하시겠습니까?)라고 묻고 Cancel(취소)와 Close all windows(모든 창 닫기) 버튼을 보여 주는 화면, 다크 테마' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-open-group-light.webp', alt: '사이드바에서 Work 그룹을 오른쪽 클릭한 메뉴와 Open all in new window(모두 새 창에서 열기), 라이트 테마' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-open-group-dark.webp', alt: '사이드바에서 Work 그룹을 오른쪽 클릭한 메뉴와 Open all in new window(모두 새 창에서 열기), 다크 테마' },
+  ],
+  tags: ['tabmerger-guides', 'session-management', 'save-tabs', 'browser-productivity'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/start-your-workday-with-saved-tabs/tm-restore-confirm-light.webp' },
+  ogImage: { src: '/blog/start-your-workday-with-saved-tabs/og.png', alt: '저장한 탭으로 업무 하루 시작하기: TabMerger의 Workday 세션과 Restore session(세션 복원) 버튼' },
+  toc: [
+    { id: 'quick', label: '빠른 답변' },
+    { id: 'problem', label: '매일 아침의 재구성' },
+    { id: 'why', label: '세션이 이렇게 동작하는 이유' },
+    { id: 'steps', label: '설정하기' },
+    { id: 'one-group', label: '그룹 하나만 열기' },
+    { id: 'benefit', label: '얻게 되는 것' },
+    { id: 'habits', label: '좋은 습관' },
+    { id: 'plans', label: '무료 vs Pro' },
+    { id: 'faq', label: '자주 묻는 질문' },
+  ],
+}
+
+<QuickAnswer>
+
+매일 쓰는 탭을 [TabMerger](/features) 그룹에 넣어 두고, 사이드바의 **세션**(Sessions) 옆에 있는 북마크 버튼인 **현재 세션 저장**(Save current session)을 눌러 이름을 '업무'로 지정하세요. 매일 아침 이 세션을 복원하면 TabMerger가 먼저 확인한 뒤 열린 창을 닫고, 저장한 창을 하나씩 탭 순서 그대로 다시 엽니다. 프로젝트 하나만 필요하다면 해당 그룹을 오른쪽 클릭하고 **모두 새 창에서 열기**(Open all in new window)를 선택하세요.
+
+</QuickAnswer>
+
+<InstallCta>아침 작업 환경 전체를 클릭 한 번으로. Chrome, Edge, Firefox용 무료 확장 프로그램입니다.</InstallCta>
+
+<Section id="problem" title="매일 아침의 재구성">
+
+대부분의 아침은 똑같이 시작됩니다. 메일, 캘린더, 팀 보드, 검토하던 풀 리퀘스트, 작성하던 문서. 북마크에서, 방문 기록에서, 기억에 의지해 하나씩 엽니다. 어떤 날은 브라우저가 대신 어제 창을 복원해서, 탭 40개로 시작해 35개를 닫게 되죠.
+
+어느 쪽이든 하루의 첫 몇 분은 이미 갖고 있던 작업 공간을 다시 만드는 데 쓰입니다. 게다가 브라우저 자체의 복원 기능은 마침 열려 있던 것을 되돌려 줄 뿐, 작업하려던 것을 되돌려 주지는 않습니다.
+
+</Section>
+
+<Section id="why" title="TabMerger 세션이 이렇게 동작하는 이유">
+
+세션의 설계 하나하나가 이 문제의 한 부분에 대한 답입니다.
+
+- **세션은 열려 있는 모든 것이 아니라 그룹을 저장합니다**. 그룹은 남기기로 고른 탭을 이미 이름 붙이고 정리해 둔 것입니다. 세션은 이 모두를 하나의 이름으로 스냅샷에 담으므로, 복원하면 어제의 어수선함이 아니라 내 계획이 돌아옵니다. (영어 UI에서 Now Open으로 표시되는 실시간 '현재 열린 탭' 보기와 가이드 투어의 연습용 그룹은 일부러 제외합니다.)
+- **복원은 바꿔치기이고, 먼저 묻습니다**. 깔끔하게 시작하도록 복원은 저장된 창을 열기 전에 열린 창을 닫습니다. 영향이 큰 작업이라 세션 보기에서든 사이드바에서든 항상 먼저 묻습니다(**모든 창 닫기** 또는 **취소**, 영어 UI에서는 Close all windows / Cancel).
+- **닫은 것은 버려지지 않습니다**. 복원으로 닫힌 창은 **최근에 닫은 탭**(Recently closed, 기본으로 켜짐)으로 가므로, 아직 필요했던 탭도 클릭 한 번이면 됩니다.
+- **창은 창 그대로 돌아옵니다**. 저장한 창은 따로따로 다시 열리고, 탭은 저장된 순서대로 놓입니다. 비공개 창에서 저장한 창은 확장 프로그램이 비공개 창에서 허용되어 있으면 비공개 창으로 다시 열리고, 그렇지 않으면 일반 창으로 열리며 TabMerger가 그 이유를 알려 줍니다.
+- **먼저 브라우저에 저장됩니다**. 세션은 무엇보다 먼저 브라우저에 기록되므로 오프라인에서도 저장됩니다. Pro에서는 그다음 종단 간 암호화된 상태로 업로드되어 다른 기기에도 전달됩니다.
+
+</Section>
+
+<Section id="steps" title="설정하기: 한 번 저장하고 매일 복원하기">
+
+1. 그날 쓸 탭을 그룹에 넣습니다. 그룹의 **⋯** 메뉴를 열고 **현재 상태와 합치기**(Merge with current)를 선택하면 열린 창이 그 그룹에 추가됩니다.
+2. 사이드바에서 **세션** 옆 북마크 버튼(**현재 세션 저장**)을 누릅니다. 이름과 선택 사항인 설명, 색을 정한 다음 **저장**(Save)을 누릅니다.
+3. 다음 날 아침 TabMerger를 열고 **세션** 아래의 세션을 클릭한 뒤 **세션 복원**(Restore session)을 누릅니다. 세션 줄에 있는 복원 버튼을 눌러도 됩니다.
+4. **모든 창 닫기**로 확인합니다. 저장한 창이 하나씩, 탭 순서 그대로 열립니다.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="세션 저장과 복원" steps={[{ title: '저장' }, { title: '세션' }, { title: '확인' }]}>
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-save-session" alt="TabMerger의 Save Session(세션 저장) 대화상자에 Workday라는 이름, 설명, 보라색이 입력된 화면, 라이트 테마" darkAlt="TabMerger의 Save Session(세션 저장) 대화상자에 Workday라는 이름, 설명, 청록색이 입력된 화면, 다크 테마" boxes={[{ id: 'session-name', label: '세션 이름' }, { id: 'description', label: '선택 사항인 설명' }]} source="TabMerger 3.16.1">되살릴 일과에 맞춰 이름을 붙이세요.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-session-view" alt="그룹 3개, 창 4개, 탭 9개가 담긴 Workday 세션과 Restore session(세션 복원) 버튼, 라이트 테마" darkAlt="그룹 3개, 창 4개, 탭 9개가 담긴 Workday 세션과 Restore session(세션 복원) 버튼, 다크 테마" boxes={[{ id: 'restore-session', label: '세션 복원' }]} source="TabMerger 3.16.1">세션에는 다시 열릴 그룹, 창, 탭이 모두 표시됩니다.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-restore-confirm" alt="TabMerger가 Restore this session?(이 세션을 복원하시겠습니까?)라고 묻고 Cancel(취소)와 Close all windows(모든 창 닫기) 버튼을 보여 주는 화면, 라이트 테마" darkAlt="TabMerger가 Restore this session?(이 세션을 복원하시겠습니까?)라고 묻고 Cancel(취소)와 Close all windows(모든 창 닫기) 버튼을 보여 주는 화면, 다크 테마" boxes={[{ id: 'close-all', label: '모든 창 닫기' }]} source="TabMerger 3.16.1">복원은 열린 것을 닫기 때문에 항상 먼저 묻습니다.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="one-group" title="대신 그룹 하나만 열기">
+
+프로젝트 하나만 필요한 아침도 있습니다. 사이드바에서 그 그룹을 오른쪽 클릭하고 **모두 새 창에서 열기**를 선택하세요. 그룹의 모든 웹 페이지가 새 창 하나에 함께 열리고, 다른 것은 닫히지 않습니다. 저장된 창 하나만 열려면 그 창의 **⋯** 메뉴에서 **브라우저에서 열기**(Open in browser)를 쓰고, 탭 하나는 클릭하면 열립니다.
+
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-open-group" alt="사이드바에서 Work 그룹을 오른쪽 클릭한 메뉴와 Open all in new window(모두 새 창에서 열기), 라이트 테마" darkAlt="사이드바에서 Work 그룹을 오른쪽 클릭한 메뉴와 Open all in new window(모두 새 창에서 열기), 다크 테마" boxes={[{ id: 'open-all', label: '모두 새 창에서 열기' }]} source="TabMerger 3.16.1">그룹 하나, 창 하나, 나머지는 그대로입니다.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="얻게 되는 것">
+
+다시 만드는 일이 클릭 한 번과 확인 한 번으로 줄어듭니다. 어제 살아남은 탭이 아니라 쓰려고 계획한 탭으로, 직접 정리한 창에서 시작합니다. 그리고 복원은 저장한 것만 다시 열기 때문에 어수선함이 돌아오지 않습니다.
+
+</Section>
+
+<Section id="habits" title="좋은 습관">
+
+- **일과마다 세션 하나씩**: '업무', '글쓰기', '월요일 계획'. 긴 목록보다 적고 분명한 세션이 낫습니다.
+- **작업 환경이 바뀌면 세션을 새로 만드세요**. 세션은 스냅샷이라 나중에 그룹을 고쳐도 세션은 바뀌지 않습니다. 새로 저장하고 예전 것은 삭제하세요.
+- **하루는 창이 아니라 그룹으로 마무리하세요**. 오늘 새로 연 탭을 각자의 그룹에 추가한 다음([매일의 탭 워크플로](/blog/tabmerger-daily-workflow) 참고) 창을 닫으세요.
+- **하루 전체를 바꿀 때는 세션, 프로젝트 하나에는 그룹을 쓰세요**. 복원은 '하루 시작하기'용이고, **모두 새 창에서 열기**는 '지금 열린 것 옆에 이 프로젝트 열기'용입니다.
+
+</Section>
+
+<Section id="plans" title="무료 vs Pro">
+
+<ComparisonTable
+  head={['', '무료', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['세션', '최대 3개, 이 브라우저에만', '무제한'],
+    ['복원 및 \'모두 새 창에서 열기\'', '예', '예'],
+    ['다른 기기의 세션', '아니요', '예, 종단 간 암호화'],
+    ['세션에 넣을 수 있는 그룹과 탭', '그룹 5개, 탭 50개', '무제한'],
+  ]}
+/>
+
+무료 세션은 브라우저 밖으로 나가지 않습니다. 계정에 Pro가 없으면 서버가 세션 업로드를 거부하므로, 동기화는 메뉴에서만이 아니라 실제로 Pro 기능입니다. [요금제 페이지](/pricing)를 확인하세요.
+
+<InstallCta>아침을 한 번 저장하고 매일 복원하세요. Chrome, Edge, Firefox용 무료 확장 프로그램입니다.</InstallCta>
+
+나머지 일과는 [TabMerger로 하는 매일의 탭 워크플로](/blog/tabmerger-daily-workflow)를, 세션이 무엇인지는 [브라우저 세션 관리자란 무엇인가](/blog/browser-session-manager)를 참고하세요.
+
+</Section>
+
+<Section id="faq" title="자주 묻는 질문">
+
+<Faq items={post.faq} />
+
+</Section>
