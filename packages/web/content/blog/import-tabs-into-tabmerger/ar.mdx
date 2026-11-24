@@ -1,0 +1,166 @@
+export const post = {
+  slug: 'import-tabs-into-tabmerger',
+  title: 'استيراد علامات التبويب إلى TabMerger: قوائم OneTab والإشارات المرجعية والنسخ الاحتياطية',
+  navTitle: 'استيراد علامات التبويب إلى TabMerger',
+  seoTitle: 'استيراد OneTab والإشارات المرجعية والنسخ الاحتياطية إلى TabMerger',
+  description:
+    'خذ علامات التبويب المحفوظة معك: يستورد TabMerger ملفات التصدير من OneTab وقوائم الروابط البسيطة وملفات الإشارات المرجعية من المتصفح ونسخه الاحتياطية بصيغة JSON. ماذا تصبح كل صيغة، وما الذي يُتخطّى.',
+  shareSummary: 'قوائم OneTab وملفات الإشارات المرجعية ونسخ TabMerger تتحول إلى مجموعات بخطوة واحدة.',
+  dek: 'تغيير الأداة لا ينبغي أن يعني البدء من الصفر. خذ معك كل قائمة حفظتها.',
+  published: '2026-12-19',
+  updated: '2026-12-19',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'يستورد ملفات TXT (من OneTab أو قائمة روابط بسيطة) وHTML (إشارات مرجعية) وJSON (من TabMerger).', source: 'TabMerger 3.16.1' },
+    { text: 'تصبح كل قائمة من OneTab مجموعة مستقلة.', source: 'TabMerger 3.16.1' },
+    { text: 'الاستيراد يضيف مجموعات دائمًا، ولا يستبدل أبدًا ما لديك.', source: 'TabMerger 3.16.1' },
+    { text: 'الاستيراد والتصدير متاحان في الخطة المجانية.', source: 'أسعار TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'كيف أستورد OneTab إلى TabMerger؟',
+      answer:
+        'في OneTab، اختر «استيراد وتصدير»، وانسخ النص واحفظه في ملف TXT. وفي TabMerger، افتح الإعدادات ← البيانات ← استيراد ملف واختر الملف. تصبح كل قائمة من OneTab مجموعة مستقلة.',
+    },
+    {
+      question: 'هل يمكنني استيراد الإشارات المرجعية إلى TabMerger؟',
+      answer:
+        'نعم. صدّر إشاراتك المرجعية كملف HTML واستورده من الإعدادات ← البيانات. يصبح كل مجلد في المستوى الأعلى من الملف مجموعة تحمل اسمه، وتُضمّ إليها المجلدات الموجودة داخله.',
+    },
+    {
+      question: 'هل يستبدل الاستيراد مجموعاتي؟',
+      answer: 'لا. يضيف الاستيراد دائمًا مجموعات الملف بجانب مجموعاتك، بعد تأكيد يوضح عدد المجموعات التي عُثر عليها.',
+    },
+    {
+      question: 'ماذا يحدث للروابط التي لا يمكن استيرادها؟',
+      answer: 'تُتخطّى الإدخالات التي ليست عناوين ويب حقيقية، مثل الإشارات المرجعية البرمجية (bookmarklets)، وتوضح الرسالة بعد الاستيراد عدد ما تُرك منها.',
+    },
+  ],
+  images: [
+    { src: '/blog/import-tabs-into-tabmerger/tm-data-tab-light.webp', alt: 'إعدادات TabMerger في «Data» (البيانات) ضمن «Settings» (الإعدادات): قسم «Import & export» (الاستيراد والتصدير) مع «Export JSON» (تصدير JSON) و«Import file» (استيراد ملف)، المظهر الفاتح' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-data-tab-dark.webp', alt: 'إعدادات TabMerger في «Data» (البيانات) ضمن «Settings» (الإعدادات): قسم «Import & export» (الاستيراد والتصدير) مع «Export JSON» (تصدير JSON) و«Import file» (استيراد ملف)، المظهر الداكن' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-light.webp', alt: 'TabMerger يسأل «Import 2 groups?» (استيراد مجموعتين؟) عن الملف onetab-export.txt، المظهر الفاتح' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-dark.webp', alt: 'TabMerger يسأل «Import 2 groups?» (استيراد مجموعتين؟) عن الملف onetab-export.txt، المظهر الداكن' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-imported-light.webp', alt: 'قائمتان من OneTab استُوردتا كمجموعتين باسم «Imported 1» و«Imported 2»، المظهر الفاتح' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-imported-dark.webp', alt: 'قائمتان من OneTab استُوردتا كمجموعتين باسم «Imported 1» و«Imported 2»، المظهر الداكن' },
+  ],
+  tags: ['tabmerger-guides', 'save-tabs', 'bookmarks', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-light.webp' },
+  ogImage: { src: '/blog/import-tabs-into-tabmerger/og.png', alt: 'استيراد علامات التبويب إلى TabMerger: قائمتان من OneTab استُوردتا كمجموعتين' },
+  toc: [
+    { id: 'quick', label: 'إجابة سريعة' },
+    { id: 'problem', label: 'علامات تبويب محفوظة عالقة في مكان آخر' },
+    { id: 'why', label: 'لماذا يعمل الاستيراد هكذا' },
+    { id: 'formats', label: 'كل الصيغ' },
+    { id: 'steps', label: 'استيراد ملف' },
+    { id: 'benefit', label: 'ما الذي تحصل عليه' },
+    { id: 'habits', label: 'عادات جيدة' },
+    { id: 'plans', label: 'المجانية أم Pro' },
+    { id: 'faq', label: 'الأسئلة الشائعة' },
+  ],
+}
+
+<QuickAnswer>
+
+افتح [TabMerger](/features)، وانتقل إلى **الإعدادات ← البيانات** (<bdi dir="ltr">Settings → Data</bdi>) واضغط **استيراد ملف** (<bdi dir="ltr">Import file</bdi>). اختر ملف تصدير من OneTab أو قائمة روابط بسيطة (<bdi dir="ltr">`.txt`</bdi>)، أو ملف إشارات مرجعية (<bdi dir="ltr">`.html`</bdi>)، أو نسخة احتياطية من TabMerger (<bdi dir="ltr">`.json`</bdi>). يعرض TabMerger عدد المجموعات التي وجدها، وبعد أن تؤكد يضيفها بجانب مجموعاتك. تصبح كل قائمة من OneTab وكل مجلد إشارات مرجعية في المستوى الأعلى مجموعة مستقلة.
+
+</QuickAnswer>
+
+<InstallCta>خذ معك كل قائمة حفظتها. مجانًا لـ Chrome وEdge وFirefox.</InstallCta>
+
+<Section id="problem" title="علامات تبويب محفوظة، عالقة في مكان آخر">
+
+سنوات من قوائم OneTab. مجلد إشارات مرجعية لكل رحلة. نسخة احتياطية من حاسوب محمول قديم. كل ذلك محفوظ، لكن لا يمكن البحث فيه من مكان واحد، ونقله يدويًا، رابطًا رابطًا، من تلك المهام التي لا تُنجز أبدًا.
+
+الاستيراد يحوّل هذه المهمة إلى ملف واحد ونقرة واحدة.
+
+</Section>
+
+<Section id="why" title="لماذا يعمل الاستيراد بهذه الطريقة">
+
+- **يضيف فقط.** يضع الاستيراد مجموعات الملف بجانب مجموعاتك ولا يلمس ما لديك أبدًا، لذا فتجربة أي ملف آمنة.
+- **يسأل أولًا.** قبل إضافة أي شيء، يخبرك TabMerger بعدد المجموعات التي وجدها وفي أي ملف، وينتظر نقرتك على **استيراد** (<bdi dir="ltr">Import</bdi>).
+- **يُفحص كل إدخال.** لا يدخل إلا عناوين الويب الحقيقية. تُتخطّى الإشارات المرجعية البرمجية وروابط <bdi dir="ltr">`javascript:`</bdi> وكل ما ليس عنوانًا كاملًا وتُحسب، وتخبرك الرسالة بعد ذلك بعددها.
+- **يُحتفظ بالبنية حيث يحتويها الملف.** تعيد النسخة الاحتياطية من TabMerger النوافذ والأسماء والألوان والملاحظات والنجوم وأوقات التذكير؛ أما صيغ الأدوات الأخرى فتصبح مجموعة لكل قائمة أو مجلد.
+- **تُفحص حدود خطتك مسبقًا.** في الخطة المجانية، يتوقف أي استيراد قد يتجاوز 5 مجموعات أو 50 علامة تبويب قبل إضافة أي شيء، ويخبرك بما يحتويه الملف.
+
+</Section>
+
+<Section id="formats" title="كل الصيغ، وما تصبح عليه">
+
+<ComparisonTable
+  head={['الملف', 'ما هو', 'ما تحصل عليه']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['ملف TXT من OneTab', 'نص «استيراد وتصدير» في OneTab: سطر «العنوان | الاسم» لكل رابط، وسطر فارغ بين القوائم', 'مجموعة لكل قائمة باسم Imported 1 ثم Imported 2 وهكذا، مع الاحتفاظ بالعناوين'],
+    ['ملف TXT بقائمة بسيطة', 'عناوين، عنوان في كل سطر', 'مجموعة لكل كتلة من الأسطر؛ والعنوان يُستخدم اسمًا أيضًا'],
+    ['ملف HTML للإشارات المرجعية', 'ملف تصدير للإشارات المرجعية أو المفضلة من متصفحك', 'مجموعة لكل مجلد في المستوى الأعلى تحمل اسمه؛ وتُضمّ إليها المجلدات الداخلية'],
+    ['ملف JSON من TabMerger', 'ملف من «تصدير JSON» في TabMerger', 'مجموعاتك بنوافذها وأسمائها وألوانها وملاحظاتها ونجومها وأوقات تذكيرها'],
+  ]}
+/>
+
+تفصيلان يستحقان المعرفة:
+
+- **الإشارات المرجعية:** لا تصبح مجموعاتٍ إلا المجلدات الموجودة في المستوى الأعلى من الملف، وتُترك الروابط التي لا تقع في أي مجلد. وفي التصدير الكامل من Chrome أو Edge، يصل شريط الإشارات كمجموعة واحدة (مع ضمّ مجلداته الفرعية إليها)، بينما يصبح كل مجلد محفوظ في **إشارات مرجعية أخرى** (<bdi dir="ltr">Other bookmarks</bdi>) أو <bdi dir="ltr">**Other favorites**</bdi> مجموعة مستقلة.
+- **النسخ الاحتياطية من TabMerger:** لا يُستورد **المفتوحة الآن** (<bdi dir="ltr">Now Open</bdi>) الموجود في الملف، أي علامات التبويب التي كانت مفتوحة عند التصدير. إن أردتها في الملف، فاحفظ علامات التبويب المفتوحة في مجموعة قبل التصدير.
+
+</Section>
+
+<Section id="steps" title="استيراد ملف">
+
+1. افتح TabMerger، ثم **الإعدادات** ← **البيانات**.
+2. ضمن **الاستيراد والتصدير** (<bdi dir="ltr">Import & export</bdi>)، اضغط **استيراد ملف** واختر ملف <bdi dir="ltr">`.txt`</bdi> أو <bdi dir="ltr">`.html`</bdi> أو <bdi dir="ltr">`.json`</bdi>.
+3. تحقق من العدد واضغط **استيراد**. تظهر المجموعات الجديدة في الشريط الجانبي؛ أعد تسميتها كما تشاء.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="استيراد ملف تصدير من OneTab" steps={[{ title: 'الإعدادات ← البيانات' }, { title: 'التأكيد' }, { title: 'مجموعاتك' }]}>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-data-tab" alt="إعدادات TabMerger في «Data» (البيانات) ضمن «Settings» (الإعدادات): قسم «Import & export» (الاستيراد والتصدير) مع «Export JSON» (تصدير JSON) و«Import file» (استيراد ملف)، المظهر الفاتح" darkAlt="إعدادات TabMerger في «Data» (البيانات) ضمن «Settings» (الإعدادات): قسم «Import & export» (الاستيراد والتصدير) مع «Export JSON» (تصدير JSON) و«Import file» (استيراد ملف)، المظهر الداكن" boxes={[{ id: 'import', label: 'استيراد ملف' }, { id: 'export', label: 'تصدير مجموعاتك' }]} source="TabMerger 3.16.1">الاستيراد والتصدير متجاوران في <bdi dir="ltr">Settings → Data</bdi> (الإعدادات ← البيانات).</ThemedScreenshot>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-import-confirm" alt="TabMerger يسأل «Import 2 groups?» (استيراد مجموعتين؟) عن الملف onetab-export.txt، المظهر الفاتح" darkAlt="TabMerger يسأل «Import 2 groups?» (استيراد مجموعتين؟) عن الملف onetab-export.txt، المظهر الداكن" boxes={[{ id: 'import-confirm', label: 'استيراد مجموعتين' }]} source="TabMerger 3.16.1">عُثر على قائمتين من OneTab؛ ولن يُضاف شيء حتى تؤكد.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-imported" alt="قائمتان من OneTab استُوردتا كمجموعتين باسم «Imported 1» و«Imported 2»، المظهر الفاتح" darkAlt="قائمتان من OneTab استُوردتا كمجموعتين باسم «Imported 1» و«Imported 2»، المظهر الداكن" boxes={[{ id: 'imported', label: 'مجموعة لكل قائمة' }]} source="TabMerger 3.16.1">أصبحت كل قائمة مجموعة، جاهزة لإعادة التسمية والبحث والمزامنة.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="benefit" title="ما الذي تحصل عليه">
+
+كل ما حفظته في أماكن أخرى، في مكان واحد خلال دقائق: قابل للبحث عبر <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi>، ومنظم في مجموعات، ومع Pro على كل حاسوب. قادم من OneTab تحديدًا؟ راجع [بدائل OneTab](/blog/onetab-alternatives). قادم من مجموعات Edge؟ راجع [ما الذي تستخدمه بدلًا من مجموعات Edge](/blog/edge-collections-replacement).
+
+</Section>
+
+<Section id="habits" title="عادات جيدة">
+
+- **أعد تسمية المجموعات المستوردة** فورًا؛ فاسم «<bdi dir="ltr">Imported 1</bdi>» مؤقت فقط.
+- **استورد الأرشيفات الكبيرة على دفعات** في الخطة المجانية، أو قم بالترقية أولًا، لأن الاستيراد الذي يتجاوز الحدود يتوقف بالكامل.
+- **احتفظ بملف تصدير من TabMerger** كنسختك الاحتياطية الخاصة: يحفظ **تصدير JSON** (<bdi dir="ltr">Export JSON</bdi>) كل المجموعات في ملف واحد. محتواه موضح في [تصدير علامات التبويب المفتوحة](/blog/export-open-tabs).
+- **رتّب بعد الاستيراد** باستخدام **ترتيب حسب العنوان** (<bdi dir="ltr">Sort by title</bdi>) أو **ترتيب حسب URL** (<bdi dir="ltr">Sort by URL</bdi>) في قائمة **⋯** الخاصة بالمجموعة، وأزل التكرار باستخدام **إزالة علامات التبويب المكررة** (<bdi dir="ltr">Deduplicate tabs</bdi>).
+
+</Section>
+
+<Section id="plans" title="المجانية أم Pro">
+
+<ComparisonTable
+  head={['', 'المجانية', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['الاستيراد والتصدير', 'نعم', 'نعم'],
+    ['كم يمكن أن يضيف الاستيراد', 'حتى 5 مجموعات و50 علامة تبويب إجمالًا', 'بلا حدود'],
+    ['المجموعات المستوردة على أجهزتك الأخرى', 'لا', 'نعم، بتشفير تام بين الطرفين'],
+  ]}
+/>
+
+الاستيراد والتصدير مجانيان للجميع، دون حساب. تزيل خطة [Pro](/pricing) حدود الحجم وتزامن ما تستورده.
+
+<InstallCta>استورد قائمتك الأولى في أقل من دقيقة. مجانًا لـ Chrome وEdge وFirefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="الأسئلة الشائعة">
+
+<Faq items={post.faq} />
+
+</Section>

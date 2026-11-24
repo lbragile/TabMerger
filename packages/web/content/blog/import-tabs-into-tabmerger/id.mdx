@@ -1,0 +1,166 @@
+export const post = {
+  slug: 'import-tabs-into-tabmerger',
+  title: 'Impor tab ke TabMerger: daftar OneTab, bookmark, dan cadangan',
+  navTitle: 'Impor tab ke TabMerger',
+  seoTitle: 'Impor OneTab, Bookmark, dan Cadangan ke TabMerger',
+  description:
+    'Bawa tab tersimpan Anda: TabMerger mengimpor ekspor OneTab, daftar tautan biasa, file bookmark browser, dan cadangan JSON miliknya sendiri. Apa hasil dari setiap format, dan apa yang dilewati.',
+  shareSummary: 'Daftar OneTab, file bookmark, dan cadangan TabMerger jadi grup dalam satu langkah.',
+  dek: 'Berganti alat tidak seharusnya berarti mulai dari nol. Bawa setiap daftar tersimpan Anda.',
+  published: '2026-12-19',
+  updated: '2026-12-19',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Mengimpor .txt (OneTab atau daftar tautan biasa), .html (bookmark), dan .json (TabMerger).', source: 'TabMerger 3.16.1' },
+    { text: 'Setiap daftar OneTab menjadi grupnya sendiri.', source: 'TabMerger 3.16.1' },
+    { text: 'Impor selalu menambahkan grup; impor tidak pernah menggantikan yang sudah Anda punya.', source: 'TabMerger 3.16.1' },
+    { text: 'Impor dan ekspor tersedia di paket gratis.', source: 'Harga TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Bagaimana cara mengimpor OneTab ke TabMerger?',
+      answer:
+        'Di OneTab, pilih “Impor & Ekspor”, salin teksnya, lalu simpan sebagai file .txt. Di TabMerger, buka Pengaturan → Data → Impor file dan pilih file itu. Setiap daftar OneTab menjadi grupnya sendiri.',
+    },
+    {
+      question: 'Bisakah saya mengimpor bookmark ke TabMerger?',
+      answer:
+        'Bisa. Ekspor bookmark Anda sebagai file HTML dan impor di Pengaturan → Data. Setiap folder di tingkat teratas file menjadi grup dengan nama folder itu, dan folder di dalamnya ikut digabungkan ke grup tersebut.',
+    },
+    {
+      question: 'Apakah impor akan menggantikan grup saya?',
+      answer: 'Tidak. Impor selalu menambahkan grup dari file di samping grup yang sudah Anda punya, setelah konfirmasi yang menyebutkan berapa grup yang ditemukan.',
+    },
+    {
+      question: 'Apa yang terjadi pada tautan yang tidak bisa diimpor?',
+      answer: 'Entri yang bukan alamat web sungguhan, seperti bookmarklet, dilewati, dan pesan setelah impor menyebutkan berapa banyak yang tidak disertakan.',
+    },
+  ],
+  images: [
+    { src: '/blog/import-tabs-into-tabmerger/tm-data-tab-light.webp', alt: 'TabMerger, “Settings” (Pengaturan), “Data” (Data): bagian “Import & export” (Impor & ekspor) dengan “Export JSON” (Ekspor JSON) dan “Import file” (Impor file), tema terang' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-data-tab-dark.webp', alt: 'TabMerger, “Settings” (Pengaturan), “Data” (Data): bagian “Import & export” (Impor & ekspor) dengan “Export JSON” (Ekspor JSON) dan “Import file” (Impor file), tema gelap' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-light.webp', alt: 'TabMerger menanyakan “Import 2 groups?” (Impor 2 grup?) untuk file onetab-export.txt, tema terang' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-dark.webp', alt: 'TabMerger menanyakan “Import 2 groups?” (Impor 2 grup?) untuk file onetab-export.txt, tema gelap' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-imported-light.webp', alt: 'Dua daftar OneTab yang diimpor sebagai grup “Imported 1” dan “Imported 2”, tema terang' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-imported-dark.webp', alt: 'Dua daftar OneTab yang diimpor sebagai grup “Imported 1” dan “Imported 2”, tema gelap' },
+  ],
+  tags: ['tabmerger-guides', 'save-tabs', 'bookmarks', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-light.webp' },
+  ogImage: { src: '/blog/import-tabs-into-tabmerger/og.png', alt: 'Impor tab ke TabMerger: dua daftar OneTab yang diimpor sebagai grup' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'problem', label: 'Tab tersimpan, terjebak di tempat lain' },
+    { id: 'why', label: 'Mengapa impor bekerja begini' },
+    { id: 'formats', label: 'Semua format' },
+    { id: 'steps', label: 'Impor file' },
+    { id: 'benefit', label: 'Yang Anda dapatkan' },
+    { id: 'habits', label: 'Kebiasaan baik' },
+    { id: 'plans', label: 'Gratis vs Pro' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Buka [TabMerger](/features), masuk ke **Pengaturan → Data** (Settings → Data), lalu tekan **Impor file** (Import file). Pilih ekspor OneTab atau daftar tautan biasa (`.txt`), file bookmark (`.html`), atau cadangan TabMerger (`.json`). TabMerger menunjukkan berapa grup yang ditemukannya, dan setelah Anda konfirmasi, menambahkannya di samping grup Anda sendiri. Setiap daftar OneTab dan setiap folder bookmark tingkat teratas menjadi grupnya sendiri.
+
+</QuickAnswer>
+
+<InstallCta>Bawa setiap daftar tersimpan Anda. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+<Section id="problem" title="Tab tersimpan, terjebak di tempat lain">
+
+Daftar OneTab bertahun-tahun. Satu folder bookmark untuk setiap perjalanan. Cadangan dari laptop lama. Semuanya tersimpan, tidak satu pun bisa dicari di satu tempat, dan memindahkannya secara manual, tautan demi tautan, adalah jenis pekerjaan yang tidak pernah terlaksana.
+
+Impor mengubah pekerjaan itu menjadi satu file dan satu klik.
+
+</Section>
+
+<Section id="why" title="Mengapa impor bekerja seperti ini">
+
+- **Impor hanya menambahkan.** Impor menaruh grup dari file di samping grup Anda dan tidak pernah menyentuh yang sudah Anda punya, jadi mencoba sebuah file itu aman.
+- **Impor bertanya dulu.** Sebelum menambahkan apa pun, TabMerger memberi tahu berapa grup yang ditemukannya di file mana, lalu menunggu Anda mengeklik **Impor** (Import).
+- **Setiap entri diperiksa.** Hanya alamat web sungguhan yang masuk. Bookmarklet, tautan `javascript:`, dan apa pun yang bukan alamat absolut dilewati dan dihitung, lalu pesan sesudahnya menyebutkan jumlahnya.
+- **Struktur dipertahankan jika file memilikinya.** Cadangan TabMerger mengembalikan jendela, nama, warna, catatan, bintang, dan waktu pengingat; format dari alat lain menjadi satu grup per daftar atau folder.
+- **Batas paket Anda diperiksa di awal.** Di paket gratis, impor yang akan melewati 5 grup atau 50 tab berhenti sebelum menambahkan apa pun, dan menyebutkan isi file tersebut.
+
+</Section>
+
+<Section id="formats" title="Semua format, dan hasilnya">
+
+<ComparisonTable
+  head={['File', 'Apa itu', 'Yang Anda dapatkan']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['.txt (OneTab)', 'Teks “Impor & Ekspor” dari OneTab: satu baris “alamat | judul” per tautan, satu baris kosong di antara daftar', 'Satu grup per daftar (“Imported 1”, “Imported 2”, …), judul tetap ada'],
+    ['.txt (daftar biasa)', 'Alamat, satu per baris', 'Satu grup per blok baris; alamat sekaligus menjadi judul'],
+    ['.html (bookmark)', 'Ekspor bookmark atau favorit dari browser Anda', 'Satu grup per folder tingkat teratas, dengan nama folder itu; folder di dalamnya digabungkan'],
+    ['.json (TabMerger)', 'File dari “Ekspor JSON” di TabMerger', 'Grup Anda beserta jendela, nama, warna, catatan, bintang, dan waktu pengingat'],
+  ]}
+/>
+
+Dua detail yang perlu diketahui:
+
+- **Bookmark:** hanya folder di tingkat teratas file yang menjadi grup, dan tautan yang berada di luar folder mana pun tidak disertakan. Dalam ekspor lengkap dari Chrome atau Edge, bilah bookmark masuk sebagai satu grup (subfoldernya digabungkan), sedangkan setiap folder yang disimpan di **Bookmark lainnya** (Other bookmarks) atau **Favorit lainnya** (Other favorites) menjadi grupnya sendiri.
+- **Cadangan TabMerger:** **Sedang Terbuka** (Now Open) di file, yaitu tab yang sedang terbuka saat file diekspor, tidak diimpor. Simpan tab yang terbuka ke sebuah grup sebelum mengekspor jika Anda ingin tab itu ada di file.
+
+</Section>
+
+<Section id="steps" title="Impor file">
+
+1. Buka TabMerger, lalu **Pengaturan** → **Data**.
+2. Di bawah **Impor & ekspor** (Import & export), tekan **Impor file** dan pilih file `.txt`, `.html`, atau `.json` Anda.
+3. Periksa jumlahnya dan tekan **Impor**. Grup baru muncul di sidebar; ganti namanya sesuka Anda.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Mengimpor ekspor OneTab" steps={[{ title: 'Pengaturan → Data' }, { title: 'Konfirmasi' }, { title: 'Grup Anda' }]}>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-data-tab" alt="TabMerger, “Settings” (Pengaturan), “Data” (Data): bagian “Import & export” (Impor & ekspor) dengan “Export JSON” (Ekspor JSON) dan “Import file” (Impor file), tema terang" darkAlt="TabMerger, “Settings” (Pengaturan), “Data” (Data): bagian “Import & export” (Impor & ekspor) dengan “Export JSON” (Ekspor JSON) dan “Import file” (Impor file), tema gelap" boxes={[{ id: 'import', label: 'Impor file' }, { id: 'export', label: 'Ekspor grup Anda' }]} source="TabMerger 3.16.1">Impor dan ekspor berdampingan di Settings → Data (Pengaturan → Data).</ThemedScreenshot>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-import-confirm" alt="TabMerger menanyakan “Import 2 groups?” (Impor 2 grup?) untuk file onetab-export.txt, tema terang" darkAlt="TabMerger menanyakan “Import 2 groups?” (Impor 2 grup?) untuk file onetab-export.txt, tema gelap" boxes={[{ id: 'import-confirm', label: 'Impor 2 grup' }]} source="TabMerger 3.16.1">Dua daftar OneTab ditemukan; tidak ada yang ditambahkan sebelum Anda konfirmasi.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-imported" alt="Dua daftar OneTab yang diimpor sebagai grup “Imported 1” dan “Imported 2”, tema terang" darkAlt="Dua daftar OneTab yang diimpor sebagai grup “Imported 1” dan “Imported 2”, tema gelap" boxes={[{ id: 'imported', label: 'Satu grup per daftar' }]} source="TabMerger 3.16.1">Setiap daftar kini menjadi grup, siap diganti namanya, dicari, dan disinkronkan.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="benefit" title="Yang Anda dapatkan">
+
+Semua yang Anda simpan di tempat lain, ada di satu tempat dalam hitungan menit: bisa dicari dengan <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>, tertata dalam grup, dan dengan Pro, ada di setiap komputer. Pindah dari OneTab? Lihat [alternatif OneTab](/blog/onetab-alternatives). Pindah dari Koleksi Edge? Lihat [apa pengganti Koleksi Edge](/blog/edge-collections-replacement).
+
+</Section>
+
+<Section id="habits" title="Kebiasaan baik">
+
+- **Ganti nama grup hasil impor** segera; “Imported 1” hanya nama sementara.
+- **Impor arsip besar sebagian demi sebagian** di paket gratis, atau upgrade dulu, karena impor yang melewati batas dihentikan seluruhnya.
+- **Simpan ekspor TabMerger** sebagai cadangan Anda sendiri: **Ekspor JSON** (Export JSON) menyimpan setiap grup dalam satu file. Isinya dijelaskan di [mengekspor tab yang terbuka](/blog/export-open-tabs).
+- **Urutkan setelah mengimpor** dengan **Urutkan berdasarkan judul** (Sort by title) atau **Urutkan berdasarkan URL** (Sort by URL) di menu **⋯** grup, lalu bersihkan duplikat dengan **Hapus tab duplikat** (Deduplicate tabs).
+
+</Section>
+
+<Section id="plans" title="Gratis vs Pro">
+
+<ComparisonTable
+  head={['', 'Gratis', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Impor dan ekspor', 'Ya', 'Ya'],
+    ['Berapa banyak yang bisa ditambahkan satu impor', 'Hingga total 5 grup dan 50 tab', 'Tanpa batas'],
+    ['Grup hasil impor di perangkat Anda yang lain', 'Tidak', 'Ya, terenkripsi end-to-end'],
+  ]}
+/>
+
+Impor dan ekspor gratis untuk semua orang, tanpa akun. [Pro](/pricing) menghapus batas ukuran dan menyinkronkan apa yang Anda impor.
+
+<InstallCta>Impor daftar pertama Anda dalam waktu kurang dari semenit. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

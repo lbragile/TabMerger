@@ -1,0 +1,166 @@
+export const post = {
+  slug: 'import-tabs-into-tabmerger',
+  title: 'TabMerger로 탭 가져오기: OneTab 목록, 북마크, 백업',
+  navTitle: 'TabMerger로 탭 가져오기',
+  seoTitle: 'OneTab 목록, 북마크, 백업을 TabMerger로 가져오는 방법',
+  description:
+    '저장해 둔 탭을 그대로 옮기세요. TabMerger는 OneTab 내보내기 파일, 링크만 적힌 목록, 브라우저 북마크 파일, 자체 JSON 백업을 가져옵니다. 형식별로 어떻게 바뀌는지, 무엇이 건너뛰어지는지 알려 드립니다.',
+  shareSummary: 'OneTab 목록, 북마크 파일, TabMerger 백업을 한 번에 그룹으로 바꿔 줍니다.',
+  dek: '도구를 바꿨다고 처음부터 다시 시작할 필요는 없습니다. 저장해 둔 목록을 모두 가져오세요.',
+  published: '2026-12-19',
+  updated: '2026-12-19',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: '.txt(OneTab 또는 링크만 적힌 목록), .html(북마크), .json(TabMerger) 파일을 가져옵니다.', source: 'TabMerger 3.16.1' },
+    { text: 'OneTab 목록 하나하나가 각각 별도의 그룹이 됩니다.', source: 'TabMerger 3.16.1' },
+    { text: '가져오기는 항상 그룹을 추가할 뿐, 기존 그룹을 대체하지 않습니다.', source: 'TabMerger 3.16.1' },
+    { text: '가져오기와 내보내기는 무료 플랜에서 쓸 수 있습니다.', source: 'TabMerger 요금제', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'OneTab을 TabMerger로 가져오려면 어떻게 하나요?',
+      answer:
+        'OneTab에서 ‘가져오기 & 내보내기’를 선택하고 텍스트를 복사해 .txt 파일로 저장하세요. TabMerger에서 설정 → 데이터 → 파일 가져오기를 열고 그 파일을 선택하면 됩니다. OneTab 목록은 각각 별도의 그룹이 됩니다.',
+    },
+    {
+      question: '북마크를 TabMerger로 가져올 수 있나요?',
+      answer:
+        '네. 북마크를 HTML 파일로 내보낸 뒤 설정 → 데이터에서 가져오세요. 파일 최상위에 있는 폴더마다 그 이름의 그룹이 되고, 그 안의 폴더도 같은 그룹에 합쳐집니다.',
+    },
+    {
+      question: '가져오기를 하면 기존 그룹이 대체되나요?',
+      answer: '아니요. 가져오기는 찾은 그룹 수를 알려 주는 확인 단계를 거친 뒤, 파일의 그룹을 항상 기존 그룹 옆에 추가합니다.',
+    },
+    {
+      question: '가져올 수 없는 링크는 어떻게 되나요?',
+      answer: '북마클릿처럼 실제 웹 주소가 아닌 항목은 건너뛰며, 가져오기 후 메시지에서 몇 개가 빠졌는지 알려 줍니다.',
+    },
+  ],
+  images: [
+    { src: '/blog/import-tabs-into-tabmerger/tm-data-tab-light.webp', alt: 'TabMerger ‘Settings’(설정)의 ‘Data’(데이터). ‘Import & export’(가져오기 및 내보내기) 섹션의 ‘Export JSON’(JSON 내보내기)와 ‘Import file’(파일 가져오기), 라이트 테마' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-data-tab-dark.webp', alt: 'TabMerger ‘Settings’(설정)의 ‘Data’(데이터). ‘Import & export’(가져오기 및 내보내기) 섹션의 ‘Export JSON’(JSON 내보내기)와 ‘Import file’(파일 가져오기), 다크 테마' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-light.webp', alt: 'onetab-export.txt 파일에 대해 ‘Import 2 groups?’(그룹 2개를 가져오시겠습니까?)라고 묻는 TabMerger, 라이트 테마' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-dark.webp', alt: 'onetab-export.txt 파일에 대해 ‘Import 2 groups?’(그룹 2개를 가져오시겠습니까?)라고 묻는 TabMerger, 다크 테마' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-imported-light.webp', alt: '‘Imported 1’과 ‘Imported 2’ 그룹으로 가져온 OneTab 목록 2개, 라이트 테마' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-imported-dark.webp', alt: '‘Imported 1’과 ‘Imported 2’ 그룹으로 가져온 OneTab 목록 2개, 다크 테마' },
+  ],
+  tags: ['tabmerger-guides', 'save-tabs', 'bookmarks', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-light.webp' },
+  ogImage: { src: '/blog/import-tabs-into-tabmerger/og.png', alt: 'TabMerger로 탭 가져오기: 그룹으로 가져온 OneTab 목록 2개' },
+  toc: [
+    { id: 'quick', label: '빠른 답변' },
+    { id: 'problem', label: '다른 곳에 묶여 있는 탭' },
+    { id: 'why', label: '가져오기가 이렇게 동작하는 이유' },
+    { id: 'formats', label: '모든 형식' },
+    { id: 'steps', label: '파일 가져오기' },
+    { id: 'benefit', label: '얻는 것' },
+    { id: 'habits', label: '좋은 습관' },
+    { id: 'plans', label: '무료와 Pro' },
+    { id: 'faq', label: '자주 묻는 질문' },
+  ],
+}
+
+<QuickAnswer>
+
+[TabMerger](/features)를 열고 **설정 → 데이터**(Settings → Data)로 이동해 **파일 가져오기**(Import file)를 누르세요. OneTab 내보내기나 링크만 적힌 목록(`.txt`), 북마크 파일(`.html`), TabMerger 백업(`.json`)을 선택합니다. TabMerger가 찾은 그룹 수를 보여 주고, 확인하면 기존 그룹 옆에 추가합니다. OneTab 목록과 최상위 북마크 폴더는 각각 별도의 그룹이 됩니다.
+
+</QuickAnswer>
+
+<InstallCta>저장해 둔 목록을 모두 가져오세요. Chrome, Edge, Firefox용 무료 확장 프로그램입니다.</InstallCta>
+
+<Section id="problem" title="다른 곳에 묶여 있는 저장된 탭">
+
+몇 년 치 OneTab 목록. 여행마다 만든 북마크 폴더. 예전 노트북의 백업. 모두 저장돼 있지만 한곳에서 검색할 수는 없고, 링크를 하나씩 손으로 옮기는 일은 결국 아무도 하지 않는 종류의 작업입니다.
+
+가져오기를 쓰면 그 작업이 파일 하나와 클릭 한 번으로 끝납니다.
+
+</Section>
+
+<Section id="why" title="가져오기가 이런 방식으로 동작하는 이유">
+
+- **추가만 합니다.** 가져오기는 파일의 그룹을 기존 그룹 옆에 둘 뿐 이미 있는 것은 건드리지 않으므로, 파일을 시험 삼아 가져와도 안전합니다.
+- **먼저 묻습니다.** 무엇이든 추가하기 전에 TabMerger는 어느 파일에서 그룹을 몇 개 찾았는지 알려 주고, **가져오기**(Import)를 클릭할 때까지 기다립니다.
+- **모든 항목을 확인합니다.** 실제 웹 주소만 들어옵니다. 북마클릿, `javascript:` 링크, 절대 주소가 아닌 것은 모두 건너뛰고 개수를 세며, 이후 메시지에서 몇 개였는지 알려 줍니다.
+- **파일에 구조가 있으면 유지합니다.** TabMerger 백업은 창, 이름, 색상, 메모, 별표, 알림 시간을 되살립니다. 다른 도구의 형식은 목록이나 폴더마다 그룹 하나가 됩니다.
+- **플랜 한도를 미리 확인합니다.** 무료 플랜에서 그룹 5개나 탭 50개를 넘게 되는 가져오기는 아무것도 추가하기 전에 멈추고, 파일에 무엇이 들어 있는지 알려 줍니다.
+
+</Section>
+
+<Section id="formats" title="모든 형식과 가져온 뒤의 모습">
+
+<ComparisonTable
+  head={['파일', '내용', '결과']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['.txt (OneTab)', 'OneTab ‘가져오기 & 내보내기’ 텍스트: 링크마다 ‘주소 | 제목’ 한 줄, 목록 사이에 빈 줄', '목록마다 그룹 하나(‘Imported 1’, ‘Imported 2’, …), 제목 유지'],
+    ['.txt (링크 목록)', '한 줄에 주소 하나', '줄 묶음마다 그룹 하나, 주소가 제목을 겸함'],
+    ['.html (북마크)', '브라우저에서 내보낸 북마크 또는 즐겨찾기', '최상위 폴더마다 그 이름의 그룹 하나, 안쪽 폴더는 합쳐짐'],
+    ['.json (TabMerger)', 'TabMerger의 ‘JSON 내보내기’로 만든 파일', '창, 이름, 색상, 메모, 별표, 알림 시간을 포함한 그룹'],
+  ]}
+/>
+
+알아 두면 좋은 두 가지:
+
+- **북마크:** 파일 최상위에 있는 폴더만 그룹이 되고, 어떤 폴더에도 들어 있지 않은 링크는 제외됩니다. Chrome이나 Edge에서 전체를 내보내면 북마크바는 그룹 하나로 들어오고(하위 폴더도 그 안에 합쳐짐), **기타 북마크**(Other bookmarks)나 **기타 즐겨찾기**(Other favorites)에 있는 폴더는 각각 별도의 그룹이 됩니다.
+- **TabMerger 백업:** 파일의 **현재 열린 탭**(Now Open), 즉 내보낼 때 열려 있던 탭은 가져오지 않습니다. 파일에 포함하고 싶다면 내보내기 전에 열린 탭을 그룹에 저장해 두세요.
+
+</Section>
+
+<Section id="steps" title="파일 가져오기">
+
+1. TabMerger를 열고 **설정** → **데이터**로 이동합니다.
+2. **가져오기 및 내보내기**(Import & export)에서 **파일 가져오기**를 누르고 `.txt`, `.html`, `.json` 파일을 선택합니다.
+3. 개수를 확인하고 **가져오기**를 누릅니다. 새 그룹이 사이드바에 나타나면 원하는 이름으로 바꾸세요.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="OneTab 내보내기 파일 가져오기" steps={[{ title: '설정 → 데이터' }, { title: '확인' }, { title: '그룹' }]}>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-data-tab" alt="TabMerger ‘Settings’(설정)의 ‘Data’(데이터). ‘Import & export’(가져오기 및 내보내기) 섹션의 ‘Export JSON’(JSON 내보내기)와 ‘Import file’(파일 가져오기), 라이트 테마" darkAlt="TabMerger ‘Settings’(설정)의 ‘Data’(데이터). ‘Import & export’(가져오기 및 내보내기) 섹션의 ‘Export JSON’(JSON 내보내기)와 ‘Import file’(파일 가져오기), 다크 테마" boxes={[{ id: 'import', label: '파일 가져오기' }, { id: 'export', label: '그룹 내보내기' }]} source="TabMerger 3.16.1">Settings → Data(설정 → 데이터)에는 가져오기와 내보내기가 나란히 있습니다.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-import-confirm" alt="onetab-export.txt 파일에 대해 ‘Import 2 groups?’(그룹 2개를 가져오시겠습니까?)라고 묻는 TabMerger, 라이트 테마" darkAlt="onetab-export.txt 파일에 대해 ‘Import 2 groups?’(그룹 2개를 가져오시겠습니까?)라고 묻는 TabMerger, 다크 테마" boxes={[{ id: 'import-confirm', label: '그룹 2개 가져오기' }]} source="TabMerger 3.16.1">OneTab 목록 2개를 찾았습니다. 확인하기 전에는 아무것도 추가되지 않습니다.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-imported" alt="‘Imported 1’과 ‘Imported 2’ 그룹으로 가져온 OneTab 목록 2개, 라이트 테마" darkAlt="‘Imported 1’과 ‘Imported 2’ 그룹으로 가져온 OneTab 목록 2개, 다크 테마" boxes={[{ id: 'imported', label: '목록마다 그룹 하나' }]} source="TabMerger 3.16.1">이제 목록마다 그룹이 되어 이름 변경, 검색, 동기화를 할 수 있습니다.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="benefit" title="얻는 것">
+
+다른 곳에 저장해 둔 모든 것이 몇 분 만에 한곳에 모입니다. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>로 검색할 수 있고, 그룹으로 정리되며, Pro라면 모든 컴퓨터에서 쓸 수 있습니다. OneTab에서 옮겨 오셨나요? [OneTab 대안](/blog/onetab-alternatives)을 참고하세요. Edge 컬렉션에서 옮겨 오셨나요? [Edge 컬렉션 대신 쓸 도구](/blog/edge-collections-replacement)를 참고하세요.
+
+</Section>
+
+<Section id="habits" title="좋은 습관">
+
+- **가져온 그룹의 이름을 바로 바꾸세요.** ‘Imported 1’은 임시 이름일 뿐입니다.
+- **큰 아카이브는 나눠서 가져오세요.** 무료 플랜이라면 그렇게 하거나 먼저 업그레이드하세요. 한도를 넘는 가져오기는 통째로 중단되기 때문입니다.
+- **TabMerger 내보내기 파일을 보관하세요.** 나만의 백업이 됩니다. **JSON 내보내기**(Export JSON)는 모든 그룹을 파일 하나에 저장합니다. 파일 내용은 [열린 탭 내보내기](/blog/export-open-tabs)에서 설명합니다.
+- **가져온 뒤에는 정렬하세요.** 그룹의 **⋯** 메뉴에서 **제목순 정렬**(Sort by title)이나 **URL순 정렬**(Sort by URL)을 쓰고, 중복은 **중복 탭 제거**(Deduplicate tabs)로 정리합니다.
+
+</Section>
+
+<Section id="plans" title="무료와 Pro">
+
+<ComparisonTable
+  head={['', '무료', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['가져오기와 내보내기', '예', '예'],
+    ['가져오기 한 번에 추가할 수 있는 양', '합계 그룹 5개, 탭 50개까지', '제한 없음'],
+    ['다른 기기에서 가져온 그룹 사용', '아니요', '예, 엔드투엔드 암호화'],
+  ]}
+/>
+
+가져오기와 내보내기는 누구나 계정 없이 무료로 쓸 수 있습니다. [Pro](/pricing)는 크기 제한을 없애고 가져온 내용을 동기화합니다.
+
+<InstallCta>첫 목록을 1분 안에 가져오세요. Chrome, Edge, Firefox용 무료 확장 프로그램입니다.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="자주 묻는 질문">
+
+<Faq items={post.faq} />
+
+</Section>

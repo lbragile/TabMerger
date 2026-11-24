@@ -1,0 +1,166 @@
+export const post = {
+  slug: 'import-tabs-into-tabmerger',
+  title: 'Importer des onglets dans TabMerger : listes OneTab, favoris et sauvegardes',
+  navTitle: 'Importer des onglets dans TabMerger',
+  seoTitle: 'Importer OneTab, vos favoris et vos sauvegardes dans TabMerger',
+  description:
+    'Emportez vos onglets enregistrés : TabMerger importe les exports OneTab, les simples listes de liens, les fichiers de favoris du navigateur et ses propres sauvegardes JSON. Ce que devient chaque format, et ce qui est ignoré.',
+  shareSummary: 'Listes OneTab, fichiers de favoris et sauvegardes TabMerger transformés en groupes en une étape.',
+  dek: 'Changer d’outil ne devrait pas obliger à tout recommencer. Emportez chaque liste enregistrée.',
+  published: '2026-12-19',
+  updated: '2026-12-19',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Importe des fichiers .txt (OneTab ou simple liste de liens), .html (favoris) et .json (TabMerger).', source: 'TabMerger 3.16.1' },
+    { text: 'Chaque liste OneTab devient un groupe à part entière.', source: 'TabMerger 3.16.1' },
+    { text: 'Une importation ajoute toujours des groupes ; elle ne remplace jamais ce que vous avez.', source: 'TabMerger 3.16.1' },
+    { text: 'L’import et l’export sont inclus dans l’offre gratuite.', source: 'Tarifs de TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Comment importer OneTab dans TabMerger ?',
+      answer:
+        'Dans OneTab, choisissez « Importer et exporter », copiez le texte et enregistrez-le dans un fichier .txt. Dans TabMerger, ouvrez Paramètres → Données → Importer un fichier et choisissez ce fichier. Chaque liste OneTab devient un groupe à part entière.',
+    },
+    {
+      question: 'Puis-je importer mes favoris dans TabMerger ?',
+      answer:
+        'Oui. Exportez vos favoris dans un fichier HTML et importez-le dans Paramètres → Données. Chaque dossier au premier niveau du fichier devient un groupe qui porte son nom, et les dossiers qu’il contient y sont intégrés.',
+    },
+    {
+      question: 'L’importation remplace-t-elle mes groupes ?',
+      answer: 'Non. Une importation ajoute toujours les groupes du fichier à côté des vôtres, après une confirmation qui indique combien de groupes ont été trouvés.',
+    },
+    {
+      question: 'Que deviennent les liens qui ne peuvent pas être importés ?',
+      answer: 'Les entrées qui ne sont pas de vraies adresses web, comme les bookmarklets, sont ignorées, et le message affiché après l’importation indique combien ont été laissées de côté.',
+    },
+  ],
+  images: [
+    { src: '/blog/import-tabs-into-tabmerger/tm-data-tab-light.webp', alt: 'TabMerger, « Settings » (Paramètres), « Data » (Données) : la section « Import & export » (Import et export) avec « Export JSON » (Exporter en JSON) et « Import file » (Importer un fichier), thème clair' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-data-tab-dark.webp', alt: 'TabMerger, « Settings » (Paramètres), « Data » (Données) : la section « Import & export » (Import et export) avec « Export JSON » (Exporter en JSON) et « Import file » (Importer un fichier), thème sombre' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-light.webp', alt: 'TabMerger demandant « Import 2 groups? » (Importer 2 groupes ?) pour le fichier onetab-export.txt, thème clair' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-dark.webp', alt: 'TabMerger demandant « Import 2 groups? » (Importer 2 groupes ?) pour le fichier onetab-export.txt, thème sombre' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-imported-light.webp', alt: 'Deux listes OneTab importées sous forme des groupes « Imported 1 » et « Imported 2 », thème clair' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-imported-dark.webp', alt: 'Deux listes OneTab importées sous forme des groupes « Imported 1 » et « Imported 2 », thème sombre' },
+  ],
+  tags: ['tabmerger-guides', 'save-tabs', 'bookmarks', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-light.webp' },
+  ogImage: { src: '/blog/import-tabs-into-tabmerger/og.png', alt: 'Importer des onglets dans TabMerger : deux listes OneTab importées sous forme de groupes' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'problem', label: 'Des onglets coincés ailleurs' },
+    { id: 'why', label: 'Pourquoi l’import fonctionne ainsi' },
+    { id: 'formats', label: 'Tous les formats' },
+    { id: 'steps', label: 'Importer un fichier' },
+    { id: 'benefit', label: 'Ce que vous y gagnez' },
+    { id: 'habits', label: 'Bonnes habitudes' },
+    { id: 'plans', label: 'Gratuit ou Pro' },
+    { id: 'faq', label: 'Questions fréquentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Ouvrez [TabMerger](/features), allez dans **Paramètres → Données** (Settings → Data) et cliquez sur **Importer un fichier** (Import file). Choisissez un export OneTab ou une simple liste de liens (`.txt`), un fichier de favoris (`.html`) ou une sauvegarde TabMerger (`.json`). TabMerger indique combien de groupes il a trouvés et, une fois que vous avez confirmé, les ajoute à côté des vôtres. Chaque liste OneTab et chaque dossier de favoris de premier niveau devient un groupe à part entière.
+
+</QuickAnswer>
+
+<InstallCta>Emportez chaque liste enregistrée. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+<Section id="problem" title="Des onglets enregistrés, coincés ailleurs">
+
+Des années de listes OneTab. Un dossier de favoris par voyage. Une sauvegarde venue d’un vieil ordinateur portable. Tout est enregistré, rien n’est consultable au même endroit, et tout déplacer à la main, lien par lien, fait partie de ces tâches qu’on ne fait jamais.
+
+L’import réduit cette tâche à un fichier et un clic.
+
+</Section>
+
+<Section id="why" title="Pourquoi l’import fonctionne de cette façon">
+
+- **Il ne fait qu’ajouter.** Une importation place les groupes du fichier à côté des vôtres et ne touche jamais à ce que vous avez : essayer un fichier ne présente aucun risque.
+- **Il demande d’abord.** Avant d’ajouter quoi que ce soit, TabMerger vous dit combien de groupes il a trouvés et dans quel fichier, puis attend votre clic sur **Importer** (Import).
+- **Chaque entrée est vérifiée.** Seules les vraies adresses web passent. Les bookmarklets, les liens `javascript:` et tout ce qui n’est pas une adresse absolue sont ignorés et comptés, et le message affiché ensuite en donne le nombre.
+- **La structure est conservée quand le fichier en a une.** Une sauvegarde TabMerger restaure fenêtres, noms, couleurs, notes, étoiles et heures de rappel ; les formats des autres outils deviennent un groupe par liste ou par dossier.
+- **Les limites de votre offre sont vérifiées dès le départ.** Avec l’offre gratuite, une importation qui dépasserait 5 groupes ou 50 onglets s’arrête avant d’ajouter quoi que ce soit, et indique ce que contient le fichier.
+
+</Section>
+
+<Section id="formats" title="Tous les formats, et ce qu’ils deviennent">
+
+<ComparisonTable
+  head={['Fichier', 'De quoi il s’agit', 'Ce que vous obtenez']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['.txt (OneTab)', 'Le texte de « Importer et exporter » de OneTab : une ligne « adresse | titre » par lien, une ligne vide entre les listes', 'Un groupe par liste (« Imported 1 », « Imported 2 », …), titres conservés'],
+    ['.txt (simple liste)', 'Des adresses, une par ligne', 'Un groupe par bloc de lignes ; l’adresse sert aussi de titre'],
+    ['.html (favoris)', 'Un export de favoris ou de marque-pages de votre navigateur', 'Un groupe par dossier de premier niveau, qui porte son nom ; les dossiers internes y sont intégrés'],
+    ['.json (TabMerger)', 'Un fichier issu de « Exporter en JSON » dans TabMerger', 'Vos groupes avec fenêtres, noms, couleurs, notes, étoiles et heures de rappel'],
+  ]}
+/>
+
+Deux détails à connaître :
+
+- **Favoris :** seuls les dossiers de premier niveau du fichier deviennent des groupes, et les liens situés hors de tout dossier sont laissés de côté. Dans un export complet depuis Chrome ou Edge, la barre de favoris arrive sous forme d’un seul groupe (sous-dossiers intégrés), tandis que chaque dossier rangé dans **Autres favoris** (Other bookmarks) de Chrome ou **Autres favoris** (Other favorites) d’Edge devient un groupe à part entière.
+- **Sauvegardes TabMerger :** **Ouverts maintenant** (Now Open) du fichier, c’est-à-dire les onglets ouverts au moment de l’export, n’est pas importé. Enregistrez les onglets ouverts dans un groupe avant d’exporter si vous voulez les retrouver dans le fichier.
+
+</Section>
+
+<Section id="steps" title="Importer un fichier">
+
+1. Ouvrez TabMerger, puis **Paramètres** → **Données**.
+2. Sous **Import et export** (Import & export), cliquez sur **Importer un fichier** et choisissez votre fichier `.txt`, `.html` ou `.json`.
+3. Vérifiez le nombre de groupes et cliquez sur **Importer**. Les nouveaux groupes apparaissent dans la barre latérale ; renommez-les comme vous le souhaitez.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Importer un export OneTab" steps={[{ title: 'Paramètres → Données' }, { title: 'Confirmer' }, { title: 'Vos groupes' }]}>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-data-tab" alt="TabMerger, « Settings » (Paramètres), « Data » (Données) : la section « Import & export » (Import et export) avec « Export JSON » (Exporter en JSON) et « Import file » (Importer un fichier), thème clair" darkAlt="TabMerger, « Settings » (Paramètres), « Data » (Données) : la section « Import & export » (Import et export) avec « Export JSON » (Exporter en JSON) et « Import file » (Importer un fichier), thème sombre" boxes={[{ id: 'import', label: 'Importer un fichier' }, { id: 'export', label: 'Exporter vos groupes' }]} source="TabMerger 3.16.1">L’import et l’export sont côte à côte dans Settings → Data (Paramètres → Données).</ThemedScreenshot>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-import-confirm" alt="TabMerger demandant « Import 2 groups? » (Importer 2 groupes ?) pour le fichier onetab-export.txt, thème clair" darkAlt="TabMerger demandant « Import 2 groups? » (Importer 2 groupes ?) pour le fichier onetab-export.txt, thème sombre" boxes={[{ id: 'import-confirm', label: 'Importer 2 groupes' }]} source="TabMerger 3.16.1">Deux listes OneTab trouvées ; rien n’est ajouté avant votre confirmation.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-imported" alt="Deux listes OneTab importées sous forme des groupes « Imported 1 » et « Imported 2 », thème clair" darkAlt="Deux listes OneTab importées sous forme des groupes « Imported 1 » et « Imported 2 », thème sombre" boxes={[{ id: 'imported', label: 'Un groupe par liste' }]} source="TabMerger 3.16.1">Chaque liste est désormais un groupe, prêt à être renommé, recherché et synchronisé.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="benefit" title="Ce que vous y gagnez">
+
+Tout ce que vous aviez enregistré ailleurs, réuni au même endroit en quelques minutes : consultable avec <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>, organisé en groupes et, avec Pro, sur chaque ordinateur. Vous venez de OneTab ? Voyez les [alternatives à OneTab](/blog/onetab-alternatives). Vous venez des Collections d’Edge ? Voyez [quoi utiliser à la place des Collections d’Edge](/blog/edge-collections-replacement).
+
+</Section>
+
+<Section id="habits" title="Bonnes habitudes">
+
+- **Renommez les groupes importés** tout de suite : « Imported 1 » n’est qu’un nom provisoire.
+- **Importez les grosses archives en plusieurs fois** avec l’offre gratuite, ou passez à Pro avant, car une importation qui dépasse les limites est bloquée en entier.
+- **Gardez un export TabMerger** comme sauvegarde personnelle : **Exporter en JSON** (Export JSON) enregistre tous les groupes dans un seul fichier. Son contenu est décrit dans [exporter les onglets ouverts](/blog/export-open-tabs).
+- **Triez après l’import** avec **Trier par titre** (Sort by title) ou **Trier par URL** (Sort by URL) dans le menu **⋯** du groupe, et supprimez les doublons avec **Dédupliquer les onglets** (Deduplicate tabs).
+
+</Section>
+
+<Section id="plans" title="Gratuit ou Pro">
+
+<ComparisonTable
+  head={['', 'Gratuit', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Import et export', 'Oui', 'Oui'],
+    ['Ce qu’une importation peut ajouter', 'Jusqu’à 5 groupes et 50 onglets au total', 'Aucune limite'],
+    ['Groupes importés sur vos autres appareils', 'Non', 'Oui, chiffrés de bout en bout'],
+  ]}
+/>
+
+L’import et l’export sont gratuits pour tout le monde, sans compte. [Pro](/pricing) supprime les limites de taille et synchronise ce que vous importez.
+
+<InstallCta>Importez votre première liste en moins d’une minute. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Questions fréquentes">
+
+<Faq items={post.faq} />
+
+</Section>

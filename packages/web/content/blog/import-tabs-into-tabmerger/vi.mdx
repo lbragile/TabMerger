@@ -1,0 +1,166 @@
+export const post = {
+  slug: 'import-tabs-into-tabmerger',
+  title: 'Nhập tab vào TabMerger: danh sách OneTab, dấu trang và bản sao lưu',
+  navTitle: 'Nhập tab vào TabMerger',
+  seoTitle: 'Nhập OneTab, dấu trang và bản sao lưu vào TabMerger',
+  description:
+    'Mang theo các tab đã lưu: TabMerger nhập bản xuất từ OneTab, danh sách liên kết thông thường, tệp dấu trang của trình duyệt và bản sao lưu JSON của chính nó. Mỗi định dạng trở thành gì, và những gì bị bỏ qua.',
+  shareSummary: 'Danh sách OneTab, tệp dấu trang và bản sao lưu TabMerger thành nhóm chỉ trong một bước.',
+  dek: 'Đổi công cụ không có nghĩa là phải bắt đầu lại từ đầu. Hãy mang theo mọi danh sách đã lưu.',
+  published: '2026-12-19',
+  updated: '2026-12-19',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Nhập tệp .txt (OneTab hoặc danh sách liên kết thông thường), .html (dấu trang) và .json (TabMerger).', source: 'TabMerger 3.16.1' },
+    { text: 'Mỗi danh sách OneTab trở thành một nhóm riêng.', source: 'TabMerger 3.16.1' },
+    { text: 'Việc nhập luôn thêm nhóm; không bao giờ thay thế những gì bạn đang có.', source: 'TabMerger 3.16.1' },
+    { text: 'Nhập và xuất có trong gói miễn phí.', source: 'Bảng giá TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Làm thế nào để nhập OneTab vào TabMerger?',
+      answer:
+        'Trong OneTab, chọn “Nhập & Xuất”, sao chép văn bản và lưu thành tệp .txt. Trong TabMerger, mở Cài đặt → Dữ liệu → Nhập tệp rồi chọn tệp đó. Mỗi danh sách OneTab trở thành một nhóm riêng.',
+    },
+    {
+      question: 'Tôi có thể nhập dấu trang vào TabMerger không?',
+      answer:
+        'Có. Xuất dấu trang thành tệp HTML rồi nhập tệp đó trong Cài đặt → Dữ liệu. Mỗi thư mục ở cấp cao nhất của tệp trở thành một nhóm mang tên thư mục đó, các thư mục bên trong được gộp vào nhóm.',
+    },
+    {
+      question: 'Nhập có thay thế các nhóm của tôi không?',
+      answer: 'Không. Việc nhập luôn thêm các nhóm trong tệp bên cạnh các nhóm bạn đang có, sau một bước xác nhận cho biết đã tìm thấy bao nhiêu nhóm.',
+    },
+    {
+      question: 'Điều gì xảy ra với các liên kết không nhập được?',
+      answer: 'Các mục không phải địa chỉ web thật, chẳng hạn bookmarklet, sẽ bị bỏ qua, và thông báo sau khi nhập cho biết có bao nhiêu mục bị loại ra.',
+    },
+  ],
+  images: [
+    { src: '/blog/import-tabs-into-tabmerger/tm-data-tab-light.webp', alt: 'TabMerger, “Settings” (Cài đặt), “Data” (Dữ liệu): mục “Import & export” (Nhập và xuất) với “Export JSON” (Xuất JSON) và “Import file” (Nhập tệp), giao diện sáng' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-data-tab-dark.webp', alt: 'TabMerger, “Settings” (Cài đặt), “Data” (Dữ liệu): mục “Import & export” (Nhập và xuất) với “Export JSON” (Xuất JSON) và “Import file” (Nhập tệp), giao diện tối' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-light.webp', alt: 'TabMerger hỏi “Import 2 groups?” (Nhập 2 nhóm?) cho tệp onetab-export.txt, giao diện sáng' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-dark.webp', alt: 'TabMerger hỏi “Import 2 groups?” (Nhập 2 nhóm?) cho tệp onetab-export.txt, giao diện tối' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-imported-light.webp', alt: 'Hai danh sách OneTab được nhập thành các nhóm “Imported 1” và “Imported 2”, giao diện sáng' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-imported-dark.webp', alt: 'Hai danh sách OneTab được nhập thành các nhóm “Imported 1” và “Imported 2”, giao diện tối' },
+  ],
+  tags: ['tabmerger-guides', 'save-tabs', 'bookmarks', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-light.webp' },
+  ogImage: { src: '/blog/import-tabs-into-tabmerger/og.png', alt: 'Nhập tab vào TabMerger: hai danh sách OneTab được nhập thành nhóm' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'problem', label: 'Tab đã lưu, bị kẹt ở nơi khác' },
+    { id: 'why', label: 'Vì sao việc nhập hoạt động như vậy' },
+    { id: 'formats', label: 'Mọi định dạng' },
+    { id: 'steps', label: 'Nhập một tệp' },
+    { id: 'benefit', label: 'Bạn được gì' },
+    { id: 'habits', label: 'Thói quen tốt' },
+    { id: 'plans', label: 'Miễn phí và Pro' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+}
+
+<QuickAnswer>
+
+Mở [TabMerger](/features), vào **Cài đặt → Dữ liệu** (Settings → Data) và nhấn **Nhập tệp** (Import file). Chọn bản xuất OneTab hoặc danh sách liên kết thông thường (`.txt`), tệp dấu trang (`.html`) hoặc bản sao lưu TabMerger (`.json`). TabMerger cho biết đã tìm thấy bao nhiêu nhóm, và sau khi bạn xác nhận, sẽ thêm chúng bên cạnh các nhóm của bạn. Mỗi danh sách OneTab và mỗi thư mục dấu trang cấp cao nhất trở thành một nhóm riêng.
+
+</QuickAnswer>
+
+<InstallCta>Mang theo mọi danh sách đã lưu. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+<Section id="problem" title="Tab đã lưu, bị kẹt ở một nơi khác">
+
+Nhiều năm danh sách OneTab. Mỗi chuyến đi một thư mục dấu trang. Một bản sao lưu từ chiếc laptop cũ. Tất cả đều đã được lưu, nhưng không thể tìm kiếm ở cùng một chỗ, và chuyển chúng bằng tay, từng liên kết một, là loại việc chẳng bao giờ được làm.
+
+Tính năng nhập biến việc đó thành một tệp và một cú nhấp.
+
+</Section>
+
+<Section id="why" title="Vì sao việc nhập hoạt động theo cách này">
+
+- **Chỉ thêm vào.** Việc nhập đặt các nhóm trong tệp bên cạnh nhóm của bạn và không bao giờ đụng đến những gì bạn đang có, nên thử một tệp là an toàn.
+- **Hỏi trước.** Trước khi thêm bất cứ thứ gì, TabMerger cho bạn biết đã tìm thấy bao nhiêu nhóm trong tệp nào, rồi chờ bạn nhấn **Nhập** (Import).
+- **Mọi mục đều được kiểm tra.** Chỉ địa chỉ web thật mới được nhập. Bookmarklet, liên kết `javascript:` và mọi thứ không phải địa chỉ tuyệt đối đều bị bỏ qua và được đếm, và thông báo sau đó cho biết có bao nhiêu.
+- **Cấu trúc được giữ lại khi tệp có cấu trúc.** Bản sao lưu TabMerger khôi phục cửa sổ, tên, màu, ghi chú, dấu sao và thời gian nhắc; định dạng của các công cụ khác trở thành một nhóm cho mỗi danh sách hoặc thư mục.
+- **Giới hạn của gói được kiểm tra ngay từ đầu.** Ở gói miễn phí, lần nhập nào vượt quá 5 nhóm hoặc 50 tab sẽ dừng lại trước khi thêm bất cứ thứ gì, và cho biết tệp chứa những gì.
+
+</Section>
+
+<Section id="formats" title="Mọi định dạng, và chúng trở thành gì">
+
+<ComparisonTable
+  head={['Tệp', 'Là gì', 'Bạn nhận được gì']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['.txt (OneTab)', 'Văn bản “Nhập & Xuất” của OneTab: mỗi liên kết một dòng “địa chỉ | tiêu đề”, một dòng trống giữa các danh sách', 'Mỗi danh sách một nhóm (“Imported 1”, “Imported 2”, …), giữ nguyên tiêu đề'],
+    ['.txt (danh sách thường)', 'Địa chỉ, mỗi dòng một địa chỉ', 'Mỗi khối dòng một nhóm; địa chỉ kiêm luôn tiêu đề'],
+    ['.html (dấu trang)', 'Bản xuất dấu trang hoặc mục yêu thích từ trình duyệt của bạn', 'Mỗi thư mục cấp cao nhất một nhóm, mang tên thư mục; các thư mục bên trong được gộp vào'],
+    ['.json (TabMerger)', 'Tệp tạo bằng “Xuất JSON” trong TabMerger', 'Các nhóm của bạn với cửa sổ, tên, màu, ghi chú, dấu sao và thời gian nhắc'],
+  ]}
+/>
+
+Hai chi tiết nên biết:
+
+- **Dấu trang:** chỉ các thư mục ở cấp cao nhất của tệp mới trở thành nhóm, còn các liên kết nằm ngoài mọi thư mục sẽ bị bỏ ra. Trong bản xuất đầy đủ từ Chrome hoặc Edge, thanh dấu trang được nhập thành một nhóm (gộp cả thư mục con), còn mỗi thư mục nằm trong **Dấu trang khác** (Other bookmarks) hoặc **Các mục yêu thích khác** (Other favorites) trở thành một nhóm riêng.
+- **Bản sao lưu TabMerger:** **Đang Mở** (Now Open) trong tệp, tức các tab đang mở lúc xuất, sẽ không được nhập. Nếu muốn có chúng trong tệp, hãy lưu các tab đang mở vào một nhóm trước khi xuất.
+
+</Section>
+
+<Section id="steps" title="Nhập một tệp">
+
+1. Mở TabMerger, rồi vào **Cài đặt** → **Dữ liệu**.
+2. Trong **Nhập và xuất** (Import & export), nhấn **Nhập tệp** và chọn tệp `.txt`, `.html` hoặc `.json` của bạn.
+3. Kiểm tra số lượng và nhấn **Nhập**. Các nhóm mới xuất hiện ở thanh bên; đổi tên tùy ý.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Nhập bản xuất từ OneTab" steps={[{ title: 'Cài đặt → Dữ liệu' }, { title: 'Xác nhận' }, { title: 'Các nhóm của bạn' }]}>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-data-tab" alt="TabMerger, “Settings” (Cài đặt), “Data” (Dữ liệu): mục “Import & export” (Nhập và xuất) với “Export JSON” (Xuất JSON) và “Import file” (Nhập tệp), giao diện sáng" darkAlt="TabMerger, “Settings” (Cài đặt), “Data” (Dữ liệu): mục “Import & export” (Nhập và xuất) với “Export JSON” (Xuất JSON) và “Import file” (Nhập tệp), giao diện tối" boxes={[{ id: 'import', label: 'Nhập một tệp' }, { id: 'export', label: 'Xuất các nhóm của bạn' }]} source="TabMerger 3.16.1">Nhập và xuất nằm cạnh nhau trong Settings → Data (Cài đặt → Dữ liệu).</ThemedScreenshot>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-import-confirm" alt="TabMerger hỏi “Import 2 groups?” (Nhập 2 nhóm?) cho tệp onetab-export.txt, giao diện sáng" darkAlt="TabMerger hỏi “Import 2 groups?” (Nhập 2 nhóm?) cho tệp onetab-export.txt, giao diện tối" boxes={[{ id: 'import-confirm', label: 'Nhập 2 nhóm' }]} source="TabMerger 3.16.1">Tìm thấy hai danh sách OneTab; không có gì được thêm cho đến khi bạn xác nhận.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-imported" alt="Hai danh sách OneTab được nhập thành các nhóm “Imported 1” và “Imported 2”, giao diện sáng" darkAlt="Hai danh sách OneTab được nhập thành các nhóm “Imported 1” và “Imported 2”, giao diện tối" boxes={[{ id: 'imported', label: 'Mỗi danh sách một nhóm' }]} source="TabMerger 3.16.1">Mỗi danh sách giờ là một nhóm, sẵn sàng để đổi tên, tìm kiếm và đồng bộ.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="benefit" title="Bạn được gì">
+
+Mọi thứ bạn đã lưu ở nơi khác, gom về một chỗ chỉ trong vài phút: tìm được bằng <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>, sắp xếp theo nhóm, và với Pro, có trên mọi máy tính. Bạn chuyển từ OneTab sang? Xem [các lựa chọn thay thế OneTab](/blog/onetab-alternatives). Bạn chuyển từ Bộ sưu tập của Edge? Xem [nên dùng gì thay cho Bộ sưu tập của Edge](/blog/edge-collections-replacement).
+
+</Section>
+
+<Section id="habits" title="Thói quen tốt">
+
+- **Đổi tên các nhóm đã nhập** ngay; “Imported 1” chỉ là tên tạm.
+- **Nhập kho lưu trữ lớn theo từng phần** ở gói miễn phí, hoặc nâng cấp trước, vì lần nhập vượt giới hạn sẽ bị dừng toàn bộ.
+- **Giữ một bản xuất TabMerger** làm bản sao lưu của riêng bạn: **Xuất JSON** (Export JSON) lưu mọi nhóm vào một tệp. Nội dung bên trong được mô tả trong [xuất các tab đang mở](/blog/export-open-tabs).
+- **Sắp xếp sau khi nhập** bằng **Sắp xếp theo tiêu đề** (Sort by title) hoặc **Sắp xếp theo URL** (Sort by URL) trong menu **⋯** của nhóm, và dọn các tab lặp bằng **Loại bỏ thẻ trùng lặp** (Deduplicate tabs).
+
+</Section>
+
+<Section id="plans" title="Miễn phí và Pro">
+
+<ComparisonTable
+  head={['', 'Miễn phí', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Nhập và xuất', 'Có', 'Có'],
+    ['Một lần nhập có thể thêm bao nhiêu', 'Tối đa 5 nhóm và 50 tab tổng cộng', 'Không giới hạn'],
+    ['Nhóm đã nhập trên các thiết bị khác của bạn', 'Không', 'Có, mã hóa đầu cuối'],
+  ]}
+/>
+
+Nhập và xuất miễn phí cho tất cả mọi người, không cần tài khoản. [Pro](/pricing) bỏ giới hạn dung lượng và đồng bộ những gì bạn nhập.
+
+<InstallCta>Nhập danh sách đầu tiên trong chưa đầy một phút. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+</Section>

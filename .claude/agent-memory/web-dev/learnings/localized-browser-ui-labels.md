@@ -111,3 +111,7 @@ A 15 KB MDX body in a Bash heredoc failed ("unexpected EOF while looking for mat
 - The machine-translated pages split `<b>` runs mid-label; match labels against the full text after stripping markup, not against single bold runs.
 - Some locales give a label only as a verb or case form (ru genitive, tr and he infinitive); don't use those as labels.
 - No page names "Export favorites"; it stays English.
+
+**"Other bookmarks" in Chrome Help 96816 ("How bookmarks are imported")**: the folder name is the last quoted phrase in the paragraph between the 4th- and 3rd-last `<strong>` runs. Cut that paragraph at the next `<h2>`/`<h3>` (in fa and zh the following export step quotes the "More" icon). Quote styles vary: `"…"`, `„…”` (pl closes with U+201D), `«…»`, `'…'` (he, ko), `[…]` (ja), `“…”` (zh). Edge"Other favorites" has no usable Microsoft string in ar, fa, hi and ru.
+
+**Imported group names:** OneTab and plain-text imports are named `Imported N` in English in every UI (hard-coded in `importExport.ts`); only unnamed bookmark folders use the localized `common.importedFolder`.

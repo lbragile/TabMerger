@@ -118,3 +118,7 @@ Run the template check again just before writing into the repo, to confirm en.md
 **Prices and limits:** let the generator turn `{PM}`/`{PY}`/`{P0}` into placeholders and decide wrapping per slot: body text in RTL gets `<bdi dir="ltr">US$3.99</bdi>`, post fields and table cells the bare string. Verify each price appears exactly as often as in English, and that every number in each English data key appears in the translated key (convert Persian/Arabic digits first; extra numbers are only warnings since CJK writes number words as digits; allow only explicit dual words for 2).
 
 - `tierNames.free` is "Free" in he, hi, it and ru, so blog tables and plan references there say "Free". Count Yes/No cells from English, not by hand.
+
+- Dual plurals: for count 2, ar (`_two`) and he give forms with no digit ("استيراد مجموعتين؟"), so check labels built from the catalog, not for a "2".
+- RTL ComparisonTable cells: a leading ".txt" or a Latin word next to a parenthesis is misplaced; start the cell with a native word ("ملف TXT من OneTab"). In RTL verifiers, strip `<bdi dir="ltr">…</bdi>` before rejecting →.
+- Keep a whole bold imperative in one bold (hi/tr can split the verb and add a second bold, breaking the strong-count parity).
