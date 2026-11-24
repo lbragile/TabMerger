@@ -114,3 +114,7 @@ Run the template check again just before writing into the repo, to confirm en.md
 ` silently check nothing; normalise `
 ` first.
 - Normalise full-width `（）` to `()` before checking English glosses in ja/zh.
+
+**Prices and limits:** let the generator turn `{PM}`/`{PY}`/`{P0}` into placeholders and decide wrapping per slot: body text in RTL gets `<bdi dir="ltr">US$3.99</bdi>`, post fields and table cells the bare string. Verify each price appears exactly as often as in English, and that every number in each English data key appears in the translated key (convert Persian/Arabic digits first; extra numbers are only warnings since CJK writes number words as digits; allow only explicit dual words for 2).
+
+- `tierNames.free` is "Free" in he, hi, it and ru, so blog tables and plan references there say "Free". Count Yes/No cells from English, not by hand.

@@ -1,0 +1,149 @@
+export const post = {
+  slug: 'tabmerger-free-vs-pro',
+  title: 'TabMerger Free o Pro: cosa include esattamente ogni piano',
+  navTitle: 'TabMerger Free o Pro',
+  seoTitle: 'TabMerger Free o Pro: limiti, sincronizzazione, prezzo e cosa succede se annulli',
+  description:
+    'Tutto ciò che c’è nel piano gratuito di TabMerger, tutto ciò che aggiunge Pro, come vengono applicati i limiti e cosa succede alle tue schede se un piano Pro termina. Senza clausole nascoste.',
+  shareSummary: 'Cosa include il piano Free, cosa aggiunge Pro e cosa succede se annulli. Senza clausole nascoste.',
+  dek: 'Il piano Free è un gestore di schede completo. Pro è per più schede, più computer e backup a cui non devi mai pensare.',
+  published: '2026-12-20',
+  updated: '2026-12-20',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Free: 5 gruppi, 50 schede, 3 regole URL, 3 sessioni, nessun account necessario.', source: 'Prezzi di TabMerger', href: '/pricing' },
+    { text: 'Pro: US$3.99 al mese o US$42.99 all’anno, senza limiti e con sincronizzazione crittografata.', source: 'Prezzi di TabMerger', href: '/pricing' },
+    { text: 'Tutto ciò che usa i nostri server viene controllato dal server, non solo dall’app.', source: 'Codice sorgente di TabMerger 3.16.1' },
+    { text: 'Se Pro termina, non viene eliminato nulla.', source: 'Codice sorgente di TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'TabMerger è gratis?',
+      answer:
+        'Sì. Il piano Free non richiede un account e include gruppi, sessioni, ricerca, salvataggio automatico, «Chiusi di recente», regole URL, importazione ed esportazione, entro i suoi limiti: 5 gruppi, 50 schede, 3 regole URL e 3 sessioni.',
+    },
+    {
+      question: 'Cosa aggiunge TabMerger Pro?',
+      answer:
+        'Nessun limite a gruppi, schede, regole o sessioni; sincronizzazione crittografata end-to-end tra dispositivi; backup crittografati automatici; tutti i salvataggi automatici conservati; 30 giorni di «Chiusi di recente» invece di 2; e assistenza prioritaria.',
+    },
+    {
+      question: 'Quanto costa TabMerger Pro?',
+      answer: 'US$3.99 al mese o US$42.99 all’anno (circa il 10% in meno rispetto al pagamento mensile). Puoi annullare quando vuoi e mantieni Pro fino alla fine del periodo che hai pagato.',
+    },
+    {
+      question: 'Cosa succede alle mie schede se annullo Pro?',
+      answer:
+        'Non viene eliminato nulla. I gruppi e le schede oltre i limiti del piano Free restano sul tuo dispositivo, bloccati, finché non passi di nuovo a Pro o non fai spazio. Le nuove modifiche non vengono più sincronizzate; quello che è già nel tuo account resta lì.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabmerger-free-vs-pro/tm-over-limit-light.webp', alt: 'TabMerger con il piano Free e 7 gruppi salvati: gli ultimi due sono bloccati e un banner propone Pro, tema chiaro' },
+    { src: '/blog/tabmerger-free-vs-pro/tm-over-limit-dark.webp', alt: 'TabMerger con il piano Free e 7 gruppi salvati: gli ultimi due sono bloccati e un banner propone Pro, tema scuro' },
+  ],
+  tags: ['tabmerger-guides', 'tab-manager', 'comparison', 'browser-productivity'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabmerger-free-vs-pro/tm-over-limit-light.webp' },
+  ogImage: { src: '/blog/tabmerger-free-vs-pro/og.png', alt: 'TabMerger Free o Pro: il piano Free con due gruppi bloccati oltre il limite' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'problem', label: 'Gratis o a pagamento?' },
+    { id: 'compare', label: 'Fianco a fianco' },
+    { id: 'why', label: 'Perché il confine è qui' },
+    { id: 'enforce', label: 'Come si controllano i limiti' },
+    { id: 'cancel', label: 'Se Pro termina' },
+    { id: 'choose', label: 'Quale piano fa per te' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+}
+
+<QuickAnswer>
+
+**Free** è un gestore di schede completo senza account: 5 gruppi, 50 schede, 3 regole URL e 3 sessioni, più ricerca, salvataggio automatico (restano i 2 più recenti), 2 giorni di «Chiusi di recente», importazione ed esportazione. **Pro** (US$3.99 al mese o US$42.99 all’anno) toglie ogni limite e aggiunge la sincronizzazione crittografata end-to-end tra dispositivi, backup crittografati automatici, tutti i salvataggi automatici conservati e 30 giorni di «Chiusi di recente». Se Pro termina, non viene eliminato nulla.
+
+</QuickAnswer>
+
+<InstallCta>Inizia gratis, senza account. Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="problem" title="Gratis o a pagamento: la vera domanda">
+
+Prima di installare un gestore di schede, quasi tutti si chiedono due cose: «La versione gratuita sarà davvero utile?» e «Se pago e poi smetto, perdo le mie schede?». Entrambe meritano una risposta chiara, quindi ecco tutto ciò che include ogni piano, come viene applicato e cosa succede ai margini.
+
+</Section>
+
+<Section id="compare" title="Free e Pro, fianco a fianco">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="34rem"
+  rows={[
+    ['Prezzo', 'US$0, nessun account necessario', 'US$3.99 al mese o US$42.99 all’anno'],
+    ['Gruppi', 'Fino a 5', 'Illimitati'],
+    ['Schede', 'Fino a 50', 'Illimitate'],
+    ['Regole URL', 'Fino a 3', 'Illimitate'],
+    ['Sessioni', 'Fino a 3, in questo browser', 'Illimitate, sincronizzate tra dispositivi'],
+    ['Salva automaticamente le schede aperte', 'Restano i 2 più recenti', 'Restano tutti'],
+    ['Schede chiuse di recente', 'I tuoi ultimi 2 giorni', 'I tuoi ultimi 30 giorni'],
+    ['Ricerca, note, promemoria, importazione ed esportazione', 'Sì', 'Sì'],
+    ['Trascina e rilascia, scorciatoie da tastiera', 'Sì', 'Sì'],
+    ['Sincronizzazione cloud tra dispositivi (crittografata end-to-end)', 'No, salvato su questo dispositivo', 'Sì'],
+    ['Backup crittografati automatici', 'No', 'Sì'],
+    ['Link di condivisione, Impostazioni → Dispositivi', 'No', 'Sì'],
+    ['Assistenza', 'Sì', 'Prioritaria'],
+  ]}
+/>
+
+Per i prezzi fa fede la [pagina dei prezzi](/pricing); il piano annuale costa circa il 10% in meno di dodici pagamenti mensili.
+
+</Section>
+
+<Section id="why" title="Perché il confine tra i piani è proprio qui">
+
+La linea segue i costi. Tutto ciò che funziona solo nel tuo browser non ci costa nulla regalarlo, quindi il piano Free ha l’intero gestore di schede: gruppi, ricerca, salvataggio automatico, «Chiusi di recente», regole URL, importazione ed esportazione, con limiti pensati per il lavoro quotidiano di una persona.
+
+Pro paga ciò che gira sui nostri server: sincronizzare e conservare i tuoi gruppi, sessioni e backup crittografati, e le schede aperte che i tuoi dispositivi condividono in Impostazioni → Dispositivi. In più toglie i limiti locali, per chi ha schede che hanno superato 5 gruppi e 50 schede.
+
+</Section>
+
+<Section id="enforce" title="Come si controllano i limiti">
+
+- **Sul tuo dispositivo:** i limiti di gruppi, schede, regole e sessioni, la rotazione del salvataggio automatico e la conservazione di «Chiusi di recente» li applica l’estensione. Quei dati non lasciano mai il tuo browser, quindi un server non ha niente da controllare.
+- **Sui nostri server:** ogni funzione che salva dati da noi (sincronizzazione, sessioni e backup nel tuo account, le schede aperte dei tuoi dispositivi, link di condivisione, configurazione della crittografia) viene rifiutata dal database per un account senza un piano Pro attivo. Un pulsante nascosto non è mai l’unico lucchetto.
+
+Quando ti avvicini ai limiti del piano Free, TabMerger te lo dice con un banner e ti propone Pro; non elimina mai i tuoi gruppi o le tue schede per fare spazio.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabmerger-free-vs-pro/tm-over-limit" alt="TabMerger con il piano Free e 7 gruppi salvati: gli ultimi due sono bloccati e un banner propone Pro, tema chiaro" darkAlt="TabMerger con il piano Free e 7 gruppi salvati: gli ultimi due sono bloccati e un banner propone Pro, tema scuro" boxes={[{ id: 'banner', label: 'Avviso del piano Free' }, { id: 'locked', label: 'Oltre il limite' }]} source="TabMerger 3.16.1">Sette gruppi con il piano Free: i primi cinque funzionano come sempre, gli ultimi due restano ma sono bloccati.</ThemedScreenshot>
+
+</Section>
+
+<Section id="cancel" title="Se un piano Pro termina">
+
+Mantieni Pro fino alla fine del periodo che hai pagato. Dopo:
+
+- **Non viene eliminato nulla.** I gruppi e le schede oltre i limiti del piano Free restano sul tuo dispositivo, con un lucchetto, finché non passi di nuovo a Pro o ne rimuovi altri per fare spazio.
+- **Le tue regole URL continuano a funzionare**, anche se ne hai più di 3; solo aggiungerne di nuove oltre le 3 richiede Pro.
+- **La sincronizzazione si ferma per le nuove modifiche.** Quello che è già nel tuo account resta lì; nella dashboard puoi ancora aprire o eliminare le sessioni salvate e scaricare o eliminare i backup.
+- **Tutto ciò che è locale continua a funzionare:** ricerca, salvataggio automatico (i nuovi salvataggi automatici ruotano, restano i 2 più recenti), «Chiusi di recente» (di nuovo 2 giorni), importazione ed esportazione.
+
+</Section>
+
+<Section id="choose" title="Quale piano fa per te">
+
+- **Resta su Free** se usi un solo computer e segui una manciata di progetti: è completo, privato per impostazione predefinita e non richiede un account.
+- **Scegli Pro** se lavori su più di un computer, tieni più di 5 gruppi o 50 schede, o vuoi backup e un mese di schede chiuse senza pensarci.
+
+Non sei sicuro? Inizia con Free; passare a Pro più avanti mantiene tutto ciò che hai già. Per la routine che fa funzionare entrambi i piani, leggi [una routine quotidiana delle schede con TabMerger](/blog/tabmerger-daily-workflow); per come la sincronizzazione protegge i tuoi dati, [sincronizzare le schede tra dispositivi](/blog/sync-tabs-between-devices-with-tabmerger).
+
+<InstallCta>Free per un computer, Pro quando ti serve di più. Chrome, Edge e Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>
