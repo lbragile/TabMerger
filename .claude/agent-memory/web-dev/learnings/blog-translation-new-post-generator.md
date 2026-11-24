@@ -105,3 +105,12 @@ Run the template check again just before writing into the repo, to confirm en.md
 - The auto-save group name follows locale formatting (`toLocaleString(locale, {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"})`), so compute the example per locale in Node; fa comes out in the Persian calendar.
 - Number match: use `(?![0-9]|[.:][0-9])` (plus a lookbehind) so a number before a sentence-ending full stop still matches. ja/zh glosses use full-width `（English）`, ko half-width with the particle after it.
 - A translated "**Sentence.** Next" becomes `**…。**` in ja/zh; move the 。 outside the bold.
+
+**Plural catalog token:** `{P:file.key:n}` picks `key_${new Intl.PluralRules(loc).select(n)}`, throws if that form is missing, and fills `{{count}}`, so labels with a count ("Restore 4 tabs") need no hand-picking (ru/pl/ar get `_few`).
+
+- Hand-typed RLMs slip into he/ar data again and again (after "Pro:", before "US$"); scan every RTL data file with `/[​-‏⁦-⁩]/` before generating.
+- Ad-hoc scans of CRLF output that split on `
+}
+` silently check nothing; normalise `
+` first.
+- Normalise full-width `（）` to `()` before checking English glosses in ja/zh.

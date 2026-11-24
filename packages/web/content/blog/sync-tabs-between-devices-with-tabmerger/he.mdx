@@ -1,0 +1,190 @@
+export const post = {
+  slug: 'sync-tabs-between-devices-with-tabmerger',
+  title: 'סנכרון כרטיסיות בין מכשירים, בהצפנה מקצה לקצה',
+  navTitle: 'סנכרון כרטיסיות בין מכשירים',
+  seoTitle: 'סנכרון כרטיסיות בין מחשבים בהצפנה מקצה לקצה',
+  description:
+    'הקבוצות שלכם ב-TabMerger בכל מחשב, מוצפנות בביטוי סיסמה שרק אתם מכירים. איך מגדירים סנכרון, מה הוא כולל, ומה בדיוק השרת שלנו יכול ולא יכול לראות.',
+  shareSummary: 'הקבוצות שלכם בכל מחשב, בלתי קריאות אפילו לשרת שלנו.',
+  dek: 'אותן קבוצות בבית ובעבודה, ואף אחד אחר לא יכול לקרוא אותן. אפילו לא אנחנו.',
+  published: '2026-12-18',
+  updated: '2026-12-18',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'הסנכרון מוצפן מקצה לקצה: AES-256-GCM, עם מפתח שמוגן בביטוי הסיסמה שלכם.', source: 'קוד המקור של TabMerger 3.16.1' },
+    { text: 'כתובות, כותרות והערות של כרטיסיות ושמות קבוצות אף פעם לא קריאים לשרת שלנו.', source: 'קוד המקור של TabMerger 3.16.1' },
+    { text: 'כל מכשיר חדש מבקש את ביטוי הסיסמה פעם אחת.', source: 'TabMerger 3.16.1' },
+    { text: 'הסנכרון הוא חלק מ-Pro: US$3.99 לחודש או US$42.99 לשנה.', source: 'המחירים של TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'איך מסנכרנים כרטיסיות בין שני מחשבים?',
+      answer:
+        'מתחברים ל-TabMerger עם חשבון Pro בשני המחשבים. הראשון מבקש מכם לבחור ביטוי סיסמה להצפנה; השני מבקש אותו פעם אחת. מאותו רגע הקבוצות והסשנים שלכם מסתנכרנים ביניהם.',
+    },
+    {
+      question: 'האם TabMerger יכול לראות את הכרטיסיות שלי?',
+      answer:
+        'לא. כתובות, כותרות והערות של כרטיסיות, שמות של קבוצות וסשנים והכרטיסיות הפתוחות במכשירים שלכם מוצפנים בדפדפן לפני ההעלאה, והמפתח אף פעם לא מגיע לשרת שלנו. השרת רואה רק את מה שהוא צריך כדי לשמור את השורות: למשל הצבע של קבוצה, אם היא מסומנת בכוכב או בארכיון, מתי היא השתנתה, וכמה חלונות וכרטיסיות יש בה.',
+    },
+    {
+      question: 'מה אם אשכח את ביטוי הסיסמה להצפנה?',
+      answer: 'אף אחד לא יכול לשחזר אותו, כולל TabMerger, כי הוא אף פעם לא יוצא מהמכשירים שלכם. הקבוצות נשארות במכשירים שכבר בוטלה בהם הנעילה, אז שמרו את ביטוי הסיסמה במקום בטוח.',
+    },
+    {
+      question: 'מה כולל הסנכרון?',
+      answer:
+        'קבוצות שמורות (חלונות, כרטיסיות, הערות, זמני תזכורות), סשנים שמורים וגיבויים אוטומטיים, וגם הכרטיסיות הפתוחות בכל מכשיר עבור הגדרות ← מכשירים. הגדרות, כללי URL וכרטיסיות שנסגרו לאחרונה נשארים בכל מכשיר.',
+    },
+    {
+      question: 'האם הסנכרון בחינם?',
+      answer: 'לא, הסנכרון הוא חלק מ-Pro. בתוכנית Free הכול נשאר במכשיר שלכם; השרת שלנו דוחה העלאות סנכרון מחשבונות בלי Pro.',
+    },
+  ],
+  images: [
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in-light.webp', alt: 'חלון Sign In (התחברות) של TabMerger, עם התחברות דרך Google או עם אימייל וסיסמה, ערכת נושא בהירה' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in-dark.webp', alt: 'חלון Sign In (התחברות) של TabMerger, עם התחברות דרך Google או עם אימייל וסיסמה, ערכת נושא כהה' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption-light.webp', alt: 'חלון Set up encryption (הגדרת הצפנה) של TabMerger, שמבקש ביטוי סיסמה חדש פעמיים, ערכת נושא בהירה' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption-dark.webp', alt: 'חלון Set up encryption (הגדרת הצפנה) של TabMerger, שמבקש ביטוי סיסמה חדש פעמיים, ערכת נושא כהה' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock-light.webp', alt: 'חלון Unlock encryption (ביטול נעילת ההצפנה) של TabMerger בדפדפן שני, שמבקש את ביטוי הסיסמה פעם אחת, ערכת נושא בהירה' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock-dark.webp', alt: 'חלון Unlock encryption (ביטול נעילת ההצפנה) של TabMerger בדפדפן שני, שמבקש את ביטוי הסיסמה פעם אחת, ערכת נושא כהה' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups-light.webp', alt: 'הדפדפן השני אחרי ביטול הנעילה, עם הקבוצות Work ו-Reading list מהדפדפן הראשון, ערכת נושא בהירה' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups-dark.webp', alt: 'הדפדפן השני אחרי ביטול הנעילה, עם הקבוצות Work ו-Reading list מהדפדפן הראשון, ערכת נושא כהה' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-light.webp', alt: 'TabMerger, Settings → Devices (הגדרות ← מכשירים): המכשיר Home laptop עם 4 הכרטיסיות הפתוחות שלו וכפתור Restore 4 tabs (שחזור 4 כרטיסיות), ערכת נושא בהירה' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-dark.webp', alt: 'TabMerger, Settings → Devices (הגדרות ← מכשירים): המכשיר Home laptop עם 4 הכרטיסיות הפתוחות שלו וכפתור Restore 4 tabs (שחזור 4 כרטיסיות), ערכת נושא כהה' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync-light.webp', alt: 'TabMerger, Settings → General (הגדרות ← כללי), עם המתג Cloud sync (סנכרון בענן) מופעל, ערכת נושא בהירה' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync-dark.webp', alt: 'TabMerger, Settings → General (הגדרות ← כללי), עם המתג Cloud sync (סנכרון בענן) מופעל, ערכת נושא כהה' },
+  ],
+  tags: ['tabmerger-guides', 'cross-browser', 'session-management', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-light.webp' },
+  ogImage: { src: '/blog/sync-tabs-between-devices-with-tabmerger/og.png', alt: 'סנכרון כרטיסיות בין מכשירים עם TabMerger: אותן קבוצות בדפדפן שני אחרי ביטול הנעילה' },
+  toc: [
+    { id: 'quick', label: 'תשובה קצרה' },
+    { id: 'problem', label: 'שני מחשבים, שתי ערכות של כרטיסיות' },
+    { id: 'why', label: 'למה הסנכרון עובד כך' },
+    { id: 'server', label: 'מה השרת שלנו רואה' },
+    { id: 'steps', label: 'הגדרה' },
+    { id: 'devices', label: 'הכרטיסיות של המכשירים האחרים' },
+    { id: 'benefit', label: 'מה יוצא לכם מזה' },
+    { id: 'habits', label: 'הרגלים טובים' },
+    { id: 'plans', label: 'Free או Pro' },
+    { id: 'faq', label: 'שאלות נפוצות' },
+  ],
+}
+
+<QuickAnswer>
+
+מתחברים ל-[TabMerger](/features) עם חשבון Pro. המחשב הראשון מבקש מכם לבחור ביטוי סיסמה להצפנה; כל מחשב אחר מבקש אותו פעם אחת. מאותו רגע הקבוצות, הסשנים והגיבויים שלכם מסתנכרנים ביניהם, מוצפנים בדפדפן עוד לפני שהם יוצאים ממנו, כך שהשרת שלנו שומר רק נתונים שהוא לא יכול לקרוא. **הגדרות ← מכשירים** (<bdi dir="ltr">Settings → Devices</bdi>) אפילו מראה מה פתוח במחשבים האחרים שלכם.
+
+</QuickAnswer>
+
+<InstallCta>אותן קבוצות בכל מחשב, קריאות רק לכם. מתחילים בחינם, סנכרון עם Pro.</InstallCta>
+
+<Section id="problem" title="שני מחשבים, שתי ערכות של כרטיסיות">
+
+בערב אתם בודקים מוצר לפני קנייה במחשב הנייד בבית. למחרת בבוקר בעבודה, הכרטיסיות נמצאות במחשב שנשאר בבית. אתם משחזרים אותן מהזיכרון, או שולחים לעצמכם קישורים במייל. הסנכרון של הדפדפן עוזר כשבכל המחשבים יש אותו דפדפן ואותו חשבון, אבל אולי במחשב בעבודה יש Edge ובנייד Chrome, או שחשבון העבודה נעול.
+
+הסנכרון של TabMerger עובד ב-Chrome, ב-Edge וב-Firefox עם חשבון TabMerger אחד, ולוקח איתו את הקבוצות המסודרות שלכם, לא רק את מה שבמקרה פתוח.
+
+</Section>
+
+<Section id="why" title="למה הסנכרון של TabMerger עובד כך">
+
+- **מוצפן לפני שהוא יוצא מהדפדפן.** התוכן של קבוצות וסשנים מוצפן בדפדפן שלכם ב-<bdi dir="ltr">AES-256-GCM</bdi>. המפתח אקראי; בשרת שלנו הוא נשמר רק עטוף (מוצפן) במפתח שנגזר מביטוי הסיסמה שלכם (<bdi dir="ltr">PBKDF2-SHA256</bdi>, 600,000 סבבים). ביטוי הסיסמה עצמו לא נשלח לשום מקום.
+- **חובה, לא הגדרה.** כל חשבון Pro מסנכרן בהצפנה. אין מצב טקסט גלוי שאפשר להפעיל בטעות.
+- **שלב אחד של ביטוי סיסמה לכל מכשיר.** מכשיר חדש מבקש את ביטוי הסיסמה פעם אחת; אחר כך הוא נשאר פתוח עד שאתם מתנתקים, כך שהסנכרון לא מציק.
+- **נשמר קודם במכשיר.** הכול נכתב מקומית לפני ההעלאה. בלי חיבור לרשת שום דבר לא מפסיק לעבוד; השינויים עולים בפעם הבאה.
+- **השינוי האחרון מנצח.** כשאותה קבוצה שונתה בשני מכשירים, נשמר השינוי העדכני ביותר.
+- **מסנכרן כל עוד TabMerger פתוח:** כשפותחים אותו, כל 30 שניות כל עוד הוא נשאר פתוח, וברגע שמגיע שינוי ממכשיר אחר.
+
+</Section>
+
+<Section id="server" title="מה השרת שלנו יכול ולא יכול לראות">
+
+<ComparisonTable
+  head={['', 'נשמר מוצפן (לא קריא לנו)', 'נשמר קריא']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['קבוצות', 'שם, הערה, כל חלון וכרטיסייה (כותרות, כתובות, הערות לכרטיסיות, זמני תזכורות)', 'צבע, כוכב, ארכיון, שינוי אחרון, מספר חלונות וכרטיסיות, סדר'],
+    ['סשנים וגיבויים', 'שם, תיאור, צבע, אם זה גיבוי, הקבוצות שבתוכו', 'מתי הם נשמרו'],
+    ['מכשירים', 'הכרטיסיות הפתוחות בכל מכשיר', 'שם המכשיר, זמן הפעילות האחרון'],
+    ['חשבון', '-', 'כתובת אימייל ותוכנית'],
+  ]}
+/>
+
+העמודות הקריאות הן מה שהשרת צריך כדי לשמור על סדר השורות שלכם ולהציג ספירות; אף אחת מהן לא מגלה אילו דפים אתם שומרים. קישורים משותפים משתמשים במפתח נפרד שנמצא רק בקישור עצמו; ראו [שיתוף כמה כרטיסיות בבת אחת](/blog/share-a-set-of-tabs).
+
+</Section>
+
+<Section id="steps" title="הגדרה">
+
+1. במחשב הראשון פותחים את TabMerger, ואז את תפריט החשבון (למעלה מימין) ← **התחברות** (<bdi dir="ltr">Sign in</bdi>). משתמשים ב-<bdi dir="ltr">Google</bdi>, באימייל וסיסמה, או בקישור קסם.
+2. מופיע **הגדרת הצפנה** (<bdi dir="ltr">Set up encryption</bdi>). בוחרים ביטוי סיסמה (לפחות 8 תווים, בלי רווחים), מקלידים אותו פעמיים ומאשרים. הקבוצות שלכם מתחילות להסתנכרן.
+3. במחשב השני מתקינים את TabMerger ומתחברים עם אותו חשבון.
+4. מופיע **ביטול נעילת ההצפנה** (<bdi dir="ltr">Unlock encryption</bdi>). מזינים את ביטוי הסיסמה פעם אחת. הקבוצות שלכם מופיעות כעבור רגע.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="סנכרון של מחשב שני" steps={[{ title: 'התחברות' }, { title: 'ביטוי סיסמה' }, { title: 'ביטול נעילה' }, { title: 'מסונכרן' }]}>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in" alt="חלון Sign In (התחברות) של TabMerger, עם התחברות דרך Google או עם אימייל וסיסמה, ערכת נושא בהירה" darkAlt="חלון Sign In (התחברות) של TabMerger, עם התחברות דרך Google או עם אימייל וסיסמה, ערכת נושא כהה" boxes={[{ id: 'email', label: 'האימייל של החשבון שלכם' }]} source="TabMerger 3.16.1">מתחברים מתפריט החשבון.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption" alt="חלון Set up encryption (הגדרת הצפנה) של TabMerger, שמבקש ביטוי סיסמה חדש פעמיים, ערכת נושא בהירה" darkAlt="חלון Set up encryption (הגדרת הצפנה) של TabMerger, שמבקש ביטוי סיסמה חדש פעמיים, ערכת נושא כהה" boxes={[{ id: 'passphrase', label: 'רק אתם מכירים אותו' }]} source="TabMerger 3.16.1">המכשיר הראשון: בוחרים את ביטוי הסיסמה שמגן על המפתח שלכם.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock" alt="חלון Unlock encryption (ביטול נעילת ההצפנה) של TabMerger בדפדפן שני, שמבקש את ביטוי הסיסמה פעם אחת, ערכת נושא בהירה" darkAlt="חלון Unlock encryption (ביטול נעילת ההצפנה) של TabMerger בדפדפן שני, שמבקש את ביטוי הסיסמה פעם אחת, ערכת נושא כהה" boxes={[{ id: 'unlock', label: 'פעם אחת לכל מכשיר' }]} source="TabMerger 3.16.1">כל מכשיר אחר: מזינים אותו פעם אחת.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups" alt="הדפדפן השני אחרי ביטול הנעילה, עם הקבוצות Work ו-Reading list מהדפדפן הראשון, ערכת נושא בהירה" darkAlt="הדפדפן השני אחרי ביטול הנעילה, עם הקבוצות Work ו-Reading list מהדפדפן הראשון, ערכת נושא כהה" boxes={[{ id: 'groups', label: 'מהמכשיר האחר' }]} source="TabMerger 3.16.1">דפדפן חדש לגמרי, שניות אחר כך: הקבוצות של המחשב הראשון, מפוענחות מקומית.</ThemedScreenshot>
+</Carousel>
+
+אפשר להשהות את הסנכרון בכל דפדפן בנפרד עם המתג **סנכרון בענן** (<bdi dir="ltr">Cloud sync</bdi>) ב-**הגדרות ← כללי** (<bdi dir="ltr">Settings → General</bdi>). ב-<bdi dir="ltr">tabmerger.com</bdi>, לוח הבקרה מציג את הקבוצות המסונכרנות שלכם אחרי שמזינים את אותו ביטוי סיסמה.
+
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync" alt="TabMerger, Settings → General (הגדרות ← כללי), עם המתג Cloud sync (סנכרון בענן) מופעל, ערכת נושא בהירה" darkAlt="TabMerger, Settings → General (הגדרות ← כללי), עם המתג Cloud sync (סנכרון בענן) מופעל, ערכת נושא כהה" boxes={[{ id: 'sync', label: 'סנכרון בענן' }]} source="TabMerger 3.16.1">מופעל בכל חשבון Pro; כבו אותו בדפדפן שלא אמור להסתנכרן.</ThemedScreenshot>
+
+</Section>
+
+<Section id="devices" title="לראות מה פתוח במכשירים האחרים שלכם">
+
+**הגדרות ← מכשירים** מציג כל דפדפן בחשבון שלכם שהיה פעיל ב-30 הימים האחרונים, עם החלונות והכרטיסיות הפתוחים בו. פותחים אחד מהם כדי לפתוח כרטיסייה בודדת, או משתמשים ב-**שחזור** (<bdi dir="ltr">Restore</bdi>) כדי לפתוח את כולן כאן. תנו למכשיר הזה שם כדי שהרשימה תהיה קלה לקריאה ("נייד בבית"), או הסירו מכשירים שאתם כבר לא משתמשים בהם.
+
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-devices" alt="TabMerger, Settings → Devices (הגדרות ← מכשירים): המכשיר Home laptop עם 4 הכרטיסיות הפתוחות שלו וכפתור Restore 4 tabs (שחזור 4 כרטיסיות), ערכת נושא בהירה" darkAlt="TabMerger, Settings → Devices (הגדרות ← מכשירים): המכשיר Home laptop עם 4 הכרטיסיות הפתוחות שלו וכפתור Restore 4 tabs (שחזור 4 כרטיסיות), ערכת נושא כהה" boxes={[{ id: 'other-device', label: 'הדפדפן האחר שלכם' }, { id: 'restore', label: 'פתיחת הכרטיסיות שלו כאן' }]} source="TabMerger 3.16.1">הכרטיסיות הפתוחות של הנייד, מהמחשב בעבודה. מוצפנות בדרך.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="מה יוצא לכם מזה">
+
+קמים ממחשב אחד וממשיכים במחשב אחר עם אותן קבוצות, סשנים והערות, בכל דפדפן שרץ בו. ומכיוון שהתוכן מוצפן במפתח שרק לכם יש, פריצה למסד הנתונים שלנו הייתה חושפת צבעים וספירות, לא את הכרטיסיות שלכם.
+
+</Section>
+
+<Section id="habits" title="הרגלים טובים">
+
+- **שמרו את ביטוי הסיסמה במנהל הסיסמאות שלכם.** אף אחד לא יכול לאפס אותו בשבילכם.
+- **תנו שם לכל מכשיר** ב-הגדרות ← מכשירים.
+- **פתחו את TabMerger פעם אחת כשאתם מתיישבים** כדי שימשוך את השינויים האחרונים.
+- **מה שקשור לדפדפן נשאר בכל מכשיר:** כללי <bdi dir="ltr">URL</bdi> והגדרות נשמרים בכוונה לכל דפדפן בנפרד. לדרכים אחרות לקחת איתכם כרטיסיות, ראו [העברת כרטיסיות למחשב אחר](/blog/move-tabs-between-computers).
+
+</Section>
+
+<Section id="plans" title="Free או Pro">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['סנכרון של קבוצות, סשנים וגיבויים', 'לא (נשאר במכשיר שלכם)', 'כן, בהצפנה מקצה לקצה'],
+    ['הגדרות ← מכשירים', 'לא', 'כן'],
+    ['מחיר', 'US$0', 'US$3.99 לחודש או US$42.99 לשנה'],
+  ]}
+/>
+
+את הסנכרון אוכף השרת, לא רק האפליקציה: מסד הנתונים דוחה העלאות סנכרון מכל חשבון בלי תוכנית Pro פעילה. אם תוכנית מסתיימת, שום דבר לא נמחק; שינויים חדשים פשוט מפסיקים להסתנכרן. פרטים ב[דף המחירים](/pricing) וב-[<bdi dir="ltr">TabMerger Free vs Pro</bdi>](/blog/tabmerger-free-vs-pro).
+
+<InstallCta>מתחילים היום בחינם, ומוסיפים סנכרון מוצפן כשצריך מחשב שני.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="שאלות נפוצות">
+
+<Faq items={post.faq} />
+
+</Section>

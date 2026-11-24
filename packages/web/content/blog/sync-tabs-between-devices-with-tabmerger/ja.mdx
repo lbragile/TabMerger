@@ -1,0 +1,190 @@
+export const post = {
+  slug: 'sync-tabs-between-devices-with-tabmerger',
+  title: 'デバイス間でタブを同期する（エンドツーエンド暗号化）',
+  navTitle: 'デバイス間でタブを同期する',
+  seoTitle: '複数のパソコンでタブを同期する方法：エンドツーエンド暗号化で安全に',
+  description:
+    'TabMerger のグループをどのパソコンでも。暗号化に使うのは、あなただけが知っているパスフレーズです。同期の設定方法、同期される内容、そして当社のサーバーに見えるもの・見えないものを正確に説明します。',
+  shareSummary: 'どのパソコンでも同じグループを。当社のサーバーにも読めません。',
+  dek: '自宅でも職場でも同じグループ。しかも、ほかの誰にも読めません。私たちにもです。',
+  published: '2026-12-18',
+  updated: '2026-12-18',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: '同期はエンドツーエンド暗号化（AES-256-GCM）で、鍵はあなたのパスフレーズで保護されます。', source: 'TabMerger 3.16.1 のソースコード' },
+    { text: 'タブのアドレス、タイトル、メモ、グループ名を当社のサーバーが読むことはできません。', source: 'TabMerger 3.16.1 のソースコード' },
+    { text: '新しいデバイスでパスフレーズを求められるのは 1 回だけです。', source: 'TabMerger 3.16.1' },
+    { text: '同期は Pro の機能です：月額 US$3.99 または年額 US$42.99。', source: 'TabMerger の料金', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '2 台のパソコンでタブを同期するには？',
+      answer:
+        '両方のパソコンで Pro アカウントを使って TabMerger にサインインします。1 台目では暗号化のパスフレーズを決め、2 台目ではそれを 1 回入力します。それ以降、グループとセッションが 2 台の間で同期されます。',
+    },
+    {
+      question: 'TabMerger は私のタブを見られますか？',
+      answer:
+        'いいえ。タブのアドレス、タイトル、メモ、グループ名とセッション名、そして各デバイスで開いているタブは、アップロード前にブラウザー内で暗号化され、鍵が当社のサーバーに届くことはありません。サーバーに見えるのは行を保存するのに必要な情報だけです。たとえばグループの色、スター付きかアーカイブ済みか、いつ変更されたか、ウィンドウとタブがいくつあるか、といったものです。',
+    },
+    {
+      question: '暗号化のパスフレーズを忘れたら？',
+      answer: 'パスフレーズはデバイスの外に出ないため、TabMerger を含め誰にも復元できません。すでにロックを解除したデバイスにはグループが残るので、パスフレーズは安全な場所に保管してください。',
+    },
+    {
+      question: '同期される内容は？',
+      answer:
+        '保存したグループ（ウィンドウ、タブ、メモ、リマインダーの時刻）、保存したセッション、自動バックアップ、それに設定 → デバイスに表示する各デバイスの開いているタブです。設定、URL ルール、最近閉じたタブはデバイスごとに残ります。',
+    },
+    {
+      question: '同期は無料ですか？',
+      answer: 'いいえ、同期は Pro の機能です。Free プランではすべてがデバイス内に保存され、当社のサーバーは Pro のないアカウントからの同期アップロードを拒否します。',
+    },
+  ],
+  images: [
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in-light.webp', alt: 'TabMerger の Sign In（サインイン）ダイアログ。Google、またはメールアドレスとパスワードでサインインできる、ライトテーマ' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in-dark.webp', alt: 'TabMerger の Sign In（サインイン）ダイアログ。Google、またはメールアドレスとパスワードでサインインできる、ダークテーマ' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption-light.webp', alt: '新しいパスフレーズを 2 回入力する TabMerger の Set up encryption（暗号化を設定）ダイアログ、ライトテーマ' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption-dark.webp', alt: '新しいパスフレーズを 2 回入力する TabMerger の Set up encryption（暗号化を設定）ダイアログ、ダークテーマ' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock-light.webp', alt: '2 台目のブラウザーでパスフレーズを 1 回求める TabMerger の Unlock encryption（暗号化のロック解除）ダイアログ、ライトテーマ' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock-dark.webp', alt: '2 台目のブラウザーでパスフレーズを 1 回求める TabMerger の Unlock encryption（暗号化のロック解除）ダイアログ、ダークテーマ' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups-light.webp', alt: 'ロック解除後の 2 台目のブラウザー。1 台目のグループ Work と Reading list が表示されている、ライトテーマ' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups-dark.webp', alt: 'ロック解除後の 2 台目のブラウザー。1 台目のグループ Work と Reading list が表示されている、ダークテーマ' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-light.webp', alt: 'TabMerger の Settings → Devices（設定 → デバイス）：4 つのタブを開いているデバイス Home laptop と Restore 4 tabs（4個のタブを復元）ボタン、ライトテーマ' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-dark.webp', alt: 'TabMerger の Settings → Devices（設定 → デバイス）：4 つのタブを開いているデバイス Home laptop と Restore 4 tabs（4個のタブを復元）ボタン、ダークテーマ' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync-light.webp', alt: 'TabMerger の Settings → General（設定 → 一般）で Cloud sync（クラウド同期）スイッチがオンの状態、ライトテーマ' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync-dark.webp', alt: 'TabMerger の Settings → General（設定 → 一般）で Cloud sync（クラウド同期）スイッチがオンの状態、ダークテーマ' },
+  ],
+  tags: ['tabmerger-guides', 'cross-browser', 'session-management', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-light.webp' },
+  ogImage: { src: '/blog/sync-tabs-between-devices-with-tabmerger/og.png', alt: 'TabMerger でデバイス間でタブを同期：ロック解除後の 2 台目のブラウザーに同じグループ' },
+  toc: [
+    { id: 'quick', label: '簡単な答え' },
+    { id: 'problem', label: '2 台のパソコン、2 組のタブ' },
+    { id: 'why', label: '同期がこの仕組みである理由' },
+    { id: 'server', label: '当社のサーバーに見えるもの' },
+    { id: 'steps', label: '設定する' },
+    { id: 'devices', label: 'ほかのデバイスのタブ' },
+    { id: 'benefit', label: '得られること' },
+    { id: 'habits', label: 'よい習慣' },
+    { id: 'plans', label: 'Free と Pro' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+}
+
+<QuickAnswer>
+
+Pro アカウントで [TabMerger](/features) にサインインします。1 台目のパソコンでは暗号化のパスフレーズを決め、ほかのパソコンではそれを 1 回入力するだけです。あとはグループ、セッション、バックアップがパソコン間で同期されます。データはブラウザーを出る前にブラウザー内で暗号化されるので、当社のサーバーには読めないデータしか保存されません。**設定 → デバイス**（Settings → Devices）では、ほかのパソコンで開いているタブまで確認できます。
+
+</QuickAnswer>
+
+<InstallCta>どのパソコンでも同じグループを、あなただけが読める形で。無料で始めて、同期は Pro で。</InstallCta>
+
+<Section id="problem" title="2 台のパソコン、2 組のタブ">
+
+夜、自宅のノートパソコンで買い物の下調べをしたとします。翌朝職場に着くと、そのタブは家に置いてきたパソコンの中です。記憶を頼りに開き直すか、リンクを自分宛てにメールするしかありません。ブラウザーの同期は、すべてのパソコンで同じブラウザーと同じアカウントを使っていれば役立ちます。でも職場のパソコンは Edge、ノートパソコンは Chrome かもしれませんし、職場のアカウントは制限されているかもしれません。
+
+TabMerger の同期は、1 つの TabMerger アカウントで Chrome、Edge、Firefox をまたいで動き、たまたま開いているタブだけでなく、整理したグループごと持ち運べます。
+
+</Section>
+
+<Section id="why" title="TabMerger の同期がこの仕組みである理由">
+
+- **ブラウザーを出る前に暗号化**。グループとセッションの中身は、ブラウザー内で AES-256-GCM により暗号化されます。鍵はランダムに生成され、当社のサーバーには、パスフレーズから導出した鍵でラップ（暗号化）した形でのみ保存されます（PBKDF2-SHA256、600,000 回）。パスフレーズそのものはどこにも送信されません。
+- **設定ではなく必須**。Pro アカウントはすべて暗号化して同期します。うっかりオンにしてしまう平文モードはありません。
+- **パスフレーズの入力はデバイスごとに 1 回**。新しいデバイスでは 1 回だけパスフレーズを求められ、その後はサインアウトするまでロック解除されたままなので、同期のたびに煩わされることはありません。
+- **まずデバイスに保存**。すべてはアップロード前にローカルに書き込まれます。オフラインでも何も止まらず、変更は次の機会にアップロードされます。
+- **最新の変更が優先**。同じグループが 2 台のデバイスで変更された場合は、最も新しい変更が残ります。
+- **TabMerger を開いている間に同期**：開いたとき、開いている間は 30 秒ごと、そして別のデバイスの変更が届いたらすぐに同期します。
+
+</Section>
+
+<Section id="server" title="当社のサーバーに見えるもの・見えないもの">
+
+<ComparisonTable
+  head={['', '暗号化して保存（当社には読めない）', '読める形で保存']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['グループ', '名前、メモ、すべてのウィンドウとタブ（タイトル、アドレス、タブのメモ、リマインダーの時刻）', '色、スター、アーカイブ、最終変更日時、ウィンドウ数とタブ数、並び順'],
+    ['セッションとバックアップ', '名前、説明、色、バックアップかどうか、含まれるグループ', '保存日時'],
+    ['デバイス', '各デバイスで開いているタブ', 'デバイス名、最終アクティブ日時'],
+    ['アカウント', '-', 'メールアドレスとプラン'],
+  ]}
+/>
+
+読める形の列は、サーバーが行の順序を保ち、件数を表示するのに必要なものです。どれも、あなたがどのページを保存しているかは示しません。共有リンクは、リンク自体にしか含まれない別の鍵を使います。詳しくは[複数のタブをまとめて共有](/blog/share-a-set-of-tabs)をご覧ください。
+
+</Section>
+
+<Section id="steps" title="設定する">
+
+1. 1 台目のパソコンで TabMerger を開き、アカウントメニュー（右上）→ **サインイン**（Sign in）を選びます。Google、メールアドレスとパスワード、またはマジックリンクを使えます。
+2. **暗号化を設定**（Set up encryption）が表示されます。パスフレーズ（8 文字以上、スペースなし）を決めて 2 回入力し、確定します。グループの同期が始まります。
+3. 2 台目のパソコンに TabMerger をインストールし、同じアカウントでサインインします。
+4. **暗号化のロック解除**（Unlock encryption）が表示されます。パスフレーズを 1 回入力します。すぐにグループが表示されます。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="2 台目のパソコンを同期する" steps={[{ title: 'サインイン' }, { title: 'パスフレーズ' }, { title: 'ロック解除' }, { title: '同期完了' }]}>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in" alt="TabMerger の Sign In（サインイン）ダイアログ。Google、またはメールアドレスとパスワードでサインインできる、ライトテーマ" darkAlt="TabMerger の Sign In（サインイン）ダイアログ。Google、またはメールアドレスとパスワードでサインインできる、ダークテーマ" boxes={[{ id: 'email', label: 'アカウントのメールアドレス' }]} source="TabMerger 3.16.1">アカウントメニューからサインインします。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption" alt="新しいパスフレーズを 2 回入力する TabMerger の Set up encryption（暗号化を設定）ダイアログ、ライトテーマ" darkAlt="新しいパスフレーズを 2 回入力する TabMerger の Set up encryption（暗号化を設定）ダイアログ、ダークテーマ" boxes={[{ id: 'passphrase', label: '知っているのはあなただけ' }]} source="TabMerger 3.16.1">1 台目のデバイス：鍵を守るパスフレーズを決めます。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock" alt="2 台目のブラウザーでパスフレーズを 1 回求める TabMerger の Unlock encryption（暗号化のロック解除）ダイアログ、ライトテーマ" darkAlt="2 台目のブラウザーでパスフレーズを 1 回求める TabMerger の Unlock encryption（暗号化のロック解除）ダイアログ、ダークテーマ" boxes={[{ id: 'unlock', label: 'デバイスごとに 1 回' }]} source="TabMerger 3.16.1">2 台目以降のデバイス：1 回入力するだけです。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups" alt="ロック解除後の 2 台目のブラウザー。1 台目のグループ Work と Reading list が表示されている、ライトテーマ" darkAlt="ロック解除後の 2 台目のブラウザー。1 台目のグループ Work と Reading list が表示されている、ダークテーマ" boxes={[{ id: 'groups', label: 'もう 1 台のデバイスから' }]} source="TabMerger 3.16.1">まっさらなブラウザーで数秒後：1 台目のパソコンのグループが、手元で復号されて表示されます。</ThemedScreenshot>
+</Carousel>
+
+同期は、**設定 → 一般**（Settings → General）の **クラウド同期**（Cloud sync）スイッチでブラウザーごとに一時停止できます。tabmerger.com では、同じパスフレーズを入力するとダッシュボードに同期済みのグループが表示されます。
+
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync" alt="TabMerger の Settings → General（設定 → 一般）で Cloud sync（クラウド同期）スイッチがオンの状態、ライトテーマ" darkAlt="TabMerger の Settings → General（設定 → 一般）で Cloud sync（クラウド同期）スイッチがオンの状態、ダークテーマ" boxes={[{ id: 'sync', label: 'クラウド同期' }]} source="TabMerger 3.16.1">Pro アカウントでは常にオン。同期させたくないブラウザーではオフにします。</ThemedScreenshot>
+
+</Section>
+
+<Section id="devices" title="ほかのデバイスで開いているタブを見る">
+
+**設定 → デバイス** には、過去 30 日間にアクティブだったアカウント内のすべてのブラウザーが、開いているウィンドウとタブとともに一覧表示されます。1 つを展開してタブを 1 つだけ開くことも、**復元**（Restore）ですべてをここで開くこともできます。一覧を読みやすくするためにこのデバイスに名前を付けたり（「自宅のノートパソコン」など）、使わなくなったデバイスを削除したりできます。
+
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-devices" alt="TabMerger の Settings → Devices（設定 → デバイス）：4 つのタブを開いているデバイス Home laptop と Restore 4 tabs（4個のタブを復元）ボタン、ライトテーマ" darkAlt="TabMerger の Settings → Devices（設定 → デバイス）：4 つのタブを開いているデバイス Home laptop と Restore 4 tabs（4個のタブを復元）ボタン、ダークテーマ" boxes={[{ id: 'other-device', label: 'もう 1 台のブラウザー' }, { id: 'restore', label: 'そのタブをここで開く' }]} source="TabMerger 3.16.1">職場のパソコンから見た、ノートパソコンで開いているタブ。転送中も暗号化されています。</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="得られること">
+
+あるパソコンを離れても、別のパソコンで同じグループ、セッション、メモの続きから作業できます。ブラウザーの種類は問いません。そして中身はあなただけが持つ鍵で暗号化されているため、万一当社のデータベースが漏えいしても、見えるのは色や件数であって、あなたのタブではありません。
+
+</Section>
+
+<Section id="habits" title="よい習慣">
+
+- **パスフレーズはパスワードマネージャーに保存**。誰にもリセットできません。
+- 設定 → デバイスで**各デバイスに名前を付ける**。
+- **席に着いたら TabMerger を一度開く**と、最新の変更を取り込みます。
+- **ブラウザー固有の設定はデバイスごと**：URL ルールと設定は、意図的にブラウザーごとに保存されます。タブを持ち運ぶほかの方法は、[タブを別のパソコンに移す](/blog/move-tabs-between-computers)をご覧ください。
+
+</Section>
+
+<Section id="plans" title="Free と Pro">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['グループ、セッション、バックアップの同期', 'なし（デバイス内に保存）', 'あり、エンドツーエンド暗号化'],
+    ['設定 → デバイス', 'なし', 'あり'],
+    ['料金', 'US$0', '月額 US$3.99 または年額 US$42.99'],
+  ]}
+/>
+
+同期の可否はアプリだけでなくサーバーが判定します。データベースは、有効な Pro プランのないアカウントからの同期アップロードをすべて拒否します。プランが終了しても何も削除されず、新しい変更が同期されなくなるだけです。詳しくは[料金ページ](/pricing)と[TabMerger Free vs Pro](/blog/tabmerger-free-vs-pro)をご覧ください。
+
+<InstallCta>今日は無料で始めて、2 台目のパソコンが必要になったら暗号化された同期を追加しましょう。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

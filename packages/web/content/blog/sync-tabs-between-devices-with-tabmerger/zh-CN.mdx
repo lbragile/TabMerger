@@ -1,0 +1,190 @@
+export const post = {
+  slug: 'sync-tabs-between-devices-with-tabmerger',
+  title: '在设备之间同步标签页，端到端加密',
+  navTitle: '在设备之间同步标签页',
+  seoTitle: '在多台电脑之间同步标签页：端到端加密',
+  description:
+    '你的 TabMerger 分组出现在每台电脑上，用只有你知道的密码短语加密。介绍如何设置同步、同步哪些内容，以及我们的服务器究竟能看到什么、看不到什么。',
+  shareSummary: '你的分组出现在每台电脑上，连我们的服务器也无法读取。',
+  dek: '在家和在公司用同样的分组，而且别人都读不了。连我们也不行。',
+  published: '2026-12-18',
+  updated: '2026-12-18',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: '同步采用端到端加密：AES-256-GCM，密钥由你的密码短语保护。', source: 'TabMerger 3.16.1 源代码' },
+    { text: '标签页的地址、标题、备注和分组名称，我们的服务器永远无法读取。', source: 'TabMerger 3.16.1 源代码' },
+    { text: '每台新设备只需输入一次密码短语。', source: 'TabMerger 3.16.1' },
+    { text: '同步属于 Pro：每月 US$3.99 或每年 US$42.99。', source: 'TabMerger 价格', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '如何在两台电脑之间同步标签页？',
+      answer:
+        '在两台电脑上都用 Pro 账户登录 TabMerger。第一台会让你设定一个加密密码短语；第二台只需输入一次。此后，你的分组和会话就会在两台电脑之间同步。',
+    },
+    {
+      question: 'TabMerger 能看到我的标签页吗？',
+      answer:
+        '不能。标签页的地址、标题和备注、分组和会话的名称，以及你各台设备上打开的标签页，都会在上传之前在浏览器中加密，而且密钥永远不会到达我们的服务器。服务器只能看到存储数据行所需的信息：比如分组的颜色、是否加星标或已归档、何时更改过，以及包含多少个窗口和标签页。',
+    },
+    {
+      question: '忘记加密密码短语怎么办？',
+      answer: '没有人能找回它，包括 TabMerger，因为它从不离开你的设备。你的分组仍保留在已经解锁的设备上，所以请把密码短语保存在安全的地方。',
+    },
+    {
+      question: '同步包括哪些内容？',
+      answer:
+        '已保存的分组（窗口、标签页、备注、提醒时间）、已保存的会话和自动备份，以及每台设备上打开的标签页（用于设置 → 设备）。设置、URL 规则和最近关闭的标签页保留在各自的设备上。',
+    },
+    {
+      question: '同步免费吗？',
+      answer: '不免费，同步属于 Pro。Free 方案把所有内容都保存在你的设备上；我们的服务器会拒绝没有 Pro 的账户上传同步数据。',
+    },
+  ],
+  images: [
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in-light.webp', alt: 'TabMerger 的 Sign In（登录）对话框，可通过 Google 或电子邮件和密码登录，浅色主题' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in-dark.webp', alt: 'TabMerger 的 Sign In（登录）对话框，可通过 Google 或电子邮件和密码登录，深色主题' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption-light.webp', alt: 'TabMerger 的 Set up encryption（设置加密）对话框，要求输入两次新的密码短语，浅色主题' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption-dark.webp', alt: 'TabMerger 的 Set up encryption（设置加密）对话框，要求输入两次新的密码短语，深色主题' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock-light.webp', alt: '第二个浏览器中 TabMerger 的 Unlock encryption（解锁加密）对话框，只需输入一次密码短语，浅色主题' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock-dark.webp', alt: '第二个浏览器中 TabMerger 的 Unlock encryption（解锁加密）对话框，只需输入一次密码短语，深色主题' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups-light.webp', alt: '解锁后的第二个浏览器，显示来自第一个浏览器的 Work 和 Reading list 分组，浅色主题' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups-dark.webp', alt: '解锁后的第二个浏览器，显示来自第一个浏览器的 Work 和 Reading list 分组，深色主题' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-light.webp', alt: 'TabMerger 的 Settings → Devices（设置 → 设备）：打开了 4 个标签页的设备 Home laptop，以及 Restore 4 tabs（恢复 4 个标签页）按钮，浅色主题' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-dark.webp', alt: 'TabMerger 的 Settings → Devices（设置 → 设备）：打开了 4 个标签页的设备 Home laptop，以及 Restore 4 tabs（恢复 4 个标签页）按钮，深色主题' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync-light.webp', alt: 'TabMerger 的 Settings → General（设置 → 通用），Cloud sync（云同步）开关已打开，浅色主题' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync-dark.webp', alt: 'TabMerger 的 Settings → General（设置 → 通用），Cloud sync（云同步）开关已打开，深色主题' },
+  ],
+  tags: ['tabmerger-guides', 'cross-browser', 'session-management', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-light.webp' },
+  ogImage: { src: '/blog/sync-tabs-between-devices-with-tabmerger/og.png', alt: '用 TabMerger 在设备之间同步标签页：解锁后，第二个浏览器中出现同样的分组' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'problem', label: '两台电脑，两套标签页' },
+    { id: 'why', label: '同步为什么这样设计' },
+    { id: 'server', label: '我们的服务器能看到什么' },
+    { id: 'steps', label: '开始设置' },
+    { id: 'devices', label: '其他设备上的标签页' },
+    { id: 'benefit', label: '你能得到什么' },
+    { id: 'habits', label: '好习惯' },
+    { id: 'plans', label: 'Free 与 Pro' },
+    { id: 'faq', label: '常见问题' },
+  ],
+}
+
+<QuickAnswer>
+
+用 Pro 账户登录 [TabMerger](/features)。第一台电脑会让你设定一个加密密码短语；其他每台电脑只需输入一次。之后，你的分组、会话和备份就会在它们之间同步，并在离开浏览器之前就在浏览器中加密，因此我们的服务器只存储它无法读取的数据。在 **设置 → 设备**（Settings → Devices）中，你甚至能看到其他电脑上打开了什么。
+
+</QuickAnswer>
+
+<InstallCta>每台电脑上都是同样的分组，只有你能读取。免费开始，同步随 Pro 提供。</InstallCta>
+
+<Section id="problem" title="两台电脑，两套标签页">
+
+晚上，你在家里的笔记本电脑上为一次购物查资料。第二天早上到了公司，这些标签页却在留在家里的那台电脑上。你只能凭记忆重新打开，或者把链接发邮件给自己。浏览器自带的同步在每台电脑都使用同一个浏览器和同一个账户时很有用，但你的工作电脑可能用 Edge，笔记本用 Chrome，或者工作账户受到限制。
+
+TabMerger 同步只需一个 TabMerger 账户，就能在 Chrome、Edge 和 Firefox 之间使用，而且带走的是你整理好的分组，而不只是碰巧打开着的标签页。
+
+</Section>
+
+<Section id="why" title="TabMerger 同步为什么这样设计">
+
+- **离开浏览器前就已加密**。分组和会话的内容在你的浏览器中用 AES-256-GCM 加密。密钥是随机生成的；我们的服务器上只保存经过包装（加密）的密钥，包装用的密钥由你的密码短语派生而来（PBKDF2-SHA256，600,000 轮）。密码短语本身从不发送到任何地方。
+- **强制启用，而非可选设置**。每个 Pro 账户都以加密方式同步，不存在会被误开的明文模式。
+- **每台设备只需输入一次密码短语**。新设备只询问一次密码短语；之后它会一直保持解锁，直到你退出登录，因此同步不会反复打扰你。
+- **先保存在设备上**。所有内容都先写入本地，再上传。离线时一切照常工作；更改会在下次上传。
+- **以最新的更改为准**。同一个分组在两台设备上都被修改时，保留最近的那次更改。
+- **在 TabMerger 打开时同步**：打开时同步，保持打开期间每 30 秒同步一次，另一台设备的更改一到达就立即同步。
+
+</Section>
+
+<Section id="server" title="我们的服务器能看到什么、看不到什么">
+
+<ComparisonTable
+  head={['', '加密存储（我们无法读取）', '可读存储']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['分组', '名称、备注、每个窗口和标签页（标题、地址、标签页备注、提醒时间）', '颜色、星标、归档、最后更改时间、窗口数和标签页数、顺序'],
+    ['会话和备份', '名称、描述、颜色、是否为备份、其中的分组', '保存时间'],
+    ['设备', '每台设备上打开的标签页', '设备名称、最后活动时间'],
+    ['账户', '-', '电子邮件地址和方案'],
+  ]}
+/>
+
+可读的这几列是服务器为了保持数据行的顺序和显示数量所需要的；它们都无法说明你保存了哪些网页。分享链接使用一把单独的密钥，它只存在于链接本身；参见[一次分享多个标签页](/blog/share-a-set-of-tabs)。
+
+</Section>
+
+<Section id="steps" title="开始设置">
+
+1. 在第一台电脑上打开 TabMerger，然后打开账户菜单（右上角）→ **登录**（Sign in）。可以用 Google、电子邮件和密码，或魔法链接登录。
+2. 出现 **设置加密**（Set up encryption）。设定一个密码短语（至少 8 个字符，不含空格），输入两次并确认。你的分组开始同步。
+3. 在第二台电脑上安装 TabMerger，用同一个账户登录。
+4. 出现 **解锁加密**（Unlock encryption）。输入一次密码短语。片刻之后，你的分组就会出现。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="同步第二台电脑" steps={[{ title: '登录' }, { title: '密码短语' }, { title: '解锁' }, { title: '已同步' }]}>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in" alt="TabMerger 的 Sign In（登录）对话框，可通过 Google 或电子邮件和密码登录，浅色主题" darkAlt="TabMerger 的 Sign In（登录）对话框，可通过 Google 或电子邮件和密码登录，深色主题" boxes={[{ id: 'email', label: '你的账户邮箱' }]} source="TabMerger 3.16.1">从账户菜单登录。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption" alt="TabMerger 的 Set up encryption（设置加密）对话框，要求输入两次新的密码短语，浅色主题" darkAlt="TabMerger 的 Set up encryption（设置加密）对话框，要求输入两次新的密码短语，深色主题" boxes={[{ id: 'passphrase', label: '只有你知道' }]} source="TabMerger 3.16.1">第一台设备：设定保护你密钥的密码短语。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock" alt="第二个浏览器中 TabMerger 的 Unlock encryption（解锁加密）对话框，只需输入一次密码短语，浅色主题" darkAlt="第二个浏览器中 TabMerger 的 Unlock encryption（解锁加密）对话框，只需输入一次密码短语，深色主题" boxes={[{ id: 'unlock', label: '每台设备一次' }]} source="TabMerger 3.16.1">其他每台设备：输入一次即可。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups" alt="解锁后的第二个浏览器，显示来自第一个浏览器的 Work 和 Reading list 分组，浅色主题" darkAlt="解锁后的第二个浏览器，显示来自第一个浏览器的 Work 和 Reading list 分组，深色主题" boxes={[{ id: 'groups', label: '来自另一台设备' }]} source="TabMerger 3.16.1">一个全新的浏览器，几秒钟后：第一台电脑的分组，在本地解密后显示出来。</ThemedScreenshot>
+</Carousel>
+
+你可以在 **设置 → 通用**（Settings → General）中用 **云同步**（Cloud sync）开关按浏览器暂停同步。在 tabmerger.com 上，输入同一个密码短语后，控制面板会显示你已同步的分组。
+
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync" alt="TabMerger 的 Settings → General（设置 → 通用），Cloud sync（云同步）开关已打开，浅色主题" darkAlt="TabMerger 的 Settings → General（设置 → 通用），Cloud sync（云同步）开关已打开，深色主题" boxes={[{ id: 'sync', label: '云同步' }]} source="TabMerger 3.16.1">所有 Pro 账户默认开启；在不应同步的浏览器上把它关掉。</ThemedScreenshot>
+
+</Section>
+
+<Section id="devices" title="查看其他设备上打开了什么">
+
+**设置 → 设备** 会列出你账户中过去 30 天内活跃过的每个浏览器，以及它打开的窗口和标签页。展开其中一个可以单独打开某个标签页，也可以用 **恢复**（Restore）在这里把它们全部打开。给这台设备起个名字（如“家里的笔记本”），列表就更易读；不再使用的设备也可以移除。
+
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-devices" alt="TabMerger 的 Settings → Devices（设置 → 设备）：打开了 4 个标签页的设备 Home laptop，以及 Restore 4 tabs（恢复 4 个标签页）按钮，浅色主题" darkAlt="TabMerger 的 Settings → Devices（设置 → 设备）：打开了 4 个标签页的设备 Home laptop，以及 Restore 4 tabs（恢复 4 个标签页）按钮，深色主题" boxes={[{ id: 'other-device', label: '你的另一个浏览器' }, { id: 'restore', label: '在这里打开它的标签页' }]} source="TabMerger 3.16.1">从工作电脑上看到的笔记本电脑上打开的标签页。传输途中全程加密。</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="你能得到什么">
+
+离开一台电脑，在另一台上接着用同样的分组、会话和备注继续工作，无论它用的是哪个浏览器。而且由于内容是用只有你持有的密钥加密的，即使我们的数据库遭到泄露，暴露的也只是颜色和数量，而不是你的标签页。
+
+</Section>
+
+<Section id="habits" title="好习惯">
+
+- **把密码短语存进密码管理器**。没有人能替你重置它。
+- 在 设置 → 设备 中**给每台设备命名**。
+- **坐下来后先打开一次 TabMerger**，让它拉取最新的更改。
+- **浏览器相关的设置留在各自设备上**：URL 规则和设置是有意按浏览器分别保存的。想了解其他带走标签页的方法，参见[把标签页转移到另一台电脑](/blog/move-tabs-between-computers)。
+
+</Section>
+
+<Section id="plans" title="Free 与 Pro">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['分组、会话和备份的同步', '否（保留在你的设备上）', '是，端到端加密'],
+    ['设置 → 设备', '否', '是'],
+    ['价格', 'US$0', '每月 US$3.99 或每年 US$42.99'],
+  ]}
+/>
+
+同步由服务器强制执行，而不只是由应用控制：数据库会拒绝任何没有有效 Pro 方案的账户上传同步数据。方案到期后不会删除任何内容，只是新的更改不再同步。详情见[价格页面](/pricing)和[TabMerger Free vs Pro](/blog/tabmerger-free-vs-pro)。
+
+<InstallCta>今天免费开始，等需要第二台电脑时再加上加密同步。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

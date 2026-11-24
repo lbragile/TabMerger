@@ -1,0 +1,190 @@
+export const post = {
+  slug: 'sync-tabs-between-devices-with-tabmerger',
+  title: 'Synchroniser ses onglets entre appareils, avec chiffrement de bout en bout',
+  navTitle: 'Synchroniser ses onglets entre appareils',
+  seoTitle: 'Synchroniser ses onglets entre ordinateurs avec un chiffrement de bout en bout',
+  description:
+    'Vos groupes TabMerger sur chaque ordinateur, chiffrés avec une phrase secrète que vous seul connaissez. Comment configurer la synchronisation, ce qu’elle couvre, et ce que notre serveur peut voir ou non, précisément.',
+  shareSummary: 'Vos groupes sur chaque ordinateur, illisibles même pour notre serveur.',
+  dek: 'Les mêmes groupes à la maison et au travail, et personne d’autre ne peut les lire. Pas même nous.',
+  published: '2026-12-18',
+  updated: '2026-12-18',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'La synchronisation est chiffrée de bout en bout : AES-256-GCM, avec une clé protégée par votre phrase secrète.', source: 'Code source de TabMerger 3.16.1' },
+    { text: 'Les adresses, titres et notes des onglets et les noms des groupes ne sont jamais lisibles par notre serveur.', source: 'Code source de TabMerger 3.16.1' },
+    { text: 'Chaque nouvel appareil demande la phrase secrète une seule fois.', source: 'TabMerger 3.16.1' },
+    { text: 'La synchronisation fait partie de Pro : US$3.99 par mois ou US$42.99 par an.', source: 'Tarifs de TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Comment synchroniser ses onglets entre deux ordinateurs ?',
+      answer:
+        'Connectez-vous à TabMerger avec un compte Pro sur les deux ordinateurs. Le premier vous demande de choisir une phrase secrète de chiffrement ; le second vous la demande une fois. Dès lors, vos groupes et sessions se synchronisent entre eux.',
+    },
+    {
+      question: 'TabMerger peut-il voir mes onglets ?',
+      answer:
+        'Non. Les adresses, titres et notes des onglets, les noms des groupes et des sessions et les onglets ouverts sur vos appareils sont chiffrés dans votre navigateur avant l’envoi, et la clé n’atteint jamais notre serveur. Le serveur ne voit que ce dont il a besoin pour stocker les lignes : par exemple la couleur d’un groupe, s’il est favori ou archivé, quand il a changé, et combien de fenêtres et d’onglets il contient.',
+    },
+    {
+      question: 'Et si j’oublie ma phrase secrète de chiffrement ?',
+      answer: 'Personne ne peut la récupérer, pas même TabMerger, car elle ne quitte jamais vos appareils. Vos groupes restent sur les appareils déjà déverrouillés ; gardez donc la phrase secrète en lieu sûr.',
+    },
+    {
+      question: 'Que couvre la synchronisation ?',
+      answer:
+        'Les groupes enregistrés (fenêtres, onglets, notes, heures de rappel), les sessions enregistrées et les sauvegardes automatiques, ainsi que les onglets ouverts de chaque appareil pour Paramètres → Appareils. Les paramètres, les règles d’URL et les onglets récemment fermés restent sur chaque appareil.',
+    },
+    {
+      question: 'La synchronisation est-elle gratuite ?',
+      answer: 'Non, la synchronisation fait partie de Pro. L’offre Free garde tout sur votre appareil ; notre serveur refuse les envois de synchronisation des comptes sans Pro.',
+    },
+  ],
+  images: [
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in-light.webp', alt: 'Boîte de dialogue Sign In (Connexion) de TabMerger, avec connexion par Google ou par e-mail et mot de passe, thème clair' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in-dark.webp', alt: 'Boîte de dialogue Sign In (Connexion) de TabMerger, avec connexion par Google ou par e-mail et mot de passe, thème sombre' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption-light.webp', alt: 'Boîte de dialogue Set up encryption (Configurer le chiffrement) de TabMerger, qui demande deux fois une nouvelle phrase secrète, thème clair' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption-dark.webp', alt: 'Boîte de dialogue Set up encryption (Configurer le chiffrement) de TabMerger, qui demande deux fois une nouvelle phrase secrète, thème sombre' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock-light.webp', alt: 'Boîte de dialogue Unlock encryption (Déverrouiller le chiffrement) de TabMerger sur un second navigateur, qui demande la phrase secrète une fois, thème clair' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock-dark.webp', alt: 'Boîte de dialogue Unlock encryption (Déverrouiller le chiffrement) de TabMerger sur un second navigateur, qui demande la phrase secrète une fois, thème sombre' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups-light.webp', alt: 'Le second navigateur après le déverrouillage, avec les groupes Work et Reading list venus du premier, thème clair' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups-dark.webp', alt: 'Le second navigateur après le déverrouillage, avec les groupes Work et Reading list venus du premier, thème sombre' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-light.webp', alt: 'TabMerger, Settings → Devices (Paramètres → Appareils) : l’appareil Home laptop avec ses 4 onglets ouverts et un bouton Restore 4 tabs (Restaurer 4 onglets), thème clair' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-dark.webp', alt: 'TabMerger, Settings → Devices (Paramètres → Appareils) : l’appareil Home laptop avec ses 4 onglets ouverts et un bouton Restore 4 tabs (Restaurer 4 onglets), thème sombre' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync-light.webp', alt: 'TabMerger, Settings → General (Paramètres → Général), avec l’interrupteur Cloud sync (Synchronisation cloud) activé, thème clair' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync-dark.webp', alt: 'TabMerger, Settings → General (Paramètres → Général), avec l’interrupteur Cloud sync (Synchronisation cloud) activé, thème sombre' },
+  ],
+  tags: ['tabmerger-guides', 'cross-browser', 'session-management', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-light.webp' },
+  ogImage: { src: '/blog/sync-tabs-between-devices-with-tabmerger/og.png', alt: 'Synchroniser ses onglets entre appareils avec TabMerger : les mêmes groupes sur un second navigateur après le déverrouillage' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'problem', label: 'Deux ordinateurs, deux jeux d’onglets' },
+    { id: 'why', label: 'Pourquoi la synchronisation fonctionne ainsi' },
+    { id: 'server', label: 'Ce que voit notre serveur' },
+    { id: 'steps', label: 'La configurer' },
+    { id: 'devices', label: 'Les onglets de vos autres appareils' },
+    { id: 'benefit', label: 'Ce que vous y gagnez' },
+    { id: 'habits', label: 'Bonnes habitudes' },
+    { id: 'plans', label: 'Free ou Pro' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Connectez-vous à [TabMerger](/features) avec un compte Pro. Le premier ordinateur vous demande de choisir une phrase secrète de chiffrement ; chaque autre ordinateur vous la demande une fois. Vos groupes, sessions et sauvegardes se synchronisent alors entre eux, chiffrés dans votre navigateur avant d’en sortir : notre serveur ne stocke que des données qu’il ne peut pas lire. **Paramètres → Appareils** (Settings → Devices) montre même ce qui est ouvert sur vos autres ordinateurs.
+
+</QuickAnswer>
+
+<InstallCta>Les mêmes groupes sur chaque ordinateur, lisibles par vous seul. Gratuit pour commencer, synchronisation avec Pro.</InstallCta>
+
+<Section id="problem" title="Deux ordinateurs, deux jeux d’onglets">
+
+Le soir, sur l’ordinateur portable de la maison, vous comparez des produits avant un achat. Le lendemain matin au bureau, les onglets sont sur un ordinateur resté à la maison. Vous les reconstituez de mémoire, ou vous vous envoyez les liens par e-mail. La synchronisation du navigateur aide quand chaque ordinateur utilise le même navigateur et le même compte, mais votre poste de travail tourne peut-être sous Edge et votre portable sous Chrome, ou le compte professionnel est verrouillé.
+
+La synchronisation de TabMerger fonctionne entre Chrome, Edge et Firefox avec un seul compte TabMerger, et emporte vos groupes organisés, pas seulement ce qui se trouve ouvert à ce moment-là.
+
+</Section>
+
+<Section id="why" title="Pourquoi la synchronisation de TabMerger fonctionne ainsi">
+
+- **Chiffré avant de quitter votre navigateur.** Le contenu des groupes et des sessions est chiffré avec AES-256-GCM dans votre navigateur. La clé est aléatoire ; elle n’est stockée sur notre serveur qu’enveloppée (chiffrée) par une clé dérivée de votre phrase secrète (PBKDF2-SHA256, 600 000 itérations). La phrase secrète elle-même n’est envoyée nulle part.
+- **Obligatoire, pas une option.** Chaque compte Pro synchronise de façon chiffrée. Il n’existe aucun mode en clair à activer par erreur.
+- **Une étape de phrase secrète par appareil.** Un nouvel appareil demande la phrase secrète une fois ; il reste ensuite déverrouillé jusqu’à ce que vous vous déconnectiez, donc la synchronisation ne vous dérange pas.
+- **Enregistré d’abord sur l’appareil.** Tout est écrit localement avant l’envoi. Hors ligne, tout continue de fonctionner ; les changements partent la fois suivante.
+- **La dernière modification l’emporte.** Si le même groupe a été modifié sur deux appareils, c’est la modification la plus récente qui est conservée.
+- **Synchronise tant que TabMerger est ouvert :** à l’ouverture, toutes les 30 secondes tant qu’il reste ouvert, et dès qu’arrive une modification d’un autre appareil.
+
+</Section>
+
+<Section id="server" title="Ce que notre serveur peut voir, et ce qu’il ne voit pas">
+
+<ComparisonTable
+  head={['', 'Stocké chiffré (illisible pour nous)', 'Stocké lisible']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['Groupes', 'Nom, note, chaque fenêtre et onglet (titres, adresses, notes d’onglet, heures de rappel)', 'Couleur, favori, archivé, dernière modification, nombre de fenêtres et d’onglets, ordre'],
+    ['Sessions et sauvegardes', 'Nom, description, couleur, s’il s’agit d’une sauvegarde, les groupes qu’elle contient', 'Leur date d’enregistrement'],
+    ['Appareils', 'Les onglets ouverts sur chaque appareil', 'Nom de l’appareil, dernière activité'],
+    ['Compte', '-', 'Adresse e-mail et offre'],
+  ]}
+/>
+
+Les colonnes lisibles sont ce dont le serveur a besoin pour garder vos lignes dans l’ordre et afficher des totaux ; aucune ne dit quelles pages vous gardez. Les liens partagés utilisent une clé distincte qui ne se trouve que dans le lien lui-même ; voir [partager plusieurs onglets](/blog/share-a-set-of-tabs).
+
+</Section>
+
+<Section id="steps" title="La configurer">
+
+1. Sur le premier ordinateur, ouvrez TabMerger, puis le menu du compte (en haut à droite) → **Se connecter** (Sign in). Utilisez Google, un e-mail et un mot de passe, ou un lien magique.
+2. **Configurer le chiffrement** (Set up encryption) s’affiche. Choisissez une phrase secrète (au moins 8 caractères, sans espaces), saisissez-la deux fois et confirmez. Vos groupes commencent à se synchroniser.
+3. Sur le second ordinateur, installez TabMerger et connectez-vous avec le même compte.
+4. **Déverrouiller le chiffrement** (Unlock encryption) s’affiche. Saisissez la phrase secrète une fois. Vos groupes apparaissent un instant plus tard.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Synchroniser un second ordinateur" steps={[{ title: 'Connexion' }, { title: 'Phrase secrète' }, { title: 'Déverrouillage' }, { title: 'Synchronisé' }]}>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in" alt="Boîte de dialogue Sign In (Connexion) de TabMerger, avec connexion par Google ou par e-mail et mot de passe, thème clair" darkAlt="Boîte de dialogue Sign In (Connexion) de TabMerger, avec connexion par Google ou par e-mail et mot de passe, thème sombre" boxes={[{ id: 'email', label: 'L’e-mail de votre compte' }]} source="TabMerger 3.16.1">Connectez-vous depuis le menu du compte.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption" alt="Boîte de dialogue Set up encryption (Configurer le chiffrement) de TabMerger, qui demande deux fois une nouvelle phrase secrète, thème clair" darkAlt="Boîte de dialogue Set up encryption (Configurer le chiffrement) de TabMerger, qui demande deux fois une nouvelle phrase secrète, thème sombre" boxes={[{ id: 'passphrase', label: 'Vous seul la connaissez' }]} source="TabMerger 3.16.1">Le premier appareil : choisissez la phrase secrète qui protège votre clé.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock" alt="Boîte de dialogue Unlock encryption (Déverrouiller le chiffrement) de TabMerger sur un second navigateur, qui demande la phrase secrète une fois, thème clair" darkAlt="Boîte de dialogue Unlock encryption (Déverrouiller le chiffrement) de TabMerger sur un second navigateur, qui demande la phrase secrète une fois, thème sombre" boxes={[{ id: 'unlock', label: 'Une fois par appareil' }]} source="TabMerger 3.16.1">Chaque autre appareil : saisissez-la une fois.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups" alt="Le second navigateur après le déverrouillage, avec les groupes Work et Reading list venus du premier, thème clair" darkAlt="Le second navigateur après le déverrouillage, avec les groupes Work et Reading list venus du premier, thème sombre" boxes={[{ id: 'groups', label: 'Depuis l’autre appareil' }]} source="TabMerger 3.16.1">Un navigateur tout neuf, quelques secondes plus tard : les groupes du premier ordinateur, déchiffrés localement.</ThemedScreenshot>
+</Carousel>
+
+La synchronisation peut être mise en pause navigateur par navigateur avec l’interrupteur **Synchronisation cloud** (Cloud sync) dans **Paramètres → Général** (Settings → General). Sur tabmerger.com, le tableau de bord affiche vos groupes synchronisés une fois que vous avez saisi la même phrase secrète.
+
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync" alt="TabMerger, Settings → General (Paramètres → Général), avec l’interrupteur Cloud sync (Synchronisation cloud) activé, thème clair" darkAlt="TabMerger, Settings → General (Paramètres → Général), avec l’interrupteur Cloud sync (Synchronisation cloud) activé, thème sombre" boxes={[{ id: 'sync', label: 'Synchronisation cloud' }]} source="TabMerger 3.16.1">Activée pour chaque compte Pro ; désactivez-la sur un navigateur qui ne doit pas se synchroniser.</ThemedScreenshot>
+
+</Section>
+
+<Section id="devices" title="Voir ce qui est ouvert sur vos autres appareils">
+
+**Paramètres → Appareils** liste chaque navigateur de votre compte actif au cours des 30 derniers jours, avec les fenêtres et onglets qu’il a ouverts. Dépliez-en un pour ouvrir un seul onglet, ou utilisez **Restaurer** (Restore) pour les rouvrir tous ici. Renommez cet appareil pour que la liste soit facile à lire (« Portable maison »), ou retirez les appareils que vous n’utilisez plus.
+
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-devices" alt="TabMerger, Settings → Devices (Paramètres → Appareils) : l’appareil Home laptop avec ses 4 onglets ouverts et un bouton Restore 4 tabs (Restaurer 4 onglets), thème clair" darkAlt="TabMerger, Settings → Devices (Paramètres → Appareils) : l’appareil Home laptop avec ses 4 onglets ouverts et un bouton Restore 4 tabs (Restaurer 4 onglets), thème sombre" boxes={[{ id: 'other-device', label: 'Votre autre navigateur' }, { id: 'restore', label: 'Ouvrir ses onglets ici' }]} source="TabMerger 3.16.1">Les onglets ouverts du portable, vus depuis l’ordinateur du bureau. Chiffrés en chemin.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Ce que vous y gagnez">
+
+Quittez un ordinateur et reprenez sur un autre avec les mêmes groupes, sessions et notes, quel que soit son navigateur. Et comme le contenu est chiffré avec une clé que vous seul détenez, une fuite de notre base de données montrerait des couleurs et des totaux, pas vos onglets.
+
+</Section>
+
+<Section id="habits" title="Bonnes habitudes">
+
+- **Rangez la phrase secrète dans votre gestionnaire de mots de passe.** Personne ne peut la réinitialiser pour vous.
+- **Nommez chaque appareil** dans Paramètres → Appareils.
+- **Ouvrez TabMerger une fois en vous installant** pour qu’il récupère les derniers changements.
+- **Ce qui est propre au navigateur reste sur chaque appareil :** les règles d’URL et les paramètres sont enregistrés par navigateur, à dessein. Pour d’autres façons d’emporter vos onglets, voir [transférer ses onglets sur un autre ordinateur](/blog/move-tabs-between-computers).
+
+</Section>
+
+<Section id="plans" title="Free ou Pro">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Synchronisation des groupes, sessions et sauvegardes', 'Non (reste sur votre appareil)', 'Oui, chiffrée de bout en bout'],
+    ['Paramètres → Appareils', 'Non', 'Oui'],
+    ['Prix', 'US$0', 'US$3.99 par mois ou US$42.99 par an'],
+  ]}
+/>
+
+La synchronisation est imposée par le serveur, pas seulement par l’application : la base de données refuse les envois de synchronisation de tout compte sans offre Pro active. Si une offre prend fin, rien n’est supprimé ; les nouveaux changements cessent simplement de se synchroniser. Détails sur la [page des tarifs](/pricing) et dans [TabMerger Free vs Pro](/blog/tabmerger-free-vs-pro).
+
+<InstallCta>Commencez gratuitement aujourd’hui, ajoutez la synchronisation chiffrée quand il vous faut un second ordinateur.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

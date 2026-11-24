@@ -1,0 +1,190 @@
+export const post = {
+  slug: 'sync-tabs-between-devices-with-tabmerger',
+  title: 'Tabs zwischen Geräten synchronisieren, Ende-zu-Ende-verschlüsselt',
+  navTitle: 'Tabs zwischen Geräten synchronisieren',
+  seoTitle: 'Tabs zwischen Computern synchronisieren, mit Ende-zu-Ende-Verschlüsselung',
+  description:
+    'Deine TabMerger-Gruppen auf jedem Computer, verschlüsselt mit einer Passphrase, die nur du kennst. Wie du die Synchronisierung einrichtest, was sie umfasst und was genau unser Server sehen kann und was nicht.',
+  shareSummary: 'Deine Gruppen auf jedem Computer, selbst für unseren Server unlesbar.',
+  dek: 'Dieselben Gruppen zu Hause und im Büro, und niemand sonst kann sie lesen. Nicht einmal wir.',
+  published: '2026-12-18',
+  updated: '2026-12-18',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Die Synchronisierung ist Ende-zu-Ende-verschlüsselt: AES-256-GCM, mit einem Schlüssel, den deine Passphrase schützt.', source: 'Quellcode von TabMerger 3.16.1' },
+    { text: 'Adressen, Titel und Notizen der Tabs sowie Gruppennamen kann unser Server nie lesen.', source: 'Quellcode von TabMerger 3.16.1' },
+    { text: 'Jedes neue Gerät fragt einmal nach der Passphrase.', source: 'TabMerger 3.16.1' },
+    { text: 'Die Synchronisierung gehört zu Pro: US$3.99 im Monat oder US$42.99 im Jahr.', source: 'Preise von TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Wie synchronisiere ich Tabs zwischen zwei Computern?',
+      answer:
+        'Melde dich auf beiden Computern mit einem Pro-Konto bei TabMerger an. Der erste bittet dich, eine Verschlüsselungs-Passphrase zu wählen, der zweite fragt einmal danach. Ab dann werden deine Gruppen und Sitzungen zwischen beiden synchronisiert.',
+    },
+    {
+      question: 'Kann TabMerger meine Tabs sehen?',
+      answer:
+        'Nein. Adressen, Titel und Notizen der Tabs, Namen von Gruppen und Sitzungen sowie die offenen Tabs deiner Geräte werden vor dem Hochladen in deinem Browser verschlüsselt, und der Schlüssel erreicht unseren Server nie. Der Server sieht nur, was er zum Speichern der Zeilen braucht: etwa die Farbe einer Gruppe, ob sie mit Stern markiert oder archiviert ist, wann sie sich geändert hat und wie viele Fenster und Tabs sie enthält.',
+    },
+    {
+      question: 'Was, wenn ich meine Verschlüsselungs-Passphrase vergesse?',
+      answer: 'Niemand kann sie wiederherstellen, auch TabMerger nicht, denn sie verlässt deine Geräte nie. Deine Gruppen bleiben auf den Geräten, die schon entsperrt sind. Bewahre die Passphrase also an einem sicheren Ort auf.',
+    },
+    {
+      question: 'Was umfasst die Synchronisierung?',
+      answer:
+        'Gespeicherte Gruppen (Fenster, Tabs, Notizen, Erinnerungszeiten), gespeicherte Sitzungen und automatische Sicherungen, dazu die offenen Tabs jedes Geräts für Einstellungen → Geräte. Einstellungen, URL-Regeln und kürzlich geschlossene Tabs bleiben auf dem jeweiligen Gerät.',
+    },
+    {
+      question: 'Ist die Synchronisierung kostenlos?',
+      answer: 'Nein, die Synchronisierung gehört zu Pro. Im Free-Tarif bleibt alles auf deinem Gerät; unser Server lehnt Synchronisierungs-Uploads von Konten ohne Pro ab.',
+    },
+  ],
+  images: [
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in-light.webp', alt: 'TabMerger-Dialog Sign In (Anmelden) mit Anmeldung über Google sowie über E-Mail und Passwort, helles Design' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in-dark.webp', alt: 'TabMerger-Dialog Sign In (Anmelden) mit Anmeldung über Google sowie über E-Mail und Passwort, dunkles Design' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption-light.webp', alt: 'TabMerger-Dialog Set up encryption (Verschlüsselung einrichten), der zweimal nach einer neuen Passphrase fragt, helles Design' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption-dark.webp', alt: 'TabMerger-Dialog Set up encryption (Verschlüsselung einrichten), der zweimal nach einer neuen Passphrase fragt, dunkles Design' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock-light.webp', alt: 'TabMerger-Dialog Unlock encryption (Verschlüsselung entsperren) in einem zweiten Browser, der einmal nach der Passphrase fragt, helles Design' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock-dark.webp', alt: 'TabMerger-Dialog Unlock encryption (Verschlüsselung entsperren) in einem zweiten Browser, der einmal nach der Passphrase fragt, dunkles Design' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups-light.webp', alt: 'Der zweite Browser nach dem Entsperren mit den Gruppen Work und Reading list vom ersten, helles Design' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups-dark.webp', alt: 'Der zweite Browser nach dem Entsperren mit den Gruppen Work und Reading list vom ersten, dunkles Design' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-light.webp', alt: 'TabMerger, Settings → Devices (Einstellungen → Geräte): das Gerät Home laptop mit seinen 4 offenen Tabs und der Schaltfläche Restore 4 tabs (4 Tabs wiederherstellen), helles Design' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-dark.webp', alt: 'TabMerger, Settings → Devices (Einstellungen → Geräte): das Gerät Home laptop mit seinen 4 offenen Tabs und der Schaltfläche Restore 4 tabs (4 Tabs wiederherstellen), dunkles Design' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync-light.webp', alt: 'TabMerger, Settings → General (Einstellungen → Allgemein) mit eingeschaltetem Schalter Cloud sync (Cloud-Sync), helles Design' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync-dark.webp', alt: 'TabMerger, Settings → General (Einstellungen → Allgemein) mit eingeschaltetem Schalter Cloud sync (Cloud-Sync), dunkles Design' },
+  ],
+  tags: ['tabmerger-guides', 'cross-browser', 'session-management', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-light.webp' },
+  ogImage: { src: '/blog/sync-tabs-between-devices-with-tabmerger/og.png', alt: 'Tabs zwischen Geräten synchronisieren mit TabMerger: dieselben Gruppen in einem zweiten Browser nach dem Entsperren' },
+  toc: [
+    { id: 'quick', label: 'Kurze Antwort' },
+    { id: 'problem', label: 'Zwei Computer, zwei Sätze Tabs' },
+    { id: 'why', label: 'Warum die Synchronisierung so funktioniert' },
+    { id: 'server', label: 'Was unser Server sieht' },
+    { id: 'steps', label: 'Einrichten' },
+    { id: 'devices', label: 'Tabs deiner anderen Geräte' },
+    { id: 'benefit', label: 'Was du davon hast' },
+    { id: 'habits', label: 'Gute Gewohnheiten' },
+    { id: 'plans', label: 'Free oder Pro' },
+    { id: 'faq', label: 'Häufige Fragen' },
+  ],
+}
+
+<QuickAnswer>
+
+Melde dich mit einem Pro-Konto bei [TabMerger](/features) an. Der erste Computer bittet dich, eine Verschlüsselungs-Passphrase zu wählen; jeder weitere fragt einmal danach. Danach werden deine Gruppen, Sitzungen und Sicherungen zwischen ihnen synchronisiert, verschlüsselt in deinem Browser, bevor sie ihn verlassen. Unser Server speichert also nur Daten, die er nicht lesen kann. Unter **Einstellungen → Geräte** (Settings → Devices) siehst du sogar, was auf deinen anderen Computern offen ist.
+
+</QuickAnswer>
+
+<InstallCta>Dieselben Gruppen auf jedem Computer, lesbar nur für dich. Kostenlos starten, Synchronisierung mit Pro.</InstallCta>
+
+<Section id="problem" title="Zwei Computer, zwei Sätze Tabs">
+
+Abends recherchierst du auf dem Laptop zu Hause einen Kauf. Am nächsten Morgen im Büro sind die Tabs auf einem Computer, der zu Hause steht. Du baust sie aus dem Gedächtnis nach oder schickst dir Links per E-Mail. Die Browser-Synchronisierung hilft, wenn auf jedem Computer derselbe Browser mit demselben Konto läuft. Aber vielleicht läuft auf dem Arbeitsrechner Edge und auf dem Laptop Chrome, oder das Arbeitskonto ist gesperrt.
+
+Die Synchronisierung von TabMerger funktioniert mit einem TabMerger-Konto in Chrome, Edge und Firefox und nimmt deine geordneten Gruppen mit, nicht nur das, was gerade zufällig offen ist.
+
+</Section>
+
+<Section id="why" title="Warum die Synchronisierung von TabMerger so funktioniert">
+
+- **Verschlüsselt, bevor es deinen Browser verlässt.** Die Inhalte von Gruppen und Sitzungen werden in deinem Browser mit AES-256-GCM verschlüsselt. Der Schlüssel ist zufällig; auf unserem Server liegt er nur verpackt (verschlüsselt) mit einem Schlüssel, der aus deiner Passphrase abgeleitet wird (PBKDF2-SHA256, 600.000 Runden). Die Passphrase selbst wird nirgendwohin gesendet.
+- **Pflicht, keine Einstellung.** Jedes Pro-Konto synchronisiert verschlüsselt. Es gibt keinen Klartextmodus, den man versehentlich einschalten könnte.
+- **Ein Passphrase-Schritt pro Gerät.** Ein neues Gerät fragt einmal nach der Passphrase; danach bleibt es entsperrt, bis du dich abmeldest. Die Synchronisierung nervt also nicht.
+- **Zuerst auf dem Gerät gespeichert.** Alles wird lokal geschrieben, bevor es hochgeladen wird. Offline funktioniert weiter alles; Änderungen gehen beim nächsten Mal hoch.
+- **Die neueste Änderung gewinnt.** Wurde dieselbe Gruppe auf zwei Geräten geändert, bleibt die jüngste Änderung erhalten.
+- **Synchronisiert, solange TabMerger offen ist:** beim Öffnen, alle 30 Sekunden, solange es offen bleibt, und sobald die Änderung eines anderen Geräts eintrifft.
+
+</Section>
+
+<Section id="server" title="Was unser Server sehen kann und was nicht">
+
+<ComparisonTable
+  head={['', 'Verschlüsselt gespeichert (für uns unlesbar)', 'Lesbar gespeichert']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['Gruppen', 'Name, Notiz, jedes Fenster und jeder Tab (Titel, Adressen, Tab-Notizen, Erinnerungszeiten)', 'Farbe, Stern, archiviert, letzte Änderung, Anzahl der Fenster und Tabs, Reihenfolge'],
+    ['Sitzungen und Sicherungen', 'Name, Beschreibung, Farbe, ob es eine Sicherung ist, die enthaltenen Gruppen', 'Wann sie gespeichert wurden'],
+    ['Geräte', 'Die auf jedem Gerät offenen Tabs', 'Gerätename, zuletzt aktiv'],
+    ['Konto', '-', 'E-Mail-Adresse und Tarif'],
+  ]}
+/>
+
+Die lesbaren Spalten braucht der Server, um deine Zeilen in der richtigen Reihenfolge zu halten und Anzahlen anzuzeigen; keine davon verrät, welche Seiten du aufbewahrst. Geteilte Links verwenden einen eigenen Schlüssel, der nur im Link selbst steckt; siehe [mehrere Tabs teilen](/blog/share-a-set-of-tabs).
+
+</Section>
+
+<Section id="steps" title="Einrichten">
+
+1. Öffne auf dem ersten Computer TabMerger und dann das Kontomenü (oben rechts) → **Anmelden** (Sign in). Nutze Google, E-Mail und Passwort oder einen Magic Link.
+2. **Verschlüsselung einrichten** (Set up encryption) erscheint. Wähle eine Passphrase (mindestens 8 Zeichen, keine Leerzeichen), gib sie zweimal ein und bestätige. Deine Gruppen werden jetzt synchronisiert.
+3. Installiere TabMerger auf dem zweiten Computer und melde dich mit demselben Konto an.
+4. **Verschlüsselung entsperren** (Unlock encryption) erscheint. Gib die Passphrase einmal ein. Kurz darauf erscheinen deine Gruppen.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Einen zweiten Computer synchronisieren" steps={[{ title: 'Anmelden' }, { title: 'Passphrase' }, { title: 'Entsperren' }, { title: 'Synchronisiert' }]}>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in" alt="TabMerger-Dialog Sign In (Anmelden) mit Anmeldung über Google sowie über E-Mail und Passwort, helles Design" darkAlt="TabMerger-Dialog Sign In (Anmelden) mit Anmeldung über Google sowie über E-Mail und Passwort, dunkles Design" boxes={[{ id: 'email', label: 'E-Mail deines Kontos' }]} source="TabMerger 3.16.1">Anmelden über das Kontomenü.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption" alt="TabMerger-Dialog Set up encryption (Verschlüsselung einrichten), der zweimal nach einer neuen Passphrase fragt, helles Design" darkAlt="TabMerger-Dialog Set up encryption (Verschlüsselung einrichten), der zweimal nach einer neuen Passphrase fragt, dunkles Design" boxes={[{ id: 'passphrase', label: 'Nur du kennst sie' }]} source="TabMerger 3.16.1">Das erste Gerät: Wähle die Passphrase, die deinen Schlüssel schützt.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock" alt="TabMerger-Dialog Unlock encryption (Verschlüsselung entsperren) in einem zweiten Browser, der einmal nach der Passphrase fragt, helles Design" darkAlt="TabMerger-Dialog Unlock encryption (Verschlüsselung entsperren) in einem zweiten Browser, der einmal nach der Passphrase fragt, dunkles Design" boxes={[{ id: 'unlock', label: 'Einmal pro Gerät' }]} source="TabMerger 3.16.1">Jedes weitere Gerät: Gib sie einmal ein.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups" alt="Der zweite Browser nach dem Entsperren mit den Gruppen Work und Reading list vom ersten, helles Design" darkAlt="Der zweite Browser nach dem Entsperren mit den Gruppen Work und Reading list vom ersten, dunkles Design" boxes={[{ id: 'groups', label: 'Vom anderen Gerät' }]} source="TabMerger 3.16.1">Ein frischer Browser, Sekunden später: die Gruppen des ersten Computers, lokal entschlüsselt.</ThemedScreenshot>
+</Carousel>
+
+Die Synchronisierung lässt sich pro Browser mit dem Schalter **Cloud-Sync** (Cloud sync) unter **Einstellungen → Allgemein** (Settings → General) pausieren. Auf tabmerger.com zeigt das Dashboard deine synchronisierten Gruppen, sobald du dieselbe Passphrase eingibst.
+
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync" alt="TabMerger, Settings → General (Einstellungen → Allgemein) mit eingeschaltetem Schalter Cloud sync (Cloud-Sync), helles Design" darkAlt="TabMerger, Settings → General (Einstellungen → Allgemein) mit eingeschaltetem Schalter Cloud sync (Cloud-Sync), dunkles Design" boxes={[{ id: 'sync', label: 'Cloud-Sync' }]} source="TabMerger 3.16.1">Bei jedem Pro-Konto an; schalte sie für einen Browser aus, der nicht synchronisieren soll.</ThemedScreenshot>
+
+</Section>
+
+<Section id="devices" title="Sieh, was auf deinen anderen Geräten offen ist">
+
+**Einstellungen → Geräte** listet jeden Browser deines Kontos auf, der in den letzten 30 Tagen aktiv war, mit den Fenstern und Tabs, die er offen hat. Klapp einen auf, um einen einzelnen Tab zu öffnen, oder hol mit **Wiederherstellen** (Restore) alle hierher. Gib diesem Gerät einen Namen, damit die Liste leicht zu lesen ist („Laptop zu Hause“), oder entferne Geräte, die du nicht mehr nutzt.
+
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-devices" alt="TabMerger, Settings → Devices (Einstellungen → Geräte): das Gerät Home laptop mit seinen 4 offenen Tabs und der Schaltfläche Restore 4 tabs (4 Tabs wiederherstellen), helles Design" darkAlt="TabMerger, Settings → Devices (Einstellungen → Geräte): das Gerät Home laptop mit seinen 4 offenen Tabs und der Schaltfläche Restore 4 tabs (4 Tabs wiederherstellen), dunkles Design" boxes={[{ id: 'other-device', label: 'Dein anderer Browser' }, { id: 'restore', label: 'Seine Tabs hier öffnen' }]} source="TabMerger 3.16.1">Die offenen Tabs des Laptops, vom Arbeitscomputer aus. Unterwegs verschlüsselt.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Was du davon hast">
+
+Du gehst von einem Computer weg und machst am nächsten weiter, mit denselben Gruppen, Sitzungen und Notizen, egal in welchem Browser. Und weil die Inhalte mit einem Schlüssel verschlüsselt sind, den nur du hast, würde ein Einbruch in unsere Datenbank Farben und Anzahlen zeigen, nicht deine Tabs.
+
+</Section>
+
+<Section id="habits" title="Gute Gewohnheiten">
+
+- **Speichere die Passphrase in deinem Passwortmanager.** Niemand kann sie für dich zurücksetzen.
+- **Gib jedem Gerät einen Namen** unter Einstellungen → Geräte.
+- **Öffne TabMerger einmal, wenn du dich hinsetzt**, damit es die neuesten Änderungen holt.
+- **Browserspezifisches bleibt pro Gerät:** URL-Regeln und Einstellungen werden bewusst pro Browser gespeichert. Andere Wege, Tabs mitzunehmen, findest du unter [Tabs auf einen anderen Computer übertragen](/blog/move-tabs-between-computers).
+
+</Section>
+
+<Section id="plans" title="Free oder Pro">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Synchronisierung von Gruppen, Sitzungen und Sicherungen', 'Nein (bleibt auf deinem Gerät)', 'Ja, Ende-zu-Ende-verschlüsselt'],
+    ['Einstellungen → Geräte', 'Nein', 'Ja'],
+    ['Preis', 'US$0', 'US$3.99 im Monat oder US$42.99 im Jahr'],
+  ]}
+/>
+
+Die Synchronisierung setzt der Server durch, nicht nur die App: Die Datenbank lehnt Synchronisierungs-Uploads von jedem Konto ohne aktiven Pro-Tarif ab. Endet ein Tarif, wird nichts gelöscht; neue Änderungen werden einfach nicht mehr synchronisiert. Details auf der [Preisseite](/pricing) und in [TabMerger Free vs Pro](/blog/tabmerger-free-vs-pro).
+
+<InstallCta>Starte heute kostenlos und füge die verschlüsselte Synchronisierung hinzu, wenn du einen zweiten Computer brauchst.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Häufige Fragen">
+
+<Faq items={post.faq} />
+
+</Section>
