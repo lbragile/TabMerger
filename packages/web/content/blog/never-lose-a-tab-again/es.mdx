@@ -1,0 +1,174 @@
+export const post = {
+  slug: 'never-lose-a-tab-again',
+  title: 'No vuelvas a perder una pestaña: guardado automático y recuperar pestañas cerradas',
+  navTitle: 'No vuelvas a perder una pestaña',
+  seoTitle: 'Guarda tus pestañas abiertas automáticamente y recupera las cerradas con TabMerger',
+  description:
+    'Guarda tus pestañas abiertas automáticamente, según un horario o cuando pasen de cierto número, y recupera cualquier pestaña o ventana que hayas cerrado. Cómo funcionan el guardado automático y «Cerrado recientemente» de TabMerger, y por qué.',
+  shareSummary: 'Tus pestañas abiertas, guardadas según un horario, y cada ventana cerrada a una búsqueda.',
+  dek: 'No deberías tener que acordarte de guardar. Configúralo una vez y cada pestaña abierta tendrá una copia.',
+  published: '2026-12-13',
+  updated: '2026-12-13',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'El guardado automático se ejecuta desde cada 15 minutos hasta una vez al día, o cuando las pestañas abiertas superan un número de 20 a 100.', source: 'TabMerger 3.16.1' },
+    { text: 'Las pestañas ya guardadas en un grupo se omiten; las ventanas privadas nunca se guardan.', source: 'TabMerger 3.16.1' },
+    { text: 'Gratis conserva los 2 guardados automáticos más recientes; Pro los conserva todos.', source: 'Precios de TabMerger', href: '/pricing' },
+    { text: '«Cerrado recientemente» conserva tus últimos 2 días en Gratis y 30 días en Pro.', source: 'Precios de TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '¿Cómo guardo mis pestañas abiertas automáticamente?',
+      answer:
+        'En TabMerger, abre Ajustes → Datos y activa «Guardar pestañas abiertas automáticamente». Elige un horario (desde cada 15 minutos hasta una vez al día), un número de pestañas abiertas que active el guardado, o ambos. Cada ejecución guarda tus pestañas abiertas como un grupo nuevo.',
+    },
+    {
+      question: '¿El guardado automático llenará TabMerger de duplicados?',
+      answer:
+        'No. Las pestañas cuya dirección ya está guardada en algún grupo se omiten, y una página abierta en varias pestañas se guarda una sola vez. Si todo ya está guardado, la ejecución no guarda nada.',
+    },
+    {
+      question: '¿El guardado automático necesita que TabMerger esté abierto?',
+      answer: 'No. Funciona en segundo plano dentro de la extensión mientras el navegador está abierto, y al iniciarse el navegador comprueba si se saltó algún guardado.',
+    },
+    {
+      question: '¿Cómo recupero una ventana que cerré?',
+      answer:
+        'Pulsa Ctrl+K en TabMerger y escribe closed: para ver las pestañas y ventanas cerradas recientemente, o abre «Cerrado recientemente» en la barra lateral. Al elegir una ventana cerrada, se restaura la ventana entera.',
+    },
+    {
+      question: '¿Qué conserva Gratis y qué añade Pro?',
+      answer:
+        'Gratis conserva los 2 guardados automáticos más recientes (conserva uno como grupo para quedártelo) y tus últimos 2 días de pestañas cerradas. Pro conserva todos los guardados automáticos y 30 días de pestañas cerradas, y añade copias de seguridad automáticas cifradas y las pestañas abiertas de tus otros dispositivos.',
+    },
+  ],
+  images: [
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-light.webp', alt: 'Ajustes de TabMerger, «Settings» (Ajustes), «Data» (Datos): «Auto-save open tabs» (Guardar pestañas abiertas automáticamente) activado, cada hora y cuando las pestañas abiertas superan 50, con «Auto-save now» (Guardar ahora), tema claro' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-dark.webp', alt: 'Ajustes de TabMerger, «Settings» (Ajustes), «Data» (Datos): «Auto-save open tabs» (Guardar pestañas abiertas automáticamente) activado, cada hora y cuando las pestañas abiertas superan 50, con «Auto-save now» (Guardar ahora), tema oscuro' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp', alt: 'Un grupo en «Auto-saved» (Guardado automático) con dos ventanas y siete pestañas, y el botón «Keep as group» (Conservar como grupo), tema claro' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-dark.webp', alt: 'Un grupo en «Auto-saved» (Guardado automático) con dos ventanas y siete pestañas, y el botón «Keep as group» (Conservar como grupo), tema oscuro' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-light.webp', alt: 'Búsqueda de TabMerger con closed: que muestra una ventana con 3 pestañas cerrada hoy, tema claro' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-dark.webp', alt: 'Búsqueda de TabMerger con closed: que muestra una ventana con 3 pestañas cerrada hoy, tema oscuro' },
+  ],
+  tags: ['tabmerger-guides', 'save-tabs', 'restore-closed-tabs', 'session-management'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp' },
+  ogImage: { src: '/blog/never-lose-a-tab-again/og.png', alt: 'No vuelvas a perder una pestaña: un grupo guardado automáticamente en TabMerger con el botón «Keep as group» (Conservar como grupo)' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'problem', label: 'Cómo se pierden las pestañas' },
+    { id: 'why', label: 'Por qué funciona así' },
+    { id: 'steps', label: 'Actívalo' },
+    { id: 'closed', label: 'Cerrado recientemente' },
+    { id: 'benefit', label: 'Lo que te ahorra' },
+    { id: 'habits', label: 'Buenos hábitos' },
+    { id: 'plans', label: 'Gratis o Pro' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Activa **Ajustes → Datos → Guardar pestañas abiertas automáticamente** (Settings → Data → Auto-save open tabs) en [TabMerger](/features) y elige un horario, un número de pestañas o ambos. A partir de ahí, tus pestañas abiertas se guardan automáticamente como un grupo nuevo, sin repetir lo que ya está guardado. ¿Cerraste algo sin querer? <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> y `closed:` encuentran cada pestaña y ventana que cerraste hace poco, y reabren una ventana entera con un clic.
+
+</QuickAnswer>
+
+<InstallCta>Una copia de cada pestaña abierta, guardada por ti según un horario. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+<Section id="problem" title="Cómo se pierden de verdad las pestañas">
+
+Rara vez es un gran fallo. Lo normal es algo pequeño: cierras la ventana equivocada, justo la de las treinta pestañas de la investigación de esta mañana. Una actualización reinicia el navegador y solo vuelve una de tus tres ventanas. Ordenas el viernes y el lunes necesitas la página que cerraste. Para entonces, la pestaña está en algún lugar del historial, entre cientos de páginas, si es que recuerdas cómo se llamaba.
+
+Guardar a mano lo soluciona, los días que te acuerdas. El guardado automático es para los demás días.
+
+Para recuperar pestañas después de un fallo o un reinicio forzado con las herramientas de cada navegador, consulta [cómo recuperar tus pestañas después de un fallo](/blog/restore-tabs-after-crash). Esta guía trata de que siempre tengas una copia.
+
+</Section>
+
+<Section id="why" title="Por qué el guardado automático funciona así">
+
+Cada regla del guardado automático de TabMerger está ahí para que la copia sea útil, no solo para que exista:
+
+- **Guarda en un grupo nuevo**, con la hora como nombre («Guardado automático 21 nov, 20:28»), con las ventanas completas y el orden de las pestañas. No cambia nada de lo que guardaste antes. Cada guardado automático nuevo recibe un color distinto del anterior, así que es fácil distinguirlos.
+- **Dos activadores, porque las pestañas se acumulan de dos formas.** Un **horario** (cada 15 o 30 minutos, cada hora, cada 2 o 4 horas, o una vez al día) cubre el trabajo constante. Un **número de pestañas** (20, 30, 50, 75 o 100 pestañas abiertas) cubre esa racha de investigación que desborda cualquier horario.
+- **Una racha se guarda una vez.** El activador por número se dispara cuando lo superas y luego espera a que vuelvas a estar en ese número o por debajo, y al menos 10 minutos, antes de poder dispararse otra vez. Abrir diez pestañas seguidas no crea diez grupos.
+- **Sin duplicados.** Una pestaña cuya dirección ya está en alguno de tus grupos se omite, y una página abierta en varias pestañas se guarda una vez. Si todo ya está guardado, la ejecución no guarda nada y te lo dice.
+- **Lo privado sigue siendo privado.** Las ventanas privadas nunca se guardan. Las páginas propias de TabMerger quedan fuera; las pestañas fijadas y las páginas del navegador se incluyen.
+- **No te necesita.** El guardado automático funciona en segundo plano dentro de la extensión mientras el navegador está abierto, y al iniciarse el navegador comprueba si toca guardar. Una notificación opcional te avisa después de cada ejecución; la línea de estado en Ajustes muestra el último resultado.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Guardado automático en TabMerger" steps={[{ title: 'Ajustes' }, { title: 'Grupo guardado automáticamente' }]}>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-save-settings" alt="Ajustes de TabMerger, «Settings» (Ajustes), «Data» (Datos): «Auto-save open tabs» (Guardar pestañas abiertas automáticamente) activado, cada hora y cuando las pestañas abiertas superan 50, con «Auto-save now» (Guardar ahora), tema claro" darkAlt="Ajustes de TabMerger, «Settings» (Ajustes), «Data» (Datos): «Auto-save open tabs» (Guardar pestañas abiertas automáticamente) activado, cada hora y cuando las pestañas abiertas superan 50, con «Auto-save now» (Guardar ahora), tema oscuro" boxes={[{ id: 'schedule', label: 'Con qué frecuencia guardar' }, { id: 'threshold', label: 'El activador por pestañas abiertas' }, { id: 'run-now', label: 'Guardar ahora mismo' }]} source="TabMerger 3.16.1">Cada hora, y cada vez que las pestañas abiertas superan 50.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-saved" alt="Un grupo en «Auto-saved» (Guardado automático) con dos ventanas y siete pestañas, y el botón «Keep as group» (Conservar como grupo), tema claro" darkAlt="Un grupo en «Auto-saved» (Guardado automático) con dos ventanas y siete pestañas, y el botón «Keep as group» (Conservar como grupo), tema oscuro" boxes={[{ id: 'keep', label: 'Conservar como grupo' }]} source="TabMerger 3.16.1">El resultado: las dos ventanas abiertas, guardadas como grupo. Consérvalo para tenerlo para siempre.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="steps" title="Actívalo en cuatro pasos">
+
+1. Abre TabMerger y luego **Ajustes** (Settings, en el menú de la cuenta) → **Datos** (Data).
+2. Activa **Guardar pestañas abiertas automáticamente** (Auto-save open tabs). (En Pro ya viene activado, cada hora.)
+3. Elige un **Horario** (Schedule), un número en **Cuando las pestañas abiertas superen** (When open tabs pass) o ambos. Activa **Mostrar una notificación** (Show a notification) si quieres un aviso después de cada guardado.
+4. Pulsa **Guardar ahora** (Auto-save now) una vez para ver el resultado: un grupo nuevo en **Guardado automático** (Auto-saved), en la barra lateral.
+
+¿Encontraste un guardado automático que quieres conservar para siempre? Ábrelo y pulsa **Conservar como grupo** (Keep as group): pasa a tus grupos y nunca se elimina automáticamente.
+
+</Section>
+
+<Section id="closed" title="Cerrado recientemente: la otra mitad de la red">
+
+El guardado automático cubre lo que está abierto; **Cerrado recientemente** (Recently closed) cubre lo que acabas de cerrar. Cada pestaña y ventana que cierras se guarda por día, solo en este dispositivo, y las ventanas privadas nunca se registran.
+
+- Abre **Cerrado recientemente** en la barra lateral para verlas por día, o pulsa <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> y empieza con `closed:` para buscarlas.
+- Una **ventana** cerrada aparece como una sola entrada («Ventana · 3 pestañas»): elígela y vuelve la ventana entera.
+- Haz <Kbd>Ctrl</Kbd>+clic (<Kbd>⌘</Kbd>+clic en Mac) o clic con el botón central en un resultado para reabrirlo en segundo plano.
+
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-closed-window" alt="Búsqueda de TabMerger con closed: que muestra una ventana con 3 pestañas cerrada hoy, tema claro" darkAlt="Búsqueda de TabMerger con closed: que muestra una ventana con 3 pestañas cerrada hoy, tema oscuro" boxes={[{ id: 'search-input', label: 'El filtro closed:' }, { id: 'closed-window', label: 'Una ventana cerrada completa' }]} source="TabMerger 3.16.1">Una ventana cerrada por error, a una búsqueda de distancia.</ThemedScreenshot>
+
+Encontrarás más trucos de búsqueda en [busca en todas tus pestañas con TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+
+</Section>
+
+<Section id="benefit" title="Lo que te ahorra">
+
+El peor caso pasa de «esas pestañas ya no están» a «pierdo lo que abrí desde el último guardado». Con un horario de cada hora, un mal reinicio te cuesta como mucho una hora de pestañas nuevas; una ventana que cerraste tú está en «Cerrado recientemente». Recuperar cualquiera de las dos es una búsqueda, no una tarde en el historial.
+
+</Section>
+
+<Section id="habits" title="Buenos hábitos">
+
+- **Ajusta el horario a tu ritmo.** Cada hora va bien la mayoría de los días; cada 15 minutos, para la investigación intensa.
+- **Añade un número de pestañas si las abres en rachas.** 50 es un buen comienzo.
+- **Primero conserva, luego limpia.** Cuando un guardado automático tenga algo que valga la pena, pulsa **Conservar como grupo** y cámbiale el nombre; borra el resto.
+- **Sigue guardando a propósito.** El guardado automático es la red, no el plan: ten grupos con nombre para los proyectos de verdad (consulta [un flujo de trabajo diario con pestañas](/blog/tabmerger-daily-workflow)).
+
+</Section>
+
+<Section id="plans" title="Gratis o Pro">
+
+<ComparisonTable
+  head={['', 'Gratis', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Guardar pestañas abiertas automáticamente', 'Desactivado hasta que lo actives; se conservan los 2 más recientes', 'Activado por defecto; se conservan todos'],
+    ['Guardados automáticos y límites del plan', 'Cuentan para los 5 grupos y 50 pestañas', 'Sin límites'],
+    ['Cerrado recientemente', 'Tus últimos 2 días', 'Tus últimos 30 días'],
+    ['Copias de seguridad automáticas y cifradas de tus grupos', 'No', 'De cada hora a semanal, se conservan las 10 más recientes'],
+    ['Pestañas abiertas de tus otros dispositivos', 'No', 'Ajustes → Dispositivos'],
+  ]}
+/>
+
+En Gratis, cada guardado automático nuevo reemplaza al más antiguo cuando ya hay 2; **Conservar como grupo** saca uno de la rotación. Cerca del límite de 50 pestañas, un guardado automático guarda las pestañas que caben y te lo indica. Las copias de seguridad y las pestañas de tus dispositivos se guardan en tu cuenta, cifradas de extremo a extremo, y nuestro servidor se niega a guardarlas para una cuenta sin Pro. Más detalles en la [página de precios](/pricing).
+
+<InstallCta>Configúralo una vez y olvídate de las ventanas cerradas. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

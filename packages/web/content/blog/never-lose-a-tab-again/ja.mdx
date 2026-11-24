@@ -1,0 +1,174 @@
+export const post = {
+  slug: 'never-lose-a-tab-again',
+  title: 'もうタブをなくさない：タブの自動保存と閉じたタブの復元',
+  navTitle: 'もうタブをなくさない',
+  seoTitle: '開いているタブを自動保存して閉じたタブを復元する方法｜TabMerger',
+  description:
+    '開いているタブを、スケジュールで、またはタブ数が一定を超えたときに自動で保存し、閉じたタブやウィンドウをいつでも復元。TabMerger の自動保存と「最近閉じたタブ」の仕組みと、その理由を解説します。',
+  shareSummary: '開いているタブをスケジュールで自動保存。閉じたウィンドウも検索ひとつで戻せます。',
+  dek: '保存を覚えておく必要はありません。一度設定すれば、開いているタブにはいつもコピーがあります。',
+  published: '2026-12-13',
+  updated: '2026-12-13',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: '自動保存は 15 分ごとから 1 日 1 回まで、または開いているタブが 20〜100 の設定数を超えたときに実行されます。', source: 'TabMerger 3.16.1' },
+    { text: 'すでにグループに保存済みのタブはスキップされ、プライベートウィンドウは保存されません。', source: 'TabMerger 3.16.1' },
+    { text: '無料プランでは最新 2 件の自動保存を残し、Pro ではすべて残します。', source: 'TabMerger の料金', href: '/pricing' },
+    { text: '「最近閉じたタブ」は無料プランで直近 2 日分、Pro で 30 日分を保持します。', source: 'TabMerger の料金', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '開いているタブを自動で保存するには？',
+      answer:
+        'TabMerger で 設定 → データ を開き、「開いているタブを自動保存」をオンにします。スケジュール（15 分ごとから 1 日 1 回まで）、保存のきっかけになる開いているタブの数、またはその両方を選びます。実行のたびに、開いているタブが新しいグループとして保存されます。',
+    },
+    {
+      question: '自動保存で TabMerger が重複だらけになりませんか？',
+      answer:
+        'なりません。アドレスがすでにいずれかのグループに保存されているタブはスキップされ、複数のタブで開いている同じページは 1 回だけ保存されます。すべて保存済みなら、その回は何も保存しません。',
+    },
+    {
+      question: '自動保存には TabMerger を開いておく必要がありますか？',
+      answer: 'いいえ。ブラウザが開いている間、拡張機能のバックグラウンドで動き、ブラウザの起動時には保存し損ねた回がないかを確認します。',
+    },
+    {
+      question: '閉じたウィンドウを元に戻すには？',
+      answer:
+        'TabMerger で Ctrl+K を押して closed: と入力すると、最近閉じたタブとウィンドウが一覧表示されます。サイドバーの「最近閉じたタブ」を開いても構いません。閉じたウィンドウを選ぶと、ウィンドウ全体が復元されます。',
+    },
+    {
+      question: '無料プランで残るものと、Pro で増えるものは？',
+      answer:
+        '無料プランでは最新 2 件の自動保存（ずっと残したいものはグループとして残せます）と、直近 2 日分の閉じたタブが残ります。Pro ではすべての自動保存と 30 日分の閉じたタブが残り、さらに暗号化された自動バックアップと、ほかのデバイスで開いているタブも使えます。',
+    },
+  ],
+  images: [
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-light.webp', alt: 'TabMerger の「Settings」（設定）、「Data」（データ）。「Auto-save open tabs」（開いているタブを自動保存）がオンで、1 時間ごとと開いているタブが 50 を超えたときに保存。「Auto-save now」（今すぐ自動保存）ボタンあり。ライトテーマ' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-dark.webp', alt: 'TabMerger の「Settings」（設定）、「Data」（データ）。「Auto-save open tabs」（開いているタブを自動保存）がオンで、1 時間ごとと開いているタブが 50 を超えたときに保存。「Auto-save now」（今すぐ自動保存）ボタンあり。ダークテーマ' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp', alt: '「Auto-saved」（自動保存）の下にある、ウィンドウ 2 つとタブ 7 つのグループと「Keep as group」（グループとして残す）ボタン。ライトテーマ' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-dark.webp', alt: '「Auto-saved」（自動保存）の下にある、ウィンドウ 2 つとタブ 7 つのグループと「Keep as group」（グループとして残す）ボタン。ダークテーマ' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-light.webp', alt: 'TabMerger で closed: を検索し、今日閉じたタブ 3 つのウィンドウが表示されている。ライトテーマ' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-dark.webp', alt: 'TabMerger で closed: を検索し、今日閉じたタブ 3 つのウィンドウが表示されている。ダークテーマ' },
+  ],
+  tags: ['tabmerger-guides', 'save-tabs', 'restore-closed-tabs', 'session-management'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp' },
+  ogImage: { src: '/blog/never-lose-a-tab-again/og.png', alt: 'もうタブをなくさない：TabMerger の自動保存グループと「Keep as group」（グループとして残す）ボタン' },
+  toc: [
+    { id: 'quick', label: '簡単な答え' },
+    { id: 'problem', label: 'タブがなくなる原因' },
+    { id: 'why', label: 'この仕組みの理由' },
+    { id: 'steps', label: 'オンにする' },
+    { id: 'closed', label: '最近閉じたタブ' },
+    { id: 'benefit', label: '得られる安心' },
+    { id: 'habits', label: 'おすすめの習慣' },
+    { id: 'plans', label: '無料プランと Pro' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+}
+
+<QuickAnswer>
+
+[TabMerger](/features) で **設定 → データ → 開いているタブを自動保存**（Settings → Data → Auto-save open tabs）をオンにし、スケジュール、タブ数、またはその両方を選びます。以後、開いているタブは新しいグループとして自動で保存され、保存済みのものはスキップされます。うっかり閉じてしまったら、<Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> を押して `closed:` と入力すれば、最近閉じたタブとウィンドウがすべて見つかり、ウィンドウ全体もワンクリックで開き直せます。
+
+</QuickAnswer>
+
+<InstallCta>開いているタブのコピーを、スケジュールで自動保存。Chrome、Edge、Firefox で無料。</InstallCta>
+
+<Section id="problem" title="タブが実際になくなるとき">
+
+大きなクラッシュで一度に失うことはまれです。たいていは小さなことです。間違ったウィンドウを閉じてしまう、それも今朝の調べもので開いた 30 個のタブがあるウィンドウを。アップデートでブラウザが再起動し、3 つのウィンドウのうち 1 つしか戻らない。金曜日に片付けたら、月曜日に閉じたページが必要になる。そのころにはタブは履歴の中、何百ものページの間のどこかです。名前を覚えていればの話ですが。
+
+手動で保存すれば解決します。覚えている日なら。自動保存は、それ以外の日のためのものです。
+
+クラッシュや強制再起動のあとに各ブラウザの機能でタブを取り戻す方法は、[クラッシュのあとでタブを取り戻す方法](/blog/restore-tabs-after-crash) をご覧ください。このガイドは、いつでもコピーがある状態にするためのものです。
+
+</Section>
+
+<Section id="why" title="自動保存がこう動く理由">
+
+TabMerger の自動保存のルールはどれも、コピーがただあるだけでなく、役に立つようにするためのものです。
+
+- **新しいグループに保存します**。グループ名は日時（「自動保存 11月21日 20:28」）で、ウィンドウ単位のまま、タブの順番も保たれます。以前に保存したものは何も変わりません。新しい自動保存には前回と違う色が付くので、見分けるのも簡単です。
+- **タブの増え方は 2 通りなので、きっかけも 2 つです**。**スケジュール**（15 分または 30 分ごと、1 時間ごと、2 時間または 4 時間ごと、1 日 1 回）は、ふだんの作業向けです。**タブ数**（開いているタブが 20、30、50、75、100）は、どのスケジュールも追いつかない調べものの急増向けです。
+- **急増しても保存は 1 回です**。タブ数のきっかけは設定数を超えたときに実行され、その後は設定数以下に戻り、かつ 10 分以上たつまで再実行されません。続けて 10 個タブを開いても、グループが 10 個できることはありません。
+- **重複なし**。アドレスがすでにいずれかのグループにあるタブはスキップされ、複数のタブで開いている同じページは 1 回だけ保存されます。すべて保存済みなら、その回は何も保存せず、そのことを知らせます。
+- **プライベートはプライベートのまま**。プライベートウィンドウは保存されません。TabMerger 自身のページは除外し、固定したタブとブラウザのページは保存します。
+- **あなたの手は要りません**。自動保存はブラウザが開いている間、拡張機能のバックグラウンドで動き、ブラウザの起動時には保存のタイミングが来ていないかを確認します。実行のたびに通知を出すこともでき（任意）、設定のステータス行には前回の結果が表示されます。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="TabMerger の自動保存" steps={[{ title: '設定' }, { title: '自動保存されたグループ' }]}>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-save-settings" alt="TabMerger の「Settings」（設定）、「Data」（データ）。「Auto-save open tabs」（開いているタブを自動保存）がオンで、1 時間ごとと開いているタブが 50 を超えたときに保存。「Auto-save now」（今すぐ自動保存）ボタンあり。ライトテーマ" darkAlt="TabMerger の「Settings」（設定）、「Data」（データ）。「Auto-save open tabs」（開いているタブを自動保存）がオンで、1 時間ごとと開いているタブが 50 を超えたときに保存。「Auto-save now」（今すぐ自動保存）ボタンあり。ダークテーマ" boxes={[{ id: 'schedule', label: '保存の間隔' }, { id: 'threshold', label: '開いているタブ数のきっかけ' }, { id: 'run-now', label: '今すぐ保存' }]} source="TabMerger 3.16.1">1 時間ごと、そして開いているタブが 50 を超えるたびに保存。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-saved" alt="「Auto-saved」（自動保存）の下にある、ウィンドウ 2 つとタブ 7 つのグループと「Keep as group」（グループとして残す）ボタン。ライトテーマ" darkAlt="「Auto-saved」（自動保存）の下にある、ウィンドウ 2 つとタブ 7 つのグループと「Keep as group」（グループとして残す）ボタン。ダークテーマ" boxes={[{ id: 'keep', label: 'グループとして残す' }]} source="TabMerger 3.16.1">結果：開いていた 2 つのウィンドウがグループとして保存されました。残せば、ずっと保管されます。</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="steps" title="4 ステップでオンにする">
+
+1. TabMerger を開き、**設定**（Settings、アカウントメニュー内）→ **データ**（Data）へ進みます。
+2. **開いているタブを自動保存**（Auto-save open tabs）をオンにします（Pro では最初から 1 時間ごとでオンです）。
+3. **スケジュール**（Schedule）、**開いているタブがこの数を超えたとき**（When open tabs pass）の数、またはその両方を選びます。保存のたびに知らせてほしいときは **通知を表示**（Show a notification）をオンにします。
+4. 一度 **今すぐ自動保存**（Auto-save now）を押して結果を確認します。サイドバーの **自動保存**（Auto-saved）の下に新しいグループができます。
+
+ずっと残したい自動保存があれば、開いて **グループとして残す**（Keep as group）を押します。通常のグループに移り、自動で削除されることはありません。
+
+</Section>
+
+<Section id="closed" title="最近閉じたタブ：もう半分の安全ネット">
+
+自動保存は開いているものを、**最近閉じたタブ**（Recently closed）はいま閉じたものを守ります。閉じたタブとウィンドウはすべて日ごとに、このデバイスだけに記録され、プライベートウィンドウは記録されません。
+
+- サイドバーの **最近閉じたタブ** を開いて日ごとに見るか、<Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> を押して `closed:` から入力して検索します。
+- 閉じた **ウィンドウ** は 1 件（「ウィンドウ · 3個のタブ」）として表示されます。選ぶとウィンドウ全体が戻ります。
+- 結果を <Kbd>Ctrl</Kbd>+クリック（Mac では <Kbd>⌘</Kbd>+クリック）またはホイールクリックすると、バックグラウンドで開き直します。
+
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-closed-window" alt="TabMerger で closed: を検索し、今日閉じたタブ 3 つのウィンドウが表示されている。ライトテーマ" darkAlt="TabMerger で closed: を検索し、今日閉じたタブ 3 つのウィンドウが表示されている。ダークテーマ" boxes={[{ id: 'search-input', label: 'closed: フィルター' }, { id: 'closed-window', label: '閉じたウィンドウ全体' }]} source="TabMerger 3.16.1">うっかり閉じたウィンドウも、検索ひとつで戻せます。</ThemedScreenshot>
+
+検索のコツは [TabMerger ですべてのタブを検索する](/blog/search-all-your-tabs-with-tabmerger) でも紹介しています。
+
+</Section>
+
+<Section id="benefit" title="得られる安心">
+
+最悪の場合が「あのタブはもうない」から「最後の保存以降に開いたものだけ失う」に縮まります。1 時間ごとのスケジュールなら、再起動に失敗しても失うのは最大 1 時間分の新しいタブだけ。自分で閉じたウィンドウは「最近閉じたタブ」にあります。どちらも、履歴で午後をつぶす代わりに検索ひとつで戻せます。
+
+</Section>
+
+<Section id="habits" title="おすすめの習慣">
+
+- **スケジュールは作業のペースに合わせる**。ふだんは 1 時間ごと、調べものが多い日は 15 分ごとが目安です。
+- **タブを一気に開くなら、タブ数も設定する**。まずは 50 がおすすめです。
+- **残してから片付ける**。自動保存に残す価値のあるものがあれば、**グループとして残す** を押して名前を変え、残りは削除しましょう。
+- **それでも意識して保存する**。自動保存は安全ネットであって、計画ではありません。本当のプロジェクトには名前付きのグループを作りましょう（[タブを使った毎日のワークフロー](/blog/tabmerger-daily-workflow) を参照）。
+
+</Section>
+
+<Section id="plans" title="無料プランと Pro">
+
+<ComparisonTable
+  head={['', '無料', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['開いているタブを自動保存', 'オンにするまでオフ。最新 2 件を保持', '最初からオン。すべて保持'],
+    ['自動保存とプランの上限', '5 グループ・50 タブの上限に含まれる', '上限なし'],
+    ['最近閉じたタブ', '直近 2 日分', '直近 30 日分'],
+    ['グループの暗号化自動バックアップ', 'いいえ', '1 時間ごとから毎週まで。最新 10 件を保持'],
+    ['ほかのデバイスで開いているタブ', 'いいえ', '設定 → デバイス'],
+  ]}
+/>
+
+無料プランでは、自動保存が 2 件になると新しいものが最も古いものと入れ替わります。**グループとして残す** を押すと、その 1 件は入れ替えの対象から外れます。50 タブの上限に近いときは、入る分だけのタブを保存し、そのことを知らせます。バックアップとデバイスのタブはエンドツーエンドで暗号化されてアカウントに保存され、Pro のないアカウントのものはサーバーが保存を拒否します。詳しくは [料金ページ](/pricing) をご覧ください。
+
+<InstallCta>一度設定すれば、閉じたウィンドウの心配はもう要りません。Chrome、Edge、Firefox で無料。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

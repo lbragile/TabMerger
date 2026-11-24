@@ -1,0 +1,174 @@
+export const post = {
+  slug: 'never-lose-a-tab-again',
+  title: 'Nigdy więcej nie trać karty: autozapis i przywracanie zamkniętych kart',
+  navTitle: 'Nigdy więcej nie trać karty',
+  seoTitle: 'Automatyczne zapisywanie otwartych kart i przywracanie zamkniętych w TabMerger',
+  description:
+    'Zapisuj otwarte karty automatycznie, według harmonogramu albo gdy przekroczą określoną liczbę, i przywracaj każdą zamkniętą kartę lub okno. Jak działają autozapis i „Ostatnio zamknięte” w TabMerger, i dlaczego tak.',
+  shareSummary: 'Otwarte karty zapisywane według harmonogramu, a każde zamknięte okno jedno wyszukanie stąd.',
+  dek: 'Nie musisz pamiętać o zapisywaniu. Ustaw to raz, a każda otwarta karta będzie miała kopię.',
+  published: '2026-12-13',
+  updated: '2026-12-13',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Autozapis działa od co 15 minut do raz dziennie albo gdy liczba otwartych kart przekroczy próg od 20 do 100.', source: 'TabMerger 3.16.1' },
+    { text: 'Karty już zapisane w grupie są pomijane; okna prywatne nigdy nie są zapisywane.', source: 'TabMerger 3.16.1' },
+    { text: 'Plan Darmowy zachowuje 2 najnowsze autozapisy; Pro zachowuje wszystkie.', source: 'Cennik TabMerger', href: '/pricing' },
+    { text: '„Ostatnio zamknięte” przechowuje ostatnie 2 dni w planie Darmowym i 30 dni w Pro.', source: 'Cennik TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Jak automatycznie zapisywać otwarte karty?',
+      answer:
+        'W TabMerger otwórz Ustawienia → Dane i włącz „Autozapis otwartych kart”. Wybierz harmonogram (od co 15 minut do raz dziennie), liczbę otwartych kart, która uruchamia zapis, albo jedno i drugie. Każde uruchomienie zapisuje otwarte karty jako nową grupę.',
+    },
+    {
+      question: 'Czy autozapis zapełni TabMerger duplikatami?',
+      answer:
+        'Nie. Karty, których adres jest już zapisany w którejkolwiek grupie, są pomijane, a strona otwarta w kilku kartach jest zapisywana raz. Gdy wszystko jest już zapisane, uruchomienie niczego nie zapisuje.',
+    },
+    {
+      question: 'Czy autozapis wymaga otwartego TabMerger?',
+      answer: 'Nie. Działa w tle rozszerzenia, dopóki przeglądarka jest otwarta, a przy jej uruchomieniu sprawdza, czy nie ominął jakiegoś zapisu.',
+    },
+    {
+      question: 'Jak odzyskać zamknięte okno?',
+      answer:
+        'Naciśnij Ctrl+K w TabMerger i wpisz closed:, aby wyświetlić ostatnio zamknięte karty i okna, albo otwórz „Ostatnio zamknięte” na pasku bocznym. Wybranie zamkniętego okna przywraca całe okno.',
+    },
+    {
+      question: 'Co zachowuje plan Darmowy, a co dodaje Pro?',
+      answer:
+        'Plan Darmowy zachowuje 2 najnowsze autozapisy (zachowaj jeden jako grupę, aby go zatrzymać) i zamknięte karty z ostatnich 2 dni. Pro zachowuje wszystkie autozapisy i 30 dni zamkniętych kart, a do tego dodaje szyfrowane automatyczne kopie zapasowe i otwarte karty z innych Twoich urządzeń.',
+    },
+  ],
+  images: [
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-light.webp', alt: 'TabMerger, „Settings” (Ustawienia), „Data” (Dane): „Auto-save open tabs” (Autozapis otwartych kart) włączony, co godzinę i gdy otwartych kart jest więcej niż 50, z przyciskiem „Auto-save now” (Zapisz teraz), jasny motyw' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-dark.webp', alt: 'TabMerger, „Settings” (Ustawienia), „Data” (Dane): „Auto-save open tabs” (Autozapis otwartych kart) włączony, co godzinę i gdy otwartych kart jest więcej niż 50, z przyciskiem „Auto-save now” (Zapisz teraz), ciemny motyw' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp', alt: 'Grupa w sekcji „Auto-saved” (Autozapisy) z dwoma oknami i siedmioma kartami oraz przyciskiem „Keep as group” (Zachowaj jako grupę), jasny motyw' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-dark.webp', alt: 'Grupa w sekcji „Auto-saved” (Autozapisy) z dwoma oknami i siedmioma kartami oraz przyciskiem „Keep as group” (Zachowaj jako grupę), ciemny motyw' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-light.webp', alt: 'Wyszukiwanie closed: w TabMerger pokazuje zamknięte dziś okno z 3 kartami, jasny motyw' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-dark.webp', alt: 'Wyszukiwanie closed: w TabMerger pokazuje zamknięte dziś okno z 3 kartami, ciemny motyw' },
+  ],
+  tags: ['tabmerger-guides', 'save-tabs', 'restore-closed-tabs', 'session-management'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp' },
+  ogImage: { src: '/blog/never-lose-a-tab-again/og.png', alt: 'Nigdy więcej nie trać karty: automatycznie zapisana grupa w TabMerger z przyciskiem „Keep as group” (Zachowaj jako grupę)' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'problem', label: 'Jak giną karty' },
+    { id: 'why', label: 'Dlaczego to tak działa' },
+    { id: 'steps', label: 'Włącz to' },
+    { id: 'closed', label: 'Ostatnio zamknięte' },
+    { id: 'benefit', label: 'Co zyskujesz' },
+    { id: 'habits', label: 'Dobre nawyki' },
+    { id: 'plans', label: 'Darmowy czy Pro' },
+    { id: 'faq', label: 'Najczęstsze pytania' },
+  ],
+}
+
+<QuickAnswer>
+
+Włącz **Ustawienia → Dane → Autozapis otwartych kart** (Settings → Data → Auto-save open tabs) w [TabMerger](/features) i wybierz harmonogram, liczbę kart albo jedno i drugie. Od tej chwili otwarte karty są automatycznie zapisywane jako nowa grupa, z pominięciem tego, co już zapisane. Zamknięte coś przez pomyłkę? <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> i `closed:` znajdą każdą kartę i okno zamknięte w ostatnim czasie i otworzą całe okno jednym kliknięciem.
+
+</QuickAnswer>
+
+<InstallCta>Kopia każdej otwartej karty, zapisywana za Ciebie według harmonogramu. Za darmo dla Chrome, Edge i Firefox.</InstallCta>
+
+<Section id="problem" title="Jak naprawdę giną karty">
+
+Rzadko w jednej wielkiej awarii. Częściej to drobiazg: zamykasz niewłaściwe okno, akurat to z trzydziestoma kartami z porannego researchu. Aktualizacja restartuje przeglądarkę i wraca tylko jedno z trzech okien. W piątek robisz porządki, a w poniedziałek potrzebujesz strony, którą zamknąłeś. Wtedy karta jest już gdzieś w historii, między setkami innych stron, o ile pamiętasz, jak się nazywała.
+
+Ręczne zapisywanie rozwiązuje problem w te dni, kiedy o nim pamiętasz. Autozapis jest na pozostałe dni.
+
+Jak odzyskać karty po awarii lub wymuszonym restarcie narzędziami samej przeglądarki, opisuje [jak odzyskać karty po awarii](/blog/restore-tabs-after-crash). Ten poradnik dotyczy tego, żeby zawsze mieć kopię.
+
+</Section>
+
+<Section id="why" title="Dlaczego autozapis działa właśnie tak">
+
+Każda reguła autozapisu w TabMerger ma sprawić, że kopia będzie przydatna, a nie tylko że będzie istnieć:
+
+- **Zapisuje do nowej grupy**, nazwanej według godziny („Autozapis 21 lis, 20:28”), z całymi oknami i zachowaną kolejnością kart. Nic, co zapisałeś wcześniej, się nie zmienia. Każdy nowy autozapis dostaje inny kolor niż poprzedni, więc łatwo je odróżnić.
+- **Dwa wyzwalacze, bo karty przybywają na dwa sposoby.** **Harmonogram** (co 15 lub 30 minut, co godzinę, co 2 lub 4 godziny albo raz dziennie) obsługuje równą pracę. **Liczba kart** (20, 30, 50, 75 lub 100 otwartych kart) obsługuje nagły wysyp kart przy researchu, którego nie dogoni żaden harmonogram.
+- **Wysyp zapisuje się raz.** Wyzwalacz liczby kart uruchamia się, gdy przekroczysz próg, a potem czeka, aż wrócisz do progu lub poniżej, i co najmniej 10 minut, zanim zadziała ponownie. Otwarcie dziesięciu kart pod rząd nie tworzy dziesięciu grup.
+- **Bez duplikatów.** Karta, której adres jest już w którejś z Twoich grup, jest pomijana, a strona otwarta w kilku kartach jest zapisywana raz. Jeśli wszystko jest już zapisane, uruchomienie niczego nie zapisuje i informuje Cię o tym.
+- **Prywatne zostaje prywatne.** Okna prywatne nigdy nie są zapisywane. Własne strony TabMerger są pomijane; przypięte karty i strony przeglądarki są zapisywane.
+- **Nie potrzebuje Ciebie.** Autozapis działa w tle rozszerzenia, dopóki przeglądarka jest otwarta, a przy jej uruchomieniu sprawdza, czy należy się zapis. Opcjonalne powiadomienie informuje Cię po każdym uruchomieniu; wiersz stanu w ustawieniach pokazuje ostatni wynik.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Autozapis w TabMerger" steps={[{ title: 'Ustawienia' }, { title: 'Grupa z autozapisu' }]}>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-save-settings" alt="TabMerger, „Settings” (Ustawienia), „Data” (Dane): „Auto-save open tabs” (Autozapis otwartych kart) włączony, co godzinę i gdy otwartych kart jest więcej niż 50, z przyciskiem „Auto-save now” (Zapisz teraz), jasny motyw" darkAlt="TabMerger, „Settings” (Ustawienia), „Data” (Dane): „Auto-save open tabs” (Autozapis otwartych kart) włączony, co godzinę i gdy otwartych kart jest więcej niż 50, z przyciskiem „Auto-save now” (Zapisz teraz), ciemny motyw" boxes={[{ id: 'schedule', label: 'Jak często zapisywać' }, { id: 'threshold', label: 'Wyzwalacz liczby otwartych kart' }, { id: 'run-now', label: 'Zapisz od razu' }]} source="TabMerger 3.16.1">Co godzinę i za każdym razem, gdy otwartych kart jest więcej niż 50.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-saved" alt="Grupa w sekcji „Auto-saved” (Autozapisy) z dwoma oknami i siedmioma kartami oraz przyciskiem „Keep as group” (Zachowaj jako grupę), jasny motyw" darkAlt="Grupa w sekcji „Auto-saved” (Autozapisy) z dwoma oknami i siedmioma kartami oraz przyciskiem „Keep as group” (Zachowaj jako grupę), ciemny motyw" boxes={[{ id: 'keep', label: 'Zachowaj jako grupę' }]} source="TabMerger 3.16.1">Wynik: oba otwarte okna zapisane jako grupa. Zachowaj ją, aby została na stałe.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="steps" title="Włącz to w czterech krokach">
+
+1. Otwórz TabMerger, a potem **Ustawienia** (Settings, w menu konta) → **Dane** (Data).
+2. Włącz **Autozapis otwartych kart** (Auto-save open tabs). (W Pro jest już włączony, co godzinę.)
+3. Wybierz **Harmonogram** (Schedule), liczbę w polu **Gdy otwartych kart jest więcej niż** (When open tabs pass) albo jedno i drugie. Włącz **Pokaż powiadomienie** (Show a notification), jeśli chcesz dostać sygnał po każdym zapisie.
+4. Naciśnij raz **Zapisz teraz** (Auto-save now), aby zobaczyć wynik: nową grupę w sekcji **Autozapisy** (Auto-saved) na pasku bocznym.
+
+Znalazłeś autozapis, który chcesz zatrzymać na stałe? Otwórz go i naciśnij **Zachowaj jako grupę** (Keep as group): trafi do Twoich grup i nigdy nie zostanie usunięty automatycznie.
+
+</Section>
+
+<Section id="closed" title="Ostatnio zamknięte: druga połowa siatki">
+
+Autozapis obejmuje to, co otwarte; **Ostatnio zamknięte** (Recently closed) obejmuje to, co właśnie zamknąłeś. Każda zamknięta karta i każde okno są przechowywane według dni, tylko na tym urządzeniu, a okna prywatne nigdy nie są rejestrowane.
+
+- Otwórz **Ostatnio zamknięte** na pasku bocznym, aby przeglądać według dni, albo naciśnij <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> i zacznij od `closed:`, aby w nich szukać.
+- Zamknięte **okno** jest widoczne jako jedna pozycja („Okno · 3 karty”): wybierz je, a wróci całe okno.
+- Kliknij wynik z <Kbd>Ctrl</Kbd> (<Kbd>⌘</Kbd> na Macu) albo środkowym przyciskiem myszy, aby otworzyć go ponownie w tle.
+
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-closed-window" alt="Wyszukiwanie closed: w TabMerger pokazuje zamknięte dziś okno z 3 kartami, jasny motyw" darkAlt="Wyszukiwanie closed: w TabMerger pokazuje zamknięte dziś okno z 3 kartami, ciemny motyw" boxes={[{ id: 'search-input', label: 'Filtr closed:' }, { id: 'closed-window', label: 'Całe zamknięte okno' }]} source="TabMerger 3.16.1">Okno zamknięte przez pomyłkę, jedno wyszukanie stąd.</ThemedScreenshot>
+
+Więcej sztuczek wyszukiwania znajdziesz w [przeszukuj wszystkie karty w TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+
+</Section>
+
+<Section id="benefit" title="Co zyskujesz">
+
+Najgorszy scenariusz kurczy się z „tych kart już nie ma” do „tracę to, co otworzyłem od ostatniego zapisu”. Przy harmonogramie co godzinę nieudany restart kosztuje Cię najwyżej godzinę nowych kart; okno, które sam zamknąłeś, jest w „Ostatnio zamknięte”. Odzyskanie jednego i drugiego to jedno wyszukanie zamiast popołudnia w historii.
+
+</Section>
+
+<Section id="habits" title="Dobre nawyki">
+
+- **Dopasuj harmonogram do swojego tempa.** Co godzinę sprawdza się w większość dni; co 15 minut przy intensywnym researchu.
+- **Dodaj liczbę kart, jeśli otwierasz je seriami.** 50 to dobry początek.
+- **Najpierw zachowaj, potem posprzątaj.** Gdy w autozapisie jest coś wartego zatrzymania, naciśnij **Zachowaj jako grupę** i zmień nazwę; resztę usuń.
+- **Nadal zapisuj celowo.** Autozapis to siatka, a nie plan: trzymaj nazwane grupy dla prawdziwych projektów (zobacz [codzienny sposób pracy z kartami](/blog/tabmerger-daily-workflow)).
+
+</Section>
+
+<Section id="plans" title="Darmowy czy Pro">
+
+<ComparisonTable
+  head={['', 'Darmowy', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Autozapis otwartych kart', 'Wyłączony, dopóki go nie włączysz; zostają 2 najnowsze', 'Domyślnie włączony; zostają wszystkie'],
+    ['Autozapisy a limity planu', 'Wliczają się do 5 grup i 50 kart', 'Bez limitów'],
+    ['Ostatnio zamknięte', 'Ostatnie 2 dni', 'Ostatnie 30 dni'],
+    ['Automatyczne szyfrowane kopie zapasowe grup', 'Nie', 'Od co godzinę do co tydzień, zostaje 10 najnowszych'],
+    ['Otwarte karty z innych urządzeń', 'Nie', 'Ustawienia → Urządzenia'],
+  ]}
+/>
+
+W planie Darmowym każdy nowy autozapis zastępuje najstarszy, gdy są już 2; **Zachowaj jako grupę** wyjmuje jeden z rotacji. Blisko limitu 50 kart autozapis zapisuje karty, które się mieszczą, i o tym informuje. Kopie zapasowe i karty z Twoich urządzeń są przechowywane na Twoim koncie z szyfrowaniem end-to-end, a nasz serwer odmawia ich przechowywania dla konta bez Pro. Szczegóły na [stronie z cennikiem](/pricing).
+
+<InstallCta>Ustaw to raz i przestań martwić się zamkniętymi oknami. Za darmo dla Chrome, Edge i Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Najczęstsze pytania">
+
+<Faq items={post.faq} />
+
+</Section>

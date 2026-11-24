@@ -99,3 +99,9 @@ Run the template check again just before writing into the repo, to confirm en.md
 
 - Number check regex: `n(?![0-9.])` misses "2." at a sentence end; use `(?![0-9]|.[0-9])`. Gloss checks must accept full-width `（…）` for ja/zh. ar/he dual forms ("يومين", "יומיים") replace the digit 2.
 - In scratch scripts, `new URL(import.meta.url).pathname` keeps `%20` for paths with spaces; use `fileURLToPath`.
+
+**Derive the English data from the template** instead of typing it: an `extract.mjs` turns `tpl.mdx` into a regex with one capture per slot, matches it against en.mdx and writes `data/en.txt`; `gen en` must then be byte-identical to en.mdx. This is the template check with no hand-copied English.
+
+- The auto-save group name follows locale formatting (`toLocaleString(locale, {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"})`), so compute the example per locale in Node; fa comes out in the Persian calendar.
+- Number match: use `(?![0-9]|[.:][0-9])` (plus a lookbehind) so a number before a sentence-ending full stop still matches. ja/zh glosses use full-width `（English）`, ko half-width with the particle after it.
+- A translated "**Sentence.** Next" becomes `**…。**` in ja/zh; move the 。 outside the bold.

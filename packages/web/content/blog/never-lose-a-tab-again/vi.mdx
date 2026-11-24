@@ -1,0 +1,174 @@
+export const post = {
+  slug: 'never-lose-a-tab-again',
+  title: 'Không bao giờ mất tab nữa: tự động lưu và khôi phục tab đã đóng',
+  navTitle: 'Không bao giờ mất tab nữa',
+  seoTitle: 'Tự động lưu các tab đang mở và khôi phục tab đã đóng với TabMerger',
+  description:
+    'Tự động lưu các tab đang mở theo lịch hoặc khi số tab vượt một mức nhất định, và lấy lại bất kỳ tab hay cửa sổ nào bạn đã đóng. Cách tính năng tự động lưu và “Đã đóng gần đây” của TabMerger hoạt động, và vì sao.',
+  shareSummary: 'Tab đang mở được lưu theo lịch, mọi cửa sổ đã đóng chỉ cách một lần tìm kiếm.',
+  dek: 'Bạn không cần phải nhớ lưu. Thiết lập một lần, và mọi tab đang mở đều có bản sao.',
+  published: '2026-12-13',
+  updated: '2026-12-13',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Tự động lưu chạy từ 15 phút một lần đến mỗi ngày một lần, hoặc khi số tab đang mở vượt một mức từ 20 đến 100.', source: 'TabMerger 3.16.1' },
+    { text: 'Tab đã lưu trong một nhóm sẽ được bỏ qua; cửa sổ riêng tư không bao giờ được lưu.', source: 'TabMerger 3.16.1' },
+    { text: 'Gói Miễn phí giữ 2 bản tự động lưu mới nhất; Pro giữ tất cả.', source: 'Bảng giá TabMerger', href: '/pricing' },
+    { text: '“Đã đóng gần đây” giữ 2 ngày gần nhất với gói Miễn phí, 30 ngày với Pro.', source: 'Bảng giá TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Làm sao để tự động lưu các tab đang mở?',
+      answer:
+        'Trong TabMerger, mở Cài đặt → Dữ liệu và bật “Tự động lưu các thẻ đang mở”. Chọn lịch (từ 15 phút một lần đến mỗi ngày một lần), số tab đang mở sẽ kích hoạt việc lưu, hoặc cả hai. Mỗi lần chạy sẽ lưu các tab đang mở thành một nhóm mới.',
+    },
+    {
+      question: 'Tự động lưu có làm TabMerger đầy bản trùng lặp không?',
+      answer:
+        'Không. Tab có địa chỉ đã được lưu trong bất kỳ nhóm nào sẽ được bỏ qua, và một trang mở ở nhiều tab chỉ được lưu một lần. Khi mọi thứ đã được lưu, lần chạy đó không lưu gì cả.',
+    },
+    {
+      question: 'Tự động lưu có cần TabMerger đang mở không?',
+      answer: 'Không. Tính năng này chạy trong nền của tiện ích khi trình duyệt đang mở, và kiểm tra xem có lần lưu nào bị lỡ khi trình duyệt khởi động.',
+    },
+    {
+      question: 'Làm sao để lấy lại một cửa sổ tôi đã đóng?',
+      answer:
+        'Nhấn Ctrl+K trong TabMerger rồi gõ closed: để liệt kê các tab và cửa sổ đã đóng gần đây, hoặc mở “Đã đóng gần đây” ở thanh bên. Chọn một cửa sổ đã đóng sẽ khôi phục toàn bộ cửa sổ đó.',
+    },
+    {
+      question: 'Gói Miễn phí giữ những gì, và Pro thêm gì?',
+      answer:
+        'Gói Miễn phí giữ 2 bản tự động lưu mới nhất (giữ một bản làm nhóm để không bị mất) và các tab đã đóng trong 2 ngày gần nhất. Pro giữ mọi bản tự động lưu và 30 ngày tab đã đóng, đồng thời thêm bản sao lưu tự động được mã hóa và các tab đang mở trên những thiết bị khác của bạn.',
+    },
+  ],
+  images: [
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-light.webp', alt: 'TabMerger “Settings” (Cài đặt), “Data” (Dữ liệu): “Auto-save open tabs” (Tự động lưu các thẻ đang mở) đang bật, mỗi giờ và khi số tab đang mở vượt quá 50, cùng nút “Auto-save now” (Tự động lưu ngay), giao diện sáng' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-dark.webp', alt: 'TabMerger “Settings” (Cài đặt), “Data” (Dữ liệu): “Auto-save open tabs” (Tự động lưu các thẻ đang mở) đang bật, mỗi giờ và khi số tab đang mở vượt quá 50, cùng nút “Auto-save now” (Tự động lưu ngay), giao diện tối' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp', alt: 'Một nhóm trong mục “Auto-saved” (Tự động lưu) có hai cửa sổ và bảy tab, cùng nút “Keep as group” (Giữ làm nhóm), giao diện sáng' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-dark.webp', alt: 'Một nhóm trong mục “Auto-saved” (Tự động lưu) có hai cửa sổ và bảy tab, cùng nút “Keep as group” (Giữ làm nhóm), giao diện tối' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-light.webp', alt: 'Tìm kiếm closed: trong TabMerger hiện một cửa sổ có 3 tab đã đóng hôm nay, giao diện sáng' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-dark.webp', alt: 'Tìm kiếm closed: trong TabMerger hiện một cửa sổ có 3 tab đã đóng hôm nay, giao diện tối' },
+  ],
+  tags: ['tabmerger-guides', 'save-tabs', 'restore-closed-tabs', 'session-management'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp' },
+  ogImage: { src: '/blog/never-lose-a-tab-again/og.png', alt: 'Không bao giờ mất tab nữa: một nhóm tự động lưu trong TabMerger với nút “Keep as group” (Giữ làm nhóm)' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'problem', label: 'Tab bị mất như thế nào' },
+    { id: 'why', label: 'Vì sao hoạt động như vậy' },
+    { id: 'steps', label: 'Bật tính năng' },
+    { id: 'closed', label: 'Đã đóng gần đây' },
+    { id: 'benefit', label: 'Lợi ích' },
+    { id: 'habits', label: 'Thói quen tốt' },
+    { id: 'plans', label: 'Miễn phí và Pro' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+}
+
+<QuickAnswer>
+
+Bật **Cài đặt → Dữ liệu → Tự động lưu các thẻ đang mở** (Settings → Data → Auto-save open tabs) trong [TabMerger](/features) rồi chọn lịch, số tab hoặc cả hai. Từ đó trở đi, các tab đang mở được tự động lưu thành một nhóm mới, bỏ qua những gì đã lưu. Lỡ tay đóng thứ gì đó? <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> và `closed:` tìm mọi tab và cửa sổ bạn vừa đóng, và mở lại cả cửa sổ chỉ bằng một cú nhấp.
+
+</QuickAnswer>
+
+<InstallCta>Bản sao của mọi tab đang mở, được lưu giúp bạn theo lịch. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+<Section id="problem" title="Tab thực sự bị mất như thế nào">
+
+Hiếm khi do một sự cố lớn. Thường chỉ là chuyện nhỏ: bạn đóng nhầm cửa sổ, đúng cái có ba mươi tab nghiên cứu từ sáng nay. Một bản cập nhật khởi động lại trình duyệt và chỉ một trong ba cửa sổ quay lại. Bạn dọn dẹp vào thứ Sáu và đến thứ Hai lại cần trang mình đã đóng. Lúc đó tab đã nằm đâu đó trong Lịch sử, giữa hàng trăm trang khác, nếu bạn còn nhớ tên nó.
+
+Lưu thủ công giải quyết được, vào những ngày bạn nhớ. Tự động lưu dành cho những ngày còn lại.
+
+Để lấy lại tab sau sự cố hoặc khi trình duyệt buộc khởi động lại, bằng công cụ có sẵn của từng trình duyệt, hãy xem [cách lấy lại tab sau sự cố](/blog/restore-tabs-after-crash). Hướng dẫn này giúp bạn luôn có một bản sao.
+
+</Section>
+
+<Section id="why" title="Vì sao tự động lưu hoạt động như vậy">
+
+Mỗi quy tắc trong tính năng tự động lưu của TabMerger đều nhằm giúp bản sao hữu ích, chứ không chỉ để có:
+
+- **Lưu vào một nhóm mới**, đặt tên theo thời gian (“Tự động lưu 20:28 21 thg 11”), giữ nguyên cửa sổ và thứ tự tab. Không có gì bạn đã lưu trước đó bị thay đổi. Mỗi bản tự động lưu mới có màu khác với bản trước, nên dễ phân biệt.
+- **Hai điều kiện kích hoạt, vì tab dồn lại theo hai cách.** **Lịch** (15 hoặc 30 phút một lần, mỗi giờ, 2 hoặc 4 giờ một lần, hoặc mỗi ngày) phù hợp với công việc đều đặn. **Số tab** (20, 30, 50, 75 hoặc 100 tab đang mở) phù hợp với những đợt nghiên cứu bùng nổ mà lịch nào cũng không theo kịp.
+- **Một đợt bùng nổ chỉ lưu một lần.** Điều kiện theo số tab kích hoạt khi bạn vượt mức, rồi chờ đến khi bạn quay về bằng hoặc dưới mức đó, và ít nhất 10 phút, mới có thể kích hoạt lại. Mở mười tab liên tiếp không tạo ra mười nhóm.
+- **Không trùng lặp.** Tab có địa chỉ đã nằm trong bất kỳ nhóm nào của bạn sẽ được bỏ qua, và một trang mở ở nhiều tab chỉ được lưu một lần. Nếu mọi thứ đã được lưu, lần chạy đó không lưu gì và báo cho bạn biết.
+- **Riêng tư vẫn riêng tư.** Cửa sổ riêng tư không bao giờ được lưu. Các trang của chính TabMerger bị loại ra; tab đã ghim và trang của trình duyệt vẫn được lưu.
+- **Không cần đến bạn.** Tự động lưu chạy trong nền của tiện ích khi trình duyệt đang mở, và kiểm tra xem đã đến lúc lưu chưa khi trình duyệt khởi động. Một thông báo tùy chọn cho bạn biết sau mỗi lần chạy; dòng trạng thái trong phần cài đặt hiện kết quả gần nhất.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Tự động lưu trong TabMerger" steps={[{ title: 'Cài đặt' }, { title: 'Nhóm tự động lưu' }]}>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-save-settings" alt="TabMerger “Settings” (Cài đặt), “Data” (Dữ liệu): “Auto-save open tabs” (Tự động lưu các thẻ đang mở) đang bật, mỗi giờ và khi số tab đang mở vượt quá 50, cùng nút “Auto-save now” (Tự động lưu ngay), giao diện sáng" darkAlt="TabMerger “Settings” (Cài đặt), “Data” (Dữ liệu): “Auto-save open tabs” (Tự động lưu các thẻ đang mở) đang bật, mỗi giờ và khi số tab đang mở vượt quá 50, cùng nút “Auto-save now” (Tự động lưu ngay), giao diện tối" boxes={[{ id: 'schedule', label: 'Bao lâu lưu một lần' }, { id: 'threshold', label: 'Điều kiện theo số tab đang mở' }, { id: 'run-now', label: 'Lưu ngay bây giờ' }]} source="TabMerger 3.16.1">Mỗi giờ, và mỗi khi số tab đang mở vượt quá 50.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-saved" alt="Một nhóm trong mục “Auto-saved” (Tự động lưu) có hai cửa sổ và bảy tab, cùng nút “Keep as group” (Giữ làm nhóm), giao diện sáng" darkAlt="Một nhóm trong mục “Auto-saved” (Tự động lưu) có hai cửa sổ và bảy tab, cùng nút “Keep as group” (Giữ làm nhóm), giao diện tối" boxes={[{ id: 'keep', label: 'Giữ làm nhóm' }]} source="TabMerger 3.16.1">Kết quả: cả hai cửa sổ đang mở, được lưu thành một nhóm. Giữ lại để lưu vĩnh viễn.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="steps" title="Bật trong bốn bước">
+
+1. Mở TabMerger, rồi **Cài đặt** (Settings, trong menu tài khoản) → **Dữ liệu** (Data).
+2. Bật **Tự động lưu các thẻ đang mở** (Auto-save open tabs). (Với Pro, tính năng này đã bật sẵn, mỗi giờ.) Giao diện TabMerger gọi tab là “thẻ”.
+3. Chọn **Lịch** (Schedule), một số trong **Khi số thẻ đang mở vượt quá** (When open tabs pass), hoặc cả hai. Bật **Hiện thông báo** (Show a notification) nếu bạn muốn được báo sau mỗi lần lưu.
+4. Nhấn **Tự động lưu ngay** (Auto-save now) một lần để xem kết quả: một nhóm mới trong mục **Tự động lưu** (Auto-saved) ở thanh bên.
+
+Thấy một bản tự động lưu muốn giữ lâu dài? Mở nó và nhấn **Giữ làm nhóm** (Keep as group): nó chuyển vào các nhóm của bạn và không bao giờ bị tự động xóa.
+
+</Section>
+
+<Section id="closed" title="Đã đóng gần đây: nửa còn lại của tấm lưới an toàn">
+
+Tự động lưu lo những gì đang mở; **Đã đóng gần đây** (Recently closed) lo những gì bạn vừa đóng. Mọi tab và cửa sổ bạn đóng được giữ lại theo ngày, chỉ trên thiết bị này, và cửa sổ riêng tư không bao giờ được ghi lại.
+
+- Mở **Đã đóng gần đây** ở thanh bên để xem theo ngày, hoặc nhấn <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> rồi bắt đầu bằng `closed:` để tìm trong đó.
+- Một **cửa sổ** đã đóng hiện thành một mục duy nhất (“Cửa sổ · 3 thẻ”): chọn nó và cả cửa sổ quay lại.
+- Nhấn <Kbd>Ctrl</Kbd> và nhấp (<Kbd>⌘</Kbd> và nhấp trên Mac) hoặc nhấp chuột giữa vào một kết quả để mở lại nó trong nền.
+
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-closed-window" alt="Tìm kiếm closed: trong TabMerger hiện một cửa sổ có 3 tab đã đóng hôm nay, giao diện sáng" darkAlt="Tìm kiếm closed: trong TabMerger hiện một cửa sổ có 3 tab đã đóng hôm nay, giao diện tối" boxes={[{ id: 'search-input', label: 'Bộ lọc closed:' }, { id: 'closed-window', label: 'Cả một cửa sổ đã đóng' }]} source="TabMerger 3.16.1">Một cửa sổ đóng nhầm, chỉ cách một lần tìm kiếm.</ThemedScreenshot>
+
+Thêm mẹo tìm kiếm trong [tìm kiếm mọi tab của bạn với TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+
+</Section>
+
+<Section id="benefit" title="Lợi ích">
+
+Trường hợp xấu nhất thu nhỏ từ “mấy tab đó mất rồi” thành “tôi chỉ mất những gì đã mở từ lần lưu gần nhất”. Với lịch mỗi giờ, một lần khởi động lại tệ hại chỉ khiến bạn mất tối đa một giờ tab mới; cửa sổ bạn tự đóng thì nằm trong “Đã đóng gần đây”. Lấy lại cả hai chỉ là một lần tìm kiếm thay vì cả buổi chiều lục Lịch sử.
+
+</Section>
+
+<Section id="habits" title="Thói quen tốt">
+
+- **Chọn lịch hợp với nhịp làm việc.** Mỗi giờ hợp với hầu hết các ngày; 15 phút một lần hợp với những lúc nghiên cứu dày đặc.
+- **Thêm số tab nếu bạn hay mở tab theo đợt.** 50 là mức khởi đầu tốt.
+- **Giữ trước, dọn sau.** Khi một bản tự động lưu có thứ đáng giữ, nhấn **Giữ làm nhóm** và đổi tên; xóa phần còn lại.
+- **Vẫn lưu có chủ đích.** Tự động lưu là tấm lưới an toàn, không phải kế hoạch: hãy giữ các nhóm có tên cho dự án thực sự (xem [quy trình làm việc với tab hằng ngày](/blog/tabmerger-daily-workflow)).
+
+</Section>
+
+<Section id="plans" title="Miễn phí và Pro">
+
+<ComparisonTable
+  head={['', 'Miễn phí', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Tự động lưu các thẻ đang mở', 'Tắt cho đến khi bạn bật; giữ 2 bản mới nhất', 'Bật sẵn; giữ tất cả'],
+    ['Bản tự động lưu và giới hạn gói', 'Tính vào giới hạn 5 nhóm và 50 tab', 'Không giới hạn'],
+    ['Đã đóng gần đây', '2 ngày gần nhất', '30 ngày gần nhất'],
+    ['Sao lưu tự động được mã hóa cho các nhóm', 'Không', 'Từ mỗi giờ đến mỗi tuần, giữ 10 bản mới nhất'],
+    ['Tab đang mở trên các thiết bị khác', 'Không', 'Cài đặt → Thiết bị'],
+  ]}
+/>
+
+Với gói Miễn phí, mỗi bản tự động lưu mới thay thế bản cũ nhất khi đã có 2 bản; **Giữ làm nhóm** đưa một bản ra khỏi vòng xoay. Khi gần chạm giới hạn 50 tab, tự động lưu sẽ lưu những tab còn vừa và báo cho bạn. Bản sao lưu và tab trên các thiết bị của bạn được lưu trong tài khoản của bạn, mã hóa đầu cuối, và máy chủ của chúng tôi từ chối lưu chúng cho tài khoản không có Pro. Chi tiết tại [trang bảng giá](/pricing).
+
+<InstallCta>Thiết lập một lần, và thôi lo lắng về các cửa sổ đã đóng. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+</Section>
