@@ -1,0 +1,175 @@
+export const post = {
+  slug: 'search-all-your-tabs-with-tabmerger',
+  title: 'Cari semua tab Anda dengan TabMerger: Ctrl+K dan filternya',
+  navTitle: 'Cari semua tab Anda',
+  seoTitle: 'Cari Tab yang Terbuka, Tersimpan, dan Tertutup Sekaligus dengan TabMerger',
+  description:
+    'Satu kotak pencarian untuk semua tab Anda: yang terbuka, tersimpan di grup, atau ditutup minggu ini. Cara kerja pencarian tab Ctrl+K di TabMerger, setiap filter (group:, window:, tag:, closed:), dan alasan cara pencocokannya.',
+  shareSummary: 'Tab terbuka, tersimpan, dan tertutup dalam satu kotak pencarian, dengan filter yang cepat menyaring.',
+  dek: 'Terbuka, tersimpan, atau ditutup sejam lalu: ketik beberapa huruf dan tab itu muncul, disorot.',
+  published: '2026-12-14',
+  updated: '2026-12-14',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Ctrl+K (⌘+K di Mac) mencari tab terbuka, tersimpan, dan yang baru ditutup sekaligus.', source: 'TabMerger 3.16.1' },
+    { text: 'Filter: group:, window:, tag: (label grup tab Chrome), dan closed:.', source: 'TabMerger 3.16.1' },
+    { text: 'Kecocokan adalah rangkaian huruf yang persis, tidak pernah kabur, jadi setiap hasil punya sorotan.', source: 'Kode sumber TabMerger 3.16.1' },
+    { text: 'Pencarian dan semua filter gratis.', source: 'Harga TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Bagaimana cara mencari semua tab saya sekaligus?',
+      answer:
+        'Buka TabMerger dan tekan Ctrl+K (⌘+K di Mac), lalu ketik sebagian judul atau alamat halaman. Hasilnya mencakup tab yang terbuka, setiap grup tersimpan, dan, di bawahnya, tab yang baru Anda tutup.',
+    },
+    {
+      question: 'Bagaimana cara mencari di satu grup saja?',
+      answer:
+        'Ketik group: lalu pilih grup dari daftar; TabMerger mengisi group:"Name". Lalu tambahkan kata-kata Anda di belakangnya, misalnya group:"Thesis sources" wiki.',
+    },
+    {
+      question: 'Bisakah saya mencari tab yang sudah saya tutup?',
+      answer: 'Bisa. Awali pencarian dengan closed: untuk menampilkan hanya tab dan jendela yang baru ditutup. Pilih salah satu untuk membukanya lagi; Ctrl-klik atau klik tengah membukanya di latar belakang.',
+    },
+    {
+      question: 'Mengapa pencarian tidak menemukan halaman saat saya salah ketik?',
+      answer:
+        'TabMerger mencocokkan huruf persis seperti yang diketik (tanpa membedakan huruf besar dan kecil), tidak pernah huruf yang tersebar di sepanjang judul. Itu membuat hasilnya bisa diprediksi: setiap hasil punya kecocokan yang disorot, dan setiap sorotan adalah kecocokan sungguhan.',
+    },
+    {
+      question: 'Apakah pencarian gratis?',
+      answer: 'Ya, pencarian dan semua filternya ada di paket Free. Pro menyimpan tab yang ditutup selama 30 hari untuk dicari, bukan 2 hari.',
+    },
+  ],
+  images: [
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-light.webp', alt: 'Pencarian TabMerger yang dibuka dengan Ctrl+K, menampilkan contoh pencarian untuk react, group:, window:, tag:, dan closed:, tema terang' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-dark.webp', alt: 'Pencarian TabMerger yang dibuka dengan Ctrl+K, menampilkan contoh pencarian untuk react, group:, window:, tag:, dan closed:, tema gelap' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-light.webp', alt: 'Pencarian docs di TabMerger: empat hasil dari Now Open (Sedang Terbuka) dan Reading list, dengan docs disorot di setiap alamat, tema terang' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-dark.webp', alt: 'Pencarian docs di TabMerger: empat hasil dari Now Open (Sedang Terbuka) dan Reading list, dengan docs disorot di setiap alamat, tema gelap' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-light.webp', alt: 'Pencarian TabMerger dengan window: diketik, menampilkan jendela Window, Papers, dan Tools untuk dipilih, tema terang' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-dark.webp', alt: 'Pencarian TabMerger dengan window: diketik, menampilkan jendela Window, Papers, dan Tools untuk dipilih, tema gelap' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp', alt: 'Grup Thesis sources saat dicari dengan wiki, dengan satu kecocokan disorot dan tab lainnya diredupkan, tema terang' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-dark.webp', alt: 'Grup Thesis sources saat dicari dengan wiki, dengan satu kecocokan disorot dan tab lainnya diredupkan, tema gelap' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'browser-tips'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp' },
+  ogImage: { src: '/blog/search-all-your-tabs-with-tabmerger/og.png', alt: 'Cari semua tab Anda dengan TabMerger: hasil untuk docs dari tab terbuka dan tersimpan' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'problem', label: 'Di mana tab itu tadi?' },
+    { id: 'why', label: 'Mengapa pencarian bekerja seperti ini' },
+    { id: 'steps', label: 'Mencari langkah demi langkah' },
+    { id: 'filters', label: 'Semua filter' },
+    { id: 'panel', label: 'Setelah mencari' },
+    { id: 'benefit', label: 'Yang Anda hemat' },
+    { id: 'habits', label: 'Kebiasaan yang baik' },
+    { id: 'plans', label: 'Free vs Pro' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Buka [TabMerger](/features) dan tekan <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> di Mac). Ketik beberapa huruf dari judul atau alamat: hasilnya berasal dari tab yang terbuka, setiap grup tersimpan, dan, di bawahnya, tab yang baru Anda tutup, masing-masing diberi tanda tempatnya berada. Persempit dengan `group:`, `window:`, `tag:`, atau `closed:`, lalu tekan <Kbd>Enter</Kbd> untuk langsung menuju tab itu.
+
+</QuickAnswer>
+
+<InstallCta>Setiap tab Anda, hanya sejauh satu pencarian. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+<Section id="problem" title="“Di mana tab itu tadi?”">
+
+Anda tahu halamannya ada. Hari Selasa halaman itu terbuka, di sebelah pull request. Apakah di jendela kerja atau jendela bacaan? Apakah Anda menyimpannya ke grup, atau menutupnya? Pencarian tab bawaan browser hanya melihat apa yang sedang terbuka di browser itu saat ini; riwayat melihat semua yang pernah Anda kunjungi, tanpa tahu mana yang sengaja Anda simpan.
+
+Yang Anda butuhkan adalah satu kotak yang tahu semuanya: apa yang terbuka, apa yang Anda simpan, dan apa yang Anda tutup minggu ini. Kotak itu adalah <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> di TabMerger. (Untuk pencarian tab bawaan browser, lihat [cara menemukan satu tab di antara ratusan tab](/blog/find-a-tab-among-hundreds).)
+
+</Section>
+
+<Section id="why" title="Mengapa pencarian TabMerger bekerja seperti ini">
+
+- **Semuanya dalam satu daftar.** Tab terbuka, grup tersimpan, dan tab yang baru ditutup menjawab pertanyaan yang sama (“di mana tabnya?”), jadi semuanya muncul bersama. Setiap hasil membawa lencana berisi grupnya, dan label grup tab Chrome-nya jika ada.
+- **Persis, bukan kabur.** Hasil adalah tab yang judul atau alamatnya memuat huruf Anda sebagai satu rangkaian, tanpa membedakan huruf besar dan kecil. Huruf yang tersebar di sepanjang judul tidak pernah dihitung. Ini disengaja: setiap hasil punya sorotan, dan setiap sorotan adalah kecocokan sebenarnya, jadi Anda bisa memercayai apa yang Anda lihat.
+- **Kecocokan terbaik lebih dulu.** Kecocokan persis berada di atas judul yang diawali teks Anda, lalu kata yang diawali teks itu, lalu kecocokan di mana saja. Daftarnya menampilkan 12 teratas, jadi tab yang tepat ada di dekat puncak.
+- **Pilih, jangan eja.** Mengetik `group:`, `window:`, atau `tag:` membuka daftar grup, jendela, atau label Anda untuk dipilih. TabMerger mengisi nama dalam tanda kutip, jadi nama panjang yang berspasi langsung berfungsi.
+- **Tab yang ditutup tidak menghalangi.** Hingga 3 tab yang baru ditutup muncul di bawah hasil tersimpan; awali dengan `closed:` untuk melihat hanya tab yang ditutup.
+- **Cukup dengan keyboard.** <Kbd>↑</Kbd> <Kbd>↓</Kbd> untuk berpindah, <Kbd>Enter</Kbd> untuk membuka, <Kbd>Esc</Kbd> atau <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> untuk menutup. Menutup tidak menghapus yang sudah Anda ketik, jadi Anda bisa kembali ke sana.
+
+</Section>
+
+<Section id="steps" title="Mencari langkah demi langkah">
+
+1. Buka TabMerger dan tekan <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> di Mac), atau klik kotak pencarian di bagian atas.
+2. Saat belum ada yang diketik, kotak itu menyarankan pencarian untuk dicoba. Klik salah satunya untuk memulai dari sana.
+3. Ketik beberapa huruf dari judul atau alamat, misalnya `docs`. Kecocokan akan disorot.
+4. Tekan <Kbd>Enter</Kbd> pada sebuah tab: TabMerger membuka grupnya dan memindahkan fokus ke tab itu. Pada tab yang sudah ditutup, <Kbd>Enter</Kbd> membukanya lagi.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Mencari di TabMerger" steps={[{ title: 'Ctrl+K' }, { title: 'Hasil' }, { title: 'window:' }]}>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-examples" alt="Pencarian TabMerger yang dibuka dengan Ctrl+K, menampilkan contoh pencarian untuk react, group:, window:, tag:, dan closed:, tema terang" darkAlt="Pencarian TabMerger yang dibuka dengan Ctrl+K, menampilkan contoh pencarian untuk react, group:, window:, tag:, dan closed:, tema gelap" boxes={[{ id: 'search-input', label: 'Kotak pencarian' }, { id: 'examples', label: 'Saran pencarian' }]} source="TabMerger 3.16.1">Pencarian kosong menyarankan dari mana harus mulai.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-results" alt="Pencarian docs di TabMerger: empat hasil dari Now Open (Sedang Terbuka) dan Reading list, dengan docs disorot di setiap alamat, tema terang" darkAlt="Pencarian docs di TabMerger: empat hasil dari Now Open (Sedang Terbuka) dan Reading list, dengan docs disorot di setiap alamat, tema gelap" boxes={[{ id: 'search-input', label: 'docs' }]} source="TabMerger 3.16.1">Tab terbuka dan tersimpan dalam satu daftar, masing-masing ditandai dengan grupnya.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker" alt="Pencarian TabMerger dengan window: diketik, menampilkan jendela Window, Papers, dan Tools untuk dipilih, tema terang" darkAlt="Pencarian TabMerger dengan window: diketik, menampilkan jendela Window, Papers, dan Tools untuk dipilih, tema gelap" boxes={[{ id: 'search-input', label: 'Filter window:' }, { id: 'pick-window', label: 'Jendela yang Anda beri nama' }]} source="TabMerger 3.16.1">Ketik window: lalu pilih; tidak perlu mengeja namanya.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="filters" title="Semua filter, dengan contoh">
+
+<ComparisonTable
+  head={['Filter', 'Menemukan', 'Contoh']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['(kata biasa)', 'Tab yang judul atau alamatnya memuat kata itu, dan grup berdasarkan nama', 'pull request'],
+    ['group:', 'Tab di satu grup', 'group:"Thesis sources" wiki'],
+    ['window:', 'Tab di satu jendela (beri nama lewat menu ⋯-nya)', 'window:"Papers"'],
+    ['tag:', 'Tab di grup tab Chrome dengan label tersebut', 'tag:"Sprint"'],
+    ['closed:', 'Hanya tab dan jendela yang baru ditutup', 'closed: seat'],
+  ]}
+/>
+
+Filter bisa digabung dengan kata dan dengan filter lain. Gunakan tanda kutip jika Anda menambahkan kata setelah filter: tanpa itu, filter mengambil sisa baris, jadi `group:Work pull` mencari grup bernama “Work pull”. Memilih dari daftar menambahkan tanda kutip untuk Anda.
+
+</Section>
+
+<Section id="panel" title="Setelah mencari: sembunyikan atau redupkan sisanya">
+
+Tutup pencarian dengan <Kbd>Esc</Kbd> dan pencarian tetap berlaku di tampilan utama. Bilah samping menunjukkan berapa kecocokan di setiap grup (“1 ditemukan”), dan di dalam grup, tab yang tidak cocok **disembunyikan** secara default. Lebih suka tetap punya patokan? Di **Pengaturan → Umum** (Settings → General), atur **Tab yang tidak cocok dengan pencarian** (Tabs that do not match a search) ke **Redupkan** (Dim): setiap tab tetap di tempatnya, diredupkan, dengan kecocokan disorot. **Hapus pencarian** (Clear search) mengakhirinya.
+
+Selama ada tab yang disembunyikan, menyusun ulang dengan menyeret dijeda (“Hapus pencarian untuk memindahkan item”): saat sebagian baris tidak terlihat, tempat mendaratnya tab yang dilepas hanya bisa ditebak.
+
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-dim" alt="Grup Thesis sources saat dicari dengan wiki, dengan satu kecocokan disorot dan tab lainnya diredupkan, tema terang" darkAlt="Grup Thesis sources saat dicari dengan wiki, dengan satu kecocokan disorot dan tab lainnya diredupkan, tema gelap" boxes={[{ id: 'match', label: 'Kecocokannya' }]} source="TabMerger 3.16.1">Mode redup: kecocokan menonjol, semua yang lain tetap di tempatnya.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Yang Anda hemat">
+
+Memindai jendela penuh ikon 16 piksel dan menggulir riwayat menjadi cukup beberapa ketukan tombol. Cara kerjanya sama berapa pun tab yang Anda simpan: grup yang Anda simpan berbulan-bulan lalu sama dekatnya dengan tab yang Anda buka semenit lalu. Itulah yang membuat menutup jendela jadi aman: apa pun yang Anda simpan hanya sejauh satu pencarian.
+
+</Section>
+
+<Section id="habits" title="Kebiasaan yang baik">
+
+- **Cari di alamat, bukan hanya judul.** `github.com/your-org` atau `localhost:3000` menemukan halaman yang judulnya mirip semua.
+- **Beri nama jendela yang sering Anda cari.** “Papers”, “PRs”, “Docs”: lalu `window:` membawa Anda ke sana.
+- **Awali dengan `closed:`** jika Anda tahu tabnya sudah ditutup; daftarnya lebih pendek dan hanya berisi yang Anda perlukan.
+- **Padukan pencarian dengan grup.** Makin rapi grup Anda (lihat [alur kerja tab harian](/blog/tabmerger-daily-workflow)), makin sempit hasil filter `group:`.
+
+</Section>
+
+<Section id="plans" title="Free vs Pro">
+
+Pencarian, semua filter, daftar pilihan, serta Sembunyikan atau Redupkan semuanya ada di paket Free, tanpa akun. Satu-satunya perbedaan adalah seberapa jauh tab yang ditutup tersimpan: Free menyimpan tab yang Anda tutup dalam 2 hari terakhir, Pro dalam 30 hari terakhir. Dan dengan grup dan tab tanpa batas di Pro, memang ada lebih banyak yang bisa ditemukan. Lihat [halaman harga](/pricing).
+
+<InstallCta>Temukan tab apa pun yang Anda simpan dengan satu ketukan tombol. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+Untuk penggunaan keyboard di luar pencarian, lihat [pintasan keyboard untuk tab](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

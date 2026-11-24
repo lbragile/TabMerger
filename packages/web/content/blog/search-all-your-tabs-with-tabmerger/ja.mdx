@@ -1,0 +1,175 @@
+export const post = {
+  slug: 'search-all-your-tabs-with-tabmerger',
+  title: 'TabMerger ですべてのタブを検索する：Ctrl+K とそのフィルタ',
+  navTitle: 'すべてのタブを検索する',
+  seoTitle: '開いているタブ・保存したタブ・閉じたタブを TabMerger でまとめて検索',
+  description:
+    '開いているタブ、グループに保存したタブ、今週閉じたタブ。そのすべてを 1 つの検索ボックスで。TabMerger の Ctrl+K によるタブ検索の仕組み、各フィルタ（group:、window:、tag:、closed:）、そしてこの一致方法を選んだ理由を解説します。',
+  shareSummary: '開いているタブも保存したタブも閉じたタブも 1 つの検索ボックスで。フィルタですぐに絞り込めます。',
+  dek: '開いていても、保存していても、1 時間前に閉じていても。数文字入力すれば、ハイライトされて見つかります。',
+  published: '2026-12-14',
+  updated: '2026-12-14',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Ctrl+K（Mac では ⌘+K）で、開いているタブ・保存したタブ・最近閉じたタブをまとめて検索できます。', source: 'TabMerger 3.16.1' },
+    { text: 'フィルタ：group:、window:、tag:（Chrome のタブグループのラベル）、closed:。', source: 'TabMerger 3.16.1' },
+    { text: '一致は文字の完全な並びだけで、あいまい検索はしないため、どの結果にもハイライトがあります。', source: 'TabMerger 3.16.1 のソースコード' },
+    { text: '検索とすべてのフィルタは無料です。', source: 'TabMerger の料金', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'すべてのタブをまとめて検索するには？',
+      answer:
+        'TabMerger を開いて Ctrl+K（Mac では ⌘+K）を押し、ページのタイトルかアドレスの一部を入力します。結果には開いているタブ、保存したすべてのグループ、その下に最近閉じたタブが表示されます。',
+    },
+    {
+      question: '1 つのグループだけを検索するには？',
+      answer:
+        'group: と入力して一覧からグループを選ぶと、TabMerger が group:"Name" を入力します。続けて検索語を加えます。例：group:"Thesis sources" wiki',
+    },
+    {
+      question: 'すでに閉じたタブも検索できますか？',
+      answer: 'はい。検索を closed: で始めると、最近閉じたタブとウィンドウだけが一覧表示されます。選ぶと再び開きます。Ctrl キーを押しながらクリックするか中クリックすると、バックグラウンドで開きます。',
+    },
+    {
+      question: '入力ミスをするとページが見つからないのはなぜですか？',
+      answer:
+        'TabMerger は入力した文字をそのままの並びで照合し（大文字と小文字は区別しません）、タイトルのあちこちに散らばった文字には一致させません。そのため結果が予測しやすく、どの結果にもハイライトされた一致があり、どのハイライトも本当の一致です。',
+    },
+    {
+      question: '検索は無料ですか？',
+      answer: 'はい。検索とすべてのフィルタは Free プランで使えます。Pro では、検索できる閉じたタブの保存期間が 2 日ではなく 30 日になります。',
+    },
+  ],
+  images: [
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-light.webp', alt: 'Ctrl+K で開いた TabMerger の検索。react、group:、window:、tag:、closed: の検索例が並んでいる（ライトテーマ）' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-dark.webp', alt: 'Ctrl+K で開いた TabMerger の検索。react、group:、window:、tag:、closed: の検索例が並んでいる（ダークテーマ）' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-light.webp', alt: 'TabMerger で docs を検索した結果。Now Open（現在開いているタブ）と Reading list から 4 件が表示され、各アドレスの docs がハイライトされている（ライトテーマ）' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-dark.webp', alt: 'TabMerger で docs を検索した結果。Now Open（現在開いているタブ）と Reading list から 4 件が表示され、各アドレスの docs がハイライトされている（ダークテーマ）' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-light.webp', alt: 'window: と入力した TabMerger の検索。Window、Papers、Tools の各ウィンドウから選べる（ライトテーマ）' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-dark.webp', alt: 'window: と入力した TabMerger の検索。Window、Papers、Tools の各ウィンドウから選べる（ダークテーマ）' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp', alt: 'Thesis sources グループ内を wiki で検索中。一致した 1 件がハイライトされ、ほかのタブは薄く表示されている（ライトテーマ）' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-dark.webp', alt: 'Thesis sources グループ内を wiki で検索中。一致した 1 件がハイライトされ、ほかのタブは薄く表示されている（ダークテーマ）' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'browser-tips'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp' },
+  ogImage: { src: '/blog/search-all-your-tabs-with-tabmerger/og.png', alt: 'TabMerger ですべてのタブを検索する：開いているタブと保存したタブから docs を検索した結果' },
+  toc: [
+    { id: 'quick', label: '簡単な答え' },
+    { id: 'problem', label: 'あのタブはどこ？' },
+    { id: 'why', label: '検索がこう動く理由' },
+    { id: 'steps', label: '検索の手順' },
+    { id: 'filters', label: 'すべてのフィルタ' },
+    { id: 'panel', label: '検索のあとで' },
+    { id: 'benefit', label: '省ける手間' },
+    { id: 'habits', label: 'よい習慣' },
+    { id: 'plans', label: 'Free と Pro' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+}
+
+<QuickAnswer>
+
+[TabMerger](/features) を開いて <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>（Mac では <Kbd>⌘</Kbd>+<Kbd>K</Kbd>）を押します。タイトルかアドレスを数文字入力すると、開いているタブ、保存したすべてのグループ、その下に最近閉じたタブから結果が表示され、それぞれにどこにあるかが示されます。`group:`、`window:`、`tag:`、`closed:` で絞り込み、<Kbd>Enter</Kbd> を押せばそのタブへ直接移動します。
+
+</QuickAnswer>
+
+<InstallCta>すべてのタブが、検索ひとつで見つかります。Chrome、Edge、Firefox 向けに無料。</InstallCta>
+
+<Section id="problem" title="「あのタブはどこ？」">
+
+そのページがあるのはわかっています。火曜日、プルリクエストの隣で開いていました。仕事用のウィンドウだったか、読み物用だったか。グループに保存したのか、閉じたのか。ブラウザのタブ検索が見ているのは、今そのブラウザで開いているものだけです。履歴はこれまでに訪れたものを全部覚えていますが、どれを意図して残したのかは知りません。
+
+必要なのは、開いているもの、保存したもの、今週閉じたもの、すべてを知っている 1 つのボックスです。それが TabMerger の <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> です（ブラウザに組み込まれたタブ検索については、[何百ものタブから目的のタブを見つける方法](/blog/find-a-tab-among-hundreds)をご覧ください）。
+
+</Section>
+
+<Section id="why" title="TabMerger の検索がこう動く理由">
+
+- **すべてを 1 つのリストに**。開いているタブ、保存したグループ、最近閉じたタブは「どこにある？」という同じ問いに答えるものなので、まとめて表示されます。各結果にはグループを示すバッジが付き、Chrome のタブグループに属していればそのラベルも表示されます。
+- **あいまいではなく完全一致**。結果になるのは、タイトルかアドレスに入力した文字がひと続きで含まれるタブです（大文字と小文字は区別しません）。タイトルに散らばった文字は数えません。これは意図した仕様です。どの結果にもハイライトがあり、どのハイライトも本当の一致なので、見たものをそのまま信頼できます。
+- **よく一致するものから順に**。完全一致が最上位で、次に入力した文字で始まるタイトル、次にその文字で始まる単語、最後にどこかに含まれるものが続きます。リストには上位 12 件が表示されるので、目的のタブは上のほうにあります。
+- **つづらずに選ぶ**。`group:`、`window:`、`tag:` と入力すると、グループ、ウィンドウ、ラベルの一覧が開いて選べます。TabMerger が名前を引用符付きで入力するので、スペースを含む長い名前もそのまま使えます。
+- **閉じたタブはじゃまにならない**。保存した結果の下に、最近閉じたタブが最大 3 件表示されます。閉じたタブだけを見たいときは `closed:` で始めます。
+- **キーボードだけで完結**。<Kbd>↑</Kbd> <Kbd>↓</Kbd> で移動、<Kbd>Enter</Kbd> で開く、<Kbd>Esc</Kbd> か <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> で閉じます。閉じても入力した内容は残るので、あとで続きから検索できます。
+
+</Section>
+
+<Section id="steps" title="検索の手順">
+
+1. TabMerger を開いて <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>（Mac では <Kbd>⌘</Kbd>+<Kbd>K</Kbd>）を押すか、上部の検索ボックスをクリックします。
+2. 何も入力していないときは、試せる検索例が表示されます。クリックすると、その検索から始められます。
+3. タイトルかアドレスを数文字入力します（例：`docs`）。一致した部分がハイライトされます。
+4. タブの上で <Kbd>Enter</Kbd> を押すと、TabMerger がそのグループを開き、そのタブにフォーカスを移します。閉じたタブなら、<Kbd>Enter</Kbd> で再び開きます。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="TabMerger での検索" steps={[{ title: 'Ctrl+K' }, { title: '結果' }, { title: 'window:' }]}>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-examples" alt="Ctrl+K で開いた TabMerger の検索。react、group:、window:、tag:、closed: の検索例が並んでいる（ライトテーマ）" darkAlt="Ctrl+K で開いた TabMerger の検索。react、group:、window:、tag:、closed: の検索例が並んでいる（ダークテーマ）" boxes={[{ id: 'search-input', label: '検索ボックス' }, { id: 'examples', label: '検索の候補' }]} source="TabMerger 3.16.1">空の検索ボックスが、どこから始めればよいかを提案します。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-results" alt="TabMerger で docs を検索した結果。Now Open（現在開いているタブ）と Reading list から 4 件が表示され、各アドレスの docs がハイライトされている（ライトテーマ）" darkAlt="TabMerger で docs を検索した結果。Now Open（現在開いているタブ）と Reading list から 4 件が表示され、各アドレスの docs がハイライトされている（ダークテーマ）" boxes={[{ id: 'search-input', label: 'docs' }]} source="TabMerger 3.16.1">開いているタブと保存したタブが 1 つのリストに。それぞれにグループが表示されます。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker" alt="window: と入力した TabMerger の検索。Window、Papers、Tools の各ウィンドウから選べる（ライトテーマ）" darkAlt="window: と入力した TabMerger の検索。Window、Papers、Tools の各ウィンドウから選べる（ダークテーマ）" boxes={[{ id: 'search-input', label: 'window: フィルタ' }, { id: 'pick-window', label: '名前を付けたウィンドウ' }]} source="TabMerger 3.16.1">window: と入力して選ぶだけ。名前をつづる必要はありません。</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="filters" title="すべてのフィルタと例">
+
+<ComparisonTable
+  head={['フィルタ', '見つかるもの', '例']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['（ふつうの語）', 'タイトルかアドレスにその語を含むタブと、名前が一致するグループ', 'pull request'],
+    ['group:', '1 つのグループ内のタブ', 'group:"Thesis sources" wiki'],
+    ['window:', '1 つのウィンドウ内のタブ（名前はウィンドウの ⋯ メニューで付けます）', 'window:"Papers"'],
+    ['tag:', 'そのラベルの Chrome タブグループ内のタブ', 'tag:"Sprint"'],
+    ['closed:', '最近閉じたタブとウィンドウのみ', 'closed: seat'],
+  ]}
+/>
+
+フィルタは検索語とも、フィルタ同士とも組み合わせられます。フィルタのあとに語を続けるときは引用符を使ってください。引用符がないとフィルタが行の残りをすべて取り込むため、`group:Work pull` は「Work pull」という名前のグループを探します。一覧から選べば、引用符は自動で付きます。
+
+</Section>
+
+<Section id="panel" title="検索のあとで：ほかのタブを隠すか、薄く表示するか">
+
+<Kbd>Esc</Kbd> で検索を閉じても、検索はメイン画面で効いたままです。サイドバーには各グループの一致件数（「1件見つかりました」）が表示され、グループ内の一致しないタブは既定で **非表示** になります。位置関係を見失いたくないなら、**設定 → 一般**（Settings → General）で **検索に一致しないタブ**（Tabs that do not match a search）を **薄く表示**（Dim）にします。すべてのタブがその場に薄く表示されたまま残り、一致した部分がハイライトされます。**検索をクリア**（Clear search）で検索を終了します。
+
+タブが非表示になっている間は、ドラッグによる並べ替えが一時停止します（「項目を移動するには検索をクリアしてください」）。見えない行があると、ドロップしたタブの行き先は推測になってしまうからです。
+
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-dim" alt="Thesis sources グループ内を wiki で検索中。一致した 1 件がハイライトされ、ほかのタブは薄く表示されている（ライトテーマ）" darkAlt="Thesis sources グループ内を wiki で検索中。一致した 1 件がハイライトされ、ほかのタブは薄く表示されている（ダークテーマ）" boxes={[{ id: 'match', label: '一致したタブ' }]} source="TabMerger 3.16.1">薄く表示モード：一致したタブが目立ち、ほかはすべて元の場所のまま。</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="省ける手間">
+
+16 ピクセルのアイコンが並ぶウィンドウを見て回ったり、履歴をスクロールしたりする手間が、数回のキー入力で済みます。保存しているタブがいくつあっても同じように使えます。何か月も前に保存したグループも、1 分前に開いたタブと同じくらいすぐに見つかります。だからこそ、安心してウィンドウを閉じられます。保存したものは、検索ひとつで見つかるからです。
+
+</Section>
+
+<Section id="habits" title="よい習慣">
+
+- **タイトルだけでなくアドレスも検索する**。`github.com/your-org` や `localhost:3000` なら、似たようなタイトルが並ぶページも見つかります。
+- **よく検索するウィンドウに名前を付ける**。「Papers」「PRs」「Docs」のように付けておけば、`window:` ですぐにたどり着けます。
+- **`closed:` から始める**。閉じたとわかっているなら、リストが短くなり、必要なものだけが残ります。
+- **検索とグループを組み合わせる**。グループがよく整理されているほど（[タブを使った毎日のワークフロー](/blog/tabmerger-daily-workflow)を参照）、`group:` フィルタで絞り込める範囲が広がります。
+
+</Section>
+
+<Section id="plans" title="Free と Pro">
+
+検索、すべてのフィルタ、選択リスト、非表示と薄く表示は、どれも Free プランでアカウントなしに使えます。違いは閉じたタブをどこまでさかのぼれるかだけで、Free は直近 2 日間、Pro は直近 30 日間に閉じたタブを保存します。さらに Pro ではグループとタブが無制限なので、見つけられるものもそれだけ増えます。詳しくは[料金ページ](/pricing)をご覧ください。
+
+<InstallCta>残しておいたタブを、キーひとつで見つけましょう。Chrome、Edge、Firefox 向けに無料。</InstallCta>
+
+検索以外もキーボードで操作したいなら、[タブのキーボードショートカット](/blog/tab-keyboard-shortcuts)をご覧ください。
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

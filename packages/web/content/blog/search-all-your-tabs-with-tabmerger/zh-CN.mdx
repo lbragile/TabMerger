@@ -1,0 +1,175 @@
+export const post = {
+  slug: 'search-all-your-tabs-with-tabmerger',
+  title: '用 TabMerger 搜索所有标签页：Ctrl+K 及其筛选器',
+  navTitle: '搜索所有标签页',
+  seoTitle: '用 TabMerger 一次搜索已打开、已保存和已关闭的标签页',
+  description:
+    '一个搜索框涵盖你的所有标签页：已打开的、保存在分组里的，或者本周关闭的。介绍 TabMerger 的 Ctrl+K 标签页搜索如何工作、每个筛选器（group:、window:、tag:、closed:）的用法，以及它为什么这样匹配。',
+  shareSummary: '已打开、已保存和已关闭的标签页都在一个搜索框里，筛选器一键缩小范围。',
+  dek: '无论是开着的、保存了的，还是一小时前关掉的：输入几个字母，它就带着高亮出现了。',
+  published: '2026-12-14',
+  updated: '2026-12-14',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Ctrl+K（Mac 上为 ⌘+K）同时搜索已打开、已保存和最近关闭的标签页。', source: 'TabMerger 3.16.1' },
+    { text: '筛选器：group:、window:、tag:（Chrome 标签页分组的标签）和 closed:。', source: 'TabMerger 3.16.1' },
+    { text: '匹配的是完全连续的字母，从不模糊匹配，所以每个结果都有高亮。', source: 'TabMerger 3.16.1 源代码' },
+    { text: '搜索和所有筛选器都免费。', source: 'TabMerger 价格', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '怎样一次搜索所有标签页？',
+      answer:
+        '打开 TabMerger，按 Ctrl+K（Mac 上为 ⌘+K），然后输入页面标题或地址的一部分。结果包括你已打开的标签页、每个已保存的分组，以及排在它们下方的最近关闭的标签页。',
+    },
+    {
+      question: '怎样只在一个分组里搜索？',
+      answer:
+        '输入 group: 并从列表中选择分组，TabMerger 会填入 group:"Name"。然后在后面加上你的关键词，例如 group:"Thesis sources" wiki。',
+    },
+    {
+      question: '能搜索已经关闭的标签页吗？',
+      answer: '可以。以 closed: 开头搜索，就只列出最近关闭的标签页和窗口。选中一个即可重新打开；按住 Ctrl 点击或用鼠标中键点击，会在后台重新打开。',
+    },
+    {
+      question: '为什么打错字时搜不到页面？',
+      answer:
+        'TabMerger 按你输入的字母原样匹配（不区分大小写），从不匹配散落在标题各处的字母。这样结果是可预期的：每个结果都有高亮的匹配，每处高亮也都是真正的匹配。',
+    },
+    {
+      question: '搜索免费吗？',
+      answer: '免费，搜索及其所有筛选器都包含在 Free 方案中。Pro 可搜索的已关闭标签页保留 30 天，而不是 2 天。',
+    },
+  ],
+  images: [
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-light.webp', alt: '用 Ctrl+K 打开的 TabMerger 搜索，列出 react、group:、window:、tag: 和 closed: 的搜索示例，浅色主题' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-dark.webp', alt: '用 Ctrl+K 打开的 TabMerger 搜索，列出 react、group:、window:、tag: 和 closed: 的搜索示例，深色主题' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-light.webp', alt: '在 TabMerger 中搜索 docs：来自 Now Open（当前打开）和 Reading list 的四个结果，每个地址中的 docs 都已高亮，浅色主题' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-dark.webp', alt: '在 TabMerger 中搜索 docs：来自 Now Open（当前打开）和 Reading list 的四个结果，每个地址中的 docs 都已高亮，深色主题' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-light.webp', alt: '输入了 window: 的 TabMerger 搜索，列出可选的窗口 Window、Papers 和 Tools，浅色主题' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-dark.webp', alt: '输入了 window: 的 TabMerger 搜索，列出可选的窗口 Window、Papers 和 Tools，深色主题' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp', alt: '在 Thesis sources 分组中搜索 wiki 时，唯一的匹配项高亮显示，其他标签页变淡，浅色主题' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-dark.webp', alt: '在 Thesis sources 分组中搜索 wiki 时，唯一的匹配项高亮显示，其他标签页变淡，深色主题' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'browser-tips'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp' },
+  ogImage: { src: '/blog/search-all-your-tabs-with-tabmerger/og.png', alt: '用 TabMerger 搜索所有标签页：在已打开和已保存的标签页中搜索 docs 的结果' },
+  toc: [
+    { id: 'quick', label: '快速回答' },
+    { id: 'problem', label: '那个标签页在哪儿？' },
+    { id: 'why', label: '搜索为什么这样工作' },
+    { id: 'steps', label: '分步搜索' },
+    { id: 'filters', label: '所有筛选器' },
+    { id: 'panel', label: '搜索之后' },
+    { id: 'benefit', label: '能省下什么' },
+    { id: 'habits', label: '好习惯' },
+    { id: 'plans', label: 'Free 与 Pro' },
+    { id: 'faq', label: '常见问题' },
+  ],
+}
+
+<QuickAnswer>
+
+打开 [TabMerger](/features)，按 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>（Mac 上为 <Kbd>⌘</Kbd>+<Kbd>K</Kbd>）。输入标题或地址中的几个字母：结果来自你已打开的标签页、每个已保存的分组，以及排在它们下方的最近关闭的标签页，每个结果都标明它所在的位置。用 `group:`、`window:`、`tag:` 或 `closed:` 缩小范围，然后按 <Kbd>Enter</Kbd> 直接跳到那个标签页。
+
+</QuickAnswer>
+
+<InstallCta>你的每个标签页，一次搜索就能找到。Chrome、Edge 和 Firefox 均可免费使用。</InstallCta>
+
+<Section id="problem" title="“那个标签页在哪儿？”">
+
+你知道那个页面存在。周二它还开着，就在那个拉取请求旁边。它是在工作窗口里，还是在阅读窗口里？你把它保存到分组里了，还是关掉了？浏览器自带的标签页搜索只能看到当前在这个浏览器里打开的内容；历史记录能看到你访问过的一切，却不知道哪些是你特意留下的。
+
+你需要的是一个什么都知道的搜索框：哪些开着，哪些保存了，哪些是本周关掉的。这个搜索框就是 TabMerger 里的 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>。（浏览器内置的标签页搜索，请参阅[如何在几百个标签页中找到想要的那一个](/blog/find-a-tab-among-hundreds)。）
+
+</Section>
+
+<Section id="why" title="TabMerger 搜索为什么这样工作">
+
+- **一切都在一个列表里**。已打开的标签页、已保存的分组和最近关闭的标签页回答的是同一个问题（“它在哪儿？”），所以会一起出现。每个结果都带有显示其分组的徽标，如果它属于某个 Chrome 标签页分组，还会显示该分组的标签。
+- **精确匹配，而非模糊匹配**。结果是标题或地址中连续包含你所输入字母的标签页，不区分大小写。散落在标题各处的字母永远不算。这是有意为之：每个结果都有高亮，每处高亮都是真正的匹配，所以你看到的就是可信的。
+- **最佳匹配排在前面**。完全匹配排在以你的文字开头的标题之前，其次是以它开头的单词，最后是出现在任意位置的匹配。列表显示前 12 个结果，所以要找的标签页就在顶部附近。
+- **直接选，不用拼**。输入 `group:`、`window:` 或 `tag:` 会打开你的分组、窗口或标签列表供你选择。TabMerger 会填入带引号的名称，所以含空格的长名称也能直接使用。
+- **已关闭的标签页不碍事**。最多 3 个最近关闭的标签页会显示在已保存的结果下方；以 `closed:` 开头则只看已关闭的标签页。
+- **键盘就够了**。<Kbd>↑</Kbd> <Kbd>↓</Kbd> 移动，<Kbd>Enter</Kbd> 打开，<Kbd>Esc</Kbd> 或 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> 关闭。关闭后你输入的内容会保留，方便你回来继续。
+
+</Section>
+
+<Section id="steps" title="分步搜索">
+
+1. 打开 TabMerger，按 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>（Mac 上为 <Kbd>⌘</Kbd>+<Kbd>K</Kbd>），或点击顶部的搜索框。
+2. 还没输入任何内容时，搜索框会推荐一些可以试试的搜索。点击其中一个即可从它开始。
+3. 输入标题或地址中的几个字母，例如 `docs`。匹配的部分会高亮显示。
+4. 在某个标签页上按 <Kbd>Enter</Kbd>：TabMerger 会打开它所在的分组，并把焦点移到该标签页上。在已关闭的标签页上，<Kbd>Enter</Kbd> 会重新打开它。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="在 TabMerger 中搜索" steps={[{ title: 'Ctrl+K' }, { title: '结果' }, { title: 'window:' }]}>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-examples" alt="用 Ctrl+K 打开的 TabMerger 搜索，列出 react、group:、window:、tag: 和 closed: 的搜索示例，浅色主题" darkAlt="用 Ctrl+K 打开的 TabMerger 搜索，列出 react、group:、window:、tag: 和 closed: 的搜索示例，深色主题" boxes={[{ id: 'search-input', label: '搜索框' }, { id: 'examples', label: '推荐的搜索' }]} source="TabMerger 3.16.1">空白搜索会建议你从哪里开始。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-results" alt="在 TabMerger 中搜索 docs：来自 Now Open（当前打开）和 Reading list 的四个结果，每个地址中的 docs 都已高亮，浅色主题" darkAlt="在 TabMerger 中搜索 docs：来自 Now Open（当前打开）和 Reading list 的四个结果，每个地址中的 docs 都已高亮，深色主题" boxes={[{ id: 'search-input', label: 'docs' }]} source="TabMerger 3.16.1">已打开和已保存的标签页在同一个列表里，每个都标有所在分组。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker" alt="输入了 window: 的 TabMerger 搜索，列出可选的窗口 Window、Papers 和 Tools，浅色主题" darkAlt="输入了 window: 的 TabMerger 搜索，列出可选的窗口 Window、Papers 和 Tools，深色主题" boxes={[{ id: 'search-input', label: 'window: 筛选器' }, { id: 'pick-window', label: '你命名的窗口' }]} source="TabMerger 3.16.1">输入 window: 后直接选择，不用拼写名称。</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="filters" title="所有筛选器及示例">
+
+<ComparisonTable
+  head={['筛选器', '查找范围', '示例']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['（普通词语）', '标题或地址包含这些词的标签页，以及名称匹配的分组', 'pull request'],
+    ['group:', '某个分组中的标签页', 'group:"Thesis sources" wiki'],
+    ['window:', '某个窗口中的标签页（通过窗口的 ⋯ 菜单为它命名）', 'window:"Papers"'],
+    ['tag:', '带有该标签的 Chrome 标签页分组中的标签页', 'tag:"Sprint"'],
+    ['closed:', '仅最近关闭的标签页和窗口', 'closed: seat'],
+  ]}
+/>
+
+筛选器可以和关键词组合，也可以彼此组合。在筛选器后面加词时请使用引号：不加引号的话，筛选器会吞掉这一行的剩余内容，所以 `group:Work pull` 查找的是名为“Work pull”的分组。从列表中选择时，引号会自动加上。
+
+</Section>
+
+<Section id="panel" title="搜索之后：隐藏或淡化其余标签页">
+
+用 <Kbd>Esc</Kbd> 关闭搜索后，搜索仍在主视图中生效。侧边栏会显示每个分组的匹配数量（“找到 1 个”），在分组内，不匹配的标签页默认会被**隐藏**。想保持方位感？在 **设置 → 通用**（Settings → General）中，把 **不匹配搜索的标签页**（Tabs that do not match a search）设为 **变淡**（Dim）：每个标签页都留在原位并变淡，匹配项则高亮显示。**清除搜索**（Clear search）会结束搜索。
+
+有标签页被隐藏时，拖动排序会暂停（“请先清除搜索再移动项目”）：有些行看不见时，拖放的标签页该落在哪里只能靠猜。
+
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-dim" alt="在 Thesis sources 分组中搜索 wiki 时，唯一的匹配项高亮显示，其他标签页变淡，浅色主题" darkAlt="在 Thesis sources 分组中搜索 wiki 时，唯一的匹配项高亮显示，其他标签页变淡，深色主题" boxes={[{ id: 'match', label: '匹配项' }]} source="TabMerger 3.16.1">变淡模式：匹配项一目了然，其他一切都留在原处。</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="能省下什么">
+
+在满是 16 像素图标的窗口里逐个查找、在历史记录里翻来翻去，变成了敲几下键盘的事。无论你保留多少标签页，它的效果都一样：几个月前保存的分组，和一分钟前打开的标签页一样触手可及。正因如此，你可以放心关闭窗口：保存过的一切，搜索一次就能找到。
+
+</Section>
+
+<Section id="habits" title="好习惯">
+
+- **搜索地址，而不只是标题**。`github.com/your-org` 或 `localhost:3000` 能找到标题都差不多的页面。
+- **给常搜索的窗口命名**。比如“Papers”“PRs”“Docs”，之后用 `window:` 就能直达。
+- **以 `closed:` 开头**，如果你知道自己已经关掉了它；列表更短，只有你需要的内容。
+- **把搜索和分组结合起来**。分组越清晰（参见[每天的标签页工作流](/blog/tabmerger-daily-workflow)），`group:` 筛选器就越能缩小范围。
+
+</Section>
+
+<Section id="plans" title="Free 与 Pro">
+
+搜索、所有筛选器、选择列表以及隐藏或变淡，都包含在 Free 方案中，无需账户。唯一的区别是已关闭的标签页能追溯多久：Free 保留你最近 2 天关闭的标签页，Pro 保留最近 30 天的。而且 Pro 的分组和标签页不限数量，能找的东西自然更多。请查看[价格页面](/pricing)。
+
+<InstallCta>你保留的任何标签页，一键即可找到。Chrome、Edge 和 Firefox 均可免费使用。</InstallCta>
+
+如果想在搜索之外也用键盘操作，请参阅[标签页键盘快捷键](/blog/tab-keyboard-shortcuts)。
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

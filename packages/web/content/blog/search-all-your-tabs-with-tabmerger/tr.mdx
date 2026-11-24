@@ -1,0 +1,175 @@
+export const post = {
+  slug: 'search-all-your-tabs-with-tabmerger',
+  title: 'TabMerger ile tüm sekmelerinizde arama: Ctrl+K ve filtreleri',
+  navTitle: 'Tüm sekmelerinizde arama',
+  seoTitle: 'TabMerger ile açık, kayıtlı ve kapatılmış sekmelerde tek seferde arama',
+  description:
+    'Tüm sekmeleriniz için tek bir arama kutusu: açık, gruplara kaydedilmiş ya da bu hafta kapatılmış. TabMerger’ın Ctrl+K sekme araması nasıl çalışır, her filtre (group:, window:, tag:, closed:) ne yapar ve neden bu şekilde eşleşir.',
+  shareSummary: 'Açık, kayıtlı ve kapatılmış sekmeler tek arama kutusunda; filtreler sonuçları anında daraltır.',
+  dek: 'Açık, kayıtlı ya da bir saat önce kapatılmış: birkaç harf yazın, vurgulanmış hâlde karşınızda.',
+  published: '2026-12-14',
+  updated: '2026-12-14',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Ctrl+K (Mac’te ⌘+K) açık, kayıtlı ve yakın zamanda kapatılmış sekmelerde birlikte arar.', source: 'TabMerger 3.16.1' },
+    { text: 'Filtreler: group:, window:, tag: (Chrome sekme grubu etiketi) ve closed:.', source: 'TabMerger 3.16.1' },
+    { text: 'Eşleşmeler birebir harf dizileridir, asla bulanık değildir; bu yüzden her sonuçta bir vurgu vardır.', source: 'TabMerger 3.16.1 kaynak kodu' },
+    { text: 'Arama ve tüm filtreler ücretsizdir.', source: 'TabMerger fiyatlandırması', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Tüm sekmelerimde aynı anda nasıl arama yaparım?',
+      answer:
+        'TabMerger’ı açıp Ctrl+K (Mac’te ⌘+K) tuşlarına basın, ardından bir sayfa başlığının ya da adresinin bir kısmını yazın. Sonuçlar açık sekmelerinizi, kayıtlı tüm grupları ve bunların altında yakın zamanda kapattığınız sekmeleri kapsar.',
+    },
+    {
+      question: 'Yalnızca bir grupta nasıl arama yaparım?',
+      answer:
+        'group: yazın ve listeden grubu seçin; TabMerger group:"Name" ifadesini doldurur. Ardından kelimelerinizi arkasına ekleyin, örneğin group:"Thesis sources" wiki.',
+    },
+    {
+      question: 'Kapattığım sekmelerde arama yapabilir miyim?',
+      answer: 'Evet. Yalnızca yakın zamanda kapatılmış sekmeleri ve pencereleri listelemek için aramaya closed: ile başlayın. Yeniden açmak için birini seçin; Ctrl ile tıklama ya da orta tıklama onu arka planda açar.',
+    },
+    {
+      question: 'Yazım hatası yaptığımda arama sayfayı neden bulmuyor?',
+      answer:
+        'TabMerger harfleri tam yazıldığı gibi eşleştirir (büyük/küçük harf fark etmez), bir başlığa dağılmış harfleri asla eşleştirmez. Bu sayede sonuçlar öngörülebilir kalır: her sonuçta vurgulanmış bir eşleşme vardır ve her vurgu gerçek bir eşleşmedir.',
+    },
+    {
+      question: 'Arama ücretsiz mi?',
+      answer: 'Evet, arama ve tüm filtreleri Free planında var. Pro, aranabilecek kapatılmış sekmeleri 2 yerine 30 gün saklar.',
+    },
+  ],
+  images: [
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-light.webp', alt: 'Ctrl+K ile açılmış TabMerger araması; react, group:, window:, tag: ve closed: için örnek aramalar listeleniyor, açık tema' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-dark.webp', alt: 'Ctrl+K ile açılmış TabMerger araması; react, group:, window:, tag: ve closed: için örnek aramalar listeleniyor, koyu tema' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-light.webp', alt: 'TabMerger’da docs araması: Now Open (Şu An Açık) ve Reading list gruplarından dört sonuç, her adreste docs vurgulanmış, açık tema' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-dark.webp', alt: 'TabMerger’da docs araması: Now Open (Şu An Açık) ve Reading list gruplarından dört sonuç, her adreste docs vurgulanmış, koyu tema' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-light.webp', alt: 'window: yazılmış TabMerger araması; seçmek için Window, Papers ve Tools pencereleri listeleniyor, açık tema' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-dark.webp', alt: 'window: yazılmış TabMerger araması; seçmek için Window, Papers ve Tools pencereleri listeleniyor, koyu tema' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp', alt: 'İçinde wiki aranırken Thesis sources grubu; tek eşleşme vurgulanmış, diğer sekmeler soluk, açık tema' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-dark.webp', alt: 'İçinde wiki aranırken Thesis sources grubu; tek eşleşme vurgulanmış, diğer sekmeler soluk, koyu tema' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'browser-tips'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp' },
+  ogImage: { src: '/blog/search-all-your-tabs-with-tabmerger/og.png', alt: 'TabMerger ile tüm sekmelerinizde arama: açık ve kayıtlı sekmelerden docs sonuçları' },
+  toc: [
+    { id: 'quick', label: 'Kısa yanıt' },
+    { id: 'problem', label: 'O sekme neredeydi?' },
+    { id: 'why', label: 'Arama neden böyle çalışır' },
+    { id: 'steps', label: 'Adım adım arama' },
+    { id: 'filters', label: 'Tüm filtreler' },
+    { id: 'panel', label: 'Aramadan sonra' },
+    { id: 'benefit', label: 'Size ne kazandırır' },
+    { id: 'habits', label: 'İyi alışkanlıklar' },
+    { id: 'plans', label: 'Free mi Pro mu' },
+    { id: 'faq', label: 'SSS' },
+  ],
+}
+
+<QuickAnswer>
+
+[TabMerger](/features)’ı açın ve <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (Mac’te <Kbd>⌘</Kbd>+<Kbd>K</Kbd>) tuşlarına basın. Bir başlığın ya da adresin birkaç harfini yazın: sonuçlar açık sekmelerinizden, kayıtlı tüm gruplardan ve bunların altında yakın zamanda kapattığınız sekmelerden gelir; her birinde nerede durduğu yazar. Aramayı `group:`, `window:`, `tag:` ya da `closed:` ile daraltın, sonra doğrudan sekmeye gitmek için <Kbd>Enter</Kbd> tuşuna basın.
+
+</QuickAnswer>
+
+<InstallCta>Tüm sekmeleriniz tek bir arama uzağınızda. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+<Section id="problem" title="“O sekme neredeydi?”">
+
+Sayfanın var olduğunu biliyorsunuz. Salı günü açıktı, pull request’in yanında. İş penceresinde miydi, okuma penceresinde mi? Bir gruba mı kaydettiniz, yoksa kapattınız mı? Tarayıcının kendi sekme araması yalnızca o tarayıcıda şu an açık olanı görür; geçmiş ise ziyaret ettiğiniz her şeyi görür ama neyi bilerek sakladığınızı bilmez.
+
+İstediğiniz şey her şeyi bilen tek bir kutu: açık olanı, kaydettiğinizi ve bu hafta kapattığınızı. O kutu, TabMerger’daki <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>. (Tarayıcıların yerleşik sekme araması için [yüzlerce sekme arasında tek bir sekmeyi bulma](/blog/find-a-tab-among-hundreds) rehberine bakın.)
+
+</Section>
+
+<Section id="why" title="TabMerger araması neden böyle çalışır">
+
+- **Her şey tek listede.** Açık sekmeler, kayıtlı gruplar ve yakın zamanda kapatılmış sekmeler aynı soruya (“nerede?”) yanıt verir, bu yüzden birlikte gelirler. Her sonuçta grubunu ve varsa Chrome sekme grubu etiketini gösteren bir rozet bulunur.
+- **Bulanık değil, birebir.** Sonuç, başlığı ya da adresi yazdığınız harfleri büyük/küçük harf fark etmeksizin tek bir dizi hâlinde içeren sekmedir. Bir başlığa dağılmış harfler asla sayılmaz. Bu bilinçli bir tercih: her sonuçta bir vurgu vardır ve her vurgu gerçek eşleşmedir, yani gördüğünüze güvenebilirsiniz.
+- **En iyi eşleşme önce.** Birebir eşleşme, metninizle başlayan bir başlığın önünde yer alır; ardından metninizle başlayan bir kelime, sonra herhangi bir yerdeki eşleşme gelir. Liste en iyi 12 sonucu gösterir, böylece doğru sekme en üstlerde olur.
+- **Yazmayın, seçin.** `group:`, `window:` ya da `tag:` yazdığınızda seçmeniz için gruplarınızın, pencerelerinizin ya da etiketlerinizin listesi açılır. TabMerger adı tırnak içinde doldurur, böylece boşluk içeren uzun adlar da sorunsuz çalışır.
+- **Kapatılmış sekmeler araya girmez.** Kayıtlı sonuçların altında en fazla 3 yakın zamanda kapatılmış sekme görünür; yalnızca kapatılmış sekmeleri görmek için `closed:` ile başlayın.
+- **Klavye yeterli.** Gezinmek için <Kbd>↑</Kbd> <Kbd>↓</Kbd>, açmak için <Kbd>Enter</Kbd>, kapatmak için <Kbd>Esc</Kbd> ya da <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>. Kapatmak yazdığınızı silmez, yani kaldığınız yere dönebilirsiniz.
+
+</Section>
+
+<Section id="steps" title="Adım adım arama">
+
+1. TabMerger’ı açın ve <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (Mac’te <Kbd>⌘</Kbd>+<Kbd>K</Kbd>) tuşlarına basın ya da üstteki arama kutusuna tıklayın.
+2. Hiçbir şey yazılmamışken kutu denemeniz için aramalar önerir. Oradan başlamak için birine tıklayın.
+3. Başlığın ya da adresin birkaç harfini yazın, örneğin `docs`. Eşleşmeler vurgulanır.
+4. Bir sekmede <Kbd>Enter</Kbd> tuşuna basın: TabMerger o sekmenin grubunu açar ve odağı o sekmeye taşır. Kapatılmış bir sekmede <Kbd>Enter</Kbd> onu yeniden açar.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="TabMerger’da arama" steps={[{ title: 'Ctrl+K' }, { title: 'Sonuçlar' }, { title: 'window:' }]}>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-examples" alt="Ctrl+K ile açılmış TabMerger araması; react, group:, window:, tag: ve closed: için örnek aramalar listeleniyor, açık tema" darkAlt="Ctrl+K ile açılmış TabMerger araması; react, group:, window:, tag: ve closed: için örnek aramalar listeleniyor, koyu tema" boxes={[{ id: 'search-input', label: 'Arama kutusu' }, { id: 'examples', label: 'Önerilen aramalar' }]} source="TabMerger 3.16.1">Boş bir arama nereden başlayacağınızı önerir.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-results" alt="TabMerger’da docs araması: Now Open (Şu An Açık) ve Reading list gruplarından dört sonuç, her adreste docs vurgulanmış, açık tema" darkAlt="TabMerger’da docs araması: Now Open (Şu An Açık) ve Reading list gruplarından dört sonuç, her adreste docs vurgulanmış, koyu tema" boxes={[{ id: 'search-input', label: 'docs' }]} source="TabMerger 3.16.1">Açık ve kayıtlı sekmeler tek listede, her biri kendi grubuyla etiketli.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker" alt="window: yazılmış TabMerger araması; seçmek için Window, Papers ve Tools pencereleri listeleniyor, açık tema" darkAlt="window: yazılmış TabMerger araması; seçmek için Window, Papers ve Tools pencereleri listeleniyor, koyu tema" boxes={[{ id: 'search-input', label: 'window: filtresi' }, { id: 'pick-window', label: 'Adlandırdığınız pencereler' }]} source="TabMerger 3.16.1">window: yazıp seçin; adı tek tek yazmanız gerekmez.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="filters" title="Örnekleriyle tüm filtreler">
+
+<ComparisonTable
+  head={['Filtre', 'Bulduğu', 'Örnek']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['(düz kelimeler)', 'Başlığında ya da adresinde bunlar geçen sekmeler ve adına göre gruplar', 'pull request'],
+    ['group:', 'Tek bir gruptaki sekmeler', 'group:"Thesis sources" wiki'],
+    ['window:', 'Tek bir penceredeki sekmeler (⋯ menüsünden ad verin)', 'window:"Papers"'],
+    ['tag:', 'O etikete sahip bir Chrome sekme grubundaki sekmeler', 'tag:"Sprint"'],
+    ['closed:', 'Yalnızca yakın zamanda kapatılmış sekmeler ve pencereler', 'closed: seat'],
+  ]}
+/>
+
+Filtreler kelimelerle ve birbirleriyle birleştirilebilir. Bir filtreden sonra kelime ekliyorsanız tırnak kullanın: tırnak olmadan filtre satırın geri kalanını alır, yani `group:Work pull` “Work pull” adlı bir grubu arar. Listeden seçtiğinizde tırnaklar sizin için eklenir.
+
+</Section>
+
+<Section id="panel" title="Aramadan sonra: gerisini gizleyin ya da soldurun">
+
+Aramayı <Kbd>Esc</Kbd> ile kapatın, ana görünümde çalışmaya devam eder. Kenar çubuğu her grubun kaç eşleşmesi olduğunu gösterir (“1 bulundu”) ve bir grubun içinde eşleşmeyen sekmeler varsayılan olarak **gizlenir**. Yolunuzu kaybetmemeyi mi tercih edersiniz? **Ayarlar → Genel** (Settings → General) bölümünde **Aramayla eşleşmeyen sekmeler** (Tabs that do not match a search) seçeneğini **Soldur** (Dim) olarak ayarlayın: her sekme yerinde, soluk hâlde kalır ve eşleşmeler vurgulanır. **Aramayı temizle** (Clear search) aramayı bitirir.
+
+Sekmeler gizliyken sürükleyerek yeniden sıralama duraklatılır (“Öğeleri taşımak için aramayı temizleyin”): bazı satırlar görünmezken bırakılan bir sekmenin nereye düşeceği tahminden ibaret olurdu.
+
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-dim" alt="İçinde wiki aranırken Thesis sources grubu; tek eşleşme vurgulanmış, diğer sekmeler soluk, açık tema" darkAlt="İçinde wiki aranırken Thesis sources grubu; tek eşleşme vurgulanmış, diğer sekmeler soluk, koyu tema" boxes={[{ id: 'match', label: 'Eşleşme' }]} source="TabMerger 3.16.1">Soldurma modu: eşleşme öne çıkar, geri kalan her şey olduğu yerde kalır.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Size ne kazandırır">
+
+16 piksellik simgelerle dolu pencereleri taramak ve geçmişte kaydırmak birkaç tuşa iner. Kaç sekme saklarsanız saklayın aynı şekilde çalışır: aylar önce kaydettiğiniz bir grup, bir dakika önce açtığınız sekme kadar yakındır. Pencereleri gönül rahatlığıyla kapatabilmenizi sağlayan da budur: kaydettiğiniz her şey tek bir arama uzağınızda.
+
+</Section>
+
+<Section id="habits" title="İyi alışkanlıklar">
+
+- **Yalnızca başlıkta değil, adreste de arayın.** `github.com/your-org` ya da `localhost:3000`, başlıkları birbirine benzeyen sayfaları bulur.
+- **Sık aradığınız pencerelere ad verin.** “Papers”, “PRs”, “Docs”: böylece `window:` sizi doğrudan oraya götürür.
+- **`closed:` ile başlayın**, kapattığınızı biliyorsanız; liste daha kısadır ve yalnızca ihtiyacınız olanı içerir.
+- **Aramayı gruplarla birlikte kullanın.** Gruplarınız ne kadar iyiyse (bkz. [günlük sekme düzeni](/blog/tabmerger-daily-workflow)), `group:` filtresi o kadar çok daraltır.
+
+</Section>
+
+<Section id="plans" title="Free mi Pro mu">
+
+Arama, tüm filtreler, seçim listeleri ve Gizle ya da Soldur seçenekleri Free planında, hesap olmadan kullanılabilir. Tek fark, kapatılmış sekmelerin ne kadar geriye gittiği: Free son 2 günde kapattığınız sekmeleri, Pro son 30 günde kapattıklarınızı saklar. Pro’nun sınırsız grupları ve sekmeleriyle de bulunacak çok daha fazla şey olur. [Fiyatlandırma sayfasına](/pricing) bakın.
+
+<InstallCta>Sakladığınız her sekmeyi tek tuşla bulun. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+Aramanın ötesinde klavyeyle çalışmak için [sekme klavye kısayolları](/blog/tab-keyboard-shortcuts) rehberine bakın.
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

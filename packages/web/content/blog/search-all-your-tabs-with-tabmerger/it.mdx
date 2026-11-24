@@ -1,0 +1,175 @@
+export const post = {
+  slug: 'search-all-your-tabs-with-tabmerger',
+  title: 'Cerca tra tutte le tue schede con TabMerger: Ctrl+K e i suoi filtri',
+  navTitle: 'Cerca tra tutte le tue schede',
+  seoTitle: 'Cercare tra le schede aperte, salvate e chiuse in un colpo solo con TabMerger',
+  description:
+    'Un’unica casella di ricerca per tutte le tue schede: aperte, salvate nei gruppi o chiuse questa settimana. Come funziona la ricerca con Ctrl+K di TabMerger, ogni filtro (group:, window:, tag:, closed:) e perché trova quello che trova.',
+  shareSummary: 'Schede aperte, salvate e chiuse in un’unica ricerca, con filtri che la restringono in un attimo.',
+  dek: 'Aperta, salvata o chiusa un’ora fa: digita qualche lettera ed eccola, evidenziata.',
+  published: '2026-12-14',
+  updated: '2026-12-14',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Ctrl+K (⌘+K su Mac) cerca insieme tra le schede aperte, salvate e chiuse di recente.', source: 'TabMerger 3.16.1' },
+    { text: 'Filtri: group:, window:, tag: (etichetta del gruppo di schede di Chrome) e closed:.', source: 'TabMerger 3.16.1' },
+    { text: 'Le corrispondenze sono sequenze esatte di lettere, mai approssimative, quindi ogni risultato ha un’evidenziazione.', source: 'Codice sorgente di TabMerger 3.16.1' },
+    { text: 'La ricerca e tutti i filtri sono gratuiti.', source: 'Prezzi di TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Come cerco tra tutte le mie schede insieme?',
+      answer:
+        'Apri TabMerger, premi Ctrl+K (⌘+K su Mac) e digita parte del titolo o dell’indirizzo di una pagina. I risultati comprendono le schede aperte, ogni gruppo salvato e, sotto, le schede chiuse di recente.',
+    },
+    {
+      question: 'Come cerco in un solo gruppo?',
+      answer:
+        'Digita group: e scegli il gruppo dall’elenco; TabMerger inserisce group:"Name". Poi aggiungi le tue parole dopo, per esempio group:"Thesis sources" wiki.',
+    },
+    {
+      question: 'Posso cercare le schede che ho già chiuso?',
+      answer: 'Sì. Inizia la ricerca con closed: per vedere solo le schede e le finestre chiuse di recente. Scegline una per riaprirla; con Ctrl+clic o clic centrale si riapre in background.',
+    },
+    {
+      question: 'Perché la ricerca non trova una pagina se sbaglio a digitare?',
+      answer:
+        'TabMerger cerca le lettere esattamente come le digiti (senza distinguere maiuscole e minuscole), mai lettere sparse in un titolo. Così i risultati restano prevedibili: ogni risultato ha una corrispondenza evidenziata, e ogni evidenziazione è una corrispondenza vera.',
+    },
+    {
+      question: 'La ricerca è gratuita?',
+      answer: 'Sì, la ricerca e tutti i suoi filtri sono nel piano Free. Pro conserva 30 giorni di schede chiuse in cui cercare invece di 2.',
+    },
+  ],
+  images: [
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-light.webp', alt: 'Ricerca di TabMerger aperta con Ctrl+K, con ricerche di esempio per react, group:, window:, tag: e closed:, tema chiaro' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-dark.webp', alt: 'Ricerca di TabMerger aperta con Ctrl+K, con ricerche di esempio per react, group:, window:, tag: e closed:, tema scuro' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-light.webp', alt: 'Ricerca di docs in TabMerger: quattro risultati da Now Open (Aperte ora) e Reading list, con docs evidenziato in ogni indirizzo, tema chiaro' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-dark.webp', alt: 'Ricerca di docs in TabMerger: quattro risultati da Now Open (Aperte ora) e Reading list, con docs evidenziato in ogni indirizzo, tema scuro' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-light.webp', alt: 'Ricerca di TabMerger con window: digitato, che elenca le finestre Window, Papers e Tools tra cui scegliere, tema chiaro' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-dark.webp', alt: 'Ricerca di TabMerger con window: digitato, che elenca le finestre Window, Papers e Tools tra cui scegliere, tema scuro' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp', alt: 'Il gruppo Thesis sources mentre vi si cerca wiki, con l’unica corrispondenza evidenziata e le altre schede attenuate, tema chiaro' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-dark.webp', alt: 'Il gruppo Thesis sources mentre vi si cerca wiki, con l’unica corrispondenza evidenziata e le altre schede attenuate, tema scuro' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'browser-tips'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp' },
+  ogImage: { src: '/blog/search-all-your-tabs-with-tabmerger/og.png', alt: 'Cerca tra tutte le tue schede con TabMerger: risultati per docs da schede aperte e salvate' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'problem', label: 'Dov’era quella scheda?' },
+    { id: 'why', label: 'Perché la ricerca funziona così' },
+    { id: 'steps', label: 'La ricerca passo per passo' },
+    { id: 'filters', label: 'Tutti i filtri' },
+    { id: 'panel', label: 'Dopo la ricerca' },
+    { id: 'benefit', label: 'Cosa ti fa risparmiare' },
+    { id: 'habits', label: 'Buone abitudini' },
+    { id: 'plans', label: 'Free o Pro' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+}
+
+<QuickAnswer>
+
+Apri [TabMerger](/features) e premi <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> su Mac). Digita qualche lettera di un titolo o di un indirizzo: i risultati arrivano dalle schede aperte, da ogni gruppo salvato e, sotto, dalle schede chiuse di recente, ciascuno con l’indicazione di dove si trova. Restringi con `group:`, `window:`, `tag:` o `closed:`, poi premi <Kbd>Enter</Kbd> per andare dritto alla scheda.
+
+</QuickAnswer>
+
+<InstallCta>Ogni scheda che hai, a una ricerca di distanza. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="problem" title="«Dov’era quella scheda?»">
+
+Sai che la pagina esiste. Martedì era aperta, accanto alla pull request. Era nella finestra di lavoro o in quella di lettura? L’hai salvata in un gruppo o l’hai chiusa? La ricerca di schede del browser vede solo ciò che è aperto in quel browser in questo momento; la cronologia vede tutto ciò che hai mai visitato, senza sapere cosa hai tenuto apposta.
+
+Ti serve un’unica casella che sappia tutto: cosa è aperto, cosa hai salvato e cosa hai chiuso questa settimana. Quella casella è <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> in TabMerger. (Per la ricerca di schede integrata nei browser, vedi [come trovare una scheda tra centinaia](/blog/find-a-tab-among-hundreds).)
+
+</Section>
+
+<Section id="why" title="Perché la ricerca di TabMerger funziona così">
+
+- **Tutto in un elenco.** Schede aperte, gruppi salvati e schede chiuse di recente rispondono alla stessa domanda («dov’è?»), quindi tornano insieme. Ogni risultato ha un badge con il suo gruppo e, se ce l’ha, l’etichetta del suo gruppo di schede di Chrome.
+- **Esatta, non approssimativa.** Un risultato è una scheda il cui titolo o indirizzo contiene le tue lettere di seguito, senza distinguere maiuscole e minuscole. Le lettere sparse in un titolo non contano mai. È voluto: ogni risultato ha un’evidenziazione, e ogni evidenziazione è la corrispondenza vera, quindi puoi fidarti di ciò che vedi.
+- **Prima la corrispondenza migliore.** Una corrispondenza esatta viene prima di un titolo che inizia con il tuo testo, poi di una parola che inizia con esso, poi di una corrispondenza in qualsiasi punto. L’elenco mostra i primi 12, quindi la scheda giusta è in cima.
+- **Scegli, non scrivere.** Digitando `group:`, `window:` o `tag:` si apre un elenco dei tuoi gruppi, finestre o etichette tra cui scegliere. TabMerger inserisce il nome tra virgolette, così anche i nomi lunghi con spazi funzionano senza problemi.
+- **Le schede chiuse non danno fastidio.** Fino a 3 schede chiuse di recente compaiono sotto i risultati salvati; inizia con `closed:` per vedere solo le schede chiuse.
+- **Basta la tastiera.** <Kbd>↑</Kbd> <Kbd>↓</Kbd> per spostarti, <Kbd>Enter</Kbd> per aprire, <Kbd>Esc</Kbd> o <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> per chiudere. Chiudere lascia intatto ciò che hai digitato, così puoi riprendere da lì.
+
+</Section>
+
+<Section id="steps" title="La ricerca passo per passo">
+
+1. Apri TabMerger e premi <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> su Mac), oppure fai clic sulla casella di ricerca in alto.
+2. Finché non hai digitato nulla, la casella suggerisce ricerche da provare. Fai clic su una per partire da lì.
+3. Digita qualche lettera del titolo o dell’indirizzo, per esempio `docs`. Le corrispondenze vengono evidenziate.
+4. Premi <Kbd>Enter</Kbd> su una scheda: TabMerger apre il suo gruppo e mette il focus su quella scheda. Su una scheda chiusa, <Kbd>Enter</Kbd> la riapre.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Cercare in TabMerger" steps={[{ title: 'Ctrl+K' }, { title: 'Risultati' }, { title: 'window:' }]}>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-examples" alt="Ricerca di TabMerger aperta con Ctrl+K, con ricerche di esempio per react, group:, window:, tag: e closed:, tema chiaro" darkAlt="Ricerca di TabMerger aperta con Ctrl+K, con ricerche di esempio per react, group:, window:, tag: e closed:, tema scuro" boxes={[{ id: 'search-input', label: 'La casella di ricerca' }, { id: 'examples', label: 'Ricerche suggerite' }]} source="TabMerger 3.16.1">Una ricerca vuota ti suggerisce da dove partire.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-results" alt="Ricerca di docs in TabMerger: quattro risultati da Now Open (Aperte ora) e Reading list, con docs evidenziato in ogni indirizzo, tema chiaro" darkAlt="Ricerca di docs in TabMerger: quattro risultati da Now Open (Aperte ora) e Reading list, con docs evidenziato in ogni indirizzo, tema scuro" boxes={[{ id: 'search-input', label: 'docs' }]} source="TabMerger 3.16.1">Schede aperte e salvate in un unico elenco, ognuna con il suo gruppo.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker" alt="Ricerca di TabMerger con window: digitato, che elenca le finestre Window, Papers e Tools tra cui scegliere, tema chiaro" darkAlt="Ricerca di TabMerger con window: digitato, che elenca le finestre Window, Papers e Tools tra cui scegliere, tema scuro" boxes={[{ id: 'search-input', label: 'Il filtro window:' }, { id: 'pick-window', label: 'Le tue finestre con nome' }]} source="TabMerger 3.16.1">Digita window: e scegli; non serve scrivere il nome.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="filters" title="Tutti i filtri, con esempi">
+
+<ComparisonTable
+  head={['Filtro', 'Trova', 'Esempio']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['(parole semplici)', 'Schede il cui titolo o indirizzo le contiene, e gruppi per nome', 'pull request'],
+    ['group:', 'Schede in un gruppo', 'group:"Thesis sources" wiki'],
+    ['window:', 'Schede in una finestra (dalle un nome dal suo menu ⋯)', 'window:"Papers"'],
+    ['tag:', 'Schede in un gruppo di schede di Chrome con quell’etichetta', 'tag:"Sprint"'],
+    ['closed:', 'Solo schede e finestre chiuse di recente', 'closed: seat'],
+  ]}
+/>
+
+I filtri si combinano con le parole e tra loro. Usa le virgolette se aggiungi parole dopo un filtro: senza, il filtro prende il resto della riga, quindi `group:Work pull` cerca un gruppo chiamato «Work pull». Se scegli dall’elenco, le virgolette le aggiunge TabMerger.
+
+</Section>
+
+<Section id="panel" title="Dopo la ricerca: nascondere o attenuare il resto">
+
+Chiudi la ricerca con <Kbd>Esc</Kbd> e continua a funzionare nella vista principale. La barra laterale mostra quante corrispondenze ha ogni gruppo («1 trovate») e, dentro un gruppo, le schede che non corrispondono sono **nascoste** per impostazione predefinita. Preferisci non perdere l’orientamento? In **Impostazioni → Generale** (Settings → General), imposta **Schede che non corrispondono alla ricerca** (Tabs that do not match a search) su **Attenua** (Dim): ogni scheda resta al suo posto, attenuata, con le corrispondenze evidenziate. **Cancella ricerca** (Clear search) termina la ricerca.
+
+Finché ci sono schede nascoste, il riordino tramite trascinamento è in pausa («Cancella la ricerca per spostare gli elementi»): con alcune righe fuori vista, il punto in cui dovrebbe finire una scheda rilasciata sarebbe solo un’ipotesi.
+
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-dim" alt="Il gruppo Thesis sources mentre vi si cerca wiki, con l’unica corrispondenza evidenziata e le altre schede attenuate, tema chiaro" darkAlt="Il gruppo Thesis sources mentre vi si cerca wiki, con l’unica corrispondenza evidenziata e le altre schede attenuate, tema scuro" boxes={[{ id: 'match', label: 'La corrispondenza' }]} source="TabMerger 3.16.1">Modalità attenuata: la corrispondenza risalta, tutto il resto rimane dov’era.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Cosa ti fa risparmiare">
+
+Scorrere finestre piene di icone da 16 pixel e la cronologia diventa questione di pochi tasti. Funziona allo stesso modo qualunque sia il numero di schede che tieni: un gruppo salvato mesi fa è vicino quanto la scheda aperta un minuto fa. È questo che rende sicuro chiudere le finestre: tutto ciò che hai salvato è a una ricerca di distanza.
+
+</Section>
+
+<Section id="habits" title="Buone abitudini">
+
+- **Cerca nell’indirizzo, non solo nel titolo.** `github.com/your-org` o `localhost:3000` trova pagine con titoli tutti simili.
+- **Dai un nome alle finestre in cui cerchi spesso.** «Papers», «PRs», «Docs»: poi `window:` ti porta lì.
+- **Inizia con `closed:`** quando sai di averla chiusa; l’elenco è più corto e contiene solo ciò che ti serve.
+- **Abbina la ricerca ai gruppi.** Più sono curati i tuoi gruppi (vedi [un flusso di lavoro quotidiano con le schede](/blog/tabmerger-daily-workflow)), più un filtro `group:` restringe il campo.
+
+</Section>
+
+<Section id="plans" title="Free o Pro">
+
+La ricerca, tutti i filtri, gli elenchi di scelta e Nascondi o Attenua sono tutti nel piano Free, senza account. L’unica differenza è quanto indietro arrivano le schede chiuse: Free conserva le schede chiuse degli ultimi 2 giorni, Pro quelle degli ultimi 30 giorni. E con gruppi e schede illimitati in Pro, c’è semplicemente più da trovare. Vedi la [pagina dei prezzi](/pricing).
+
+<InstallCta>Trova con un tasto qualsiasi scheda che hai conservato. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+Per usare la tastiera oltre alla ricerca, vedi [le scorciatoie da tastiera per le schede](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

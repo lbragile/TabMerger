@@ -1,0 +1,175 @@
+export const post = {
+  slug: 'search-all-your-tabs-with-tabmerger',
+  title: 'חיפוש בכל הכרטיסיות עם TabMerger: הקיצור Ctrl+K והמסננים שלו',
+  navTitle: 'חיפוש בכל הכרטיסיות',
+  seoTitle: 'חיפוש בכרטיסיות פתוחות, שמורות וסגורות בבת אחת עם TabMerger',
+  description:
+    'תיבת חיפוש אחת לכל הכרטיסיות שלכם: פתוחות, שמורות בקבוצות או כאלה שנסגרו השבוע. איך עובד החיפוש בכרטיסיות עם Ctrl+K ב-TabMerger, מה עושה כל מסנן (group:, window:, tag:, closed:) ולמה הוא מתאים תוצאות דווקא כך.',
+  shareSummary: 'כרטיסיות פתוחות, שמורות וסגורות בתיבת חיפוש אחת, עם מסננים שמצמצמים אותה בהקשה.',
+  dek: 'פתוחה, שמורה או כזו שנסגרה לפני שעה: מקלידים כמה אותיות והיא שם, מודגשת.',
+  published: '2026-12-14',
+  updated: '2026-12-14',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'הקיצור Ctrl+K (או ⌘+K ב-Mac) מחפש יחד בכרטיסיות פתוחות, שמורות ושנסגרו לאחרונה.', source: 'TabMerger 3.16.1' },
+    { text: 'מסננים: group:, window:, tag: (תווית של קבוצת כרטיסיות ב-Chrome) ו-closed:.', source: 'TabMerger 3.16.1' },
+    { text: 'התאמה היא רצף אותיות מדויק, אף פעם לא משוער, ולכן בכל תוצאה יש הדגשה.', source: 'קוד המקור של TabMerger 3.16.1' },
+    { text: 'החיפוש וכל המסננים בחינם.', source: 'המחירים של TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'איך מחפשים בכל הכרטיסיות בבת אחת?',
+      answer:
+        'פותחים את TabMerger, לוחצים על Ctrl+K (או ⌘+K ב-Mac) ומקלידים חלק מהכותרת או מהכתובת של הדף. התוצאות כוללות את הכרטיסיות הפתוחות, כל קבוצה שמורה ומתחתן כרטיסיות שנסגרו לאחרונה.',
+    },
+    {
+      question: 'איך מחפשים רק בקבוצה אחת?',
+      answer:
+        'מקלידים group: ובוחרים את הקבוצה מהרשימה; TabMerger משלים group:"Name". אחר כך מוסיפים מילים אחריו, למשל group:"Thesis sources" wiki.',
+    },
+    {
+      question: 'אפשר לחפש כרטיסיות שכבר סגרתי?',
+      answer: 'כן. מתחילים את החיפוש ב-closed: כדי לראות רק כרטיסיות וחלונות שנסגרו לאחרונה. בוחרים אחת כדי לפתוח אותה מחדש; לחיצה עם Ctrl או לחיצה אמצעית פותחת אותה ברקע.',
+    },
+    {
+      question: 'למה החיפוש לא מוצא דף כשאני מקליד עם שגיאה?',
+      answer:
+        'TabMerger מתאים את האותיות בדיוק כפי שהוקלדו (בלי הבדל בין אותיות רישיות לקטנות), ואף פעם לא אותיות שמפוזרות לאורך הכותרת. כך התוצאות צפויות: בכל תוצאה יש התאמה מודגשת, וכל הדגשה היא התאמה אמיתית.',
+    },
+    {
+      question: 'החיפוש בחינם?',
+      answer: 'כן, החיפוש וכל המסננים שלו כלולים בתוכנית Free. ב-Pro כרטיסיות סגורות נשמרות לחיפוש 30 יום במקום יומיים.',
+    },
+  ],
+  images: [
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-light.webp', alt: 'החיפוש של TabMerger נפתח עם Ctrl+K ומציג חיפושים לדוגמה עבור react, group:, window:, tag: ו-closed:, ערכת נושא בהירה' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-dark.webp', alt: 'החיפוש של TabMerger נפתח עם Ctrl+K ומציג חיפושים לדוגמה עבור react, group:, window:, tag: ו-closed:, ערכת נושא כהה' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-light.webp', alt: 'חיפוש docs ב-TabMerger: ארבע תוצאות מ-Now Open (פתוח עכשיו) ומ-Reading list, ו-docs מודגש בכל כתובת, ערכת נושא בהירה' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-dark.webp', alt: 'חיפוש docs ב-TabMerger: ארבע תוצאות מ-Now Open (פתוח עכשיו) ומ-Reading list, ו-docs מודגש בכל כתובת, ערכת נושא כהה' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-light.webp', alt: 'החיפוש של TabMerger אחרי הקלדת window:, עם החלונות Window, Papers ו-Tools לבחירה, ערכת נושא בהירה' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-dark.webp', alt: 'החיפוש של TabMerger אחרי הקלדת window:, עם החלונות Window, Papers ו-Tools לבחירה, ערכת נושא כהה' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp', alt: 'הקבוצה Thesis sources בזמן חיפוש wiki בתוכה: ההתאמה היחידה מודגשת ושאר הכרטיסיות מעומעמות, ערכת נושא בהירה' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-dark.webp', alt: 'הקבוצה Thesis sources בזמן חיפוש wiki בתוכה: ההתאמה היחידה מודגשת ושאר הכרטיסיות מעומעמות, ערכת נושא כהה' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'browser-tips'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp' },
+  ogImage: { src: '/blog/search-all-your-tabs-with-tabmerger/og.png', alt: 'חיפוש בכל הכרטיסיות עם TabMerger: תוצאות עבור docs מכרטיסיות פתוחות ושמורות' },
+  toc: [
+    { id: 'quick', label: 'תשובה מהירה' },
+    { id: 'problem', label: 'איפה הייתה הכרטיסייה ההיא?' },
+    { id: 'why', label: 'למה החיפוש עובד כך' },
+    { id: 'steps', label: 'חיפוש שלב אחר שלב' },
+    { id: 'filters', label: 'כל המסננים' },
+    { id: 'panel', label: 'אחרי החיפוש' },
+    { id: 'benefit', label: 'מה זה חוסך לכם' },
+    { id: 'habits', label: 'הרגלים טובים' },
+    { id: 'plans', label: 'Free או Pro' },
+    { id: 'faq', label: 'שאלות נפוצות' },
+  ],
+}
+
+<QuickAnswer>
+
+פותחים את [TabMerger](/features) ולוחצים על <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>K</Kbd></bdi> ב-Mac). מקלידים כמה אותיות מכותרת או מכתובת: התוצאות מגיעות מהכרטיסיות הפתוחות, מכל קבוצה שמורה ומתחתן מכרטיסיות שנסגרו לאחרונה, ולכל אחת מצוין איפה היא נמצאת. מצמצמים עם <bdi dir="ltr">`group:`</bdi>, <bdi dir="ltr">`window:`</bdi>, <bdi dir="ltr">`tag:`</bdi> או <bdi dir="ltr">`closed:`</bdi>, ואז לוחצים על <bdi dir="ltr"><Kbd>Enter</Kbd></bdi> כדי לעבור ישר לכרטיסייה.
+
+</QuickAnswer>
+
+<InstallCta>כל הכרטיסיות שלכם, במרחק חיפוש אחד. בחינם ל-Chrome, ל-Edge ול-Firefox.</InstallCta>
+
+<Section id="problem" title="איפה הייתה הכרטיסייה ההיא?">
+
+אתם יודעים שהדף קיים. ביום שלישי הוא היה פתוח, ליד ה-<bdi dir="ltr">pull request</bdi>. הוא היה בחלון העבודה או בחלון הקריאה? שמרתם אותו בקבוצה או סגרתם? החיפוש המובנה בכרטיסיות של הדפדפן רואה רק מה שפתוח בדפדפן הזה ברגע זה; ההיסטוריה רואה כל מה שאי פעם ביקרתם בו, בלי לדעת מה שמרתם בכוונה.
+
+מה שאתם צריכים הוא תיבה אחת שיודעת הכול: מה פתוח, מה שמרתם ומה סגרתם השבוע. התיבה הזו היא <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> ב-TabMerger. (על החיפוש בכרטיסיות שמובנה בדפדפנים, ראו [איך למצוא כרטיסייה אחת מתוך מאות](/blog/find-a-tab-among-hundreds).)
+
+</Section>
+
+<Section id="why" title="למה החיפוש ב-TabMerger עובד כך">
+
+- **הכול ברשימה אחת.** כרטיסיות פתוחות, קבוצות שמורות וכרטיסיות שנסגרו לאחרונה עונות על אותה שאלה ("איפה זה?"), ולכן הן מופיעות יחד. כל תוצאה מסומנת בתג עם הקבוצה שלה, ועם התווית של קבוצת הכרטיסיות שלה ב-Chrome אם יש לה כזו.
+- **מדויק, לא משוער.** תוצאה היא כרטיסייה שהכותרת או הכתובת שלה מכילות את האותיות שלכם ברצף אחד, בלי הבדל בין רישיות לקטנות. אותיות שמפוזרות לאורך כותרת אף פעם לא נחשבות. זה בכוונה: בכל תוצאה יש הדגשה, וכל הדגשה היא ההתאמה האמיתית, כך שאפשר לסמוך על מה שרואים.
+- **ההתאמה הטובה ביותר קודם.** התאמה מדויקת מופיעה לפני כותרת שמתחילה בטקסט שלכם, אחריה מילה שמתחילה בו, ואחריה התאמה בכל מקום. הרשימה מציגה את 12 הראשונות, כך שהכרטיסייה הנכונה נמצאת למעלה.
+- **בוחרים, לא מאייתים.** הקלדת <bdi dir="ltr">`group:`</bdi>, <bdi dir="ltr">`window:`</bdi> או <bdi dir="ltr">`tag:`</bdi> פותחת רשימה של הקבוצות, החלונות או התוויות שלכם לבחירה. TabMerger משלים את השם בתוך מירכאות, כך ששמות ארוכים עם רווחים פשוט עובדים.
+- **כרטיסיות סגורות לא מפריעות.** עד 3 כרטיסיות שנסגרו לאחרונה מופיעות מתחת לתוצאות השמורות; מתחילים ב-<bdi dir="ltr">`closed:`</bdi> כדי לראות רק כרטיסיות סגורות.
+- **המקלדת מספיקה.** <bdi dir="ltr"><Kbd>↑</Kbd></bdi> <bdi dir="ltr"><Kbd>↓</Kbd></bdi> כדי לנוע, <bdi dir="ltr"><Kbd>Enter</Kbd></bdi> כדי לפתוח, <bdi dir="ltr"><Kbd>Esc</Kbd></bdi> או <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> כדי לסגור. הסגירה משאירה את מה שהקלדתם, כך שאפשר לחזור אליו.
+
+</Section>
+
+<Section id="steps" title="חיפוש שלב אחר שלב">
+
+1. פותחים את TabMerger ולוחצים על <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>K</Kbd></bdi> ב-Mac), או לוחצים על תיבת החיפוש למעלה.
+2. כשעוד לא הוקלד כלום, התיבה מציעה חיפושים לנסות. לוחצים על אחד כדי להתחיל ממנו.
+3. מקלידים כמה אותיות מהכותרת או מהכתובת, למשל <bdi dir="ltr">`docs`</bdi>. ההתאמות מודגשות.
+4. לוחצים על <bdi dir="ltr"><Kbd>Enter</Kbd></bdi> על כרטיסייה: TabMerger פותח את הקבוצה שלה ומעביר אליה את המיקוד. על כרטיסייה סגורה, <bdi dir="ltr"><Kbd>Enter</Kbd></bdi> פותח אותה מחדש.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="חיפוש ב-TabMerger" steps={[{ title: 'Ctrl+K' }, { title: 'תוצאות' }, { title: 'window:' }]}>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-examples" alt="החיפוש של TabMerger נפתח עם Ctrl+K ומציג חיפושים לדוגמה עבור react, group:, window:, tag: ו-closed:, ערכת נושא בהירה" darkAlt="החיפוש של TabMerger נפתח עם Ctrl+K ומציג חיפושים לדוגמה עבור react, group:, window:, tag: ו-closed:, ערכת נושא כהה" boxes={[{ id: 'search-input', label: 'תיבת החיפוש' }, { id: 'examples', label: 'חיפושים מוצעים' }]} source="TabMerger 3.16.1">חיפוש ריק מציע מאיפה להתחיל.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-results" alt="חיפוש docs ב-TabMerger: ארבע תוצאות מ-Now Open (פתוח עכשיו) ומ-Reading list, ו-docs מודגש בכל כתובת, ערכת נושא בהירה" darkAlt="חיפוש docs ב-TabMerger: ארבע תוצאות מ-Now Open (פתוח עכשיו) ומ-Reading list, ו-docs מודגש בכל כתובת, ערכת נושא כהה" boxes={[{ id: 'search-input', label: 'docs' }]} source="TabMerger 3.16.1">כרטיסיות פתוחות ושמורות ברשימה אחת, וכל אחת מסומנת בקבוצה שלה.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker" alt="החיפוש של TabMerger אחרי הקלדת window:, עם החלונות Window, Papers ו-Tools לבחירה, ערכת נושא בהירה" darkAlt="החיפוש של TabMerger אחרי הקלדת window:, עם החלונות Window, Papers ו-Tools לבחירה, ערכת נושא כהה" boxes={[{ id: 'search-input', label: 'המסנן window:' }, { id: 'pick-window', label: 'החלונות שנתתם להם שם' }]} source="TabMerger 3.16.1">מקלידים <bdi dir="ltr">window:</bdi> ובוחרים; אין צורך לאיית את השם.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="filters" title="כל המסננים, עם דוגמאות">
+
+<ComparisonTable
+  head={['מסנן', 'מה הוא מוצא', 'דוגמה']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['(מילים רגילות)', 'כרטיסיות שהכותרת או הכתובת שלהן מכילות אותן, וקבוצות לפי שם', <bdi dir="ltr">pull request</bdi>],
+    [<bdi dir="ltr">group:</bdi>, 'כרטיסיות בקבוצה אחת', <bdi dir="ltr">group:"Thesis sources" wiki</bdi>],
+    [<bdi dir="ltr">window:</bdi>, 'כרטיסיות בחלון אחד (נותנים לו שם מתפריט ⋯ שלו)', <bdi dir="ltr">window:"Papers"</bdi>],
+    [<bdi dir="ltr">tag:</bdi>, 'כרטיסיות בקבוצת כרטיסיות של Chrome עם התווית הזו', <bdi dir="ltr">tag:"Sprint"</bdi>],
+    [<bdi dir="ltr">closed:</bdi>, 'רק כרטיסיות וחלונות שנסגרו לאחרונה', <bdi dir="ltr">closed: seat</bdi>],
+  ]}
+/>
+
+אפשר לשלב מסננים עם מילים וזה עם זה. כשמוסיפים מילים אחרי מסנן, משתמשים במירכאות: בלעדיהן המסנן לוקח את כל שאר השורה, ולכן <bdi dir="ltr">`group:Work pull`</bdi> מחפש קבוצה בשם "Work pull". בחירה מהרשימה מוסיפה את המירכאות בשבילכם.
+
+</Section>
+
+<Section id="panel" title="אחרי החיפוש: הסתרה או עמעום של השאר">
+
+סוגרים את החיפוש עם <bdi dir="ltr"><Kbd>Esc</Kbd></bdi> והוא ממשיך לפעול בתצוגה הראשית. הסרגל הצדדי מציג כמה התאמות יש בכל קבוצה ("1 נמצאו"), ובתוך קבוצה הכרטיסיות שלא תואמות **מוסתרות** כברירת מחדל. מעדיפים לא לאבד את ההתמצאות? ב-**הגדרות ← כללי** (<bdi dir="ltr">Settings → General</bdi>) מגדירים את **כרטיסיות שלא תואמות לחיפוש** (<bdi dir="ltr">Tabs that do not match a search</bdi>) ל-**עמעום** (<bdi dir="ltr">Dim</bdi>): כל כרטיסייה נשארת במקומה, מעומעמת, וההתאמות מודגשות. **ניקוי החיפוש** (<bdi dir="ltr">Clear search</bdi>) מסיים את החיפוש.
+
+כל עוד יש כרטיסיות מוסתרות, שינוי הסדר בגרירה מושהה ("כדי להזיז פריטים צריך לנקות את החיפוש"): כשחלק מהשורות לא נראות, המקום שבו כרטיסייה שנשמטה אמורה לנחות היה ניחוש.
+
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-dim" alt="הקבוצה Thesis sources בזמן חיפוש wiki בתוכה: ההתאמה היחידה מודגשת ושאר הכרטיסיות מעומעמות, ערכת נושא בהירה" darkAlt="הקבוצה Thesis sources בזמן חיפוש wiki בתוכה: ההתאמה היחידה מודגשת ושאר הכרטיסיות מעומעמות, ערכת נושא כהה" boxes={[{ id: 'match', label: 'ההתאמה' }]} source="TabMerger 3.16.1">מצב עמעום: ההתאמה בולטת, וכל השאר נשאר במקומו.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="מה זה חוסך לכם">
+
+סריקת חלונות מלאים בסמלים של 16 פיקסלים וגלילה בהיסטוריה הופכות לכמה הקשות. זה עובד אותו דבר לא משנה כמה כרטיסיות אתם שומרים: קבוצה ששמרתם לפני חודשים קרובה בדיוק כמו הכרטיסייה שפתחתם לפני דקה. זה מה שהופך את סגירת החלונות לבטוחה: כל מה ששמרתם נמצא במרחק חיפוש אחד.
+
+</Section>
+
+<Section id="habits" title="הרגלים טובים">
+
+- **מחפשים בכתובת, לא רק בכותרת.** <bdi dir="ltr">`github.com/your-org`</bdi> או <bdi dir="ltr">`localhost:3000`</bdi> מוצאים דפים שהכותרות שלהם נראות אותו דבר.
+- **נותנים שמות לחלונות שמחפשים בהם הרבה.** "Papers", "PRs", "Docs": ואז <bdi dir="ltr">`window:`</bdi> מביא אתכם ישר לשם.
+- **מתחילים ב-<bdi dir="ltr">`closed:`</bdi>** כשיודעים שסגרתם את הכרטיסייה; הרשימה קצרה יותר ויש בה רק מה שצריך.
+- **משלבים חיפוש עם קבוצות.** ככל שהקבוצות שלכם טובות יותר (ראו [שגרת כרטיסיות יומית](/blog/tabmerger-daily-workflow)), כך מסנן <bdi dir="ltr">`group:`</bdi> מצמצם יותר.
+
+</Section>
+
+<Section id="plans" title="Free או Pro">
+
+החיפוש, כל המסננים, רשימות הבחירה והסתרה או עמעום כלולים כולם בתוכנית Free, בלי חשבון. ההבדל היחיד הוא כמה אחורה מגיעות הכרטיסיות הסגורות: Free שומרת את הכרטיסיות שסגרתם ביומיים האחרונים, Pro את אלה מ-30 הימים האחרונים. ועם הקבוצות והכרטיסיות הבלתי מוגבלות של Pro, פשוט יש יותר מה למצוא. ראו את [דף המחירים](/pricing).
+
+<InstallCta>מוצאים כל כרטיסייה ששמרתם בהקשה אחת. בחינם ל-Chrome, ל-Edge ול-Firefox.</InstallCta>
+
+לעבודה עם המקלדת גם מעבר לחיפוש, ראו [קיצורי מקלדת לכרטיסיות](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="faq" title="שאלות נפוצות">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,175 @@
+export const post = {
+  slug: 'search-all-your-tabs-with-tabmerger',
+  title: 'Busca en todas tus pestañas con TabMerger: Ctrl+K y sus filtros',
+  navTitle: 'Buscar en todas tus pestañas',
+  seoTitle: 'Buscar pestañas abiertas, guardadas y cerradas a la vez con TabMerger',
+  description:
+    'Un solo cuadro de búsqueda para todas tus pestañas: abiertas, guardadas en grupos o cerradas esta semana. Cómo funciona la búsqueda con Ctrl+K de TabMerger, cada filtro (group:, window:, tag:, closed:) y por qué encuentra lo que encuentra.',
+  shareSummary: 'Pestañas abiertas, guardadas y cerradas en un solo buscador, con filtros que lo acotan al instante.',
+  dek: 'Abierta, guardada o cerrada hace una hora: escribe unas letras y ahí está, resaltada.',
+  published: '2026-12-14',
+  updated: '2026-12-14',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Ctrl+K (⌘+K en Mac) busca a la vez en las pestañas abiertas, guardadas y cerradas recientemente.', source: 'TabMerger 3.16.1' },
+    { text: 'Filtros: group:, window:, tag: (etiqueta de grupo de pestañas de Chrome) y closed:.', source: 'TabMerger 3.16.1' },
+    { text: 'Las coincidencias son secuencias exactas de letras, nunca aproximadas, así que cada resultado lleva un resaltado.', source: 'Código fuente de TabMerger 3.16.1' },
+    { text: 'La búsqueda y todos los filtros son gratis.', source: 'Precios de TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '¿Cómo busco en todas mis pestañas a la vez?',
+      answer:
+        'Abre TabMerger, pulsa Ctrl+K (⌘+K en Mac) y escribe parte del título o la dirección de una página. Los resultados incluyen tus pestañas abiertas, todos los grupos guardados y, debajo, las pestañas que cerraste hace poco.',
+    },
+    {
+      question: '¿Cómo busco solo en un grupo?',
+      answer:
+        'Escribe group: y elige el grupo de la lista; TabMerger completa group:"Name". Luego añade tus palabras detrás, por ejemplo group:"Thesis sources" wiki.',
+    },
+    {
+      question: '¿Puedo buscar pestañas que ya cerré?',
+      answer: 'Sí. Empieza la búsqueda con closed: para ver solo las pestañas y ventanas cerradas recientemente. Elige una para volver a abrirla; con Ctrl+clic o clic central se abre en segundo plano.',
+    },
+    {
+      question: '¿Por qué la búsqueda no encuentra una página si escribo mal una letra?',
+      answer:
+        'TabMerger busca las letras exactamente como las escribes (sin distinguir mayúsculas), nunca letras sueltas repartidas por un título. Así los resultados son previsibles: cada resultado tiene una coincidencia resaltada, y cada resaltado es una coincidencia real.',
+    },
+    {
+      question: '¿La búsqueda es gratis?',
+      answer: 'Sí, la búsqueda y todos sus filtros están en el plan Free. Pro guarda 30 días de pestañas cerradas para buscar, en lugar de 2.',
+    },
+  ],
+  images: [
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-light.webp', alt: 'Búsqueda de TabMerger abierta con Ctrl+K, con búsquedas de ejemplo para react, group:, window:, tag: y closed:, tema claro' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-dark.webp', alt: 'Búsqueda de TabMerger abierta con Ctrl+K, con búsquedas de ejemplo para react, group:, window:, tag: y closed:, tema oscuro' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-light.webp', alt: 'Búsqueda de docs en TabMerger: cuatro resultados de Now Open (Abiertas ahora) y Reading list, con docs resaltado en cada dirección, tema claro' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-dark.webp', alt: 'Búsqueda de docs en TabMerger: cuatro resultados de Now Open (Abiertas ahora) y Reading list, con docs resaltado en cada dirección, tema oscuro' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-light.webp', alt: 'Búsqueda de TabMerger con window: escrito, que muestra las ventanas Window, Papers y Tools para elegir, tema claro' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-dark.webp', alt: 'Búsqueda de TabMerger con window: escrito, que muestra las ventanas Window, Papers y Tools para elegir, tema oscuro' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp', alt: 'El grupo Thesis sources mientras se busca wiki en él, con la única coincidencia resaltada y las demás pestañas atenuadas, tema claro' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-dark.webp', alt: 'El grupo Thesis sources mientras se busca wiki en él, con la única coincidencia resaltada y las demás pestañas atenuadas, tema oscuro' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'browser-tips'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp' },
+  ogImage: { src: '/blog/search-all-your-tabs-with-tabmerger/og.png', alt: 'Busca en todas tus pestañas con TabMerger: resultados para docs de pestañas abiertas y guardadas' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'problem', label: '¿Dónde estaba esa pestaña?' },
+    { id: 'why', label: 'Por qué la búsqueda funciona así' },
+    { id: 'steps', label: 'Buscar paso a paso' },
+    { id: 'filters', label: 'Todos los filtros' },
+    { id: 'panel', label: 'Después de buscar' },
+    { id: 'benefit', label: 'Lo que te ahorra' },
+    { id: 'habits', label: 'Buenos hábitos' },
+    { id: 'plans', label: 'Free o Pro' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Abre [TabMerger](/features) y pulsa <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> en Mac). Escribe unas letras de un título o una dirección: los resultados salen de tus pestañas abiertas, de todos los grupos guardados y, debajo, de las pestañas que cerraste hace poco, cada uno marcado con el lugar donde está. Acota con `group:`, `window:`, `tag:` o `closed:` y pulsa <Kbd>Enter</Kbd> para ir directo a la pestaña.
+
+</QuickAnswer>
+
+<InstallCta>Todas tus pestañas, a una búsqueda de distancia. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+<Section id="problem" title="«¿Dónde estaba esa pestaña?»">
+
+Sabes que la página existe. La tenías abierta el martes, junto a la pull request. ¿Estaba en la ventana de trabajo o en la de lectura? ¿La guardaste en un grupo o la cerraste? La búsqueda de pestañas del propio navegador solo ve lo que está abierto en ese navegador ahora mismo; el historial ve todo lo que has visitado alguna vez, sin saber qué guardaste a propósito.
+
+Lo que quieres es un solo cuadro que lo sepa todo: lo que está abierto, lo que guardaste y lo que cerraste esta semana. Ese cuadro es <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> en TabMerger. (Para la búsqueda de pestañas integrada en los navegadores, consulta [cómo encontrar una pestaña entre cientos](/blog/find-a-tab-among-hundreds).)
+
+</Section>
+
+<Section id="why" title="Por qué la búsqueda de TabMerger funciona así">
+
+- **Todo en una lista.** Las pestañas abiertas, los grupos guardados y las pestañas cerradas recientemente responden a la misma pregunta («¿dónde está?»), así que aparecen juntas. Cada resultado lleva una insignia con su grupo y, si la tiene, la etiqueta de su grupo de pestañas de Chrome.
+- **Exacta, no aproximada.** Un resultado es una pestaña cuyo título o dirección contiene tus letras seguidas, sin distinguir mayúsculas. Las letras sueltas repartidas por un título nunca cuentan. Es a propósito: cada resultado tiene un resaltado y cada resaltado es la coincidencia real, así que puedes fiarte de lo que ves.
+- **La mejor coincidencia, primero.** Una coincidencia exacta va por delante de un título que empieza por tu texto, luego de una palabra que empieza por él y luego de una coincidencia en cualquier parte. La lista muestra las 12 mejores, así que la pestaña correcta queda arriba.
+- **Elige, no deletrees.** Al escribir `group:`, `window:` o `tag:` se abre una lista de tus grupos, ventanas o etiquetas para elegir. TabMerger completa el nombre entre comillas, así que los nombres largos con espacios funcionan sin más.
+- **Las pestañas cerradas no estorban.** Aparecen hasta 3 pestañas cerradas recientemente bajo los resultados guardados; empieza con `closed:` para ver solo pestañas cerradas.
+- **Basta con el teclado.** <Kbd>↑</Kbd> <Kbd>↓</Kbd> para moverte, <Kbd>Enter</Kbd> para abrir, <Kbd>Esc</Kbd> o <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> para cerrar. Al cerrar, lo que escribiste se queda donde estaba, para que puedas volver a ello.
+
+</Section>
+
+<Section id="steps" title="Buscar paso a paso">
+
+1. Abre TabMerger y pulsa <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> en Mac), o haz clic en el cuadro de búsqueda de arriba.
+2. Sin nada escrito, el cuadro sugiere búsquedas para probar. Haz clic en una para empezar desde ella.
+3. Escribe unas letras del título o la dirección, como `docs`. Las coincidencias aparecen resaltadas.
+4. Pulsa <Kbd>Enter</Kbd> sobre una pestaña: TabMerger abre su grupo y pone el foco en esa pestaña. En una pestaña cerrada, <Kbd>Enter</Kbd> la vuelve a abrir.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Buscar en TabMerger" steps={[{ title: 'Ctrl+K' }, { title: 'Resultados' }, { title: 'window:' }]}>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-examples" alt="Búsqueda de TabMerger abierta con Ctrl+K, con búsquedas de ejemplo para react, group:, window:, tag: y closed:, tema claro" darkAlt="Búsqueda de TabMerger abierta con Ctrl+K, con búsquedas de ejemplo para react, group:, window:, tag: y closed:, tema oscuro" boxes={[{ id: 'search-input', label: 'El cuadro de búsqueda' }, { id: 'examples', label: 'Búsquedas sugeridas' }]} source="TabMerger 3.16.1">Una búsqueda vacía te sugiere por dónde empezar.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-results" alt="Búsqueda de docs en TabMerger: cuatro resultados de Now Open (Abiertas ahora) y Reading list, con docs resaltado en cada dirección, tema claro" darkAlt="Búsqueda de docs en TabMerger: cuatro resultados de Now Open (Abiertas ahora) y Reading list, con docs resaltado en cada dirección, tema oscuro" boxes={[{ id: 'search-input', label: 'docs' }]} source="TabMerger 3.16.1">Pestañas abiertas y guardadas en una lista, cada una marcada con su grupo.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker" alt="Búsqueda de TabMerger con window: escrito, que muestra las ventanas Window, Papers y Tools para elegir, tema claro" darkAlt="Búsqueda de TabMerger con window: escrito, que muestra las ventanas Window, Papers y Tools para elegir, tema oscuro" boxes={[{ id: 'search-input', label: 'El filtro window:' }, { id: 'pick-window', label: 'Tus ventanas con nombre' }]} source="TabMerger 3.16.1">Escribe window: y elige; no hace falta deletrear el nombre.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="filters" title="Todos los filtros, con ejemplos">
+
+<ComparisonTable
+  head={['Filtro', 'Encuentra', 'Ejemplo']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['(palabras sueltas)', 'Pestañas cuyo título o dirección las contiene, y grupos por nombre', 'pull request'],
+    ['group:', 'Pestañas de un grupo', 'group:"Thesis sources" wiki'],
+    ['window:', 'Pestañas de una ventana (ponle nombre desde su menú ⋯)', 'window:"Papers"'],
+    ['tag:', 'Pestañas de un grupo de pestañas de Chrome con esa etiqueta', 'tag:"Sprint"'],
+    ['closed:', 'Solo pestañas y ventanas cerradas recientemente', 'closed: seat'],
+  ]}
+/>
+
+Los filtros se combinan con palabras y entre sí. Usa comillas si añades palabras después de un filtro: sin ellas, el filtro se queda con el resto de la línea, así que `group:Work pull` busca un grupo llamado «Work pull». Al elegir de la lista, las comillas se añaden solas.
+
+</Section>
+
+<Section id="panel" title="Después de buscar: ocultar o atenuar el resto">
+
+Cierra la búsqueda con <Kbd>Esc</Kbd> y sigue funcionando en la vista principal. La barra lateral muestra cuántas coincidencias tiene cada grupo («1 encontradas») y, dentro de un grupo, las pestañas que no coinciden quedan **ocultas** por defecto. ¿Prefieres no perder la orientación? En **Ajustes → General** (Settings → General), cambia **Pestañas que no coinciden con una búsqueda** (Tabs that do not match a search) a **Atenuar** (Dim): cada pestaña se queda en su sitio, atenuada, con las coincidencias resaltadas. **Borrar búsqueda** (Clear search) termina la búsqueda.
+
+Mientras haya pestañas ocultas, reordenar arrastrando queda en pausa («Borra la búsqueda para mover elementos»): con filas fuera de la vista, dónde debería caer una pestaña sería pura adivinanza.
+
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-dim" alt="El grupo Thesis sources mientras se busca wiki en él, con la única coincidencia resaltada y las demás pestañas atenuadas, tema claro" darkAlt="El grupo Thesis sources mientras se busca wiki en él, con la única coincidencia resaltada y las demás pestañas atenuadas, tema oscuro" boxes={[{ id: 'match', label: 'La coincidencia' }]} source="TabMerger 3.16.1">Modo atenuado: la coincidencia destaca y todo lo demás sigue donde estaba.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Lo que te ahorra">
+
+Recorrer ventanas llenas de iconos de 16 píxeles y desplazarte por el historial se convierte en unas pocas pulsaciones. Funciona igual tengas las pestañas que tengas: un grupo que guardaste hace meses está tan a mano como la pestaña que abriste hace un minuto. Eso es lo que hace seguro cerrar ventanas: todo lo que guardaste está a una búsqueda de distancia.
+
+</Section>
+
+<Section id="habits" title="Buenos hábitos">
+
+- **Busca en la dirección, no solo en el título.** `github.com/your-org` o `localhost:3000` encuentran páginas cuyos títulos se parecen todos.
+- **Pon nombre a las ventanas en las que buscas a menudo.** «Papers», «PRs», «Docs»: así `window:` te lleva directo.
+- **Empieza con `closed:`** cuando sepas que la cerraste; la lista es más corta y solo tiene lo que necesitas.
+- **Combina la búsqueda con grupos.** Cuanto mejores sean tus grupos (consulta [un flujo de trabajo diario con pestañas](/blog/tabmerger-daily-workflow)), más acota un filtro `group:`.
+
+</Section>
+
+<Section id="plans" title="Free o Pro">
+
+La búsqueda, todos los filtros, las listas para elegir y Ocultar o Atenuar están en el plan Free, sin cuenta. La única diferencia es hasta dónde llegan las pestañas cerradas: Free guarda las pestañas que cerraste en los últimos 2 días, Pro las de los últimos 30 días. Y con los grupos y pestañas ilimitados de Pro, simplemente hay más que encontrar. Consulta la [página de precios](/pricing).
+
+<InstallCta>Encuentra cualquier pestaña que hayas guardado con una pulsación. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+Para usar el teclado más allá de la búsqueda, consulta [los atajos de teclado para pestañas](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -94,3 +94,8 @@ Run the template check again just before writing into the repo, to confirm en.md
 - Interpolated catalog strings ("{{used}}/{{max}}"): don't expand through a token; write the localized "3/3" by hand and let the verifier fill the placeholders.
 - The data parser trims each value, stripping the first table row's indent: let the generator indent `*rows` keys itself.
 - Declined product or place names (pl "Sintrze") break on-screen-name checks; quote the uninflected name instead.
+
+**RTL auto-wrap in the generator:** wrap every Kbd combo and every code span in body keys (outside existing bdi runs), plus a `[[English]]` shorthand for glosses that is refused outside RTL; this removes hand-typed bdi, and the verifier confirms no Kbd or backtick is left outside one. A table slot `{{c:literal}}` can emit `'literal'` in LTR and `<bdi dir="ltr">literal</bdi>` in RTL.
+
+- Number check regex: `n(?![0-9.])` misses "2." at a sentence end; use `(?![0-9]|.[0-9])`. Gloss checks must accept full-width `（…）` for ja/zh. ar/he dual forms ("يومين", "יומיים") replace the digit 2.
+- In scratch scripts, `new URL(import.meta.url).pathname` keeps `%20` for paths with spaces; use `fileURLToPath`.
