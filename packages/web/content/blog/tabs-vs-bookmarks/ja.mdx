@@ -1,0 +1,162 @@
+export const post = {
+  slug: 'tabs-vs-bookmarks',
+  title: 'タブとブックマークの使い分け：開いておくもの、保存するもの',
+  navTitle: 'タブとブックマークの使い分け',
+  seoTitle: 'タブとブックマークの違いと使い分け：開いたままにするか保存するか',
+  description:
+    'ブックマークするか、タブを開いたままにするか。読み物、プロジェクト作業、参考ページごとにすぐ判断できる表と、その中間の選択肢である「保存したタブグループ」を紹介します。検索でき、ワンクリックで開き直せます。',
+  shareSummary: 'ブックマークか、開いたままか。判断の表と、その中間にある「保存したグループ」という選択肢。',
+  dek: '開いているタブは今日のため。ブックマークは何年も先のため。その間にあるものは、保存したグループに入れましょう。',
+  published: '2026-11-28',
+  updated: '2026-11-28',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D で、ウィンドウ内のすべてのタブをブックマークできます。3 つのブラウザすべてで使えます。', source: 'Chrome と Edge のヘルプ、Firefox 159 のキー設定' },
+    { text: 'TabMerger のグループはウィンドウ丸ごとをメモ付きで保存し、ワンクリックで開き直せます。', source: 'TabMerger 3.16.1' },
+    { text: 'TabMerger の Ctrl+K は、開いているタブ、保存したタブ、最近閉じたタブをまとめて検索します。', source: 'TabMerger 3.16.1' },
+    { text: '無料版は 5 グループ・50 タブまで。Pro は無制限で同期付きです。', source: 'TabMerger の料金', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'ブックマークするべき？ それともタブを開いたままにするべき？',
+      answer:
+        '開いたままにするのは今日必要なものだけにしましょう。作業中のものは TabMerger のグループとして保存すればウィンドウとして開き直せます。何か月、何年と使うページはブックマークしましょう。',
+    },
+    {
+      question: '開いているタブはブラウザを重くしますか？',
+      answer: '開いているページはそれぞれメモリを使います。使っていないタブを保存して閉じるのが一番簡単な対策です。詳しくはタブが多すぎてブラウザが重いときのガイドをご覧ください。',
+      link: { text: 'タブが多すぎてブラウザが重いときのガイド', href: '/blog/too-many-tabs-slow-browser' },
+    },
+    {
+      question: 'ブックマークと保存したタブグループの違いは？',
+      answer:
+        'ブックマークはフォルダの中の 1 ページです。TabMerger のグループはタブの入ったウィンドウを丸ごと、名前、色、メモと一緒に保存し、すべてを一度に開き直せます。',
+    },
+    {
+      question: 'ブックマークをタブグループに変換できますか？',
+      answer: 'できます。ブックマークを HTML ファイルとしてエクスポートし、TabMerger の「設定 → データ」からインポートしてください。最上位のフォルダがそれぞれ 1 つのグループになります。',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-light.webp', alt: 'TabMerger のグループ「Read this week」（今週読む）。保存したタブ 4 つとグループのメモ。ライトテーマ' },
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-dark.webp', alt: 'TabMerger のグループ「Read this week」（今週読む）。保存したタブ 4 つとグループのメモ。ダークテーマ' },
+  ],
+  tags: ['tab-management', 'bookmarks', 'save-tabs', 'tab-manager', 'browser-productivity'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-vs-bookmarks/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/tabs-vs-bookmarks/og.png', alt: 'タブとブックマークの使い分け：TabMerger のガイド。今週読むタブを保存したグループの画像' },
+  toc: [
+    { id: 'quick', label: '簡単な答え' },
+    { id: 'decide', label: '判断の表' },
+    { id: 'tabs', label: 'タブを開いたままにするとき' },
+    { id: 'bookmarks', label: 'ブックマークするとき' },
+    { id: 'middle', label: '中間の選択肢' },
+    { id: 'tabmerger', label: 'TabMerger でやってみる' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+}
+
+<QuickAnswer>
+
+タブを開いたままにするのは、**今日**使うものだけにしましょう。**何か月も、何年も**先に使いたいならブックマークです。その間にあるもの（来週再開するプロジェクト、読みたい記事のリスト、進行中の調べもの）は、[TabMerger](/features) でタブを**グループ**として保存しましょう。ウィンドウが丸ごと残り、<Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> で検索でき、ワンクリックで画面に戻せます。
+
+</QuickAnswer>
+
+<InstallCta>今日のタブをワンクリックでグループとして保存。Chrome、Edge、Firefox 向けに無料です。</InstallCta>
+
+<Section id="decide" title="ブックマークする？ タブを開いたままにする？">
+
+自分に聞くのは一つだけ：**次にこれが必要になるのはいつ**？
+
+<ComparisonTable
+  head={['必要になるのは…', '最適な置き場所', '理由']}
+  rowHeaders
+  highlight={1}
+  minWidth="34rem"
+  rows={[
+    ['数時間以内', '開いているタブ', '今まさに使っている'],
+    ['今週のうちに、ほかのタブと一緒に', 'TabMerger のグループ', 'ひとまとまりのまま、ワンクリックでウィンドウとして戻る'],
+    ['時間があるときに読む', 'メモ付きの TabMerger のグループ', '検索できる「あとで読む」リストが一つにまとまる'],
+    ['中断と再開を繰り返すプロジェクト', 'TabMerger のグループ', 'ウィンドウを分けたまま、保存したとおりに開き直せる'],
+    ['何か月も、何年も参照する', 'ブックマーク', 'ブラウザが同期し、フォルダで整理できる'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabs" title="タブを開いたままにすべきなのはどんなとき？">
+
+開いているタブは、あなたの机の上です。今まさに取り組んでいるものが並んでいます。すぐに手が届き、位置もスクロール位置も、入力した内容もそのまま残ります。それは同時にコストでもあります。開いているページはそれぞれメモリを使い、数十を超えるとタイトルが縮んでアイコンだけになり、目当てのタブが埋もれてしまいます。
+
+その日のうちに戻ってくるタブなら、開いたままで構いません。それ以外は散らかっているだけです。[タブが多すぎるときの片付け手順](/blog/manage-too-many-tabs)で、数分で整理する方法を紹介しています。
+
+</Section>
+
+<Section id="bookmarks" title="ブックマークが正解になるのはどんなとき？">
+
+ブックマークは、あなたの書類棚です。1 ページを好きなだけ長くフォルダに保管でき、ログインしていればブラウザが同期してくれます。
+
+- <Kbd>Ctrl</Kbd>+<Kbd>D</Kbd>（Mac では <Kbd>⌘</Kbd>+<Kbd>D</Kbd>）で、今のタブをブックマークします。
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> で、ウィンドウ内のすべてのタブを新しいフォルダにブックマークします。Chrome、Edge、Firefox で使えます。
+
+<Catch>ブックマークは一度に 1 つのウィンドウしか保存できず、残るのはアドレスだけで、どのページが一緒だったかもわかりません。参考資料の書庫には最適ですが、進行中の作業には不向きです。</Catch>
+
+</Section>
+
+<Section id="middle" title="その間にあるものはどうする？">
+
+ほとんどのタブは「今日」でも「ずっと」でもありません。来週のプロジェクト、読むつもりの記事、途中まで進めた比較などです。この中間こそタブマネージャーの出番で、[開いているタブをすべて保存](/blog/save-all-open-tabs)してグループにするほうが、開いたままにするよりも、フォルダごとにブックマークするよりも優れているのはそのためです。
+
+- **1 ページずつではなく、ウィンドウ丸ごと**。開いていたウィンドウのまま、ひとまとまりで残ります。
+- **名前、色、メモを付けられる**ので、「火曜日の調べもの」がすぐ見つかります。
+- 開いているタブや最近閉じたタブと一緒に**検索できます**。
+- **ワンクリックですべて開き直し**、終わったらまた閉じられます。
+
+調べものをしていますか？ [調べもののためのタブ整理](/blog/organize-tabs-for-research)では、ここにメモとリマインダーを加えます。
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger でやってみる">
+
+[TabMerger](/features) なら、この中間の選択肢が 2 クリックの習慣になります。
+
+1. **グループを追加**をクリックして名前を付けます。たとえば「今週読む」（スクリーンショットでは「Read this week」）。
+2. グループの **⋯** メニューを開き、**現在の内容と統合**を選びます。開いているウィンドウがすべてグループに保存されます。
+3. グループの **⋯** メニューからメモを追加し、ウィンドウを閉じます。机の上が片付き、何も失われません。
+4. 時間ができたらグループを開いてタブを開き直しましょう。<Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> なら、どのタブもキー 1 つで見つかります。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-vs-bookmarks/tm-read-later-group" alt="TabMerger のグループ「Read this week」（今週読む）。保存したタブ 4 つとグループのメモ。ライトテーマ" darkAlt="TabMerger のグループ「Read this week」（今週読む）。保存したタブ 4 つとグループのメモ。ダークテーマ" boxes={[{ id: 'group-note', label: 'グループのメモ' }, { id: 'group-row', label: 'グループ' }]} source="TabMerger 3.16.1">読みたいものをまとめたグループ。未来の自分へのメモ付き。</ThemedScreenshot>
+
+何年分ものブックマークがありますか？ HTML としてエクスポートし、**設定 → データ**でファイルをインポートすれば、最上位のフォルダがそれぞれ TabMerger のグループになります。無料版は 5 グループ・50 タブまで。[Pro](/pricing) なら制限がなくなり、グループをエンドツーエンド暗号化でパソコン間で同期できます。
+
+<InstallCta>Chrome、Edge、Firefox に無料で追加できます。使い始めるのにアカウントは不要です。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

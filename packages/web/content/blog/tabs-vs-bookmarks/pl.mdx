@@ -1,0 +1,162 @@
+export const post = {
+  slug: 'tabs-vs-bookmarks',
+  title: 'Karty czy zakładki: co zostawić otwarte, a co zapisać',
+  navTitle: 'Karty czy zakładki',
+  seoTitle: 'Karty czy zakładki: kiedy zostawić kartę otwartą, a kiedy ją zapisać',
+  description:
+    'Dodać do zakładek czy zostawić kartę otwartą? Krótka tabela decyzji dla lektur, pracy nad projektami i stron referencyjnych oraz złoty środek: zapisane grupy kart, które możesz przeszukiwać i ponownie otwierać jednym kliknięciem.',
+  shareSummary: 'Zakładka czy otwarta karta? Tabela decyzji i złoty środek, czyli zapisana grupa.',
+  dek: 'Otwarte karty są na dziś. Zakładki są na lata. Wszystko pomiędzy należy do zapisanej grupy.',
+  published: '2026-11-28',
+  updated: '2026-11-28',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D dodaje do zakładek każdą kartę z okna we wszystkich trzech przeglądarkach.', source: 'Pomoc Chrome i Edge; skróty Firefoksa 159' },
+    { text: 'Grupy TabMergera przechowują całe okna z notatką i otwierają je ponownie jednym kliknięciem.', source: 'TabMerger 3.16.1' },
+    { text: 'Ctrl+K w TabMergerze przeszukuje naraz otwarte, zapisane i niedawno zamknięte karty.', source: 'TabMerger 3.16.1' },
+    { text: 'Za darmo: 5 grup i 50 kart; Pro jest bez limitów i z synchronizacją.', source: 'Cennik TabMergera', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Dodawać do zakładek czy zostawiać karty otwarte?',
+      answer:
+        'Zostaw otwarte tylko to, czego potrzebujesz dziś. Bieżącą pracę zapisz jako grupę TabMergera, żeby otworzyła się ponownie jako okno, a do zakładek dodawaj strony, które będą ci potrzebne przez miesiące lub lata.',
+    },
+    {
+      question: 'Czy otwarte karty spowalniają przeglądarkę?',
+      answer: 'Każda otwarta strona zajmuje pamięć. Najprościej zapisać karty, których nie używasz, i je zamknąć; zajrzyj do naszego poradnika o zbyt wielu kartach i wolnej przeglądarce.',
+      link: { text: 'zbyt wielu kartach i wolnej przeglądarce', href: '/blog/too-many-tabs-slow-browser' },
+    },
+    {
+      question: 'Czym różni się zakładka od zapisanej grupy kart?',
+      answer:
+        'Zakładka to jedna strona w folderze. Grupa TabMergera przechowuje całe okna kart, z nazwą, kolorem i notatką, i otwiera je wszystkie naraz.',
+    },
+    {
+      question: 'Czy mogę zamienić zakładki w grupy kart?',
+      answer: 'Tak. Wyeksportuj zakładki do pliku HTML i zaimportuj go w TabMergerze w Ustawienia → Dane: każdy folder najwyższego poziomu staje się grupą.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-light.webp', alt: 'Grupa TabMergera „Read this week” z czterema zapisanymi kartami i notatką grupy, jasny motyw' },
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-dark.webp', alt: 'Grupa TabMergera „Read this week” z czterema zapisanymi kartami i notatką grupy, ciemny motyw' },
+  ],
+  tags: ['tab-management', 'bookmarks', 'save-tabs', 'tab-manager', 'browser-productivity'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-vs-bookmarks/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/tabs-vs-bookmarks/og.png', alt: 'Karty czy zakładki: poradnik TabMergera z zapisaną grupą kart do przeczytania w tym tygodniu' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'decide', label: 'Tabela decyzji' },
+    { id: 'tabs', label: 'Kiedy zostawić karty otwarte' },
+    { id: 'bookmarks', label: 'Kiedy dodać zakładkę' },
+    { id: 'middle', label: 'Złoty środek' },
+    { id: 'tabmerger', label: 'Jak to zrobić w TabMergerze' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Zostaw kartę otwartą tylko wtedy, gdy użyjesz jej **dziś**. Dodaj ją do zakładek, jeśli będzie ci potrzebna **za miesiące lub lata**. Wszystko pomiędzy (projekt, do którego wrócisz w przyszłym tygodniu, listę lektur, trwający research) zapisz jako **grupę** w [TabMergerze](/features): całe okno zostaje zachowane, można je przeszukać skrótem <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> i jednym kliknięciem wraca na ekran.
+
+</QuickAnswer>
+
+<InstallCta>Zapisz dzisiejsze karty jako grupę jednym kliknięciem. Za darmo dla Chrome, Edge i Firefoksa.</InstallCta>
+
+<Section id="decide" title="Dodać do zakładek czy zostawić kartę otwartą?">
+
+Zadaj sobie jedno pytanie: **kiedy znów będę tego potrzebować?**
+
+<ComparisonTable
+  head={['Potrzebujesz tego…', 'Najlepsze miejsce', 'Dlaczego']}
+  rowHeaders
+  highlight={1}
+  minWidth="34rem"
+  rows={[
+    ['W ciągu najbliższych godzin', 'Otwarta karta', 'Właśnie z niej korzystasz'],
+    ['Później w tym tygodniu, razem z innymi kartami', 'Grupa TabMergera', 'Cały zestaw wraca jako okno, jednym kliknięciem'],
+    ['Do przeczytania, gdy znajdziesz czas', 'Grupa TabMergera z notatką', 'Jedna lista „do przeczytania później”, którą da się przeszukać'],
+    ['Do projektu, który wstrzymujesz i wznawiasz', 'Grupa TabMergera', 'Trzyma okna osobno i otwiera je dokładnie tak, jak je zapisano'],
+    ['Jako materiał referencyjny na miesiące lub lata', 'Zakładka', 'Synchronizowana przez przeglądarkę, uporządkowana w folderach'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabs" title="Kiedy karta powinna zostać otwarta?">
+
+Otwarte karty to twoje biurko: to, nad czym pracujesz w tej chwili. Są dostępne od ręki i zachowują swoje miejsce, pozycję przewijania i wszystko, co wpisałeś. To jednocześnie ich koszt: każda otwarta strona zajmuje pamięć, a po przekroczeniu kilkudziesięciu tytuły kurczą się do ikon i karta, której szukasz, ginie.
+
+Zostaw kartę otwartą, jeśli wrócisz do niej przed końcem dnia. Cała reszta to bałagan; nasza [rutyna na zbyt wiele kart](/blog/manage-too-many-tabs) pokazuje, jak go uprzątnąć w kilka minut.
+
+</Section>
+
+<Section id="bookmarks" title="Kiedy zakładka to dobry wybór?">
+
+Zakładki to twoja szafa na dokumenty: jedna strona, przechowywana tak długo, jak chcesz, w folderach i synchronizowana przez przeglądarkę, gdy jesteś zalogowany.
+
+- <Kbd>Ctrl</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>D</Kbd> na Macu) dodaje bieżącą kartę do zakładek.
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> dodaje każdą kartę z okna do zakładek w nowym folderze, w Chrome, Edge i Firefoksie.
+
+<Catch>zakładki zapisują jedno okno naraz, zachowują tylko adres i nie mówią, które strony były ze sobą powiązane. Świetnie sprawdzają się jako biblioteka materiałów, ale przy bieżącej pracy są niewygodne.</Catch>
+
+</Section>
+
+<Section id="middle" title="A co ze wszystkim pomiędzy?">
+
+Większość kart nie jest ani „na dziś”, ani „na zawsze”. To projekt na przyszły tydzień, artykuły, które chcesz przeczytać, porównanie, które masz w połowie. Właśnie do tego służy menedżer kart i dlatego [zapisanie wszystkich otwartych kart](/blog/save-all-open-tabs) jako grupy jest lepsze niż zostawianie ich otwartych czy dodawanie do zakładek folder po folderze:
+
+- **Całe okna, a nie pojedyncze strony.** Zestaw zostaje razem, w oknach, które miałeś.
+- **Z nazwą, kolorem i notatką,** więc „research z wtorku” łatwo wypatrzeć.
+- **Można je przeszukiwać** razem z otwartymi i niedawno zamkniętymi kartami.
+- **Jedno kliknięcie otwiera** wszystko ponownie, a gdy skończysz, znów to zamykasz.
+
+Zbierasz materiały? [Porządkowanie kart do researchu](/blog/organize-tabs-for-research) dokłada do tego notatki i przypomnienia.
+
+</Section>
+
+<Section id="tabmerger" title="Jak to zrobić w TabMergerze">
+
+[TabMerger](/features) zamienia złoty środek w nawyk na dwa kliknięcia:
+
+1. Kliknij **Dodaj Grupę** i nadaj jej nazwę, na przykład „Do przeczytania w tym tygodniu” (na zrzutach ekranu „Read this week”).
+2. Otwórz menu **⋯** grupy i wybierz **Scal z bieżącą sesją**: każde otwarte okno zostanie w niej zapisane.
+3. Dodaj notatkę z menu **⋯** grupy, a potem zamknij okna. Biurko jest czyste i nic nie przepadło.
+4. Gdy przyjdzie pora, otwórz grupę i ponownie otwórz karty; <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> znajdzie każdą z nich jednym naciśnięciem klawisza.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-vs-bookmarks/tm-read-later-group" alt="Grupa TabMergera „Read this week” z czterema zapisanymi kartami i notatką grupy, jasny motyw" darkAlt="Grupa TabMergera „Read this week” z czterema zapisanymi kartami i notatką grupy, ciemny motyw" boxes={[{ id: 'group-note', label: 'Jej notatka' }, { id: 'group-row', label: 'Grupa' }]} source="TabMerger 3.16.1">Lista lektur jako grupa, z notatką dla przyszłego siebie.</ThemedScreenshot>
+
+Masz już zakładki z wielu lat? Wyeksportuj je do HTML i zaimportuj plik w **Ustawienia → Dane**: każdy folder najwyższego poziomu staje się grupą TabMergera. Wersja darmowa mieści 5 grup i 50 kart; [Pro](/pricing) znosi limity i synchronizuje twoje grupy między komputerami z szyfrowaniem end-to-end.
+
+<InstallCta>Za darmo dla Chrome, Edge i Firefoksa. Na start nie potrzebujesz konta.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

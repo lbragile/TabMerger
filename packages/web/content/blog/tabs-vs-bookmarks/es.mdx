@@ -1,0 +1,162 @@
+export const post = {
+  slug: 'tabs-vs-bookmarks',
+  title: 'Pestañas vs marcadores: qué dejar abierto y qué guardar',
+  navTitle: 'Pestañas vs marcadores',
+  seoTitle: 'Pestañas vs marcadores: cuándo dejar una pestaña abierta o guardarla',
+  description:
+    '¿Lo guardas en marcadores o dejas la pestaña abierta? Una tabla rápida para decidir con lecturas, trabajo de proyecto y páginas de consulta, y el término medio: grupos de pestañas guardados que puedes buscar y volver a abrir con un clic.',
+  shareSummary: '¿Marcador o pestaña abierta? Una tabla para decidir y el término medio de los grupos guardados.',
+  dek: 'Las pestañas abiertas son para hoy. Los marcadores, para años. Todo lo que queda en medio va en un grupo guardado.',
+  published: '2026-11-28',
+  updated: '2026-11-28',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D guarda en marcadores todas las pestañas de la ventana, en los tres navegadores.', source: 'Ayuda de Chrome y Edge; atajos de Firefox 159' },
+    { text: 'Los grupos de TabMerger guardan ventanas completas, con una nota, y las vuelven a abrir con un clic.', source: 'TabMerger 3.16.1' },
+    { text: 'Ctrl+K en TabMerger busca a la vez en pestañas abiertas, guardadas y cerradas recientemente.', source: 'TabMerger 3.16.1' },
+    { text: 'Gratis: 5 grupos y 50 pestañas; Pro es ilimitado y sincronizado.', source: 'Precios de TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '¿Es mejor guardar en marcadores o dejar las pestañas abiertas?',
+      answer:
+        'Deja abierto solo lo que necesitas hoy. Guarda el trabajo en curso como un grupo de TabMerger para que se vuelva a abrir como una ventana, y guarda en marcadores las páginas que vas a querer durante meses o años.',
+    },
+    {
+      question: '¿Las pestañas abiertas ralentizan el navegador?',
+      answer: 'Cada página abierta usa memoria. Lo más sencillo es guardar las pestañas que no estás usando y cerrarlas; consulta nuestra guía sobre demasiadas pestañas y un navegador lento.',
+      link: { text: 'demasiadas pestañas y un navegador lento', href: '/blog/too-many-tabs-slow-browser' },
+    },
+    {
+      question: '¿Qué diferencia hay entre un marcador y un grupo de pestañas guardado?',
+      answer:
+        'Un marcador es una página dentro de una carpeta. Un grupo de TabMerger guarda ventanas completas de pestañas, con nombre, color y nota, y las vuelve a abrir todas a la vez.',
+    },
+    {
+      question: '¿Puedo convertir mis marcadores en grupos de pestañas?',
+      answer: 'Sí. Exporta tus marcadores como archivo HTML e impórtalo en TabMerger desde Ajustes → Datos: cada carpeta de primer nivel se convierte en un grupo.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-light.webp', alt: 'Grupo de TabMerger «Read this week» con cuatro pestañas guardadas y una nota del grupo, tema claro' },
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-dark.webp', alt: 'Grupo de TabMerger «Read this week» con cuatro pestañas guardadas y una nota del grupo, tema oscuro' },
+  ],
+  tags: ['tab-management', 'bookmarks', 'save-tabs', 'tab-manager', 'browser-productivity'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-vs-bookmarks/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/tabs-vs-bookmarks/og.png', alt: 'Pestañas vs marcadores: una guía de TabMerger, con un grupo guardado de pestañas para leer esta semana' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'decide', label: 'La tabla para decidir' },
+    { id: 'tabs', label: 'Cuándo dejar pestañas abiertas' },
+    { id: 'bookmarks', label: 'Cuándo usar un marcador' },
+    { id: 'middle', label: 'El término medio' },
+    { id: 'tabmerger', label: 'Cómo hacerlo en TabMerger' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Deja una pestaña abierta solo si la vas a usar **hoy**. Guárdala en marcadores si la vas a querer **dentro de meses o años**. Para todo lo que queda en medio (un proyecto que retomarás la semana que viene, una lista de lectura, una investigación a medias) guarda las pestañas como un **grupo** en [TabMerger](/features): se conserva la ventana entera, puedes buscarla con <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> y vuelve a la pantalla con un clic.
+
+</QuickAnswer>
+
+<InstallCta>Guarda las pestañas de hoy como un grupo con un clic. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+<Section id="decide" title="¿Lo guardo en marcadores o dejo la pestaña abierta?">
+
+Hazte una sola pregunta: **¿cuándo voy a volver a necesitar esto?**
+
+<ComparisonTable
+  head={['Lo necesitas…', 'Mejor sitio', 'Por qué']}
+  rowHeaders
+  highlight={1}
+  minWidth="34rem"
+  rows={[
+    ['En las próximas horas', 'Una pestaña abierta', 'La estás usando ahora mismo'],
+    ['Más adelante esta semana, junto con otras pestañas', 'Un grupo de TabMerger', 'Todo el conjunto vuelve como una ventana, con un clic'],
+    ['Para leer cuando tengas tiempo', 'Un grupo de TabMerger con una nota', 'Una sola lista de «leer más tarde» que puedes buscar'],
+    ['Para un proyecto que se pausa y se retoma', 'Un grupo de TabMerger', 'Mantiene las ventanas separadas y las reabre tal como se guardaron'],
+    ['Como referencia durante meses o años', 'Un marcador', 'Sincronizado por tu navegador, ordenado en carpetas'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabs" title="¿Cuándo debe quedarse abierta una pestaña?">
+
+Las pestañas abiertas son tu escritorio: lo que estás haciendo ahora mismo. Están a mano al instante y conservan su sitio, la posición de desplazamiento y todo lo que hayas escrito. Ese también es su coste: cada página abierta usa memoria, y a partir de un par de docenas los títulos se encogen hasta quedar en iconos y la pestaña que buscas se pierde.
+
+Deja una pestaña abierta si vas a volver a ella antes de que acabe el día. Todo lo demás es desorden; nuestra [rutina para demasiadas pestañas](/blog/manage-too-many-tabs) muestra cómo despejarlo en minutos.
+
+</Section>
+
+<Section id="bookmarks" title="¿Cuándo conviene un marcador?">
+
+Los marcadores son tu archivador: una página, guardada todo el tiempo que quieras, en carpetas y sincronizada por tu navegador cuando has iniciado sesión.
+
+- <Kbd>Ctrl</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>D</Kbd> en un Mac) guarda en marcadores la pestaña actual.
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> guarda en marcadores todas las pestañas de la ventana dentro de una carpeta nueva, en Chrome, Edge y Firefox.
+
+<Catch>los marcadores guardan una ventana cada vez, solo conservan la dirección y no te dicen qué páginas iban juntas. Son geniales para una biblioteca de consulta y torpes para el trabajo en curso.</Catch>
+
+</Section>
+
+<Section id="middle" title="¿Y todo lo que queda en medio?">
+
+La mayoría de las pestañas no son ni «de hoy» ni «para siempre». Son el proyecto de la semana que viene, los artículos que quieres leer, la comparación que tienes a medias. Ese término medio es justo para lo que sirve un gestor de pestañas, y por eso [guardar todas tus pestañas abiertas](/blog/save-all-open-tabs) como un grupo es mejor que dejarlas abiertas o guardarlas en marcadores carpeta a carpeta:
+
+- **Ventanas completas, no páginas sueltas.** El conjunto sigue unido, en las ventanas que tenías.
+- **Con nombre, color y notas,** para que «la investigación del martes» salte a la vista.
+- **Se puede buscar** junto con tus pestañas abiertas y cerradas recientemente.
+- **Un clic para reabrir** todo, y lo vuelves a cerrar cuando termines.
+
+¿Estás investigando? [Organizar pestañas para investigar](/blog/organize-tabs-for-research) le añade notas y recordatorios.
+
+</Section>
+
+<Section id="tabmerger" title="Cómo hacerlo en TabMerger">
+
+[TabMerger](/features) convierte el término medio en un hábito de dos clics:
+
+1. Haz clic en **Agregar grupo** y ponle nombre, por ejemplo «Leer esta semana» (en las capturas, «Read this week»).
+2. Abre el menú **⋯** del grupo y elige **Combinar con lo actual**: todas las ventanas abiertas se guardan en él.
+3. Añade una nota desde el menú **⋯** del grupo y cierra las ventanas. Tu escritorio queda despejado y no se pierde nada.
+4. Cuando llegue el momento, abre el grupo y vuelve a abrir las pestañas; <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> encuentra cualquiera de ellas con una pulsación.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-vs-bookmarks/tm-read-later-group" alt="Grupo de TabMerger «Read this week» con cuatro pestañas guardadas y una nota del grupo, tema claro" darkAlt="Grupo de TabMerger «Read this week» con cuatro pestañas guardadas y una nota del grupo, tema oscuro" boxes={[{ id: 'group-note', label: 'Su nota' }, { id: 'group-row', label: 'El grupo' }]} source="TabMerger 3.16.1">Una lista de lectura como grupo, con una nota para tu yo del futuro.</ThemedScreenshot>
+
+¿Ya tienes años de marcadores? Expórtalos como HTML e importa el archivo en **Ajustes → Datos**: cada carpeta de primer nivel se convierte en un grupo de TabMerger. La versión gratis admite 5 grupos y 50 pestañas; [Pro](/pricing) elimina los límites y sincroniza tus grupos entre ordenadores con cifrado de extremo a extremo.
+
+<InstallCta>Gratis para Chrome, Edge y Firefox. No necesitas cuenta para empezar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

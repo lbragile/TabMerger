@@ -1,0 +1,162 @@
+export const post = {
+  slug: 'tabs-vs-bookmarks',
+  title: 'Abas ou favoritos: o que deixar aberto e o que salvar',
+  navTitle: 'Abas ou favoritos',
+  seoTitle: 'Abas ou favoritos: quando deixar uma aba aberta ou salvá-la',
+  description:
+    'Adicionar aos favoritos ou deixar a aba aberta? Uma tabela rápida para decidir entre leitura, trabalho em projetos e páginas de consulta, mais o meio-termo: grupos de abas salvos que você pode pesquisar e reabrir com um clique.',
+  shareSummary: 'Favorito ou aba aberta? Uma tabela para decidir e o meio-termo do grupo salvo.',
+  dek: 'Abas abertas são para hoje. Favoritos são para anos. Tudo o que fica no meio vai para um grupo salvo.',
+  published: '2026-11-28',
+  updated: '2026-11-28',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D adiciona aos favoritos todas as abas da janela, nos três navegadores.', source: 'Ajuda do Chrome e do Edge; atalhos do Firefox 159' },
+    { text: 'Os grupos do TabMerger guardam janelas inteiras, com uma nota, e as reabrem com um clique.', source: 'TabMerger 3.16.1' },
+    { text: 'O Ctrl+K do TabMerger pesquisa ao mesmo tempo abas abertas, salvas e fechadas recentemente.', source: 'TabMerger 3.16.1' },
+    { text: 'Grátis: 5 grupos e 50 abas; o Pro é ilimitado e sincronizado.', source: 'Preços do TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'É melhor adicionar aos favoritos ou deixar as abas abertas?',
+      answer:
+        'Deixe aberto só o que você precisa hoje. Salve o trabalho em andamento como um grupo do TabMerger para que ele reabra como uma janela, e adicione aos favoritos as páginas que você vai querer por meses ou anos.',
+    },
+    {
+      question: 'Abas abertas deixam o navegador lento?',
+      answer: 'Cada página aberta usa memória. O jeito mais simples é salvar as abas que você não está usando e fechá-las; veja nosso guia sobre abas demais e navegador lento.',
+      link: { text: 'abas demais e navegador lento', href: '/blog/too-many-tabs-slow-browser' },
+    },
+    {
+      question: 'Qual é a diferença entre um favorito e um grupo de abas salvo?',
+      answer:
+        'Um favorito é uma página dentro de uma pasta. Um grupo do TabMerger guarda janelas inteiras de abas, com nome, cor e nota, e reabre todas de uma vez.',
+    },
+    {
+      question: 'Posso transformar favoritos em grupos de abas?',
+      answer: 'Sim. Exporte seus favoritos como arquivo HTML e importe-o no TabMerger em Configurações → Dados: cada pasta de primeiro nível vira um grupo.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-light.webp', alt: 'Grupo do TabMerger “Read this week” com quatro abas salvas e uma nota do grupo, tema claro' },
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-dark.webp', alt: 'Grupo do TabMerger “Read this week” com quatro abas salvas e uma nota do grupo, tema escuro' },
+  ],
+  tags: ['tab-management', 'bookmarks', 'save-tabs', 'tab-manager', 'browser-productivity'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-vs-bookmarks/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/tabs-vs-bookmarks/og.png', alt: 'Abas ou favoritos: um guia do TabMerger, com um grupo salvo de abas para ler nesta semana' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'decide', label: 'A tabela para decidir' },
+    { id: 'tabs', label: 'Quando deixar abas abertas' },
+    { id: 'bookmarks', label: 'Quando usar favoritos' },
+    { id: 'middle', label: 'O meio-termo' },
+    { id: 'tabmerger', label: 'Como fazer no TabMerger' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Deixe uma aba aberta só se você for usá-la **hoje**. Adicione aos favoritos se for querer a página **daqui a meses ou anos**. Para tudo o que fica no meio (um projeto que você vai retomar na semana que vem, uma lista de leitura, uma pesquisa em andamento), salve as abas como um **grupo** no [TabMerger](/features): a janela inteira é guardada, pode ser pesquisada com <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> e volta para a tela com um clique.
+
+</QuickAnswer>
+
+<InstallCta>Salve as abas de hoje como um grupo com um clique. Grátis para Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="decide" title="Adicionar aos favoritos ou deixar a aba aberta?">
+
+Faça uma pergunta só: **quando vou precisar disso de novo?**
+
+<ComparisonTable
+  head={['Você precisa…', 'Melhor lugar', 'Por quê']}
+  rowHeaders
+  highlight={1}
+  minWidth="34rem"
+  rows={[
+    ['Nas próximas horas', 'Uma aba aberta', 'Você está usando agora'],
+    ['Mais tarde nesta semana, junto com outras abas', 'Um grupo do TabMerger', 'O conjunto inteiro volta como uma janela, com um clique'],
+    ['Para ler quando tiver tempo', 'Um grupo do TabMerger com uma nota', 'Uma única lista de “ler depois” que você pode pesquisar'],
+    ['Para um projeto que pausa e recomeça', 'Um grupo do TabMerger', 'Mantém as janelas separadas e reabre tudo exatamente como foi salvo'],
+    ['Como referência por meses ou anos', 'Um favorito', 'Sincronizado pelo navegador, organizado em pastas'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabs" title="Quando uma aba deve ficar aberta?">
+
+Abas abertas são a sua mesa: aquilo em que você está trabalhando agora. Estão ao alcance na hora e guardam o lugar, a posição de rolagem e tudo o que você digitou. Esse também é o custo delas: cada página aberta usa memória e, passando de umas duas dúzias, os títulos encolhem até virar ícones e a aba que você procura se perde.
+
+Deixe uma aba aberta se for voltar a ela antes do fim do dia. O resto é bagunça; nossa [rotina para abas demais](/blog/manage-too-many-tabs) mostra como limpar tudo em minutos.
+
+</Section>
+
+<Section id="bookmarks" title="Quando um favorito é a melhor escolha?">
+
+Favoritos são o seu arquivo: uma página, guardada pelo tempo que você quiser, em pastas, e sincronizada pelo navegador quando você está conectado.
+
+- <Kbd>Ctrl</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>D</Kbd> no Mac) adiciona a aba atual aos favoritos.
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> adiciona todas as abas da janela aos favoritos, em uma pasta nova, no Chrome, no Edge e no Firefox.
+
+<Catch>os favoritos salvam uma janela por vez, guardam só o endereço e não dizem quais páginas iam juntas. São ótimos para uma biblioteca de consulta e desajeitados para trabalho em andamento.</Catch>
+
+</Section>
+
+<Section id="middle" title="E tudo o que fica no meio?">
+
+A maioria das abas não é nem “de hoje” nem “para sempre”. É o projeto da semana que vem, os artigos que você quer ler, a comparação que ficou pela metade. Esse meio-termo é exatamente para o que serve um gerenciador de abas, e é por isso que [salvar todas as abas abertas](/blog/save-all-open-tabs) como um grupo é melhor do que deixá-las abertas ou adicioná-las aos favoritos uma pasta de cada vez:
+
+- **Janelas inteiras, não páginas soltas.** O conjunto continua junto, nas janelas que você tinha.
+- **Com nome, cor e notas,** para que “aquela pesquisa de terça” seja fácil de achar.
+- **Pesquisáveis** junto com as abas abertas e as fechadas recentemente.
+- **Um clique para reabrir** tudo, e depois você fecha de novo quando terminar.
+
+Está pesquisando? [Organizar abas para pesquisa](/blog/organize-tabs-for-research) acrescenta notas e lembretes a isso.
+
+</Section>
+
+<Section id="tabmerger" title="Como fazer no TabMerger">
+
+O [TabMerger](/features) transforma o meio-termo em um hábito de dois cliques:
+
+1. Clique em **Adicionar grupo** e dê um nome a ele, por exemplo “Ler esta semana” (nas capturas, “Read this week”).
+2. Abra o menu **⋯** do grupo e escolha **Mesclar com as atuais**: todas as janelas abertas são salvas nele.
+3. Adicione uma nota pelo menu **⋯** do grupo e feche as janelas. Sua mesa fica livre e nada se perde.
+4. Quando chegar a hora, abra o grupo e reabra as abas; <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> encontra qualquer uma delas com um toque de tecla.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-vs-bookmarks/tm-read-later-group" alt="Grupo do TabMerger “Read this week” com quatro abas salvas e uma nota do grupo, tema claro" darkAlt="Grupo do TabMerger “Read this week” com quatro abas salvas e uma nota do grupo, tema escuro" boxes={[{ id: 'group-note', label: 'A nota dele' }, { id: 'group-row', label: 'O grupo' }]} source="TabMerger 3.16.1">Uma lista de leitura como grupo, com uma nota para o você do futuro.</ThemedScreenshot>
+
+Já tem anos de favoritos? Exporte-os como HTML e importe o arquivo em **Configurações → Dados**: cada pasta de primeiro nível vira um grupo do TabMerger. O plano grátis comporta 5 grupos e 50 abas; o [Pro](/pricing) remove os limites e sincroniza seus grupos entre computadores, com criptografia de ponta a ponta.
+
+<InstallCta>Grátis para Chrome, Edge e Firefox. Não precisa de conta para começar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

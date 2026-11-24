@@ -65,3 +65,7 @@ Run the template check again just before writing into the repo, to confirm en.md
 - Posts with several figures: collect every `<ThemedScreenshot` alt/darkAlt (match `[^>]*? alt=` since width/height may come first) and compare the list to `post.images`.
 - A `` in a JS template literal written through a bash heredoc became a literal backspace byte (0x08) and silently broke a regex. Check edited scripts with `grep -c $''`, or write them with Write.
 - Seed the verifier once with deliberate faults (missing bdi, changed cover, stray CJK bold) to prove it catches them.
+- Never fix the CJK bold trap by replacing `。**` with `**。` everywhere: it also moves opening markers (`しましょう。**何か月も**`) and breaks bold. Count `**` per line and fix only the closing ones.
+- KeyFact text is free prose, so localized key names (fr "Maj") slip in; shortcuts there stay English like the `Kbd` keys.
+- `vitest -t "<slug>/"` runs 15 tests per locale (14 for en); `--reporter=verbose | grep -o "<slug>/[a-zA-Z-]*" | sort | uniq -c` confirms every locale ran.
+- Only `navTitle` and `shareSummary` have schema length limits; a long `seoTitle` passes silently.

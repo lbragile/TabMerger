@@ -1,0 +1,162 @@
+export const post = {
+  slug: 'tabs-vs-bookmarks',
+  title: 'Schede o preferiti: cosa tenere aperto e cosa salvare',
+  navTitle: 'Schede o preferiti',
+  seoTitle: 'Schede o preferiti: quando tenere aperta una scheda e quando salvarla',
+  description:
+    'Aggiungerla ai preferiti o lasciare la scheda aperta? Una tabella rapida per decidere tra letture, lavoro sui progetti e pagine di riferimento, più la via di mezzo: gruppi di schede salvati che puoi cercare e riaprire con un clic.',
+  shareSummary: 'Preferito o scheda aperta? Una tabella per decidere e la via di mezzo del gruppo salvato.',
+  dek: 'Le schede aperte sono per oggi. I preferiti sono per anni. Tutto quello che sta in mezzo va in un gruppo salvato.',
+  published: '2026-11-28',
+  updated: '2026-11-28',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D aggiunge ai preferiti tutte le schede della finestra, in tutti e tre i browser.', source: 'Guide di Chrome e Edge; scorciatoie di Firefox 159' },
+    { text: 'I gruppi di TabMerger conservano finestre intere, con una nota, e le riaprono con un clic.', source: 'TabMerger 3.16.1' },
+    { text: 'Ctrl+K in TabMerger cerca insieme tra schede aperte, salvate e chiuse di recente.', source: 'TabMerger 3.16.1' },
+    { text: 'Gratis: 5 gruppi e 50 schede; Pro è illimitato e sincronizzato.', source: 'Prezzi di TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Meglio aggiungere ai preferiti o lasciare le schede aperte?',
+      answer:
+        'Lascia aperto solo quello che ti serve oggi. Salva il lavoro in corso come gruppo di TabMerger, così si riapre come una finestra, e aggiungi ai preferiti le pagine che vorrai tenere per mesi o anni.',
+    },
+    {
+      question: 'Le schede aperte rallentano il browser?',
+      answer: 'Ogni pagina aperta usa memoria. La soluzione più semplice è salvare le schede che non stai usando e chiuderle; leggi la nostra guida su troppe schede e un browser lento.',
+      link: { text: 'troppe schede e un browser lento', href: '/blog/too-many-tabs-slow-browser' },
+    },
+    {
+      question: 'Che differenza c’è tra un preferito e un gruppo di schede salvato?',
+      answer:
+        'Un preferito è una pagina in una cartella. Un gruppo di TabMerger conserva finestre intere di schede, con nome, colore e nota, e le riapre tutte insieme.',
+    },
+    {
+      question: 'Posso trasformare i preferiti in gruppi di schede?',
+      answer: 'Sì. Esporta i preferiti come file HTML e importalo in TabMerger da Impostazioni → Dati: ogni cartella di primo livello diventa un gruppo.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-light.webp', alt: 'Gruppo di TabMerger «Read this week» con quattro schede salvate e una nota del gruppo, tema chiaro' },
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-dark.webp', alt: 'Gruppo di TabMerger «Read this week» con quattro schede salvate e una nota del gruppo, tema scuro' },
+  ],
+  tags: ['tab-management', 'bookmarks', 'save-tabs', 'tab-manager', 'browser-productivity'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-vs-bookmarks/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/tabs-vs-bookmarks/og.png', alt: 'Schede o preferiti: una guida di TabMerger, con un gruppo salvato di schede da leggere questa settimana' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'decide', label: 'La tabella per decidere' },
+    { id: 'tabs', label: 'Quando tenere aperte le schede' },
+    { id: 'bookmarks', label: 'Quando usare un preferito' },
+    { id: 'middle', label: 'La via di mezzo' },
+    { id: 'tabmerger', label: 'Come farlo in TabMerger' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+}
+
+<QuickAnswer>
+
+Tieni aperta una scheda solo se la userai **oggi**. Aggiungila ai preferiti se ti servirà **tra mesi o anni**. Per tutto quello che sta in mezzo (un progetto che riprenderai la settimana prossima, una lista di letture, una ricerca in corso) salva le schede come **gruppo** in [TabMerger](/features): l’intera finestra resta conservata, si può cercare con <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> e torna sullo schermo con un clic.
+
+</QuickAnswer>
+
+<InstallCta>Salva le schede di oggi come gruppo con un clic. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="decide" title="Aggiungerla ai preferiti o lasciare la scheda aperta?">
+
+Fatti una sola domanda: **quando mi servirà di nuovo?**
+
+<ComparisonTable
+  head={['Ti serve…', 'Posto migliore', 'Perché']}
+  rowHeaders
+  highlight={1}
+  minWidth="34rem"
+  rows={[
+    ['Nelle prossime ore', 'Una scheda aperta', 'La stai usando adesso'],
+    ['Più avanti questa settimana, insieme ad altre schede', 'Un gruppo di TabMerger', 'L’intero insieme torna come finestra, con un clic'],
+    ['Da leggere quando avrai tempo', 'Un gruppo di TabMerger con una nota', 'Un’unica lista «da leggere più tardi» in cui cercare'],
+    ['Per un progetto che si ferma e riprende', 'Un gruppo di TabMerger', 'Tiene separate le finestre e le riapre esattamente come salvate'],
+    ['Come riferimento per mesi o anni', 'Un preferito', 'Sincronizzato dal browser, ordinato in cartelle'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabs" title="Quando una scheda deve restare aperta?">
+
+Le schede aperte sono la tua scrivania: quello su cui stai lavorando adesso. Si raggiungono all’istante e conservano il loro posto, la posizione di scorrimento e tutto ciò che hai digitato. Questo è anche il loro costo: ogni pagina aperta usa memoria, e oltre un paio di dozzine i titoli si riducono a icone e la scheda che cerchi si perde.
+
+Tieni aperta una scheda se ci tornerai prima della fine della giornata. Tutto il resto è disordine; la nostra [routine per le troppe schede](/blog/manage-too-many-tabs) mostra come fare pulizia in pochi minuti.
+
+</Section>
+
+<Section id="bookmarks" title="Quando un preferito è la scelta giusta?">
+
+I preferiti sono il tuo schedario: una pagina, conservata per tutto il tempo che vuoi, in cartelle, e sincronizzata dal browser quando hai eseguito l’accesso.
+
+- <Kbd>Ctrl</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>D</Kbd> su Mac) aggiunge ai preferiti la scheda corrente.
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> aggiunge ai preferiti tutte le schede della finestra in una nuova cartella, in Chrome, Edge e Firefox.
+
+<Catch>i preferiti salvano una finestra alla volta, conservano solo l’indirizzo e non ti dicono quali pagine andavano insieme. Ottimi per una biblioteca di riferimento, scomodi per il lavoro in corso.</Catch>
+
+</Section>
+
+<Section id="middle" title="E tutto quello che sta in mezzo?">
+
+La maggior parte delle schede non è né «per oggi» né «per sempre». È il progetto della settimana prossima, gli articoli che vuoi leggere, il confronto che hai lasciato a metà. Quella via di mezzo è proprio ciò a cui serve un gestore di schede, ed è per questo che [salvare tutte le schede aperte](/blog/save-all-open-tabs) come gruppo batte sia lasciarle aperte sia aggiungerle ai preferiti una cartella alla volta:
+
+- **Finestre intere, non pagine singole.** L’insieme resta unito, nelle finestre che avevi.
+- **Con nome, colore e note,** così «la ricerca di martedì» salta subito all’occhio.
+- **Ricercabili** insieme alle schede aperte e a quelle chiuse di recente.
+- **Un clic per riaprire** tutto, poi lo richiudi quando hai finito.
+
+Stai facendo una ricerca? [Organizzare le schede per la ricerca](/blog/organize-tabs-for-research) aggiunge note e promemoria.
+
+</Section>
+
+<Section id="tabmerger" title="Come farlo in TabMerger">
+
+[TabMerger](/features) trasforma la via di mezzo in un’abitudine da due clic:
+
+1. Fai clic su **Aggiungi gruppo** e dagli un nome, per esempio «Da leggere questa settimana» (negli screenshot «Read this week»).
+2. Apri il menu **⋯** del gruppo e scegli **Unisci con l'attuale**: ogni finestra aperta viene salvata al suo interno.
+3. Aggiungi una nota dal menu **⋯** del gruppo, poi chiudi le finestre. La scrivania è libera e non si perde nulla.
+4. Quando è il momento, apri il gruppo e riapri le schede; <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> ne trova una qualsiasi con un tasto.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-vs-bookmarks/tm-read-later-group" alt="Gruppo di TabMerger «Read this week» con quattro schede salvate e una nota del gruppo, tema chiaro" darkAlt="Gruppo di TabMerger «Read this week» con quattro schede salvate e una nota del gruppo, tema scuro" boxes={[{ id: 'group-note', label: 'La sua nota' }, { id: 'group-row', label: 'Il gruppo' }]} source="TabMerger 3.16.1">Una lista di letture come gruppo, con una nota per il te del futuro.</ThemedScreenshot>
+
+Hai già anni di preferiti? Esportali come HTML e importa il file in **Impostazioni → Dati**: ogni cartella di primo livello diventa un gruppo di TabMerger. Con il piano gratuito hai 5 gruppi e 50 schede; [Pro](/pricing) toglie i limiti e sincronizza i tuoi gruppi tra computer, con crittografia end-to-end.
+
+<InstallCta>Gratis per Chrome, Edge e Firefox. Per iniziare non serve un account.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

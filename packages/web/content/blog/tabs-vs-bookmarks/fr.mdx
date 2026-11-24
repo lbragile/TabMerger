@@ -1,0 +1,162 @@
+export const post = {
+  slug: 'tabs-vs-bookmarks',
+  title: 'Onglets ou favoris : quoi garder ouvert et quoi enregistrer',
+  navTitle: 'Onglets ou favoris',
+  seoTitle: 'Onglets ou favoris : quand garder un onglet ouvert ou l’enregistrer',
+  description:
+    'Ajouter aux favoris ou laisser l’onglet ouvert ? Un tableau de décision rapide pour la lecture, le travail sur un projet et les pages de référence, plus la solution intermédiaire : des groupes d’onglets enregistrés, faciles à rechercher et à rouvrir en un clic.',
+  shareSummary: 'Favori ou onglet ouvert ? Un tableau de décision et la solution intermédiaire du groupe enregistré.',
+  dek: 'Les onglets ouverts, c’est pour aujourd’hui. Les favoris, pour des années. Tout ce qui est entre les deux a sa place dans un groupe enregistré.',
+  published: '2026-11-28',
+  updated: '2026-11-28',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D ajoute aux favoris tous les onglets de la fenêtre, dans les trois navigateurs.', source: 'Aide de Chrome et d’Edge ; raccourcis de Firefox 159' },
+    { text: 'Les groupes TabMerger conservent des fenêtres entières, avec une note, et les rouvrent en un clic.', source: 'TabMerger 3.16.1' },
+    { text: 'Le Ctrl+K de TabMerger cherche à la fois dans les onglets ouverts, enregistrés et fermés récemment.', source: 'TabMerger 3.16.1' },
+    { text: 'Gratuit : 5 groupes et 50 onglets ; Pro est illimité et synchronisé.', source: 'Tarifs de TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Vaut-il mieux ajouter aux favoris ou laisser les onglets ouverts ?',
+      answer:
+        'Ne laissez ouvert que ce dont vous avez besoin aujourd’hui. Enregistrez le travail en cours dans un groupe TabMerger pour le rouvrir sous forme de fenêtre, et ajoutez aux favoris les pages que vous voudrez garder des mois ou des années.',
+    },
+    {
+      question: 'Les onglets ouverts ralentissent-ils mon navigateur ?',
+      answer: 'Chaque page ouverte utilise de la mémoire. Le plus simple est d’enregistrer les onglets que vous n’utilisez pas, puis de les fermer ; consultez notre guide sur les trop nombreux onglets qui ralentissent le navigateur.',
+      link: { text: 'trop nombreux onglets qui ralentissent le navigateur', href: '/blog/too-many-tabs-slow-browser' },
+    },
+    {
+      question: 'Quelle différence entre un favori et un groupe d’onglets enregistré ?',
+      answer:
+        'Un favori, c’est une page dans un dossier. Un groupe TabMerger conserve des fenêtres entières d’onglets, avec un nom, une couleur et une note, et les rouvre toutes d’un coup.',
+    },
+    {
+      question: 'Puis-je transformer mes favoris en groupes d’onglets ?',
+      answer: 'Oui. Exportez vos favoris dans un fichier HTML et importez-le dans TabMerger, sous Paramètres → Données : chaque dossier de premier niveau devient un groupe.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-light.webp', alt: 'Groupe TabMerger « Read this week » avec quatre onglets enregistrés et une note de groupe, thème clair' },
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-dark.webp', alt: 'Groupe TabMerger « Read this week » avec quatre onglets enregistrés et une note de groupe, thème sombre' },
+  ],
+  tags: ['tab-management', 'bookmarks', 'save-tabs', 'tab-manager', 'browser-productivity'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-vs-bookmarks/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/tabs-vs-bookmarks/og.png', alt: 'Onglets ou favoris : un guide TabMerger, avec un groupe enregistré d’onglets à lire cette semaine' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'decide', label: 'Le tableau de décision' },
+    { id: 'tabs', label: 'Quand garder des onglets ouverts' },
+    { id: 'bookmarks', label: 'Quand ajouter aux favoris' },
+    { id: 'middle', label: 'La solution intermédiaire' },
+    { id: 'tabmerger', label: 'Dans TabMerger' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Ne gardez un onglet ouvert que si vous allez l’utiliser **aujourd’hui**. Ajoutez-le aux favoris si vous en aurez besoin **dans des mois ou des années**. Pour tout ce qui est entre les deux (un projet que vous reprendrez la semaine prochaine, une liste de lecture, une recherche en cours), enregistrez les onglets dans un **groupe** de [TabMerger](/features) : la fenêtre entière est conservée, on la retrouve avec <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>, et elle revient à l’écran en un clic.
+
+</QuickAnswer>
+
+<InstallCta>Enregistrez les onglets du jour dans un groupe en un clic. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+<Section id="decide" title="Ajouter aux favoris ou laisser l’onglet ouvert ?">
+
+Posez-vous une seule question : **quand en aurai-je de nouveau besoin ?**
+
+<ComparisonTable
+  head={['Vous en avez besoin…', 'Meilleur endroit', 'Pourquoi']}
+  rowHeaders
+  highlight={1}
+  minWidth="34rem"
+  rows={[
+    ['Dans les prochaines heures', 'Un onglet ouvert', 'Vous l’utilisez en ce moment'],
+    ['Plus tard cette semaine, avec d’autres onglets', 'Un groupe TabMerger', 'L’ensemble revient sous forme de fenêtre, en un clic'],
+    ['Pour lire quand vous aurez le temps', 'Un groupe TabMerger avec une note', 'Une seule liste « à lire plus tard », dans laquelle chercher'],
+    ['Pour un projet qui s’interrompt et reprend', 'Un groupe TabMerger', 'Garde les fenêtres séparées et les rouvre exactement comme enregistrées'],
+    ['Comme référence pendant des mois ou des années', 'Un favori', 'Synchronisé par votre navigateur, rangé dans des dossiers'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabs" title="Quand un onglet doit-il rester ouvert ?">
+
+Les onglets ouverts sont votre bureau : ce sur quoi vous travaillez en ce moment. On y accède instantanément, et ils gardent leur place, la position de défilement et tout ce que vous avez saisi. C’est aussi leur coût : chaque page ouverte utilise de la mémoire, et au-delà de quelques dizaines, les titres se réduisent à des icônes et l’onglet que vous cherchez se perd.
+
+Gardez un onglet ouvert si vous y reviendrez avant la fin de la journée. Tout le reste encombre ; notre [routine contre les trop nombreux onglets](/blog/manage-too-many-tabs) montre comment faire le tri en quelques minutes.
+
+</Section>
+
+<Section id="bookmarks" title="Quand un favori est-il le bon choix ?">
+
+Les favoris sont votre classeur : une page, gardée aussi longtemps que vous le voulez, dans des dossiers, et synchronisée par votre navigateur quand vous êtes connecté.
+
+- <Kbd>Ctrl</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>D</Kbd> sur Mac) ajoute l’onglet actuel aux favoris.
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> ajoute tous les onglets de la fenêtre aux favoris, dans un nouveau dossier, dans Chrome, Edge et Firefox.
+
+<Catch>les favoris n’enregistrent qu’une fenêtre à la fois, ne gardent que l’adresse et ne disent pas quelles pages allaient ensemble. Parfaits pour une bibliothèque de référence, malcommodes pour le travail en cours.</Catch>
+
+</Section>
+
+<Section id="middle" title="Et tout ce qui est entre les deux ?">
+
+La plupart des onglets ne sont ni « pour aujourd’hui » ni « pour toujours ». Ce sont le projet de la semaine prochaine, les articles que vous comptez lire, la comparaison que vous avez laissée à mi-chemin. C’est exactement à cela que sert un gestionnaire d’onglets, et c’est pourquoi [enregistrer tous vos onglets ouverts](/blog/save-all-open-tabs) dans un groupe vaut mieux que de les laisser ouverts ou de les ajouter aux favoris dossier par dossier :
+
+- **Des fenêtres entières, pas des pages isolées.** L’ensemble reste groupé, dans les fenêtres que vous aviez.
+- **Nommés, colorés et annotés,** pour repérer facilement « la recherche de mardi ».
+- **Consultables par recherche,** avec vos onglets ouverts et fermés récemment.
+- **Un clic pour tout rouvrir,** puis vous refermez quand vous avez fini.
+
+Vous faites des recherches ? [Organiser ses onglets pour la recherche](/blog/organize-tabs-for-research) y ajoute des notes et des rappels.
+
+</Section>
+
+<Section id="tabmerger" title="Dans TabMerger">
+
+[TabMerger](/features) fait de cette solution intermédiaire une habitude en deux clics :
+
+1. Cliquez sur **Ajouter un groupe** et donnez-lui un nom, par exemple « À lire cette semaine » (« Read this week » sur les captures).
+2. Ouvrez le menu **⋯** du groupe et choisissez **Fusionner avec l’actuel** : chaque fenêtre ouverte y est enregistrée.
+3. Ajoutez une note depuis le menu **⋯** du groupe, puis fermez les fenêtres. Votre bureau est dégagé et rien n’est perdu.
+4. Le moment venu, ouvrez le groupe et rouvrez les onglets ; <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> retrouve n’importe lequel d’entre eux en une touche.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-vs-bookmarks/tm-read-later-group" alt="Groupe TabMerger « Read this week » avec quatre onglets enregistrés et une note de groupe, thème clair" darkAlt="Groupe TabMerger « Read this week » avec quatre onglets enregistrés et une note de groupe, thème sombre" boxes={[{ id: 'group-note', label: 'Sa note' }, { id: 'group-row', label: 'Le groupe' }]} source="TabMerger 3.16.1">Une liste de lecture sous forme de groupe, avec une note pour vous-même plus tard.</ThemedScreenshot>
+
+Vous avez déjà des années de favoris ? Exportez-les en HTML et importez le fichier dans **Paramètres → Données** : chaque dossier de premier niveau devient un groupe TabMerger. La version gratuite contient 5 groupes et 50 onglets ; [Pro](/pricing) supprime les limites et synchronise vos groupes entre vos ordinateurs, chiffrés de bout en bout.
+
+<InstallCta>Gratuit pour Chrome, Edge et Firefox. Aucun compte nécessaire pour commencer.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>
