@@ -1,0 +1,276 @@
+export const post = {
+  slug: 'tab-keyboard-shortcuts',
+  title: 'Scorciatoie da tastiera per le schede in Chrome, Edge e Firefox',
+  seoTitle: 'Scorciatoie per le schede di Chrome (e Edge, Firefox): guida completa',
+  description:
+    'Tutte le scorciatoie per le schede che vale la pena imparare in Chrome, Edge e Firefox: cambiare scheda, riaprire schede e finestre chiuse, cercare tra le schede e aggiungerle tutte ai preferiti, su Windows e Mac.',
+  shareSummary: 'Cambia, riapri, cerca e salva le schede dalla tastiera in Chrome, Edge e Firefox.',
+  dek: 'Una tabella per tutti e tre i browser, le differenze su Mac e come impostare scorciatoie delle estensioni che restino davvero.',
+  published: '2026-11-22',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+T riapre l’ultima scheda chiusa in tutti e tre.', source: 'Guida di Chrome ed Edge; tasti di Firefox 159' },
+    { text: 'Firefox riapre una finestra chiusa con Ctrl+Shift+N.', source: 'Tasti di Firefox 159' },
+    {
+      text: 'In Chrome, Ctrl+9 va all’ultima scheda, non alla nona.',
+      source: 'Guida di Chrome',
+      href: 'https://support.google.com/chrome/answer/157179',
+    },
+    { text: 'Edge tiene per sé Ctrl+Shift+K, U e P, quindi le estensioni non possono usarli.', source: 'Supporto Microsoft; Edge 158' },
+  ],
+  faq: [
+    {
+      question: 'Come si cambia scheda con la tastiera?',
+      answer:
+        'Ctrl+Tab passa alla scheda successiva e Ctrl+Shift+Tab a quella precedente in Chrome, Edge e Firefox. Da Ctrl+1 a Ctrl+8 vai a una scheda in base alla posizione; Ctrl+9 porta all’ultima.',
+    },
+    {
+      question: 'Come si riapre una scheda chiusa?',
+      answer:
+        'Premi Ctrl+Shift+T (⌘+Shift+T su Mac). Premilo ancora per tornare più indietro. In Chrome recupera anche le finestre chiuse; in Firefox, Ctrl+Shift+N riapre una finestra chiusa.',
+    },
+    {
+      question: 'Posso cercare tra le schede aperte?',
+      answer: 'Sì. Ctrl+Shift+A apre la ricerca di schede in Chrome ed elenca tutte le schede in Firefox. In Chrome puoi anche digitare @tabs nella barra degli indirizzi.',
+    },
+    {
+      question: 'Perché la scorciatoia di un’estensione non funziona?',
+      answer:
+        'Il browser lascia non assegnata una scorciatoia suggerita quando è in conflitto con una delle sue. Controlla chrome://extensions/shortcuts o edge://extensions/shortcuts e scegli un altro tasto.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp', alt: 'Pagina delle scorciatoie da tastiera delle estensioni di Edge per TabMerger: tutti e quattro i comandi di salvataggio assegnati, ad Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma e Alt+Shift+Period' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp', alt: 'Ricerca di TabMerger aperta con la query docs, con le schede aperte e salvate corrispondenti, tema chiaro' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-dark.webp', alt: 'Ricerca di TabMerger aperta con la query docs, con le schede aperte e salvate corrispondenti, tema scuro' },
+  ],
+  tags: ['browser-tips', 'cross-browser', 'chrome', 'edge', 'firefox', 'tab-management'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-20',
+      note: 'Le voci di Firefox sono state lette dalle definizioni dei tasti di Firefox 159.0.1 stesso; questa pagina ha bloccato il nostro controllo automatico.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp' },
+  ogImage: { src: '/blog/tab-keyboard-shortcuts/og.png', alt: 'Scorciatoie da tastiera per le schede in Chrome, Edge e Firefox: una guida di TabMerger, con la ricerca di TabMerger aperta' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'table', label: 'Scorciatoie per browser' },
+    { id: 'reopen', label: 'Riaprire le schede chiuse' },
+    { id: 'extensions', label: 'Scorciatoie delle estensioni' },
+    { id: 'tabmerger', label: 'I tasti di TabMerger' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+  browserSections: ['table', 'reopen', 'extensions'],
+  browserFact: {
+    label: 'Scorciatoie delle estensioni',
+    values: { chrome: 'chrome://extensions/shortcuts', edge: 'edge://extensions/shortcuts', firefox: 'about:addons' },
+  },
+}
+
+<QuickAnswer>
+
+<Kbd>Ctrl</Kbd>+<Kbd>Tab</Kbd> e <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Tab</Kbd> passano alla scheda successiva e a quella precedente, <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> vanno a una scheda in base alla posizione, <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> la chiude e <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> la riporta indietro. Funzionano allo stesso modo in Chrome, Edge e Firefox su Windows e Linux; su Mac usa <Kbd>⌘</Kbd> invece di <Kbd>Ctrl</Kbd>. Aggiungi [TabMerger](/features) e altri due tasti fanno il lavoro pesante: salvare le schede direttamente dalla tastiera e <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> per trovare qualsiasi scheda, aperta, salvata o chiusa.
+
+</QuickAnswer>
+
+<InstallCta>Salva le schede senza staccare le mani dalla tastiera. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="table" title="Quali scorciatoie per le schede ha il tuo browser?">
+
+Prima Windows e Linux, poi cosa cambia su Mac. Ogni voce viene dalla pagina di guida del browser o, per Firefox, dalle definizioni dei tasti dentro Firefox 159.0.1 stesso.
+
+<BrowserPanels section="table">
+<BrowserPanel browser="chrome">
+
+<ComparisonTable
+  head={['Azione', 'Scorciatoia']}
+  rowHeaders
+  rows={[
+    ['Nuova scheda', 'Ctrl+T'],
+    ['Chiudi scheda', 'Ctrl+W'],
+    ['Riapri schede e finestre chiuse', 'Ctrl+Shift+T'],
+    ['Scheda successiva', 'Ctrl+Tab o Ctrl+PgDn'],
+    ['Scheda precedente', 'Ctrl+Shift+Tab o Ctrl+PgUp'],
+    ['Schede da 1 a 8', 'Ctrl+1 … Ctrl+8'],
+    ['Ultima scheda', 'Ctrl+9'],
+    ['Cerca tra le schede aperte', 'Ctrl+Shift+A'],
+    ['Aggiungi tutte le schede ai preferiti', 'Ctrl+Shift+D'],
+    ['Cronologia', 'Ctrl+H'],
+    ['Chiudi finestra', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+Puoi cercare tra le schede aperte anche dalla barra degli indirizzi: digita `@tabs` e premi <Kbd>Tab</Kbd>. Per cercare anche tra quelle salvate e chiuse, leggi [come trovare una scheda tra centinaia](/blog/find-a-tab-among-hundreds).
+
+**Su Mac** usa <Kbd>⌘</Kbd> dove la tabella dice <Kbd>Ctrl</Kbd>, con queste eccezioni indicate dalla guida di Chrome: scheda successiva e precedente sono <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>→</Kbd> e <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>←</Kbd>, la cronologia è <Kbd>⌘</Kbd>+<Kbd>Y</Kbd> e la gestione dei preferiti è <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>B</Kbd>.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+<ComparisonTable
+  head={['Azione', 'Scorciatoia']}
+  rowHeaders
+  rows={[
+    ['Nuova scheda', 'Ctrl+T'],
+    ['Chiudi scheda', 'Ctrl+W'],
+    ['Riapri l’ultima scheda chiusa', 'Ctrl+Shift+T'],
+    ['Scheda successiva', 'Ctrl+Tab o Ctrl+PgDn'],
+    ['Scheda precedente', 'Ctrl+Shift+Tab o Ctrl+PgUp'],
+    ['Schede da 1 a 8', 'Ctrl+1 … Ctrl+8'],
+    ['Ultima scheda', 'Ctrl+9'],
+    ['Aggiungi tutte le schede ai Preferiti di Edge', 'Ctrl+Shift+D'],
+    ['Cronologia', 'Ctrl+H'],
+    ['Chiudi finestra', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+L’elenco delle scorciatoie di Edge non ha tasti per cercare tra le schede aperte né per riaprire una finestra chiusa.
+
+**Su Mac** usa <Kbd>⌘</Kbd> dove la tabella dice <Kbd>Ctrl</Kbd>; la cronologia è <Kbd>⌘</Kbd>+<Kbd>Y</Kbd>. Per scheda successiva e precedente Microsoft indica <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↓</Kbd> e <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↑</Kbd>.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+<ComparisonTable
+  head={['Azione', 'Scorciatoia']}
+  rowHeaders
+  rows={[
+    ['Nuova scheda', 'Ctrl+T'],
+    ['Chiudi scheda', 'Ctrl+W'],
+    ['Riapri scheda chiusa', 'Ctrl+Shift+T'],
+    ['Riapri finestra chiusa', 'Ctrl+Shift+N'],
+    ['Scheda successiva', 'Ctrl+Tab o Ctrl+PgDn'],
+    ['Scheda precedente', 'Ctrl+Shift+Tab o Ctrl+PgUp'],
+    ['Schede da 1 a 8', 'Ctrl+1 … Ctrl+8'],
+    ['Ultima scheda', 'Ctrl+9'],
+    ['Elenco di tutte le schede', 'Ctrl+Shift+A'],
+    ['Aggiungi tutte le schede ai preferiti', 'Ctrl+Shift+D'],
+    ['Cronologia nella barra laterale', 'Ctrl+H'],
+    ['Cronologia nella Libreria', 'Ctrl+Shift+H'],
+    ['Chiudi finestra', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+**Su Mac** Firefox definisce queste scorciatoie con il tasto modificatore principale del sistema, quindi premi <Kbd>⌘</Kbd> dove la tabella dice <Kbd>Ctrl</Kbd>.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="reopen" title="Come si riapre una scheda chiusa per sbaglio?">
+
+Premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> su Mac). Ogni pressione torna indietro di un passo. Cosa torna dipende dal browser:
+
+<BrowserPanels section="reopen">
+<BrowserPanel browser="chrome">
+
+Chrome riapre schede *e* finestre, nell’ordine in cui sono state chiuse, quindi continua a premere finché non torna la finestra che hai perso.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge documenta <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> come riapertura dell’ultima scheda chiusa. Per una finestra chiusa, apri la cronologia (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) e guarda sotto **Recently closed** (chiuse di recente).
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox tiene elenchi separati: <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> per le schede e <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> per le finestre. In Firefox 159, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> è collegato a un comando che ripristina l’ultima scheda, finestra o sessione chiusa, quindi può anche riportare la sessione precedente.
+
+</BrowserPanel>
+</BrowserPanels>
+
+L’elenco arriva solo fino a un certo punto. Per un’intera sessione persa, leggi [come ripristinare le schede dopo un crash](/blog/restore-tabs-after-crash). Per non perderle fin dall’inizio, [salva tutte le schede aperte](/blog/save-all-open-tabs) prima di chiudere qualcosa di importante.
+
+</Section>
+
+<Section id="extensions" title="Come si impostano le scorciatoie delle estensioni?">
+
+Le estensioni possono suggerire scorciatoie, ma l’ultima parola spetta al browser: un tasto suggerito in conflitto con uno del browser resta su **Not set** (non impostato), senza alcun avviso. Apri la pagina delle scorciatoie del browser, fai clic sulla matita accanto a un comando e premi i tasti che vuoi.
+
+<BrowserPanels section="extensions">
+<BrowserPanel browser="chrome">
+
+Incolla `chrome://extensions/shortcuts` nella barra degli indirizzi. Ogni comando ha anche un menu per l’ambito: **In Chrome** (solo in Chrome) o **Global** (ovunque), perché funzioni anche quando Chrome non è in primo piano.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Incolla `edge://extensions/shortcuts` nella barra degli indirizzi.
+
+Edge tiene per sé <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd> (duplica la scheda), <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>U</Kbd> (Read Aloud, lettura ad alta voce) e <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> (stampa con la finestra di dialogo di sistema), quindi un comando di un’estensione che ne suggerisce uno parte su **Not set** in Edge 158. Edge 158 rifiuta anche alcuni tasti <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd> che l’elenco di Microsoft non cita, come <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> e <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Z</Kbd>. I comandi di salvataggio di TabMerger li evitano tutti, quindi una nuova installazione li ha tutti e quattro assegnati:
+
+<AnnotatedFigure src="/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp" alt="Pagina delle scorciatoie da tastiera delle estensioni di Edge per TabMerger: tutti e quattro i comandi di salvataggio assegnati, ad Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma e Alt+Shift+Period" width={852} height={460} boxes={[{ id: 'save-shortcuts' }]} source="edge://extensions/shortcuts · Edge 158.0.4370.33">Una nuova installazione di TabMerger in Edge 158: tutti e quattro i comandi di salvataggio hanno i loro tasti, senza niente da sistemare.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Apri `about:addons`, fai clic sul menu a forma di ingranaggio e scegli **Gestisci scorciatoie da tastiera** (Manage Extension Shortcuts). Nota che in Firefox <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> apre una finestra anonima, quindi scegli un altro tasto per tutto ciò che lo suggerisce.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>la pagina delle scorciatoie non ti avvisa. Se una scorciatoia «non fa niente», controlla prima lì.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="I tasti di TabMerger">
+
+[TabMerger](/features), la nostra estensione gratuita per Chrome, Edge e Firefox, salva le schede direttamente dalla tastiera, senza aprirla. Suggerisce un tasto per ciascuno dei suoi quattro comandi di salvataggio, scelto per evitare le scorciatoie che Chrome, Edge e Firefox usano già, e puoi cambiarli tutti nella pagina delle scorciatoie del browser (vedi sopra):
+
+<ComparisonTable
+  head={['Tasto suggerito', 'Salva']}
+  keysColumn={0}
+  rows={[
+    ['Alt+Shift+S', 'La scheda attuale'],
+    ['Alt+Shift+O', 'Tutte le altre schede della finestra'],
+    ['Alt+Shift+Comma', 'Le schede a sinistra'],
+    ['Alt+Shift+Period', 'Le schede a destra'],
+  ]}
+/>
+
+Su Mac usano <Kbd>Control</Kbd>+<Kbd>Shift</Kbd> al posto di <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>: <Kbd>Control</Kbd>+<Kbd>Shift</Kbd>+<Kbd>S</Kbd> salva la scheda attuale. Questi sono i tasti di una nuova installazione. Gli aggiornamenti non cambiano le scorciatoie, quindi se hai installato TabMerger prima che arrivassero questi tasti, mantiene quelli che aveva, compresi quelli su **Not set**: impostali nella pagina delle scorciatoie.
+
+Nel popup, <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd>) cerca tra le schede aperte, salvate e chiuse di recente in un’unica lista.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tab-keyboard-shortcuts/tm-search" alt="Ricerca di TabMerger aperta con la query docs, con le schede aperte e salvate corrispondenti, tema chiaro" darkAlt="Ricerca di TabMerger aperta con la query docs, con le schede aperte e salvate corrispondenti, tema scuro" boxes={[{ id: 'search-input', label: 'Ricerca' }]} source="TabMerger 3.16.1">Ctrl+K, poi digita: i risultati arrivano sia dalle schede aperte sia da quelle salvate.</ThemedScreenshot>
+
+<InstallCta>Gratis per Chrome, Edge e Firefox. Per iniziare non serve un account.</InstallCta>
+
+Altre abitudini per tenere basso il numero di schede sono nella nostra [guida per gestire troppe schede](/blog/manage-too-many-tabs), e cosa offre ogni browser oltre alle scorciatoie è nel [confronto delle funzioni per le schede di Chrome, Edge e Firefox](/blog/browser-tab-features-compared).
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

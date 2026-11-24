@@ -1,0 +1,276 @@
+export const post = {
+  slug: 'tab-keyboard-shortcuts',
+  title: 'קיצורי מקלדת לכרטיסיות ב-Chrome, ב-Edge וב-Firefox',
+  seoTitle: 'קיצורי כרטיסיות ב-Chrome (וגם Edge ו-Firefox): המדריך המלא',
+  description:
+    'כל קיצורי הכרטיסיות ששווה ללמוד ב-Chrome, ב-Edge וב-Firefox: מעבר בין כרטיסיות, פתיחה מחדש של כרטיסיות וחלונות שנסגרו, חיפוש בכרטיסיות והוספת כולן לסימניות, ב-Windows וב-Mac.',
+  shareSummary: 'מעבר, פתיחה מחדש, חיפוש ושמירה של כרטיסיות מהמקלדת ב-Chrome, ב-Edge וב-Firefox.',
+  dek: 'טבלה אחת לשלושת הדפדפנים, ההבדלים ב-Mac, ואיך מגדירים קיצורים להרחבות כך שבאמת יישארו.',
+  published: '2026-11-22',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+T פותח מחדש את הכרטיסייה האחרונה שנסגרה בכל השלושה.', source: 'העזרה של Chrome ושל Edge; הגדרות המקשים של Firefox 159' },
+    { text: 'Firefox פותח מחדש חלון שנסגר עם Ctrl+Shift+N.', source: 'הגדרות המקשים של Firefox 159' },
+    {
+      text: 'ב-Chrome הקיצור Ctrl+9 קופץ לכרטיסייה האחרונה, לא לתשיעית.',
+      source: 'העזרה של Chrome',
+      href: 'https://support.google.com/chrome/answer/157179',
+    },
+    { text: 'Edge שומר לעצמו את Ctrl+Shift+K, U ו-P, ולכן הרחבות לא יכולות לקבל אותם.', source: 'התמיכה של Microsoft; Edge 158' },
+  ],
+  faq: [
+    {
+      question: 'איך עוברים בין כרטיסיות עם המקלדת?',
+      answer:
+        'ב-Chrome, ב-Edge וב-Firefox הקיצור Ctrl+Tab עובר לכרטיסייה הבאה ו-Ctrl+Shift+Tab לקודמת. Ctrl+1 עד Ctrl+8 קופצים לכרטיסייה לפי המיקום שלה; Ctrl+9 עובר לכרטיסייה האחרונה.',
+    },
+    {
+      question: 'איך פותחים מחדש כרטיסייה שנסגרה?',
+      answer:
+        'לוחצים על Ctrl+Shift+T (ב-Mac: ⌘+Shift+T). כל לחיצה נוספת חוזרת עוד צעד אחורה. ב-Chrome זה מחזיר גם חלונות שנסגרו; ב-Firefox, הקיצור Ctrl+Shift+N פותח מחדש חלון שנסגר.',
+    },
+    {
+      question: 'אפשר לחפש בכרטיסיות הפתוחות?',
+      answer: 'כן. Ctrl+Shift+A פותח ב-Chrome את החיפוש בכרטיסיות, וב-Firefox מציג רשימה של כל הכרטיסיות. ב-Chrome אפשר גם להקליד @tabs בסרגל הכתובות.',
+    },
+    {
+      question: 'למה קיצור הדרך של הרחבה לא עובד?',
+      answer:
+        'הדפדפן משאיר קיצור מוצע בלי הגדרה כשהוא מתנגש באחד מהקיצורים שלו. כדאי לבדוק ב-chrome://extensions/shortcuts או ב-edge://extensions/shortcuts ולבחור מקש אחר.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp', alt: 'דף קיצורי המקלדת להרחבות ב-Edge עבור TabMerger: כל ארבע פקודות השמירה מוגדרות, ל-Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma ו-Alt+Shift+Period' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp', alt: 'החיפוש של TabMerger פתוח עם השאילתה docs ומציג כרטיסיות פתוחות ושמורות שמתאימות, ערכת נושא בהירה' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-dark.webp', alt: 'החיפוש של TabMerger פתוח עם השאילתה docs ומציג כרטיסיות פתוחות ושמורות שמתאימות, ערכת נושא כהה' },
+  ],
+  tags: ['browser-tips', 'cross-browser', 'chrome', 'edge', 'firefox', 'tab-management'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-20',
+      note: 'הנתונים של Firefox נקראו מהגדרות המקשים של Firefox 159.0.1 עצמו; הדף הזה חסם את הבדיקה האוטומטית שלנו.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp' },
+  ogImage: { src: '/blog/tab-keyboard-shortcuts/og.png', alt: 'קיצורי מקלדת לכרטיסיות ב-Chrome, ב-Edge וב-Firefox: מדריך של TabMerger, עם החיפוש של TabMerger פתוח' },
+  toc: [
+    { id: 'quick', label: 'תשובה קצרה' },
+    { id: 'table', label: 'קיצורים לפי דפדפן' },
+    { id: 'reopen', label: 'פתיחה מחדש של כרטיסיות שנסגרו' },
+    { id: 'extensions', label: 'קיצורים להרחבות' },
+    { id: 'tabmerger', label: 'המקשים של TabMerger' },
+    { id: 'faq', label: 'שאלות נפוצות' },
+  ],
+  browserSections: ['table', 'reopen', 'extensions'],
+  browserFact: {
+    label: 'קיצורים להרחבות',
+    values: { chrome: 'chrome://extensions/shortcuts', edge: 'edge://extensions/shortcuts', firefox: 'about:addons' },
+  },
+}
+
+<QuickAnswer>
+
+<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Tab</Kbd></bdi> ו-<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Tab</Kbd></bdi> עוברים לכרטיסייה הבאה ולקודמת, <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd></bdi> קופצים לכרטיסייה לפי המיקום שלה, <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>W</Kbd></bdi> סוגר אותה ו-<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> מחזיר אותה. הם עובדים אותו דבר ב-Chrome, ב-Edge וב-Firefox ב-Windows וב-Linux; ב-Mac משתמשים ב-<bdi dir="ltr"><Kbd>⌘</Kbd></bdi> במקום <bdi dir="ltr"><Kbd>Ctrl</Kbd></bdi>. מוסיפים את [TabMerger](/features), ועוד שני מקשים עושים את העבודה הקשה: שמירת כרטיסיות ישר מהמקלדת, ו-<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> כדי למצוא כל כרטיסייה, פתוחה, שמורה או סגורה.
+
+</QuickAnswer>
+
+<InstallCta>שומרים כרטיסיות בלי להרים את הידיים מהמקלדת. בחינם ל-Chrome, ל-Edge ול-Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="table" title="אילו קיצורי כרטיסיות יש בדפדפן שלכם?">
+
+קודם Windows ו-Linux, ואחר כך מה משתנה ב-Mac. כל שורה לקוחה מדף העזרה של הדפדפן עצמו, וב-Firefox מהגדרות המקשים שבתוך Firefox 159.0.1 עצמו.
+
+<BrowserPanels section="table">
+<BrowserPanel browser="chrome">
+
+<ComparisonTable
+  head={['פעולה', 'קיצור']}
+  rowHeaders
+  rows={[
+    ['כרטיסייה חדשה', 'Ctrl+T'],
+    ['סגירת כרטיסייה', 'Ctrl+W'],
+    ['פתיחה מחדש של כרטיסיות וחלונות שנסגרו', 'Ctrl+Shift+T'],
+    ['הכרטיסייה הבאה', <><bdi dir="ltr">Ctrl+Tab</bdi> או <bdi dir="ltr">Ctrl+PgDn</bdi></>],
+    ['הכרטיסייה הקודמת', <><bdi dir="ltr">Ctrl+Shift+Tab</bdi> או <bdi dir="ltr">Ctrl+PgUp</bdi></>],
+    ['כרטיסייה 1 עד 8', 'Ctrl+1 … Ctrl+8'],
+    ['הכרטיסייה האחרונה', 'Ctrl+9'],
+    ['חיפוש בכרטיסיות הפתוחות', 'Ctrl+Shift+A'],
+    ['הוספת כל הכרטיסיות לסימניות', 'Ctrl+Shift+D'],
+    ['היסטוריה', 'Ctrl+H'],
+    ['סגירת חלון', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+אפשר לחפש בכרטיסיות הפתוחות גם מסרגל הכתובות: מקלידים <bdi dir="ltr">`@tabs`</bdi> ולוחצים על <bdi dir="ltr"><Kbd>Tab</Kbd></bdi>. כדי לחפש גם בכרטיסיות שמורות וסגורות, כדאי לקרוא [איך מוצאים כרטיסייה אחת מתוך מאות](/blog/find-a-tab-among-hundreds).
+
+**ב-Mac** משתמשים ב-<bdi dir="ltr"><Kbd>⌘</Kbd></bdi> בכל מקום שבו בטבלה כתוב <bdi dir="ltr"><Kbd>Ctrl</Kbd></bdi>, עם החריגים האלה מדף העזרה של Chrome: הכרטיסייה הבאה והקודמת הן <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>→</Kbd></bdi> ו-<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>←</Kbd></bdi>, ההיסטוריה היא <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Y</Kbd></bdi>, ומנהל הסימניות הוא <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>B</Kbd></bdi>.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+<ComparisonTable
+  head={['פעולה', 'קיצור']}
+  rowHeaders
+  rows={[
+    ['כרטיסייה חדשה', 'Ctrl+T'],
+    ['סגירת כרטיסייה', 'Ctrl+W'],
+    ['פתיחה מחדש של הכרטיסייה האחרונה שנסגרה', 'Ctrl+Shift+T'],
+    ['הכרטיסייה הבאה', <><bdi dir="ltr">Ctrl+Tab</bdi> או <bdi dir="ltr">Ctrl+PgDn</bdi></>],
+    ['הכרטיסייה הקודמת', <><bdi dir="ltr">Ctrl+Shift+Tab</bdi> או <bdi dir="ltr">Ctrl+PgUp</bdi></>],
+    ['כרטיסייה 1 עד 8', 'Ctrl+1 … Ctrl+8'],
+    ['הכרטיסייה האחרונה', 'Ctrl+9'],
+    ['הוספת כל הכרטיסיות למועדפים של Edge', 'Ctrl+Shift+D'],
+    ['היסטוריה', 'Ctrl+H'],
+    ['סגירת חלון', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+ברשימת הקיצורים של Edge אין מקש לחיפוש בכרטיסיות הפתוחות או לפתיחה מחדש של חלון שנסגר.
+
+**ב-Mac** משתמשים ב-<bdi dir="ltr"><Kbd>⌘</Kbd></bdi> בכל מקום שבו בטבלה כתוב <bdi dir="ltr"><Kbd>Ctrl</Kbd></bdi>; ההיסטוריה היא <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Y</Kbd></bdi>. ל-Microsoft רשומים <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↓</Kbd></bdi> ו-<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↑</Kbd></bdi> לכרטיסייה הבאה ולקודמת.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+<ComparisonTable
+  head={['פעולה', 'קיצור']}
+  rowHeaders
+  rows={[
+    ['כרטיסייה חדשה', 'Ctrl+T'],
+    ['סגירת כרטיסייה', 'Ctrl+W'],
+    ['פתיחה מחדש של כרטיסייה שנסגרה', 'Ctrl+Shift+T'],
+    ['פתיחה מחדש של חלון שנסגר', 'Ctrl+Shift+N'],
+    ['הכרטיסייה הבאה', <><bdi dir="ltr">Ctrl+Tab</bdi> או <bdi dir="ltr">Ctrl+PgDn</bdi></>],
+    ['הכרטיסייה הקודמת', <><bdi dir="ltr">Ctrl+Shift+Tab</bdi> או <bdi dir="ltr">Ctrl+PgUp</bdi></>],
+    ['כרטיסייה 1 עד 8', 'Ctrl+1 … Ctrl+8'],
+    ['הכרטיסייה האחרונה', 'Ctrl+9'],
+    ['רשימת כל הלשוניות', 'Ctrl+Shift+A'],
+    ['הוספת כל הכרטיסיות לסימניות', 'Ctrl+Shift+D'],
+    ['היסטוריה בסרגל הצד', 'Ctrl+H'],
+    ['היסטוריה בספרייה', 'Ctrl+Shift+H'],
+    ['סגירת חלון', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+**ב-Mac** הדפדפן Firefox מגדיר את הקיצורים האלה עם מקש הצירוף הראשי של המערכת, ולכן לוחצים על <bdi dir="ltr"><Kbd>⌘</Kbd></bdi> בכל מקום שבו בטבלה כתוב <bdi dir="ltr"><Kbd>Ctrl</Kbd></bdi>.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="reopen" title="איך פותחים מחדש כרטיסייה שנסגרה בטעות?">
+
+לוחצים על <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> (ב-Mac: <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi>). כל לחיצה חוזרת עוד צעד אחורה. מה בדיוק חוזר תלוי בדפדפן:
+
+<BrowserPanels section="reopen">
+<BrowserPanel browser="chrome">
+
+Chrome פותח מחדש כרטיסיות *וגם* חלונות, לפי הסדר שבו נסגרו, אז ממשיכים ללחוץ עד שהחלון שאבד חוזר.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+לפי התיעוד של Edge, <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> פותח מחדש את הכרטיסייה האחרונה שנסגרה. כדי להחזיר חלון שנסגר, פותחים את ההיסטוריה (<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi>) ומחפשים תחת <bdi dir="ltr">**Recently closed**</bdi> (נסגרו לאחרונה).
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+ל-Firefox יש רשימות נפרדות: <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> לכרטיסיות ו-<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd></bdi> לחלונות. ב-Firefox 159 הקיצור <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> מחובר לפקודה שמשחזרת את הכרטיסייה, החלון או ההפעלה האחרונים שנסגרו, ולכן הוא יכול להחזיר גם את ההפעלה הקודמת.
+
+</BrowserPanel>
+</BrowserPanels>
+
+הרשימה חוזרת אחורה רק עד גבול מסוים. אם אבד סשן שלם, כדאי לקרוא [איך משחזרים כרטיסיות אחרי קריסה](/blog/restore-tabs-after-crash). וכדי לא לאבד אותן מלכתחילה, [שומרים את כל הכרטיסיות הפתוחות](/blog/save-all-open-tabs) לפני שסוגרים משהו גדול.
+
+</Section>
+
+<Section id="extensions" title="איך מגדירים קיצורי דרך להרחבות?">
+
+הרחבות יכולות להציע קיצורים, אבל המילה האחרונה היא של הדפדפן: מקש מוצע שמתנגש באחד המקשים של הדפדפן נשאר <bdi dir="ltr">**Not set**</bdi> (לא מוגדר), בלי שום אזהרה. פותחים את דף הקיצורים של הדפדפן, לוחצים על העיפרון ליד פקודה ולוחצים על המקשים הרצויים.
+
+<BrowserPanels section="extensions">
+<BrowserPanel browser="chrome">
+
+מדביקים את <bdi dir="ltr">`chrome://extensions/shortcuts`</bdi> בסרגל הכתובות. לכל פקודה יש גם תפריט היקף: <bdi dir="ltr">**In Chrome**</bdi> (רק בתוך Chrome), או <bdi dir="ltr">**Global**</bdi> (בכל מקום) כדי שתעבוד גם כש-Chrome לא בחזית.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+מדביקים את <bdi dir="ltr">`edge://extensions/shortcuts`</bdi> בסרגל הכתובות.
+
+Edge שומר לעצמו את <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd></bdi> (שכפול כרטיסייה), <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>U</Kbd></bdi> (<bdi dir="ltr">Read Aloud</bdi>, הקראה בקול) ו-<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd></bdi> (הדפסה עם תיבת הדו-שיח של המערכת), ולכן פקודת הרחבה שמציעה אחד מהם מתחילה ב-Edge 158 במצב <bdi dir="ltr">**Not set**</bdi>. Edge 158 גם דוחה כמה מקשי <bdi dir="ltr"><Kbd>Alt</Kbd>+<Kbd>Shift</Kbd></bdi> שהרשימה של Microsoft לא מזכירה, למשל <bdi dir="ltr"><Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi> ו-<bdi dir="ltr"><Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Z</Kbd></bdi>. פקודות השמירה של TabMerger נמנעות מכולם, ולכן בהתקנה חדשה כל הארבע מוגדרות:
+
+<AnnotatedFigure src="/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp" alt="דף קיצורי המקלדת להרחבות ב-Edge עבור TabMerger: כל ארבע פקודות השמירה מוגדרות, ל-Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma ו-Alt+Shift+Period" width={852} height={460} boxes={[{ id: 'save-shortcuts' }]} source="edge://extensions/shortcuts · Edge 158.0.4370.33">התקנה חדשה של TabMerger ב-Edge 158: לכל ארבע פקודות השמירה יש מקשים, ואין מה לתקן.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+פותחים את <bdi dir="ltr">`about:addons`</bdi>, לוחצים על תפריט גלגל השיניים ובוחרים **ניהול קיצורי דרך להרחבות** (<bdi dir="ltr">Manage Extension Shortcuts</bdi>). שימו לב ש-<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd></bdi> פותח ב-Firefox חלון פרטי, אז לכל דבר שמציע אותו כדאי לבחור מקש אחר.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>דף הקיצורים לא מזהיר אתכם. אם קיצור "לא עושה כלום", בודקים קודם שם.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="המקשים של TabMerger">
+
+[TabMerger](/features), ההרחבה החינמית שלנו ל-Chrome, ל-Edge ול-Firefox, שומרת כרטיסיות ישר מהמקלדת, בלי לפתוח אותה. היא מציעה מקש לכל אחת מארבע פקודות השמירה שלה, שנבחר כך שלא יתנגש בקיצורים של הדפדפנים עצמם, ואפשר לשנות כל אחד מהם בדף הקיצורים של הדפדפן (למעלה):
+
+<ComparisonTable
+  head={['מקש מוצע', 'מה נשמר']}
+  keysColumn={0}
+  rows={[
+    ['Alt+Shift+S', 'הכרטיסייה הנוכחית'],
+    ['Alt+Shift+O', 'כל שאר הכרטיסיות בחלון'],
+    ['Alt+Shift+Comma', 'הכרטיסיות מימין'],
+    ['Alt+Shift+Period', 'הכרטיסיות משמאל'],
+  ]}
+/>
+
+ב-Mac הם משתמשים ב-<bdi dir="ltr"><Kbd>Control</Kbd>+<Kbd>Shift</Kbd></bdi> במקום <bdi dir="ltr"><Kbd>Alt</Kbd>+<Kbd>Shift</Kbd></bdi>: <bdi dir="ltr"><Kbd>Control</Kbd>+<Kbd>Shift</Kbd>+<Kbd>S</Kbd></bdi> שומר את הכרטיסייה הנוכחית. אלה המקשים שמקבלת התקנה חדשה. עדכונים לא משנים קיצורים, אז אם התקנתם את TabMerger לפני שהמקשים האלה הגיעו, נשארים לו המקשים הקודמים, כולל אלה שנמצאים במצב <bdi dir="ltr">**Not set**</bdi>: מגדירים אותם בדף הקיצורים.
+
+בתוך החלון הקופץ, <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>K</Kbd></bdi>) מחפש בכרטיסיות פתוחות, שמורות ושנסגרו לאחרונה, ברשימה אחת.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tab-keyboard-shortcuts/tm-search" alt="החיפוש של TabMerger פתוח עם השאילתה docs ומציג כרטיסיות פתוחות ושמורות שמתאימות, ערכת נושא בהירה" darkAlt="החיפוש של TabMerger פתוח עם השאילתה docs ומציג כרטיסיות פתוחות ושמורות שמתאימות, ערכת נושא כהה" boxes={[{ id: 'search-input', label: 'חיפוש' }]} source="TabMerger 3.16.1"><bdi dir="ltr">Ctrl+K</bdi> ואז מקלידים: התוצאות מגיעות גם מכרטיסיות פתוחות וגם משמורות.</ThemedScreenshot>
+
+<InstallCta>בחינם ל-Chrome, ל-Edge ול-Firefox. לא צריך חשבון כדי להתחיל.</InstallCta>
+
+עוד הרגלים ששומרים על מספר קטן של כרטיסיות יש ב[מדריך שלנו לניהול יותר מדי כרטיסיות](/blog/manage-too-many-tabs), ומה כל דפדפן מציע מעבר לקיצורים יש ב[השוואת תכונות הכרטיסיות של Chrome, של Edge ושל Firefox](/blog/browser-tab-features-compared).
+
+</Section>
+
+<Section id="faq" title="שאלות נפוצות">
+
+<Faq items={post.faq} />
+
+</Section>

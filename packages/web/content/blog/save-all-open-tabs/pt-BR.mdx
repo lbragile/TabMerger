@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'Um atalho, restauração ao iniciar e recuperação de abas fechadas no Chrome, Edge e Firefox.',
   dek: 'Cinco jeitos de manter todas as abas abertas, e o que cada um deixa passar sem avisar.',
   published: '2026-11-19',
-  updated: '2026-11-21',
+  updated: '2026-11-24',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D salva só a janela atual.', source: 'Testado nos três, 19 nov. 2026' },
@@ -264,14 +264,14 @@ Cada método nativo cobre uma janela, uma reinicialização ou uma aba fechada p
   head={['Atalho', 'Salva']}
   keysColumn={0}
   rows={[
-    ['Ctrl+Shift+P', 'Todas as outras abas da janela'],
-    ['Ctrl+Shift+S', 'A aba atual'],
-    ['Ctrl+Shift+K', 'As abas à esquerda'],
-    ['Ctrl+Shift+U', 'As abas à direita'],
+    ['Alt+Shift+O', 'Todas as outras abas da janela'],
+    ['Alt+Shift+S', 'A aba atual'],
+    ['Alt+Shift+Comma', 'As abas à esquerda'],
+    ['Alt+Shift+Period', 'As abas à direita'],
   ]}
 />
 
-No Mac, use <Kbd>⌘</Kbd>. Cada atalho pergunta onde salvar; **Salvar rápido (novo grupo)** cria um grupo na hora. No Firefox, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> abre uma janela privativa, então escolha outra tecla em `about:addons` → “Manage Extension Shortcuts”. O Edge reserva <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd>, <Kbd>U</Kbd> e <Kbd>P</Kbd> para comandos próprios, então dê a esses três atalhos outras teclas em `edge://extensions/shortcuts`; nossa [referência de atalhos de teclado para abas](/blog/tab-keyboard-shortcuts) mostra como.
+No Mac, pressione <Kbd>Control</Kbd> em vez de <Kbd>Alt</Kbd>. Cada atalho pergunta onde salvar; **Salvar rápido (novo grupo)** cria um grupo na hora. Essas são as teclas de uma instalação nova; uma anterior mantém as que tinha, e você pode mudar qualquer uma na página de atalhos do navegador, como mostra nossa [referência de atalhos de teclado para abas](/blog/tab-keyboard-shortcuts).
 
 ### Fechou algo sem querer?
 

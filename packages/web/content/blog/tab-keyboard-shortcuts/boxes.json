@@ -1,12 +1,12 @@
 {
   "edge-extension-shortcuts": [
     {
-      "id": "save-current-tab",
-      "label": "Save the current tab: Ctrl+Shift+S",
-      "l": "6.47%",
-      "t": "44.53%",
-      "w": "22.17%",
-      "h": "4.01%"
+      "id": "save-shortcuts",
+      "label": "The four save commands, all set: Alt+Shift+S, O, Comma, Period",
+      "l": "50.26%",
+      "t": "41.34%",
+      "w": "19.79%",
+      "h": "49.05%"
     }
   ],
   "tm-search-dark": [

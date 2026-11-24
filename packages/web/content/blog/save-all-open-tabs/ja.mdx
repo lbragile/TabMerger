@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'ショートカット一つで保存、起動時に復元、閉じたタブも取り戻す。Chrome・Edge・Firefox 対応。',
   dek: '開いているタブをすべて残す5つの方法と、それぞれが見落としがちな点。',
   published: '2026-11-19',
-  updated: '2026-11-21',
+  updated: '2026-11-24',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D で保存されるのは現在のウィンドウだけです。', source: '3つのブラウザで検証（2026年11月19日）' },
@@ -260,14 +260,14 @@ Firefox では「履歴」（History）メニューの「最近閉じたタブ�
   head={['ショートカット', '保存されるもの']}
   keysColumn={0}
   rows={[
-    ['Ctrl+Shift+P', 'ウィンドウ内のほかのタブすべて'],
-    ['Ctrl+Shift+S', '現在のタブ'],
-    ['Ctrl+Shift+K', '左側のタブ'],
-    ['Ctrl+Shift+U', '右側のタブ'],
+    ['Alt+Shift+O', 'ウィンドウ内のほかのタブすべて'],
+    ['Alt+Shift+S', '現在のタブ'],
+    ['Alt+Shift+Comma', '左側のタブ'],
+    ['Alt+Shift+Period', '右側のタブ'],
   ]}
 />
 
-Mac では <Kbd>⌘</Kbd> を使います。どのショートカットも保存先を尋ねてきます。**クイック保存（新しいグループ）** を選ぶと、その場でグループが作られます。Firefox では <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> がプライベートウィンドウを開くキーなので、`about:addons` の「拡張機能のショートカットキーの管理」（Manage Extension Shortcuts）で別のキーを割り当ててください。Edge は <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd>、<Kbd>U</Kbd>、<Kbd>P</Kbd> を独自のコマンドに使っているため、`edge://extensions/shortcuts` でこの 3 つに別のキーを設定してください。やり方は[タブのキーボード ショートカット一覧](/blog/tab-keyboard-shortcuts)で紹介しています。
+Mac では <Kbd>Alt</Kbd> の代わりに <Kbd>Control</Kbd> を押します。どのショートカットも保存先を尋ねてきます。**クイック保存（新しいグループ）** を選ぶと、その場でグループが作られます。これは新しくインストールしたときのキーで、以前からインストールしている場合は元のキーのままです。どのキーもブラウザのショートカット ページで変更できます。やり方は[タブのキーボード ショートカット一覧](/blog/tab-keyboard-shortcuts)で紹介しています。
 
 ### うっかり閉じてしまったら
 

@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'Một phím tắt, khôi phục khi khởi động và lấy lại tab đã đóng trong Chrome, Edge và Firefox.',
   dek: 'Năm cách giữ lại mọi tab đang mở, và điều mà mỗi cách lặng lẽ bỏ sót.',
   published: '2026-11-19',
-  updated: '2026-11-21',
+  updated: '2026-11-24',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D chỉ lưu cửa sổ hiện tại.', source: 'Đã kiểm tra trên cả ba, ngày 19/11/2026' },
@@ -264,14 +264,14 @@ Mỗi cách có sẵn chỉ xử lý một cửa sổ, một lần khởi độn
   head={['Phím tắt', 'Lưu gì']}
   keysColumn={0}
   rows={[
-    ['Ctrl+Shift+P', 'Mọi tab khác trong cửa sổ'],
-    ['Ctrl+Shift+S', 'Tab hiện tại'],
-    ['Ctrl+Shift+K', 'Các tab bên trái'],
-    ['Ctrl+Shift+U', 'Các tab bên phải'],
+    ['Alt+Shift+O', 'Mọi tab khác trong cửa sổ'],
+    ['Alt+Shift+S', 'Tab hiện tại'],
+    ['Alt+Shift+Comma', 'Các tab bên trái'],
+    ['Alt+Shift+Period', 'Các tab bên phải'],
   ]}
 />
 
-Trên Mac, dùng <Kbd>⌘</Kbd>. Mỗi phím tắt sẽ hỏi lưu vào đâu; **Lưu Nhanh (nhóm mới)** tạo ngay một nhóm. Trong Firefox, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> mở cửa sổ riêng tư, vì vậy hãy chọn phím khác trong `about:addons` → “Quản lý phím tắt tiện ích mở rộng” (“Manage Extension Shortcuts”). Edge giữ <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd>, <Kbd>U</Kbd> và <Kbd>P</Kbd> cho các lệnh riêng của nó, vì vậy hãy gán phím khác cho ba phím tắt này tại `edge://extensions/shortcuts`; [bảng tra phím tắt cho tab](/blog/tab-keyboard-shortcuts) của chúng tôi chỉ cách làm.
+Trên Mac, nhấn <Kbd>Control</Kbd> thay cho <Kbd>Alt</Kbd>. Mỗi phím tắt sẽ hỏi lưu vào đâu; **Lưu Nhanh (nhóm mới)** tạo ngay một nhóm. Đây là các phím của bản cài mới; bản cài từ trước vẫn giữ các phím cũ, và bạn có thể đổi bất kỳ phím nào trên trang phím tắt của trình duyệt; [bảng tra phím tắt cho tab](/blog/tab-keyboard-shortcuts) của chúng tôi chỉ cách làm.
 
 ### Lỡ đóng nhầm?
 

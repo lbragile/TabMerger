@@ -130,3 +130,5 @@ A 15 KB MDX body in a Bash heredoc failed ("unexpected EOF while looking for mat
 **Chrome Help rate limit:** after about 18 quick requests it answers 429 (`google.com/sorry`); check status and final URL, not just length, and reuse cached copies from other runs.
 
 **Firefox rename upstream:** `tabs-toolbar-list-all-tabs` became `tabs-toolbar-list-all-tabs-2` ("Search and manage tabs") in en-US main; the l10n repos still carry the old key, which Firefox 159 uses. If a post's English wording changes to the new name, the translations must follow.
+
+**Firefox History/Library names vary by locale:** de "Chronik", es-ES Library "Catálogo", ja Library "ブラウジングライブラリー", tr "Arşiv", fa Library "مخزن", ar History "التأريخ". `addon-manage-extensions-shortcuts` (aboutAddons.ftl, "Manage Extension Shortcuts") exists in all 17 locales. The Chrome/Edge shortcuts page strings ("Not set", "In Chrome", "Global") and Edge "Read Aloud"/"Recently closed" have no official translated source: keep English with a bracketed translation at first mention.

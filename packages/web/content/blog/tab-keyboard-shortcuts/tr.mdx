@@ -1,0 +1,276 @@
+export const post = {
+  slug: 'tab-keyboard-shortcuts',
+  title: 'Chrome, Edge ve Firefox için sekme klavye kısayolları',
+  seoTitle: 'Chrome Sekme Kısayolları (Edge ve Firefox da): Tam Liste',
+  description:
+    'Chrome, Edge ve Firefox’ta öğrenmeye değer tüm sekme kısayolları: sekmeler arasında geçiş, kapatılan sekmeleri ve pencereleri geri açma, sekmelerde arama ve hepsini yer işaretlerine ekleme, Windows’ta ve Mac’te.',
+  shareSummary: 'Chrome, Edge ve Firefox’ta sekmeleri klavyeyle değiştirin, geri açın, arayın ve kaydedin.',
+  dek: 'Üç tarayıcı için tek tablo, Mac’teki farklar ve uzantı kısayollarını gerçekten kalıcı olacak şekilde ayarlamanın yolu.',
+  published: '2026-11-22',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+T üçünde de son kapatılan sekmeyi yeniden açar.', source: 'Chrome ve Edge yardımı; Firefox 159 tuş tanımları' },
+    { text: 'Firefox kapatılan bir pencereyi Ctrl+Shift+N ile yeniden açar.', source: 'Firefox 159 tuş tanımları' },
+    {
+      text: 'Chrome’da Ctrl+9 dokuzuncu sekmeye değil, son sekmeye gider.',
+      source: 'Chrome Yardım',
+      href: 'https://support.google.com/chrome/answer/157179',
+    },
+    { text: 'Edge Ctrl+Shift+K, U ve P’yi kendine ayırır, uzantılar bunları alamaz.', source: 'Microsoft Destek; Edge 158' },
+  ],
+  faq: [
+    {
+      question: 'Klavyeyle sekmeler arasında nasıl geçiş yaparım?',
+      answer:
+        'Chrome, Edge ve Firefox’ta Ctrl+Tab sonraki sekmeye, Ctrl+Shift+Tab önceki sekmeye geçer. Ctrl+1 ile Ctrl+8 arası sırasına göre bir sekmeye atlar; Ctrl+9 son sekmeye gider.',
+    },
+    {
+      question: 'Kapattığım bir sekmeyi nasıl yeniden açarım?',
+      answer:
+        'Ctrl+Shift+T’ye basın (Mac’te ⌘+Shift+T). Daha geriye gitmek için yeniden basın. Chrome’da kapatılan pencereler de geri gelir; Firefox’ta kapatılan bir pencereyi Ctrl+Shift+N yeniden açar.',
+    },
+    {
+      question: 'Açık sekmelerimde arama yapabilir miyim?',
+      answer: 'Evet. Ctrl+Shift+A, Chrome’da Sekme Arama özelliğini açar, Firefox’ta ise tüm sekmeleri listeler. Chrome’da adres çubuğuna @sekmeler de yazabilirsiniz (İngilizce Chrome’da @tabs).',
+    },
+    {
+      question: 'Bir uzantının kısayolu neden çalışmıyor?',
+      answer:
+        'Tarayıcı, önerilen bir kısayol kendi kısayollarından biriyle çakışırsa onu atanmamış bırakır. chrome://extensions/shortcuts veya edge://extensions/shortcuts sayfasına bakın ve başka bir tuş seçin.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp', alt: 'Edge’in uzantı klavye kısayolları sayfasında TabMerger: dört kaydetme komutunun hepsi Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma ve Alt+Shift+Period olarak atanmış' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp', alt: 'docs sorgusuyla açılmış TabMerger araması, eşleşen açık ve kayıtlı sekmeler listeleniyor, açık tema' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-dark.webp', alt: 'docs sorgusuyla açılmış TabMerger araması, eşleşen açık ve kayıtlı sekmeler listeleniyor, koyu tema' },
+  ],
+  tags: ['browser-tips', 'cross-browser', 'chrome', 'edge', 'firefox', 'tab-management'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-20',
+      note: 'Firefox girdileri doğrudan Firefox 159.0.1’in kendi tuş tanımlarından okundu; bu sayfa otomatik kontrolümüzü engelledi.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp' },
+  ogImage: { src: '/blog/tab-keyboard-shortcuts/og.png', alt: 'Chrome, Edge ve Firefox için sekme klavye kısayolları: TabMerger rehberi, TabMerger araması açık' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'table', label: 'Tarayıcıya göre kısayollar' },
+    { id: 'reopen', label: 'Kapatılan sekmeleri geri açma' },
+    { id: 'extensions', label: 'Uzantı kısayolları' },
+    { id: 'tabmerger', label: 'TabMerger’ın tuşları' },
+    { id: 'faq', label: 'SSS' },
+  ],
+  browserSections: ['table', 'reopen', 'extensions'],
+  browserFact: {
+    label: 'Uzantı kısayolları',
+    values: { chrome: 'chrome://extensions/shortcuts', edge: 'edge://extensions/shortcuts', firefox: 'about:addons' },
+  },
+}
+
+<QuickAnswer>
+
+<Kbd>Ctrl</Kbd>+<Kbd>Tab</Kbd> ve <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Tab</Kbd> sonraki ve önceki sekmeye geçer, <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> sırasına göre bir sekmeye atlar, <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> sekmeyi kapatır ve <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> geri getirir. Bunlar Windows ve Linux’ta Chrome, Edge ve Firefox’ta aynı çalışır; Mac’te <Kbd>Ctrl</Kbd> yerine <Kbd>⌘</Kbd> kullanın. [TabMerger](/features)’ı ekleyin, ağır işi iki tuş daha üstlensin: sekmeleri doğrudan klavyeden kaydetmek ve açık, kayıtlı ya da kapatılmış her sekmeyi bulmak için <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+
+</QuickAnswer>
+
+<InstallCta>Ellerinizi klavyeden kaldırmadan sekmeleri kaydedin. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="table" title="Tarayıcınızda hangi sekme kısayolları var?">
+
+Önce Windows ve Linux, ardından Mac’te nelerin değiştiği. Her giriş tarayıcının kendi yardım sayfasından, Firefox için ise Firefox 159.0.1’in içindeki tuş tanımlarından alındı.
+
+<BrowserPanels section="table">
+<BrowserPanel browser="chrome">
+
+<ComparisonTable
+  head={['İşlem', 'Kısayol']}
+  rowHeaders
+  rows={[
+    ['Yeni sekme', 'Ctrl+T'],
+    ['Sekmeyi kapat', 'Ctrl+W'],
+    ['Kapatılan sekmeleri ve pencereleri yeniden aç', 'Ctrl+Shift+T'],
+    ['Sonraki sekme', 'Ctrl+Tab veya Ctrl+PgDn'],
+    ['Önceki sekme', 'Ctrl+Shift+Tab veya Ctrl+PgUp'],
+    ['1–8. sekme', 'Ctrl+1 … Ctrl+8'],
+    ['Son sekme', 'Ctrl+9'],
+    ['Açık sekmelerde ara', 'Ctrl+Shift+A'],
+    ['Tüm sekmeleri yer işaretlerine ekle', 'Ctrl+Shift+D'],
+    ['Geçmiş', 'Ctrl+H'],
+    ['Pencereyi kapat', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+Açık sekmelerde adres çubuğundan da arama yapabilirsiniz: `@sekmeler` yazın (İngilizce Chrome’da `@tabs`) ve <Kbd>Tab</Kbd> tuşuna basın. Kayıtlı ve kapatılmış sekmelerde de aramak için [yüzlerce sekme arasında tek bir sekmeyi bulma](/blog/find-a-tab-among-hundreds) yazımıza bakın.
+
+**Mac’te**, tabloda <Kbd>Ctrl</Kbd> yazan yerde <Kbd>⌘</Kbd> kullanın; Chrome’un yardım sayfasındaki istisnalar şunlar: sonraki ve önceki sekme <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>→</Kbd> ve <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>←</Kbd>, geçmiş <Kbd>⌘</Kbd>+<Kbd>Y</Kbd>, yer işareti yöneticisi ise <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>B</Kbd>.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+<ComparisonTable
+  head={['İşlem', 'Kısayol']}
+  rowHeaders
+  rows={[
+    ['Yeni sekme', 'Ctrl+T'],
+    ['Sekmeyi kapat', 'Ctrl+W'],
+    ['Son kapatılan sekmeyi yeniden aç', 'Ctrl+Shift+T'],
+    ['Sonraki sekme', 'Ctrl+Tab veya Ctrl+PgDn'],
+    ['Önceki sekme', 'Ctrl+Shift+Tab veya Ctrl+PgUp'],
+    ['1–8. sekme', 'Ctrl+1 … Ctrl+8'],
+    ['Son sekme', 'Ctrl+9'],
+    ['Tüm sekmeleri Sık Kullanılanlar’a ekle', 'Ctrl+Shift+D'],
+    ['Geçmiş', 'Ctrl+H'],
+    ['Pencereyi kapat', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+Edge’in kısayol listesinde açık sekmelerde arama yapan ya da kapatılan bir pencereyi yeniden açan bir tuş yok.
+
+**Mac’te**, tabloda <Kbd>Ctrl</Kbd> yazan yerde <Kbd>⌘</Kbd> kullanın; geçmiş <Kbd>⌘</Kbd>+<Kbd>Y</Kbd>. Microsoft, sonraki ve önceki sekme için <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↓</Kbd> ve <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↑</Kbd> kısayollarını veriyor.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+<ComparisonTable
+  head={['İşlem', 'Kısayol']}
+  rowHeaders
+  rows={[
+    ['Yeni sekme', 'Ctrl+T'],
+    ['Sekmeyi kapat', 'Ctrl+W'],
+    ['Kapatılan sekmeyi yeniden aç', 'Ctrl+Shift+T'],
+    ['Kapatılan pencereyi yeniden aç', 'Ctrl+Shift+N'],
+    ['Sonraki sekme', 'Ctrl+Tab veya Ctrl+PgDn'],
+    ['Önceki sekme', 'Ctrl+Shift+Tab veya Ctrl+PgUp'],
+    ['1–8. sekme', 'Ctrl+1 … Ctrl+8'],
+    ['Son sekme', 'Ctrl+9'],
+    ['Tüm sekmeleri listele', 'Ctrl+Shift+A'],
+    ['Tüm sekmeleri yer işaretlerine ekle', 'Ctrl+Shift+D'],
+    ['Kenar çubuğunda geçmiş', 'Ctrl+H'],
+    ['Arşiv’de geçmiş', 'Ctrl+Shift+H'],
+    ['Pencereyi kapat', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+**Mac’te** Firefox bu kısayolları sistemin ana değiştirici tuşuyla tanımlar; yani tabloda <Kbd>Ctrl</Kbd> yazan yerde <Kbd>⌘</Kbd> tuşuna basın.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="reopen" title="Yanlışlıkla kapattığım bir sekmeyi nasıl yeniden açarım?">
+
+<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> tuşlarına basın (Mac’te <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>). Her basış bir adım daha geriye gider. Neyin geri geldiği tarayıcıya bağlıdır:
+
+<BrowserPanels section="reopen">
+<BrowserPanel browser="chrome">
+
+Chrome sekmeleri *ve* pencereleri kapatıldıkları sırayla yeniden açar; kaybettiğiniz pencere geri gelene kadar basmaya devam edin.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge’in belgelerine göre <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> son kapatılan sekmeyi yeniden açar. Kapatılan bir pencere için geçmişi (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) açın ve **Recently closed** (son kapatılanlar) altına bakın.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox ayrı listeler tutar: sekmeler için <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>, pencereler için <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd>. Firefox 159’da <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>, son kapatılan sekmeyi, pencereyi veya oturumu geri yükleyen bir komuta bağlıdır; bu yüzden önceki oturumu da geri getirebilir.
+
+</BrowserPanel>
+</BrowserPanels>
+
+Liste ancak bir yere kadar geriye gider. Kaybolan bütün bir oturum için [çökmeden sonra sekmeleri geri yükleme](/blog/restore-tabs-after-crash) yazımıza bakın. Onları hiç kaybetmemek için, büyük bir şeyi kapatmadan önce [tüm açık sekmelerinizi kaydedin](/blog/save-all-open-tabs).
+
+</Section>
+
+<Section id="extensions" title="Uzantılar için kısayolları nasıl ayarlarım?">
+
+Uzantılar kısayol önerebilir ama son sözü tarayıcı söyler: tarayıcının kendi kısayollarından biriyle çakışan önerilen tuş, hiçbir uyarı olmadan **Not set** (ayarlanmamış) olarak kalır. Tarayıcınızın kısayollar sayfasını açın, bir komutun yanındaki kaleme tıklayın ve istediğiniz tuşlara basın.
+
+<BrowserPanels section="extensions">
+<BrowserPanel browser="chrome">
+
+`chrome://extensions/shortcuts` adresini adres çubuğuna yapıştırın. Her komutun bir kapsam menüsü de vardır: **In Chrome** (yalnızca Chrome’da) veya Chrome odakta değilken de çalışması için **Global** (her yerde).
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+`edge://extensions/shortcuts` adresini adres çubuğuna yapıştırın.
+
+Edge, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd> (sekmeyi çoğalt), <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>U</Kbd> (Read Aloud, sesli okuma) ve <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> (sistem iletişim kutusuyla yazdır) kısayollarını kendine ayırır; bu yüzden bunlardan birini öneren bir uzantı komutu Edge 158’de **Not set** olarak başlar. Edge 158, Microsoft’un listesinde geçmeyen bazı <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd> tuşlarını da reddeder; örneğin <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> ve <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Z</Kbd>. TabMerger’ın kaydetme komutları bunların hepsinden kaçınır, bu yüzden yeni bir kurulumda dördü de atanmış olur:
+
+<AnnotatedFigure src="/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp" alt="Edge’in uzantı klavye kısayolları sayfasında TabMerger: dört kaydetme komutunun hepsi Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma ve Alt+Shift+Period olarak atanmış" width={852} height={460} boxes={[{ id: 'save-shortcuts' }]} source="edge://extensions/shortcuts · Edge 158.0.4370.33">Edge 158’de yeni bir TabMerger kurulumu: dört kaydetme komutunun hepsinin tuşu var, düzeltilecek bir şey yok.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+`about:addons` sayfasını açın, dişli menüsüne tıklayın ve **Uzantı kısayollarını yönet** (Manage Extension Shortcuts) seçeneğini seçin. Firefox’ta <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> gizli pencere açtığından, bunu öneren her şey için başka bir tuş seçin.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>kısayollar sayfası sizi uyarmaz. Bir kısayol “hiçbir şey yapmıyorsa” önce oraya bakın.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger’ın tuşları">
+
+Chrome, Edge ve Firefox için ücretsiz uzantımız [TabMerger](/features), sekmeleri onu açmadan doğrudan klavyeden kaydeder. Dört kaydetme komutunun her biri için, Chrome, Edge ve Firefox’un kendi kısayollarına denk gelmeyecek şekilde seçilmiş bir tuş önerir; bunların her birini tarayıcınızın kısayollar sayfasından (yukarıda) değiştirebilirsiniz:
+
+<ComparisonTable
+  head={['Önerilen tuş', 'Kaydettiği']}
+  keysColumn={0}
+  rows={[
+    ['Alt+Shift+S', 'Geçerli sekme'],
+    ['Alt+Shift+O', 'Penceredeki diğer tüm sekmeler'],
+    ['Alt+Shift+Comma', 'Soldaki sekmeler'],
+    ['Alt+Shift+Period', 'Sağdaki sekmeler'],
+  ]}
+/>
+
+Mac’te <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd> yerine <Kbd>Control</Kbd>+<Kbd>Shift</Kbd> kullanılır: <Kbd>Control</Kbd>+<Kbd>Shift</Kbd>+<Kbd>S</Kbd> geçerli sekmeyi kaydeder. Bunlar yeni bir kurulumun aldığı tuşlardır. Güncellemeler kısayolları değiştirmez; TabMerger’ı bu tuşlar gelmeden önce kurduysanız, **Not set** olanlar dahil eski tuşları kalır: onları kısayollar sayfasından ayarlayın.
+
+Açılır pencerede <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd>), açık, kayıtlı ve yakın zamanda kapatılmış sekmelerde tek bir listede arama yapar.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tab-keyboard-shortcuts/tm-search" alt="docs sorgusuyla açılmış TabMerger araması, eşleşen açık ve kayıtlı sekmeler listeleniyor, açık tema" darkAlt="docs sorgusuyla açılmış TabMerger araması, eşleşen açık ve kayıtlı sekmeler listeleniyor, koyu tema" boxes={[{ id: 'search-input', label: 'Arama' }]} source="TabMerger 3.16.1">Ctrl+K’ye basın ve yazın: sonuçlar hem açık hem de kayıtlı sekmelerden gelir.</ThemedScreenshot>
+
+<InstallCta>Chrome, Edge ve Firefox için ücretsiz. Başlamak için hesap gerekmez.</InstallCta>
+
+Sekme sayısını düşük tutan başka alışkanlıklar [çok fazla sekmeyle başa çıkma rehberimizde](/blog/manage-too-many-tabs), her tarayıcının kısayolların ötesinde neler sunduğu ise [Chrome, Edge ve Firefox sekme özellikleri karşılaştırmasında](/blog/browser-tab-features-compared).
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

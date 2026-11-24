@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'Satu pintasan, pemulihan saat startup, dan pengembalian tab tertutup di Chrome, Edge, dan Firefox.',
   dek: 'Lima cara menyimpan semua tab yang Anda buka, dan satu hal yang diam-diam terlewat oleh masing-masing.',
   published: '2026-11-19',
-  updated: '2026-11-21',
+  updated: '2026-11-24',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D hanya menyimpan jendela saat ini.', source: 'Diuji di ketiganya, 19 November 2026' },
@@ -264,14 +264,14 @@ Cara bawaan masing-masing hanya mencakup satu jendela, satu restart, atau satu t
   head={['Pintasan', 'Yang disimpan']}
   keysColumn={0}
   rows={[
-    ['Ctrl+Shift+P', 'Semua tab lain di jendela'],
-    ['Ctrl+Shift+S', 'Tab saat ini'],
-    ['Ctrl+Shift+K', 'Tab di sebelah kiri'],
-    ['Ctrl+Shift+U', 'Tab di sebelah kanan'],
+    ['Alt+Shift+O', 'Semua tab lain di jendela'],
+    ['Alt+Shift+S', 'Tab saat ini'],
+    ['Alt+Shift+Comma', 'Tab di sebelah kiri'],
+    ['Alt+Shift+Period', 'Tab di sebelah kanan'],
   ]}
 />
 
-Di Mac, gunakan <Kbd>⌘</Kbd>. Setiap pintasan menanyakan lokasi penyimpanan; **Simpan Cepat (grup baru)** langsung membuat grup. Di Firefox, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> membuka jendela pribadi, jadi pilih tombol lain di `about:addons` → “Kelola Pintasan Ekstensi” (“Manage Extension Shortcuts”). Edge memakai <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd>, <Kbd>U</Kbd>, dan <Kbd>P</Kbd> untuk perintahnya sendiri, jadi beri ketiganya tombol lain di `edge://extensions/shortcuts`; [referensi pintasan keyboard untuk tab](/blog/tab-keyboard-shortcuts) kami menunjukkan caranya.
+Di Mac, tekan <Kbd>Control</Kbd> sebagai ganti <Kbd>Alt</Kbd>. Setiap pintasan menanyakan lokasi penyimpanan; **Simpan Cepat (grup baru)** langsung membuat grup. Instalasi baru mendapat tombol ini; instalasi yang lebih lama tetap memakai tombol yang sudah ada, dan Anda bisa mengubah semuanya di halaman pintasan browser Anda; [referensi pintasan keyboard untuk tab](/blog/tab-keyboard-shortcuts) kami menunjukkan caranya.
 
 ### Tidak sengaja menutup sesuatu?
 

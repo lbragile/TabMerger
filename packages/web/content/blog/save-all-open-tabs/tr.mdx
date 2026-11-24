@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'Chrome, Edge ve Firefox’ta tek kısayol, başlangıçta geri yükleme ve kapatılan sekmeleri kurtarma.',
   dek: 'Açık her sekmeyi saklamanın beş yolu ve her birinin sessizce kaçırdığı tek şey.',
   published: '2026-11-19',
-  updated: '2026-11-21',
+  updated: '2026-11-24',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D yalnızca geçerli pencereyi kaydeder.', source: '19 Kasım 2026’da üçünde de test edildi' },
@@ -264,14 +264,14 @@ Yerleşik yöntemlerin her biri aynı anda yalnızca bir pencereyi, bir yeniden 
   head={['Kısayol', 'Kaydettikleri']}
   keysColumn={0}
   rows={[
-    ['Ctrl+Shift+P', 'Penceredeki diğer tüm sekmeler'],
-    ['Ctrl+Shift+S', 'Geçerli sekme'],
-    ['Ctrl+Shift+K', 'Soldaki sekmeler'],
-    ['Ctrl+Shift+U', 'Sağdaki sekmeler'],
+    ['Alt+Shift+O', 'Penceredeki diğer tüm sekmeler'],
+    ['Alt+Shift+S', 'Geçerli sekme'],
+    ['Alt+Shift+Comma', 'Soldaki sekmeler'],
+    ['Alt+Shift+Period', 'Sağdaki sekmeler'],
   ]}
 />
 
-Mac’te <Kbd>⌘</Kbd> kullanın. Her kısayol nereye kaydedileceğini sorar; **Hızlı Kayıt (yeni grup)** hemen bir grup oluşturur. Firefox’ta <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> gizli pencere açar, bu yüzden `about:addons` → “Uzantı kısayollarını yönet” (Manage Extension Shortcuts) altında başka bir tuş seçin. Edge, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd>, <Kbd>U</Kbd> ve <Kbd>P</Kbd> kısayollarını kendi komutları için ayırır; bu yüzden bu üçüne `edge://extensions/shortcuts` adresinden başka tuşlar atayın. Nasıl yapılacağını [sekme klavye kısayolları rehberimiz](/blog/tab-keyboard-shortcuts) gösteriyor.
+Mac’te <Kbd>Alt</Kbd> yerine <Kbd>Control</Kbd> tuşuna basın. Her kısayol nereye kaydedileceğini sorar; **Hızlı Kayıt (yeni grup)** hemen bir grup oluşturur. Bu tuşlar yeni kurulumlarda gelir; daha önceki bir kurulum eski tuşlarını korur ve hepsini tarayıcınızın kısayollar sayfasında değiştirebilirsiniz. Nasıl yapılacağını [sekme klavye kısayolları rehberimiz](/blog/tab-keyboard-shortcuts) gösteriyor.
 
 ### Yanlışlıkla bir şey mi kapattınız?
 

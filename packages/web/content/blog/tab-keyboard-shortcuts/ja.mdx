@@ -1,0 +1,276 @@
+export const post = {
+  slug: 'tab-keyboard-shortcuts',
+  title: 'Chrome・Edge・Firefox のタブのキーボード ショートカット',
+  seoTitle: 'Chrome のタブ ショートカット（Edge・Firefox も）：完全リファレンス',
+  description:
+    'Chrome、Edge、Firefox で覚えておきたいタブのショートカットをすべて紹介。タブの切り替え、閉じたタブやウィンドウの復元、タブの検索、すべてのタブのブックマークまで、Windows と Mac の両方で。',
+  shareSummary: 'Chrome、Edge、Firefox でタブの切り替え、復元、検索、保存をキーボードで。',
+  dek: '3 つのブラウザをひとつの表で。Mac での違いと、拡張機能のショートカットを確実に設定する方法も。',
+  published: '2026-11-22',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+T は 3 つとも最後に閉じたタブを開き直します。', source: 'Chrome と Edge のヘルプ、Firefox 159 のキー定義' },
+    { text: 'Firefox は Ctrl+Shift+N で閉じたウィンドウを開き直します。', source: 'Firefox 159 のキー定義' },
+    {
+      text: 'Chrome の Ctrl+9 は 9 番目ではなく最後のタブに移動します。',
+      source: 'Chrome ヘルプ',
+      href: 'https://support.google.com/chrome/answer/157179',
+    },
+    { text: 'Edge は Ctrl+Shift+K、U、P を自分で使うため、拡張機能には割り当てられません。', source: 'Microsoft サポート、Edge 158' },
+  ],
+  faq: [
+    {
+      question: 'キーボードでタブを切り替えるには？',
+      answer:
+        'Chrome、Edge、Firefox では、Ctrl+Tab で次のタブ、Ctrl+Shift+Tab で前のタブに移動します。Ctrl+1～Ctrl+8 は位置でタブに移動し、Ctrl+9 は最後のタブに移動します。',
+    },
+    {
+      question: '閉じたタブを開き直すには？',
+      answer:
+        'Ctrl+Shift+T（Mac では ⌘+Shift+T）を押します。もう一度押すと、さらに前に閉じたものに戻ります。Chrome では閉じたウィンドウも戻ります。Firefox では Ctrl+Shift+N で閉じたウィンドウを開き直せます。',
+    },
+    {
+      question: '開いているタブを検索できますか？',
+      answer: 'はい。Ctrl+Shift+A で、Chrome ではタブ検索が開き、Firefox ではすべてのタブが一覧表示されます。Chrome ではアドレスバーに @タブ（英語版 Chrome では @tabs）と入力しても検索できます。',
+    },
+    {
+      question: '拡張機能のショートカットが効かないのはなぜ？',
+      answer:
+        '提案されたショートカットがブラウザ自身のものと重なると、ブラウザはそれを未設定のままにします。chrome://extensions/shortcuts か edge://extensions/shortcuts を確認して、別のキーを選んでください。',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp', alt: 'Edge の拡張機能のキーボード ショートカット ページの TabMerger。4 つの保存コマンドすべてに Alt+Shift+S、Alt+Shift+O、Alt+Shift+Comma、Alt+Shift+Period が設定済み' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp', alt: 'TabMerger の検索で docs と入力し、一致する開いているタブと保存済みのタブが一覧表示された状態、ライトテーマ' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-dark.webp', alt: 'TabMerger の検索で docs と入力し、一致する開いているタブと保存済みのタブが一覧表示された状態、ダークテーマ' },
+  ],
+  tags: ['browser-tips', 'cross-browser', 'chrome', 'edge', 'firefox', 'tab-management'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-20',
+      note: 'Firefox の項目は Firefox 159.0.1 自体のキー定義から読み取りました。このページは自動チェックをブロックしました。',
+    },
+  ],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp' },
+  ogImage: { src: '/blog/tab-keyboard-shortcuts/og.png', alt: 'Chrome・Edge・Firefox のタブのキーボード ショートカット：TabMerger のガイド。TabMerger の検索を開いた画面' },
+  toc: [
+    { id: 'quick', label: '簡単な答え' },
+    { id: 'table', label: 'ブラウザ別のショートカット' },
+    { id: 'reopen', label: '閉じたタブを開き直す' },
+    { id: 'extensions', label: '拡張機能のショートカット' },
+    { id: 'tabmerger', label: 'TabMerger のキー' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+  browserSections: ['table', 'reopen', 'extensions'],
+  browserFact: {
+    label: '拡張機能のショートカット',
+    values: { chrome: 'chrome://extensions/shortcuts', edge: 'edge://extensions/shortcuts', firefox: 'about:addons' },
+  },
+}
+
+<QuickAnswer>
+
+<Kbd>Ctrl</Kbd>+<Kbd>Tab</Kbd> と <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Tab</Kbd> で次と前のタブに切り替え、<Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> で位置を指定してタブに移動、<Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> で閉じて、<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> で元に戻せます。これは Windows と Linux の Chrome、Edge、Firefox で共通です。Mac では <Kbd>Ctrl</Kbd> の代わりに <Kbd>⌘</Kbd> を使います。[TabMerger](/features) を入れると、さらに 2 つのキーが大きな仕事をします。キーボードから直接タブを保存するキーと、開いている・保存した・閉じたタブを問わず見つけ出す <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> です。
+
+</QuickAnswer>
+
+<InstallCta>キーボードから手を離さずにタブを保存。Chrome、Edge、Firefox 向けに無料。</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="table" title="あなたのブラウザにはどんなタブのショートカットがある？">
+
+まず Windows と Linux、次に Mac で変わる点です。各項目はブラウザ自身のヘルプページから、Firefox は Firefox 159.0.1 本体のキー定義から取っています。
+
+<BrowserPanels section="table">
+<BrowserPanel browser="chrome">
+
+<ComparisonTable
+  head={['操作', 'ショートカット']}
+  rowHeaders
+  rows={[
+    ['新しいタブ', 'Ctrl+T'],
+    ['タブを閉じる', 'Ctrl+W'],
+    ['閉じたタブとウィンドウを開き直す', 'Ctrl+Shift+T'],
+    ['次のタブ', 'Ctrl+Tab または Ctrl+PgDn'],
+    ['前のタブ', 'Ctrl+Shift+Tab または Ctrl+PgUp'],
+    ['1～8 番目のタブ', 'Ctrl+1 … Ctrl+8'],
+    ['最後のタブ', 'Ctrl+9'],
+    ['開いているタブを検索', 'Ctrl+Shift+A'],
+    ['すべてのタブをブックマーク', 'Ctrl+Shift+D'],
+    ['履歴', 'Ctrl+H'],
+    ['ウィンドウを閉じる', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+アドレスバーから開いているタブを検索することもできます。`@タブ`（英語版 Chrome では `@tabs`）と入力して <Kbd>Tab</Kbd> を押します。保存したタブや閉じたタブも検索したいなら、[数百のタブから 1 つを見つける方法](/blog/find-a-tab-among-hundreds)をご覧ください。
+
+**Mac では**、表で <Kbd>Ctrl</Kbd> となっているところに <Kbd>⌘</Kbd> を使います。Chrome のヘルプによる例外は次のとおりです。次と前のタブは <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>→</Kbd> と <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>←</Kbd>、履歴は <Kbd>⌘</Kbd>+<Kbd>Y</Kbd>、ブックマーク マネージャは <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>B</Kbd> です。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+<ComparisonTable
+  head={['操作', 'ショートカット']}
+  rowHeaders
+  rows={[
+    ['新しいタブ', 'Ctrl+T'],
+    ['タブを閉じる', 'Ctrl+W'],
+    ['最後に閉じたタブを開き直す', 'Ctrl+Shift+T'],
+    ['次のタブ', 'Ctrl+Tab または Ctrl+PgDn'],
+    ['前のタブ', 'Ctrl+Shift+Tab または Ctrl+PgUp'],
+    ['1～8 番目のタブ', 'Ctrl+1 … Ctrl+8'],
+    ['最後のタブ', 'Ctrl+9'],
+    ['すべてのタブをお気に入りに追加', 'Ctrl+Shift+D'],
+    ['履歴', 'Ctrl+H'],
+    ['ウィンドウを閉じる', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+Edge のショートカット一覧には、開いているタブを検索するキーも、閉じたウィンドウを開き直すキーもありません。
+
+**Mac では**、表で <Kbd>Ctrl</Kbd> となっているところに <Kbd>⌘</Kbd> を使います。履歴は <Kbd>⌘</Kbd>+<Kbd>Y</Kbd> です。次と前のタブについて、Microsoft は <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↓</Kbd> と <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↑</Kbd> を挙げています。
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+<ComparisonTable
+  head={['操作', 'ショートカット']}
+  rowHeaders
+  rows={[
+    ['新しいタブ', 'Ctrl+T'],
+    ['タブを閉じる', 'Ctrl+W'],
+    ['閉じたタブを開き直す', 'Ctrl+Shift+T'],
+    ['閉じたウィンドウを開き直す', 'Ctrl+Shift+N'],
+    ['次のタブ', 'Ctrl+Tab または Ctrl+PgDn'],
+    ['前のタブ', 'Ctrl+Shift+Tab または Ctrl+PgUp'],
+    ['1～8 番目のタブ', 'Ctrl+1 … Ctrl+8'],
+    ['最後のタブ', 'Ctrl+9'],
+    ['タブを一覧表示', 'Ctrl+Shift+A'],
+    ['すべてのタブをブックマーク', 'Ctrl+Shift+D'],
+    ['履歴サイドバー', 'Ctrl+H'],
+    ['履歴（ブラウジングライブラリー）', 'Ctrl+Shift+H'],
+    ['ウィンドウを閉じる', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+**Mac では**、Firefox はこれらをシステムの主な修飾キーで定義しているので、表で <Kbd>Ctrl</Kbd> となっているところで <Kbd>⌘</Kbd> を押します。
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="reopen" title="うっかり閉じたタブを開き直すには？">
+
+<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>（Mac では <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>）を押します。押すたびに 1 つ前に戻ります。何が戻るかはブラウザによって違います。
+
+<BrowserPanels section="reopen">
+<BrowserPanel browser="chrome">
+
+Chrome はタブ*と*ウィンドウを閉じた順に開き直すので、なくしたウィンドウが戻るまで押し続けてください。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge のドキュメントでは、<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> は最後に閉じたタブを開き直すキーです。閉じたウィンドウは、履歴（<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>）を開いて「**Recently closed**」（最近閉じたもの）を確認してください。
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox はリストを分けています。タブは <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>、ウィンドウは <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> です。Firefox 159 では <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> が、最後に閉じたタブ、ウィンドウ、セッションのいずれかを復元するコマンドに割り当てられているので、前回のセッションを戻すこともあります。
+
+</BrowserPanel>
+</BrowserPanels>
+
+このリストがさかのぼれる範囲には限りがあります。セッションをまるごと失ったときは、[クラッシュ後にタブを復元する方法](/blog/restore-tabs-after-crash)をご覧ください。そもそも失わないためには、大きなものを閉じる前に[開いているタブをすべて保存](/blog/save-all-open-tabs)しておきましょう。
+
+</Section>
+
+<Section id="extensions" title="拡張機能のショートカットを設定するには？">
+
+拡張機能はショートカットを提案できますが、最終的に決めるのはブラウザです。ブラウザ自身のキーと重なる提案キーは、警告なしに「**Not set**」（未設定）のままになります。ブラウザのショートカット ページを開き、コマンドの横の鉛筆をクリックして、使いたいキーを押してください。
+
+<BrowserPanels section="extensions">
+<BrowserPanel browser="chrome">
+
+アドレスバーに `chrome://extensions/shortcuts` を貼り付けます。各コマンドには範囲のメニューもあり、「**In Chrome**」（Chrome 内のみ）か、Chrome が前面にないときも動かすなら「**Global**」（どこでも）を選べます。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+アドレスバーに `edge://extensions/shortcuts` を貼り付けます。
+
+Edge は <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd>（タブの複製）、<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>U</Kbd>（Read Aloud、音声読み上げ）、<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd>（システムのダイアログで印刷）を自分用に確保しているため、これらを提案する拡張機能のコマンドは Edge 158 では「**Not set**」で始まります。Edge 158 は、Microsoft の一覧に載っていない <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd> のキーもいくつか受け付けません。たとえば <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> や <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Z</Kbd> です。TabMerger の保存コマンドはこれらをすべて避けているので、新しくインストールすると 4 つとも設定済みになります。
+
+<AnnotatedFigure src="/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp" alt="Edge の拡張機能のキーボード ショートカット ページの TabMerger。4 つの保存コマンドすべてに Alt+Shift+S、Alt+Shift+O、Alt+Shift+Comma、Alt+Shift+Period が設定済み" width={852} height={460} boxes={[{ id: 'save-shortcuts' }]} source="edge://extensions/shortcuts · Edge 158.0.4370.33">Edge 158 に TabMerger を新しくインストールした状態。4 つの保存コマンドすべてにキーが設定され、直すところはありません。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+`about:addons` を開き、歯車メニューをクリックして「**拡張機能のショートカットキーの管理**」（Manage Extension Shortcuts）を選びます。Firefox では <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> がプライベートウィンドウを開くキーなので、これを提案するものには別のキーを選んでください。
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>ショートカット ページは警告を出しません。ショートカットが「何もしない」ときは、まずここを確認しましょう。</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger のキー">
+
+私たちの無料拡張機能 [TabMerger](/features) は、Chrome、Edge、Firefox で、開かずにキーボードから直接タブを保存できます。4 つの保存コマンドそれぞれにキーを提案しており、どれも Chrome、Edge、Firefox 自身のショートカットと重ならないように選んでいます。どのキーも、ブラウザのショートカット ページ（上記）で変更できます。
+
+<ComparisonTable
+  head={['提案キー', '保存する対象']}
+  keysColumn={0}
+  rows={[
+    ['Alt+Shift+S', '現在のタブ'],
+    ['Alt+Shift+O', 'ウィンドウ内のほかのタブすべて'],
+    ['Alt+Shift+Comma', '左側のタブ'],
+    ['Alt+Shift+Period', '右側のタブ'],
+  ]}
+/>
+
+Mac では <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd> の代わりに <Kbd>Control</Kbd>+<Kbd>Shift</Kbd> を使います。たとえば <Kbd>Control</Kbd>+<Kbd>Shift</Kbd>+<Kbd>S</Kbd> で現在のタブを保存します。これは新しくインストールしたときのキーです。アップデートではショートカットは変わらないので、これらのキーより前に TabMerger をインストールしていた場合は、「**Not set**」も含めて元のキーのままです。ショートカット ページで設定してください。
+
+ポップアップ内では、<Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>（<Kbd>⌘</Kbd>+<Kbd>K</Kbd>）で、開いているタブ、保存したタブ、最近閉じたタブをひとつのリストで検索できます。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tab-keyboard-shortcuts/tm-search" alt="TabMerger の検索で docs と入力し、一致する開いているタブと保存済みのタブが一覧表示された状態、ライトテーマ" darkAlt="TabMerger の検索で docs と入力し、一致する開いているタブと保存済みのタブが一覧表示された状態、ダークテーマ" boxes={[{ id: 'search-input', label: '検索' }]} source="TabMerger 3.16.1">Ctrl+K を押して入力するだけ。開いているタブからも保存したタブからも結果が出ます。</ThemedScreenshot>
+
+<InstallCta>Chrome、Edge、Firefox 向けに無料。始めるのにアカウントは不要です。</InstallCta>
+
+タブを増やしすぎないための習慣は[タブが多すぎるときの整理ガイド](/blog/manage-too-many-tabs)に、ショートカット以外に各ブラウザでできることは [Chrome・Edge・Firefox のタブ機能比較](/blog/browser-tab-features-compared)にまとめています。
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

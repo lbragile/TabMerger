@@ -135,3 +135,10 @@ Run the template check again just before writing into the repo, to confirm en.md
 ]*"` for attributes.
 - Gloss checks must look only at the numbered step lines, because shared figure alts and captions repeat the English names.
 - Korean particle after 중복 탭 제거 (vowel ending) is 는/가, not 은/이.
+
+**Real captures with no page to measure** (e.g. PR screenshots): crop with the `CROPS` convention, find the box by scanning pixels, convert it with `toImageBoxes` from `boxes.mjs`, and check it with `composite.mjs <out> <images> <boxes.json>`, which needs no dev server.
+
+- Compare `Kbd` keys per body line as a sorted list, not one sequence: word order differs between languages.
+- RTL: two English names with only a comma or space between them form one LTR run. Hebrew: put a prefix on each name ("של Chrome, של Edge ושל Firefox"); Persian: put a Persian word between them.
+- Surgical edits to older translations: compare stats against `git show HEAD:…`, not English; several already differ from English in bold and line counts.
+- The :3000 dev server can be down even when a brief says it runs; check with `netstat` before planning a render.

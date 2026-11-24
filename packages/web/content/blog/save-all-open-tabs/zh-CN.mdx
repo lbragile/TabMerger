@@ -7,7 +7,7 @@ export const post = {
   shareSummary: '一个快捷键保存、启动时恢复、找回已关闭的标签页，适用于 Chrome、Edge 和 Firefox。',
   dek: '保留所有打开标签页的五种方法，以及每种方法悄悄漏掉的那一点。',
   published: '2026-11-19',
-  updated: '2026-11-21',
+  updated: '2026-11-24',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D 只保存当前窗口。', source: '已在三款浏览器中测试，2026 年 11 月 19 日' },
@@ -260,14 +260,14 @@ Firefox 在“历史”（History）菜单的“最近关闭的标签页”和�
   head={['快捷键', '保存的内容']}
   keysColumn={0}
   rows={[
-    ['Ctrl+Shift+P', '窗口中的其他所有标签页'],
-    ['Ctrl+Shift+S', '当前标签页'],
-    ['Ctrl+Shift+K', '左侧的标签页'],
-    ['Ctrl+Shift+U', '右侧的标签页'],
+    ['Alt+Shift+O', '窗口中的其他所有标签页'],
+    ['Alt+Shift+S', '当前标签页'],
+    ['Alt+Shift+Comma', '左侧的标签页'],
+    ['Alt+Shift+Period', '右侧的标签页'],
   ]}
 />
 
-在 Mac 上用 <Kbd>⌘</Kbd>。每个快捷键都会询问保存到哪里；选择 **快速保存（新分组）** 会当场新建一个分组。在 Firefox 中，<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> 会打开隐私窗口，所以请在 `about:addons` 的“管理扩展快捷键”（Manage Extension Shortcuts）中另选一个按键。Edge 将 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd>、<Kbd>U</Kbd> 和 <Kbd>P</Kbd> 留给自己的命令，所以请在 `edge://extensions/shortcuts` 为这三个快捷键另设按键；具体做法见我们的[标签页键盘快捷键参考](/blog/tab-keyboard-shortcuts)。
+在 Mac 上，用 <Kbd>Control</Kbd> 代替 <Kbd>Alt</Kbd>。每个快捷键都会询问保存到哪里；选择 **快速保存（新分组）** 会当场新建一个分组。新安装会使用这些按键；之前安装的会保留原有按键。每个按键都可以在浏览器的快捷键页面中更改，具体做法见我们的[标签页键盘快捷键参考](/blog/tab-keyboard-shortcuts)。
 
 ### 不小心关掉了？
 

@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'Jeden skrót, przywracanie przy starcie i odzyskiwanie zamkniętych kart w Chrome, Edge i Firefoksie.',
   dek: 'Pięć sposobów na zachowanie wszystkich otwartych kart i to, co każdy z nich po cichu pomija.',
   published: '2026-11-19',
-  updated: '2026-11-21',
+  updated: '2026-11-24',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D zapisuje tylko bieżące okno.', source: 'Sprawdzone we wszystkich trzech, 19 lis 2026' },
@@ -264,14 +264,14 @@ Każda z wbudowanych metod obejmuje jedno okno, jedno ponowne uruchomienie albo 
   head={['Skrót', 'Zapisuje']}
   keysColumn={0}
   rows={[
-    ['Ctrl+Shift+P', 'Wszystkie pozostałe karty w oknie'],
-    ['Ctrl+Shift+S', 'Bieżącą kartę'],
-    ['Ctrl+Shift+K', 'Karty po lewej'],
-    ['Ctrl+Shift+U', 'Karty po prawej'],
+    ['Alt+Shift+O', 'Wszystkie pozostałe karty w oknie'],
+    ['Alt+Shift+S', 'Bieżącą kartę'],
+    ['Alt+Shift+Comma', 'Karty po lewej'],
+    ['Alt+Shift+Period', 'Karty po prawej'],
   ]}
 />
 
-Na Macu użyj <Kbd>⌘</Kbd>. Każdy skrót pyta, gdzie zapisać; **Szybki Zapis (nowa grupa)** od razu tworzy grupę. W Firefoksie <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> otwiera okno prywatne, więc wybierz inny klawisz w `about:addons` → „Manage Extension Shortcuts”. Edge rezerwuje <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd>, <Kbd>U</Kbd> i <Kbd>P</Kbd> dla własnych poleceń, więc przypisz tym trzem skrótom inne klawisze w `edge://extensions/shortcuts`; jak to zrobić, pokazuje nasza [ściągawka skrótów klawiszowych do kart](/blog/tab-keyboard-shortcuts).
+Na Macu zamiast <Kbd>Alt</Kbd> naciśnij <Kbd>Control</Kbd>. Każdy skrót pyta, gdzie zapisać; **Szybki Zapis (nowa grupa)** od razu tworzy grupę. Takie klawisze dostaje nowa instalacja; starsza zachowuje dotychczasowe, a każdy z nich zmienisz na stronie skrótów przeglądarki; jak to zrobić, pokazuje nasza [ściągawka skrótów klawiszowych do kart](/blog/tab-keyboard-shortcuts).
 
 ### Coś zamknięte przez pomyłkę?
 

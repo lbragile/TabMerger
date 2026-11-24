@@ -1,0 +1,276 @@
+export const post = {
+  slug: 'tab-keyboard-shortcuts',
+  title: 'Atalhos de teclado para abas no Chrome, Edge e Firefox',
+  seoTitle: 'Atalhos de abas do Chrome (e Edge, Firefox): referência completa',
+  description:
+    'Todos os atalhos de abas que valem a pena no Chrome, Edge e Firefox: trocar de aba, reabrir abas e janelas fechadas, pesquisar abas e adicionar todas aos favoritos, no Windows e no Mac.',
+  shareSummary: 'Troque, reabra, pesquise e salve abas pelo teclado no Chrome, Edge e Firefox.',
+  dek: 'Uma tabela para os três navegadores, as diferenças no Mac e como definir atalhos de extensões que realmente fiquem.',
+  published: '2026-11-22',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+T reabre a última aba fechada nos três.', source: 'Ajuda do Chrome e do Edge; teclas do Firefox 159' },
+    { text: 'O Firefox reabre uma janela fechada com Ctrl+Shift+N.', source: 'Teclas do Firefox 159' },
+    {
+      text: 'No Chrome, Ctrl+9 vai para a última aba, não para a nona.',
+      source: 'Ajuda do Chrome',
+      href: 'https://support.google.com/chrome/answer/157179',
+    },
+    { text: 'O Edge reserva Ctrl+Shift+K, U e P, então as extensões não podem usá-los.', source: 'Suporte da Microsoft; Edge 158' },
+  ],
+  faq: [
+    {
+      question: 'Como trocar de aba pelo teclado?',
+      answer:
+        'Ctrl+Tab vai para a próxima aba e Ctrl+Shift+Tab para a anterior no Chrome, Edge e Firefox. Ctrl+1 a Ctrl+8 pulam para uma aba pela posição; Ctrl+9 vai para a última aba.',
+    },
+    {
+      question: 'Como reabrir uma aba fechada?',
+      answer:
+        'Pressione Ctrl+Shift+T (⌘+Shift+T no Mac). Pressione de novo para continuar voltando. No Chrome, ele também traz de volta janelas fechadas; no Firefox, Ctrl+Shift+N reabre uma janela fechada.',
+    },
+    {
+      question: 'Posso pesquisar minhas abas abertas?',
+      answer: 'Sim. Ctrl+Shift+A abre a Pesquisa em Todas as Guias no Chrome e lista todas as abas no Firefox. No Chrome, você também pode digitar @tabs na barra de endereço.',
+    },
+    {
+      question: 'Por que o atalho de uma extensão não funciona?',
+      answer:
+        'O navegador deixa um atalho sugerido sem definição quando ele conflita com um dos seus. Confira chrome://extensions/shortcuts ou edge://extensions/shortcuts e escolha outra tecla.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp', alt: 'Página de atalhos de teclado de extensões do Edge para o TabMerger: os quatro comandos de salvar definidos, como Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma e Alt+Shift+Period' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp', alt: 'Pesquisa do TabMerger aberta com a busca docs, listando as abas abertas e salvas correspondentes, tema claro' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-dark.webp', alt: 'Pesquisa do TabMerger aberta com a busca docs, listando as abas abertas e salvas correspondentes, tema escuro' },
+  ],
+  tags: ['browser-tips', 'cross-browser', 'chrome', 'edge', 'firefox', 'tab-management'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-20',
+      note: 'As entradas do Firefox foram lidas nas próprias definições de teclas do Firefox 159.0.1; esta página bloqueou nossa verificação automática.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp' },
+  ogImage: { src: '/blog/tab-keyboard-shortcuts/og.png', alt: 'Atalhos de teclado para abas no Chrome, Edge e Firefox: um guia do TabMerger, com a pesquisa do TabMerger aberta' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'table', label: 'Atalhos por navegador' },
+    { id: 'reopen', label: 'Reabrir abas fechadas' },
+    { id: 'extensions', label: 'Atalhos de extensões' },
+    { id: 'tabmerger', label: 'As teclas do TabMerger' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+  browserSections: ['table', 'reopen', 'extensions'],
+  browserFact: {
+    label: 'Atalhos de extensões',
+    values: { chrome: 'chrome://extensions/shortcuts', edge: 'edge://extensions/shortcuts', firefox: 'about:addons' },
+  },
+}
+
+<QuickAnswer>
+
+<Kbd>Ctrl</Kbd>+<Kbd>Tab</Kbd> e <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Tab</Kbd> vão para a próxima aba e para a anterior, <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> pulam para uma aba pela posição, <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> fecha a aba e <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> traz de volta. Eles funcionam igual no Chrome, Edge e Firefox no Windows e no Linux; no Mac, use <Kbd>⌘</Kbd> em vez de <Kbd>Ctrl</Kbd>. Adicione o [TabMerger](/features) e mais duas teclas fazem o trabalho pesado: salvar abas direto pelo teclado e <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> para achar qualquer aba, aberta, salva ou fechada.
+
+</QuickAnswer>
+
+<InstallCta>Salve abas sem tirar as mãos do teclado. Grátis para Chrome, Edge e Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="table" title="Quais atalhos de abas o seu navegador tem?">
+
+Primeiro Windows e Linux, depois o que muda no Mac. Cada item vem da página de ajuda do próprio navegador ou, no caso do Firefox, das definições de teclas dentro do próprio Firefox 159.0.1.
+
+<BrowserPanels section="table">
+<BrowserPanel browser="chrome">
+
+<ComparisonTable
+  head={['Ação', 'Atalho']}
+  rowHeaders
+  rows={[
+    ['Nova aba', 'Ctrl+T'],
+    ['Fechar aba', 'Ctrl+W'],
+    ['Reabrir abas e janelas fechadas', 'Ctrl+Shift+T'],
+    ['Próxima aba', 'Ctrl+Tab ou Ctrl+PgDn'],
+    ['Aba anterior', 'Ctrl+Shift+Tab ou Ctrl+PgUp'],
+    ['Abas 1 a 8', 'Ctrl+1 … Ctrl+8'],
+    ['Última aba', 'Ctrl+9'],
+    ['Pesquisar abas abertas', 'Ctrl+Shift+A'],
+    ['Adicionar todas as abas aos favoritos', 'Ctrl+Shift+D'],
+    ['Histórico', 'Ctrl+H'],
+    ['Fechar janela', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+Você também pode pesquisar abas abertas pela barra de endereço: digite `@tabs` e pressione <Kbd>Tab</Kbd>. Para pesquisar também as salvas e as fechadas, veja [como encontrar uma aba entre centenas](/blog/find-a-tab-among-hundreds).
+
+**No Mac**, use <Kbd>⌘</Kbd> onde a tabela diz <Kbd>Ctrl</Kbd>, com estas exceções da ajuda do Chrome: próxima aba e aba anterior são <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>→</Kbd> e <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>←</Kbd>, o histórico é <Kbd>⌘</Kbd>+<Kbd>Y</Kbd> e o gerenciador de favoritos é <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>B</Kbd>.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+<ComparisonTable
+  head={['Ação', 'Atalho']}
+  rowHeaders
+  rows={[
+    ['Nova aba', 'Ctrl+T'],
+    ['Fechar aba', 'Ctrl+W'],
+    ['Reabrir a última aba fechada', 'Ctrl+Shift+T'],
+    ['Próxima aba', 'Ctrl+Tab ou Ctrl+PgDn'],
+    ['Aba anterior', 'Ctrl+Shift+Tab ou Ctrl+PgUp'],
+    ['Abas 1 a 8', 'Ctrl+1 … Ctrl+8'],
+    ['Última aba', 'Ctrl+9'],
+    ['Adicionar todas as abas aos Favoritos do Edge', 'Ctrl+Shift+D'],
+    ['Histórico', 'Ctrl+H'],
+    ['Fechar janela', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+A lista de atalhos do Edge não tem tecla para pesquisar abas abertas nem para reabrir uma janela fechada.
+
+**No Mac**, use <Kbd>⌘</Kbd> onde a tabela diz <Kbd>Ctrl</Kbd>; o histórico é <Kbd>⌘</Kbd>+<Kbd>Y</Kbd>. A Microsoft indica <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↓</Kbd> e <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↑</Kbd> para a próxima aba e a anterior.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+<ComparisonTable
+  head={['Ação', 'Atalho']}
+  rowHeaders
+  rows={[
+    ['Nova aba', 'Ctrl+T'],
+    ['Fechar aba', 'Ctrl+W'],
+    ['Reabrir aba fechada', 'Ctrl+Shift+T'],
+    ['Reabrir janela fechada', 'Ctrl+Shift+N'],
+    ['Próxima aba', 'Ctrl+Tab ou Ctrl+PgDn'],
+    ['Aba anterior', 'Ctrl+Shift+Tab ou Ctrl+PgUp'],
+    ['Abas 1 a 8', 'Ctrl+1 … Ctrl+8'],
+    ['Última aba', 'Ctrl+9'],
+    ['Listar todas as abas', 'Ctrl+Shift+A'],
+    ['Adicionar todas as abas aos favoritos', 'Ctrl+Shift+D'],
+    ['Histórico na barra lateral', 'Ctrl+H'],
+    ['Histórico na biblioteca', 'Ctrl+Shift+H'],
+    ['Fechar janela', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+**No Mac**, o Firefox define esses atalhos com a tecla modificadora principal do sistema, então pressione <Kbd>⌘</Kbd> onde a tabela diz <Kbd>Ctrl</Kbd>.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="reopen" title="Como reabrir uma aba que fechei sem querer?">
+
+Pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> no Mac). Cada vez que você pressiona, volta mais um passo. O que volta depende do navegador:
+
+<BrowserPanels section="reopen">
+<BrowserPanel browser="chrome">
+
+O Chrome reabre abas *e* janelas, na ordem em que foram fechadas, então continue pressionando até a janela perdida voltar.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+O Edge documenta <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> como reabrir a última aba fechada. Para uma janela fechada, abra o histórico (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) e procure em **Recently closed** (fechadas recentemente).
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+O Firefox mantém listas separadas: <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> para abas e <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> para janelas. No Firefox 159, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> está ligado a um comando que restaura a última aba, janela ou sessão fechada, então também pode trazer de volta a sessão anterior.
+
+</BrowserPanel>
+</BrowserPanels>
+
+A lista só vai até certo ponto. Para uma sessão inteira perdida, veja [como restaurar abas depois de uma falha](/blog/restore-tabs-after-crash). Para não perdê-las logo de saída, [salve todas as suas abas abertas](/blog/save-all-open-tabs) antes de fechar algo grande.
+
+</Section>
+
+<Section id="extensions" title="Como definir atalhos para extensões?">
+
+As extensões podem sugerir atalhos, mas quem decide é o navegador: uma tecla sugerida que conflita com uma do próprio navegador fica como **Not set** (não definido), sem aviso. Abra a página de atalhos do seu navegador, clique no lápis ao lado de um comando e pressione as teclas que quiser.
+
+<BrowserPanels section="extensions">
+<BrowserPanel browser="chrome">
+
+Cole `chrome://extensions/shortcuts` na barra de endereço. Cada comando também tem um menu de escopo: **In Chrome** (só no Chrome) ou **Global** (em todo lugar), para funcionar mesmo quando o Chrome não está em primeiro plano.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Cole `edge://extensions/shortcuts` na barra de endereço.
+
+O Edge reserva <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd> (duplicar aba), <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>U</Kbd> (Read Aloud, leitura em voz alta) e <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> (imprimir com a caixa de diálogo do sistema) para si, então um comando de extensão que sugira um deles começa como **Not set** no Edge 158. O Edge 158 também recusa algumas teclas <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd> que a lista da Microsoft não menciona, como <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> e <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Z</Kbd>. Os comandos de salvar do TabMerger evitam todas elas, então uma instalação nova já vem com os quatro definidos:
+
+<AnnotatedFigure src="/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp" alt="Página de atalhos de teclado de extensões do Edge para o TabMerger: os quatro comandos de salvar definidos, como Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma e Alt+Shift+Period" width={852} height={460} boxes={[{ id: 'save-shortcuts' }]} source="edge://extensions/shortcuts · Edge 158.0.4370.33">Uma instalação nova do TabMerger no Edge 158: os quatro comandos de salvar têm suas teclas, sem nada para corrigir.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Abra `about:addons`, clique no menu da engrenagem e escolha **Gerenciar atalhos de extensões** (Manage Extension Shortcuts). Lembre que <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> abre uma janela privativa no Firefox, então escolha outra tecla para tudo o que sugerir esse atalho.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>a página de atalhos não avisa você. Se um atalho “não faz nada”, confira ali primeiro.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="As teclas do TabMerger">
+
+O [TabMerger](/features), nossa extensão gratuita para Chrome, Edge e Firefox, salva abas direto pelo teclado, sem precisar abri-lo. Ele sugere uma tecla para cada um dos seus quatro comandos de salvar, escolhidas para evitar os atalhos do próprio Chrome, Edge e Firefox, e você pode mudar qualquer uma na página de atalhos do seu navegador (acima):
+
+<ComparisonTable
+  head={['Tecla sugerida', 'Salva']}
+  keysColumn={0}
+  rows={[
+    ['Alt+Shift+S', 'A aba atual'],
+    ['Alt+Shift+O', 'Todas as outras abas da janela'],
+    ['Alt+Shift+Comma', 'As abas à esquerda'],
+    ['Alt+Shift+Period', 'As abas à direita'],
+  ]}
+/>
+
+No Mac, elas usam <Kbd>Control</Kbd>+<Kbd>Shift</Kbd> em vez de <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>: <Kbd>Control</Kbd>+<Kbd>Shift</Kbd>+<Kbd>S</Kbd> salva a aba atual. Essas são as teclas de uma instalação nova. As atualizações não mudam atalhos, então, se você instalou o TabMerger antes dessas teclas chegarem, ele mantém as que tinha, incluindo as que estão como **Not set**: defina-as na página de atalhos.
+
+Dentro do pop-up, <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd>) pesquisa abas abertas, salvas e fechadas recentemente numa lista só.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tab-keyboard-shortcuts/tm-search" alt="Pesquisa do TabMerger aberta com a busca docs, listando as abas abertas e salvas correspondentes, tema claro" darkAlt="Pesquisa do TabMerger aberta com a busca docs, listando as abas abertas e salvas correspondentes, tema escuro" boxes={[{ id: 'search-input', label: 'Pesquisa' }]} source="TabMerger 3.16.1">Ctrl+K e digite: os resultados vêm tanto das abas abertas quanto das salvas.</ThemedScreenshot>
+
+<InstallCta>Grátis para Chrome, Edge e Firefox. Não precisa de conta para começar.</InstallCta>
+
+Mais hábitos para manter o número de abas baixo estão no nosso [guia para lidar com abas demais](/blog/manage-too-many-tabs), e o que cada navegador oferece além dos atalhos está em [recursos de abas do Chrome, Edge e Firefox comparados](/blog/browser-tab-features-compared).
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

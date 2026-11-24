@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'קיצור מקשים אחד, שחזור בהפעלה והחזרת כרטיסיות שנסגרו ב-Chrome, ב-Edge וב-Firefox.',
   dek: 'חמש דרכים לשמור כל כרטיסייה פתוחה, והדבר שכל אחת מהן מפספסת בשקט.',
   published: '2026-11-19',
-  updated: '2026-11-21',
+  updated: '2026-11-24',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'הקיצור Ctrl+Shift+D שומר את החלון הנוכחי בלבד.', source: 'נבדק בשלושת הדפדפנים, 19 בנובמבר 2026' },
@@ -260,14 +260,14 @@ export const post = {
   head={['קיצור', 'מה נשמר']}
   keysColumn={0}
   rows={[
-    ['Ctrl+Shift+P', 'כל שאר הכרטיסיות בחלון'],
-    ['Ctrl+Shift+S', 'הכרטיסייה הנוכחית'],
-    ['Ctrl+Shift+K', 'הכרטיסיות מימין'],
-    ['Ctrl+Shift+U', 'הכרטיסיות משמאל'],
+    ['Alt+Shift+O', 'כל שאר הכרטיסיות בחלון'],
+    ['Alt+Shift+S', 'הכרטיסייה הנוכחית'],
+    ['Alt+Shift+Comma', 'הכרטיסיות מימין'],
+    ['Alt+Shift+Period', 'הכרטיסיות משמאל'],
   ]}
 />
 
-ב-Mac משתמשים ב-<Kbd>⌘</Kbd>. כל אחד מהם שואל איפה לשמור; **שמירה מהירה (קבוצה חדשה)** יוצרת קבוצה במקום. ב-Firefox הקיצור <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd></bdi> פותח חלון פרטי, אז כדאי לבחור מקש אחר ב-`about:addons`, תחת "ניהול קיצורי דרך להרחבות" (<bdi dir="ltr">Manage Extension Shortcuts</bdi>). ב-Edge הקיצורים <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd></bdi>, <Kbd>U</Kbd> ו-<Kbd>P</Kbd> שמורים לפקודות של הדפדפן עצמו, אז כדאי לתת לשלושה האלה מקשים משלהם ב-<bdi dir="ltr">`edge://extensions/shortcuts`</bdi>; [מדריך קיצורי המקלדת לכרטיסיות](/blog/tab-keyboard-shortcuts) שלנו מראה איך.
+ב-Mac לוחצים על <Kbd>Control</Kbd> במקום <Kbd>Alt</Kbd>. כל אחד מהם שואל איפה לשמור; **שמירה מהירה (קבוצה חדשה)** יוצרת קבוצה במקום. אלה המקשים בהתקנה חדשה; התקנה מלפני כן שומרת על המקשים שהיו לה, ואפשר לשנות כל אחד מהם בדף קיצורי הדרך של הדפדפן; [מדריך קיצורי המקלדת לכרטיסיות](/blog/tab-keyboard-shortcuts) שלנו מראה איך.
 
 ### סגרתם משהו בטעות?
 

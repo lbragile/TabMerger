@@ -1,0 +1,276 @@
+export const post = {
+  slug: 'tab-keyboard-shortcuts',
+  title: 'Сочетания клавиш для вкладок в Chrome, Edge и Firefox',
+  seoTitle: 'Горячие клавиши вкладок Chrome (и Edge, Firefox): полный справочник',
+  description:
+    'Все сочетания клавиш для вкладок, которые стоит знать в Chrome, Edge и Firefox: переключение вкладок, восстановление закрытых вкладок и окон, поиск по вкладкам и закладки на все сразу, в Windows и на Mac.',
+  shareSummary: 'Переключайте, возвращайте, ищите и сохраняйте вкладки с клавиатуры в Chrome, Edge и Firefox.',
+  dek: 'Одна таблица для трёх браузеров, отличия на Mac и как назначить сочетания для расширений, чтобы они действительно работали.',
+  published: '2026-11-22',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+T во всех трёх открывает последнюю закрытую вкладку.', source: 'Справка Chrome и Edge; клавиши Firefox 159' },
+    { text: 'Firefox открывает закрытое окно по Ctrl+Shift+N.', source: 'Клавиши Firefox 159' },
+    {
+      text: 'В Chrome Ctrl+9 переходит на последнюю вкладку, а не на девятую.',
+      source: 'Справка Chrome',
+      href: 'https://support.google.com/chrome/answer/157179',
+    },
+    { text: 'Edge оставляет Ctrl+Shift+K, U и P себе, расширениям они не достаются.', source: 'Поддержка Microsoft; Edge 158' },
+  ],
+  faq: [
+    {
+      question: 'Как переключать вкладки с клавиатуры?',
+      answer:
+        'Ctrl+Tab переходит на следующую вкладку, а Ctrl+Shift+Tab на предыдущую в Chrome, Edge и Firefox. Ctrl+1–Ctrl+8 переходят на вкладку по её номеру; Ctrl+9 на последнюю вкладку.',
+    },
+    {
+      question: 'Как вернуть закрытую вкладку?',
+      answer:
+        'Нажмите Ctrl+Shift+T (⌘+Shift+T на Mac). Нажимайте ещё, чтобы возвращаться дальше назад. В Chrome так возвращаются и закрытые окна; в Firefox закрытое окно открывает Ctrl+Shift+N.',
+    },
+    {
+      question: 'Можно ли искать по открытым вкладкам?',
+      answer: 'Да. Ctrl+Shift+A открывает «Поиск по вкладкам» в Chrome и список всех вкладок в Firefox. В Chrome можно также ввести @вкладки в адресной строке (в английском интерфейсе Chrome это @tabs).',
+    },
+    {
+      question: 'Почему не работает сочетание клавиш расширения?',
+      answer:
+        'Браузер оставляет предложенное сочетание неназначенным, если оно совпадает с одним из его собственных. Проверьте chrome://extensions/shortcuts или edge://extensions/shortcuts и выберите другую клавишу.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp', alt: 'Страница сочетаний клавиш для расширений в Edge для TabMerger: все четыре команды сохранения назначены, на Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma и Alt+Shift+Period' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp', alt: 'Поиск TabMerger открыт с запросом docs и показывает подходящие открытые и сохранённые вкладки, светлая тема' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-dark.webp', alt: 'Поиск TabMerger открыт с запросом docs и показывает подходящие открытые и сохранённые вкладки, тёмная тема' },
+  ],
+  tags: ['browser-tips', 'cross-browser', 'chrome', 'edge', 'firefox', 'tab-management'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-20',
+      note: 'Данные Firefox взяты из определений клавиш в самом Firefox 159.0.1; эта страница заблокировала нашу автоматическую проверку.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp' },
+  ogImage: { src: '/blog/tab-keyboard-shortcuts/og.png', alt: 'Сочетания клавиш для вкладок в Chrome, Edge и Firefox: руководство TabMerger, с открытым поиском TabMerger' },
+  toc: [
+    { id: 'quick', label: 'Коротко' },
+    { id: 'table', label: 'Сочетания по браузерам' },
+    { id: 'reopen', label: 'Как вернуть закрытые вкладки' },
+    { id: 'extensions', label: 'Сочетания для расширений' },
+    { id: 'tabmerger', label: 'Клавиши TabMerger' },
+    { id: 'faq', label: 'Вопросы и ответы' },
+  ],
+  browserSections: ['table', 'reopen', 'extensions'],
+  browserFact: {
+    label: 'Сочетания для расширений',
+    values: { chrome: 'chrome://extensions/shortcuts', edge: 'edge://extensions/shortcuts', firefox: 'about:addons' },
+  },
+}
+
+<QuickAnswer>
+
+<Kbd>Ctrl</Kbd>+<Kbd>Tab</Kbd> и <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Tab</Kbd> переключают на следующую и предыдущую вкладку, <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> переходят на вкладку по её номеру, <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> закрывает её, а <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> возвращает. Они одинаково работают в Chrome, Edge и Firefox в Windows и Linux; на Mac используйте <Kbd>⌘</Kbd> вместо <Kbd>Ctrl</Kbd>. Добавьте [TabMerger](/features), и основную работу возьмут на себя ещё две клавиши: сохранение вкладок прямо с клавиатуры и <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>, чтобы найти любую вкладку, открытую, сохранённую или закрытую.
+
+</QuickAnswer>
+
+<InstallCta>Сохраняйте вкладки, не отрывая рук от клавиатуры. Бесплатно для Chrome, Edge и Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="table" title="Какие сочетания для вкладок есть в вашем браузере?">
+
+Сначала Windows и Linux, потом что меняется на Mac. Каждая строка взята со страницы справки самого браузера, а для Firefox из определений клавиш в самом Firefox 159.0.1.
+
+<BrowserPanels section="table">
+<BrowserPanel browser="chrome">
+
+<ComparisonTable
+  head={['Действие', 'Сочетание']}
+  rowHeaders
+  rows={[
+    ['Новая вкладка', 'Ctrl+T'],
+    ['Закрыть вкладку', 'Ctrl+W'],
+    ['Открыть закрытые вкладки и окна', 'Ctrl+Shift+T'],
+    ['Следующая вкладка', 'Ctrl+Tab или Ctrl+PgDn'],
+    ['Предыдущая вкладка', 'Ctrl+Shift+Tab или Ctrl+PgUp'],
+    ['Вкладки с 1 по 8', 'Ctrl+1 … Ctrl+8'],
+    ['Последняя вкладка', 'Ctrl+9'],
+    ['Поиск по открытым вкладкам', 'Ctrl+Shift+A'],
+    ['Добавить все вкладки в закладки', 'Ctrl+Shift+D'],
+    ['История', 'Ctrl+H'],
+    ['Закрыть окно', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+Искать по открытым вкладкам можно и из адресной строки: введите `@вкладки` (в английском интерфейсе Chrome это `@tabs`) и нажмите <Kbd>Tab</Kbd>. Чтобы искать ещё и среди сохранённых и закрытых вкладок, прочитайте, [как найти одну вкладку среди сотен](/blog/find-a-tab-among-hundreds).
+
+**На Mac** используйте <Kbd>⌘</Kbd> там, где в таблице <Kbd>Ctrl</Kbd>, с такими исключениями из справки Chrome: следующая и предыдущая вкладка это <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>→</Kbd> и <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>←</Kbd>, история это <Kbd>⌘</Kbd>+<Kbd>Y</Kbd>, а диспетчер закладок <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>B</Kbd>.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+<ComparisonTable
+  head={['Действие', 'Сочетание']}
+  rowHeaders
+  rows={[
+    ['Новая вкладка', 'Ctrl+T'],
+    ['Закрыть вкладку', 'Ctrl+W'],
+    ['Открыть последнюю закрытую вкладку', 'Ctrl+Shift+T'],
+    ['Следующая вкладка', 'Ctrl+Tab или Ctrl+PgDn'],
+    ['Предыдущая вкладка', 'Ctrl+Shift+Tab или Ctrl+PgUp'],
+    ['Вкладки с 1 по 8', 'Ctrl+1 … Ctrl+8'],
+    ['Последняя вкладка', 'Ctrl+9'],
+    ['Добавить все вкладки в Избранное Edge', 'Ctrl+Shift+D'],
+    ['История', 'Ctrl+H'],
+    ['Закрыть окно', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+В списке сочетаний Edge нет клавиш для поиска по открытым вкладкам и для открытия закрытого окна.
+
+**На Mac** используйте <Kbd>⌘</Kbd> там, где в таблице <Kbd>Ctrl</Kbd>; история это <Kbd>⌘</Kbd>+<Kbd>Y</Kbd>. Для следующей и предыдущей вкладки Microsoft указывает <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↓</Kbd> и <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↑</Kbd>.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+<ComparisonTable
+  head={['Действие', 'Сочетание']}
+  rowHeaders
+  rows={[
+    ['Новая вкладка', 'Ctrl+T'],
+    ['Закрыть вкладку', 'Ctrl+W'],
+    ['Открыть закрытую вкладку', 'Ctrl+Shift+T'],
+    ['Открыть закрытое окно', 'Ctrl+Shift+N'],
+    ['Следующая вкладка', 'Ctrl+Tab или Ctrl+PgDn'],
+    ['Предыдущая вкладка', 'Ctrl+Shift+Tab или Ctrl+PgUp'],
+    ['Вкладки с 1 по 8', 'Ctrl+1 … Ctrl+8'],
+    ['Последняя вкладка', 'Ctrl+9'],
+    ['Список всех вкладок', 'Ctrl+Shift+A'],
+    ['Добавить все вкладки в закладки', 'Ctrl+Shift+D'],
+    ['Журнал на боковой панели', 'Ctrl+H'],
+    ['Журнал в Библиотеке', 'Ctrl+Shift+H'],
+    ['Закрыть окно', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+**На Mac** Firefox задаёт эти сочетания с основной клавишей-модификатором системы, поэтому нажимайте <Kbd>⌘</Kbd> там, где в таблице <Kbd>Ctrl</Kbd>.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="reopen" title="Как вернуть вкладку, закрытую по ошибке?">
+
+Нажмите <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> на Mac). Каждое нажатие возвращает ещё на шаг назад. Что именно вернётся, зависит от браузера:
+
+<BrowserPanels section="reopen">
+<BrowserPanel browser="chrome">
+
+Chrome возвращает вкладки *и* окна в том порядке, в каком они закрывались, так что нажимайте, пока не вернётся потерянное окно.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+В документации Edge <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> открывает последнюю закрытую вкладку. Для закрытого окна откройте историю (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) и загляните в раздел **Recently closed** (недавно закрытые).
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox ведёт отдельные списки: <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> для вкладок и <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> для окон. В Firefox 159 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> привязано к команде, которая восстанавливает последнюю закрытую вкладку, окно или сеанс, поэтому оно может вернуть и предыдущую сессию.
+
+</BrowserPanel>
+</BrowserPanels>
+
+Список не бесконечен. Если пропала целая сессия, прочитайте, [как восстановить вкладки после сбоя](/blog/restore-tabs-after-crash). А чтобы не терять их вовсе, [сохраните все открытые вкладки](/blog/save-all-open-tabs), прежде чем закрывать что-то большое.
+
+</Section>
+
+<Section id="extensions" title="Как назначить сочетания клавиш для расширений?">
+
+Расширения могут предлагать сочетания, но последнее слово за браузером: предложенная клавиша, которая совпадает с одной из его собственных, остаётся в состоянии **Not set** (не задано), без всякого предупреждения. Откройте страницу сочетаний вашего браузера, нажмите на карандаш рядом с командой и нажмите нужные клавиши.
+
+<BrowserPanels section="extensions">
+<BrowserPanel browser="chrome">
+
+Вставьте `chrome://extensions/shortcuts` в адресную строку. У каждой команды есть ещё меню области действия: **In Chrome** (только в Chrome) или **Global** (везде), чтобы она работала, даже когда Chrome не в фокусе.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Вставьте `edge://extensions/shortcuts` в адресную строку.
+
+Edge оставляет себе <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd> (дублировать вкладку), <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>U</Kbd> (Read Aloud, чтение вслух) и <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> (печать через системный диалог), поэтому команда расширения, которая предлагает одно из них, в Edge 158 начинает с **Not set**. Edge 158 также отклоняет некоторые клавиши <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>, которых нет в списке Microsoft, например <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> и <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Z</Kbd>. Команды сохранения TabMerger обходят их все, поэтому после новой установки назначены все четыре:
+
+<AnnotatedFigure src="/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp" alt="Страница сочетаний клавиш для расширений в Edge для TabMerger: все четыре команды сохранения назначены, на Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma и Alt+Shift+Period" width={852} height={460} boxes={[{ id: 'save-shortcuts' }]} source="edge://extensions/shortcuts · Edge 158.0.4370.33">Новая установка TabMerger в Edge 158: у всех четырёх команд сохранения есть клавиши, исправлять нечего.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Откройте `about:addons`, нажмите на меню с шестерёнкой и выберите **Управление горячими клавишами расширений** (Manage Extension Shortcuts). Учтите, что <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> в Firefox открывает приватное окно, так что для всего, что предлагает это сочетание, выберите другую клавишу.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>страница сочетаний ни о чём не предупреждает. Если сочетание «ничего не делает», сначала проверьте его там.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="Клавиши TabMerger">
+
+[TabMerger](/features), наше бесплатное расширение для Chrome, Edge и Firefox, сохраняет вкладки прямо с клавиатуры, даже не открываясь. Оно предлагает клавишу для каждой из четырёх команд сохранения, подобранную так, чтобы не пересекаться с сочетаниями самих Chrome, Edge и Firefox, и любую из них можно изменить на странице сочетаний браузера (см. выше):
+
+<ComparisonTable
+  head={['Предлагаемая клавиша', 'Сохраняет']}
+  keysColumn={0}
+  rows={[
+    ['Alt+Shift+S', 'Текущую вкладку'],
+    ['Alt+Shift+O', 'Все остальные вкладки окна'],
+    ['Alt+Shift+Comma', 'Вкладки слева'],
+    ['Alt+Shift+Period', 'Вкладки справа'],
+  ]}
+/>
+
+На Mac вместо <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd> используется <Kbd>Control</Kbd>+<Kbd>Shift</Kbd>: <Kbd>Control</Kbd>+<Kbd>Shift</Kbd>+<Kbd>S</Kbd> сохраняет текущую вкладку. Эти клавиши получает новая установка. Обновления сочетаний не меняют, поэтому если вы установили TabMerger до появления этих клавиш, у него остались прежние, включая те, что в состоянии **Not set**: назначьте их на странице сочетаний.
+
+Во всплывающем окне <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd>) ищет по открытым, сохранённым и недавно закрытым вкладкам в одном списке.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tab-keyboard-shortcuts/tm-search" alt="Поиск TabMerger открыт с запросом docs и показывает подходящие открытые и сохранённые вкладки, светлая тема" darkAlt="Поиск TabMerger открыт с запросом docs и показывает подходящие открытые и сохранённые вкладки, тёмная тема" boxes={[{ id: 'search-input', label: 'Поиск' }]} source="TabMerger 3.16.1">Ctrl+K, затем вводите текст: результаты берутся и из открытых, и из сохранённых вкладок.</ThemedScreenshot>
+
+<InstallCta>Бесплатно для Chrome, Edge и Firefox. Для начала аккаунт не нужен.</InstallCta>
+
+Другие привычки, которые помогают держать число вкладок под контролем, есть в нашем [руководстве, что делать со множеством вкладок](/blog/manage-too-many-tabs), а что каждый браузер умеет помимо сочетаний клавиш, рассказано в [сравнении функций вкладок в Chrome, Edge и Firefox](/blog/browser-tab-features-compared).
+
+</Section>
+
+<Section id="faq" title="Вопросы и ответы">
+
+<Faq items={post.faq} />
+
+</Section>

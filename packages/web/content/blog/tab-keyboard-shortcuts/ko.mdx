@@ -1,0 +1,276 @@
+export const post = {
+  slug: 'tab-keyboard-shortcuts',
+  title: 'Chrome, Edge, Firefox 탭 키보드 단축키',
+  seoTitle: 'Chrome 탭 단축키(Edge, Firefox 포함): 전체 정리',
+  description:
+    'Chrome, Edge, Firefox에서 알아 둘 만한 탭 단축키를 모두 모았습니다. 탭 전환, 닫은 탭과 창 다시 열기, 탭 검색, 모든 탭 북마크까지 Windows와 Mac 모두에서.',
+  shareSummary: 'Chrome, Edge, Firefox에서 키보드로 탭을 전환하고, 다시 열고, 검색하고, 저장하세요.',
+  dek: '세 브라우저를 한 표로, Mac에서 달라지는 점과 확장 프로그램 단축키를 제대로 설정하는 방법까지.',
+  published: '2026-11-22',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+T는 세 브라우저 모두에서 마지막으로 닫은 탭을 다시 엽니다.', source: 'Chrome 및 Edge 도움말, Firefox 159 키 정의' },
+    { text: 'Firefox는 Ctrl+Shift+N으로 닫은 창을 다시 엽니다.', source: 'Firefox 159 키 정의' },
+    {
+      text: 'Chrome의 Ctrl+9는 아홉 번째가 아니라 마지막 탭으로 이동합니다.',
+      source: 'Chrome 고객센터',
+      href: 'https://support.google.com/chrome/answer/157179',
+    },
+    { text: 'Edge는 Ctrl+Shift+K, U, P를 직접 쓰므로 확장 프로그램이 가져갈 수 없습니다.', source: 'Microsoft 지원, Edge 158' },
+  ],
+  faq: [
+    {
+      question: '키보드로 탭을 전환하려면 어떻게 하나요?',
+      answer:
+        'Chrome, Edge, Firefox에서 Ctrl+Tab은 다음 탭으로, Ctrl+Shift+Tab은 이전 탭으로 이동합니다. Ctrl+1부터 Ctrl+8까지는 위치로 탭에 바로 이동하고, Ctrl+9는 마지막 탭으로 이동합니다.',
+    },
+    {
+      question: '닫은 탭을 다시 열려면 어떻게 하나요?',
+      answer:
+        'Ctrl+Shift+T(Mac에서는 ⌘+Shift+T)를 누르세요. 다시 누르면 계속 더 이전으로 돌아갑니다. Chrome에서는 닫은 창도 돌아오고, Firefox에서는 Ctrl+Shift+N이 닫은 창을 다시 엽니다.',
+    },
+    {
+      question: '열려 있는 탭을 검색할 수 있나요?',
+      answer: '네. Ctrl+Shift+A를 누르면 Chrome에서는 탭 검색이 열리고 Firefox에서는 모든 탭 목록이 표시됩니다. Chrome에서는 주소창에 @tabs를 입력해도 됩니다.',
+    },
+    {
+      question: '확장 프로그램 단축키가 작동하지 않는 이유는 무엇인가요?',
+      answer:
+        '제안된 단축키가 브라우저 자체 단축키와 겹치면 브라우저는 그 단축키를 지정하지 않은 채로 둡니다. chrome://extensions/shortcuts 또는 edge://extensions/shortcuts를 확인하고 다른 키를 고르세요.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp', alt: 'Edge 확장 프로그램 키보드 단축키 페이지의 TabMerger: 저장 명령 네 개 모두 Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma, Alt+Shift+Period로 지정됨' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp', alt: '검색어 docs로 TabMerger 검색을 연 화면, 일치하는 열린 탭과 저장된 탭 목록, 밝은 테마' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-dark.webp', alt: '검색어 docs로 TabMerger 검색을 연 화면, 일치하는 열린 탭과 저장된 탭 목록, 어두운 테마' },
+  ],
+  tags: ['browser-tips', 'cross-browser', 'chrome', 'edge', 'firefox', 'tab-management'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-20',
+      note: 'Firefox 항목은 Firefox 159.0.1 자체의 키 정의에서 읽었습니다. 이 페이지는 자동 확인을 차단했습니다.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp' },
+  ogImage: { src: '/blog/tab-keyboard-shortcuts/og.png', alt: 'Chrome, Edge, Firefox 탭 키보드 단축키: TabMerger 가이드, TabMerger 검색이 열린 화면' },
+  toc: [
+    { id: 'quick', label: '간단한 답' },
+    { id: 'table', label: '브라우저별 단축키' },
+    { id: 'reopen', label: '닫은 탭 다시 열기' },
+    { id: 'extensions', label: '확장 프로그램 단축키' },
+    { id: 'tabmerger', label: 'TabMerger 단축키' },
+    { id: 'faq', label: '자주 묻는 질문' },
+  ],
+  browserSections: ['table', 'reopen', 'extensions'],
+  browserFact: {
+    label: '확장 프로그램 단축키',
+    values: { chrome: 'chrome://extensions/shortcuts', edge: 'edge://extensions/shortcuts', firefox: 'about:addons' },
+  },
+}
+
+<QuickAnswer>
+
+<Kbd>Ctrl</Kbd>+<Kbd>Tab</Kbd>과 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Tab</Kbd>은 다음 탭과 이전 탭으로 전환하고, <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd>은 위치로 탭에 이동하며, <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd>는 탭을 닫고 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>는 다시 엽니다. Windows와 Linux의 Chrome, Edge, Firefox에서 똑같이 작동하며, Mac에서는 <Kbd>Ctrl</Kbd> 대신 <Kbd>⌘</Kbd>를 쓰면 됩니다. [TabMerger](/features)를 추가하면 키 두 개가 더 큰일을 맡습니다. 키보드에서 바로 탭을 저장하는 키와, 열린 탭이든 저장한 탭이든 닫은 탭이든 찾아 주는 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>입니다.
+
+</QuickAnswer>
+
+<InstallCta>키보드에서 손을 떼지 않고 탭을 저장하세요. Chrome, Edge, Firefox용 무료.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="table" title="내 브라우저에는 어떤 탭 단축키가 있을까요?">
+
+먼저 Windows와 Linux, 그다음 Mac에서 달라지는 점입니다. 각 항목은 브라우저의 도움말 페이지에서, Firefox는 Firefox 159.0.1 자체의 키 정의에서 가져왔습니다.
+
+<BrowserPanels section="table">
+<BrowserPanel browser="chrome">
+
+<ComparisonTable
+  head={['동작', '단축키']}
+  rowHeaders
+  rows={[
+    ['새 탭', 'Ctrl+T'],
+    ['탭 닫기', 'Ctrl+W'],
+    ['닫은 탭과 창 다시 열기', 'Ctrl+Shift+T'],
+    ['다음 탭', 'Ctrl+Tab 또는 Ctrl+PgDn'],
+    ['이전 탭', 'Ctrl+Shift+Tab 또는 Ctrl+PgUp'],
+    ['1~8번째 탭', 'Ctrl+1 … Ctrl+8'],
+    ['마지막 탭', 'Ctrl+9'],
+    ['열린 탭 검색', 'Ctrl+Shift+A'],
+    ['모든 탭 북마크', 'Ctrl+Shift+D'],
+    ['방문 기록', 'Ctrl+H'],
+    ['창 닫기', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+주소창에서도 열린 탭을 검색할 수 있습니다. `@tabs`를 입력하고 <Kbd>Tab</Kbd> 키를 누르세요. 저장한 탭과 닫은 탭까지 검색하려면 [수백 개 탭 중에서 하나를 찾는 방법](/blog/find-a-tab-among-hundreds)을 참고하세요.
+
+**Mac에서는** 표에 <Kbd>Ctrl</Kbd>로 적힌 곳에 <Kbd>⌘</Kbd>를 쓰되, Chrome 도움말에 따른 예외가 있습니다. 다음 탭과 이전 탭은 <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>→</Kbd>와 <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>←</Kbd>, 방문 기록은 <Kbd>⌘</Kbd>+<Kbd>Y</Kbd>, 북마크 관리자는 <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>B</Kbd>입니다.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+<ComparisonTable
+  head={['동작', '단축키']}
+  rowHeaders
+  rows={[
+    ['새 탭', 'Ctrl+T'],
+    ['탭 닫기', 'Ctrl+W'],
+    ['마지막으로 닫은 탭 다시 열기', 'Ctrl+Shift+T'],
+    ['다음 탭', 'Ctrl+Tab 또는 Ctrl+PgDn'],
+    ['이전 탭', 'Ctrl+Shift+Tab 또는 Ctrl+PgUp'],
+    ['1~8번째 탭', 'Ctrl+1 … Ctrl+8'],
+    ['마지막 탭', 'Ctrl+9'],
+    ['모든 탭을 즐겨찾기에 추가', 'Ctrl+Shift+D'],
+    ['방문 기록', 'Ctrl+H'],
+    ['창 닫기', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+Edge의 단축키 목록에는 열린 탭을 검색하거나 닫은 창을 다시 여는 키가 없습니다.
+
+**Mac에서는** 표에 <Kbd>Ctrl</Kbd>로 적힌 곳에 <Kbd>⌘</Kbd>를 쓰고, 방문 기록은 <Kbd>⌘</Kbd>+<Kbd>Y</Kbd>입니다. Microsoft는 다음 탭과 이전 탭을 <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↓</Kbd>와 <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↑</Kbd>로 안내합니다.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+<ComparisonTable
+  head={['동작', '단축키']}
+  rowHeaders
+  rows={[
+    ['새 탭', 'Ctrl+T'],
+    ['탭 닫기', 'Ctrl+W'],
+    ['닫은 탭 다시 열기', 'Ctrl+Shift+T'],
+    ['닫은 창 다시 열기', 'Ctrl+Shift+N'],
+    ['다음 탭', 'Ctrl+Tab 또는 Ctrl+PgDn'],
+    ['이전 탭', 'Ctrl+Shift+Tab 또는 Ctrl+PgUp'],
+    ['1~8번째 탭', 'Ctrl+1 … Ctrl+8'],
+    ['마지막 탭', 'Ctrl+9'],
+    ['탭 전체 목록', 'Ctrl+Shift+A'],
+    ['모든 탭 북마크', 'Ctrl+Shift+D'],
+    ['기록 사이드바', 'Ctrl+H'],
+    ['기록 라이브러리', 'Ctrl+Shift+H'],
+    ['창 닫기', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+**Mac에서는** Firefox가 이 단축키들을 시스템의 기본 보조 키로 정의하므로, 표에 <Kbd>Ctrl</Kbd>로 적힌 곳에서 <Kbd>⌘</Kbd>를 누르면 됩니다.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="reopen" title="실수로 닫은 탭을 다시 열려면 어떻게 하나요?">
+
+<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>(Mac에서는 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>)를 누르세요. 누를 때마다 한 단계씩 더 이전으로 돌아갑니다. 무엇이 돌아오는지는 브라우저마다 다릅니다.
+
+<BrowserPanels section="reopen">
+<BrowserPanel browser="chrome">
+
+Chrome은 탭*과* 창을 닫은 순서대로 다시 열므로, 잃어버린 창이 돌아올 때까지 계속 누르세요.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge 문서에 따르면 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>는 마지막으로 닫은 탭을 다시 엽니다. 닫은 창은 방문 기록(<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>)을 열고 **Recently closed**(최근에 닫은 항목)에서 찾으세요.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox는 목록을 따로 관리합니다. 탭은 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>, 창은 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd>입니다. Firefox 159에서 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>는 마지막으로 닫은 탭, 창 또는 세션을 복원하는 명령에 연결되어 있어서 이전 세션을 되살릴 수도 있습니다.
+
+</BrowserPanel>
+</BrowserPanels>
+
+이 목록은 어느 정도까지만 거슬러 올라갑니다. 세션 전체를 잃었다면 [충돌 후 탭을 복원하는 방법](/blog/restore-tabs-after-crash)을 참고하세요. 처음부터 잃지 않으려면 큰 작업을 닫기 전에 [열린 탭을 모두 저장](/blog/save-all-open-tabs)하세요.
+
+</Section>
+
+<Section id="extensions" title="확장 프로그램 단축키는 어떻게 설정하나요?">
+
+확장 프로그램은 단축키를 제안할 수 있지만 최종 결정은 브라우저가 합니다. 브라우저 자체 단축키와 겹치는 제안 키는 아무 경고 없이 **Not set**(설정 안 됨) 상태로 남습니다. 브라우저의 단축키 페이지를 열고 명령 옆의 연필을 클릭한 다음 원하는 키를 누르세요.
+
+<BrowserPanels section="extensions">
+<BrowserPanel browser="chrome">
+
+주소창에 `chrome://extensions/shortcuts`를 붙여 넣으세요. 각 명령에는 범위 메뉴도 있어서 **In Chrome**(Chrome 안에서만)을 고르거나, Chrome이 앞에 있지 않을 때도 작동하게 하려면 **Global**(전체)을 고르면 됩니다.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+주소창에 `edge://extensions/shortcuts`를 붙여 넣으세요.
+
+Edge는 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd>(탭 복제), <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>U</Kbd>(Read Aloud, 소리 내어 읽기), <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd>(시스템 대화 상자로 인쇄)를 직접 쓰기 때문에, 이 중 하나를 제안하는 확장 프로그램 명령은 Edge 158에서 **Not set** 상태로 시작합니다. Edge 158은 Microsoft 목록에 없는 일부 <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd> 키도 거부합니다. 예를 들면 <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>와 <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Z</Kbd>입니다. TabMerger의 저장 명령은 이런 키를 모두 피하므로, 새로 설치하면 네 개 모두 지정되어 있습니다.
+
+<AnnotatedFigure src="/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp" alt="Edge 확장 프로그램 키보드 단축키 페이지의 TabMerger: 저장 명령 네 개 모두 Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma, Alt+Shift+Period로 지정됨" width={852} height={460} boxes={[{ id: 'save-shortcuts' }]} source="edge://extensions/shortcuts · Edge 158.0.4370.33">Edge 158에 TabMerger를 새로 설치한 모습: 저장 명령 네 개 모두 키가 지정되어 있어 고칠 것이 없습니다.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+`about:addons`를 열고 톱니바퀴 메뉴를 클릭한 다음 **확장 기능 단축키 관리**(Manage Extension Shortcuts)를 선택하세요. Firefox에서는 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd>가 사생활 보호 창을 여는 키이므로, 이 키를 제안하는 항목에는 다른 키를 고르세요.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>단축키 페이지는 경고해 주지 않습니다. 단축키가 "아무 반응이 없다"면 먼저 여기를 확인하세요.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger 단축키">
+
+Chrome, Edge, Firefox용 무료 확장 프로그램인 [TabMerger](/features)는 열지 않고도 키보드에서 바로 탭을 저장합니다. 저장 명령 네 개마다 키를 제안하는데, Chrome, Edge, Firefox가 직접 쓰는 단축키와 겹치지 않도록 골랐습니다. 어느 키든 브라우저의 단축키 페이지(위 참고)에서 바꿀 수 있습니다.
+
+<ComparisonTable
+  head={['제안 키', '저장 대상']}
+  keysColumn={0}
+  rows={[
+    ['Alt+Shift+S', '현재 탭'],
+    ['Alt+Shift+O', '창의 다른 탭 전부'],
+    ['Alt+Shift+Comma', '왼쪽 탭'],
+    ['Alt+Shift+Period', '오른쪽 탭'],
+  ]}
+/>
+
+Mac에서는 <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd> 대신 <Kbd>Control</Kbd>+<Kbd>Shift</Kbd>를 씁니다. 예를 들어 <Kbd>Control</Kbd>+<Kbd>Shift</Kbd>+<Kbd>S</Kbd>는 현재 탭을 저장합니다. 이 키들은 새로 설치할 때 지정됩니다. 업데이트는 단축키를 바꾸지 않으므로, 이 키들이 나오기 전에 TabMerger를 설치했다면 **Not set** 상태까지 포함해 기존 키가 그대로 유지됩니다. 단축키 페이지에서 지정하세요.
+
+팝업 안에서는 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>(<Kbd>⌘</Kbd>+<Kbd>K</Kbd>)로 열린 탭, 저장한 탭, 최근에 닫은 탭을 한 목록에서 검색합니다.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tab-keyboard-shortcuts/tm-search" alt="검색어 docs로 TabMerger 검색을 연 화면, 일치하는 열린 탭과 저장된 탭 목록, 밝은 테마" darkAlt="검색어 docs로 TabMerger 검색을 연 화면, 일치하는 열린 탭과 저장된 탭 목록, 어두운 테마" boxes={[{ id: 'search-input', label: '검색' }]} source="TabMerger 3.16.1">Ctrl+K를 누르고 입력하세요. 열린 탭과 저장한 탭 모두에서 결과가 나옵니다.</ThemedScreenshot>
+
+<InstallCta>Chrome, Edge, Firefox용 무료. 계정 없이 시작할 수 있습니다.</InstallCta>
+
+탭 수를 줄이는 다른 습관은 [탭이 너무 많을 때의 관리 가이드](/blog/manage-too-many-tabs)에, 단축키 말고 각 브라우저가 제공하는 기능은 [Chrome, Edge, Firefox 탭 기능 비교](/blog/browser-tab-features-compared)에 정리되어 있습니다.
+
+</Section>
+
+<Section id="faq" title="자주 묻는 질문">
+
+<Faq items={post.faq} />
+
+</Section>

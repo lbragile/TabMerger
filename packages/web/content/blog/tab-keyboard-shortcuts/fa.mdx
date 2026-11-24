@@ -1,0 +1,276 @@
+export const post = {
+  slug: 'tab-keyboard-shortcuts',
+  title: 'میان‌برهای صفحه‌کلید برای زبانه‌ها در Chrome و Edge و Firefox',
+  seoTitle: 'میان‌برهای زبانه در Chrome (و Edge و Firefox): فهرست کامل',
+  description:
+    'همهٔ میان‌برهای زبانه که ارزش یادگرفتن دارند در Chrome و Edge و Firefox: جابه‌جایی بین زبانه‌ها، باز کردن دوبارهٔ زبانه‌ها و پنجره‌های بسته‌شده، جست‌وجو در زبانه‌ها و نشانک‌گذاری همهٔ آن‌ها، در Windows و Mac.',
+  shareSummary: 'جابه‌جایی، بازگرداندن، جست‌وجو و ذخیرهٔ زبانه‌ها با صفحه‌کلید در Chrome و Edge و Firefox.',
+  dek: 'یک جدول برای هر سه مرورگر، تفاوت‌ها در Mac، و اینکه چطور میان‌برهای افزونه را طوری تنظیم کنید که واقعاً سر جایشان بمانند.',
+  published: '2026-11-22',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+T در هر سه مرورگر آخرین زبانهٔ بسته‌شده را دوباره باز می‌کند.', source: 'راهنمای Chrome و Edge؛ تعریف کلیدهای Firefox 159' },
+    { text: 'Firefox پنجرهٔ بسته‌شده را با Ctrl+Shift+N دوباره باز می‌کند.', source: 'تعریف کلیدهای Firefox 159' },
+    {
+      text: 'در Chrome، کلید Ctrl+9 به آخرین زبانه می‌رود، نه به زبانهٔ نهم.',
+      source: 'راهنمای Chrome',
+      href: 'https://support.google.com/chrome/answer/157179',
+    },
+    { text: 'Edge کلیدهای Ctrl+Shift+K و U و P را برای خودش نگه می‌دارد، پس افزونه‌ها نمی‌توانند آن‌ها را بگیرند.', source: 'پشتیبانی Microsoft؛ Edge 158' },
+  ],
+  faq: [
+    {
+      question: 'چطور با صفحه‌کلید بین زبانه‌ها جابه‌جا شوم؟',
+      answer:
+        'در Chrome و Edge و Firefox، کلید Ctrl+Tab به زبانهٔ بعدی و Ctrl+Shift+Tab به زبانهٔ قبلی می‌رود. Ctrl+1 تا Ctrl+8 بر اساس جایگاه به یک زبانه می‌روند؛ Ctrl+9 به آخرین زبانه می‌رود.',
+    },
+    {
+      question: 'چطور زبانهٔ بسته‌شده را دوباره باز کنم؟',
+      answer:
+        'Ctrl+Shift+T را بزنید (در Mac کلید ⌘+Shift+T). برای برگشتن بیشتر، دوباره بزنید. در Chrome پنجره‌های بسته‌شده هم برمی‌گردند؛ در Firefox، کلید Ctrl+Shift+N پنجرهٔ بسته‌شده را دوباره باز می‌کند.',
+    },
+    {
+      question: 'می‌توانم در زبانه‌های باز جست‌وجو کنم؟',
+      answer: 'بله. Ctrl+Shift+A در Chrome قابلیت جستجوی زبانه را باز می‌کند و در Firefox فهرست همهٔ زبانه‌ها را نشان می‌دهد. در Chrome می‌توانید @tabs را هم در نوار نشانی تایپ کنید.',
+    },
+    {
+      question: 'چرا میان‌بر یک افزونه کار نمی‌کند؟',
+      answer:
+        'وقتی میان‌بر پیشنهادی با یکی از میان‌برهای خود مرورگر تداخل داشته باشد، مرورگر آن را تنظیم‌نشده رها می‌کند. chrome://extensions/shortcuts یا edge://extensions/shortcuts را بررسی کنید و کلید دیگری انتخاب کنید.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp', alt: 'صفحهٔ میان‌برهای صفحه‌کلید افزونه‌ها در Edge برای TabMerger: هر چهار فرمان ذخیره تنظیم شده‌اند، روی Alt+Shift+S و Alt+Shift+O و Alt+Shift+Comma و Alt+Shift+Period' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp', alt: 'جست‌وجوی TabMerger با عبارت docs باز است و زبانه‌های باز و ذخیره‌شدهٔ منطبق را نشان می‌دهد، پوستهٔ روشن' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-dark.webp', alt: 'جست‌وجوی TabMerger با عبارت docs باز است و زبانه‌های باز و ذخیره‌شدهٔ منطبق را نشان می‌دهد، پوستهٔ تیره' },
+  ],
+  tags: ['browser-tips', 'cross-browser', 'chrome', 'edge', 'firefox', 'tab-management'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-20',
+      note: 'موارد مربوط به Firefox از تعریف کلیدهای خود Firefox 159.0.1 خوانده شد؛ این صفحه بررسی خودکار ما را مسدود کرد.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp' },
+  ogImage: { src: '/blog/tab-keyboard-shortcuts/og.png', alt: 'میان‌برهای صفحه‌کلید برای زبانه‌ها در Chrome و Edge و Firefox: راهنمایی از TabMerger، با جست‌وجوی TabMerger باز' },
+  toc: [
+    { id: 'quick', label: 'پاسخ کوتاه' },
+    { id: 'table', label: 'میان‌برها به تفکیک مرورگر' },
+    { id: 'reopen', label: 'باز کردن دوبارهٔ زبانه‌های بسته‌شده' },
+    { id: 'extensions', label: 'میان‌برهای افزونه' },
+    { id: 'tabmerger', label: 'کلیدهای TabMerger' },
+    { id: 'faq', label: 'پرسش‌های متداول' },
+  ],
+  browserSections: ['table', 'reopen', 'extensions'],
+  browserFact: {
+    label: 'میان‌برهای افزونه',
+    values: { chrome: 'chrome://extensions/shortcuts', edge: 'edge://extensions/shortcuts', firefox: 'about:addons' },
+  },
+}
+
+<QuickAnswer>
+
+<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Tab</Kbd></bdi> و <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Tab</Kbd></bdi> به زبانهٔ بعدی و قبلی می‌روند، <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd></bdi> بر اساس جایگاه به یک زبانه می‌پرند، <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>W</Kbd></bdi> آن را می‌بندد و <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> برش می‌گرداند. این کلیدها در Chrome و Edge و Firefox روی Windows و Linux یکسان کار می‌کنند؛ در Mac به‌جای <bdi dir="ltr"><Kbd>Ctrl</Kbd></bdi> از <bdi dir="ltr"><Kbd>⌘</Kbd></bdi> استفاده کنید. [TabMerger](/features) را اضافه کنید تا دو کلید دیگر کار سنگین را انجام دهند: ذخیرهٔ زبانه‌ها مستقیم از صفحه‌کلید، و <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> برای پیدا کردن هر زبانه، چه باز باشد، چه ذخیره‌شده و چه بسته.
+
+</QuickAnswer>
+
+<InstallCta>زبانه‌ها را ذخیره کنید، بی‌آنکه دست از صفحه‌کلید بردارید. رایگان برای Chrome و Edge و Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="table" title="مرورگر شما چه میان‌برهایی برای زبانه‌ها دارد؟">
+
+اول Windows و Linux، بعد آنچه در Mac فرق می‌کند. هر مورد از صفحهٔ راهنمای خود مرورگر آمده است، و برای Firefox از تعریف کلیدهای داخل خود Firefox 159.0.1.
+
+<BrowserPanels section="table">
+<BrowserPanel browser="chrome">
+
+<ComparisonTable
+  head={['کار', 'میان‌بر']}
+  rowHeaders
+  rows={[
+    ['زبانهٔ جدید', 'Ctrl+T'],
+    ['بستن زبانه', 'Ctrl+W'],
+    ['باز کردن دوبارهٔ زبانه‌ها و پنجره‌های بسته‌شده', 'Ctrl+Shift+T'],
+    ['زبانهٔ بعدی', <><bdi dir="ltr">Ctrl+Tab</bdi> یا <bdi dir="ltr">Ctrl+PgDn</bdi></>],
+    ['زبانهٔ قبلی', <><bdi dir="ltr">Ctrl+Shift+Tab</bdi> یا <bdi dir="ltr">Ctrl+PgUp</bdi></>],
+    ['زبانهٔ ۱ تا ۸', 'Ctrl+1 … Ctrl+8'],
+    ['آخرین زبانه', 'Ctrl+9'],
+    ['جست‌وجو در زبانه‌های باز', 'Ctrl+Shift+A'],
+    ['نشانک‌گذاری همهٔ زبانه‌ها', 'Ctrl+Shift+D'],
+    ['سابقه', 'Ctrl+H'],
+    ['بستن پنجره', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+از نوار نشانی هم می‌توانید در زبانه‌های باز جست‌وجو کنید: <bdi dir="ltr">`@tabs`</bdi> را تایپ کنید و <bdi dir="ltr"><Kbd>Tab</Kbd></bdi> را بزنید. برای جست‌وجو در زبانه‌های ذخیره‌شده و بسته‌شده هم، [چطور یک زبانه را میان صدها زبانه پیدا کنیم](/blog/find-a-tab-among-hundreds) را ببینید.
+
+**در Mac** هر جا جدول <bdi dir="ltr"><Kbd>Ctrl</Kbd></bdi> نوشته، <bdi dir="ltr"><Kbd>⌘</Kbd></bdi> را بزنید، با این استثناها از صفحهٔ راهنمای Chrome: زبانهٔ بعدی و قبلی <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>→</Kbd></bdi> و <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>←</Kbd></bdi> است، سابقه <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Y</Kbd></bdi>، و مدیر نشانک‌ها <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>B</Kbd></bdi>.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+<ComparisonTable
+  head={['کار', 'میان‌بر']}
+  rowHeaders
+  rows={[
+    ['زبانهٔ جدید', 'Ctrl+T'],
+    ['بستن زبانه', 'Ctrl+W'],
+    ['باز کردن دوبارهٔ آخرین زبانهٔ بسته‌شده', 'Ctrl+Shift+T'],
+    ['زبانهٔ بعدی', <><bdi dir="ltr">Ctrl+Tab</bdi> یا <bdi dir="ltr">Ctrl+PgDn</bdi></>],
+    ['زبانهٔ قبلی', <><bdi dir="ltr">Ctrl+Shift+Tab</bdi> یا <bdi dir="ltr">Ctrl+PgUp</bdi></>],
+    ['زبانهٔ ۱ تا ۸', 'Ctrl+1 … Ctrl+8'],
+    ['آخرین زبانه', 'Ctrl+9'],
+    ['افزودن همهٔ زبانه‌ها به موارد دلخواه Edge', 'Ctrl+Shift+D'],
+    ['سابقه', 'Ctrl+H'],
+    ['بستن پنجره', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+فهرست میان‌برهای Edge کلیدی برای جست‌وجو در زبانه‌های باز یا باز کردن دوبارهٔ پنجرهٔ بسته‌شده ندارد.
+
+**در Mac** هر جا جدول <bdi dir="ltr"><Kbd>Ctrl</Kbd></bdi> نوشته، <bdi dir="ltr"><Kbd>⌘</Kbd></bdi> را بزنید؛ سابقه <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Y</Kbd></bdi> است. Microsoft برای زبانهٔ بعدی و قبلی کلیدهای <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↓</Kbd></bdi> و <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↑</Kbd></bdi> را ذکر می‌کند.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+<ComparisonTable
+  head={['کار', 'میان‌بر']}
+  rowHeaders
+  rows={[
+    ['زبانهٔ جدید', 'Ctrl+T'],
+    ['بستن زبانه', 'Ctrl+W'],
+    ['باز کردن دوبارهٔ زبانهٔ بسته‌شده', 'Ctrl+Shift+T'],
+    ['باز کردن دوبارهٔ پنجرهٔ بسته‌شده', 'Ctrl+Shift+N'],
+    ['زبانهٔ بعدی', <><bdi dir="ltr">Ctrl+Tab</bdi> یا <bdi dir="ltr">Ctrl+PgDn</bdi></>],
+    ['زبانهٔ قبلی', <><bdi dir="ltr">Ctrl+Shift+Tab</bdi> یا <bdi dir="ltr">Ctrl+PgUp</bdi></>],
+    ['زبانهٔ ۱ تا ۸', 'Ctrl+1 … Ctrl+8'],
+    ['آخرین زبانه', 'Ctrl+9'],
+    ['فهرست کردن همهٔ زبانه‌ها', 'Ctrl+Shift+A'],
+    ['نشانک‌گذاری همهٔ زبانه‌ها', 'Ctrl+Shift+D'],
+    ['تاریخچه در نوار کناری', 'Ctrl+H'],
+    ['تاریخچه در مخزن', 'Ctrl+Shift+H'],
+    ['بستن پنجره', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+**در Mac** مرورگر Firefox این میان‌برها را با کلید تغییردهندهٔ اصلی سیستم تعریف می‌کند، پس هر جا جدول <bdi dir="ltr"><Kbd>Ctrl</Kbd></bdi> نوشته، <bdi dir="ltr"><Kbd>⌘</Kbd></bdi> را بزنید.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="reopen" title="زبانه‌ای را که اشتباهی بستم چطور دوباره باز کنم؟">
+
+<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> را بزنید (در Mac کلید <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi>). هر بار زدن، یک قدم دیگر به عقب برمی‌گردد. اینکه چه چیزی برمی‌گردد به مرورگر بستگی دارد:
+
+<BrowserPanels section="reopen">
+<BrowserPanel browser="chrome">
+
+Chrome زبانه‌ها *و* پنجره‌ها را به همان ترتیبی که بسته شده‌اند دوباره باز می‌کند، پس آن‌قدر بزنید تا پنجره‌ای که گم کرده‌اید برگردد.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+طبق مستندات Edge، کلید <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> آخرین زبانهٔ بسته‌شده را دوباره باز می‌کند. برای پنجرهٔ بسته‌شده، سابقه را باز کنید (<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi>) و زیر <bdi dir="ltr">**Recently closed**</bdi> (به‌تازگی بسته‌شده) را ببینید.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox فهرست‌های جداگانه دارد: <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> برای زبانه‌ها و <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd></bdi> برای پنجره‌ها. در Firefox 159 کلید <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> به فرمانی وصل است که آخرین زبانه، پنجره یا نشست بسته‌شده را بازیابی می‌کند، پس ممکن است نشست قبلی را هم برگرداند.
+
+</BrowserPanel>
+</BrowserPanels>
+
+این فهرست فقط تا جای مشخصی به عقب برمی‌گردد. اگر یک نشست کامل از دست رفته است، [چطور زبانه‌ها را بعد از خرابی بازیابی کنیم](/blog/restore-tabs-after-crash) را ببینید. برای اینکه از اول چیزی گم نشود، پیش از بستن هر چیز بزرگی [همهٔ زبانه‌های باز را ذخیره کنید](/blog/save-all-open-tabs).
+
+</Section>
+
+<Section id="extensions" title="چطور برای افزونه‌ها میان‌بر تنظیم کنم؟">
+
+افزونه‌ها می‌توانند میان‌بر پیشنهاد دهند، اما حرف آخر را مرورگر می‌زند: کلید پیشنهادی‌ای که با یکی از کلیدهای خود مرورگر تداخل داشته باشد، بدون هیچ هشداری روی <bdi dir="ltr">**Not set**</bdi> (تنظیم‌نشده) می‌ماند. صفحهٔ میان‌برهای مرورگرتان را باز کنید، روی مداد کنار یک فرمان کلیک کنید و کلیدهای دلخواهتان را بزنید.
+
+<BrowserPanels section="extensions">
+<BrowserPanel browser="chrome">
+
+<bdi dir="ltr">`chrome://extensions/shortcuts`</bdi> را در نوار نشانی بچسبانید. هر فرمان یک منوی محدوده هم دارد: <bdi dir="ltr">**In Chrome**</bdi> (فقط داخل Chrome)، یا <bdi dir="ltr">**Global**</bdi> (همه‌جا) تا وقتی Chrome در پیش‌زمینه نیست هم کار کند.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+<bdi dir="ltr">`edge://extensions/shortcuts`</bdi> را در نوار نشانی بچسبانید.
+
+Edge کلیدهای <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd></bdi> (تکثیر زبانه)، <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>U</Kbd></bdi> (<bdi dir="ltr">Read Aloud</bdi>، بلندخوانی) و <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd></bdi> (چاپ با پنجرهٔ گفت‌وگوی سیستم) را برای خودش نگه می‌دارد، پس فرمان افزونه‌ای که یکی از این‌ها را پیشنهاد دهد، در Edge 158 از همان اول روی <bdi dir="ltr">**Not set**</bdi> است. Edge 158 بعضی کلیدهای <bdi dir="ltr"><Kbd>Alt</Kbd>+<Kbd>Shift</Kbd></bdi> را هم که در فهرست Microsoft نیامده‌اند رد می‌کند، مثل <bdi dir="ltr"><Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi> و <bdi dir="ltr"><Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Z</Kbd></bdi>. فرمان‌های ذخیرهٔ TabMerger از همهٔ این‌ها دوری می‌کنند، پس در نصب تازه هر چهار فرمان تنظیم شده‌اند:
+
+<AnnotatedFigure src="/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp" alt="صفحهٔ میان‌برهای صفحه‌کلید افزونه‌ها در Edge برای TabMerger: هر چهار فرمان ذخیره تنظیم شده‌اند، روی Alt+Shift+S و Alt+Shift+O و Alt+Shift+Comma و Alt+Shift+Period" width={852} height={460} boxes={[{ id: 'save-shortcuts' }]} source="edge://extensions/shortcuts · Edge 158.0.4370.33">نصب تازهٔ TabMerger در Edge 158: هر چهار فرمان ذخیره کلید دارند و چیزی برای اصلاح نیست.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+<bdi dir="ltr">`about:addons`</bdi> را باز کنید، روی منوی چرخ‌دنده کلیک کنید و **مدیریت میانبرهای افزودنی** (<bdi dir="ltr">Manage Extension Shortcuts</bdi>) را انتخاب کنید. توجه کنید که در Firefox کلید <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd></bdi> پنجرهٔ خصوصی باز می‌کند، پس برای هر چیزی که آن را پیشنهاد می‌دهد کلید دیگری انتخاب کنید.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>صفحهٔ میان‌برها به شما هشدار نمی‌دهد. اگر میان‌بری «هیچ کاری نمی‌کند»، اول آنجا را بررسی کنید.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="کلیدهای TabMerger">
+
+[TabMerger](/features)، افزونهٔ رایگان ما برای Chrome و Edge و Firefox، بدون اینکه بازش کنید زبانه‌ها را مستقیم از صفحه‌کلید ذخیره می‌کند. برای هر یک از چهار فرمان ذخیره‌اش کلیدی پیشنهاد می‌دهد که طوری انتخاب شده تا با میان‌برهای خود Chrome و Edge و Firefox تداخل نداشته باشد، و می‌توانید هر کدام را در صفحهٔ میان‌برهای مرورگرتان (بالا) تغییر دهید:
+
+<ComparisonTable
+  head={['کلید پیشنهادی', 'چه چیزی ذخیره می‌شود']}
+  keysColumn={0}
+  rows={[
+    ['Alt+Shift+S', 'زبانهٔ فعلی'],
+    ['Alt+Shift+O', 'همهٔ زبانه‌های دیگر پنجره'],
+    ['Alt+Shift+Comma', 'زبانه‌های سمت راست'],
+    ['Alt+Shift+Period', 'زبانه‌های سمت چپ'],
+  ]}
+/>
+
+در Mac این کلیدها به‌جای <bdi dir="ltr"><Kbd>Alt</Kbd>+<Kbd>Shift</Kbd></bdi> از <bdi dir="ltr"><Kbd>Control</Kbd>+<Kbd>Shift</Kbd></bdi> استفاده می‌کنند: <bdi dir="ltr"><Kbd>Control</Kbd>+<Kbd>Shift</Kbd>+<Kbd>S</Kbd></bdi> زبانهٔ فعلی را ذخیره می‌کند. این‌ها کلیدهای نصب تازه است. به‌روزرسانی‌ها میان‌برها را تغییر نمی‌دهند، پس اگر TabMerger را پیش از آمدن این کلیدها نصب کرده‌اید، کلیدهای قبلی‌اش می‌ماند، از جمله آن‌هایی که روی <bdi dir="ltr">**Not set**</bdi> هستند: آن‌ها را در صفحهٔ میان‌برها تنظیم کنید.
+
+داخل پنجرهٔ بازشو، <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>K</Kbd></bdi>) در زبانه‌های باز، ذخیره‌شده و به‌تازگی بسته‌شده، در یک فهرست جست‌وجو می‌کند.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tab-keyboard-shortcuts/tm-search" alt="جست‌وجوی TabMerger با عبارت docs باز است و زبانه‌های باز و ذخیره‌شدهٔ منطبق را نشان می‌دهد، پوستهٔ روشن" darkAlt="جست‌وجوی TabMerger با عبارت docs باز است و زبانه‌های باز و ذخیره‌شدهٔ منطبق را نشان می‌دهد، پوستهٔ تیره" boxes={[{ id: 'search-input', label: 'جست‌وجو' }]} source="TabMerger 3.16.1"><bdi dir="ltr">Ctrl+K</bdi> را بزنید و تایپ کنید: نتیجه‌ها هم از زبانه‌های باز می‌آیند و هم از زبانه‌های ذخیره‌شده.</ThemedScreenshot>
+
+<InstallCta>رایگان برای Chrome و Edge و Firefox. برای شروع به حساب کاربری نیاز ندارید.</InstallCta>
+
+عادت‌های دیگری که تعداد زبانه‌ها را پایین نگه می‌دارند در [راهنمای ما برای مدیریت زبانه‌های زیاد](/blog/manage-too-many-tabs) آمده است، و اینکه هر مرورگر فراتر از میان‌برها چه امکاناتی دارد در [مقایسهٔ قابلیت‌های زبانه در Chrome و Edge و Firefox](/blog/browser-tab-features-compared).
+
+</Section>
+
+<Section id="faq" title="پرسش‌های متداول">
+
+<Faq items={post.faq} />
+
+</Section>

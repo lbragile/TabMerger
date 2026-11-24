@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'Una scorciatoia, il ripristino all’avvio e le schede chiuse recuperate in Chrome, Edge e Firefox.',
   dek: 'Cinque modi per tenere tutte le schede aperte, e cosa ognuno trascura senza dirtelo.',
   published: '2026-11-19',
-  updated: '2026-11-21',
+  updated: '2026-11-24',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D salva solo la finestra attuale.', source: 'Testato in tutti e tre, 19 nov 2026' },
@@ -264,14 +264,14 @@ Ognuno dei metodi integrati copre una finestra, un riavvio o una scheda chiusa a
   head={['Scorciatoia', 'Salva']}
   keysColumn={0}
   rows={[
-    ['Ctrl+Shift+P', 'Tutte le altre schede della finestra'],
-    ['Ctrl+Shift+S', 'La scheda attuale'],
-    ['Ctrl+Shift+K', 'Le schede a sinistra'],
-    ['Ctrl+Shift+U', 'Le schede a destra'],
+    ['Alt+Shift+O', 'Tutte le altre schede della finestra'],
+    ['Alt+Shift+S', 'La scheda attuale'],
+    ['Alt+Shift+Comma', 'Le schede a sinistra'],
+    ['Alt+Shift+Period', 'Le schede a destra'],
   ]}
 />
 
-Su Mac usa <Kbd>⌘</Kbd>. Ogni scorciatoia chiede dove salvare; **Salvataggio rapido (nuovo gruppo)** crea subito un gruppo. In Firefox <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> apre una finestra anonima, quindi scegli un altro tasto in `about:addons` → «Manage Extension Shortcuts». Edge riserva <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd>, <Kbd>U</Kbd> e <Kbd>P</Kbd> ai propri comandi, quindi assegna a queste tre scorciatoie tasti diversi in `edge://extensions/shortcuts`; la nostra [guida alle scorciatoie da tastiera per le schede](/blog/tab-keyboard-shortcuts) spiega come.
+Su Mac premi <Kbd>Control</Kbd> al posto di <Kbd>Alt</Kbd>. Ogni scorciatoia chiede dove salvare; **Salvataggio rapido (nuovo gruppo)** crea subito un gruppo. Queste sono le scorciatoie di una nuova installazione; una precedente mantiene quelle che aveva, e puoi cambiarle tutte nella pagina delle scorciatoie del browser, come spiega la nostra [guida alle scorciatoie da tastiera per le schede](/blog/tab-keyboard-shortcuts).
 
 ### Hai chiuso qualcosa per sbaglio?
 

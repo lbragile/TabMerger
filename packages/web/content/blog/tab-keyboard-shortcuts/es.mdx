@@ -1,0 +1,276 @@
+export const post = {
+  slug: 'tab-keyboard-shortcuts',
+  title: 'Atajos de teclado para pestañas en Chrome, Edge y Firefox',
+  seoTitle: 'Atajos de pestañas en Chrome (y Edge, Firefox): referencia completa',
+  description:
+    'Todos los atajos de pestañas que vale la pena aprender en Chrome, Edge y Firefox: cambiar de pestaña, reabrir pestañas y ventanas cerradas, buscar pestañas y guardarlas todas como marcadores, en Windows y Mac.',
+  shareSummary: 'Cambia, reabre, busca y guarda pestañas desde el teclado en Chrome, Edge y Firefox.',
+  dek: 'Una tabla para los tres navegadores, las diferencias en Mac y cómo configurar atajos de extensiones que de verdad se queden.',
+  published: '2026-11-22',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+T reabre la última pestaña cerrada en los tres.', source: 'Ayuda de Chrome y Edge; teclas de Firefox 159' },
+    { text: 'Firefox reabre una ventana cerrada con Ctrl+Shift+N.', source: 'Teclas de Firefox 159' },
+    {
+      text: 'En Chrome, Ctrl+9 salta a la última pestaña, no a la novena.',
+      source: 'Ayuda de Chrome',
+      href: 'https://support.google.com/chrome/answer/157179',
+    },
+    { text: 'Edge se reserva Ctrl+Shift+K, U y P, así que las extensiones no pueden usarlos.', source: 'Soporte de Microsoft; Edge 158' },
+  ],
+  faq: [
+    {
+      question: '¿Cómo cambio de pestaña con el teclado?',
+      answer:
+        'Ctrl+Tab pasa a la pestaña siguiente y Ctrl+Shift+Tab a la anterior en Chrome, Edge y Firefox. Ctrl+1 a Ctrl+8 saltan a una pestaña por su posición; Ctrl+9 va a la última.',
+    },
+    {
+      question: '¿Cómo reabro una pestaña cerrada?',
+      answer:
+        'Pulsa Ctrl+Shift+T (⌘+Shift+T en Mac). Púlsalo de nuevo para seguir retrocediendo. En Chrome también recupera ventanas cerradas; en Firefox, Ctrl+Shift+N reabre una ventana cerrada.',
+    },
+    {
+      question: '¿Puedo buscar entre mis pestañas abiertas?',
+      answer: 'Sí. Ctrl+Shift+A abre la Búsqueda en pestañas en Chrome y muestra la lista de todas las pestañas en Firefox. En Chrome también puedes escribir @tabs en la barra de direcciones.',
+    },
+    {
+      question: '¿Por qué no funciona el atajo de una extensión?',
+      answer:
+        'El navegador deja sin asignar un atajo sugerido cuando choca con uno propio. Revisa chrome://extensions/shortcuts o edge://extensions/shortcuts y elige otra tecla.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp', alt: 'Página de atajos de teclado de extensiones de Edge para TabMerger: los cuatro comandos de guardado asignados, a Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma y Alt+Shift+Period' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp', alt: 'Búsqueda de TabMerger abierta con la consulta docs, con las pestañas abiertas y guardadas que coinciden, tema claro' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-dark.webp', alt: 'Búsqueda de TabMerger abierta con la consulta docs, con las pestañas abiertas y guardadas que coinciden, tema oscuro' },
+  ],
+  tags: ['browser-tips', 'cross-browser', 'chrome', 'edge', 'firefox', 'tab-management'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-20',
+      note: 'Los datos de Firefox se leyeron de las propias definiciones de teclas de Firefox 159.0.1; esta página bloqueó nuestra comprobación automática.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp' },
+  ogImage: { src: '/blog/tab-keyboard-shortcuts/og.png', alt: 'Atajos de teclado para pestañas en Chrome, Edge y Firefox: una guía de TabMerger, con la búsqueda de TabMerger abierta' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'table', label: 'Atajos por navegador' },
+    { id: 'reopen', label: 'Reabrir pestañas cerradas' },
+    { id: 'extensions', label: 'Atajos de extensiones' },
+    { id: 'tabmerger', label: 'Las teclas de TabMerger' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+  browserSections: ['table', 'reopen', 'extensions'],
+  browserFact: {
+    label: 'Atajos de extensiones',
+    values: { chrome: 'chrome://extensions/shortcuts', edge: 'edge://extensions/shortcuts', firefox: 'about:addons' },
+  },
+}
+
+<QuickAnswer>
+
+<Kbd>Ctrl</Kbd>+<Kbd>Tab</Kbd> y <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Tab</Kbd> pasan a la pestaña siguiente y a la anterior, <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> saltan a una pestaña por su posición, <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> la cierra y <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> la recupera. Funcionan igual en Chrome, Edge y Firefox en Windows y Linux; en Mac, usa <Kbd>⌘</Kbd> en lugar de <Kbd>Ctrl</Kbd>. Añade [TabMerger](/features) y dos teclas más hacen el trabajo pesado: guardar pestañas directamente desde el teclado y <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> para encontrar cualquier pestaña, abierta, guardada o cerrada.
+
+</QuickAnswer>
+
+<InstallCta>Guarda pestañas sin quitar las manos del teclado. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="table" title="¿Qué atajos de pestañas tiene tu navegador?">
+
+Primero Windows y Linux, luego lo que cambia en Mac. Cada entrada sale de la página de ayuda del propio navegador o, en Firefox, de las definiciones de teclas dentro de Firefox 159.0.1.
+
+<BrowserPanels section="table">
+<BrowserPanel browser="chrome">
+
+<ComparisonTable
+  head={['Acción', 'Atajo']}
+  rowHeaders
+  rows={[
+    ['Nueva pestaña', 'Ctrl+T'],
+    ['Cerrar pestaña', 'Ctrl+W'],
+    ['Reabrir pestañas y ventanas cerradas', 'Ctrl+Shift+T'],
+    ['Pestaña siguiente', 'Ctrl+Tab o Ctrl+PgDn'],
+    ['Pestaña anterior', 'Ctrl+Shift+Tab o Ctrl+PgUp'],
+    ['Pestaña 1 a 8', 'Ctrl+1 … Ctrl+8'],
+    ['Última pestaña', 'Ctrl+9'],
+    ['Buscar pestañas abiertas', 'Ctrl+Shift+A'],
+    ['Guardar todas las pestañas como marcadores', 'Ctrl+Shift+D'],
+    ['Historial', 'Ctrl+H'],
+    ['Cerrar ventana', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+También puedes buscar pestañas abiertas desde la barra de direcciones: escribe `@tabs` y pulsa <Kbd>Tab</Kbd>. Para buscar también entre las guardadas y las cerradas, mira [cómo encontrar una pestaña entre cientos](/blog/find-a-tab-among-hundreds).
+
+**En Mac**, usa <Kbd>⌘</Kbd> donde la tabla dice <Kbd>Ctrl</Kbd>, con estas excepciones de la ayuda de Chrome: la pestaña siguiente y la anterior son <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>→</Kbd> y <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>←</Kbd>, el historial es <Kbd>⌘</Kbd>+<Kbd>Y</Kbd> y el administrador de marcadores es <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>B</Kbd>.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+<ComparisonTable
+  head={['Acción', 'Atajo']}
+  rowHeaders
+  rows={[
+    ['Nueva pestaña', 'Ctrl+T'],
+    ['Cerrar pestaña', 'Ctrl+W'],
+    ['Reabrir la última pestaña cerrada', 'Ctrl+Shift+T'],
+    ['Pestaña siguiente', 'Ctrl+Tab o Ctrl+PgDn'],
+    ['Pestaña anterior', 'Ctrl+Shift+Tab o Ctrl+PgUp'],
+    ['Pestaña 1 a 8', 'Ctrl+1 … Ctrl+8'],
+    ['Última pestaña', 'Ctrl+9'],
+    ['Guardar todas las pestañas (como favoritos)', 'Ctrl+Shift+D'],
+    ['Historial', 'Ctrl+H'],
+    ['Cerrar ventana', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+La lista de atajos de Edge no tiene ninguna tecla para buscar pestañas abiertas ni para reabrir una ventana cerrada.
+
+**En Mac**, usa <Kbd>⌘</Kbd> donde la tabla dice <Kbd>Ctrl</Kbd>; el historial es <Kbd>⌘</Kbd>+<Kbd>Y</Kbd>. Microsoft indica <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↓</Kbd> y <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↑</Kbd> para la pestaña siguiente y la anterior.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+<ComparisonTable
+  head={['Acción', 'Atajo']}
+  rowHeaders
+  rows={[
+    ['Nueva pestaña', 'Ctrl+T'],
+    ['Cerrar pestaña', 'Ctrl+W'],
+    ['Reabrir pestaña cerrada', 'Ctrl+Shift+T'],
+    ['Reabrir ventana cerrada', 'Ctrl+Shift+N'],
+    ['Pestaña siguiente', 'Ctrl+Tab o Ctrl+PgDn'],
+    ['Pestaña anterior', 'Ctrl+Shift+Tab o Ctrl+PgUp'],
+    ['Pestaña 1 a 8', 'Ctrl+1 … Ctrl+8'],
+    ['Última pestaña', 'Ctrl+9'],
+    ['Mostrar todas las pestañas', 'Ctrl+Shift+A'],
+    ['Guardar todas las pestañas como marcadores', 'Ctrl+Shift+D'],
+    ['Historial en la barra lateral', 'Ctrl+H'],
+    ['Historial en el Catálogo', 'Ctrl+Shift+H'],
+    ['Cerrar ventana', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+**En Mac**, Firefox define estos atajos con la tecla modificadora principal del sistema, así que pulsa <Kbd>⌘</Kbd> donde la tabla dice <Kbd>Ctrl</Kbd>.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="reopen" title="¿Cómo reabro una pestaña que cerré por error?">
+
+Pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> en Mac). Cada pulsación retrocede un paso más. Lo que recupera depende del navegador:
+
+<BrowserPanels section="reopen">
+<BrowserPanel browser="chrome">
+
+Chrome reabre pestañas *y* ventanas, en el orden en que se cerraron, así que sigue pulsando hasta que vuelva la ventana que perdiste.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge documenta <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> como reabrir la última pestaña cerrada. Para una ventana cerrada, abre el historial (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) y busca en **Recently closed** (cerradas recientemente).
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox lleva listas separadas: <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> para pestañas y <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> para ventanas. En Firefox 159, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> está ligado a un comando que restaura la última pestaña, ventana o sesión cerrada, así que también puede recuperar la sesión anterior.
+
+</BrowserPanel>
+</BrowserPanels>
+
+La lista solo llega hasta cierto punto. Para una sesión perdida entera, mira [cómo restaurar pestañas después de un fallo](/blog/restore-tabs-after-crash). Para no perderlas desde el principio, [guarda todas tus pestañas abiertas](/blog/save-all-open-tabs) antes de cerrar algo importante.
+
+</Section>
+
+<Section id="extensions" title="¿Cómo configuro atajos para extensiones?">
+
+Las extensiones pueden sugerir atajos, pero el navegador tiene la última palabra: una tecla sugerida que choca con una del navegador se queda en **Not set** (sin asignar), sin ningún aviso. Abre la página de atajos de tu navegador, haz clic en el lápiz junto a un comando y pulsa las teclas que quieras.
+
+<BrowserPanels section="extensions">
+<BrowserPanel browser="chrome">
+
+Pega `chrome://extensions/shortcuts` en la barra de direcciones. Cada comando tiene además un menú de alcance: **In Chrome** (solo en Chrome) o **Global** (en todo el sistema), para que funcione aunque Chrome no esté en primer plano.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Pega `edge://extensions/shortcuts` en la barra de direcciones.
+
+Edge se reserva <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd> (duplicar pestaña), <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>U</Kbd> (Read Aloud, lectura en voz alta) y <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> (imprimir con el cuadro de diálogo del sistema), así que un comando de extensión que sugiera uno de ellos empieza como **Not set** en Edge 158. Edge 158 también rechaza algunas teclas <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd> que la lista de Microsoft no menciona, como <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> y <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Z</Kbd>. Los comandos de guardado de TabMerger las evitan todas, así que una instalación nueva tiene los cuatro asignados:
+
+<AnnotatedFigure src="/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp" alt="Página de atajos de teclado de extensiones de Edge para TabMerger: los cuatro comandos de guardado asignados, a Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma y Alt+Shift+Period" width={852} height={460} boxes={[{ id: 'save-shortcuts' }]} source="edge://extensions/shortcuts · Edge 158.0.4370.33">Una instalación nueva de TabMerger en Edge 158: los cuatro comandos de guardado tienen sus teclas, sin nada que arreglar.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Abre `about:addons`, haz clic en el menú del engranaje y elige **Administrar atajos de extensiones** (Manage Extension Shortcuts). Ten en cuenta que <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> abre una ventana privada en Firefox, así que elige otra tecla para cualquier cosa que lo sugiera.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>la página de atajos no te avisa. Si un atajo «no hace nada», revísalo ahí primero.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="Las teclas de TabMerger">
+
+[TabMerger](/features), nuestra extensión gratuita para Chrome, Edge y Firefox, guarda pestañas directamente desde el teclado, sin abrirla. Sugiere una tecla para cada uno de sus cuatro comandos de guardado, elegidas para no chocar con los atajos propios de Chrome, Edge y Firefox, y puedes cambiar cualquiera en la página de atajos de tu navegador (arriba):
+
+<ComparisonTable
+  head={['Tecla sugerida', 'Guarda']}
+  keysColumn={0}
+  rows={[
+    ['Alt+Shift+S', 'La pestaña actual'],
+    ['Alt+Shift+O', 'Todas las demás pestañas de la ventana'],
+    ['Alt+Shift+Comma', 'Las pestañas a la izquierda'],
+    ['Alt+Shift+Period', 'Las pestañas a la derecha'],
+  ]}
+/>
+
+En Mac usan <Kbd>Control</Kbd>+<Kbd>Shift</Kbd> en lugar de <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>: <Kbd>Control</Kbd>+<Kbd>Shift</Kbd>+<Kbd>S</Kbd> guarda la pestaña actual. Estas son las teclas que recibe una instalación nueva. Las actualizaciones no cambian los atajos, así que si instalaste TabMerger antes de que llegaran estas teclas, conserva las que tenía, incluidas las que están en **Not set**: asígnalas en la página de atajos.
+
+Dentro de la ventana emergente, <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd>) busca pestañas abiertas, guardadas y cerradas recientemente en una sola lista.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tab-keyboard-shortcuts/tm-search" alt="Búsqueda de TabMerger abierta con la consulta docs, con las pestañas abiertas y guardadas que coinciden, tema claro" darkAlt="Búsqueda de TabMerger abierta con la consulta docs, con las pestañas abiertas y guardadas que coinciden, tema oscuro" boxes={[{ id: 'search-input', label: 'Búsqueda' }]} source="TabMerger 3.16.1">Ctrl+K y escribe: los resultados salen tanto de las pestañas abiertas como de las guardadas.</ThemedScreenshot>
+
+<InstallCta>Gratis para Chrome, Edge y Firefox. No necesitas cuenta para empezar.</InstallCta>
+
+Encontrarás más hábitos para mantener a raya el número de pestañas en nuestra [guía para gestionar demasiadas pestañas](/blog/manage-too-many-tabs), y lo que ofrece cada navegador más allá de los atajos en [funciones de pestañas de Chrome, Edge y Firefox](/blog/browser-tab-features-compared).
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

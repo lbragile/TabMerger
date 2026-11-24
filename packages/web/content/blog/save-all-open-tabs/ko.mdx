@@ -7,7 +7,7 @@ export const post = {
   shareSummary: '단축키 하나로 저장, 시작할 때 복원, 닫은 탭 되살리기. Chrome, Edge, Firefox 모두 해당.',
   dek: '열린 탭을 모두 지키는 다섯 가지 방법과, 각 방법이 조용히 놓치는 한 가지.',
   published: '2026-11-19',
-  updated: '2026-11-21',
+  updated: '2026-11-24',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D는 현재 창만 저장합니다.', source: '세 브라우저에서 테스트, 2026년 11월 19일' },
@@ -260,14 +260,14 @@ Firefox는 **기록**(History) 메뉴의 **최근에 닫은 탭**과 **최근에
   head={['단축키', '저장 대상']}
   keysColumn={0}
   rows={[
-    ['Ctrl+Shift+P', '창의 다른 탭 전부'],
-    ['Ctrl+Shift+S', '현재 탭'],
-    ['Ctrl+Shift+K', '왼쪽 탭'],
-    ['Ctrl+Shift+U', '오른쪽 탭'],
+    ['Alt+Shift+O', '창의 다른 탭 전부'],
+    ['Alt+Shift+S', '현재 탭'],
+    ['Alt+Shift+Comma', '왼쪽 탭'],
+    ['Alt+Shift+Period', '오른쪽 탭'],
   ]}
 />
 
-Mac에서는 <Kbd>⌘</Kbd>를 사용하세요. 단축키마다 저장할 곳을 묻고, **빠른 저장(새 그룹)** 항목을 고르면 바로 그룹이 만들어집니다. Firefox에서는 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd>가 시크릿 창을 여는 키이므로, `about:addons`의 "확장 기능 단축키 관리"(Manage Extension Shortcuts)에서 다른 키를 지정하세요. Edge는 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd>, <Kbd>U</Kbd>, <Kbd>P</Kbd>를 자체 명령에 쓰므로, `edge://extensions/shortcuts`에서 이 세 단축키에 다른 키를 지정하세요. 방법은 [탭 키보드 단축키 모음](/blog/tab-keyboard-shortcuts)에 나와 있습니다.
+Mac에서는 <Kbd>Alt</Kbd> 대신 <Kbd>Control</Kbd>을 누르세요. 단축키마다 저장할 곳을 묻고, **빠른 저장(새 그룹)** 항목을 고르면 바로 그룹이 만들어집니다. 새로 설치하면 이 키가 지정되고, 이전에 설치한 경우에는 기존 키가 그대로 유지됩니다. 어느 키든 브라우저의 단축키 페이지에서 바꿀 수 있으며, 방법은 [탭 키보드 단축키 모음](/blog/tab-keyboard-shortcuts)에 나와 있습니다.
 
 ### 실수로 닫았다면
 
