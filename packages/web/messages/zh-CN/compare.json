@@ -281,7 +281,7 @@
     "title": "从 OneTab 迁移？",
     "lead": "您的列表会连同标题一起变成分组。数据不会离开您的浏览器。",
     "steps": {
-      "export": "在 OneTab 中打开 <b>Export / Import URLs</b>，然后点击 <b>Copy to clipboard</b>。",
+      "export": "在 OneTab 中打开 <b>导入与导出</b>，然后点击 <b>复制到剪贴板</b>。",
       "save": "将其粘贴到纯文本文件（记事本，或设为纯文本的“文本编辑”）中，并保存为 <b><code>.txt</code></b>。",
       "open": "在 TabMerger 中打开 <b>设置 → 数据</b>，点击 <b>导入</b> 并选择该 <code>.txt</code> 文件。",
       "import": "确认即可。每个 OneTab 分组都会成为独立的分组，名称依次为“Imported 1”“Imported 2”等。",

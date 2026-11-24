@@ -281,7 +281,7 @@
     "title": "Switching from OneTab?",
     "lead": "Your lists come across as groups, titles and all. Nothing leaves your browser.",
     "steps": {
-      "export": "In OneTab, open <b>Export / Import URLs</b> and press <b>Copy to clipboard</b>.",
+      "export": "In OneTab, open <b>Import & Export</b> and press <b>Copy to clipboard</b>.",
       "save": "Paste it into a plain-text file (Notepad, or TextEdit set to plain text) and save it as <b><code>.txt</code></b>.",
       "open": "In TabMerger, open <b>Settings → Data</b>, press <b>Import</b> and choose the <code>.txt</code> file.",
       "import": "Confirm. Each OneTab group becomes its own group, named “Imported 1”, “Imported 2” and so on.",

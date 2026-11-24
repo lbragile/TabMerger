@@ -281,7 +281,7 @@
     "title": "Vindo do OneTab?",
     "lead": "Suas listas chegam como grupos, com títulos e tudo. Nada sai do seu navegador.",
     "steps": {
-      "export": "No OneTab, abra <b>Export / Import URLs</b> e clique em <b>Copy to clipboard</b>.",
+      "export": "No OneTab, abra <b>Importar e exportar</b> e clique em <b>Copiar para a área de transferência</b>.",
       "save": "Cole em um arquivo de texto simples (Bloco de Notas, ou TextEdit em modo texto simples) e salve como <b><code>.txt</code></b>.",
       "open": "No TabMerger, abra <b>Configurações → Dados</b>, clique em <b>Importar</b> e escolha o arquivo <code>.txt</code>.",
       "import": "Confirme. Cada grupo do OneTab vira um grupo próprio, chamado “Imported 1”, “Imported 2” e assim por diante.",

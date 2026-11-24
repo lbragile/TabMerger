@@ -281,7 +281,7 @@
     "title": "Chuyển từ OneTab?",
     "lead": "Danh sách của bạn được chuyển thành nhóm, giữ nguyên tiêu đề. Không có gì rời khỏi trình duyệt của bạn.",
     "steps": {
-      "export": "Trong OneTab, mở <b>Export / Import URLs</b> và nhấn <b>Copy to clipboard</b>.",
+      "export": "Trong OneTab, mở <b>Nhập & Xuất</b> và nhấn <b>Sao chép vào bảng tạm</b>.",
       "save": "Dán vào một tệp văn bản thuần (Notepad, hoặc TextEdit ở chế độ văn bản thuần) và lưu thành <b><code>.txt</code></b>.",
       "open": "Trong TabMerger, mở <b>Cài đặt → Dữ liệu</b>, nhấn <b>Nhập</b> và chọn tệp <code>.txt</code>.",
       "import": "Xác nhận. Mỗi nhóm OneTab trở thành một nhóm riêng, tên là \"Imported 1\", \"Imported 2\", v.v.",

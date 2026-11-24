@@ -281,7 +281,7 @@
     "title": "OneTab'den mi geçiyorsunuz?",
     "lead": "Listeleriniz başlıklarıyla birlikte grup olarak gelir. Hiçbir şey tarayıcınızdan çıkmaz.",
     "steps": {
-      "export": "OneTab'de <b>Export / Import URLs</b> sayfasını açın ve <b>Copy to clipboard</b> düğmesine basın.",
+      "export": "OneTab'de <b>İçe ve dışa aktar</b> sayfasını açın ve <b>Panoya kopyala</b> düğmesine basın.",
       "save": "Metni düz metin dosyasına yapıştırın (Not Defteri veya düz metne ayarlı TextEdit) ve <b><code>.txt</code></b> olarak kaydedin.",
       "open": "TabMerger'da <b>Ayarlar → Veri</b> bölümünü açın, <b>İçe aktar</b> düğmesine basın ve <code>.txt</code> dosyasını seçin.",
       "import": "Onaylayın. Her OneTab grubu \"Imported 1\", \"Imported 2\" gibi adlarla ayrı bir grup olur.",
