@@ -1,0 +1,134 @@
+export const post = {
+  slug: 'firefox-tab-groups',
+  title: 'Grupos de pestañas en Firefox: cómo guardarlos, reabrirlos y conservarlos',
+  navTitle: 'Grupos de pestañas en Firefox',
+  seoTitle: 'Grupos de pestañas de Firefox: guardar, reabrir, sincronizar y sus límites',
+  description:
+    'Cómo funcionan los grupos de pestañas en Firefox 159: crear un grupo, darle color, contraerlo, guardarlo y cerrarlo para reabrirlo después, qué cubre Firefox Sync y cómo conservar tus grupos en todos tus dispositivos con TabMerger.',
+  shareSummary: 'Crea, guarda, reabre y conserva grupos de pestañas en Firefox, y qué cubre Firefox Sync.',
+  dek: 'Los grupos de Firefox ya se pueden guardar y cerrar. Aquí verás adónde van y cómo conservarlos para siempre.',
+  published: '2026-12-07',
+  updated: '2026-12-07',
+  testedOn: ['Firefox 159.0.1'],
+  keyFacts: [
+    { text: '«Guardar y cerrar grupo» conserva un grupo para reabrirlo más tarde.', source: 'Texto de los menús de Firefox 159' },
+    { text: 'Los grupos cerrados aparecen en «Grupos cerrados» y en «Grupos de pestañas recientes».', source: 'Texto de los menús de Firefox 159' },
+    { text: 'La configuración de Firefox Sync incluye «Pestañas abiertas», pero no tiene una entrada propia para los grupos de pestañas.', source: 'Texto de los ajustes de Firefox 159' },
+    { text: 'El menú de un grupo puede copiar todos sus enlaces a la vez.', source: 'Texto de los menús de Firefox 159' },
+  ],
+  faq: [
+    {
+      question: '¿Cómo guardo un grupo de pestañas en Firefox?',
+      answer: 'Haz clic derecho en la etiqueta del grupo y elige «Guardar y cerrar grupo». Luego puedes reabrirlo desde «Grupos cerrados» o desde la lista «Grupos de pestañas».',
+    },
+    {
+      question: '¿Se sincronizan los grupos de pestañas de Firefox?',
+      answer:
+        'La configuración de Sync de Firefox 159 incluye Marcadores, Historial, Pestañas abiertas y otros datos, pero no tiene una entrada propia para los grupos de pestañas. Para tener los mismos grupos en todos tus dispositivos, TabMerger Pro los sincroniza con cifrado de extremo a extremo.',
+    },
+    {
+      question: '¿Qué diferencia hay entre «Guardar y cerrar grupo» y «Eliminar grupo»?',
+      answer: '«Guardar y cerrar grupo» conserva el grupo para reabrirlo más tarde. «Eliminar grupo» lo elimina; «Desagrupar pestañas» deja las pestañas abiertas pero quita el grupo.',
+    },
+    {
+      question: '¿Puedo copiar todos los enlaces de un grupo de pestañas de Firefox?',
+      answer: 'Sí: el menú del grupo en Firefox 159 tiene «Copiar enlaces en el grupo». TabMerger también puede exportar grupos completos a un archivo JSON.',
+    },
+  ],
+  images: [
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp', alt: 'El grupo de TabMerger «Home renovation» con tres ventanas guardadas y nueve pestañas, algunas etiquetadas con sus grupos de pestañas «Kitchen» y «Quotes», tema claro' },
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-dark.webp', alt: 'El grupo de TabMerger «Home renovation» con tres ventanas guardadas y nueve pestañas, algunas etiquetadas con sus grupos de pestañas «Kitchen» y «Quotes», tema oscuro' },
+  ],
+  tags: ['firefox', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Tab groups in Firefox',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/tab-groups',
+      checked: '2026-11-21',
+      note: 'Menu names and settings were read from Firefox 159.0.1’s own interface text; this page blocked our automated check.',
+    },
+    {
+      title: 'Firefox Sync: what it is and how it works',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/firefox-sync-what-it-is-and-how-it-works',
+      checked: '2026-11-21',
+      note: 'The list of synced data was read from Firefox 159.0.1’s settings text.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-23',
+  cover: { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp' },
+  ogImage: { src: '/blog/firefox-tab-groups/og.png', alt: 'Portada «Firefox tab groups: how to save, reopen and keep them»: una guía de TabMerger, con un grupo guardado de dos ventanas' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'basics', label: 'Crear un grupo' },
+    { id: 'save', label: 'Guardar y reabrir' },
+    { id: 'sync', label: '¿Se sincronizan?' },
+    { id: 'tabmerger', label: 'Conservarlos para siempre' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Arrastra una pestaña sobre otra, o haz clic derecho en una pestaña, para crear un grupo en Firefox. Para guardarlo para después, haz clic derecho en la etiqueta del grupo y elige **Guardar y cerrar grupo** («Save and close group»); reábrelo desde **Grupos cerrados** («Closed Groups») o desde la lista **Grupos de pestañas** («Tab groups»). La configuración de Firefox Sync no tiene una entrada propia para los grupos de pestañas, así que, para tener los mismos grupos en todos tus dispositivos y poder buscarlos junto con todo lo demás, guárdalos en [TabMerger](/features).
+
+</QuickAnswer>
+
+<InstallCta>Mantén tus grupos de Firefox guardados, con búsqueda y sincronizados. Gratis para Firefox, Chrome y Edge.</InstallCta>
+
+<Section id="basics" title="¿Cómo funcionan los grupos de pestañas en Firefox?">
+
+Según la propia interfaz de Firefox 159:
+
+1. **Crear:** arrastra una pestaña sobre otra, o haz clic derecho en una pestaña y añádela a un grupo nuevo. Firefox te pide un **Nombre** («Name») y un color (azul, cian, gris, verde, naranja, rosa, púrpura, rojo o amarillo).
+2. **Contraer:** haz clic en la etiqueta del grupo para plegarlo al ancho de una sola pestaña.
+3. **Gestionar:** haz clic derecho en la etiqueta para ver **Guardar y cerrar grupo**, **Desagrupar pestañas** («Ungroup tabs»), **Eliminar grupo** («Delete group»), **Mover grupo a una nueva ventana** («Move group to new window»), **Copiar enlaces en el grupo** («Copy links in group») y **Compartir grupo** («Share group»).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's tab group editor with Name, colours and Save and close group. */}
+
+</Section>
+
+<Section id="save" title="¿Cómo guardo un grupo y lo recupero?">
+
+- **Guardar:** clic derecho en la etiqueta del grupo → **Guardar y cerrar grupo**. Las pestañas se cierran; el grupo se conserva.
+- **Reabrir:** clic derecho en una pestaña → añadir a un grupo → **Grupos cerrados**, o abre la lista **Grupos de pestañas** (Firefox muestra ahí **Grupos de pestañas recientes**, «Recent tab groups»), elige el grupo y luego **Reabrir grupo de pestañas** («Reopen tab group»).
+- **Eliminar:** **Eliminar grupo** lo borra para siempre.
+
+<Catch>un grupo guardado vive en este perfil de Firefox. No es una copia de seguridad y, por lo que muestra la configuración de Sync, no te acompaña a otro dispositivo.</Catch>
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's Tab groups list with a closed group. */}
+
+</Section>
+
+<Section id="sync" title="¿Se sincronizan los grupos de pestañas de Firefox?">
+
+La configuración de **Sincronización** («Sync») de Firefox 159 enumera lo que sincroniza: **Marcadores, Historial, Pestañas abiertas, Contraseña, Direcciones, Métodos de pago, Complementos y Ajustes** («Bookmarks, History, Open tabs, Passwords, Addresses, Payment methods, Add-ons and Settings»). «Pestañas abiertas» se describe como «Una lista de lo que está abierto en todos los dispositivos sincronizados». No hay una entrada propia para los grupos de pestañas, así que no cuentes con que un grupo guardado aparezca en tu otro ordenador.
+
+Para lo mismo en Chrome, consulta nuestra [guía de los grupos de pestañas de Chrome](/blog/chrome-tab-groups), que sí se sincronizan a través de una cuenta de Google.
+
+</Section>
+
+<Section id="tabmerger" title="Conserva tus grupos para siempre con TabMerger">
+
+[TabMerger](/features) funciona en Firefox, Chrome y Edge, y conserva los grupos que el navegador no puede conservar:
+
+1. Haz clic en **Agregar grupo**, ponle nombre y elige **Combinar con lo actual** en su menú **⋯**: todas las ventanas y pestañas abiertas se guardan en él.
+2. Cierra las ventanas. El grupo se queda, con cada pestaña, y puedes buscar en él con <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+3. Reabre una pestaña, una ventana o todo, cuando quieras.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/firefox-tab-groups/tm-kept-groups" alt="El grupo de TabMerger «Home renovation» con tres ventanas guardadas y nueve pestañas, algunas etiquetadas con sus grupos de pestañas «Kitchen» y «Quotes», tema claro" darkAlt="El grupo de TabMerger «Home renovation» con tres ventanas guardadas y nueve pestañas, algunas etiquetadas con sus grupos de pestañas «Kitchen» y «Quotes», tema oscuro" boxes={[{ id: 'summary', label: 'Ventanas y pestañas guardadas' }]} source="TabMerger 3.16.1">Un grupo guardado: tres ventanas, nueve pestañas, listo para reabrir.</ThemedScreenshot>
+
+Con [Pro](/pricing), tus grupos se sincronizan entre Firefox, Chrome y Edge en todos tus dispositivos, con cifrado de extremo a extremo, así que el servidor no puede leerlos. Encontrarás más hábitos en la [rutina para cuando tienes demasiadas pestañas](/blog/manage-too-many-tabs).
+
+<InstallCta>Gratis para Firefox, Chrome y Edge. No necesitas una cuenta para empezar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

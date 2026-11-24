@@ -1,0 +1,134 @@
+export const post = {
+  slug: 'firefox-tab-groups',
+  title: 'مجموعات علامات التبويب في Firefox: كيف تحفظها وتعيد فتحها وتحتفظ بها',
+  navTitle: 'مجموعات علامات التبويب في Firefox',
+  seoTitle: 'مجموعات علامات التبويب في Firefox: الحفظ وإعادة الفتح والمزامنة (وحدودها)',
+  description:
+    'كيف تعمل مجموعات علامات التبويب في Firefox 159: إنشاء مجموعة وتلوينها وطيّها وحفظها وإغلاقها ثم إعادة فتحها لاحقًا، وما الذي يغطيه Firefox Sync، وكيف تحافظ على مجموعاتك آمنة على كل أجهزتك مع TabMerger.',
+  shareSummary: 'أنشئ مجموعات علامات التبويب في Firefox واحفظها وأعد فتحها واحتفظ بها، واعرف ما يغطيه Firefox Sync.',
+  dek: 'صار بإمكانك الآن حفظ مجموعات Firefox وإغلاقها. إليك أين تذهب، وكيف تحتفظ بها إلى الأبد.',
+  published: '2026-12-07',
+  updated: '2026-12-07',
+  testedOn: ['Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'يحتفظ خيار احفظ وأغلق المجموعة بالمجموعة لتعيد فتحها لاحقًا.', source: 'نص قوائم Firefox 159' },
+    { text: 'تظهر المجموعات المغلقة تحت الألسنة المغلقة ومجموعات الألسنة الأخيرة.', source: 'نص قوائم Firefox 159' },
+    { text: 'تعرض إعدادات Firefox Sync بند الألسنة المفتوحة، ولا يوجد بند منفصل لمجموعات علامات التبويب.', source: 'نص إعدادات Firefox 159' },
+    { text: 'تستطيع قائمة المجموعة نسخ كل روابطها دفعة واحدة.', source: 'نص قوائم Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'كيف أحفظ مجموعة علامات تبويب في Firefox؟',
+      answer: 'انقر بزر الماوس الأيمن على تسمية المجموعة واختر احفظ وأغلق المجموعة. أعد فتحها لاحقًا من الألسنة المغلقة أو من قائمة مجموعات الألسنة.',
+    },
+    {
+      question: 'هل تتزامن مجموعات علامات التبويب في Firefox؟',
+      answer:
+        'تعرض إعدادات المزامنة في Firefox 159 العلامات والتأريخ والألسنة المفتوحة وغيرها، ولا يوجد بند منفصل لمجموعات علامات التبويب. ولتحصل على المجموعات نفسها على كل جهاز، يزامنها TabMerger Pro بتشفير تام بين الطرفين.',
+    },
+    {
+      question: 'ما الفرق بين احفظ وأغلق المجموعة واحذف المجموعة؟',
+      answer: 'يحتفظ خيار احفظ وأغلق المجموعة بالمجموعة لتعيد فتحها لاحقًا. أما خيار احذف المجموعة فيزيلها، ويُبقي خيار ألغِ تجميع الألسنة علامات التبويب مفتوحة لكنه يلغي المجموعة.',
+    },
+    {
+      question: 'هل يمكنني نسخ كل الروابط في مجموعة علامات تبويب في Firefox؟',
+      answer: 'نعم: في قائمة المجموعة في Firefox 159 خيار انسخ روابط في المجموعة. ويستطيع TabMerger أيضًا تصدير مجموعات كاملة إلى ملف JSON.',
+    },
+  ],
+  images: [
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp', alt: 'مجموعة TabMerger باسم Home renovation تضم ثلاث نوافذ محفوظة بتسع علامات تبويب، بعضها موسوم بمجموعتي علامات التبويب الخاصتين به Kitchen وQuotes، المظهر الفاتح' },
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-dark.webp', alt: 'مجموعة TabMerger باسم Home renovation تضم ثلاث نوافذ محفوظة بتسع علامات تبويب، بعضها موسوم بمجموعتي علامات التبويب الخاصتين به Kitchen وQuotes، المظهر الداكن' },
+  ],
+  tags: ['firefox', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Tab groups in Firefox',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/tab-groups',
+      checked: '2026-11-21',
+      note: 'Menu names and settings were read from Firefox 159.0.1’s own interface text; this page blocked our automated check.',
+    },
+    {
+      title: 'Firefox Sync: what it is and how it works',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/firefox-sync-what-it-is-and-how-it-works',
+      checked: '2026-11-21',
+      note: 'The list of synced data was read from Firefox 159.0.1’s settings text.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-23',
+  cover: { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp' },
+  ogImage: { src: '/blog/firefox-tab-groups/og.png', alt: 'بطاقة عنوان Firefox tab groups: how to save, reopen and keep them: دليل من TabMerger، مع مجموعة محفوظة من نافذتين' },
+  toc: [
+    { id: 'quick', label: 'إجابة سريعة' },
+    { id: 'basics', label: 'أنشئ مجموعة' },
+    { id: 'save', label: 'الحفظ وإعادة الفتح' },
+    { id: 'sync', label: 'هل تتزامن؟' },
+    { id: 'tabmerger', label: 'احتفظ بها إلى الأبد' },
+    { id: 'faq', label: 'الأسئلة الشائعة' },
+  ],
+}
+
+<QuickAnswer>
+
+اسحب علامة تبويب فوق أخرى، أو انقر بزر الماوس الأيمن على علامة تبويب، لتبدأ مجموعة في Firefox. ولتحتفظ بها لوقت لاحق، انقر بزر الماوس الأيمن على تسمية المجموعة واختر **احفظ وأغلق المجموعة** (<bdi dir="ltr">Save and close group</bdi>)؛ وأعد فتحها من **الألسنة المغلقة** (<bdi dir="ltr">Closed Groups</bdi>) أو من قائمة **مجموعات الألسنة** (<bdi dir="ltr">Tab groups</bdi>). لا يوجد في إعدادات <bdi dir="ltr">Firefox Sync</bdi> بند منفصل لمجموعات علامات التبويب، لذا إن أردت المجموعات نفسها على كل جهاز، وأن تبحث فيها مع كل شيء آخر، فاحفظها في [TabMerger](/features).
+
+</QuickAnswer>
+
+<InstallCta>احتفظ بمجموعات Firefox محفوظة وقابلة للبحث ومتزامنة. مجاني لـ Firefox وChrome وEdge.</InstallCta>
+
+<Section id="basics" title="كيف تعمل مجموعات علامات التبويب في Firefox؟">
+
+بحسب واجهة Firefox 159 نفسها (يسمّي Firefox علامات التبويب «ألسنة»):
+
+1. **الإنشاء:** اسحب علامة تبويب فوق أخرى، أو انقر بزر الماوس الأيمن على علامة تبويب وأضفها إلى مجموعة جديدة. يطلب Firefox **الاسم** (<bdi dir="ltr">Name</bdi>) ولونًا (أزرق، سماوي، الرمادي، أخضر، برتقالي، وردي، أرجواني، أحمر أو أصفر).
+2. **الطيّ:** انقر على تسمية المجموعة لتطويها إلى عرض علامة تبويب واحدة.
+3. **الإدارة:** انقر بزر الماوس الأيمن على التسمية لتجد **احفظ وأغلق المجموعة** و**ألغِ تجميع الألسنة** (<bdi dir="ltr">Ungroup tabs</bdi>) و**احذف المجموعة** (<bdi dir="ltr">Delete group</bdi>) و**انقل المجموعة إلى نافذة جديدة** (<bdi dir="ltr">Move group to new window</bdi>) و**انسخ روابط في المجموعة** (<bdi dir="ltr">Copy links in group</bdi>) و**شارك المجموعة** (<bdi dir="ltr">Share group</bdi>).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's tab group editor with Name, colours and Save and close group. */}
+
+</Section>
+
+<Section id="save" title="كيف أحفظ مجموعة وأستعيدها؟">
+
+- **الحفظ:** انقر بزر الماوس الأيمن على تسمية المجموعة ← **احفظ وأغلق المجموعة**. تُغلق علامات التبويب، وتبقى المجموعة محفوظة.
+- **إعادة الفتح:** انقر بزر الماوس الأيمن على علامة تبويب ← الإضافة إلى مجموعة ← **الألسنة المغلقة**، أو افتح قائمة **مجموعات الألسنة** (يعرض Firefox فيها **مجموعات الألسنة الأخيرة**، <bdi dir="ltr">Recent tab groups</bdi>)، واختر المجموعة، ثم **إعادة فتح مجموعة لسان** (<bdi dir="ltr">Reopen tab group</bdi>).
+- **الحذف:** يزيلها خيار **احذف المجموعة** نهائيًا.
+
+<Catch>المجموعة المحفوظة تعيش في ملف Firefox الشخصي هذا. ليست نسخة احتياطية، وبحسب ما تظهره إعدادات المزامنة، لا تنتقل معك إلى جهاز آخر.</Catch>
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's Tab groups list with a closed group. */}
+
+</Section>
+
+<Section id="sync" title="هل تتزامن مجموعات علامات التبويب في Firefox؟">
+
+تسرد إعدادات **المزامنة** (<bdi dir="ltr">Sync</bdi>) في Firefox 159 ما تزامنه: **العلامات، التأريخ، الألسنة المفتوحة، كلمات السر، العناوين، طرق الدفع، الإضافات والإعدادات** (<bdi dir="ltr">Bookmarks, History, Open tabs, Passwords, Addresses, Payment methods, Add-ons and Settings</bdi>). ويُوصف بند «الألسنة المفتوحة» بأنه «قائمة بالألسنة المفتوحة على كل الأجهزة». لا يوجد بند منفصل لمجموعات علامات التبويب، فلا تعتمد على ظهور مجموعة محفوظة على حاسوبك الآخر.
+
+وللفكرة نفسها في Chrome، راجع [دليلنا لمجموعات علامات التبويب في Chrome](/blog/chrome-tab-groups)، وهي تتزامن عبر حساب Google.
+
+</Section>
+
+<Section id="tabmerger" title="احتفظ بمجموعاتك إلى الأبد مع TabMerger">
+
+يعمل [TabMerger](/features) في Firefox وChrome وEdge، ويحتفظ بالمجموعات التي لا يستطيع المتصفح الاحتفاظ بها:
+
+1. انقر على **إضافة مجموعة**، وسمّها، ثم اختر **دمج مع الحالية** من قائمة **⋯** الخاصة بها: تُحفظ فيها كل نافذة وعلامة تبويب مفتوحة.
+2. أغلق النوافذ. تبقى المجموعة بكل علامات تبويبها، ويمكنك البحث فيها بـ <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi>.
+3. أعد فتح علامة تبويب واحدة أو نافذة واحدة أو كل شيء، متى شئت.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/firefox-tab-groups/tm-kept-groups" alt="مجموعة TabMerger باسم Home renovation تضم ثلاث نوافذ محفوظة بتسع علامات تبويب، بعضها موسوم بمجموعتي علامات التبويب الخاصتين به Kitchen وQuotes، المظهر الفاتح" darkAlt="مجموعة TabMerger باسم Home renovation تضم ثلاث نوافذ محفوظة بتسع علامات تبويب، بعضها موسوم بمجموعتي علامات التبويب الخاصتين به Kitchen وQuotes، المظهر الداكن" boxes={[{ id: 'summary', label: 'النوافذ وعلامات التبويب المحفوظة' }]} source="TabMerger 3.16.1">مجموعة محفوظة: ثلاث نوافذ وتسع علامات تبويب، جاهزة لإعادة الفتح.</ThemedScreenshot>
+
+مع [Pro](/pricing)، تتزامن مجموعاتك بين Firefox وChrome وEdge على كل أجهزتك، بتشفير تام بين الطرفين، فلا يستطيع الخادم قراءتها. والمزيد من العادات في [روتين التعامل مع كثرة علامات التبويب](/blog/manage-too-many-tabs).
+
+<InstallCta>مجاني لـ Firefox وChrome وEdge. لا حاجة إلى حساب للبدء.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="الأسئلة الشائعة">
+
+<Faq items={post.faq} />
+
+</Section>

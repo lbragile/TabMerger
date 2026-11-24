@@ -1,0 +1,134 @@
+export const post = {
+  slug: 'firefox-tab-groups',
+  title: 'קבוצות כרטיסיות ב-Firefox: איך שומרים, פותחים מחדש ומשמרים אותן',
+  navTitle: 'קבוצות כרטיסיות ב-Firefox',
+  seoTitle: 'קבוצות כרטיסיות ב-Firefox: שמירה, פתיחה מחדש, סנכרון והמגבלות',
+  description:
+    'איך קבוצות כרטיסיות עובדות ב-Firefox 159: יצירת קבוצה, צביעה, כיווץ, שמירה וסגירה של קבוצה ופתיחה מחדש מאוחר יותר, מה Firefox Sync מכסה, ואיך לשמור על הקבוצות בכל המכשירים עם TabMerger.',
+  shareSummary: 'יצירה, שמירה, פתיחה מחדש ושימור של קבוצות כרטיסיות ב-Firefox, ומה Firefox Sync מכסה.',
+  dek: 'עכשיו אפשר לשמור ולסגור קבוצות ב-Firefox. הנה לאן הן הולכות, ואיך לשמור אותן לתמיד.',
+  published: '2026-12-07',
+  updated: '2026-12-07',
+  testedOn: ['Firefox 159.0.1'],
+  keyFacts: [
+    { text: '"שמירה וסגירת הקבוצה" שומרת קבוצה כדי לפתוח אותה מחדש מאוחר יותר.', source: 'הטקסט בתפריטים של Firefox 159' },
+    { text: 'קבוצות סגורות מופיעות תחת "קבוצות סגורות" ו-"קבוצות לשוניות אחרונות".', source: 'הטקסט בתפריטים של Firefox 159' },
+    { text: 'בהגדרות של Firefox Sync מופיע "לשוניות פתוחות", בלי פריט נפרד לקבוצות כרטיסיות.', source: 'הטקסט בהגדרות של Firefox 159' },
+    { text: 'התפריט של קבוצה יכול להעתיק את כל הקישורים שלה בבת אחת.', source: 'הטקסט בתפריטים של Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'איך שומרים קבוצת כרטיסיות ב-Firefox?',
+      answer: 'לוחצים לחיצה ימנית על התווית של הקבוצה ובוחרים "שמירה וסגירת הקבוצה". פותחים אותה מחדש מאוחר יותר מ-"קבוצות סגורות" או מהרשימה "קבוצות לשוניות".',
+    },
+    {
+      question: 'האם קבוצות כרטיסיות ב-Firefox מסתנכרנות?',
+      answer:
+        'בהגדרות הסנכרון של Firefox 159 מופיעים סימניות, היסטוריה, לשוניות פתוחות ועוד, בלי פריט נפרד לקבוצות כרטיסיות. כדי שאותן קבוצות יהיו בכל מכשיר, TabMerger Pro מסנכרן אותן בהצפנה מקצה לקצה.',
+    },
+    {
+      question: 'מה ההבדל בין "שמירה וסגירת הקבוצה" לבין "מחיקת הקבוצה"?',
+      answer: '"שמירה וסגירת הקבוצה" שומרת את הקבוצה כדי לפתוח אותה מחדש מאוחר יותר. "מחיקת הקבוצה" מסירה אותה; "ביטול קיבוץ הלשוניות" משאיר את הכרטיסיות פתוחות אבל מבטל את הקבוצה.',
+    },
+    {
+      question: 'אפשר להעתיק את כל הקישורים שבקבוצת כרטיסיות ב-Firefox?',
+      answer: 'כן: בתפריט הקבוצה של Firefox 159 יש "העתקת הקישורים שבקבוצה". TabMerger יכול גם לייצא קבוצות שלמות לקובץ JSON.',
+    },
+  ],
+  images: [
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp', alt: 'הקבוצה Home renovation ב-TabMerger עם שלושה חלונות שמורים ותשע כרטיסיות, חלקן מתויגות בקבוצות הכרטיסיות שלהן Kitchen ו-Quotes, ערכת נושא בהירה' },
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-dark.webp', alt: 'הקבוצה Home renovation ב-TabMerger עם שלושה חלונות שמורים ותשע כרטיסיות, חלקן מתויגות בקבוצות הכרטיסיות שלהן Kitchen ו-Quotes, ערכת נושא כהה' },
+  ],
+  tags: ['firefox', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Tab groups in Firefox',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/tab-groups',
+      checked: '2026-11-21',
+      note: 'Menu names and settings were read from Firefox 159.0.1’s own interface text; this page blocked our automated check.',
+    },
+    {
+      title: 'Firefox Sync: what it is and how it works',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/firefox-sync-what-it-is-and-how-it-works',
+      checked: '2026-11-21',
+      note: 'The list of synced data was read from Firefox 159.0.1’s settings text.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-23',
+  cover: { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp' },
+  ogImage: { src: '/blog/firefox-tab-groups/og.png', alt: 'כרטיס הכותרת Firefox tab groups: how to save, reopen and keep them: מדריך של TabMerger, עם קבוצה שמורה של שני חלונות' },
+  toc: [
+    { id: 'quick', label: 'תשובה קצרה' },
+    { id: 'basics', label: 'יצירת קבוצה' },
+    { id: 'save', label: 'שמירה ופתיחה מחדש' },
+    { id: 'sync', label: 'האם הן מסתנכרנות?' },
+    { id: 'tabmerger', label: 'לשמור לתמיד' },
+    { id: 'faq', label: 'שאלות נפוצות' },
+  ],
+}
+
+<QuickAnswer>
+
+גוררים כרטיסייה אחת אל אחרת, או לוחצים לחיצה ימנית על כרטיסייה, כדי ליצור קבוצה ב-Firefox. כדי לשמור אותה להמשך, לוחצים לחיצה ימנית על התווית של הקבוצה ובוחרים **שמירה וסגירת הקבוצה** (<bdi dir="ltr">Save and close group</bdi>); פותחים אותה מחדש מ-**קבוצות סגורות** (<bdi dir="ltr">Closed Groups</bdi>) או מהרשימה **קבוצות לשוניות** (<bdi dir="ltr">Tab groups</bdi>). בהגדרות של <bdi dir="ltr">Firefox Sync</bdi> אין פריט נפרד לקבוצות כרטיסיות, ולכן כדי שאותן קבוצות יהיו בכל מכשיר, ויהיה אפשר לחפש בהן יחד עם כל השאר, כדאי לשמור אותן ב-[TabMerger](/features).
+
+</QuickAnswer>
+
+<InstallCta>הקבוצות שלך מ-Firefox שמורות, ניתנות לחיפוש ומסונכרנות. בחינם ל-Firefox, ל-Chrome ול-Edge.</InstallCta>
+
+<Section id="basics" title="איך קבוצות כרטיסיות עובדות ב-Firefox?">
+
+לפי הממשק של Firefox 159 עצמו (ב-Firefox כרטיסיות נקראות "לשוניות"):
+
+1. **יצירה:** גוררים כרטיסייה אחת אל אחרת, או לוחצים לחיצה ימנית על כרטיסייה ומוסיפים אותה לקבוצה חדשה. Firefox מבקש **שם** (<bdi dir="ltr">Name</bdi>) וצבע (כחול, ציאן, אפור, ירוק, כתום, ורוד, סגול, אדום או צהוב).
+2. **כיווץ:** לוחצים על התווית של הקבוצה כדי לקפל אותה לרוחב של כרטיסייה אחת.
+3. **ניהול:** בלחיצה ימנית על התווית מופיעים **שמירה וסגירת הקבוצה**, **ביטול קיבוץ הלשוניות** (<bdi dir="ltr">Ungroup tabs</bdi>), **מחיקת הקבוצה** (<bdi dir="ltr">Delete group</bdi>), **העברת הקבוצה לחלון חדש** (<bdi dir="ltr">Move group to new window</bdi>), **העתקת הקישורים שבקבוצה** (<bdi dir="ltr">Copy links in group</bdi>) ו-**שיתוף הקבוצה** (<bdi dir="ltr">Share group</bdi>).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's tab group editor with Name, colours and Save and close group. */}
+
+</Section>
+
+<Section id="save" title="איך שומרים קבוצה ומחזירים אותה?">
+
+- **שמירה:** לחיצה ימנית על התווית של הקבוצה ← **שמירה וסגירת הקבוצה**. הכרטיסיות נסגרות; הקבוצה נשמרת.
+- **פתיחה מחדש:** לחיצה ימנית על כרטיסייה ← הוספה לקבוצה ← **קבוצות סגורות**, או פותחים את הרשימה **קבוצות לשוניות** (שם Firefox מציג את **קבוצות לשוניות אחרונות**, <bdi dir="ltr">Recent tab groups</bdi>), בוחרים את הקבוצה ואז **פתיחת קבוצת הלשוניות מחדש** (<bdi dir="ltr">Reopen tab group</bdi>).
+- **מחיקה:** **מחיקת הקבוצה** מסירה אותה לתמיד.
+
+<Catch>קבוצה שמורה חיה בפרופיל ה-Firefox הזה. היא לא גיבוי, ולפי מה שמראות הגדרות הסנכרון, היא לא עוברת איתך למכשיר אחר.</Catch>
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's Tab groups list with a closed group. */}
+
+</Section>
+
+<Section id="sync" title="האם קבוצות כרטיסיות ב-Firefox מסתנכרנות?">
+
+ההגדרות של **סנכרון** (<bdi dir="ltr">Sync</bdi>) ב-Firefox 159 מפרטות מה מסתנכרן: **סימניות, היסטוריה, לשוניות פתוחות, ססמאות, כתובות, אמצעי תשלום, תוספות והגדרות** (<bdi dir="ltr">Bookmarks, History, Open tabs, Passwords, Addresses, Payment methods, Add-ons and Settings</bdi>). הפריט "לשוניות פתוחות" מתואר כ"רשימה של מה שפתוח בכל ההתקנים המסונכרנים". אין פריט נפרד לקבוצות כרטיסיות, אז לא כדאי לסמוך על כך שקבוצה שמורה תופיע במחשב האחר שלך.
+
+לאותו רעיון ב-Chrome, כדאי לקרוא את [המדריך שלנו לקבוצות כרטיסיות ב-Chrome](/blog/chrome-tab-groups), שם הקבוצות כן מסתנכרנות דרך חשבון Google.
+
+</Section>
+
+<Section id="tabmerger" title="לשמור את הקבוצות לתמיד עם TabMerger">
+
+[TabMerger](/features) עובד ב-Firefox, ב-Chrome וב-Edge, ושומר קבוצות שהדפדפן לא יכול לשמור:
+
+1. לוחצים על **הוספת קבוצה**, נותנים לה שם, ואז בוחרים **מיזוג עם הנוכחיים** בתפריט **⋯** שלה: כל החלונות והכרטיסיות הפתוחים נשמרים בה.
+2. סוגרים את החלונות. הקבוצה נשארת, עם כל כרטיסייה, ואפשר לחפש בה עם <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi>.
+3. פותחים מחדש כרטיסייה אחת, חלון אחד או הכול, מתי שרוצים.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/firefox-tab-groups/tm-kept-groups" alt="הקבוצה Home renovation ב-TabMerger עם שלושה חלונות שמורים ותשע כרטיסיות, חלקן מתויגות בקבוצות הכרטיסיות שלהן Kitchen ו-Quotes, ערכת נושא בהירה" darkAlt="הקבוצה Home renovation ב-TabMerger עם שלושה חלונות שמורים ותשע כרטיסיות, חלקן מתויגות בקבוצות הכרטיסיות שלהן Kitchen ו-Quotes, ערכת נושא כהה" boxes={[{ id: 'summary', label: 'חלונות וכרטיסיות שנשמרו' }]} source="TabMerger 3.16.1">קבוצה שמורה: שלושה חלונות, תשע כרטיסיות, מוכנה לפתיחה מחדש.</ThemedScreenshot>
+
+ב-[Pro](/pricing), הקבוצות שלך מסתנכרנות בין Firefox, Chrome ו-Edge בכל המכשירים שלך, בהצפנה מקצה לקצה, כך שהשרת לא יכול לקרוא אותן. עוד הרגלים ב[שגרה למצב של יותר מדי כרטיסיות](/blog/manage-too-many-tabs).
+
+<InstallCta>בחינם ל-Firefox, ל-Chrome ול-Edge. לא צריך חשבון כדי להתחיל.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="שאלות נפוצות">
+
+<Faq items={post.faq} />
+
+</Section>

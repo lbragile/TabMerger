@@ -1,0 +1,134 @@
+export const post = {
+  slug: 'firefox-tab-groups',
+  title: 'Grupy kart w Firefoksie: jak je zapisać, ponownie otworzyć i zachować',
+  navTitle: 'Grupy kart w Firefoksie',
+  seoTitle: 'Grupy kart w Firefoksie: zapisywanie, otwieranie, synchronizacja (i limity)',
+  description:
+    'Jak działają grupy kart w Firefoksie 159: tworzenie grupy, nadawanie koloru, zwijanie, zapisywanie i zamykanie oraz ponowne otwieranie, co obejmuje Firefox Sync i jak bezpiecznie zachować grupy na wszystkich urządzeniach dzięki TabMergerowi.',
+  shareSummary: 'Twórz, zapisuj, otwieraj i zachowuj grupy kart w Firefoksie. Plus: co obejmuje Firefox Sync.',
+  dek: 'Grupy w Firefoksie można już zapisać i zamknąć. Zobacz, gdzie trafiają i jak zachować je na dobre.',
+  published: '2026-12-07',
+  updated: '2026-12-07',
+  testedOn: ['Firefox 159.0.1'],
+  keyFacts: [
+    { text: '„Zachowaj i zamknij grupę” zachowuje grupę, by można ją było później otworzyć.', source: 'Tekst menu Firefoksa 159' },
+    { text: 'Zamknięte grupy są widoczne w „Zamknięte grupy” i „Ostatnie grupy kart”.', source: 'Tekst menu Firefoksa 159' },
+    { text: 'Ustawienia Firefox Sync wymieniają „Otwarte karty”, ale nie mają osobnej pozycji dla grup kart.', source: 'Tekst ustawień Firefoksa 159' },
+    { text: 'Menu grupy pozwala skopiować wszystkie jej odnośniki naraz.', source: 'Tekst menu Firefoksa 159' },
+  ],
+  faq: [
+    {
+      question: 'Jak zapisać grupę kart w Firefoksie?',
+      answer: 'Kliknij prawym przyciskiem etykietę grupy i wybierz „Zachowaj i zamknij grupę”. Później otworzysz ją ponownie z „Zamknięte grupy” albo z listy „Grupy kart”.',
+    },
+    {
+      question: 'Czy grupy kart w Firefoksie się synchronizują?',
+      answer:
+        'Ustawienia synchronizacji w Firefoksie 159 wymieniają Zakładki, Historia, Otwarte karty i inne dane, ale nie mają osobnej pozycji dla grup kart. Aby mieć te same grupy na każdym urządzeniu, TabMerger Pro synchronizuje je z szyfrowaniem end-to-end.',
+    },
+    {
+      question: 'Czym różni się „Zachowaj i zamknij grupę” od „Usuń grupę”?',
+      answer: '„Zachowaj i zamknij grupę” zachowuje grupę, by można ją było później otworzyć. „Usuń grupę” ją usuwa; „Rozgrupuj karty” zostawia karty otwarte, ale likwiduje grupę.',
+    },
+    {
+      question: 'Czy mogę skopiować wszystkie odnośniki z grupy kart w Firefoksie?',
+      answer: 'Tak: menu grupy w Firefoksie 159 ma pozycję „Kopiuj odnośniki w grupie”. TabMerger może też wyeksportować całe grupy do pliku JSON.',
+    },
+  ],
+  images: [
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp', alt: 'Grupa TabMergera „Home renovation” z trzema zapisanymi oknami i dziewięcioma kartami, część oznaczona swoimi grupami kart „Kitchen” i „Quotes”, jasny motyw' },
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-dark.webp', alt: 'Grupa TabMergera „Home renovation” z trzema zapisanymi oknami i dziewięcioma kartami, część oznaczona swoimi grupami kart „Kitchen” i „Quotes”, ciemny motyw' },
+  ],
+  tags: ['firefox', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Tab groups in Firefox',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/tab-groups',
+      checked: '2026-11-21',
+      note: 'Menu names and settings were read from Firefox 159.0.1’s own interface text; this page blocked our automated check.',
+    },
+    {
+      title: 'Firefox Sync: what it is and how it works',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/firefox-sync-what-it-is-and-how-it-works',
+      checked: '2026-11-21',
+      note: 'The list of synced data was read from Firefox 159.0.1’s settings text.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-23',
+  cover: { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp' },
+  ogImage: { src: '/blog/firefox-tab-groups/og.png', alt: 'Karta tytułowa „Firefox tab groups: how to save, reopen and keep them”: poradnik TabMergera z zapisaną grupą dwóch okien' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'basics', label: 'Tworzenie grupy' },
+    { id: 'save', label: 'Zapisywanie i otwieranie' },
+    { id: 'sync', label: 'Czy się synchronizują?' },
+    { id: 'tabmerger', label: 'Zachowaj je na dobre' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Przeciągnij jedną kartę na drugą albo kliknij kartę prawym przyciskiem, aby utworzyć grupę w Firefoksie. Aby zachować ją na później, kliknij prawym przyciskiem etykietę grupy i wybierz **Zachowaj i zamknij grupę** („Save and close group”); ponownie otworzysz ją z **Zamknięte grupy** („Closed Groups”) albo z listy **Grupy kart** („Tab groups”). Ustawienia Firefox Sync nie mają osobnej pozycji dla grup kart, więc jeśli chcesz mieć te same grupy na każdym urządzeniu i przeszukiwać je razem z całą resztą, zapisz je w [TabMergerze](/features).
+
+</QuickAnswer>
+
+<InstallCta>Twoje grupy z Firefoksa zapisane, łatwe do przeszukania i zsynchronizowane. Za darmo dla Firefoksa, Chrome i Edge.</InstallCta>
+
+<Section id="basics" title="Jak działają grupy kart w Firefoksie?">
+
+Według samego interfejsu Firefoksa 159:
+
+1. **Tworzenie:** przeciągnij jedną kartę na drugą albo kliknij kartę prawym przyciskiem i dodaj ją do nowej grupy. Firefox pyta o nazwę (pole **Nazwa**, „Name”) i kolor (niebieski, turkusowy, szary, zielony, pomarańczowy, różowy, fioletowy, czerwony lub żółty).
+2. **Zwijanie:** kliknij etykietę grupy, aby zwinąć ją do szerokości jednej karty.
+3. **Zarządzanie:** po kliknięciu etykiety prawym przyciskiem masz do wyboru **Zachowaj i zamknij grupę**, **Rozgrupuj karty** („Ungroup tabs”), **Usuń grupę** („Delete group”), **Przenieś grupę do nowego okna** („Move group to new window”), **Kopiuj odnośniki w grupie** („Copy links in group”) i **Udostępnij grupę** („Share group”).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's tab group editor with Name, colours and Save and close group. */}
+
+</Section>
+
+<Section id="save" title="Jak zapisać grupę i ją odzyskać?">
+
+- **Zapisywanie:** prawy przycisk na etykiecie grupy → **Zachowaj i zamknij grupę**. Karty się zamykają, a grupa zostaje zachowana.
+- **Ponowne otwieranie:** prawy przycisk na karcie → dodaj do grupy → **Zamknięte grupy** albo otwórz listę **Grupy kart** (Firefox pokazuje tam **Ostatnie grupy kart**, „Recent tab groups”), wybierz grupę, a potem **Przywróć grupę kart** („Reopen tab group”).
+- **Usuwanie:** **Usuń grupę** usuwa ją na dobre.
+
+<Catch>zapisana grupa żyje w tym profilu Firefoksa. Nie jest kopią zapasową i, na ile wynika z ustawień synchronizacji, nie pójdzie za tobą na inne urządzenie.</Catch>
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's Tab groups list with a closed group. */}
+
+</Section>
+
+<Section id="sync" title="Czy grupy kart w Firefoksie się synchronizują?">
+
+Ustawienia **Synchronizacja** („Sync”) w Firefoksie 159 wymieniają, co jest synchronizowane: **Zakładki, Historia, Otwarte karty, Hasła, Adresy, Metody płatności, Dodatki i Ustawienia** („Bookmarks, History, Open tabs, Passwords, Addresses, Payment methods, Add-ons and Settings”). „Otwarte karty” opisano jako „Lista otwartych stron na wszystkich synchronizowanych urządzeniach”. Nie ma osobnej pozycji dla grup kart, więc nie licz na to, że zapisana grupa pojawi się na twoim drugim komputerze.
+
+Jak to wygląda w Chrome, opisuje nasz [poradnik o grupach kart w Chrome](/blog/chrome-tab-groups); tam grupy synchronizują się przez konto Google.
+
+</Section>
+
+<Section id="tabmerger" title="Zachowaj swoje grupy na dobre dzięki TabMergerowi">
+
+[TabMerger](/features) działa w Firefoksie, Chrome i Edge i zachowuje grupy, których przeglądarka nie potrafi zachować:
+
+1. Kliknij **Dodaj Grupę**, nazwij grupę, a potem w jej menu **⋯** wybierz **Scal z bieżącą sesją**: wszystkie otwarte okna i karty zostaną w niej zapisane.
+2. Zamknij okna. Grupa zostaje, z każdą kartą, i można ją przeszukać skrótem <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+3. Otwórz ponownie jedną kartę, jedno okno albo wszystko, kiedy chcesz.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/firefox-tab-groups/tm-kept-groups" alt="Grupa TabMergera „Home renovation” z trzema zapisanymi oknami i dziewięcioma kartami, część oznaczona swoimi grupami kart „Kitchen” i „Quotes”, jasny motyw" darkAlt="Grupa TabMergera „Home renovation” z trzema zapisanymi oknami i dziewięcioma kartami, część oznaczona swoimi grupami kart „Kitchen” i „Quotes”, ciemny motyw" boxes={[{ id: 'summary', label: 'Zapisane okna i karty' }]} source="TabMerger 3.16.1">Zapisana grupa: trzy okna, dziewięć kart, gotowe do ponownego otwarcia.</ThemedScreenshot>
+
+W planie [Pro](/pricing) twoje grupy synchronizują się między Firefoksem, Chrome i Edge na wszystkich twoich urządzeniach, z szyfrowaniem end-to-end, więc serwer nie może ich odczytać. Więcej nawyków znajdziesz w poradniku [sposób na zbyt wiele kart](/blog/manage-too-many-tabs).
+
+<InstallCta>Za darmo dla Firefoksa, Chrome i Edge. Na start nie potrzebujesz konta.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,134 @@
+export const post = {
+  slug: 'firefox-tab-groups',
+  title: 'Firefox 탭 그룹: 저장하고, 다시 열고, 오래 보관하는 방법',
+  navTitle: 'Firefox 탭 그룹',
+  seoTitle: 'Firefox 탭 그룹 저장, 다시 열기, 동기화 (그리고 한계)',
+  description:
+    'Firefox 159에서 탭 그룹이 작동하는 방식: 그룹 만들기, 색 지정, 접기, 저장 후 닫았다가 나중에 다시 열기, Firefox Sync가 동기화하는 범위, 그리고 TabMerger로 모든 기기에서 그룹을 안전하게 보관하는 방법.',
+  shareSummary: 'Firefox 탭 그룹을 만들고, 저장하고, 다시 열고, 보관하는 방법과 Firefox Sync의 동기화 범위.',
+  dek: '이제 Firefox에서 그룹을 저장하고 닫을 수 있습니다. 그룹이 어디로 가는지, 어떻게 오래 보관하는지 알아보세요.',
+  published: '2026-12-07',
+  updated: '2026-12-07',
+  testedOn: ['Firefox 159.0.1'],
+  keyFacts: [
+    { text: '‘그룹 저장 후 닫기’는 그룹을 남겨 두어 나중에 다시 열 수 있게 합니다.', source: 'Firefox 159 메뉴 문구' },
+    { text: '닫힌 그룹은 ‘닫힌 그룹’과 ‘최근 탭 그룹’에 표시됩니다.', source: 'Firefox 159 메뉴 문구' },
+    { text: 'Firefox Sync 설정에는 ‘열린 탭’이 있지만 탭 그룹 전용 항목은 없습니다.', source: 'Firefox 159 설정 문구' },
+    { text: '그룹 메뉴에서 그룹의 모든 링크를 한 번에 복사할 수 있습니다.', source: 'Firefox 159 메뉴 문구' },
+  ],
+  faq: [
+    {
+      question: 'Firefox에서 탭 그룹을 저장하려면 어떻게 하나요?',
+      answer: '그룹 레이블을 마우스 오른쪽 버튼으로 클릭하고 ‘그룹 저장 후 닫기’를 선택하세요. 나중에 ‘닫힌 그룹’이나 ‘탭 그룹’ 목록에서 다시 열 수 있습니다.',
+    },
+    {
+      question: 'Firefox 탭 그룹은 동기화되나요?',
+      answer:
+        'Firefox 159의 동기화 설정에는 북마크, 기록, 열린 탭 등이 있지만 탭 그룹 전용 항목은 없습니다. 모든 기기에서 같은 그룹을 쓰려면 TabMerger Pro가 엔드투엔드 암호화로 동기화합니다.',
+    },
+    {
+      question: '‘그룹 저장 후 닫기’와 ‘그룹 삭제’의 차이는 무엇인가요?',
+      answer: '‘그룹 저장 후 닫기’는 그룹을 남겨 두어 나중에 다시 열 수 있게 합니다. ‘그룹 삭제’는 그룹을 없애고, ‘그룹 해제’는 탭은 연 채로 그룹만 해제합니다.',
+    },
+    {
+      question: 'Firefox 탭 그룹의 링크를 한 번에 모두 복사할 수 있나요?',
+      answer: '네. Firefox 159의 그룹 메뉴에 ‘그룹의 링크 복사’가 있습니다. TabMerger는 그룹 전체를 JSON 파일로 내보낼 수도 있습니다.',
+    },
+  ],
+  images: [
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp', alt: '저장된 창 세 개와 탭 아홉 개를 담은 TabMerger 그룹 Home renovation, 일부 탭에 원래 탭 그룹인 Kitchen과 Quotes 태그가 붙은 화면, 라이트 테마' },
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-dark.webp', alt: '저장된 창 세 개와 탭 아홉 개를 담은 TabMerger 그룹 Home renovation, 일부 탭에 원래 탭 그룹인 Kitchen과 Quotes 태그가 붙은 화면, 다크 테마' },
+  ],
+  tags: ['firefox', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Tab groups in Firefox',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/tab-groups',
+      checked: '2026-11-21',
+      note: 'Menu names and settings were read from Firefox 159.0.1’s own interface text; this page blocked our automated check.',
+    },
+    {
+      title: 'Firefox Sync: what it is and how it works',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/firefox-sync-what-it-is-and-how-it-works',
+      checked: '2026-11-21',
+      note: 'The list of synced data was read from Firefox 159.0.1’s settings text.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-23',
+  cover: { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp' },
+  ogImage: { src: '/blog/firefox-tab-groups/og.png', alt: '제목 카드 ‘Firefox tab groups: how to save, reopen and keep them’: 창 두 개를 저장한 그룹이 담긴 TabMerger 가이드' },
+  toc: [
+    { id: 'quick', label: '빠른 답변' },
+    { id: 'basics', label: '그룹 만들기' },
+    { id: 'save', label: '저장하고 다시 열기' },
+    { id: 'sync', label: '동기화되나요?' },
+    { id: 'tabmerger', label: '오래 보관하기' },
+    { id: 'faq', label: '자주 묻는 질문' },
+  ],
+}
+
+<QuickAnswer>
+
+Firefox에서 그룹을 만들려면 탭 하나를 다른 탭 위로 끌어다 놓거나 탭을 마우스 오른쪽 버튼으로 클릭하세요. 나중을 위해 남겨 두려면 그룹 레이블을 마우스 오른쪽 버튼으로 클릭하고 **그룹 저장 후 닫기**(Save and close group)를 선택합니다. 다시 열 때는 **닫힌 그룹**(Closed Groups)이나 **탭 그룹**(Tab groups) 목록을 이용합니다. Firefox Sync 설정에는 탭 그룹 전용 항목이 없으니, 모든 기기에서 같은 그룹을 쓰고 다른 모든 것과 함께 검색하려면 [TabMerger](/features)에 저장하세요.
+
+</QuickAnswer>
+
+<InstallCta>Firefox 그룹을 저장하고, 검색하고, 동기화하세요. Firefox, Chrome, Edge에서 무료.</InstallCta>
+
+<Section id="basics" title="Firefox 탭 그룹은 어떻게 작동하나요?">
+
+Firefox 159 화면 문구 기준입니다.
+
+1. **만들기:** 탭 하나를 다른 탭 위로 끌어다 놓거나, 탭을 마우스 오른쪽 버튼으로 클릭해 새 그룹에 추가합니다. Firefox가 **이름**(Name)과 색(파란색, 청록색, 회색, 초록색, 주황색, 분홍색, 보라색, 빨간색, 노란색)을 묻습니다.
+2. **접기:** 그룹 레이블을 클릭하면 탭 하나 너비로 접힙니다.
+3. **관리:** 레이블을 마우스 오른쪽 버튼으로 클릭하면 **그룹 저장 후 닫기**, **그룹 해제**(Ungroup tabs), **그룹 삭제**(Delete group), **그룹을 새 창으로 이동**(Move group to new window), **그룹의 링크 복사**(Copy links in group), **그룹 공유**(Share group)가 나옵니다.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's tab group editor with Name, colours and Save and close group. */}
+
+</Section>
+
+<Section id="save" title="그룹을 저장하고 되찾으려면?">
+
+- **저장:** 그룹 레이블을 마우스 오른쪽 버튼으로 클릭 → **그룹 저장 후 닫기**. 탭은 닫히고 그룹은 남습니다.
+- **다시 열기:** 탭을 마우스 오른쪽 버튼으로 클릭 → 그룹에 추가 → **닫힌 그룹**. 또는 **탭 그룹** 목록을 열어(Firefox는 여기에 **최근 탭 그룹**(Recent tab groups)을 표시합니다) 그룹을 고른 다음 **탭 그룹 다시 열기**(Reopen tab group)를 선택합니다.
+- **삭제:** **그룹 삭제**를 선택하면 완전히 사라집니다.
+
+<Catch>저장된 그룹은 이 Firefox 프로필 안에만 있습니다. 백업이 아니며, 동기화 설정으로 보면 다른 기기로 따라오지 않습니다.</Catch>
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's Tab groups list with a closed group. */}
+
+</Section>
+
+<Section id="sync" title="Firefox 탭 그룹은 동기화되나요?">
+
+Firefox 159의 **Sync** 설정에는 동기화하는 항목이 나와 있습니다. **북마크, 기록, 열린 탭, 비밀번호, 주소, 결제 수단, 부가 기능, 설정**(Bookmarks, History, Open tabs, Passwords, Addresses, Payment methods, Add-ons and Settings)입니다. ‘열린 탭’의 설명은 ‘모든 동기화된 기기에서 열린 탭의 목록’입니다. 탭 그룹 전용 항목은 없으므로, 저장한 그룹이 다른 컴퓨터에 나타날 거라고 기대하지 마세요.
+
+Chrome에서의 같은 기능은 [Chrome 탭 그룹 가이드](/blog/chrome-tab-groups)를 참고하세요. Chrome 그룹은 Google 계정으로 동기화됩니다.
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger로 그룹을 오래 보관하기">
+
+[TabMerger](/features)는 Firefox, Chrome, Edge에서 작동하며 브라우저가 지키지 못하는 그룹을 보관합니다.
+
+1. **그룹 추가**를 클릭해 이름을 붙인 다음, 그룹의 **⋯** 메뉴에서 **현재 상태와 합치기**를 선택하세요. 열려 있는 모든 창과 탭이 그룹에 저장됩니다.
+2. 창을 닫으세요. 그룹은 모든 탭과 함께 남고, <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>로 검색할 수 있습니다.
+3. 언제든 탭 하나, 창 하나 또는 전부를 다시 여세요.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/firefox-tab-groups/tm-kept-groups" alt="저장된 창 세 개와 탭 아홉 개를 담은 TabMerger 그룹 Home renovation, 일부 탭에 원래 탭 그룹인 Kitchen과 Quotes 태그가 붙은 화면, 라이트 테마" darkAlt="저장된 창 세 개와 탭 아홉 개를 담은 TabMerger 그룹 Home renovation, 일부 탭에 원래 탭 그룹인 Kitchen과 Quotes 태그가 붙은 화면, 다크 테마" boxes={[{ id: 'summary', label: '저장된 창과 탭' }]} source="TabMerger 3.16.1">저장된 그룹: 창 세 개, 탭 아홉 개, 언제든 다시 열 준비 완료.</ThemedScreenshot>
+
+[Pro](/pricing)에서는 그룹이 모든 기기의 Firefox, Chrome, Edge 사이에서 엔드투엔드 암호화로 동기화되므로 서버는 그룹을 읽을 수 없습니다. 더 많은 습관은 [탭이 너무 많을 때의 정리 루틴](/blog/manage-too-many-tabs)에서 확인하세요.
+
+<InstallCta>Firefox, Chrome, Edge에서 무료. 시작할 때 계정이 필요 없습니다.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="자주 묻는 질문">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,134 @@
+export const post = {
+  slug: 'firefox-tab-groups',
+  title: 'Grupos de abas no Firefox: como salvar, reabrir e guardar de vez',
+  navTitle: 'Grupos de abas no Firefox',
+  seoTitle: 'Grupos de abas do Firefox: salvar, reabrir, sincronizar (e os limites)',
+  description:
+    'Como funcionam os grupos de abas no Firefox 159: criar um grupo, dar uma cor, recolher, salvar e fechar para reabrir depois, o que o Firefox Sync cobre e como manter seus grupos seguros em todos os dispositivos com o TabMerger.',
+  shareSummary: 'Crie, salve, reabra e guarde grupos de abas no Firefox, e veja o que o Firefox Sync cobre.',
+  dek: 'Agora dá para salvar e fechar grupos no Firefox. Veja para onde eles vão e como guardá-los de vez.',
+  published: '2026-12-07',
+  updated: '2026-12-07',
+  testedOn: ['Firefox 159.0.1'],
+  keyFacts: [
+    { text: '“Salvar e fechar grupo” guarda um grupo para reabrir depois.', source: 'Texto dos menus do Firefox 159' },
+    { text: 'Os grupos fechados aparecem em “Grupos fechados” e em “Grupos de abas recentes”.', source: 'Texto dos menus do Firefox 159' },
+    { text: 'As configurações do Firefox Sync listam “Abas abertas”, sem uma entrada separada para grupos de abas.', source: 'Texto das configurações do Firefox 159' },
+    { text: 'O menu de um grupo copia todos os links dele de uma vez.', source: 'Texto dos menus do Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Como salvo um grupo de abas no Firefox?',
+      answer: 'Clique com o botão direito no rótulo do grupo e escolha “Salvar e fechar grupo”. Reabra depois em “Grupos fechados” ou na lista “Grupos de abas”.',
+    },
+    {
+      question: 'Os grupos de abas do Firefox sincronizam?',
+      answer:
+        'As configurações de sincronização do Firefox 159 listam Favoritos, Histórico, Abas abertas e outros itens, sem uma entrada separada para grupos de abas. Para ter os mesmos grupos em todos os dispositivos, o TabMerger Pro sincroniza esses grupos com criptografia de ponta a ponta.',
+    },
+    {
+      question: 'Qual é a diferença entre “Salvar e fechar grupo” e “Excluir grupo”?',
+      answer: '“Salvar e fechar grupo” guarda o grupo para reabrir depois. “Excluir grupo” remove o grupo; “Desagrupar abas” mantém as abas abertas, mas desfaz o grupo.',
+    },
+    {
+      question: 'Dá para copiar todos os links de um grupo de abas do Firefox?',
+      answer: 'Sim: o menu do grupo no Firefox 159 tem “Copiar links em grupo”. O TabMerger também exporta grupos inteiros para um arquivo JSON.',
+    },
+  ],
+  images: [
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp', alt: 'O grupo do TabMerger “Home renovation” com três janelas salvas e nove abas, algumas marcadas com seus grupos de abas “Kitchen” e “Quotes”, tema claro' },
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-dark.webp', alt: 'O grupo do TabMerger “Home renovation” com três janelas salvas e nove abas, algumas marcadas com seus grupos de abas “Kitchen” e “Quotes”, tema escuro' },
+  ],
+  tags: ['firefox', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Tab groups in Firefox',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/tab-groups',
+      checked: '2026-11-21',
+      note: 'Menu names and settings were read from Firefox 159.0.1’s own interface text; this page blocked our automated check.',
+    },
+    {
+      title: 'Firefox Sync: what it is and how it works',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/firefox-sync-what-it-is-and-how-it-works',
+      checked: '2026-11-21',
+      note: 'The list of synced data was read from Firefox 159.0.1’s settings text.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-23',
+  cover: { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp' },
+  ogImage: { src: '/blog/firefox-tab-groups/og.png', alt: 'Capa “Firefox tab groups: how to save, reopen and keep them”: um guia do TabMerger, com um grupo salvo de duas janelas' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'basics', label: 'Criar um grupo' },
+    { id: 'save', label: 'Salvar e reabrir' },
+    { id: 'sync', label: 'Eles sincronizam?' },
+    { id: 'tabmerger', label: 'Guardar de vez' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Arraste uma aba sobre outra, ou clique com o botão direito em uma aba, para criar um grupo no Firefox. Para guardar o grupo para depois, clique com o botão direito no rótulo dele e escolha **Salvar e fechar grupo** (“Save and close group”); reabra em **Grupos fechados** (“Closed Groups”) ou na lista **Grupos de abas** (“Tab groups”). As configurações do Firefox Sync não têm uma entrada separada para grupos de abas; então, para ter os mesmos grupos em todos os dispositivos e poder pesquisá-los junto com todo o resto, salve-os no [TabMerger](/features).
+
+</QuickAnswer>
+
+<InstallCta>Mantenha seus grupos do Firefox salvos, pesquisáveis e sincronizados. Grátis para Firefox, Chrome e Edge.</InstallCta>
+
+<Section id="basics" title="Como funcionam os grupos de abas no Firefox?">
+
+Segundo a própria interface do Firefox 159:
+
+1. **Criar:** arraste uma aba sobre outra, ou clique com o botão direito em uma aba e adicione-a a um novo grupo. O Firefox pede um **Nome** (“Name”) e uma cor (azul, ciano, cinza, verde, laranja, rosa, roxo, vermelho ou amarelo).
+2. **Recolher:** clique no rótulo do grupo para reduzi-lo à largura de uma só aba.
+3. **Gerenciar:** clique com o botão direito no rótulo para ver **Salvar e fechar grupo**, **Desagrupar abas** (“Ungroup tabs”), **Excluir grupo** (“Delete group”), **Mover grupo para nova janela** (“Move group to new window”), **Copiar links em grupo** (“Copy links in group”) e **Compartilhar grupo** (“Share group”).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's tab group editor with Name, colours and Save and close group. */}
+
+</Section>
+
+<Section id="save" title="Como salvo um grupo e recupero depois?">
+
+- **Salvar:** botão direito no rótulo do grupo → **Salvar e fechar grupo**. As abas fecham; o grupo fica guardado.
+- **Reabrir:** botão direito em uma aba → adicionar a um grupo → **Grupos fechados**, ou abra a lista **Grupos de abas** (o Firefox mostra **Grupos de abas recentes** ali, “Recent tab groups”), escolha o grupo e depois **Reabrir grupo de abas** (“Reopen tab group”).
+- **Excluir:** **Excluir grupo** remove o grupo de vez.
+
+<Catch>um grupo salvo fica neste perfil do Firefox. Ele não é um backup e, pelo que as configurações de sincronização mostram, não vai com você para outro dispositivo.</Catch>
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's Tab groups list with a closed group. */}
+
+</Section>
+
+<Section id="sync" title="Os grupos de abas do Firefox sincronizam?">
+
+As configurações de **Sincronização** (“Sync”) do Firefox 159 listam o que é sincronizado: **Favoritos, Histórico, Abas abertas, Senhas, Endereços, Métodos de pagamento, Extensões e Configurações** (“Bookmarks, History, Open tabs, Passwords, Addresses, Payment methods, Add-ons and Settings”). “Abas abertas” é descrito como “Uma lista do que está aberto em todos os dispositivos sincronizados”. Não há uma entrada separada para grupos de abas, então não conte com um grupo salvo aparecendo no seu outro computador.
+
+Para a mesma ideia no Chrome, veja o [guia dos grupos de abas do Chrome](/blog/chrome-tab-groups), que sincronizam pela Conta do Google.
+
+</Section>
+
+<Section id="tabmerger" title="Guarde seus grupos de vez com o TabMerger">
+
+O [TabMerger](/features) funciona no Firefox, no Chrome e no Edge e guarda os grupos que o navegador não consegue guardar:
+
+1. Clique em **Adicionar grupo**, dê um nome e escolha **Mesclar com as atuais** no menu **⋯** dele: todas as janelas e abas abertas são salvas no grupo.
+2. Feche as janelas. O grupo continua lá, com cada aba, e dá para pesquisar nele com <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+3. Reabra uma aba, uma janela ou tudo, quando quiser.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/firefox-tab-groups/tm-kept-groups" alt="O grupo do TabMerger “Home renovation” com três janelas salvas e nove abas, algumas marcadas com seus grupos de abas “Kitchen” e “Quotes”, tema claro" darkAlt="O grupo do TabMerger “Home renovation” com três janelas salvas e nove abas, algumas marcadas com seus grupos de abas “Kitchen” e “Quotes”, tema escuro" boxes={[{ id: 'summary', label: 'Janelas e abas salvas' }]} source="TabMerger 3.16.1">Um grupo salvo: três janelas, nove abas, pronto para reabrir.</ThemedScreenshot>
+
+No [Pro](/pricing), seus grupos sincronizam entre Firefox, Chrome e Edge em todos os seus dispositivos, com criptografia de ponta a ponta, então o servidor não consegue lê-los. Mais hábitos na [rotina para quem tem abas demais](/blog/manage-too-many-tabs).
+
+<InstallCta>Grátis para Firefox, Chrome e Edge. Não precisa de conta para começar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

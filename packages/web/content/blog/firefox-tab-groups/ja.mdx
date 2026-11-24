@@ -1,0 +1,134 @@
+export const post = {
+  slug: 'firefox-tab-groups',
+  title: 'Firefox のタブグループ：保存、再表示、ずっと残しておく方法',
+  navTitle: 'Firefox のタブグループ',
+  seoTitle: 'Firefox タブグループの保存・再表示・同期（とその限界）',
+  description:
+    'Firefox 159 のタブグループの使い方：グループの作成、色分け、折りたたみ、保存して閉じてから後で開き直す方法、Firefox Sync で同期される範囲、そして TabMerger ですべての端末にグループを安全に残す方法。',
+  shareSummary: 'Firefox のタブグループを作成、保存、再表示し、残しておく方法と、Firefox Sync の同期範囲。',
+  dek: 'Firefox のグループは保存して閉じられるようになりました。保存先と、ずっと残しておく方法を紹介します。',
+  published: '2026-12-07',
+  updated: '2026-12-07',
+  testedOn: ['Firefox 159.0.1'],
+  keyFacts: [
+    { text: '「グループを保存して閉じる」でグループを残し、後で開き直せます。', source: 'Firefox 159 のメニューの表記' },
+    { text: '閉じたグループは「閉じたグループ」と「最近のタブグループ」に表示されます。', source: 'Firefox 159 のメニューの表記' },
+    { text: 'Firefox Sync の設定には「開いているタブ」があり、タブグループ専用の項目はありません。', source: 'Firefox 159 の設定の表記' },
+    { text: 'グループのメニューから、そのグループのリンクをまとめてコピーできます。', source: 'Firefox 159 のメニューの表記' },
+  ],
+  faq: [
+    {
+      question: 'Firefox でタブグループを保存するには？',
+      answer: 'グループのラベルを右クリックし、「グループを保存して閉じる」を選びます。後で「閉じたグループ」または「タブグループ」の一覧から開き直せます。',
+    },
+    {
+      question: 'Firefox のタブグループは同期されますか？',
+      answer:
+        'Firefox 159 の同期の設定には「ブックマーク」「表示履歴」「開いているタブ」などが並びますが、タブグループ専用の項目はありません。すべての端末で同じグループを使うなら、TabMerger Pro がエンドツーエンドで暗号化して同期します。',
+    },
+    {
+      question: '「グループを保存して閉じる」と「グループを削除」の違いは？',
+      answer: '「グループを保存して閉じる」はグループを残し、後で開き直せるようにします。「グループを削除」はグループを消します。「グループを解除」はタブを開いたままグループだけを外します。',
+    },
+    {
+      question: 'Firefox のタブグループのリンクをまとめてコピーできますか？',
+      answer: 'はい。Firefox 159 のグループのメニューに「グループ内のリンクをコピー」があります。TabMerger ならグループ丸ごとを JSON ファイルに書き出すこともできます。',
+    },
+  ],
+  images: [
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp', alt: 'TabMerger のグループ「Home renovation」。保存した 3 つのウィンドウに 9 つのタブがあり、一部のタブには元のタブグループ Kitchen と Quotes のタグ付き。ライトテーマ' },
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-dark.webp', alt: 'TabMerger のグループ「Home renovation」。保存した 3 つのウィンドウに 9 つのタブがあり、一部のタブには元のタブグループ Kitchen と Quotes のタグ付き。ダークテーマ' },
+  ],
+  tags: ['firefox', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Tab groups in Firefox',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/tab-groups',
+      checked: '2026-11-21',
+      note: 'Menu names and settings were read from Firefox 159.0.1’s own interface text; this page blocked our automated check.',
+    },
+    {
+      title: 'Firefox Sync: what it is and how it works',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/firefox-sync-what-it-is-and-how-it-works',
+      checked: '2026-11-21',
+      note: 'The list of synced data was read from Firefox 159.0.1’s settings text.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-23',
+  cover: { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp' },
+  ogImage: { src: '/blog/firefox-tab-groups/og.png', alt: 'タイトルカード「Firefox tab groups: how to save, reopen and keep them」。2 つのウィンドウを保存したグループを載せた TabMerger のガイド' },
+  toc: [
+    { id: 'quick', label: '簡単な答え' },
+    { id: 'basics', label: 'グループを作る' },
+    { id: 'save', label: '保存と再表示' },
+    { id: 'sync', label: '同期される？' },
+    { id: 'tabmerger', label: 'ずっと残す' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+}
+
+<QuickAnswer>
+
+Firefox でグループを作るには、タブを別のタブにドラッグするか、タブを右クリックします。後で使うために残すには、グループのラベルを右クリックして「**グループを保存して閉じる**」（Save and close group）を選びます。開き直すときは「**閉じたグループ**」（Closed Groups）か「**タブグループ**」（Tab groups）の一覧から選びます。Firefox Sync の設定にはタブグループ専用の項目がないため、すべての端末で同じグループを使い、ほかのすべてと一緒に検索したいなら、[TabMerger](/features) に保存しましょう。
+
+</QuickAnswer>
+
+<InstallCta>Firefox のグループを保存して、検索も同期も。Firefox、Chrome、Edge 向けに無料。</InstallCta>
+
+<Section id="basics" title="Firefox のタブグループの仕組みは？">
+
+Firefox 159 の画面の表記にもとづく手順です。
+
+1. **作成**：タブを別のタブにドラッグするか、タブを右クリックして新しいグループに追加します。Firefox が「**グループ名**」（Name）と色（青、シアン、グレー、緑、オレンジ、ピンク、紫、赤、黄）を尋ねます。
+2. **折りたたみ**：グループのラベルをクリックすると、タブ 1 つ分の幅にたたまれます。
+3. **管理**：ラベルを右クリックすると「**グループを保存して閉じる**」「**グループを解除**」（Ungroup tabs）「**グループを削除**」（Delete group）「**グループを新しいウィンドウへ移動**」（Move group to new window）「**グループ内のリンクをコピー**」（Copy links in group）「**グループを共有**」（Share group）が出ます。
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's tab group editor with Name, colours and Save and close group. */}
+
+</Section>
+
+<Section id="save" title="グループを保存して元に戻すには？">
+
+- **保存**：グループのラベルを右クリック →「**グループを保存して閉じる**」。タブは閉じますが、グループは残ります。
+- **開き直す**：タブを右クリック → グループに追加 →「**閉じたグループ**」。または「**タブグループ**」の一覧を開き（Firefox はそこに「**最近のタブグループ**」（Recent tab groups）を表示します）、グループを選んで「**タブグループを開き直す**」（Reopen tab group）を選びます。
+- **削除**：「**グループを削除**」で完全に消えます。
+
+<Catch>保存したグループはこの Firefox のプロファイルの中にあります。バックアップではなく、同期の設定を見る限り、ほかの端末には付いてきません。</Catch>
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's Tab groups list with a closed group. */}
+
+</Section>
+
+<Section id="sync" title="Firefox のタブグループは同期される？">
+
+Firefox 159 の「**同期**」（Sync）の設定には、同期される項目として **ブックマーク、表示履歴、開いているタブ、パスワード、住所フォーム、支払い方法、アドオン、個人設定**（Bookmarks, History, Open tabs, Passwords, Addresses, Payment methods, Add-ons and Settings）が並びます。「開いているタブ」の説明は「同期した端末で開いているすべてのタブの一覧です」です。タブグループ専用の項目はないので、保存したグループがもう 1 台のパソコンに現れるとは考えないでください。
+
+Chrome で同じことをするなら [Chrome のタブグループのガイド](/blog/chrome-tab-groups)をご覧ください。Chrome のグループは Google アカウントで同期されます。
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger でグループをずっと残す">
+
+[TabMerger](/features) は Firefox、Chrome、Edge で動き、ブラウザーが残せないグループも残せます。
+
+1. **グループを追加** をクリックして名前を付け、そのグループの **⋯** メニューで **現在の内容と統合** を選びます。開いているすべてのウィンドウとタブがグループに保存されます。
+2. ウィンドウを閉じます。グループはすべてのタブとともに残り、<Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> で検索できます。
+3. タブ 1 つ、ウィンドウ 1 つ、またはすべてを、いつでも開き直せます。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/firefox-tab-groups/tm-kept-groups" alt="TabMerger のグループ「Home renovation」。保存した 3 つのウィンドウに 9 つのタブがあり、一部のタブには元のタブグループ Kitchen と Quotes のタグ付き。ライトテーマ" darkAlt="TabMerger のグループ「Home renovation」。保存した 3 つのウィンドウに 9 つのタブがあり、一部のタブには元のタブグループ Kitchen と Quotes のタグ付き。ダークテーマ" boxes={[{ id: 'summary', label: '保存したウィンドウとタブ' }]} source="TabMerger 3.16.1">保存したグループ：3 つのウィンドウと 9 つのタブを、いつでも開き直せます。</ThemedScreenshot>
+
+[Pro](/pricing) なら、グループはすべての端末の Firefox、Chrome、Edge 間でエンドツーエンドで暗号化して同期されるため、サーバーからは読めません。ほかの習慣は[タブが多すぎるときの習慣](/blog/manage-too-many-tabs)で紹介しています。
+
+<InstallCta>Firefox、Chrome、Edge 向けに無料。アカウントなしで始められます。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>
