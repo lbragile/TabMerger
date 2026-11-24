@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'One shortcut, startup restore and closed-tab recovery in Chrome, Edge and Firefox.',
   dek: 'Five ways to keep every tab you have open, and the one thing each of them quietly misses.',
   published: '2026-11-19',
-  updated: '2026-11-21',
+  updated: '2026-11-24',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D saves the current window only.', source: 'Tested in all three, Nov 19, 2026' },
@@ -264,14 +264,14 @@ The built-in methods each cover one window, one restart, or one closed tab at a 
   head={['Shortcut', 'Saves']}
   keysColumn={0}
   rows={[
-    ['Ctrl+Shift+P', 'All other tabs in the window'],
-    ['Ctrl+Shift+S', 'The current tab'],
-    ['Ctrl+Shift+K', 'Tabs to the left'],
-    ['Ctrl+Shift+U', 'Tabs to the right'],
+    ['Alt+Shift+O', 'All other tabs in the window'],
+    ['Alt+Shift+S', 'The current tab'],
+    ['Alt+Shift+Comma', 'Tabs to the left'],
+    ['Alt+Shift+Period', 'Tabs to the right'],
   ]}
 />
 
-Use <Kbd>⌘</Kbd> on a Mac. Each asks where to save; **Quick Save (new group)** makes a group on the spot. In Firefox, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> opens a private window, so pick another key under `about:addons` → Manage Extension Shortcuts. Edge keeps <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd>, <Kbd>U</Kbd> and <Kbd>P</Kbd> for its own commands, so give those three their own keys at `edge://extensions/shortcuts`; our [tab keyboard shortcuts reference](/blog/tab-keyboard-shortcuts) shows how.
+On a Mac, press <Kbd>Control</Kbd> where the table says <Kbd>Alt</Kbd>. Each asks where to save; **Quick Save (new group)** makes a group on the spot. A new install gets these keys; one from before keeps the keys it had, and you can change any of them on your browser’s shortcuts page, as our [tab keyboard shortcuts reference](/blog/tab-keyboard-shortcuts) shows.
 
 ### Closed something by mistake?
 

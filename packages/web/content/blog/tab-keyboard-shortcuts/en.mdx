@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'Switch, reopen, search and save tabs from the keyboard in Chrome, Edge and Firefox.',
   dek: 'One table for all three browsers, the Mac differences, and how to set extension shortcuts that actually stick.',
   published: '2026-11-22',
-  updated: '2026-11-22',
+  updated: '2026-11-24',
   testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+T reopens the last closed tab in all three.', source: 'Chrome and Edge help; Firefox 159 keyset' },
@@ -17,7 +17,7 @@ export const post = {
       source: 'Chrome Help',
       href: 'https://support.google.com/chrome/answer/157179',
     },
-    { text: 'Edge keeps Ctrl+Shift+K, U and P for its own commands.', source: 'Microsoft Support' },
+    { text: 'Edge keeps Ctrl+Shift+K, U and P, so extensions can’t claim them.', source: 'Microsoft Support; Edge 158' },
   ],
   faq: [
     {
@@ -41,7 +41,7 @@ export const post = {
     },
   ],
   images: [
-    { src: '/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp', alt: 'Edge extension keyboard shortcuts page for TabMerger: Save the current tab set to Ctrl+Shift+S, the other commands Not set' },
+    { src: '/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp', alt: 'Edge extension keyboard shortcuts page for TabMerger: all four save commands set, to Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma and Alt+Shift+Period' },
     { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp', alt: 'TabMerger search open with the query docs, listing matching open and saved tabs, light theme' },
     { src: '/blog/tab-keyboard-shortcuts/tm-search-dark.webp', alt: 'TabMerger search open with the query docs, listing matching open and saved tabs, dark theme' },
   ],
@@ -73,7 +73,7 @@ export const post = {
       note: 'Firefox entries were read from Firefox 159.0.1’s own key definitions; this page blocked our automated check.',
     },
   ],
-  screenshotsCaptured: '2026-11-20',
+  screenshotsCaptured: '2026-11-22',
   cover: { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp' },
   ogImage: { src: '/blog/tab-keyboard-shortcuts/og.png', alt: 'Tab keyboard shortcuts for Chrome, Edge and Firefox: a TabMerger guide, with TabMerger’s search open' },
   toc: [
@@ -224,9 +224,9 @@ Paste `chrome://extensions/shortcuts` into the address bar. Each command also ha
 
 Paste `edge://extensions/shortcuts` into the address bar.
 
-Edge keeps <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd> (duplicate tab), <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>U</Kbd> (Read Aloud) and <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> (print with the system dialog) for itself, so an extension command that suggests one of them starts as **Not set** in Edge 158. TabMerger’s save commands are an example: click the pencil, press the keys you want, and they work.
+Edge keeps <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd> (duplicate tab), <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>U</Kbd> (Read Aloud) and <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> (print with the system dialog) for itself, so an extension command that suggests one of them starts as **Not set** in Edge 158. Edge 158 also refuses some <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd> keys that Microsoft’s list doesn’t mention, such as <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> and <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Z</Kbd>. TabMerger’s save commands avoid all of them, so a new install has all four set:
 
-<AnnotatedFigure src="/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp" alt="Edge extension keyboard shortcuts page for TabMerger: Save the current tab set to Ctrl+Shift+S, the other commands Not set" width={1600} height={1364} boxes={[{ id: 'save-current-tab' }]} source="edge://extensions/shortcuts · Edge 158.0.4370.33">TabMerger in a fresh Edge 158 profile: Save the current tab is ready on Ctrl+Shift+S; pick keys for the other three here.</AnnotatedFigure>
+<AnnotatedFigure src="/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp" alt="Edge extension keyboard shortcuts page for TabMerger: all four save commands set, to Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma and Alt+Shift+Period" width={852} height={460} boxes={[{ id: 'save-shortcuts' }]} source="edge://extensions/shortcuts · Edge 158.0.4370.33">A new TabMerger install in Edge 158: all four save commands have their keys, with nothing to fix.</AnnotatedFigure>
 
 </BrowserPanel>
 <BrowserPanel browser="firefox">
@@ -242,18 +242,20 @@ Open `about:addons`, click the gear menu and choose **Manage Extension Shortcuts
 
 <Section id="tabmerger" title="TabMerger’s keys">
 
-[TabMerger](/features), our free extension for Chrome, Edge and Firefox, saves tabs straight from the keyboard, without opening it. It suggests four save commands, and you can change any of them on your browser’s shortcuts page (above):
+[TabMerger](/features), our free extension for Chrome, Edge and Firefox, saves tabs straight from the keyboard, without opening it. It suggests a key for each of its four save commands, picked to avoid the shortcuts Chrome, Edge and Firefox use themselves, and you can change any of them on your browser’s shortcuts page (above):
 
 <ComparisonTable
   head={['Suggested key', 'Saves']}
   keysColumn={0}
   rows={[
-    ['Ctrl+Shift+S', 'The current tab'],
-    ['Ctrl+Shift+P', 'All other tabs in the window'],
-    ['Ctrl+Shift+K', 'Tabs to the left'],
-    ['Ctrl+Shift+U', 'Tabs to the right'],
+    ['Alt+Shift+S', 'The current tab'],
+    ['Alt+Shift+O', 'All other tabs in the window'],
+    ['Alt+Shift+Comma', 'Tabs to the left'],
+    ['Alt+Shift+Period', 'Tabs to the right'],
   ]}
 />
+
+On a Mac, they use <Kbd>Control</Kbd>+<Kbd>Shift</Kbd> instead of <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>: <Kbd>Control</Kbd>+<Kbd>Shift</Kbd>+<Kbd>S</Kbd> saves the current tab. These are the keys a new install gets. Updates don’t change shortcuts, so if you installed TabMerger before these keys arrived, it keeps the ones it had, **Not set** included: set them on the shortcuts page.
 
 Inside the popup, <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd>) searches open, saved and recently closed tabs in one list.
 

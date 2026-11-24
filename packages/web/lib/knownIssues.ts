@@ -35,11 +35,12 @@ export const KNOWN_ISSUES: KnownIssue[] = [
   {
     id: 'edge-save-shortcuts-not-set',
     area: 'Extension',
-    title: 'In Edge, three of the four save shortcuts start unset',
+    title: 'Older Edge installs keep three save shortcuts unset',
     details:
-      'After installing TabMerger in Edge, edge://extensions/shortcuts shows Ctrl+Shift+S for “Save the current tab”, but “Save all other tabs”, “Save tabs to the left” and “Save tabs to the right” say “Not set”. Edge already uses Ctrl+Shift+P, Ctrl+Shift+K and Ctrl+Shift+U for its own commands, so those keys do Edge’s action instead.',
-    workaround: 'Open edge://extensions/shortcuts and pick your own keys for the three commands.',
+      'If you installed TabMerger in Edge before version 3.16.2, edge://extensions/shortcuts still shows “Not set” for “Save all other tabs”, “Save tabs to the left” and “Save tabs to the right”, because Edge keeps an install’s shortcuts across updates. New installs get Alt+Shift+O, Alt+Shift+Comma and Alt+Shift+Period for them.',
+    workaround: 'Open edge://extensions/shortcuts and pick keys for the three commands.',
   },
+
   {
     id: 'change-lost-if-popup-closes-instantly',
     area: 'Extension',
