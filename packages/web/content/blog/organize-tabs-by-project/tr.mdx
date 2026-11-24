@@ -1,0 +1,160 @@
+export const post = {
+  slug: 'organize-tabs-by-project',
+  title: 'Sekmeleri projeye göre düzenleyin: her projeye bir grup',
+  navTitle: 'Sekmeleri projeye göre düzenleyin',
+  seoTitle: 'TabMerger ile Tarayıcı Sekmelerini Projeye Göre Düzenleme',
+  description:
+    'Her projeye kendi TabMerger grubunu verin: işin her bölümü için adlandırılmış pencereler, bağlam için notlar ve biten projeler için bir arşiv. Grupların neden böyle çalıştığı, adım adım.',
+  shareSummary: 'Her projeye bir grup, içinde adlandırılmış pencereler ve biten işler için bir arşiv.',
+  dek: 'Projeler arasında geçiş yapmak sekme avına dönüşmemeli. Her projeye açıp kapatabileceğiniz ve arşivleyebileceğiniz bir yuva verin.',
+  published: '2026-12-15',
+  updated: '2026-12-15',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Bir TabMerger grubu, her biri kendi adına ve notuna sahip birden çok pencere barındırır.', source: 'TabMerger 3.16.1' },
+    { text: 'Yıldızlı gruplar kenar çubuğunun en üstünde kalır.', source: 'TabMerger 3.16.1 kaynak kodu' },
+    { text: 'Arşivlenen gruplar salt okunurdur ve “Geri yükle” ile geri gelir.', source: 'TabMerger 3.16.1' },
+    { text: 'Ücretsiz planda arşivlenen gruplar dahil 5 grup ve 50 sekme var; Pro’da sınır yok.', source: 'TabMerger fiyatları', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Sekmeleri projeye göre düzenlemenin en iyi yolu nedir?',
+      answer:
+        'Her projeye bir TabMerger grubu verin ve grubu işin bölümleri için adlandırılmış pencerelere ayırın (örneğin Tasarım, Geliştirme, Geri bildirim). Bağlamı anlatan bir grup notu ekleyin, bu hafta üzerinde çalıştığınız projeleri yıldızlayın ve biten projeyi arşivleyin.',
+    },
+    {
+      question: 'Bir grupta birden fazla pencere olabilir mi?',
+      answer: 'Evet. Bir TabMerger grubunda istediğiniz kadar pencere olabilir. Her pencerenin kendi adı, notu ve yıldızı olabilir ve her biri ayrı bir tarayıcı penceresi olarak açılır.',
+    },
+    {
+      question: 'Bir grubu arşivlemek ne işe yarar?',
+      answer:
+        'Grubu kenar çubuğundaki “Arşiv” bölümüne salt okunur olarak taşır; yolunuzdan çekilir ama kaybolmaz. Bir sekmeye tıklamak onu yine açar, “Geri yükle” ise grubu listenize geri getirir.',
+    },
+    {
+      question: 'Chrome sekme grupları kaydedildiğinde korunur mu?',
+      answer: 'Evet. Kaydedilen sekmeler Chrome sekme grubunun adını ve rengini korur; böylece sekme şeridinde grupladığınız bir proje, TabMerger’da da aynı yapıyı korur.',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp', alt: 'Üç adlandırılmış pencereli Website redesign grubu: Design, Build ve Feedback, açık tema' },
+    { src: '/blog/organize-tabs-by-project/tm-project-group-dark.webp', alt: 'Üç adlandırılmış pencereli Website redesign grubu: Design, Build ve Feedback, koyu tema' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-light.webp', alt: 'Kenar çubuğunda bir grubun sağ tık menüsü ve Archive group (Grubu arşivle), açık tema' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-dark.webp', alt: 'Kenar çubuğunda bir grubun sağ tık menüsü ve Archive group (Grubu arşivle), koyu tema' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-light.webp', alt: 'Restore (Geri yükle) düğmesi olan salt okunur, arşivlenmiş bir grup ve kenar çubuğunda açık Archived (Arşiv) bölümü, açık tema' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-dark.webp', alt: 'Restore (Geri yükle) düğmesi olan salt okunur, arşivlenmiş bir grup ve kenar çubuğunda açık Archived (Arşiv) bölümü, koyu tema' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-by-project/og.png', alt: 'TabMerger ile sekmeleri projeye göre düzenleyin: Design, Build ve Feedback pencereli bir grup' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'problem', label: 'Projeler aynı sekme şeridini paylaşınca' },
+    { id: 'why', label: 'Gruplar neden böyle çalışır' },
+    { id: 'steps', label: 'Bir proje kurun' },
+    { id: 'archive', label: 'Biten işi arşivleyin' },
+    { id: 'benefit', label: 'Ne kazanırsınız' },
+    { id: 'habits', label: 'İyi alışkanlıklar' },
+    { id: 'plans', label: 'Ücretsiz ve Pro' },
+    { id: 'faq', label: 'SSS' },
+  ],
+}
+
+<QuickAnswer>
+
+Her projeye kendi [TabMerger](/features) grubunu verin. Grubun içinde işin her bölümü için adlandırılmış bir pencere (“Tasarım”, “Geliştirme”, “Geri bildirim”) ve bağlamı anlatan bir grup notu tutun. Bu hafta üzerinde çalıştığınız projeleri en üstte kalsınlar diye yıldızlayın; biri bittiğinde **Grubu arşivle** (Archive group) onu tek bir sekme silmeden, salt okunur olarak kaldırır.
+
+</QuickAnswer>
+
+<InstallCta>Her projeye bir yuva, açılmasına tek tık. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+<Section id="problem" title="Üç proje aynı sekme şeridini paylaşınca">
+
+Bir web sitesini yeniden tasarlıyor, bir rapor yazıyor ve bir seyahat planlıyorsunuz. Çarşamba olduğunda tarayıcıda üçü birden açık: uçuş aramalarının yanında maketler, raporun iki kaynağı arasında bir pull request. Proje değiştirmek bütün şeridi taramak demek ve bir şeyi kapatmak riskli geliyor, çünkü hangi projeye ait olduğunu bilemiyorsunuz.
+
+Tarayıcının kendi sekme grupları tek bir pencerede işe yarar, ama bir proje nadiren tek pencereye sığar ve pencere kapanınca o sekmelerin nereye gittiği de belirsizleşir.
+
+</Section>
+
+<Section id="why" title="TabMerger grupları neden böyle çalışır">
+
+- **Grup bir projedir, pencere değil.** Her grup işin gerektirdiği kadar pencere barındırır ve her pencere ayrı bir tarayıcı penceresi olarak açılır. Projeler gerçekte de böyle görünür: tasarım sekmeleri burada, geliştirme sekmeleri orada.
+- **Adlar ve notlar bağlamı taşır.** Pencereler yeniden adlandırılabilir ve kendi notlarına sahip olabilir; grup da öyle. Aylar sonra “Geri bildirim” adı ve neyin kararlaştırıldığını anlatan bir not, bir sıra site simgesinden çok daha fazlasını söyler.
+- **Yıldızlar sıralamayı sizin yerinize yapar.** Yıldızlı gruplar kenar çubuğunun en üstünde kalır; yıldızlı pencereler de kendi gruplarında ilk sırada durur.
+- **Arşivlemek kaldırmaktır, silmek değil.** Arşivlenen grup listenizden çıkıp **Arşiv** (Archived) bölümüne geçer ve salt okunur olur; böylece hiçbir şey yanlışlıkla yer değiştirmez. Sekmeleri yine tek tıkla açılır, **Geri yükle** (Restore) ise grubu geri getirir.
+- **Tarayıcınızdaki yapı korunur.** Kaydedilen sekmeler Chrome sekme grubunun adını ve rengini korur; böylece sekme şeridinde zaten grupladığınız bir proje aynı şeklini korur.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-project-group" alt="Üç adlandırılmış pencereli Website redesign grubu: Design, Build ve Feedback, açık tema" darkAlt="Üç adlandırılmış pencereli Website redesign grubu: Design, Build ve Feedback, koyu tema" boxes={[{ id: 'windows', label: 'Aşamaya göre pencereler' }]} source="TabMerger 3.16.1">Bir proje, üç pencere; her biri işin kendi bölümüyle adlandırılmış.</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="Beş adımda bir proje kurun">
+
+1. Kenar çubuğunda **Grup Ekle** (Add Group) düğmesine basın ve gruba projenin adını verin. Renk seçmek için grubun renk noktasına tıklayın.
+2. Projenin sayfalarını açın, ardından açık pencereleri gruba kaydetmek için grubun **⋯** menüsünden **Mevcutla birleştir** (Merge with current) seçeneğini seçin.
+3. Her pencereyi **⋯** menüsünden (**Pencereyi yeniden adlandır**, Rename window) içerdiği iş bölümüne göre yeniden adlandırın.
+4. Bağlamı içeren bir grup notu ekleyin (**⋯** menüsünde **Not ekle**, Add note): son tarih, iş kaydı, “bitti”nin ne anlama geldiği.
+5. Proje etkin olduğu sürece grubu yıldızlayın (adının yanındaki yıldız).
+
+Sekmeleri daha sonra projeler arasında taşımak için onları kenar çubuğundaki bir grubun üzerine sürükleyin ya da sekmenin sağ tık menüsündeki **Gruba taşı** (Move to group) ve **Gruba kopyala** (Copy to group) seçeneklerini kullanın. **Pencereleri birleştir** (Unite windows) ve **Pencereleri ayır** (Split windows) bir grubu tek adımda yeniden şekillendirir.
+
+</Section>
+
+<Section id="archive" title="Biten işi arşivleyin">
+
+Bir proje bittiğinde kenar çubuğunda grubuna sağ tıklayın ve **Grubu arşivle** seçeneğini seçin. Grup salt okunur olarak **Arşiv** bölümüne geçer: sekmelerinden herhangi birini yine açabilirsiniz, **Geri yükle** ise grubun tamamını listenize geri getirir.
+
+<Carousel label="Bir projeyi arşivlemek" steps={[{ title: 'Arşivle' }, { title: 'Arşivlendi' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archive-menu" alt="Kenar çubuğunda bir grubun sağ tık menüsü ve Archive group (Grubu arşivle), açık tema" darkAlt="Kenar çubuğunda bir grubun sağ tık menüsü ve Archive group (Grubu arşivle), koyu tema" boxes={[{ id: 'archive', label: 'Grubu arşivle' }]} source="TabMerger 3.16.1">Kenar çubuğunda gruba sağ tıklayın.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archived" alt="Restore (Geri yükle) düğmesi olan salt okunur, arşivlenmiş bir grup ve kenar çubuğunda açık Archived (Arşiv) bölümü, açık tema" darkAlt="Restore (Geri yükle) düğmesi olan salt okunur, arşivlenmiş bir grup ve kenar çubuğunda açık Archived (Arşiv) bölümü, koyu tema" boxes={[{ id: 'banner', label: 'Geri yüklenene kadar salt okunur' }]} source="TabMerger 3.16.1">Yolunuzdan çekildi, ama açılmasına hâlâ tek tık var.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="benefit" title="Ne kazanırsınız">
+
+Proje değiştirmek, bir sekme şeridinde arama yapmak yerine bir grubu açmak olur. Üzerinde çalışmadığınız bir projenin bütün pencerelerini, sekmelerinin tam olarak nerede olduğunu bilerek kapatabilirsiniz; kenar çubuğunuz da yalnızca güncel olanı gösterir.
+
+</Section>
+
+<Section id="habits" title="İyi alışkanlıklar">
+
+- **Her projeye bir grup, her konuya değil.** “Web sitesi yenileme”, “Tasarım bağlantıları” değil.
+- **Pencereleri aşamalara veya rollere göre adlandırın**, sitelere göre değil: “Geri bildirim”, “GitHub”dan daha uzun ömürlüdür.
+- **En fazla birkaç grubu yıldızlayın.** Yıldız “bu hafta” demektir.
+- **Teslim gününde arşivleyin.** Arşivlenmiş bir proje hâlâ tek tık uzakta, yani onu listenizde tutmanız için bir neden yok.
+- **Yoğun projelerde yeni sekmeleri URL kuralları yerleştirsin**: [URL kurallarıyla sekmeleri otomatik sıralama](/blog/auto-sort-tabs-with-url-rules) yazısına bakın. Araştırma ağırlıklı projelerde [araştırma için sekmeleri düzenleme](/blog/organize-tabs-for-research) notlar ve hatırlatıcılar ekler.
+
+</Section>
+
+<Section id="plans" title="Ücretsiz ve Pro">
+
+<ComparisonTable
+  head={['', 'Ücretsiz', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Gruplar', '5 (arşivlenenler dahil)', 'Sınırsız'],
+    ['Sekmeler', '50', 'Sınırsız'],
+    ['Pencereler, adlar, notlar, yıldızlar, arşiv', 'Evet', 'Evet'],
+    ['Projeleriniz diğer cihazlarınızda', 'Hayır', 'Evet, uçtan uca şifreli'],
+  ]}
+/>
+
+Buradaki bütün düzenleme araçları Ücretsiz planda var; sınırlar yalnızca grup ve sekme sayısında. [Pro](/pricing) bu sınırları kaldırır ve projelerinizi cihazlarınız arasında senkronize eder.
+
+<InstallCta>Her proje kendi grubunda, Chrome, Edge ve Firefox’ta. Başlamak ücretsiz.</InstallCta>
+
+Projeler etrafındaki günlük düzenin tamamı için [TabMerger ile günlük sekme iş akışı](/blog/tabmerger-daily-workflow) yazısına bakın.
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

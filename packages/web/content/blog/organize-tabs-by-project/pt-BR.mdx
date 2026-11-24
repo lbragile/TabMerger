@@ -1,0 +1,160 @@
+export const post = {
+  slug: 'organize-tabs-by-project',
+  title: 'Organizar abas por projeto: um grupo para cada projeto',
+  navTitle: 'Organizar abas por projeto',
+  seoTitle: 'Como organizar as abas do navegador por projeto com o TabMerger',
+  description:
+    'Dê a cada projeto o seu próprio grupo do TabMerger, com janelas nomeadas para cada parte do trabalho, notas para o contexto e um arquivo para os projetos concluídos. Por que os grupos funcionam assim, passo a passo.',
+  shareSummary: 'Um grupo por projeto, janelas nomeadas dentro dele e um arquivo para o trabalho concluído.',
+  dek: 'Trocar de projeto não deveria significar caçar abas. Dê a cada um seu próprio lugar, que você pode abrir, fechar e arquivar.',
+  published: '2026-12-15',
+  updated: '2026-12-15',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Um grupo do TabMerger reúne várias janelas, cada uma com seu próprio nome e sua própria nota.', source: 'TabMerger 3.16.1' },
+    { text: 'Grupos marcados com estrela ficam no topo da barra lateral.', source: 'Código-fonte do TabMerger 3.16.1' },
+    { text: 'Grupos arquivados são somente leitura e voltam com “Restaurar”.', source: 'TabMerger 3.16.1' },
+    { text: 'O plano Gratuito tem 5 grupos e 50 abas, contando os grupos arquivados; o Pro não tem limite.', source: 'Preços do TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Qual é a melhor forma de organizar abas por projeto?',
+      answer:
+        'Dê a cada projeto um grupo do TabMerger e divida-o em janelas nomeadas para as partes do trabalho (por exemplo, Design, Desenvolvimento, Feedback). Adicione uma nota ao grupo com o contexto, marque com estrela os projetos desta semana e arquive um projeto quando ele estiver concluído.',
+    },
+    {
+      question: 'Um grupo pode ter mais de uma janela?',
+      answer: 'Sim. Um grupo do TabMerger pode ter quantas janelas você quiser. Cada janela pode ter seu próprio nome, nota e estrela, e abre como uma janela separada do navegador.',
+    },
+    {
+      question: 'O que acontece ao arquivar um grupo?',
+      answer:
+        'O grupo vai para a seção “Arquivados” da barra lateral, somente leitura, para sair do caminho sem desaparecer. Clicar em uma aba ainda a abre, e “Restaurar” traz o grupo de volta para a sua lista.',
+    },
+    {
+      question: 'Os grupos de abas do Chrome são mantidos quando eu os salvo?',
+      answer: 'Sim. As abas salvas mantêm o nome e a cor do grupo de abas do Chrome, então um projeto que você agrupou na barra de abas mantém essa estrutura dentro do TabMerger.',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp', alt: 'O grupo “Website redesign” com três janelas nomeadas, Design, Build e Feedback, tema claro' },
+    { src: '/blog/organize-tabs-by-project/tm-project-group-dark.webp', alt: 'O grupo “Website redesign” com três janelas nomeadas, Design, Build e Feedback, tema escuro' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-light.webp', alt: 'O menu de clique com o botão direito de um grupo na barra lateral, com Archive group (Arquivar grupo), tema claro' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-dark.webp', alt: 'O menu de clique com o botão direito de um grupo na barra lateral, com Archive group (Arquivar grupo), tema escuro' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-light.webp', alt: 'Um grupo arquivado, somente leitura, com um botão Restore (Restaurar) e a seção Archived (Arquivados) aberta na barra lateral, tema claro' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-dark.webp', alt: 'Um grupo arquivado, somente leitura, com um botão Restore (Restaurar) e a seção Archived (Arquivados) aberta na barra lateral, tema escuro' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-by-project/og.png', alt: 'Organizar abas por projeto com o TabMerger: um grupo com as janelas Design, Build e Feedback' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'problem', label: 'Quando projetos dividem a barra de abas' },
+    { id: 'why', label: 'Por que os grupos funcionam assim' },
+    { id: 'steps', label: 'Configurar um projeto' },
+    { id: 'archive', label: 'Arquivar o trabalho concluído' },
+    { id: 'benefit', label: 'O que você ganha' },
+    { id: 'habits', label: 'Bons hábitos' },
+    { id: 'plans', label: 'Gratuito ou Pro' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Dê a cada projeto o seu próprio grupo do [TabMerger](/features). Dentro dele, mantenha uma janela nomeada para cada parte do trabalho (“Design”, “Desenvolvimento”, “Feedback”) e uma nota do grupo com o contexto. Marque com estrela os projetos desta semana para que fiquem no topo e, quando um terminar, **Arquivar grupo** (Archive group) guarda o projeto em modo somente leitura, sem apagar nenhuma aba.
+
+</QuickAnswer>
+
+<InstallCta>Um lugar para cada projeto, a um clique de abrir. Grátis para Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="problem" title="Quando três projetos dividem a mesma barra de abas">
+
+Você está redesenhando um site, escrevendo um relatório e planejando uma viagem. Lá pela quarta-feira, o navegador tem os três ao mesmo tempo: mockups ao lado de buscas de voos, um pull request entre duas fontes do relatório. Trocar de projeto significa percorrer a barra inteira, e fechar qualquer coisa parece arriscado, porque você não sabe a qual projeto ela pertence.
+
+Os grupos de abas do próprio navegador ajudam dentro de uma janela, mas um projeto raramente cabe em uma janela só, e quando a janela é fechada, ninguém sabe mais para onde foram aquelas abas.
+
+</Section>
+
+<Section id="why" title="Por que os grupos do TabMerger funcionam do jeito que funcionam">
+
+- **Um grupo é um projeto, não uma janela.** Cada grupo tem quantas janelas o trabalho precisar, e cada janela abre como uma janela separada do navegador. É assim que os projetos são de verdade: as abas de design aqui, as de desenvolvimento ali.
+- **Nomes e notas guardam o contexto.** As janelas podem ser renomeadas e ter sua própria nota, assim como o grupo. Meses depois, “Feedback” e uma nota dizendo o que foi decidido valem mais que uma fileira de favicons.
+- **As estrelas organizam por você.** Grupos com estrela ficam no topo da barra lateral, e janelas com estrela vêm primeiro dentro do grupo.
+- **Arquivar é guardar, não apagar.** Um grupo arquivado sai da sua lista, vai para a seção **Arquivados** (Archived) e passa a ser somente leitura, para que nada mude de lugar por acidente. As abas ainda abrem com um clique, e **Restaurar** (Restore) traz o grupo de volta.
+- **A estrutura do seu navegador é mantida.** As abas salvas mantêm o nome e a cor do grupo de abas do Chrome, então um projeto que você já agrupou na barra de abas mantém esse formato.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-project-group" alt="O grupo “Website redesign” com três janelas nomeadas, Design, Build e Feedback, tema claro" darkAlt="O grupo “Website redesign” com três janelas nomeadas, Design, Build e Feedback, tema escuro" boxes={[{ id: 'windows', label: 'Janelas por etapa' }]} source="TabMerger 3.16.1">Um projeto, três janelas, cada uma com o nome da sua parte do trabalho.</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="Configure um projeto em cinco passos">
+
+1. Clique em **Adicionar grupo** (Add Group) na barra lateral e dê ao grupo o nome do projeto. Clique no ponto colorido para escolher uma cor.
+2. Abra as páginas do projeto e escolha **Mesclar com as atuais** (Merge with current) no menu **⋯** do grupo para salvar nele as janelas abertas.
+3. Renomeie cada janela pelo menu **⋯** dela (**Renomear janela**, Rename window) com a parte do trabalho que ela reúne.
+4. Adicione uma nota ao grupo (**Adicionar nota**, Add note, no menu **⋯**) com o contexto: o prazo, o ticket, o que significa “pronto”.
+5. Marque o grupo com estrela (a estrela ao lado do nome) enquanto o projeto estiver ativo.
+
+Para mover abas entre projetos depois, arraste-as até um grupo na barra lateral ou use **Mover para o grupo** (Move to group) e **Copiar para o grupo** (Copy to group) no menu de clique com o botão direito da aba. **Unir janelas** (Unite windows) e **Dividir janelas** (Split windows) reorganizam um grupo em um só passo.
+
+</Section>
+
+<Section id="archive" title="Arquive o trabalho concluído">
+
+Quando um projeto terminar, clique com o botão direito no grupo dele na barra lateral e escolha **Arquivar grupo**. Ele vai para a seção **Arquivados**, somente leitura: você ainda pode abrir qualquer uma das abas, e **Restaurar** traz o grupo inteiro de volta para a sua lista.
+
+<Carousel label="Arquivar um projeto" steps={[{ title: 'Arquivar' }, { title: 'Arquivado' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archive-menu" alt="O menu de clique com o botão direito de um grupo na barra lateral, com Archive group (Arquivar grupo), tema claro" darkAlt="O menu de clique com o botão direito de um grupo na barra lateral, com Archive group (Arquivar grupo), tema escuro" boxes={[{ id: 'archive', label: 'Arquivar grupo' }]} source="TabMerger 3.16.1">Clique com o botão direito no grupo na barra lateral.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archived" alt="Um grupo arquivado, somente leitura, com um botão Restore (Restaurar) e a seção Archived (Arquivados) aberta na barra lateral, tema claro" darkAlt="Um grupo arquivado, somente leitura, com um botão Restore (Restaurar) e a seção Archived (Arquivados) aberta na barra lateral, tema escuro" boxes={[{ id: 'banner', label: 'Somente leitura até ser restaurado' }]} source="TabMerger 3.16.1">Fora do caminho, mas ainda a um clique de abrir.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="benefit" title="O que você ganha">
+
+Trocar de projeto passa a ser abrir um grupo em vez de procurar numa barra de abas. Você pode fechar todas as janelas de um projeto em que não está trabalhando sabendo exatamente onde estão as abas dele, e a barra lateral mostra só o que está em andamento.
+
+</Section>
+
+<Section id="habits" title="Bons hábitos">
+
+- **Um grupo por projeto, não por assunto.** “Redesign do site”, não “Links de design”.
+- **Dê às janelas nomes de etapas ou funções**, não de sites: “Feedback” dura mais que “GitHub”.
+- **Use poucas estrelas.** Estrela significa “esta semana”.
+- **Arquive no dia da entrega.** Um projeto arquivado continua a um clique, então não há motivo para mantê-lo na sua lista.
+- **Deixe as regras de URL distribuírem as novas abas** nos projetos mais movimentados: veja [organizar abas automaticamente com regras de URL](/blog/auto-sort-tabs-with-url-rules). Para projetos com muita pesquisa, [organizar abas para pesquisa](/blog/organize-tabs-for-research) acrescenta notas e lembretes.
+
+</Section>
+
+<Section id="plans" title="Gratuito ou Pro">
+
+<ComparisonTable
+  head={['', 'Gratuito', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Grupos', '5 (os arquivados contam)', 'Ilimitado'],
+    ['Abas', '50', 'Ilimitado'],
+    ['Janelas, nomes, notas, estrelas, arquivo', 'Sim', 'Sim'],
+    ['Seus projetos nos seus outros dispositivos', 'Não', 'Sim, com criptografia de ponta a ponta'],
+  ]}
+/>
+
+Todas as ferramentas de organização deste guia estão no plano Gratuito; os limites são o número de grupos e de abas. O [Pro](/pricing) remove esses limites e sincroniza seus projetos entre dispositivos.
+
+<InstallCta>Cada projeto no seu próprio grupo, no Chrome, no Edge e no Firefox. Comece grátis.</InstallCta>
+
+Para a rotina completa em torno dos projetos, veja [um fluxo de trabalho diário com abas no TabMerger](/blog/tabmerger-daily-workflow).
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

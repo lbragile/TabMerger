@@ -1,0 +1,160 @@
+export const post = {
+  slug: 'organize-tabs-by-project',
+  title: 'Organizar pestañas por proyecto: un grupo para cada proyecto',
+  navTitle: 'Organizar pestañas por proyecto',
+  seoTitle: 'Cómo organizar las pestañas del navegador por proyecto con TabMerger',
+  description:
+    'Dale a cada proyecto su propio grupo de TabMerger, con ventanas con nombre para cada parte del trabajo, notas para el contexto y un archivo para los proyectos terminados. Por qué los grupos funcionan así, paso a paso.',
+  shareSummary: 'Un grupo por proyecto, ventanas con nombre dentro y un archivo para el trabajo terminado.',
+  dek: 'Cambiar de proyecto no debería ser buscar entre pestañas. Dale a cada uno un lugar propio que puedas abrir, cerrar y archivar.',
+  published: '2026-12-15',
+  updated: '2026-12-15',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Un grupo de TabMerger contiene varias ventanas, cada una con su propio nombre y su propia nota.', source: 'TabMerger 3.16.1' },
+    { text: 'Los grupos destacados se quedan arriba en la barra lateral.', source: 'Código fuente de TabMerger 3.16.1' },
+    { text: 'Los grupos archivados son de solo lectura y vuelven con «Restaurar».', source: 'TabMerger 3.16.1' },
+    { text: 'El plan gratuito incluye 5 grupos y 50 pestañas, contando los grupos archivados; Pro no tiene límite.', source: 'Precios de TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '¿Cuál es la mejor forma de organizar las pestañas por proyecto?',
+      answer:
+        'Dale a cada proyecto un grupo de TabMerger y divídelo en ventanas con nombre para las partes del trabajo (por ejemplo, Diseño, Desarrollo, Comentarios). Añade una nota de grupo con el contexto, destaca con una estrella los proyectos de esta semana y archiva un proyecto cuando esté terminado.',
+    },
+    {
+      question: '¿Un grupo puede tener más de una ventana?',
+      answer: 'Sí. Un grupo de TabMerger puede tener tantas ventanas como quieras. Cada ventana puede tener su propio nombre, su nota y su estrella, y se abre como una ventana del navegador independiente.',
+    },
+    {
+      question: '¿Qué hace archivar un grupo?',
+      answer:
+        'Mueve el grupo a la sección «Archivados» de la barra lateral, en modo de solo lectura, para que no estorbe pero sin que desaparezca. Al hacer clic en una pestaña se sigue abriendo, y «Restaurar» devuelve el grupo a tu lista.',
+    },
+    {
+      question: '¿Se conservan los grupos de pestañas de Chrome al guardarlos?',
+      answer: 'Sí. Las pestañas guardadas conservan el nombre y el color de su grupo de pestañas de Chrome, así que un proyecto que agrupaste en la barra de pestañas mantiene esa estructura dentro de TabMerger.',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp', alt: 'El grupo «Website redesign» con tres ventanas con nombre, Design, Build y Feedback, tema claro' },
+    { src: '/blog/organize-tabs-by-project/tm-project-group-dark.webp', alt: 'El grupo «Website redesign» con tres ventanas con nombre, Design, Build y Feedback, tema oscuro' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-light.webp', alt: 'El menú contextual de un grupo en la barra lateral con Archive group (Archivar grupo), tema claro' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-dark.webp', alt: 'El menú contextual de un grupo en la barra lateral con Archive group (Archivar grupo), tema oscuro' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-light.webp', alt: 'Un grupo archivado, de solo lectura, con un botón Restore (Restaurar) y la sección Archived (Archivados) abierta en la barra lateral, tema claro' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-dark.webp', alt: 'Un grupo archivado, de solo lectura, con un botón Restore (Restaurar) y la sección Archived (Archivados) abierta en la barra lateral, tema oscuro' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-by-project/og.png', alt: 'Organizar pestañas por proyecto con TabMerger: un grupo con las ventanas Design, Build y Feedback' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'problem', label: 'Cuando los proyectos comparten barra de pestañas' },
+    { id: 'why', label: 'Por qué los grupos funcionan así' },
+    { id: 'steps', label: 'Preparar un proyecto' },
+    { id: 'archive', label: 'Archivar el trabajo terminado' },
+    { id: 'benefit', label: 'Lo que ganas' },
+    { id: 'habits', label: 'Buenos hábitos' },
+    { id: 'plans', label: 'Gratis o Pro' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Dale a cada proyecto su propio grupo de [TabMerger](/features). Dentro, mantén una ventana con nombre para cada parte del trabajo («Diseño», «Desarrollo», «Comentarios») y una nota de grupo con el contexto. Destaca con una estrella los proyectos de esta semana para que se queden arriba y, cuando uno esté terminado, **Archivar grupo** (Archive group) lo guarda en modo de solo lectura sin borrar ni una pestaña.
+
+</QuickAnswer>
+
+<InstallCta>Un lugar para cada proyecto, a un clic de abrirlo. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+<Section id="problem" title="Cuando tres proyectos comparten una barra de pestañas">
+
+Estás rediseñando una web, escribiendo un informe y planeando un viaje. Para el miércoles, el navegador tiene los tres a la vez: maquetas junto a búsquedas de vuelos, una pull request entre dos fuentes del informe. Cambiar de proyecto significa repasar toda la barra, y cerrar cualquier cosa da miedo, porque no sabes a qué proyecto pertenece.
+
+Los grupos de pestañas del propio navegador ayudan dentro de una ventana, pero un proyecto rara vez cabe en una sola ventana, y al cerrar la ventana ya no sabes adónde fueron esas pestañas.
+
+</Section>
+
+<Section id="why" title="Por qué los grupos de TabMerger funcionan como funcionan">
+
+- **Un grupo es un proyecto, no una ventana.** Cada grupo tiene tantas ventanas como necesite el trabajo, y cada ventana se abre como una ventana del navegador independiente. Así son los proyectos de verdad: las pestañas de diseño aquí, las de desarrollo allá.
+- **Los nombres y las notas guardan el contexto.** Las ventanas se pueden renombrar y tienen su propia nota, igual que el grupo. Meses después, «Comentarios» y una nota que diga qué se decidió valen más que una fila de favicons.
+- **Las estrellas ordenan por ti.** Los grupos destacados se quedan arriba en la barra lateral, y las ventanas destacadas van primero dentro de su grupo.
+- **Archivar es guardar, no borrar.** Un grupo archivado sale de tu lista, pasa a la sección **Archivados** (Archived) y queda en solo lectura, así que nada se mueve por accidente. Sus pestañas se siguen abriendo con un clic, y **Restaurar** (Restore) lo trae de vuelta.
+- **Se mantiene la estructura de tu navegador.** Las pestañas guardadas conservan el nombre y el color de su grupo de pestañas de Chrome, así que un proyecto que ya agrupaste en la barra de pestañas mantiene esa forma.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-project-group" alt="El grupo «Website redesign» con tres ventanas con nombre, Design, Build y Feedback, tema claro" darkAlt="El grupo «Website redesign» con tres ventanas con nombre, Design, Build y Feedback, tema oscuro" boxes={[{ id: 'windows', label: 'Ventanas por etapa' }]} source="TabMerger 3.16.1">Un proyecto, tres ventanas, cada una con el nombre de su parte del trabajo.</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="Prepara un proyecto en cinco pasos">
+
+1. Pulsa **Agregar grupo** (Add Group) en la barra lateral y ponle el nombre del proyecto. Haz clic en su punto de color para elegir un color.
+2. Abre las páginas del proyecto y elige **Combinar con lo actual** (Merge with current) en el menú **⋯** del grupo para guardar en él las ventanas abiertas.
+3. Renombra cada ventana desde su menú **⋯** (**Renombrar ventana**, Rename window) según la parte del trabajo que contiene.
+4. Añade una nota de grupo (**Agregar nota**, Add note, en el menú **⋯**) con el contexto: la fecha límite, el ticket, qué significa «terminado».
+5. Destaca el grupo con una estrella (la estrella junto a su nombre) mientras sea un proyecto activo.
+
+Para mover pestañas entre proyectos más adelante, arrástralas a un grupo de la barra lateral o usa **Mover al grupo** (Move to group) y **Copiar al grupo** (Copy to group) en el menú contextual de la pestaña. **Unir ventanas** (Unite windows) y **Dividir ventanas** (Split windows) reorganizan un grupo en un solo paso.
+
+</Section>
+
+<Section id="archive" title="Archiva el trabajo terminado">
+
+Cuando un proyecto esté terminado, haz clic derecho en su grupo de la barra lateral y elige **Archivar grupo**. Pasa a la sección **Archivados** en modo de solo lectura: puedes seguir abriendo cualquiera de sus pestañas, y **Restaurar** devuelve el grupo entero a tu lista.
+
+<Carousel label="Archivar un proyecto" steps={[{ title: 'Archivar' }, { title: 'Archivado' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archive-menu" alt="El menú contextual de un grupo en la barra lateral con Archive group (Archivar grupo), tema claro" darkAlt="El menú contextual de un grupo en la barra lateral con Archive group (Archivar grupo), tema oscuro" boxes={[{ id: 'archive', label: 'Archivar grupo' }]} source="TabMerger 3.16.1">Haz clic derecho en el grupo de la barra lateral.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archived" alt="Un grupo archivado, de solo lectura, con un botón Restore (Restaurar) y la sección Archived (Archivados) abierta en la barra lateral, tema claro" darkAlt="Un grupo archivado, de solo lectura, con un botón Restore (Restaurar) y la sección Archived (Archivados) abierta en la barra lateral, tema oscuro" boxes={[{ id: 'banner', label: 'Solo lectura hasta que lo restaures' }]} source="TabMerger 3.16.1">Fuera de la vista, pero a un clic de abrirlo.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="benefit" title="Lo que ganas">
+
+Cambiar de proyecto pasa a ser abrir un grupo en lugar de buscar en una barra de pestañas. Puedes cerrar todas las ventanas de un proyecto en el que no estás trabajando sabiendo exactamente dónde están sus pestañas, y tu barra lateral solo muestra lo que está en curso.
+
+</Section>
+
+<Section id="habits" title="Buenos hábitos">
+
+- **Un grupo por proyecto, no por tema.** «Rediseño de la web», no «Enlaces de diseño».
+- **Nombra las ventanas por etapas o funciones**, no por sitios: «Comentarios» dura más que «GitHub».
+- **Destaca solo unos pocos.** Una estrella significa «esta semana».
+- **Archiva el día en que se entrega.** Un proyecto archivado sigue a un clic, así que no hay motivo para mantenerlo en tu lista.
+- **Deja que las reglas de URL clasifiquen las pestañas nuevas** en los proyectos con mucho movimiento: consulta [ordenar pestañas automáticamente con reglas de URL](/blog/auto-sort-tabs-with-url-rules). Para proyectos con mucha investigación, [organizar pestañas para investigar](/blog/organize-tabs-for-research) añade notas y recordatorios.
+
+</Section>
+
+<Section id="plans" title="Gratis o Pro">
+
+<ComparisonTable
+  head={['', 'Gratis', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Grupos', '5 (los archivados cuentan)', 'Ilimitado'],
+    ['Pestañas', '50', 'Ilimitado'],
+    ['Ventanas, nombres, notas, estrellas, archivo', 'Sí', 'Sí'],
+    ['Tus proyectos en tus otros dispositivos', 'No', 'Sí, con cifrado de extremo a extremo'],
+  ]}
+/>
+
+Todas las herramientas para organizar de esta guía están en el plan gratuito; los límites son el número de grupos y de pestañas. [Pro](/pricing) los elimina y sincroniza tus proyectos entre dispositivos.
+
+<InstallCta>Cada proyecto en su propio grupo, en Chrome, Edge y Firefox. Empieza gratis.</InstallCta>
+
+Para la rutina completa en torno a tus proyectos, consulta [un flujo de trabajo diario con pestañas en TabMerger](/blog/tabmerger-daily-workflow).
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

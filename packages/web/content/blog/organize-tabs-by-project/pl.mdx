@@ -1,0 +1,160 @@
+export const post = {
+  slug: 'organize-tabs-by-project',
+  title: 'Organizowanie kart według projektów: jedna grupa na projekt',
+  navTitle: 'Organizowanie kart według projektów',
+  seoTitle: 'Jak organizować karty przeglądarki według projektów w TabMerger',
+  description:
+    'Daj każdemu projektowi osobną grupę TabMerger, z nazwanymi oknami dla każdej części pracy, notatkami z kontekstem i archiwum na skończone projekty. Dlaczego grupy działają właśnie tak, krok po kroku.',
+  shareSummary: 'Jedna grupa na projekt, nazwane okna w środku i archiwum na skończoną pracę.',
+  dek: 'Przejście do innego projektu nie powinno oznaczać szukania kart. Daj każdemu projektowi miejsce, które możesz otworzyć, zamknąć i zarchiwizować.',
+  published: '2026-12-15',
+  updated: '2026-12-15',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Grupa TabMerger mieści kilka okien, każde z własną nazwą i notatką.', source: 'TabMerger 3.16.1' },
+    { text: 'Grupy oznaczone gwiazdką zostają na górze paska bocznego.', source: 'Kod źródłowy TabMerger 3.16.1' },
+    { text: 'Zarchiwizowane grupy są tylko do odczytu i wracają przyciskiem „Przywróć”.', source: 'TabMerger 3.16.1' },
+    { text: 'Plan darmowy ma 5 grup i 50 kart, wliczając zarchiwizowane grupy; Pro nie ma limitu.', source: 'Cennik TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Jak najlepiej organizować karty według projektów?',
+      answer:
+        'Daj każdemu projektowi jedną grupę TabMerger i podziel ją na nazwane okna dla poszczególnych części pracy (na przykład Projekt graficzny, Wdrożenie, Uwagi). Dodaj do grupy notatkę z kontekstem, oznacz gwiazdką projekty z tego tygodnia i zarchiwizuj projekt, gdy będzie gotowy.',
+    },
+    {
+      question: 'Czy jedna grupa może mieć więcej niż jedno okno?',
+      answer: 'Tak. Grupa TabMerger mieści dowolną liczbę okien. Każde okno może mieć własną nazwę, notatkę i gwiazdkę, a otwiera się jako osobne okno przeglądarki.',
+    },
+    {
+      question: 'Co daje archiwizacja grupy?',
+      answer:
+        'Przenosi grupę do sekcji „Zarchiwizowane” na pasku bocznym, w trybie tylko do odczytu, więc nie przeszkadza, ale nie znika. Kliknięcie karty nadal ją otwiera, a „Przywróć” przywraca grupę na twoją listę.',
+    },
+    {
+      question: 'Czy grupy kart z Chrome przetrwają zapisanie?',
+      answer: 'Tak. Zapisane karty zachowują nazwę i kolor swojej grupy kart z Chrome, więc projekt pogrupowany na pasku kart zachowuje tę strukturę w TabMerger.',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp', alt: 'Grupa „Website redesign” z trzema nazwanymi oknami, Design, Build i Feedback, motyw jasny' },
+    { src: '/blog/organize-tabs-by-project/tm-project-group-dark.webp', alt: 'Grupa „Website redesign” z trzema nazwanymi oknami, Design, Build i Feedback, motyw ciemny' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-light.webp', alt: 'Menu kontekstowe grupy na pasku bocznym z pozycją Archive group (Archiwizuj grupę), motyw jasny' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-dark.webp', alt: 'Menu kontekstowe grupy na pasku bocznym z pozycją Archive group (Archiwizuj grupę), motyw ciemny' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-light.webp', alt: 'Zarchiwizowana grupa tylko do odczytu z przyciskiem Restore (Przywróć) i otwartą sekcją Archived (Zarchiwizowane) na pasku bocznym, motyw jasny' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-dark.webp', alt: 'Zarchiwizowana grupa tylko do odczytu z przyciskiem Restore (Przywróć) i otwartą sekcją Archived (Zarchiwizowane) na pasku bocznym, motyw ciemny' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-by-project/og.png', alt: 'Organizowanie kart według projektów w TabMerger: jedna grupa z oknami Design, Build i Feedback' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'problem', label: 'Gdy projekty dzielą jeden pasek kart' },
+    { id: 'why', label: 'Dlaczego grupy działają właśnie tak' },
+    { id: 'steps', label: 'Przygotuj projekt' },
+    { id: 'archive', label: 'Archiwizuj skończoną pracę' },
+    { id: 'benefit', label: 'Co zyskujesz' },
+    { id: 'habits', label: 'Dobre nawyki' },
+    { id: 'plans', label: 'Darmowy czy Pro' },
+    { id: 'faq', label: 'Najczęstsze pytania' },
+  ],
+}
+
+<QuickAnswer>
+
+Daj każdemu projektowi osobną grupę [TabMerger](/features). W środku trzymaj jedno nazwane okno na każdą część pracy („Projekt graficzny”, „Wdrożenie”, „Uwagi”) i notatkę grupy z kontekstem. Oznacz gwiazdką projekty z tego tygodnia, żeby zostały na górze, a gdy któryś się skończy, **Archiwizuj grupę** (Archive group) odłoży go w trybie tylko do odczytu, bez usuwania żadnej karty.
+
+</QuickAnswer>
+
+<InstallCta>Miejsce na każdy projekt, jedno kliknięcie od otwarcia. Za darmo dla Chrome, Edge i Firefox.</InstallCta>
+
+<Section id="problem" title="Gdy trzy projekty dzielą jeden pasek kart">
+
+Przeprojektowujesz stronę internetową, piszesz raport i planujesz wyjazd. W środę przeglądarka ma już otwarte wszystkie trzy: makiety obok wyszukiwania lotów, pull request między dwoma źródłami do raportu. Zmiana projektu oznacza przeszukiwanie całego paska, a zamknięcie czegokolwiek wydaje się ryzykowne, bo nie wiesz, do którego projektu to należy.
+
+Wbudowane grupy kart przeglądarki pomagają w obrębie jednego okna, ale projekt rzadko mieści się w jednym oknie, a po zamknięciu okna nie wiadomo już, gdzie podziały się te karty.
+
+</Section>
+
+<Section id="why" title="Dlaczego grupy TabMerger działają tak, jak działają">
+
+- **Grupa to projekt, a nie okno.** Każda grupa mieści tyle okien, ile wymaga praca, a każde okno otwiera się jako osobne okno przeglądarki. Tak naprawdę wyglądają projekty: karty z projektem graficznym tutaj, karty z wdrożeniem tam.
+- **Nazwy i notatki niosą kontekst.** Okna można przemianować i dodać im własną notatkę, tak samo jak grupie. Po kilku miesiącach „Uwagi” i notatka z tym, co ustalono, mówią więcej niż rząd favikon.
+- **Gwiazdki sortują za ciebie.** Grupy z gwiazdką zostają na górze paska bocznego, a okna z gwiazdką są pierwsze w swojej grupie.
+- **Archiwizacja to odłożenie, a nie usunięcie.** Zarchiwizowana grupa znika z listy, trafia do sekcji **Zarchiwizowane** (Archived) i staje się tylko do odczytu, więc nic nie przesunie się przypadkiem. Jej karty nadal otwierają się jednym kliknięciem, a **Przywróć** (Restore) przywraca ją z powrotem.
+- **Struktura z przeglądarki zostaje zachowana.** Zapisane karty zachowują nazwę i kolor swojej grupy kart z Chrome, więc projekt, który masz już pogrupowany na pasku kart, zachowuje swój kształt.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-project-group" alt="Grupa „Website redesign” z trzema nazwanymi oknami, Design, Build i Feedback, motyw jasny" darkAlt="Grupa „Website redesign” z trzema nazwanymi oknami, Design, Build i Feedback, motyw ciemny" boxes={[{ id: 'windows', label: 'Okna według etapów' }]} source="TabMerger 3.16.1">Jeden projekt, trzy okna, każde nazwane od swojej części pracy.</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="Przygotuj projekt w pięciu krokach">
+
+1. Kliknij **Dodaj Grupę** (Add Group) na pasku bocznym i nazwij grupę od projektu. Kliknij jej kolorową kropkę, żeby wybrać kolor.
+2. Otwórz strony projektu, a potem wybierz **Scal z bieżącą sesją** (Merge with current) w menu **⋯** grupy, żeby zapisać w niej otwarte okna.
+3. Zmień nazwę każdego okna w jego menu **⋯** (**Zmień nazwę okna**, Rename window) na część pracy, którą zawiera.
+4. Dodaj notatkę grupy (**Dodaj notatkę**, Add note, w menu **⋯**) z kontekstem: termin, zgłoszenie, co znaczy „gotowe”.
+5. Oznacz grupę gwiazdką (gwiazdka obok jej nazwy), dopóki projekt jest aktywny.
+
+Żeby później przenieść karty między projektami, przeciągnij je na grupę na pasku bocznym albo użyj **Przenieś do grupy** (Move to group) i **Kopiuj do grupy** (Copy to group) w menu kontekstowym karty. **Połącz okna** (Unite windows) i **Rozdziel okna** (Split windows) przebudowują grupę w jednym kroku.
+
+</Section>
+
+<Section id="archive" title="Archiwizuj skończoną pracę">
+
+Gdy projekt jest skończony, kliknij prawym przyciskiem jego grupę na pasku bocznym i wybierz **Archiwizuj grupę**. Grupa trafia do sekcji **Zarchiwizowane** w trybie tylko do odczytu: nadal możesz otworzyć każdą jej kartę, a **Przywróć** przywraca całą grupę na twoją listę.
+
+<Carousel label="Archiwizacja projektu" steps={[{ title: 'Archiwizuj' }, { title: 'Zarchiwizowana' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archive-menu" alt="Menu kontekstowe grupy na pasku bocznym z pozycją Archive group (Archiwizuj grupę), motyw jasny" darkAlt="Menu kontekstowe grupy na pasku bocznym z pozycją Archive group (Archiwizuj grupę), motyw ciemny" boxes={[{ id: 'archive', label: 'Archiwizuj grupę' }]} source="TabMerger 3.16.1">Kliknij grupę prawym przyciskiem na pasku bocznym.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archived" alt="Zarchiwizowana grupa tylko do odczytu z przyciskiem Restore (Przywróć) i otwartą sekcją Archived (Zarchiwizowane) na pasku bocznym, motyw jasny" darkAlt="Zarchiwizowana grupa tylko do odczytu z przyciskiem Restore (Przywróć) i otwartą sekcją Archived (Zarchiwizowane) na pasku bocznym, motyw ciemny" boxes={[{ id: 'banner', label: 'Tylko do odczytu do czasu przywrócenia' }]} source="TabMerger 3.16.1">Nie przeszkadza, a wciąż jest jedno kliknięcie od otwarcia.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="benefit" title="Co zyskujesz">
+
+Zmiana projektu sprowadza się do otwarcia grupy zamiast przeszukiwania paska kart. Możesz zamknąć wszystkie okna projektu, nad którym akurat nie pracujesz, wiedząc dokładnie, gdzie są jego karty, a pasek boczny pokazuje tylko to, co bieżące.
+
+</Section>
+
+<Section id="habits" title="Dobre nawyki">
+
+- **Jedna grupa na projekt, a nie na temat.** „Nowa strona firmy”, a nie „Linki o designie”.
+- **Nazywaj okna od etapów lub ról**, a nie od stron: „Uwagi” przetrwają dłużej niż „GitHub”.
+- **Gwiazdek używaj najwyżej kilka.** Gwiazdka znaczy „w tym tygodniu”.
+- **Archiwizuj w dniu oddania projektu.** Zarchiwizowany projekt nadal jest jedno kliknięcie dalej, więc nie ma powodu trzymać go na liście.
+- **Pozwól regułom URL rozkładać nowe karty** w projektach, w których dużo się dzieje: zobacz [automatyczne sortowanie kart regułami URL](/blog/auto-sort-tabs-with-url-rules). Do projektów opartych na researchu [porządkowanie kart do researchu](/blog/organize-tabs-for-research) dodaje notatki i przypomnienia.
+
+</Section>
+
+<Section id="plans" title="Darmowy czy Pro">
+
+<ComparisonTable
+  head={['', 'Darmowy', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Grupy', '5 (zarchiwizowane się liczą)', 'Bez limitu'],
+    ['Karty', '50', 'Bez limitu'],
+    ['Okna, nazwy, notatki, gwiazdki, archiwum', 'Tak', 'Tak'],
+    ['Twoje projekty na innych urządzeniach', 'Nie', 'Tak, z szyfrowaniem end-to-end'],
+  ]}
+/>
+
+Każde narzędzie do organizowania z tego poradnika jest w planie darmowym; ograniczona jest tylko liczba grup i kart. [Pro](/pricing) znosi te limity i synchronizuje twoje projekty między urządzeniami.
+
+<InstallCta>Każdy projekt we własnej grupie, w Chrome, Edge i Firefox. Na start za darmo.</InstallCta>
+
+Całą rutynę wokół projektów opisuje [codzienny sposób pracy z kartami w TabMerger](/blog/tabmerger-daily-workflow).
+
+</Section>
+
+<Section id="faq" title="Najczęstsze pytania">
+
+<Faq items={post.faq} />
+
+</Section>

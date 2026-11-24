@@ -1,0 +1,160 @@
+export const post = {
+  slug: 'organize-tabs-by-project',
+  title: '프로젝트별로 탭 정리하기: 프로젝트 하나에 그룹 하나',
+  navTitle: '프로젝트별로 탭 정리하기',
+  seoTitle: 'TabMerger로 브라우저 탭을 프로젝트별로 정리하는 방법',
+  description:
+    '프로젝트마다 TabMerger 그룹을 하나씩 만들고, 작업의 각 부분에는 이름 붙인 창을, 맥락에는 메모를, 끝난 프로젝트에는 보관함을 쓰세요. 그룹이 이렇게 동작하는 이유와 방법을 단계별로 설명합니다.',
+  shareSummary: '프로젝트마다 그룹 하나, 그 안에 이름 붙인 창, 끝난 작업은 보관함으로.',
+  dek: '프로젝트를 바꿀 때마다 탭을 뒤질 필요는 없습니다. 프로젝트마다 열고, 닫고, 보관할 수 있는 자리를 마련해 두세요.',
+  published: '2026-12-15',
+  updated: '2026-12-15',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'TabMerger 그룹 하나에는 여러 창이 들어가고, 창마다 이름과 메모를 따로 둘 수 있습니다.', source: 'TabMerger 3.16.1' },
+    { text: '별표한 그룹은 사이드바 맨 위에 남아 있습니다.', source: 'TabMerger 3.16.1 소스 코드' },
+    { text: '보관한 그룹은 읽기 전용이 되고, \'복원\' 버튼으로 다시 돌아옵니다.', source: 'TabMerger 3.16.1' },
+    { text: '무료 플랜은 보관한 그룹을 포함해 그룹 5개, 탭 50개까지이며, Pro는 제한이 없습니다.', source: 'TabMerger 요금제', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '탭을 프로젝트별로 정리하는 가장 좋은 방법은 무엇인가요?',
+      answer:
+        '프로젝트마다 TabMerger 그룹을 하나씩 만들고, 작업의 부분별로 이름 붙인 창으로 나누세요(예: 디자인, 개발, 피드백). 맥락을 적은 그룹 메모를 추가하고, 이번 주에 진행 중인 프로젝트에는 별표를 하고, 끝난 프로젝트는 보관하세요.',
+    },
+    {
+      question: '그룹 하나에 창을 여러 개 넣을 수 있나요?',
+      answer: '네. TabMerger 그룹에는 창을 몇 개든 넣을 수 있습니다. 창마다 이름, 메모, 별표를 따로 둘 수 있고, 각 창은 별도의 브라우저 창으로 열립니다.',
+    },
+    {
+      question: '그룹을 보관하면 어떻게 되나요?',
+      answer:
+        '그룹이 사이드바의 \'보관됨\' 섹션으로 옮겨지고 읽기 전용이 됩니다. 눈앞에서는 치워지지만 사라지지는 않습니다. 탭을 클릭하면 여전히 열리고, \'복원\' 버튼을 누르면 그룹이 목록으로 돌아옵니다.',
+    },
+    {
+      question: 'Chrome 탭 그룹은 저장해도 유지되나요?',
+      answer: '네. 저장한 탭은 Chrome 탭 그룹의 이름과 색상을 그대로 유지하므로, 탭 표시줄에서 묶어 둔 프로젝트는 TabMerger 안에서도 같은 구조를 유지합니다.',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp', alt: '이름 붙인 창 세 개(Design, Build, Feedback)가 있는 Website redesign 그룹, 밝은 테마' },
+    { src: '/blog/organize-tabs-by-project/tm-project-group-dark.webp', alt: '이름 붙인 창 세 개(Design, Build, Feedback)가 있는 Website redesign 그룹, 어두운 테마' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-light.webp', alt: 'Archive group(그룹 보관) 항목이 있는 사이드바 그룹의 오른쪽 클릭 메뉴, 밝은 테마' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-dark.webp', alt: 'Archive group(그룹 보관) 항목이 있는 사이드바 그룹의 오른쪽 클릭 메뉴, 어두운 테마' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-light.webp', alt: 'Restore(복원) 버튼이 있는 읽기 전용 보관 그룹과 사이드바에 펼쳐진 Archived(보관됨) 섹션, 밝은 테마' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-dark.webp', alt: 'Restore(복원) 버튼이 있는 읽기 전용 보관 그룹과 사이드바에 펼쳐진 Archived(보관됨) 섹션, 어두운 테마' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-by-project/og.png', alt: 'TabMerger로 프로젝트별 탭 정리하기: Design, Build, Feedback 창이 있는 그룹 하나' },
+  toc: [
+    { id: 'quick', label: '빠른 답변' },
+    { id: 'problem', label: '여러 프로젝트가 탭 표시줄을 함께 쓸 때' },
+    { id: 'why', label: '그룹이 이렇게 동작하는 이유' },
+    { id: 'steps', label: '프로젝트 준비하기' },
+    { id: 'archive', label: '끝난 작업 보관하기' },
+    { id: 'benefit', label: '얻을 수 있는 것' },
+    { id: 'habits', label: '좋은 습관' },
+    { id: 'plans', label: '무료와 Pro' },
+    { id: 'faq', label: '자주 묻는 질문' },
+  ],
+}
+
+<QuickAnswer>
+
+프로젝트마다 [TabMerger](/features) 그룹을 하나씩 만드세요. 그 안에 작업의 부분마다 이름 붙인 창('디자인', '개발', '피드백')을 하나씩 두고, 맥락을 적은 그룹 메모를 달아 두세요. 이번 주에 진행 중인 프로젝트에는 별표를 해서 맨 위에 두고, 프로젝트가 끝나면 **그룹 보관**(Archive group) 메뉴로 탭을 하나도 지우지 않고 읽기 전용으로 치워 두세요.
+
+</QuickAnswer>
+
+<InstallCta>프로젝트마다 자리를 하나씩, 클릭 한 번이면 열립니다. Chrome, Edge, Firefox용 무료.</InstallCta>
+
+<Section id="problem" title="세 프로젝트가 탭 표시줄 하나를 함께 쓸 때">
+
+웹사이트를 새로 디자인하고, 보고서를 쓰고, 여행을 계획하고 있다고 해 봅시다. 수요일쯤이면 브라우저에 세 가지가 모두 섞여 있습니다. 항공권 검색 옆에 목업이, 보고서 자료 두 개 사이에 풀 리퀘스트가 있습니다. 프로젝트를 바꿀 때마다 탭 표시줄 전체를 훑어야 하고, 어느 프로젝트의 탭인지 알 수 없으니 무엇이든 닫기가 불안합니다.
+
+브라우저 자체의 탭 그룹은 창 하나 안에서는 도움이 되지만, 프로젝트가 창 하나에 들어가는 일은 드뭅니다. 게다가 창을 닫으면 그 탭들이 어디로 갔는지도 알 수 없게 됩니다.
+
+</Section>
+
+<Section id="why" title="TabMerger 그룹이 이렇게 동작하는 이유">
+
+- **그룹은 창이 아니라 프로젝트입니다.** 그룹마다 작업에 필요한 만큼 창을 넣을 수 있고, 각 창은 별도의 브라우저 창으로 열립니다. 실제 프로젝트도 이런 모습입니다. 디자인 탭은 여기에, 개발 탭은 저기에.
+- **이름과 메모가 맥락을 담습니다.** 창은 이름을 바꿀 수 있고 창마다 메모를 둘 수 있습니다. 그룹도 마찬가지입니다. 몇 달 뒤에는 파비콘 한 줄보다 '피드백'이라는 이름과 결정 사항을 적은 메모가 훨씬 많은 것을 알려 줍니다.
+- **정렬은 별표가 대신합니다.** 별표한 그룹은 사이드바 맨 위에 남고, 별표한 창은 그룹 안에서 맨 앞에 옵니다.
+- **보관은 삭제가 아니라 치워 두기입니다.** 보관한 그룹은 목록에서 빠져 **보관됨**(Archived) 섹션으로 옮겨지고 읽기 전용이 되므로, 실수로 무언가가 옮겨질 일이 없습니다. 탭은 여전히 클릭 한 번으로 열리고, **복원**(Restore) 버튼을 누르면 그룹이 돌아옵니다.
+- **브라우저에서 만든 구조가 유지됩니다.** 저장한 탭은 Chrome 탭 그룹의 이름과 색상을 그대로 유지하므로, 탭 표시줄에서 이미 묶어 둔 프로젝트는 그 모양 그대로 남습니다.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-project-group" alt="이름 붙인 창 세 개(Design, Build, Feedback)가 있는 Website redesign 그룹, 밝은 테마" darkAlt="이름 붙인 창 세 개(Design, Build, Feedback)가 있는 Website redesign 그룹, 어두운 테마" boxes={[{ id: 'windows', label: '단계별 창' }]} source="TabMerger 3.16.1">프로젝트 하나에 창 세 개, 각 창에는 맡은 작업의 이름을 붙였습니다.</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="다섯 단계로 프로젝트 준비하기">
+
+1. 사이드바에서 **그룹 추가**(Add Group) 버튼을 누르고 프로젝트 이름을 붙이세요. 색상 점을 클릭하면 색을 고를 수 있습니다.
+2. 프로젝트 페이지를 연 다음, 그룹의 **⋯** 메뉴에서 **현재 상태와 합치기**(Merge with current) 항목을 선택해 열려 있는 창을 그룹에 저장하세요.
+3. 각 창의 **⋯** 메뉴(**창 이름 바꾸기**, Rename window)에서 그 창에 담긴 작업에 맞게 이름을 바꾸세요.
+4. 그룹 메모(**⋯** 메뉴의 **메모 추가**, Add note)에 맥락을 적으세요. 마감일, 티켓, 무엇이 '완료'인지 같은 것들입니다.
+5. 진행 중인 동안에는 그룹에 별표(이름 옆의 별)를 해 두세요.
+
+나중에 탭을 다른 프로젝트로 옮기려면 사이드바의 그룹으로 끌어다 놓거나, 탭의 오른쪽 클릭 메뉴에서 **그룹으로 이동**(Move to group)과 **그룹에 복사**(Copy to group) 항목을 쓰세요. **창 합치기**(Unite windows)와 **창 나누기**(Split windows) 항목은 그룹 구성을 한 번에 바꿔 줍니다.
+
+</Section>
+
+<Section id="archive" title="끝난 작업 보관하기">
+
+프로젝트가 끝나면 사이드바에서 그 그룹을 오른쪽 클릭하고 **그룹 보관** 항목을 선택하세요. 그룹이 읽기 전용으로 **보관됨** 섹션에 옮겨집니다. 그 안의 탭은 여전히 열 수 있고, **복원** 버튼을 누르면 그룹 전체가 목록으로 돌아옵니다.
+
+<Carousel label="프로젝트 보관하기" steps={[{ title: '보관' }, { title: '보관됨' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archive-menu" alt="Archive group(그룹 보관) 항목이 있는 사이드바 그룹의 오른쪽 클릭 메뉴, 밝은 테마" darkAlt="Archive group(그룹 보관) 항목이 있는 사이드바 그룹의 오른쪽 클릭 메뉴, 어두운 테마" boxes={[{ id: 'archive', label: '그룹 보관' }]} source="TabMerger 3.16.1">사이드바에서 그룹을 오른쪽 클릭하세요.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archived" alt="Restore(복원) 버튼이 있는 읽기 전용 보관 그룹과 사이드바에 펼쳐진 Archived(보관됨) 섹션, 밝은 테마" darkAlt="Restore(복원) 버튼이 있는 읽기 전용 보관 그룹과 사이드바에 펼쳐진 Archived(보관됨) 섹션, 어두운 테마" boxes={[{ id: 'banner', label: '복원할 때까지 읽기 전용' }]} source="TabMerger 3.16.1">눈앞에서는 치웠지만, 여전히 클릭 한 번이면 열립니다.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="benefit" title="얻을 수 있는 것">
+
+프로젝트 전환이 탭 표시줄을 뒤지는 일에서 그룹 하나를 여는 일로 바뀝니다. 지금 작업하지 않는 프로젝트의 창은 모두 닫아도 탭이 어디 있는지 정확히 알 수 있고, 사이드바에는 진행 중인 것만 보입니다.
+
+</Section>
+
+<Section id="habits" title="좋은 습관">
+
+- **그룹은 주제가 아니라 프로젝트마다 하나씩.** '디자인 링크'가 아니라 '웹사이트 리디자인'.
+- **창 이름은 사이트가 아니라 단계나 역할로 짓기.** '피드백'이 'GitHub'보다 오래 갑니다.
+- **별표는 많아야 몇 개만.** 별표는 '이번 주'라는 뜻입니다.
+- **납품한 날 바로 보관하기.** 보관한 프로젝트도 클릭 한 번이면 열리니, 목록에 남겨 둘 이유가 없습니다.
+- **바쁜 프로젝트는 URL 규칙이 새 탭을 분류하게 하기.** [URL 규칙으로 탭을 자동 정렬하는 방법](/blog/auto-sort-tabs-with-url-rules)을 참고하세요. 조사할 것이 많은 프로젝트라면 [리서치용으로 탭을 정리하는 방법](/blog/organize-tabs-for-research)에서 메모와 리마인더를 더할 수 있습니다.
+
+</Section>
+
+<Section id="plans" title="무료와 Pro">
+
+<ComparisonTable
+  head={['', '무료', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['그룹', '5개(보관한 그룹 포함)', '무제한'],
+    ['탭', '50', '무제한'],
+    ['창, 이름, 메모, 별표, 보관', '예', '예'],
+    ['다른 기기에서 보는 내 프로젝트', '아니요', '예, 엔드투엔드 암호화'],
+  ]}
+/>
+
+여기서 소개한 정리 기능은 모두 무료 플랜에 있습니다. 제한은 그룹과 탭의 개수뿐입니다. [Pro](/pricing)는 이 제한을 없애고 프로젝트를 기기 간에 동기화합니다.
+
+<InstallCta>프로젝트마다 자기 그룹을, Chrome, Edge, Firefox에서. 무료로 시작하세요.</InstallCta>
+
+프로젝트를 둘러싼 하루 루틴 전체는 [TabMerger로 하는 하루 탭 워크플로](/blog/tabmerger-daily-workflow)를 참고하세요.
+
+</Section>
+
+<Section id="faq" title="자주 묻는 질문">
+
+<Faq items={post.faq} />
+
+</Section>

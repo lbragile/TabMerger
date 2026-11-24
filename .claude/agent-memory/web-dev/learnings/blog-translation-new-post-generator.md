@@ -72,3 +72,9 @@ Run the template check again just before writing into the repo, to confirm en.md
 - Don't `.trim()` data values: French keys that start right after a link (`](…) : …`) need their leading space. Strip only blank lines and trailing whitespace.
 - Make every number cell a data key, even a bare `'3'`: fa uses Persian digits in table cells.
 - Alts in JSX attributes can't hold ASCII `"`; where a language's body uses ASCII quotes (id, he), alts need “ ” or no quotes.
+
+**Sidebar section headings are all-caps in the catalogs** (`sidePanel.archived`, `sessions`: "ARCHIVIERT", "ARŞİV"). For prose, generate sentence case with `toLocaleLowerCase(loc)` (handles Turkish İ) instead of copying the capitals or hand-typing.
+
+**Plan names in tables and prose** come from `messages/<loc>/pricing.json` `tierNames` (a `{M:file.key}` token). he, hi, it and ru keep "Free" there, so "Gratis o Pro" would disagree with the pricing page.
+
+- Verifier English-token checks must test names one by one, not a comma-joined list (ar writes "Design وBuild"); a keyFacts check must not assume every source label starts with "TabMerger 3" once source labels are translated.
