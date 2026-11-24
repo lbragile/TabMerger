@@ -1,0 +1,179 @@
+export const post = {
+  slug: 'auto-sort-tabs-with-url-rules',
+  title: 'Organizar abas em grupos automaticamente com regras de URL',
+  navTitle: 'Organizar abas automaticamente com regras de URL',
+  seoTitle: 'Agrupar abas do navegador automaticamente por URL',
+  description:
+    'Deixe o TabMerger organizar suas abas por você: uma regra de URL copia cada página correspondente para o grupo certo enquanto você navega. Como funcionam os padrões e o curinga *, a ordem das regras e padrões que funcionam bem.',
+  shareSummary: 'Um padrão e um grupo: o TabMerger arquiva cada aba correspondente enquanto você navega.',
+  dek: 'Escreva a regra uma vez. Toda página correspondente que você abrir a partir daí vai para o grupo certo.',
+  published: '2026-12-17',
+  updated: '2026-12-17',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Uma regra é um padrão mais um grupo; * corresponde a qualquer sequência de caracteres.', source: 'TabMerger 3.16.1' },
+    { text: 'Os padrões valem para o endereço inteiro, sem http:// ou https://.', source: 'Código-fonte do TabMerger 3.16.1' },
+    { text: 'As regras são verificadas de cima para baixo; vence a primeira que corresponde.', source: 'TabMerger 3.16.1' },
+    { text: 'O plano Gratuito tem 3 regras de URL; o Pro não tem limite.', source: 'Preços do TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Dá para organizar as abas do navegador em grupos automaticamente?',
+      answer:
+        'Sim, com as regras de URL do TabMerger. Uma regra liga um padrão de endereço, como github.com/your-org/*, a um grupo. Sempre que uma página correspondente abre ou termina de carregar, o TabMerger salva uma cópia dela nesse grupo. A aba continua aberta.',
+    },
+    {
+      question: 'Como funcionam os padrões das regras de URL?',
+      answer:
+        'Um padrão precisa corresponder ao endereço inteiro, sem a parte http:// ou https://. * representa qualquer sequência de caracteres, inclusive nenhuma, e é o único curinga. Assim, github.com/* corresponde a todas as páginas do GitHub, e *wikipedia.org/* à Wikipedia em qualquer idioma.',
+    },
+    {
+      question: 'E se duas regras corresponderem à mesma página?',
+      answer: 'As regras são verificadas do topo da lista para baixo, e vence a primeira que corresponde. Use as setas ao lado de cada regra para colocar as regras específicas acima das gerais.',
+    },
+    {
+      question: 'Uma regra de URL fecha a aba?',
+      answer: 'Não. A regra salva uma cópia no grupo; a aba continua aberta onde está.',
+    },
+    {
+      question: 'Quantas regras de URL posso ter?',
+      answer: 'O plano Gratuito tem 3. O Pro não tem limite. As regras que você já tem continuam funcionando se o seu plano mudar.',
+    },
+  ],
+  images: [
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-light.webp', alt: 'Caixa de diálogo “Add URL Rule” (Adicionar regra de URL) do TabMerger com o padrão *wikivoyage.org/wiki/* e o grupo “Trip to Lisbon”, tema claro' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-dark.webp', alt: 'Caixa de diálogo “Add URL Rule” (Adicionar regra de URL) do TabMerger com o padrão *wikivoyage.org/wiki/* e o grupo “Trip to Lisbon”, tema escuro' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-light.webp', alt: '“URL Rules” (Regras de URL) do TabMerger com três regras, cada uma com setas para mudar sua ordem, e “3/3 used” (3/3 em uso), tema claro' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-dark.webp', alt: '“URL Rules” (Regras de URL) do TabMerger com três regras, cada uma com setas para mudar sua ordem, e “3/3 used” (3/3 em uso), tema escuro' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp', alt: 'O grupo “Trip to Lisbon” com a página de Sintra adicionada por uma regra de URL, tema claro' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-dark.webp', alt: 'O grupo “Trip to Lisbon” com a página de Sintra adicionada por uma regra de URL, tema escuro' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'developers'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp' },
+  ogImage: { src: '/blog/auto-sort-tabs-with-url-rules/og.png', alt: 'Organizar abas automaticamente com regras de URL: três regras do TabMerger arquivando abas em grupos' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'problem', label: 'Arquivar à mão' },
+    { id: 'why', label: 'Por que funcionam assim' },
+    { id: 'steps', label: 'Adicionar uma regra' },
+    { id: 'patterns', label: 'Escrever padrões' },
+    { id: 'order', label: 'Ordem das regras' },
+    { id: 'benefit', label: 'O que você ganha' },
+    { id: 'habits', label: 'Bons hábitos' },
+    { id: 'plans', label: 'Gratuito ou Pro' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+}
+
+<QuickAnswer>
+
+No [TabMerger](/features), abra **Configurações → Geral → Regras de URL → Gerenciar** (Settings → General → URL rules → Manage) e adicione uma regra: um padrão de endereço como `github.com/your-org/*` e o grupo a que ele pertence. A partir daí, toda página correspondente é salva nesse grupo enquanto você navega, e a aba continua aberta. `*` corresponde a qualquer coisa; vence a primeira regra que corresponde.
+
+</QuickAnswer>
+
+<InstallCta>Abas que se arquivam sozinhas no grupo certo. Grátis para Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="problem" title="Arquivar abas à mão não dura">
+
+Você começa a semana organizado: o trabalho em um grupo, a viagem em outro, as leituras em um terceiro. Aí o dia acontece. Um colega manda o link de uma issue, você pesquisa dois horários de trem, uma busca traz um artigo. Cada um deveria ir para algum lugar, e cada um é um arrastar que você não vai fazer. Na sexta, os grupos estão desatualizados e Abertas agora (Now Open) virou uma pilha de novo.
+
+As páginas que você mais abre vêm dos mesmos poucos sites. É exatamente isso que uma regra consegue reconhecer.
+
+</Section>
+
+<Section id="why" title="Por que as regras de URL funcionam assim">
+
+- **Copiar, não mover.** Uma regra salva uma cópia da página no grupo e deixa a aba aberta. Arquivar nunca interrompe o que você está lendo.
+- **Observa enquanto você navega.** Uma regra é verificada quando uma aba abre com um endereço e sempre que uma página termina de carregar, então um link que você segue dentro de uma aba também é arquivado. A cópia vai para a primeira janela do grupo. Uma página que carrega de novo (ao recarregar, numa visita posterior) é salva de novo; **Remover abas duplicadas** (Deduplicate tabs), no menu **⋯** do grupo, limpa as repetições.
+- **O endereço inteiro, sem esquema.** Um padrão é comparado com todo o endereço depois de `http://` ou `https://`, então você nunca digita essa parte, e `localhost:3000/*` funciona do jeito que está escrito.
+- **Um só curinga, de propósito.** `*` significa qualquer sequência de caracteres, inclusive nenhuma. Não há outros caracteres especiais para escapar. Os padrões são comparados como texto simples, nunca transformados em expressão regular, então até os longos são verificados rapidamente.
+- **A ordem decide.** Quando duas regras correspondem, vence a de cima, então uma regra específica pode ficar acima de uma geral.
+
+</Section>
+
+<Section id="steps" title="Adicionar uma regra">
+
+1. Abra o TabMerger e depois **Configurações** → **Geral** (Settings → General). Ao lado de **Regras de URL**, clique em **Gerenciar** (Manage).
+2. Clique em **Adicionar regra** (Add rule). Digite o padrão, escolha o grupo de destino e clique em **Adicionar regra** na caixa de diálogo.
+3. Repita para cada site que você quer arquivar e depois clique em **Salvar** (Save) para manter a lista.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Uma regra de URL do início ao fim" steps={[{ title: 'Adicionar' }, { title: 'A lista' }, { title: 'O resultado' }]}>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-add-rule" alt="Caixa de diálogo “Add URL Rule” (Adicionar regra de URL) do TabMerger com o padrão *wikivoyage.org/wiki/* e o grupo “Trip to Lisbon”, tema claro" darkAlt="Caixa de diálogo “Add URL Rule” (Adicionar regra de URL) do TabMerger com o padrão *wikivoyage.org/wiki/* e o grupo “Trip to Lisbon”, tema escuro" boxes={[{ id: 'pattern', label: 'O padrão de endereço' }, { id: 'group', label: 'O grupo de destino' }]} source="TabMerger 3.16.1">Todo artigo do Wikivoyage vai para a viagem.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rules-list" alt="“URL Rules” (Regras de URL) do TabMerger com três regras, cada uma com setas para mudar sua ordem, e “3/3 used” (3/3 em uso), tema claro" darkAlt="“URL Rules” (Regras de URL) do TabMerger com três regras, cada uma com setas para mudar sua ordem, e “3/3 used” (3/3 em uso), tema escuro" boxes={[{ id: 'order', label: 'Verificadas de cima para baixo' }, { id: 'used', label: 'Contador do plano Gratuito' }]} source="TabMerger 3.16.1">Três regras, três grupos. As setas definem qual regra é testada primeiro.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rule-result" alt="O grupo “Trip to Lisbon” com a página de Sintra adicionada por uma regra de URL, tema claro" darkAlt="O grupo “Trip to Lisbon” com a página de Sintra adicionada por uma regra de URL, tema escuro" boxes={[{ id: 'new-tab', label: 'Arquivada pela regra' }]} source="TabMerger 3.16.1">Abrir o artigo sobre Sintra o salvou sozinho em “Trip to Lisbon”.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="patterns" title="Escrever padrões que correspondem">
+
+<ComparisonTable
+  head={['Padrão', 'Corresponde a', 'Não corresponde a']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['github.com/your-org/*', 'Todo repositório, issue e pull request de your-org', 'github.com/other-org/…'],
+    ['*wikipedia.org/wiki/*', 'Artigos em qualquer idioma (en., de., …)', 'a página inicial de wikipedia.org'],
+    ['localhost:3000/*', 'Toda página do seu servidor de desenvolvimento local', 'localhost:8080/…'],
+    ['docs.example.com/*', 'O site de documentação', 'www.docs.example.com/… (adicione *docs.example.com/*)'],
+    ['github.com', 'Só o endereço github.com em si', 'github.com/qualquer-coisa (adicione /*)'],
+  ]}
+/>
+
+Dicas que poupam uma sessão de depuração:
+
+- **Termine com `/*`** para cobrir um site inteiro. Sem `*`, um padrão corresponde a um único endereço exato.
+- **Comece com `*`** quando um site usa subdomínios ou `www.`: `*example.com/*`.
+- **As letras precisam corresponder como estão escritas.** Os navegadores escrevem nomes de domínio em minúsculas, então escreva assim também.
+- **Parâmetros de consulta contam.** `*youtube.com/watch*` corresponde a vídeos, seja o que for que venha depois de `watch`.
+
+</Section>
+
+<Section id="order" title="Ordem das regras: as específicas primeiro">
+
+As regras são testadas a partir do topo. Coloque a regra estreita (`github.com/your-org/design-system/*` → “Design system”) acima da ampla (`github.com/your-org/*` → “Work”) usando as setas ao lado de cada regra. A primeira regra que corresponde arquiva a página, e as demais são ignoradas.
+
+</Section>
+
+<Section id="benefit" title="O que você ganha">
+
+Seus grupos ficam em dia sem nenhum arquivamento da sua parte. Uma página que você abriu na terça já está no grupo do projeto dela na sexta, e uma busca nesse grupo a encontra.
+
+</Section>
+
+<Section id="habits" title="Bons hábitos">
+
+- **Crie regras para os sites que você abre todo dia,** não para cada site que visita uma vez.
+- **Uma regra por domínio ou caminho de projeto**, as específicas primeiro.
+- **Combine regras com um grupo por projeto:** veja [organizar abas por projeto](/blog/organize-tabs-by-project). Quem programa encontra mais padrões em [gerenciamento de abas para desenvolvedores](/blog/tab-management-for-developers).
+- **Faça uma limpeza de vez em quando** com **Remover abas duplicadas** nos grupos que as regras enchem com frequência.
+
+</Section>
+
+<Section id="plans" title="Gratuito ou Pro">
+
+<ComparisonTable
+  head={['', 'Gratuito', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Regras de URL', '3', 'Ilimitadas'],
+    ['Padrões, ordem, todas as opções acima', 'Sim', 'Sim'],
+  ]}
+/>
+
+As regras de URL ficam salvas no navegador onde você as criou. Se um plano Pro terminar, as regras que você já tem continuam arquivando abas; só adicionar uma quarta regra exige o [Pro](/pricing).
+
+<InstallCta>Escreva três regras hoje e pare de arquivar abas à mão. Grátis para Chrome, Edge e Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,179 @@
+export const post = {
+  slug: 'auto-sort-tabs-with-url-rules',
+  title: 'URLルールでタブをグループに自動で振り分ける方法',
+  navTitle: 'URLルールでタブを自動で振り分ける',
+  seoTitle: 'ブラウザのタブをURLで自動的にグループ分けする方法',
+  description:
+    'タブの整理は TabMerger に任せましょう。URLルールを作ると、ブラウジング中に一致したページが正しいグループへ自動でコピーされます。パターンとワイルドカード * の仕組み、ルールの順序、うまく働くパターンを紹介します。',
+  shareSummary: 'パターンとグループを決めるだけ。ブラウジング中、一致したタブを TabMerger が自動で振り分けます。',
+  dek: 'ルールは一度書くだけ。それ以降に開いた一致するページは、すべて正しいグループに振り分けられます。',
+  published: '2026-12-17',
+  updated: '2026-12-17',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'ルールはパターンとグループの組み合わせ。* は任意の文字列に一致します。', source: 'TabMerger 3.16.1' },
+    { text: 'パターンは http:// や https:// を除いたアドレス全体と照合されます。', source: 'TabMerger 3.16.1 のソースコード' },
+    { text: 'ルールは上から順に確認され、最初に一致したものが適用されます。', source: 'TabMerger 3.16.1' },
+    { text: '無料プランは URLルール3つまで、Pro は無制限です。', source: 'TabMerger の料金', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'ブラウザのタブを自動でグループに振り分けられますか？',
+      answer:
+        'はい、TabMerger の URLルールで可能です。ルールは github.com/your-org/* のようなアドレスのパターンとグループを結び付けます。一致するページが開いたり読み込みを終えたりするたびに、TabMerger がそのコピーをグループに保存します。タブ自体は開いたままです。',
+    },
+    {
+      question: 'URLルールのパターンはどう動きますか？',
+      answer:
+        'パターンは http:// や https:// の部分を除いたアドレス全体に一致する必要があります。* は空の場合も含めて任意の文字列を表し、使えるワイルドカードはこれだけです。たとえば github.com/* は GitHub のすべてのページに、*wikipedia.org/* はあらゆる言語の Wikipedia に一致します。',
+    },
+    {
+      question: '2つのルールが同じページに一致したら？',
+      answer: 'ルールはリストの上から順に確認され、最初に一致したものが適用されます。各ルールの横にある矢印で、具体的なルールを一般的なルールより上に置きましょう。',
+    },
+    {
+      question: 'URLルールはタブを閉じますか？',
+      answer: 'いいえ。ルールはグループにコピーを保存するだけで、タブは元の場所で開いたままです。',
+    },
+    {
+      question: 'URLルールはいくつ作れますか？',
+      answer: '無料プランは3つまでです。Pro は無制限です。プランが変わっても、作成済みのルールは引き続き動作します。',
+    },
+  ],
+  images: [
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-light.webp', alt: 'TabMerger の「Add URL Rule」（URLルールを追加）ダイアログ。パターン *wikivoyage.org/wiki/* とグループ「Trip to Lisbon」を指定。ライトテーマ' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-dark.webp', alt: 'TabMerger の「Add URL Rule」（URLルールを追加）ダイアログ。パターン *wikivoyage.org/wiki/* とグループ「Trip to Lisbon」を指定。ダークテーマ' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-light.webp', alt: 'TabMerger の「URL Rules」（URLルール）。3つのルールにそれぞれ順序を変える矢印があり、「3/3 used」（3/3を使用中）と表示。ライトテーマ' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-dark.webp', alt: 'TabMerger の「URL Rules」（URLルール）。3つのルールにそれぞれ順序を変える矢印があり、「3/3 used」（3/3を使用中）と表示。ダークテーマ' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp', alt: 'URLルールによって「Sintra」のページが追加された「Trip to Lisbon」グループ。ライトテーマ' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-dark.webp', alt: 'URLルールによって「Sintra」のページが追加された「Trip to Lisbon」グループ。ダークテーマ' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'developers'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp' },
+  ogImage: { src: '/blog/auto-sort-tabs-with-url-rules/og.png', alt: 'URLルールでタブを自動で振り分ける：タブをグループに振り分ける3つの TabMerger ルール' },
+  toc: [
+    { id: 'quick', label: '簡単な答え' },
+    { id: 'problem', label: '手作業での整理' },
+    { id: 'why', label: 'ルールの仕組みの理由' },
+    { id: 'steps', label: 'ルールを追加する' },
+    { id: 'patterns', label: 'パターンの書き方' },
+    { id: 'order', label: 'ルールの順序' },
+    { id: 'benefit', label: '得られること' },
+    { id: 'habits', label: 'よい習慣' },
+    { id: 'plans', label: '無料と Pro' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+}
+
+<QuickAnswer>
+
+[TabMerger](/features) で **設定 → 一般 → URLルール → 管理**（Settings → General → URL rules → Manage）を開き、ルールを追加します。ルールは `github.com/your-org/*` のようなアドレスのパターンと、振り分け先のグループです。以降はブラウジング中に一致したページがすべてそのグループに保存され、タブは開いたままです。`*` は何にでも一致し、最初に一致したルールが適用されます。
+
+</QuickAnswer>
+
+<InstallCta>タブがひとりでに正しいグループへ。Chrome、Edge、Firefox で無料。</InstallCta>
+
+<Section id="problem" title="手作業でのタブ整理は続かない">
+
+週の始まりはきちんと整っています。仕事はひとつのグループ、旅行は別のグループ、読み物は3つ目のグループ。ところが一日が始まると、同僚から Issue のリンクが届き、電車の時刻を2本調べ、検索で記事が見つかります。どれもどこかに入れるべきものですが、そのたびにドラッグするのは面倒で、結局やりません。金曜日にはグループが古くなり、現在開いているタブ（Now Open）はまた山積みです。
+
+よく開くページは、決まったいくつかのサイトから来ています。それこそがルールで見分けられるものです。
+
+</Section>
+
+<Section id="why" title="URLルールがこう動く理由">
+
+- **移動ではなくコピー**。ルールはページのコピーをグループに保存し、タブは開いたままにします。読んでいる最中に整理で邪魔されることはありません。
+- **ブラウジング中に見張る**。ルールは、タブがアドレス付きで開いたときと、ページの読み込みが終わるたびに確認されます。そのため、タブ内でたどったリンクも振り分けられます。コピーはグループの最初のウィンドウに入ります。同じページが再び読み込まれると（再読み込みや後日の訪問）もう一度保存されますが、グループの **⋯** メニューにある **重複タブを削除**（Deduplicate tabs）で重複を片付けられます。
+- **スキームを除いたアドレス全体**。パターンは `http://` や `https://` の後ろにあるアドレス全体と比べられるので、それらを入力する必要はなく、`localhost:3000/*` も書いたとおりに動きます。
+- **ワイルドカードはあえてひとつ**。`*` は空も含めた任意の文字列を意味します。エスケープが必要な特殊文字はほかにありません。パターンはプレーンテキストとして照合され、正規表現に変換されることはないので、長いパターンでもすばやく確認されます。
+- **順序で決まる**。2つのルールが一致したら上のほうが適用されるので、具体的なルールを一般的なルールの上に置けます。
+
+</Section>
+
+<Section id="steps" title="ルールを追加する">
+
+1. TabMerger を開き、**設定** → **一般**（Settings → General）に進みます。**URLルール** の横にある **管理**（Manage）を押します。
+2. **ルールを追加**（Add rule）を押します。パターンを入力し、振り分け先のグループを選んで、ダイアログの **ルールを追加** を押します。
+3. 振り分けたいサイトごとに繰り返し、最後に **保存**（Save）を押してリストを保存します。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="URLルールの最初から最後まで" steps={[{ title: '追加' }, { title: 'リスト' }, { title: '結果' }]}>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-add-rule" alt="TabMerger の「Add URL Rule」（URLルールを追加）ダイアログ。パターン *wikivoyage.org/wiki/* とグループ「Trip to Lisbon」を指定。ライトテーマ" darkAlt="TabMerger の「Add URL Rule」（URLルールを追加）ダイアログ。パターン *wikivoyage.org/wiki/* とグループ「Trip to Lisbon」を指定。ダークテーマ" boxes={[{ id: 'pattern', label: 'アドレスのパターン' }, { id: 'group', label: '振り分け先のグループ' }]} source="TabMerger 3.16.1">Wikivoyage の記事はすべて旅行のグループへ。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rules-list" alt="TabMerger の「URL Rules」（URLルール）。3つのルールにそれぞれ順序を変える矢印があり、「3/3 used」（3/3を使用中）と表示。ライトテーマ" darkAlt="TabMerger の「URL Rules」（URLルール）。3つのルールにそれぞれ順序を変える矢印があり、「3/3 used」（3/3を使用中）と表示。ダークテーマ" boxes={[{ id: 'order', label: '上から順に確認' }, { id: 'used', label: '無料プランの使用数' }]} source="TabMerger 3.16.1">3つのルールに3つのグループ。矢印でどのルールを先に試すかを決めます。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rule-result" alt="URLルールによって「Sintra」のページが追加された「Trip to Lisbon」グループ。ライトテーマ" darkAlt="URLルールによって「Sintra」のページが追加された「Trip to Lisbon」グループ。ダークテーマ" boxes={[{ id: 'new-tab', label: 'ルールが振り分けたタブ' }]} source="TabMerger 3.16.1">「Sintra」の記事を開いただけで、「Trip to Lisbon」に自動で保存されました。</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="patterns" title="一致するパターンの書き方">
+
+<ComparisonTable
+  head={['パターン', '一致するもの', '一致しないもの']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['github.com/your-org/*', 'your-org のすべてのリポジトリ、Issue、プルリクエスト', 'github.com/other-org/…'],
+    ['*wikipedia.org/wiki/*', 'あらゆる言語の記事 (en., de., …)', 'wikipedia.org のトップページ'],
+    ['localhost:3000/*', 'ローカル開発サーバーのすべてのページ', 'localhost:8080/…'],
+    ['docs.example.com/*', 'ドキュメントサイト', 'www.docs.example.com/…（*docs.example.com/* を追加）'],
+    ['github.com', 'github.com というアドレスそのものだけ', 'github.com/anything（/* を追加）'],
+  ]}
+/>
+
+デバッグの手間を省くコツ：
+
+- **末尾を `/*` にする**と、サイト全体が対象になります。`*` がないと、パターンはひとつのアドレスにだけ完全一致します。
+- **先頭を `*` にする**のは、サイトがサブドメインや `www.` を使う場合です（例：`*example.com/*`）。
+- **文字は書いたとおりに一致させる**。ブラウザはドメイン名を小文字で書くので、パターンも小文字で書きましょう。
+- **クエリ文字列も対象**。`*youtube.com/watch*` は、`watch` の後に何が続いても動画に一致します。
+
+</Section>
+
+<Section id="order" title="ルールの順序：具体的なものを先に">
+
+ルールは上から試されます。各ルールの横の矢印を使って、範囲の狭いルール（`github.com/your-org/design-system/*` → 「Design system」）を広いルール（`github.com/your-org/*` → 「Work」）より上に置きましょう。最初に一致したルールがページを振り分け、残りは飛ばされます。
+
+</Section>
+
+<Section id="benefit" title="得られること">
+
+自分で整理しなくても、グループは常に最新の状態です。火曜日に開いたページは金曜日にはもうプロジェクトのグループに入っていて、そのグループを検索すれば見つかります。
+
+</Section>
+
+<Section id="habits" title="よい習慣">
+
+- **毎日開くサイトにルールを作る**。一度しか訪れないサイトにまでは不要です。
+- **プロジェクトのドメインやパスごとにルールをひとつ**、具体的なルールを先に。
+- **ルールとプロジェクトごとのグループを組み合わせる**：[プロジェクトごとにタブを整理する](/blog/organize-tabs-by-project)をご覧ください。開発者向けのパターンは[開発者のためのタブ管理](/blog/tab-management-for-developers)にもっとあります。
+- **ときどき片付ける**。ルールでよく埋まるグループでは **重複タブを削除** を使いましょう。
+
+</Section>
+
+<Section id="plans" title="無料と Pro">
+
+<ComparisonTable
+  head={['', '無料', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['URLルール', '3', '無制限'],
+    ['パターン、順序、上記のすべてのオプション', 'はい', 'はい'],
+  ]}
+/>
+
+URLルールは、作成したブラウザに保存されます。Pro プランが終了しても、作成済みのルールはタブを振り分け続けます。4つ目のルールを追加するときだけ [Pro](/pricing) が必要です。
+
+<InstallCta>今日3つのルールを書いて、手作業のタブ整理から卒業しましょう。Chrome、Edge、Firefox で無料。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

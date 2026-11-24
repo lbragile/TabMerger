@@ -1,0 +1,179 @@
+export const post = {
+  slug: 'auto-sort-tabs-with-url-rules',
+  title: 'מיון כרטיסיות לקבוצות באופן אוטומטי עם כללי URL',
+  navTitle: 'מיון כרטיסיות אוטומטי עם כללי URL',
+  seoTitle: 'איך לקבץ כרטיסיות בדפדפן לקבוצות אוטומטית לפי URL',
+  description:
+    'תנו ל-TabMerger לסדר את הכרטיסיות בשבילכם: כלל URL מעתיק כל דף תואם לקבוצה הנכונה תוך כדי גלישה. איך עובדות תבניות ותו הכללי *, סדר הכללים ותבניות שעובדות טוב.',
+  shareSummary: 'תבנית וקבוצה: TabMerger מסדר כל כרטיסייה תואמת במקומה תוך כדי גלישה.',
+  dek: 'כותבים את הכלל פעם אחת. כל דף תואם שתפתחו מאז נשמר בקבוצה הנכונה.',
+  published: '2026-12-17',
+  updated: '2026-12-17',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'כלל הוא תבנית וקבוצה; * תואם כל רצף של תווים.', source: 'TabMerger 3.16.1' },
+    { text: 'תבניות מושוות לכתובת המלאה, בלי http:// או https://.', source: 'קוד המקור של TabMerger 3.16.1' },
+    { text: 'הכללים נבדקים מלמעלה למטה; הכלל התואם הראשון קובע.', source: 'TabMerger 3.16.1' },
+    { text: 'בתוכנית החינמית יש 3 כללי URL; ב-Pro אין הגבלה.', source: 'המחירים של TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'אפשר למיין כרטיסיות בדפדפן לקבוצות באופן אוטומטי?',
+      answer:
+        'כן, עם כללי URL ב-TabMerger. כלל מחבר תבנית כתובת, כמו github.com/your-org/*, לקבוצה. בכל פעם שדף תואם נפתח או מסיים להיטען, TabMerger שומר עותק שלו בקבוצה הזו. הכרטיסייה עצמה נשארת פתוחה.',
+    },
+    {
+      question: 'איך עובדות התבניות של כללי URL?',
+      answer:
+        'תבנית צריכה להתאים לכתובת המלאה, בלי החלק http:// או https://. * מייצג כל רצף של תווים, גם רצף ריק, והוא התו הכללי היחיד. לכן github.com/* תואם כל דף ב-GitHub, ו-*wikipedia.org/* תואם את Wikipedia בכל שפה.',
+    },
+    {
+      question: 'מה קורה אם שני כללים תואמים את אותו דף?',
+      answer: 'הכללים נבדקים מראש הרשימה כלפי מטה, והכלל התואם הראשון קובע. בעזרת החצים שליד כל כלל מציבים כללים ספציפיים מעל כללים כלליים.',
+    },
+    {
+      question: 'האם כלל URL סוגר את הכרטיסייה?',
+      answer: 'לא. הכלל שומר עותק בקבוצה; הכרטיסייה נשארת פתוחה איפה שהיא.',
+    },
+    {
+      question: 'כמה כללי URL אפשר ליצור?',
+      answer: 'בתוכנית החינמית 3. ב-Pro אין הגבלה. הכללים שכבר יש לכם ממשיכים לעבוד אם התוכנית שלכם משתנה.',
+    },
+  ],
+  images: [
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-light.webp', alt: 'חלון הדו-שיח Add URL Rule (הוספת כלל URL) ב-TabMerger עם התבנית *wikivoyage.org/wiki/* והקבוצה Trip to Lisbon, ערכת נושא בהירה' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-dark.webp', alt: 'חלון הדו-שיח Add URL Rule (הוספת כלל URL) ב-TabMerger עם התבנית *wikivoyage.org/wiki/* והקבוצה Trip to Lisbon, ערכת נושא כהה' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-light.webp', alt: 'URL Rules (כללי URL) ב-TabMerger עם שלושה כללים, לכל אחד חצים לשינוי הסדר, ו-3/3 used (3/3 בשימוש), ערכת נושא בהירה' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-dark.webp', alt: 'URL Rules (כללי URL) ב-TabMerger עם שלושה כללים, לכל אחד חצים לשינוי הסדר, ו-3/3 used (3/3 בשימוש), ערכת נושא כהה' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp', alt: 'הקבוצה Trip to Lisbon עם הדף Sintra שכלל URL הוסיף, ערכת נושא בהירה' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-dark.webp', alt: 'הקבוצה Trip to Lisbon עם הדף Sintra שכלל URL הוסיף, ערכת נושא כהה' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'developers'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp' },
+  ogImage: { src: '/blog/auto-sort-tabs-with-url-rules/og.png', alt: 'מיון כרטיסיות אוטומטי עם כללי URL: שלושה כללים של TabMerger שמסדרים כרטיסיות בקבוצות' },
+  toc: [
+    { id: 'quick', label: 'תשובה קצרה' },
+    { id: 'problem', label: 'סידור ידני' },
+    { id: 'why', label: 'למה הכללים עובדים כך' },
+    { id: 'steps', label: 'הוספת כלל' },
+    { id: 'patterns', label: 'כתיבת תבניות' },
+    { id: 'order', label: 'סדר הכללים' },
+    { id: 'benefit', label: 'מה מרוויחים' },
+    { id: 'habits', label: 'הרגלים טובים' },
+    { id: 'plans', label: 'חינם או Pro' },
+    { id: 'faq', label: 'שאלות נפוצות' },
+  ],
+}
+
+<QuickAnswer>
+
+ב-[TabMerger](/features) פותחים את **הגדרות ← כללי ← כללי URL ← ניהול** (<bdi dir="ltr">Settings → General → URL rules → Manage</bdi>) ומוסיפים כלל: תבנית כתובת כמו <bdi dir="ltr">`github.com/your-org/*`</bdi> והקבוצה שאליה היא שייכת. מאותו רגע כל דף תואם נשמר בקבוצה הזו תוך כדי גלישה, והכרטיסייה נשארת פתוחה. <bdi dir="ltr">`*`</bdi> תואם כל דבר; הכלל התואם הראשון קובע.
+
+</QuickAnswer>
+
+<InstallCta>כרטיסיות שמסתדרות לבד בקבוצה הנכונה. בחינם ל-Chrome, ל-Edge ול-Firefox.</InstallCta>
+
+<Section id="problem" title="סידור ידני של כרטיסיות לא מחזיק מעמד">
+
+מתחילים את השבוע מסודרים: העבודה בקבוצה אחת, הטיול בשנייה, חומרי הקריאה בשלישית. ואז היום מתחיל. עמית שולח קישור לבאג, אתם בודקים שני זמני רכבת, חיפוש מעלה מאמר. כל אחד מהם צריך ללכת למקום כלשהו, וכל אחד הוא גרירה שלא תעשו. עד יום שישי הקבוצות כבר לא מעודכנות, ו-פתוח עכשיו (<bdi dir="ltr">Now Open</bdi>) שוב הופך לערימה.
+
+הדפים שאתם פותחים הכי הרבה מגיעים מאותם אתרים בודדים. בדיוק את זה כלל יודע לזהות.
+
+</Section>
+
+<Section id="why" title="למה כללי URL עובדים כמו שהם עובדים">
+
+- **העתקה, לא העברה.** כלל שומר עותק של הדף בקבוצה ומשאיר את הכרטיסייה פתוחה. הסידור אף פעם לא קוטע את מה שאתם קוראים.
+- **עוקב תוך כדי גלישה.** כלל נבדק כשכרטיסייה נפתחת עם כתובת ובכל פעם שדף מסיים להיטען, כך שגם קישור שאתם עוקבים אחריו בתוך כרטיסייה מסודר. העותק נכנס לחלון הראשון של הקבוצה. דף שנטען שוב (רענון, ביקור מאוחר יותר) נשמר שוב; **הסרת כרטיסיות כפולות** (<bdi dir="ltr">Deduplicate tabs</bdi>) בתפריט **⋯** של הקבוצה מנקה כפילויות.
+- **הכתובת המלאה, בלי פרוטוקול.** תבנית מושווית לכל הכתובת שאחרי <bdi dir="ltr">`http://`</bdi> או <bdi dir="ltr">`https://`</bdi>, כך שאף פעם לא מקלידים אותם, ו-<bdi dir="ltr">`localhost:3000/*`</bdi> עובד בדיוק כמו שהוא כתוב.
+- **תו כללי אחד, בכוונה.** <bdi dir="ltr">`*`</bdi> פירושו כל רצף של תווים, גם רצף ריק. אין תווים מיוחדים אחרים שצריך לסמן בתו בריחה. תבניות מושוות כטקסט פשוט ואף פעם לא הופכות לביטוי רגולרי, ולכן גם תבניות ארוכות נבדקות מהר.
+- **הסדר קובע.** כששני כללים תואמים, העליון קובע, כך שכלל ספציפי יכול לשבת מעל כלל כללי.
+
+</Section>
+
+<Section id="steps" title="הוספת כלל">
+
+1. פותחים את TabMerger, ואז **הגדרות** ← **כללי** (<bdi dir="ltr">Settings → General</bdi>). ליד **כללי URL** לוחצים על **ניהול** (<bdi dir="ltr">Manage</bdi>).
+2. לוחצים על **הוספת כלל** (<bdi dir="ltr">Add rule</bdi>). מקלידים את התבנית, בוחרים את קבוצת היעד ולוחצים על **הוספת כלל** בחלון הדו-שיח.
+3. חוזרים על זה לכל אתר שרוצים לסדר, ואז לוחצים על **שמירה** (<bdi dir="ltr">Save</bdi>) כדי לשמור את הרשימה.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="כלל URL מההתחלה ועד הסוף" steps={[{ title: 'הוספה' }, { title: 'הרשימה' }, { title: 'התוצאה' }]}>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-add-rule" alt="חלון הדו-שיח Add URL Rule (הוספת כלל URL) ב-TabMerger עם התבנית *wikivoyage.org/wiki/* והקבוצה Trip to Lisbon, ערכת נושא בהירה" darkAlt="חלון הדו-שיח Add URL Rule (הוספת כלל URL) ב-TabMerger עם התבנית *wikivoyage.org/wiki/* והקבוצה Trip to Lisbon, ערכת נושא כהה" boxes={[{ id: 'pattern', label: 'תבנית הכתובת' }, { id: 'group', label: 'קבוצת היעד' }]} source="TabMerger 3.16.1">כל מאמר ב-Wikivoyage הולך לקבוצת הטיול.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rules-list" alt="URL Rules (כללי URL) ב-TabMerger עם שלושה כללים, לכל אחד חצים לשינוי הסדר, ו-3/3 used (3/3 בשימוש), ערכת נושא בהירה" darkAlt="URL Rules (כללי URL) ב-TabMerger עם שלושה כללים, לכל אחד חצים לשינוי הסדר, ו-3/3 used (3/3 בשימוש), ערכת נושא כהה" boxes={[{ id: 'order', label: 'נבדקים מלמעלה למטה' }, { id: 'used', label: 'המונה של התוכנית החינמית' }]} source="TabMerger 3.16.1">שלושה כללים, שלוש קבוצות. החצים קובעים איזה כלל נבדק ראשון.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rule-result" alt="הקבוצה Trip to Lisbon עם הדף Sintra שכלל URL הוסיף, ערכת נושא בהירה" darkAlt="הקבוצה Trip to Lisbon עם הדף Sintra שכלל URL הוסיף, ערכת נושא כהה" boxes={[{ id: 'new-tab', label: 'סודר על ידי הכלל' }]} source="TabMerger 3.16.1">פתיחת המאמר על Sintra שמרה אותו לבד ב-<bdi dir="ltr">Trip to Lisbon</bdi>.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="patterns" title="כתיבת תבניות שתואמות">
+
+<ComparisonTable
+  head={['תבנית', 'תואמת', 'לא תואמת']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    [<bdi dir="ltr">github.com/your-org/*</bdi>, <>כל מאגר, באג ו-<bdi dir="ltr">pull request</bdi> של <bdi dir="ltr">your-org</bdi></>, <bdi dir="ltr">github.com/other-org/…</bdi>],
+    [<bdi dir="ltr">*wikipedia.org/wiki/*</bdi>, <>מאמרים בכל שפה <bdi dir="ltr">(en., de., …)</bdi></>, <>דף הבית של <bdi dir="ltr">wikipedia.org</bdi></>],
+    [<bdi dir="ltr">localhost:3000/*</bdi>, 'כל דף בשרת הפיתוח המקומי שלכם', <bdi dir="ltr">localhost:8080/…</bdi>],
+    [<bdi dir="ltr">docs.example.com/*</bdi>, 'אתר התיעוד', <><bdi dir="ltr">www.docs.example.com/…</bdi> (מוסיפים <bdi dir="ltr">*docs.example.com/*</bdi>)</>],
+    [<bdi dir="ltr">github.com</bdi>, <>רק הכתובת <bdi dir="ltr">github.com</bdi> עצמה</>, <><bdi dir="ltr">github.com/anything</bdi> (מוסיפים <bdi dir="ltr">/*</bdi>)</>],
+  ]}
+/>
+
+טיפים שחוסכים סבב דיבאג:
+
+- **מסיימים ב-<bdi dir="ltr">`/*`</bdi>** כדי לכסות אתר שלם. בלי <bdi dir="ltr">`*`</bdi>, תבנית תואמת כתובת מדויקת אחת בלבד.
+- **מתחילים ב-<bdi dir="ltr">`*`</bdi>** כשאתר משתמש בתת-דומיינים או ב-<bdi dir="ltr">`www.`</bdi>: <bdi dir="ltr">`*example.com/*`</bdi>.
+- **האותיות צריכות להתאים בדיוק כפי שנכתבו.** דפדפנים כותבים שמות דומיין באותיות קטנות, אז כותבים אותם כך גם בתבנית.
+- **מחרוזות שאילתה נספרות.** <bdi dir="ltr">`*youtube.com/watch*`</bdi> תואם סרטונים, לא משנה מה בא אחרי <bdi dir="ltr">`watch`</bdi>.
+
+</Section>
+
+<Section id="order" title="סדר הכללים: קודם הספציפיים">
+
+הכללים נבדקים מלמעלה. בעזרת החצים שליד כל כלל מציבים את הכלל הצר (<bdi dir="ltr">`github.com/your-org/design-system/*` → "Design system"</bdi>) מעל הכלל הרחב (<bdi dir="ltr">`github.com/your-org/*` → "Work"</bdi>). הכלל התואם הראשון מסדר את הדף, והשאר מדולגים.
+
+</Section>
+
+<Section id="benefit" title="מה מרוויחים">
+
+הקבוצות נשארות מעודכנות בלי שתצטרכו לסדר שום דבר. דף שפתחתם ביום שלישי כבר נמצא ביום שישי בקבוצה של הפרויקט שלו, וחיפוש בקבוצה הזו מוצא אותו.
+
+</Section>
+
+<Section id="habits" title="הרגלים טובים">
+
+- **מגדירים כללים לאתרים שפותחים כל יום,** לא לכל אתר שביקרתם בו פעם אחת.
+- **כלל אחד לכל דומיין או נתיב של פרויקט**, הספציפיים קודם.
+- **משלבים כללים עם קבוצה לכל פרויקט:** ראו [ארגון כרטיסיות לפי פרויקט](/blog/organize-tabs-by-project). מפתחים ימצאו עוד תבניות ב[ניהול כרטיסיות למפתחים](/blog/tab-management-for-developers).
+- **מסדרים מדי פעם** עם **הסרת כרטיסיות כפולות** בקבוצות שהכללים ממלאים לעיתים קרובות.
+
+</Section>
+
+<Section id="plans" title="חינם או Pro">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['כללי URL', '3', 'ללא הגבלה'],
+    ['תבניות, סדר וכל האפשרויות שלמעלה', 'כן', 'כן'],
+  ]}
+/>
+
+כללי URL נשמרים בדפדפן שבו יצרתם אותם. אם תוכנית Pro מסתיימת, הכללים שכבר יש לכם ממשיכים לסדר כרטיסיות; רק הוספת כלל רביעי דורשת [Pro](/pricing).
+
+<InstallCta>כתבו היום שלושה כללים ותפסיקו לסדר כרטיסיות ביד. בחינם ל-Chrome, ל-Edge ול-Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="שאלות נפוצות">
+
+<Faq items={post.faq} />
+
+</Section>

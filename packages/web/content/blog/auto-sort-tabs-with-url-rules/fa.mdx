@@ -1,0 +1,179 @@
+export const post = {
+  slug: 'auto-sort-tabs-with-url-rules',
+  title: 'مرتب کردن خودکار زبانه‌ها در گروه‌ها با قانون‌های URL',
+  navTitle: 'مرتب کردن خودکار زبانه‌ها با قانون‌های URL',
+  seoTitle: 'گروه‌بندی خودکار زبانه‌های مرورگر بر اساس URL',
+  description:
+    'بگذارید TabMerger زبانه‌هایتان را مرتب کند: یک قانون URL هنگام مرور، هر صفحهٔ منطبق را در گروه درست کپی می‌کند. طرز کار الگوها و نویسهٔ عام *، ترتیب قانون‌ها و الگوهایی که خوب جواب می‌دهند.',
+  shareSummary: 'یک الگو و یک گروه: TabMerger هنگام مرور، هر زبانهٔ منطبق را سر جایش می‌گذارد.',
+  dek: 'قانون را یک بار بنویسید. از آن به بعد هر صفحهٔ منطبقی که باز کنید در گروه درست قرار می‌گیرد.',
+  published: '2026-12-17',
+  updated: '2026-12-17',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'هر قانون یک الگو و یک گروه است؛ * با هر رشته‌ای از نویسه‌ها منطبق می‌شود.', source: 'TabMerger 3.16.1' },
+    { text: 'الگوها با کل نشانی، بدون http:// یا https://، مقایسه می‌شوند.', source: 'کد منبع TabMerger 3.16.1' },
+    { text: 'قانون‌ها از بالا به پایین بررسی می‌شوند؛ نخستین قانون منطبق اعمال می‌شود.', source: 'TabMerger 3.16.1' },
+    { text: 'طرح رایگان ۳ قانون URL دارد؛ Pro محدودیتی ندارد.', source: 'قیمت‌های TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'آیا می‌شود زبانه‌های مرورگر را خودکار در گروه‌ها مرتب کرد؟',
+      answer:
+        'بله، با قانون‌های URL در TabMerger. هر قانون یک الگوی نشانی، مثل github.com/your-org/*، را به یک گروه وصل می‌کند. هر بار که صفحه‌ای منطبق باز می‌شود یا بارگذاری‌اش تمام می‌شود، TabMerger نسخه‌ای از آن را در آن گروه ذخیره می‌کند. خود زبانه باز می‌ماند.',
+    },
+    {
+      question: 'الگوهای قانون URL چطور کار می‌کنند؟',
+      answer:
+        'الگو باید با کل نشانی منطبق باشد، بدون بخش http:// یا https://. * به معنای هر رشته‌ای از نویسه‌هاست، حتی رشتهٔ خالی، و تنها نویسهٔ عام است. پس github.com/* با همهٔ صفحه‌های GitHub منطبق می‌شود و *wikipedia.org/* با Wikipedia به هر زبانی.',
+    },
+    {
+      question: 'اگر دو قانون با یک صفحه منطبق شوند چه می‌شود؟',
+      answer: 'قانون‌ها از بالای فهرست به پایین بررسی می‌شوند و نخستین قانون منطبق اعمال می‌شود. با پیکان‌های کنار هر قانون، قانون‌های مشخص را بالای قانون‌های کلی بگذارید.',
+    },
+    {
+      question: 'آیا قانون URL زبانه را می‌بندد؟',
+      answer: 'نه. قانون نسخه‌ای را در گروه ذخیره می‌کند؛ زبانه همان جایی که هست باز می‌ماند.',
+    },
+    {
+      question: 'چند قانون URL می‌توانم داشته باشم؟',
+      answer: 'طرح رایگان ۳ قانون دارد. Pro محدودیتی ندارد. اگر طرحتان تغییر کند، قانون‌هایی که دارید همچنان کار می‌کنند.',
+    },
+  ],
+  images: [
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-light.webp', alt: 'پنجرهٔ Add URL Rule (افزودن قانون URL) در TabMerger با الگوی *wikivoyage.org/wiki/* و گروه Trip to Lisbon، پوستهٔ روشن' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-dark.webp', alt: 'پنجرهٔ Add URL Rule (افزودن قانون URL) در TabMerger با الگوی *wikivoyage.org/wiki/* و گروه Trip to Lisbon، پوستهٔ تیره' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-light.webp', alt: 'URL Rules (قانون‌های URL) در TabMerger با سه قانون که هر کدام پیکان‌هایی برای تغییر ترتیب دارند، و 3/3 used (3/3 استفاده‌شده)، پوستهٔ روشن' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-dark.webp', alt: 'URL Rules (قانون‌های URL) در TabMerger با سه قانون که هر کدام پیکان‌هایی برای تغییر ترتیب دارند، و 3/3 used (3/3 استفاده‌شده)، پوستهٔ تیره' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp', alt: 'گروه Trip to Lisbon با صفحهٔ Sintra که یک قانون URL آن را اضافه کرده است، پوستهٔ روشن' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-dark.webp', alt: 'گروه Trip to Lisbon با صفحهٔ Sintra که یک قانون URL آن را اضافه کرده است، پوستهٔ تیره' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'developers'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp' },
+  ogImage: { src: '/blog/auto-sort-tabs-with-url-rules/og.png', alt: 'مرتب کردن خودکار زبانه‌ها با قانون‌های URL: سه قانون TabMerger که زبانه‌ها را در گروه‌ها می‌گذارند' },
+  toc: [
+    { id: 'quick', label: 'پاسخ کوتاه' },
+    { id: 'problem', label: 'مرتب کردن دستی' },
+    { id: 'why', label: 'چرا قانون‌ها این‌طور کار می‌کنند' },
+    { id: 'steps', label: 'افزودن قانون' },
+    { id: 'patterns', label: 'نوشتن الگوها' },
+    { id: 'order', label: 'ترتیب قانون‌ها' },
+    { id: 'benefit', label: 'چه به دست می‌آورید' },
+    { id: 'habits', label: 'عادت‌های خوب' },
+    { id: 'plans', label: 'رایگان یا Pro' },
+    { id: 'faq', label: 'پرسش‌های متداول' },
+  ],
+}
+
+<QuickAnswer>
+
+در [TabMerger](/features)، **تنظیمات ← عمومی ← قانون‌های URL ← مدیریت** (<bdi dir="ltr">Settings → General → URL rules → Manage</bdi>) را باز کنید و یک قانون اضافه کنید: یک الگوی نشانی مثل <bdi dir="ltr">`github.com/your-org/*`</bdi> و گروهی که به آن تعلق دارد. از آن به بعد هر صفحهٔ منطبق هنگام مرور در آن گروه ذخیره می‌شود و زبانه باز می‌ماند. <bdi dir="ltr">`*`</bdi> با هر چیزی منطبق می‌شود؛ نخستین قانون منطبق اعمال می‌شود.
+
+</QuickAnswer>
+
+<InstallCta>زبانه‌هایی که خودشان در گروه درست جا می‌گیرند. رایگان برای Chrome و Edge و Firefox.</InstallCta>
+
+<Section id="problem" title="مرتب کردن دستی زبانه‌ها دوام نمی‌آورد">
+
+هفته را مرتب شروع می‌کنید: کار در یک گروه، سفر در گروهی دیگر، مطالعه در گروه سوم. بعد روز شروع می‌شود. همکاری پیوند یک <bdi dir="ltr">issue</bdi> را می‌فرستد، ساعت دو قطار را نگاه می‌کنید، یک جست‌وجو به مقاله‌ای می‌رسد. هر کدام باید جایی برود و هر کدام یک کشیدن و رها کردن است که انجامش نمی‌دهید. تا جمعه گروه‌ها قدیمی شده‌اند و هم‌اکنون باز (<bdi dir="ltr">Now Open</bdi>) دوباره تلنباری از زبانه‌هاست.
+
+صفحه‌هایی که بیش از همه باز می‌کنید از همان چند سایت می‌آیند. این دقیقاً همان چیزی است که یک قانون می‌تواند تشخیص دهد.
+
+</Section>
+
+<Section id="why" title="چرا قانون‌های URL این‌طور کار می‌کنند">
+
+- **کپی، نه جابه‌جایی.** قانون نسخه‌ای از صفحه را در گروه ذخیره می‌کند و زبانه را باز می‌گذارد. مرتب کردن هرگز خواندنتان را قطع نمی‌کند.
+- **هنگام مرور حواسش هست.** قانون وقتی بررسی می‌شود که زبانه‌ای با یک نشانی باز شود و هر بار که بارگذاری صفحه‌ای تمام شود؛ پس پیوندی که داخل یک زبانه دنبال می‌کنید هم سر جایش می‌رود. نسخه به نخستین پنجرهٔ گروه می‌رود. صفحه‌ای که دوباره بارگذاری شود (با بارگذاری مجدد یا بازدیدی دیگر) دوباره ذخیره می‌شود؛ **حذف زبانه‌های تکراری** (<bdi dir="ltr">Deduplicate tabs</bdi>) در منوی **⋯** گروه تکراری‌ها را پاک می‌کند.
+- **کل نشانی، بدون طرح.** الگو با کل نشانیِ بعد از <bdi dir="ltr">`http://`</bdi> یا <bdi dir="ltr">`https://`</bdi> مقایسه می‌شود؛ پس هیچ‌وقت آن‌ها را تایپ نمی‌کنید و <bdi dir="ltr">`localhost:3000/*`</bdi> همان‌طور که نوشته شده کار می‌کند.
+- **عمداً فقط یک نویسهٔ عام.** <bdi dir="ltr">`*`</bdi> یعنی هر رشته‌ای از نویسه‌ها، حتی رشتهٔ خالی. نویسهٔ ویژهٔ دیگری نیست که لازم باشد گریز داده شود. الگوها به‌صورت متن ساده مقایسه می‌شوند و هرگز به عبارت باقاعده تبدیل نمی‌شوند؛ برای همین حتی الگوهای بلند هم سریع بررسی می‌شوند.
+- **ترتیب تعیین می‌کند.** وقتی دو قانون منطبق باشند، قانون بالاتر اعمال می‌شود؛ پس یک قانون مشخص می‌تواند بالای یک قانون کلی بنشیند.
+
+</Section>
+
+<Section id="steps" title="افزودن قانون">
+
+1. TabMerger را باز کنید و بعد به **تنظیمات** ← **عمومی** (<bdi dir="ltr">Settings → General</bdi>) بروید. کنار **قانون‌های URL** روی **مدیریت** (<bdi dir="ltr">Manage</bdi>) بزنید.
+2. روی **افزودن قانون** (<bdi dir="ltr">Add rule</bdi>) بزنید. الگو را تایپ کنید، گروه مقصد را انتخاب کنید و در پنجره روی **افزودن قانون** بزنید.
+3. برای هر سایتی که می‌خواهید مرتب شود تکرار کنید و بعد برای نگه داشتن فهرست روی **ذخیره** (<bdi dir="ltr">Save</bdi>) بزنید.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="یک قانون URL از ابتدا تا انتها" steps={[{ title: 'افزودن' }, { title: 'فهرست' }, { title: 'نتیجه' }]}>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-add-rule" alt="پنجرهٔ Add URL Rule (افزودن قانون URL) در TabMerger با الگوی *wikivoyage.org/wiki/* و گروه Trip to Lisbon، پوستهٔ روشن" darkAlt="پنجرهٔ Add URL Rule (افزودن قانون URL) در TabMerger با الگوی *wikivoyage.org/wiki/* و گروه Trip to Lisbon، پوستهٔ تیره" boxes={[{ id: 'pattern', label: 'الگوی نشانی' }, { id: 'group', label: 'گروه مقصد' }]} source="TabMerger 3.16.1">هر مقالهٔ Wikivoyage به گروه سفر می‌رود.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rules-list" alt="URL Rules (قانون‌های URL) در TabMerger با سه قانون که هر کدام پیکان‌هایی برای تغییر ترتیب دارند، و 3/3 used (3/3 استفاده‌شده)، پوستهٔ روشن" darkAlt="URL Rules (قانون‌های URL) در TabMerger با سه قانون که هر کدام پیکان‌هایی برای تغییر ترتیب دارند، و 3/3 used (3/3 استفاده‌شده)، پوستهٔ تیره" boxes={[{ id: 'order', label: 'از بالا به پایین بررسی می‌شوند' }, { id: 'used', label: 'شمارندهٔ طرح رایگان' }]} source="TabMerger 3.16.1">سه قانون، سه گروه. پیکان‌ها تعیین می‌کنند کدام قانون اول امتحان شود.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rule-result" alt="گروه Trip to Lisbon با صفحهٔ Sintra که یک قانون URL آن را اضافه کرده است، پوستهٔ روشن" darkAlt="گروه Trip to Lisbon با صفحهٔ Sintra که یک قانون URL آن را اضافه کرده است، پوستهٔ تیره" boxes={[{ id: 'new-tab', label: 'قانون آن را گذاشته است' }]} source="TabMerger 3.16.1">با باز کردن مقالهٔ Sintra، خودبه‌خود در <bdi dir="ltr">Trip to Lisbon</bdi> ذخیره شد.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="patterns" title="نوشتن الگوهایی که منطبق شوند">
+
+<ComparisonTable
+  head={['الگو', 'منطبق می‌شود با', 'منطبق نمی‌شود با']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    [<bdi dir="ltr">github.com/your-org/*</bdi>, <>هر مخزن، <bdi dir="ltr">issue</bdi> و <bdi dir="ltr">pull request</bdi> از <bdi dir="ltr">your-org</bdi></>, <bdi dir="ltr">github.com/other-org/…</bdi>],
+    [<bdi dir="ltr">*wikipedia.org/wiki/*</bdi>, <>مقاله‌ها به همهٔ زبان‌ها <bdi dir="ltr">(en., de., …)</bdi></>, <>صفحهٔ اصلی <bdi dir="ltr">wikipedia.org</bdi></>],
+    [<bdi dir="ltr">localhost:3000/*</bdi>, 'هر صفحه از سرور توسعهٔ محلی شما', <bdi dir="ltr">localhost:8080/…</bdi>],
+    [<bdi dir="ltr">docs.example.com/*</bdi>, 'سایت مستندات', <><bdi dir="ltr">www.docs.example.com/…</bdi> (<bdi dir="ltr">*docs.example.com/*</bdi> را اضافه کنید)</>],
+    [<bdi dir="ltr">github.com</bdi>, <>فقط خود نشانی <bdi dir="ltr">github.com</bdi></>, <><bdi dir="ltr">github.com/anything</bdi> (<bdi dir="ltr">/*</bdi> را اضافه کنید)</>],
+  ]}
+/>
+
+نکته‌هایی که شما را از یک جلسهٔ اشکال‌زدایی نجات می‌دهند:
+
+- **الگو را با <bdi dir="ltr">`/*`</bdi> تمام کنید** تا کل سایت را بپوشاند. بدون <bdi dir="ltr">`*`</bdi>، الگو فقط با یک نشانی دقیق منطبق می‌شود.
+- **الگو را با <bdi dir="ltr">`*`</bdi> شروع کنید** وقتی سایت از زیردامنه یا <bdi dir="ltr">`www.`</bdi> استفاده می‌کند: <bdi dir="ltr">`*example.com/*`</bdi>.
+- **حروف باید همان‌طور که نوشته شده منطبق شوند.** مرورگرها نام دامنه را با حروف کوچک می‌نویسند؛ شما هم همین‌طور بنویسید.
+- **رشته‌های پرس‌وجو هم حساب می‌شوند.** <bdi dir="ltr">`*youtube.com/watch*`</bdi> با ویدیوها منطبق می‌شود، هر چه بعد از <bdi dir="ltr">`watch`</bdi> بیاید.
+
+</Section>
+
+<Section id="order" title="ترتیب قانون‌ها: اول قانون‌های مشخص">
+
+قانون‌ها از بالا امتحان می‌شوند. با پیکان‌های کنار هر قانون، قانون محدود (<bdi dir="ltr">`github.com/your-org/design-system/*` → “Design system”</bdi>) را بالای قانون گسترده (<bdi dir="ltr">`github.com/your-org/*` → “Work”</bdi>) بگذارید. نخستین قانون منطبق صفحه را سر جایش می‌گذارد و بقیه نادیده گرفته می‌شوند.
+
+</Section>
+
+<Section id="benefit" title="چه به دست می‌آورید">
+
+گروه‌هایتان بی‌آنکه خودتان چیزی را مرتب کنید به‌روز می‌مانند. صفحه‌ای که سه‌شنبه باز کرده‌اید، جمعه از قبل در گروه پروژه‌اش است و جست‌وجو در آن گروه پیدایش می‌کند.
+
+</Section>
+
+<Section id="habits" title="عادت‌های خوب">
+
+- **برای سایت‌هایی که هر روز باز می‌کنید قانون بنویسید،** نه برای هر سایتی که یک بار به آن سر می‌زنید.
+- **یک قانون برای هر دامنه یا مسیر پروژه**، قانون‌های مشخص اول.
+- **قانون‌ها را با یک گروه برای هر پروژه همراه کنید:** [مرتب کردن زبانه‌ها بر اساس پروژه](/blog/organize-tabs-by-project) را ببینید. توسعه‌دهندگان الگوهای بیشتری را در [مدیریت زبانه‌ها برای توسعه‌دهندگان](/blog/tab-management-for-developers) پیدا می‌کنند.
+- **گاهی مرتب کنید** با **حذف زبانه‌های تکراری** در گروه‌هایی که قانون‌ها زیاد پرشان می‌کنند.
+
+</Section>
+
+<Section id="plans" title="رایگان یا Pro">
+
+<ComparisonTable
+  head={['', 'رایگان', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['قانون‌های URL', '۳', 'نامحدود'],
+    ['الگوها، ترتیب، همهٔ گزینه‌های بالا', 'بله', 'بله'],
+  ]}
+/>
+
+قانون‌های URL در همان مرورگری ذخیره می‌شوند که آن‌ها را ساخته‌اید. اگر طرح Pro تمام شود، قانون‌هایی که دارید همچنان زبانه‌ها را مرتب می‌کنند؛ فقط افزودن قانون چهارم به [Pro](/pricing) نیاز دارد.
+
+<InstallCta>امروز سه قانون بنویسید و دیگر زبانه‌ها را دستی مرتب نکنید. رایگان برای Chrome و Edge و Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="پرسش‌های متداول">
+
+<Faq items={post.faq} />
+
+</Section>

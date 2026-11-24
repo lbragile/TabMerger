@@ -88,3 +88,9 @@ Run the template check again just before writing into the repo, to confirm en.md
 - CJK labels ending in `…` (ja 後で通知…, zh 提醒我…, ko 알림 설정…): a closing `**` right before a particle or letter doesn't parse. Use ja `「**…**」`, a space after in ko, or punctuation/a gloss bracket right after.
 - Korean particle after 내일 is 을 (ㄹ final). A symbolic N with a plural catalog label: use ar `_few`, ru/pl `_many`.
 - RTL verifiers must accept ← in settings paths.
+
+**RTL ComparisonTable cells** accept JSX: `<bdi dir="ltr">pattern</bdi>` for a pattern cell, a fragment `<>text <bdi dir="ltr">x</bdi></>` for a mixed cell. An unisolated pattern shows its trailing `/*` on the wrong side. The verifier should map `<bdi dir="ltr">X</bdi>` to `X` before comparing cells with English.
+
+- Interpolated catalog strings ("{{used}}/{{max}}"): don't expand through a token; write the localized "3/3" by hand and let the verifier fill the placeholders.
+- The data parser trims each value, stripping the first table row's indent: let the generator indent `*rows` keys itself.
+- Declined product or place names (pl "Sintrze") break on-screen-name checks; quote the uninflected name instead.

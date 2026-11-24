@@ -1,0 +1,179 @@
+export const post = {
+  slug: 'auto-sort-tabs-with-url-rules',
+  title: 'URL kurallarıyla sekmeleri otomatik olarak gruplara ayırma',
+  navTitle: 'URL kurallarıyla sekmeleri otomatik sıralama',
+  seoTitle: 'Tarayıcı Sekmelerini URL’ye Göre Otomatik Gruplama',
+  description:
+    'Sekmelerinizi TabMerger düzenlesin: bir URL kuralı, siz gezinirken eşleşen her sayfayı doğru gruba kopyalar. Kalıpların ve * joker karakterinin nasıl çalıştığı, kural sırası ve iyi çalışan kalıplar.',
+  shareSummary: 'Bir kalıp ve bir grup: TabMerger, siz gezinirken eşleşen her sekmeyi yerine koyar.',
+  dek: 'Kuralı bir kez yazın. Bundan sonra açtığınız her eşleşen sayfa doğru gruba girer.',
+  published: '2026-12-17',
+  updated: '2026-12-17',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Bir kural, bir kalıp ve bir gruptan oluşur; * herhangi bir karakter dizisiyle eşleşir.', source: 'TabMerger 3.16.1' },
+    { text: 'Kalıplar, http:// veya https:// olmadan adresin tamamıyla eşleşir.', source: 'TabMerger 3.16.1 kaynak kodu' },
+    { text: 'Kurallar yukarıdan aşağıya denetlenir; ilk eşleşen kazanır.', source: 'TabMerger 3.16.1' },
+    { text: 'Ücretsiz planda 3 URL kuralı var; Pro’da sınır yok.', source: 'TabMerger fiyatlandırması', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Tarayıcı sekmeleri gruplara otomatik olarak ayrılabilir mi?',
+      answer:
+        'Evet, TabMerger’ın URL kurallarıyla. Bir kural, github.com/your-org/* gibi bir adres kalıbını bir grupla eşleştirir. Eşleşen bir sayfa açıldığında ya da yüklenmesi bittiğinde TabMerger onun bir kopyasını o gruba kaydeder. Sekmenin kendisi açık kalır.',
+    },
+    {
+      question: 'URL kuralı kalıpları nasıl çalışır?',
+      answer:
+        'Bir kalıp, http:// veya https:// kısmı olmadan adresin tamamıyla eşleşmelidir. * hiç karakter olmaması dahil herhangi bir karakter dizisi anlamına gelir ve tek joker karakterdir. Yani github.com/* her GitHub sayfasıyla, *wikipedia.org/* ise her dildeki Wikipedia ile eşleşir.',
+    },
+    {
+      question: 'İki kural aynı sayfayla eşleşirse ne olur?',
+      answer: 'Kurallar listenin en üstünden aşağıya doğru denetlenir ve ilk eşleşen kazanır. Özel kuralları genel kuralların üstüne almak için her kuralın yanındaki okları kullanın.',
+    },
+    {
+      question: 'URL kuralı sekmeyi kapatır mı?',
+      answer: 'Hayır. Kural, gruba bir kopya kaydeder; sekme olduğu yerde açık kalır.',
+    },
+    {
+      question: 'Kaç URL kuralım olabilir?',
+      answer: 'Ücretsiz planda 3. Pro’da sınır yok. Planınız değişirse mevcut kurallarınız çalışmaya devam eder.',
+    },
+  ],
+  images: [
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-light.webp', alt: '*wikivoyage.org/wiki/* kalıbı ve “Trip to Lisbon” grubuyla TabMerger “Add URL Rule” (URL Kuralı Ekle) penceresi, açık tema' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-dark.webp', alt: '*wikivoyage.org/wiki/* kalıbı ve “Trip to Lisbon” grubuyla TabMerger “Add URL Rule” (URL Kuralı Ekle) penceresi, koyu tema' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-light.webp', alt: 'Her birinde sırasını değiştiren oklar bulunan üç kural ve “3/3 used” (3/3 kullanıldı) ile TabMerger “URL Rules” (URL Kuralları), açık tema' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-dark.webp', alt: 'Her birinde sırasını değiştiren oklar bulunan üç kural ve “3/3 used” (3/3 kullanıldı) ile TabMerger “URL Rules” (URL Kuralları), koyu tema' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp', alt: 'Bir URL kuralının eklediği “Sintra” sayfasıyla “Trip to Lisbon” grubu, açık tema' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-dark.webp', alt: 'Bir URL kuralının eklediği “Sintra” sayfasıyla “Trip to Lisbon” grubu, koyu tema' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'developers'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp' },
+  ogImage: { src: '/blog/auto-sort-tabs-with-url-rules/og.png', alt: 'URL kurallarıyla sekmeleri otomatik sıralama: sekmeleri gruplara yerleştiren üç TabMerger kuralı' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'problem', label: 'Elle düzenlemek' },
+    { id: 'why', label: 'Kurallar neden böyle çalışır' },
+    { id: 'steps', label: 'Kural ekleme' },
+    { id: 'patterns', label: 'Kalıp yazma' },
+    { id: 'order', label: 'Kural sırası' },
+    { id: 'benefit', label: 'Ne kazanırsınız' },
+    { id: 'habits', label: 'İyi alışkanlıklar' },
+    { id: 'plans', label: 'Ücretsiz ve Pro' },
+    { id: 'faq', label: 'SSS' },
+  ],
+}
+
+<QuickAnswer>
+
+[TabMerger](/features) içinde **Ayarlar → Genel → URL kuralları → Yönet** (Settings → General → URL rules → Manage) yolunu açın ve bir kural ekleyin: `github.com/your-org/*` gibi bir adres kalıbı ve ait olduğu grup. Bundan sonra eşleşen her sayfa siz gezinirken o gruba kaydedilir ve sekme açık kalır. `*` her şeyle eşleşir; ilk eşleşen kural kazanır.
+
+</QuickAnswer>
+
+<InstallCta>Kendiliğinden doğru gruba yerleşen sekmeler. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+<Section id="problem" title="Sekmeleri elle düzenlemek uzun sürmez">
+
+Haftaya düzenli başlarsınız: iş bir grupta, seyahat başka birinde, okunacaklar üçüncüsünde. Sonra gün başlar. Bir iş arkadaşınız bir issue bağlantısı gönderir, iki tren saatine bakarsınız, bir arama sizi bir makaleye götürür. Her biri bir yere gitmeli ve her biri yapmayacağınız bir sürükle-bırakma demek. Cuma günü gruplar güncelliğini yitirmiştir ve Şu An Açık (Now Open) yine bir yığına dönmüştür.
+
+En sık açtığınız sayfalar aynı birkaç siteden gelir. Bir kuralın tanıyabildiği şey de tam olarak budur.
+
+</Section>
+
+<Section id="why" title="URL kuralları neden böyle çalışır">
+
+- **Taşımaz, kopyalar.** Kural, sayfanın bir kopyasını gruba kaydeder ve sekmeyi açık bırakır. Düzenleme, okuduğunuz şeyi asla bölmez.
+- **Siz gezinirken izler.** Kural, bir sekme bir adresle açıldığında ve bir sayfanın yüklenmesi her bittiğinde denetlenir; böylece bir sekmenin içinde tıkladığınız bağlantı da yerine konur. Kopya, grubun ilk penceresine gider. Yeniden yüklenen bir sayfa (yenileme, sonraki bir ziyaret) yeniden kaydedilir; grubun **⋯** menüsündeki **Yinelenen sekmeleri kaldır** (Deduplicate tabs) tekrarları temizler.
+- **Şema olmadan adresin tamamı.** Kalıp, `http://` veya `https://` sonrasındaki adresin tamamıyla karşılaştırılır; bu yüzden bunları hiç yazmazsınız ve `localhost:3000/*` yazıldığı gibi çalışır.
+- **Bilerek tek joker karakter.** `*`, hiç karakter olmaması dahil herhangi bir karakter dizisi demektir. Kaçış karakteriyle yazılması gereken başka özel karakter yoktur. Kalıplar düz metin olarak karşılaştırılır, asla düzenli ifadeye dönüştürülmez; bu yüzden uzun kalıplar bile hızla denetlenir.
+- **Sıra belirler.** İki kural eşleştiğinde üstteki kazanır; böylece özel bir kural genel bir kuralın üstünde durabilir.
+
+</Section>
+
+<Section id="steps" title="Kural ekleme">
+
+1. TabMerger’ı açın, ardından **Ayarlar** → **Genel** (Settings → General) bölümüne gidin. **URL kuralları** satırının yanındaki **Yönet** (Manage) düğmesine basın.
+2. **Kural ekle** (Add rule) düğmesine basın. Kalıbı yazın, hedef grubu seçin ve pencerede **Kural ekle** düğmesine basın.
+3. Yerine konmasını istediğiniz her site için tekrarlayın, sonra listeyi korumak için **Kaydet** (Save) düğmesine basın.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Baştan sona bir URL kuralı" steps={[{ title: 'Ekleme' }, { title: 'Liste' }, { title: 'Sonuç' }]}>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-add-rule" alt="*wikivoyage.org/wiki/* kalıbı ve “Trip to Lisbon” grubuyla TabMerger “Add URL Rule” (URL Kuralı Ekle) penceresi, açık tema" darkAlt="*wikivoyage.org/wiki/* kalıbı ve “Trip to Lisbon” grubuyla TabMerger “Add URL Rule” (URL Kuralı Ekle) penceresi, koyu tema" boxes={[{ id: 'pattern', label: 'Adres kalıbı' }, { id: 'group', label: 'Hedef grup' }]} source="TabMerger 3.16.1">Her Wikivoyage makalesi seyahat grubuna gider.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rules-list" alt="Her birinde sırasını değiştiren oklar bulunan üç kural ve “3/3 used” (3/3 kullanıldı) ile TabMerger “URL Rules” (URL Kuralları), açık tema" darkAlt="Her birinde sırasını değiştiren oklar bulunan üç kural ve “3/3 used” (3/3 kullanıldı) ile TabMerger “URL Rules” (URL Kuralları), koyu tema" boxes={[{ id: 'order', label: 'Yukarıdan aşağıya denetlenir' }, { id: 'used', label: 'Ücretsiz plan sayacı' }]} source="TabMerger 3.16.1">Üç kural, üç grup. Oklar hangi kuralın önce deneneceğini belirler.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rule-result" alt="Bir URL kuralının eklediği “Sintra” sayfasıyla “Trip to Lisbon” grubu, açık tema" darkAlt="Bir URL kuralının eklediği “Sintra” sayfasıyla “Trip to Lisbon” grubu, koyu tema" boxes={[{ id: 'new-tab', label: 'Kuralın yerleştirdiği' }]} source="TabMerger 3.16.1">“Sintra” makalesi açılınca kendiliğinden “Trip to Lisbon” grubuna kaydedildi.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="patterns" title="Eşleşen kalıplar yazmak">
+
+<ComparisonTable
+  head={['Kalıp', 'Eşleşir', 'Eşleşmez']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['github.com/your-org/*', 'your-org’un her deposu, issue’su ve pull request’i', 'github.com/other-org/…'],
+    ['*wikipedia.org/wiki/*', 'Her dildeki makaleler (en., de., …)', 'wikipedia.org ana sayfası'],
+    ['localhost:3000/*', 'Yerel geliştirme sunucunuzun her sayfası', 'localhost:8080/…'],
+    ['docs.example.com/*', 'Belge sitesi', 'www.docs.example.com/… (*docs.example.com/* ekleyin)'],
+    ['github.com', 'Yalnızca github.com adresinin kendisi', 'github.com/herhangi-bir-şey (/* ekleyin)'],
+  ]}
+/>
+
+Sizi bir hata ayıklama seansından kurtaracak ipuçları:
+
+- **Sonuna `/*` koyun**, böylece tüm site kapsanır. `*` olmadan bir kalıp tek bir adresle tam olarak eşleşir.
+- **Başına `*` koyun**, site alt alan adları veya `www.` kullanıyorsa: `*example.com/*`.
+- **Harfler yazıldığı gibi eşleşmeli.** Tarayıcılar alan adlarını küçük harfle yazar, siz de öyle yazın.
+- **Sorgu dizeleri de sayılır.** `*youtube.com/watch*`, `watch` sonrasında ne gelirse gelsin videolarla eşleşir.
+
+</Section>
+
+<Section id="order" title="Kural sırası: önce özel olanlar">
+
+Kurallar en üstten başlayarak denenir. Her kuralın yanındaki oklarla dar kuralı (`github.com/your-org/design-system/*` → “Design system”) geniş olanın (`github.com/your-org/*` → “Work”) üstüne alın. Eşleşen ilk kural sayfayı yerine koyar, geri kalanlar atlanır.
+
+</Section>
+
+<Section id="benefit" title="Ne kazanırsınız">
+
+Gruplarınız, sizin hiçbir şey düzenlemenize gerek kalmadan güncel kalır. Salı günü açtığınız bir sayfa cuma günü zaten projesinin grubundadır ve o grupta arama yaptığınızda bulunur.
+
+</Section>
+
+<Section id="habits" title="İyi alışkanlıklar">
+
+- **Her gün açtığınız siteler için kural yazın,** bir kez ziyaret ettiğiniz her site için değil.
+- **Proje alan adı veya yolu başına bir kural**, önce özel kurallar.
+- **Kuralları proje başına bir grupla birlikte kullanın:** bkz. [sekmeleri projeye göre düzenleme](/blog/organize-tabs-by-project). Geliştiriciler daha fazla kalıbı [geliştiriciler için sekme yönetimi](/blog/tab-management-for-developers) yazısında bulabilir.
+- **Ara sıra toparlayın**, kuralların sık doldurduğu gruplarda **Yinelenen sekmeleri kaldır** ile.
+
+</Section>
+
+<Section id="plans" title="Ücretsiz ve Pro">
+
+<ComparisonTable
+  head={['', 'Ücretsiz', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['URL kuralları', '3', 'Sınırsız'],
+    ['Kalıplar, sıra, yukarıdaki tüm seçenekler', 'Evet', 'Evet'],
+  ]}
+/>
+
+URL kuralları, onları oluşturduğunuz tarayıcıda saklanır. Bir Pro plan sona ererse mevcut kurallarınız sekmeleri yerine koymaya devam eder; yalnızca dördüncü bir kural eklemek için [Pro](/pricing) gerekir.
+
+<InstallCta>Bugün üç kural yazın ve sekmeleri elle düzenlemeyi bırakın. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

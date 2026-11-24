@@ -1,0 +1,179 @@
+export const post = {
+  slug: 'auto-sort-tabs-with-url-rules',
+  title: 'Ordenar pestañas en grupos automáticamente con reglas de URL',
+  navTitle: 'Ordenar pestañas automáticamente con reglas de URL',
+  seoTitle: 'Agrupar pestañas del navegador automáticamente por URL',
+  description:
+    'Deja que TabMerger organice tus pestañas por ti: una regla de URL copia cada página que coincide en el grupo correcto mientras navegas. Cómo funcionan los patrones y el comodín *, el orden de las reglas y patrones que funcionan bien.',
+  shareSummary: 'Un patrón y un grupo: TabMerger archiva cada pestaña que coincide mientras navegas.',
+  dek: 'Escribe la regla una vez. Cada página que coincida y abras a partir de entonces irá al grupo correcto.',
+  published: '2026-12-17',
+  updated: '2026-12-17',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Una regla es un patrón más un grupo; * equivale a cualquier secuencia de caracteres.', source: 'TabMerger 3.16.1' },
+    { text: 'Los patrones se comparan con la dirección completa, sin http:// ni https://.', source: 'Código fuente de TabMerger 3.16.1' },
+    { text: 'Las reglas se comprueban de arriba abajo; gana la primera que coincide.', source: 'TabMerger 3.16.1' },
+    { text: 'El plan Gratis tiene 3 reglas de URL; Pro no tiene límite.', source: 'Precios de TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '¿Se pueden ordenar las pestañas del navegador en grupos automáticamente?',
+      answer:
+        'Sí, con las reglas de URL de TabMerger. Una regla une un patrón de dirección, como github.com/your-org/*, con un grupo. Cada vez que se abre o termina de cargar una página que coincide, TabMerger guarda una copia en ese grupo. La pestaña sigue abierta.',
+    },
+    {
+      question: '¿Cómo funcionan los patrones de las reglas de URL?',
+      answer:
+        'Un patrón debe coincidir con la dirección completa, sin la parte http:// o https://. * representa cualquier secuencia de caracteres, incluso ninguna, y es el único comodín. Así, github.com/* coincide con cualquier página de GitHub y *wikipedia.org/* con Wikipedia en cualquier idioma.',
+    },
+    {
+      question: '¿Qué pasa si dos reglas coinciden con la misma página?',
+      answer: 'Las reglas se comprueban desde arriba de la lista hacia abajo, y gana la primera que coincide. Usa las flechas junto a cada regla para poner las reglas específicas por encima de las generales.',
+    },
+    {
+      question: '¿Una regla de URL cierra la pestaña?',
+      answer: 'No. La regla guarda una copia en el grupo; la pestaña sigue abierta donde está.',
+    },
+    {
+      question: '¿Cuántas reglas de URL puedo tener?',
+      answer: 'El plan Gratis tiene 3. Pro no tiene límite. Las reglas que ya tienes siguen funcionando si cambias de plan.',
+    },
+  ],
+  images: [
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-light.webp', alt: 'Diálogo «Add URL Rule» (Agregar regla de URL) de TabMerger con el patrón *wikivoyage.org/wiki/* y el grupo «Trip to Lisbon», tema claro' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-dark.webp', alt: 'Diálogo «Add URL Rule» (Agregar regla de URL) de TabMerger con el patrón *wikivoyage.org/wiki/* y el grupo «Trip to Lisbon», tema oscuro' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-light.webp', alt: '«URL Rules» (Reglas de URL) de TabMerger con tres reglas, cada una con flechas para cambiar su orden, y «3/3 used» (3/3 usadas), tema claro' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-dark.webp', alt: '«URL Rules» (Reglas de URL) de TabMerger con tres reglas, cada una con flechas para cambiar su orden, y «3/3 used» (3/3 usadas), tema oscuro' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp', alt: 'El grupo «Trip to Lisbon» con la página de Sintra añadida por una regla de URL, tema claro' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-dark.webp', alt: 'El grupo «Trip to Lisbon» con la página de Sintra añadida por una regla de URL, tema oscuro' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'developers'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp' },
+  ogImage: { src: '/blog/auto-sort-tabs-with-url-rules/og.png', alt: 'Ordenar pestañas automáticamente con reglas de URL: tres reglas de TabMerger que archivan pestañas en grupos' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'problem', label: 'Archivar a mano' },
+    { id: 'why', label: 'Por qué funcionan así' },
+    { id: 'steps', label: 'Añadir una regla' },
+    { id: 'patterns', label: 'Escribir patrones' },
+    { id: 'order', label: 'Orden de las reglas' },
+    { id: 'benefit', label: 'Lo que ganas' },
+    { id: 'habits', label: 'Buenos hábitos' },
+    { id: 'plans', label: 'Gratis o Pro' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+}
+
+<QuickAnswer>
+
+En [TabMerger](/features), abre **Ajustes → General → Reglas de URL → Gestionar** (Settings → General → URL rules → Manage) y añade una regla: un patrón de dirección como `github.com/your-org/*` y el grupo al que pertenece. A partir de ahí, cada página que coincida se guarda en ese grupo mientras navegas, y la pestaña sigue abierta. `*` coincide con cualquier cosa; gana la primera regla que coincide.
+
+</QuickAnswer>
+
+<InstallCta>Pestañas que se archivan solas en el grupo correcto. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+<Section id="problem" title="Archivar pestañas a mano no dura">
+
+Empiezas la semana con todo en orden: el trabajo en un grupo, el viaje en otro, las lecturas en un tercero. Luego llega el día a día. Un compañero te pasa el enlace a una incidencia, consultas dos horarios de tren, una búsqueda te lleva a un artículo. Cada una debería ir a algún sitio, y cada una es un arrastre que no vas a hacer. El viernes los grupos están desfasados y Abiertas ahora (Now Open) vuelve a ser un montón.
+
+Las páginas que más abres vienen de los mismos pocos sitios. Eso es justo lo que una regla sabe reconocer.
+
+</Section>
+
+<Section id="why" title="Por qué las reglas de URL funcionan así">
+
+- **Copiar, no mover.** Una regla guarda una copia de la página en el grupo y deja la pestaña abierta. Archivar nunca interrumpe lo que estás leyendo.
+- **Vigila mientras navegas.** Una regla se comprueba cuando se abre una pestaña con una dirección y cada vez que una página termina de cargar, así que también se archiva un enlace que sigues dentro de una pestaña. La copia va a la primera ventana del grupo. Una página que vuelve a cargarse (al recargarla o visitarla más tarde) se guarda de nuevo; **Quitar duplicadas** (Deduplicate tabs), en el menú **⋯** del grupo, elimina las repeticiones.
+- **La dirección completa, sin esquema.** Un patrón se compara con toda la dirección que sigue a `http://` o `https://`, así que nunca los escribes, y `localhost:3000/*` funciona tal cual.
+- **Un solo comodín, a propósito.** `*` significa cualquier secuencia de caracteres, incluso ninguna. No hay otros caracteres especiales que escapar. Los patrones se comparan como texto plano y nunca se convierten en una expresión regular, así que incluso los largos se comprueban rápido.
+- **El orden decide.** Si coinciden dos reglas, gana la de más arriba, así que una regla específica puede ir encima de una general.
+
+</Section>
+
+<Section id="steps" title="Añadir una regla">
+
+1. Abre TabMerger y luego **Ajustes** → **General** (Settings → General). Junto a **Reglas de URL**, pulsa **Gestionar** (Manage).
+2. Pulsa **Agregar regla** (Add rule). Escribe el patrón, elige el grupo de destino y pulsa **Agregar regla** en el diálogo.
+3. Repite con cada sitio que quieras archivar y luego pulsa **Guardar** (Save) para conservar la lista.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Una regla de URL de principio a fin" steps={[{ title: 'Añadir' }, { title: 'La lista' }, { title: 'El resultado' }]}>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-add-rule" alt="Diálogo «Add URL Rule» (Agregar regla de URL) de TabMerger con el patrón *wikivoyage.org/wiki/* y el grupo «Trip to Lisbon», tema claro" darkAlt="Diálogo «Add URL Rule» (Agregar regla de URL) de TabMerger con el patrón *wikivoyage.org/wiki/* y el grupo «Trip to Lisbon», tema oscuro" boxes={[{ id: 'pattern', label: 'El patrón de dirección' }, { id: 'group', label: 'El grupo de destino' }]} source="TabMerger 3.16.1">Cada artículo de Wikivoyage va al viaje.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rules-list" alt="«URL Rules» (Reglas de URL) de TabMerger con tres reglas, cada una con flechas para cambiar su orden, y «3/3 used» (3/3 usadas), tema claro" darkAlt="«URL Rules» (Reglas de URL) de TabMerger con tres reglas, cada una con flechas para cambiar su orden, y «3/3 used» (3/3 usadas), tema oscuro" boxes={[{ id: 'order', label: 'Se comprueba de arriba abajo' }, { id: 'used', label: 'Contador del plan Gratis' }]} source="TabMerger 3.16.1">Tres reglas, tres grupos. Las flechas deciden qué regla se prueba primero.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rule-result" alt="El grupo «Trip to Lisbon» con la página de Sintra añadida por una regla de URL, tema claro" darkAlt="El grupo «Trip to Lisbon» con la página de Sintra añadida por una regla de URL, tema oscuro" boxes={[{ id: 'new-tab', label: 'Archivada por la regla' }]} source="TabMerger 3.16.1">Al abrir el artículo de Sintra, se guardó solo en «Trip to Lisbon».</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="patterns" title="Escribir patrones que coincidan">
+
+<ComparisonTable
+  head={['Patrón', 'Coincide con', 'No coincide con']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['github.com/your-org/*', 'Cada repositorio, incidencia y pull request de your-org', 'github.com/other-org/…'],
+    ['*wikipedia.org/wiki/*', 'Artículos en cualquier idioma (en., de., …)', 'la página de inicio de wikipedia.org'],
+    ['localhost:3000/*', 'Cada página de tu servidor de desarrollo local', 'localhost:8080/…'],
+    ['docs.example.com/*', 'El sitio de documentación', 'www.docs.example.com/… (añade *docs.example.com/*)'],
+    ['github.com', 'Solo la dirección github.com en sí', 'github.com/loquesea (añade /*)'],
+  ]}
+/>
+
+Consejos que te ahorran una sesión de depuración:
+
+- **Termina con `/*`** para cubrir un sitio entero. Sin `*`, un patrón coincide con una sola dirección exacta.
+- **Empieza con `*`** cuando un sitio usa subdominios o `www.`: `*example.com/*`.
+- **Las letras deben coincidir tal cual.** Los navegadores escriben los nombres de dominio en minúsculas, así que escríbelos igual.
+- **Los parámetros de consulta cuentan.** `*youtube.com/watch*` coincide con vídeos, venga lo que venga después de `watch`.
+
+</Section>
+
+<Section id="order" title="Orden de las reglas: lo específico primero">
+
+Las reglas se prueban desde arriba. Pon la regla estrecha (`github.com/your-org/design-system/*` → «Design system») encima de la amplia (`github.com/your-org/*` → «Work») con las flechas junto a cada regla. La primera regla que coincide archiva la página y el resto se omite.
+
+</Section>
+
+<Section id="benefit" title="Lo que ganas">
+
+Tus grupos se mantienen al día sin que tengas que archivar nada. Una página que abriste el martes ya está el viernes en el grupo de su proyecto, y una búsqueda en ese grupo la encuentra.
+
+</Section>
+
+<Section id="habits" title="Buenos hábitos">
+
+- **Crea reglas para los sitios que abres a diario,** no para cada sitio que visitas una vez.
+- **Una regla por dominio o ruta de proyecto**, las específicas primero.
+- **Combina las reglas con un grupo por proyecto:** consulta [organizar pestañas por proyecto](/blog/organize-tabs-by-project). Si programas, encontrarás más patrones en [gestión de pestañas para desarrolladores](/blog/tab-management-for-developers).
+- **Ordena de vez en cuando** con **Quitar duplicadas** en los grupos que las reglas llenan a menudo.
+
+</Section>
+
+<Section id="plans" title="Gratis o Pro">
+
+<ComparisonTable
+  head={['', 'Gratis', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Reglas de URL', '3', 'Ilimitadas'],
+    ['Patrones, orden y todas las opciones anteriores', 'Sí', 'Sí'],
+  ]}
+/>
+
+Las reglas de URL se guardan en el navegador donde las creaste. Si un plan Pro termina, las reglas que ya tienes siguen archivando pestañas; solo añadir una cuarta regla requiere [Pro](/pricing).
+
+<InstallCta>Escribe tres reglas hoy y deja de archivar pestañas a mano. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>
