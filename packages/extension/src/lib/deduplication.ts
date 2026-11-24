@@ -37,3 +37,26 @@ export function findDuplicateTabs(windows: { tabs: Tab[] }[]): DuplicateTab[] {
   })
   return duplicates
 }
+
+/**
+ * The windows of a merge with their duplicate tabs removed, for "Auto-deduplicate on merge".
+ * Duplicates are found by {@link findDuplicateTabs} over `kept` then `added` in reading order, so
+ * a tab the group already had (`kept`) stays and the incoming copy of it (`added`) is the one
+ * removed: the group keeps its notes, reminders and saved dates. A window that only held
+ * duplicates is dropped; a window that was already empty stays, as it was. Windows with nothing
+ * removed are returned as the same objects.
+ */
+export function dedupeMergedWindows<W extends { tabs: Tab[] }>(kept: W[], added: W[] = []): { kept: W[]; added: W[] } {
+  const all = [...kept, ...added]
+  const drop = new Set(findDuplicateTabs(all).map((d) => `${d.windowIndex}:${d.tabIndex}`))
+  if (drop.size === 0) return { kept, added }
+  const result = all.flatMap((w, wi): { w: W; wi: number }[] => {
+    if (!w.tabs.some((_, ti) => drop.has(`${wi}:${ti}`))) return [{ w, wi }]
+    const tabs = w.tabs.filter((_, ti) => !drop.has(`${wi}:${ti}`))
+    return tabs.length > 0 ? [{ w: { ...w, tabs }, wi }] : []
+  })
+  return {
+    kept: result.filter((r) => r.wi < kept.length).map((r) => r.w),
+    added: result.filter((r) => r.wi >= kept.length).map((r) => r.w)
+  }
+}

@@ -8,6 +8,7 @@ import { isTourDemoGroup, type OrganizeAction } from '@tabmerger/shared';
 import type { Group, GroupsState, UrlRule } from './types';
 import { getGroupInfo, sortWindowsByStarred } from './utils';
 import { cleanSuggestedName } from './aiGroupName';
+import { dedupeMergedWindows } from './deduplication';
 
 /** Most actions read from one reply: a reply longer than this is runaway output, the rest is dropped. */
 export const MAX_ORGANIZE_ACTIONS = 100;
@@ -134,10 +135,17 @@ export interface OrganizeResult {
  *
  * A merge keeps the target's name, colour, note and star; the source's windows go after the
  * target's own (starred windows first) and the source group is removed: the same result as the
- * AI banner's Merge. Changed groups get a fresh `updatedAt` and `pendingSync` like every other
- * mutation; reindexed groups are flagged for a position push by the write itself.
+ * AI banner's Merge. With `dedupOnMerge` ("Auto-deduplicate on merge"), a merged group keeps one
+ * tab per URL, the target's own tab winning, as the banner's Merge does. Changed groups get a
+ * fresh `updatedAt` and `pendingSync` like every other mutation; reindexed groups are flagged for
+ * a position push by the write itself.
  */
-export function applyOrganizeActions(state: GroupsState, actions: readonly OrganizeAction[], now = Date.now()): OrganizeResult {
+export function applyOrganizeActions(
+  state: GroupsState,
+  actions: readonly OrganizeAction[],
+  now = Date.now(),
+  { dedupOnMerge = false }: { dedupOnMerge?: boolean } = {}
+): OrganizeResult {
   let available = [...state.available];
   const applied: OrganizeAction[] = [];
   const merged = new Map<string, string>();
@@ -166,7 +174,8 @@ export function applyOrganizeActions(state: GroupsState, actions: readonly Organ
     const source = available[sourceIndex];
     const target = available[targetIndex];
     if (!isOrganizable(source) || !isOrganizable(target) || source.archived || target.archived) continue;
-    const result = touched({ ...target, windows: sortWindowsByStarred([...target.windows, ...source.windows]) });
+    const windows = dedupOnMerge ? dedupeMergedWindows(target.windows, source.windows) : { kept: target.windows, added: source.windows };
+    const result = touched({ ...target, windows: sortWindowsByStarred([...windows.kept, ...windows.added]) });
     result.info = getGroupInfo(result);
     available[targetIndex] = result;
     available.splice(sourceIndex, 1);

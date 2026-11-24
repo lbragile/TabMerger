@@ -1,6 +1,6 @@
 # Chrome Web Store Listing — TabMerger
 
-> Last Updated: 2026-11-19
+> Last Updated: 2026-11-21
 >
 > This file tracks everything filled into the Chrome Developer Dashboard for **both** TabMerger
 > Chrome Web Store items — see [Two listings](#two-listings) below. Manifest facts here are
@@ -104,8 +104,8 @@ from another tool? Import a OneTab export or your bookmarks.
 
 WHAT YOU CAN DO
 - Save the current tab, all tabs, the tabs to the left or right of it, or all other tabs. Use the
-  popup, the right-click menu ("Save to TabMerger"), or keyboard shortcuts (Ctrl+Shift+S, K, U
-  and P; Command instead of Ctrl on Mac). You can rebind them at chrome://extensions/shortcuts.
+  popup, the right-click menu ("Save to TabMerger"), or keyboard shortcuts (Alt+Shift+S, Comma,
+  Period and O; Control+Shift on Mac). You can rebind them at chrome://extensions/shortcuts.
 - Organize tabs into windows inside groups. Name each group, give it a color (12 presets or any
   custom color), star it to keep it at the top, or archive it.
 - Restore one tab, one window or a whole group. Saved browser tab groups are recreated, and
@@ -507,7 +507,9 @@ for every existing user until they accepted the new warning. The CI baseline
 Not permissions, but reviewers ask:
 
 - **Keyboard `commands`:** four save shortcuts (current tab, tabs to the left, tabs to the
-  right, all other tabs) plus the standard "activate the extension" command. Not a permission.
+  right, all other tabs: Alt+Shift+S, Alt+Shift+Comma, Alt+Shift+Period, Alt+Shift+O; Control+Shift
+  with the same keys on Mac) plus the standard "activate the extension" command without a default
+  key. Not a permission.
 - **`incognito: "spanning"`:** one shared extension instance. Private windows are only visible
   to the extension if the user turns on "Allow in Incognito" in Chrome; it is used to reopen
   saved private windows as private windows.
@@ -891,6 +893,7 @@ with the real semver string carried in `version_name`.
 | Both | next release | — | not tagged yet | 2026-11-08 | Draft (in code, not released): localized store text. The manifest gains `default_locale: "en"`, its `description` becomes `__MSG_extDescription__` and the five command descriptions `__MSG_command…__`, resolved from `_locales/<code>/messages.json` for all 18 UI languages (`ar`, `de`, `en`, `es`, `fa`, `fr`, `he`, `hi`, `id`, `it`, `ja`, `ko`, `pl`, `pt_BR`, `ru`, `tr`, `vi`, `zh_CN`), generated at build time from `src/locales/<lng>/manifest.json`. The `name` stays a literal and BETA keeps its literal description. No new permission and no new data. The English summary is unchanged; after the upload, enter each language's detailed description in the dashboard (see [Localized listings](#localized-listings)). Screenshots: none affected; per-language screenshots optional |
 | Both | next release | — | not tagged yet | 2026-11-13 | Draft (in code, not released): clicking an archived group or a saved session in the sidebar shows it read-only in the main panel (header with Restore, a ⋯ menu with Delete and ✕ to go back; tabs open on click; no editing, drag and drop or AI actions there). The bottom sidebar sections (Auto-saved, Archived, Sessions) become an accordion: opening one closes the others. The current sidebar row is now the only one in bold. **No manifest change and no new permission**; no new data is stored or sent, so the privacy tab is unchanged. Description: new bullet under "What you can do". Screenshots: `open-popup-light/dark.jpg` shows the Archived and Sessions sections and the group names in the sidebar (now regular weight except the current one), so refresh it at the next upload; a screenshot of an archived group or session view would be worth adding |
 | Both | next release | — | not tagged yet | 2026-11-19 | Draft (in the package, not released): store-search text. The manifest `description` (summary) in all 18 languages now opens with that language's phrase for a tab manager and names saving all open tabs into groups, restoring closed tabs and sessions, offline use and encrypted sync (Pro); the English text is above, the counts under [Localized listings](#localized-listings). No manifest structure change, no new permission, no new data. By hand after the upload: paste the new detailed-description opening (Chrome, Edge), enter the Edge search terms and the AMO summary, categories and tags. The `name` is unchanged (see [Name for search](#name-for-search-owner-decision)). Screenshots: none affected |
+| Both | next release | — | not tagged yet | 2026-11-21 | Draft (in code, not released): new default keyboard shortcuts. The four save commands' `suggested_key` changes from Ctrl+Shift+S/K/U/P (Command+Shift on Mac) to Alt+Shift+S, Alt+Shift+Comma, Alt+Shift+Period and Alt+Shift+O (`MacCtrl+Shift` with the same keys on Mac), because Edge reserves Ctrl+Shift+K, U and P (and Chromium P) and silently left those commands "Not set"; checked in Edge 158 and Chromium 149, which assign all four new keys. Only new installs get the new defaults: the browser keeps an existing install's shortcuts (set or "Not set"), and users can change them at chrome://extensions/shortcuts. Also fixed: the "Auto-deduplicate on merge" setting (Settings, General) now works; when it is on, "Merge with current", "Unite windows", the suggestion banner's "Merge" and AI Organize merges leave out tabs whose address the group already has. No permission change. The description's shortcut line above already names the new keys: paste it with this release |
 <!-- Status options: Draft | Submitted | In Review | Published | Rejected | Superseded -->
 
 Betas 1–3 predate the store-version offset, so their manifest version is the plain

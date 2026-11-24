@@ -4,6 +4,7 @@ import path from "path";
 import { visualizer } from "rollup-plugin-visualizer";
 import tailwindcss from "@tailwindcss/vite";
 import { resolveManifestVersion } from "./scripts/manifestVersion";
+import { suggestedKeyFor } from "./scripts/commandShortcuts";
 import { resolveE2eTestDefine, resolveNodeEnv, resolveWxtModeFromArgv } from "./scripts/buildEnv";
 import { FIREFOX_BETA_ADDON_ID, FIREFOX_STABLE_ADDON_ID } from "./scripts/firefoxAddonIds";
 import { resolveFirefoxBetaUpdateUrl } from "./scripts/firefoxBetaUpdateUrl";
@@ -172,41 +173,26 @@ export default defineConfig({
             // save-* commands get the defaults since they're the higher-value shortcuts, and
             // _execute_action is left without a suggested_key so it still appears in
             // chrome://extensions/shortcuts for the user to bind manually if they want one.
-            // Ctrl+Shift+M and Ctrl+Shift+O are Chrome's own reserved shortcuts (profile switcher,
-            // bookmark manager) — Chrome silently leaves those bindings blank instead of erroring,
-            // so avoid any letter in Chrome's reserved list (B/D/G/I/J/M/N/O/Q/R/T/W/A). Ctrl+Shift+K
-            // was confirmed working live; S/U/P below are unreserved by Chrome (a locally-installed
-            // extension could still grab one — rebind manually at chrome://extensions/shortcuts if so).
+            // A browser leaves a default that collides with its own shortcuts "Not set" without an
+            // error: the keys and the browser shortcuts they avoid are in scripts/commandShortcuts.ts.
             commands: {
                 _execute_action: {
                     description: manifestMessage("commandActivate"),
                 },
                 "save-current-tab": {
-                    suggested_key: {
-                        default: "Ctrl+Shift+S",
-                        mac: "Command+Shift+S",
-                    },
+                    suggested_key: suggestedKeyFor("save-current-tab"),
                     description: manifestMessage("commandSaveCurrentTab"),
                 },
                 "save-tabs-left": {
-                    suggested_key: {
-                        default: "Ctrl+Shift+K",
-                        mac: "Command+Shift+K",
-                    },
+                    suggested_key: suggestedKeyFor("save-tabs-left"),
                     description: manifestMessage("commandSaveTabsLeft"),
                 },
                 "save-tabs-right": {
-                    suggested_key: {
-                        default: "Ctrl+Shift+U",
-                        mac: "Command+Shift+U",
-                    },
+                    suggested_key: suggestedKeyFor("save-tabs-right"),
                     description: manifestMessage("commandSaveTabsRight"),
                 },
                 "save-other-tabs": {
-                    suggested_key: {
-                        default: "Ctrl+Shift+P",
-                        mac: "Command+Shift+P",
-                    },
+                    suggested_key: suggestedKeyFor("save-other-tabs"),
                     description: manifestMessage("commandSaveOtherTabs"),
                 },
             },
