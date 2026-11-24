@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'edge-collections-replacement',
+  title: 'Edge のコレクションは廃止に：代わりに何を使う？',
+  navTitle: 'Edge コレクションの代わり',
+  seoTitle: 'Edge のコレクションが廃止？最適な代替ツールと移行方法',
+  description:
+    'Microsoft はバージョン 149 以降の Edge からコレクション（Collections）を削除しました。保存したコレクションがどうなったか、どう取り出すか、そして Edge コレクションの代替となる TabMerger に名前付きグループとして取り込む方法を解説します。',
+  shareSummary: 'Edge 149 でコレクションは廃止されました。ページの行き先と、これから使うべきツール。',
+  dek: '保存したページは消えていません。その行き先と、もっと良い置き場所を紹介します。',
+  published: '2026-12-06',
+  updated: '2026-12-06',
+  testedOn: ['Edge 158.0.4370.33', 'Chrome 157.0.8103.80'],
+  keyFacts: [
+    {
+      text: 'コレクションは、2026 年 6 月 4 日リリースの Edge 149 以降では使用できません。',
+      source: 'Microsoft サポート',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'Edge 145 以降、コレクションにページを追加できなくなりました。', source: 'Microsoft サポート' },
+    {
+      text: '「お気に入りに移動」で残るのはページのアドレスだけで、画像やメモは移りません。',
+      source: 'Microsoft サポート',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'TabMerger は「その他のお気に入り」内の各フォルダーを名前付きグループに変換します。', source: 'TabMerger 3.16.1 で検証（2026年11月21日）' },
+  ],
+  faq: [
+    {
+      question: 'Microsoft は Edge のコレクションを廃止したのですか？',
+      answer:
+        'はい。Microsoft のサポートページによると、コレクションは 2026 年 6 月 4 日リリースの Edge 149 以降では使用できません。Edge 145 以降は新しいページを追加できなくなっていました。',
+    },
+    {
+      question: '保存していたコレクションはどこへ行ったのですか？',
+      answer:
+        'Microsoft は「お気に入りに移動」を用意しており、各コレクションをお気に入りのフォルダーに変換します（ページのみ）。個人アカウントなら bing.com/saves でも保存したコレクションを確認できます。職場または学校のアカウントではエクスポートが可能でした。',
+    },
+    {
+      question: 'Edge のコレクションの代わりに最適なのは？',
+      answer:
+        'TabMerger です。名前と色を付けたタブのグループを検索でき、メモやリマインダーを付けられ、Pro ではエンドツーエンド暗号化で同期できます。Chrome と Firefox でも使えます。',
+    },
+    {
+      question: 'コレクションを TabMerger にインポートできますか？',
+      answer: 'はい。コレクションのフォルダーを「その他のお気に入り」に移し、お気に入りを HTML ファイルとしてエクスポートして、設定 → データでインポートします。それぞれのフォルダーが TabMerger のグループになります。',
+    },
+  ],
+  images: [
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-light.webp', alt: 'favorites_edge.html について Import 2 groups?（2個のグループをインポートしますか？）と確認する TabMerger のダイアログ、ライトテーマ' },
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-dark.webp', alt: 'favorites_edge.html について Import 2 groups?（2個のグループをインポートしますか？）と確認する TabMerger のダイアログ、ダークテーマ' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-light.webp', alt: 'お気に入りのフォルダーから取り込んだグループ Trip to Lisbon と Thesis reading が並ぶ TabMerger のサイドバー、ライトテーマ' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-dark.webp', alt: 'お気に入りのフォルダーから取り込んだグループ Trip to Lisbon と Thesis reading が並ぶ TabMerger のサイドバー、ダークテーマ' },
+  ],
+  tags: ['edge', 'bookmarks', 'save-tabs', 'tab-manager'],
+  sources: [
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'EdgeCollectionsEnabled policy (obsolete)',
+      publisher: 'Microsoft Learn',
+      url: 'https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies/EdgeCollectionsEnabled',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/edge-collections-replacement/cover-edge-light.webp' },
+  ogImage: { src: '/blog/edge-collections-replacement/og.png', alt: 'Edge のコレクションは廃止に：代わりに何を使う？お気に入りのフォルダーをグループとして取り込む TabMerger のガイド' },
+  toc: [
+    { id: 'quick', label: '結論' },
+    { id: 'what-happened', label: '何が起きたか' },
+    { id: 'where', label: 'ページの行き先' },
+    { id: 'move', label: 'TabMerger への移行' },
+    { id: 'why', label: 'TabMerger を選ぶ理由' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+}
+
+<QuickAnswer>
+
+はい、廃止されました。Microsoft によると、**コレクション（Collections）は Edge 149 以降では使用できません**（2026 年 6 月 4 日リリース）。ただし、ページは削除されていません。**お気に入りに移動**（Move to Favorites）によって、各コレクションはお気に入りのフォルダーになりました。新しい置き場所として最適なのは [TabMerger](/features) です。お気に入りを HTML でエクスポートしてそのファイルをインポートすれば、「その他のお気に入り」内のフォルダーがそれぞれ名前付きで検索できるグループになり、メモ、リマインダー、暗号化された同期も使えます。Edge、Chrome、Firefox に対応しています。
+
+</QuickAnswer>
+
+<InstallCta>以前のコレクションを、名前付きで検索できるグループとして取り戻しましょう。Edge、Chrome、Firefox で無料です。</InstallCta>
+
+<Section id="what-happened" title="Microsoft は本当に Edge のコレクションを廃止したのですか？">
+
+はい。Microsoft 自身のページによると、段階的に廃止されました。
+
+<ComparisonTable
+  head={['Edge のバージョン', '変更点']}
+  rowHeaders
+  rows={[
+    ['145', 'コレクションにページを追加できなくなった。既存のコレクションは引き続き表示された'],
+    ['149（2026 年 6 月 4 日）', 'コレクションは使用できなくなった'],
+    ['153', 'コレクションの管理ポリシーが「because the Collections feature was removed」（コレクション機能が削除されたため）廃止扱いになった'],
+  ]}
+/>
+
+Microsoft が挙げた理由は、本人の言葉で「retiring Collections in Edge, to better simplify our offerings」（提供内容をよりシンプルにするため、Edge のコレクションを廃止する）というものです。
+
+</Section>
+
+<Section id="where" title="保存していたコレクションはどこへ行ったのですか？">
+
+廃止の過程で、Edge はコレクションのウィンドウに 2 つの選択肢を表示していました。
+
+- **お気に入りに移動**（Microsoft の推奨）：各コレクションがお気に入りのフォルダーになりました。移動したのは保存した Web ページだけで、画像やメモは移っていません。
+- **データのエクスポート**（Export your data）：職場または学校のアカウントのみ。
+
+個人の Microsoft アカウントなら、以前に保存したコレクションを `bing.com/saves` でも見つけられます。まずはお気に入り（<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>）を確認してください。コレクションはおそらくフォルダーとしてそこにあります。
+
+</Section>
+
+<Section id="move" title="コレクションを TabMerger に移すには？">
+
+数分で、以前のコレクションがそれぞれグループになります。
+
+1. Edge でお気に入りを開きます（<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>）。以前のコレクションが **お気に入りバー**（Favorites bar）の中にある場合は、それらのフォルダーを **その他のお気に入り**（Other favorites）に移します。エクスポートではお気に入りバー全体が 1 つのフォルダーとして書き出されるため、中に残ったフォルダーは 1 つのグループにまとめられてしまいます。
+2. **Export favorites** を選び、HTML ファイルを保存します。
+3. TabMerger を開き → **設定 → データ** → **ファイルをインポート**（Settings → Data → Import file）から、そのファイルを選びます。
+4. 確認します。「その他のお気に入り」内の各フォルダーがフォルダー名のグループになり、その中のサブフォルダーは同じグループにまとめられます。お気に入りバーはそれだけで 1 つのグループとして取り込まれます。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="エクスポートしたお気に入りのインポート" steps={[{ title: '確認' }, { title: 'グループ' }]}>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-import-confirm" alt="favorites_edge.html について Import 2 groups?（2個のグループをインポートしますか？）と確認する TabMerger のダイアログ、ライトテーマ" darkAlt="favorites_edge.html について Import 2 groups?（2個のグループをインポートしますか？）と確認する TabMerger のダイアログ、ダークテーマ" boxes={[{ id: 'import-confirm', label: 'インポート' }]} source="TabMerger 3.16.1">TabMerger は見つかったフォルダーの数を数え、先に確認します。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-imported-groups" alt="お気に入りのフォルダーから取り込んだグループ Trip to Lisbon と Thesis reading が並ぶ TabMerger のサイドバー、ライトテーマ" darkAlt="お気に入りのフォルダーから取り込んだグループ Trip to Lisbon と Thesis reading が並ぶ TabMerger のサイドバー、ダークテーマ" boxes={[{ id: 'imported', label: 'フォルダー名のグループ' }]} source="TabMerger 3.16.1">各フォルダーが、同じ名前と同じページを持つグループになりました。</ThemedScreenshot>
+</Carousel>
+
+「その他のお気に入り」内のほかのフォルダーも一緒に取り込まれるので、不要なグループは削除してください。インポートできる形式はすべて [TabMerger へのタブのインポート](/blog/import-tabs-into-tabmerger) で紹介しています。無料版は 5 グループ・50 タブまでで、それを超えるインポートは何も追加される前に止まります。[Pro](/pricing) には上限がありません。
+
+{/* Screenshot still to capture by hand (needs a visible browser): Edge Favorites page menu with Export favorites. */}
+
+</Section>
+
+<Section id="why" title="TabMerger がコレクションよりも良い置き場所である理由は？">
+
+- **タブ一式をワンクリックで**。**現在の内容と統合**（Merge with current）で、開いているすべてのウィンドウを名前付きグループに保存できます。
+- **どのタブにもメモとリマインダー**。コレクションでは移せなかったメモの代わりになります。タブを右クリックして **メモを追加**（Add note）または **後で通知…**（Remind me…）を選びます。
+- **1 つの検索**で、開いているタブ、保存したタブ、最近閉じたタブをまとめて探せます：<Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>。
+- **ブラウザーをまたいで使える**。Edge、Chrome、Firefox で同じグループを使え、Pro ではエンドツーエンド暗号化で同期されます。
+- **データは自分のもの**。いつでもすべてを JSON にエクスポートできます。1 つの会社が機能を残すかどうかに左右されません。
+
+タブ管理ツールは初めてですか？[ブラウザーのセッションマネージャーでできること](/blog/browser-session-manager)と[おすすめのタブ管理拡張機能](/blog/best-tab-manager-extensions)で全体像がつかめます。
+
+<InstallCta>Edge、Chrome、Firefox で無料。始めるのにアカウントは不要です。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

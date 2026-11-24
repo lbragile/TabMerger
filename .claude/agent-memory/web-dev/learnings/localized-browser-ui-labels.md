@@ -105,3 +105,9 @@ A 15 KB MDX body in a Bash heredoc failed ("unexpected EOF while looking for mat
 **Chrome Help 165139 (other devices):** with scripts and styles removed, bold runs 24 and 28 are "History" and "Tabs from other devices" in every language. Firefox "Send to Device" is `tab-context-send-to-device` `[1]` (pl only `[one]`; Firefox 159 doesn't use `…device2`), missing in ar, hi-IN and id. Firefox View's "Tabs from other devices" is `firefoxview-synced-tabs-nav`; the pl string contains a no-break space, so normalize spaces in byte-exact label checks.
 
 **More CJK bold placement:** put brackets and colons outside the bold: `「**…**」`, and `**…（[Pro](/pricing)）**：`.
+
+**Edge Collections and Favorites on Microsoft Support** (per locale `support.microsoft.com/<ll-cc>/…`): Collections, Move to Favorites and Export your data are on `microsoft-edge/organize-your-ideas-with-collections-in-microsoft-edge-60fd7bba-6cfd-00b9-3787-b197231b507e`; Favorites and Favorites bar on `/edge/open-your-entire-favorites-bar-in-microsoft-edge`; Other favorites on `/edge/find-your-reading-list-web-notes-and-tabs-in-microsoft-edge`. `support.microsoft.com/en-us/search/results?query=…` returns server-rendered article links (Bing/DuckDuckGo return nothing to curl). Caveats:
+- fa-ir and hi-in serve English, so Edge labels stay English there.
+- The machine-translated pages split `<b>` runs mid-label; match labels against the full text after stripping markup, not against single bold runs.
+- Some locales give a label only as a verb or case form (ru genitive, tr and he infinitive); don't use those as labels.
+- No page names "Export favorites"; it stays English.

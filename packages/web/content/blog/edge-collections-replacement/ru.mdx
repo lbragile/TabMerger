@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'edge-collections-replacement',
+  title: 'Коллекций в Edge больше нет: чем их заменить',
+  navTitle: 'Замена Коллекций Edge',
+  seoTitle: 'Коллекции удалены из Edge? Лучшая замена (и как перенести данные)',
+  description:
+    'Microsoft убрала Коллекции (Collections) из Edge начиная с версии 149. Что стало с вашими коллекциями, как их достать и как перенести в TabMerger, замену Коллекциям Edge, в виде именованных групп.',
+  shareSummary: 'В Edge 149 Коллекции отключены. Куда делись ваши страницы и чем пользоваться теперь.',
+  dek: 'Сохранённые страницы не пропали. Рассказываем, где они теперь, и предлагаем для них место получше.',
+  published: '2026-12-06',
+  updated: '2026-12-06',
+  testedOn: ['Edge 158.0.4370.33', 'Chrome 157.0.8103.80'],
+  keyFacts: [
+    {
+      text: 'Коллекции недоступны начиная с Edge 149, выпущенного 4 июня 2026 г.',
+      source: 'Поддержка Microsoft',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'Начиная с Edge 145 добавлять страницы в Коллекции стало нельзя.', source: 'Поддержка Microsoft' },
+    {
+      text: 'Move to Favorites сохраняет адреса страниц, но не изображения и не заметки.',
+      source: 'Поддержка Microsoft',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'TabMerger превращает каждую папку из Other favorites в именованную группу.', source: 'Проверено в TabMerger 3.16.1, 21 ноября 2026 г.' },
+  ],
+  faq: [
+    {
+      question: 'Microsoft удалила Коллекции из Edge?',
+      answer:
+        'Да. На странице поддержки Microsoft сказано, что Коллекции недоступны начиная с Edge 149, выпущенного 4 июня 2026 г.; с Edge 145 добавлять новые страницы было уже нельзя.',
+    },
+    {
+      question: 'Куда делись мои коллекции?',
+      answer:
+        'Microsoft предлагала функцию Move to Favorites, которая превращает каждую коллекцию в папку избранного (только страницы). С личной учётной записью сохранённые коллекции также видны на bing.com/saves; рабочие и учебные учётные записи могли их экспортировать.',
+    },
+    {
+      question: 'Чем лучше всего заменить Коллекции Edge?',
+      answer:
+        'TabMerger: именованные группы вкладок с цветовыми метками, по которым можно искать, к которым можно добавлять заметки и напоминания и которые синхронизируются со сквозным шифрованием в Pro. Он работает и в Chrome, и в Firefox.',
+    },
+    {
+      question: 'Можно ли импортировать мои коллекции в TabMerger?',
+      answer: 'Да. Переместите папки коллекций в Other favorites, экспортируйте избранное в HTML-файл и импортируйте его в разделе Настройки → Данные: каждая из этих папок станет группой TabMerger.',
+    },
+  ],
+  images: [
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-light.webp', alt: 'Диалог TabMerger с вопросом Import 2 groups? (Импортировать 2 группы?) для файла favorites_edge.html, светлая тема' },
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-dark.webp', alt: 'Диалог TabMerger с вопросом Import 2 groups? (Импортировать 2 группы?) для файла favorites_edge.html, тёмная тема' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-light.webp', alt: 'Боковая панель TabMerger с группами Trip to Lisbon и Thesis reading, импортированными из папок избранного, светлая тема' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-dark.webp', alt: 'Боковая панель TabMerger с группами Trip to Lisbon и Thesis reading, импортированными из папок избранного, тёмная тема' },
+  ],
+  tags: ['edge', 'bookmarks', 'save-tabs', 'tab-manager'],
+  sources: [
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'EdgeCollectionsEnabled policy (obsolete)',
+      publisher: 'Microsoft Learn',
+      url: 'https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies/EdgeCollectionsEnabled',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/edge-collections-replacement/cover-edge-light.webp' },
+  ogImage: { src: '/blog/edge-collections-replacement/og.png', alt: 'Коллекций в Edge больше нет: чем их заменить. Руководство TabMerger, в котором папки избранного импортируются как группы' },
+  toc: [
+    { id: 'quick', label: 'Коротко' },
+    { id: 'what-happened', label: 'Что произошло' },
+    { id: 'where', label: 'Где ваши страницы' },
+    { id: 'move', label: 'Перенос в TabMerger' },
+    { id: 'why', label: 'Почему TabMerger' },
+    { id: 'faq', label: 'Частые вопросы' },
+  ],
+}
+
+<QuickAnswer>
+
+Да, их больше нет: по словам Microsoft, **Коллекции (Collections) недоступны начиная с Edge 149** (выпущен 4 июня 2026 г.). Но ваши страницы не удалены: **Move to Favorites** (перенос в избранное) превратила каждую коллекцию в папку избранного. Лучший новый дом для них — [TabMerger](/features): экспортируйте избранное в HTML, импортируйте файл, и каждая папка из Other favorites станет именованной группой с поиском, заметками, напоминаниями и зашифрованной синхронизацией, в Edge, Chrome и Firefox.
+
+</QuickAnswer>
+
+<InstallCta>Верните старые коллекции в виде именованных групп с поиском. Бесплатно для Edge, Chrome и Firefox.</InstallCta>
+
+<Section id="what-happened" title="Microsoft действительно удалила Коллекции из Edge?">
+
+Да, поэтапно, если верить страницам самой Microsoft:
+
+<ComparisonTable
+  head={['Версия Edge', 'Что изменилось']}
+  rowHeaders
+  rows={[
+    ['145', 'Добавлять страницы в Коллекции стало нельзя; существующие остались видны'],
+    ['149 (4 июня 2026 г.)', 'Коллекции больше недоступны'],
+    ['153', 'Административная политика для Коллекций устарела, «because the Collections feature was removed» (потому что функция Коллекции удалена)'],
+  ]}
+/>
+
+Причина, своими словами Microsoft: компания «retiring Collections in Edge, to better simplify our offerings» (отключает Коллекции в Edge, чтобы упростить свои продукты).
+
+</Section>
+
+<Section id="where" title="Куда делись мои коллекции?">
+
+Во время отключения Edge показывал на панели Коллекции два варианта:
+
+- **Move to Favorites** (перенос в избранное, рекомендован Microsoft): каждая коллекция стала папкой в вашем Избранном. Перенеслись только сохранённые веб-страницы; изображения и заметки — нет.
+- **Экспорт данных** (Export your data): только для рабочих и учебных учётных записей.
+
+С личной учётной записью Microsoft ранее сохранённые коллекции также можно найти на `bing.com/saves`. Так что сначала загляните в избранное (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>): скорее всего, ваши коллекции лежат там в виде папок.
+
+</Section>
+
+<Section id="move" title="Как перенести коллекции в TabMerger?">
+
+Несколько минут — и каждая бывшая коллекция становится группой:
+
+1. В Edge откройте Избранное (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>). Если бывшие коллекции лежат на панели «Избранное» (**Favorites bar**), переместите эти папки в **Other favorites**. При экспорте вся панель «Избранное» записывается одной папкой, поэтому оставшиеся в ней папки пришли бы объединёнными в одну группу.
+2. Выберите **Export favorites** и сохраните HTML-файл.
+3. Откройте TabMerger → **Настройки → Данные** → **Импорт файла** (Settings → Data → Import file) и выберите этот файл.
+4. Подтвердите. Каждая папка из Other favorites станет группой с именем папки, а вложенные папки войдут в эту группу. Панель «Избранное» придёт отдельной группой.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Импорт экспортированного избранного" steps={[{ title: 'Подтверждение' }, { title: 'Ваши группы' }]}>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-import-confirm" alt="Диалог TabMerger с вопросом Import 2 groups? (Импортировать 2 группы?) для файла favorites_edge.html, светлая тема" darkAlt="Диалог TabMerger с вопросом Import 2 groups? (Импортировать 2 группы?) для файла favorites_edge.html, тёмная тема" boxes={[{ id: 'import-confirm', label: 'Импорт' }]} source="TabMerger 3.16.1">TabMerger считает найденные папки и сначала спрашивает.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-imported-groups" alt="Боковая панель TabMerger с группами Trip to Lisbon и Thesis reading, импортированными из папок избранного, светлая тема" darkAlt="Боковая панель TabMerger с группами Trip to Lisbon и Thesis reading, импортированными из папок избранного, тёмная тема" boxes={[{ id: 'imported', label: 'Группы с именами папок' }]} source="TabMerger 3.16.1">Каждая папка теперь группа с тем же именем и теми же страницами.</ThemedScreenshot>
+</Carousel>
+
+Остальные папки из Other favorites тоже импортируются; удалите группы, которые вам не нужны. Все форматы импорта описаны в статье [импорт вкладок в TabMerger](/blog/import-tabs-into-tabmerger). В бесплатной версии помещается 5 групп и 50 вкладок, и импорт, который превысил бы этот лимит, останавливается, прежде чем что-либо будет добавлено; в [Pro](/pricing) ограничений нет.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Edge Favorites page menu with Export favorites. */}
+
+</Section>
+
+<Section id="why" title="Чем TabMerger лучше, чем были Коллекции?">
+
+- **Целые наборы вкладок в один клик.** **Объединить с текущими** (Merge with current) сохраняет все открытые окна в именованную группу.
+- **Заметки и напоминания для любой вкладки,** вместо заметок, которые Коллекции не смогли перенести: щёлкните вкладку правой кнопкой мыши и выберите **Добавить заметку** (Add note) или **Напомнить…** (Remind me…).
+- **Один поиск** по открытым, сохранённым и недавно закрытым вкладкам: <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+- **В разных браузерах.** Одни и те же группы в Edge, Chrome и Firefox, синхронизация со сквозным шифрованием в Pro.
+- **Всё остаётся у вас.** Экспортируйте всё в JSON в любой момент; ничто не зависит от того, сохранит ли какая-то компания свою функцию.
+
+Впервые слышите о менеджерах вкладок? [Что делает менеджер сеансов браузера](/blog/browser-session-manager) и [лучшие расширения для управления вкладками](/blog/best-tab-manager-extensions) дают полную картину.
+
+<InstallCta>Бесплатно для Edge, Chrome и Firefox. Для начала аккаунт не нужен.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Частые вопросы">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'edge-collections-replacement',
+  title: 'Koleksi Edge sudah tiada: apa penggantinya?',
+  navTitle: 'Pengganti Koleksi Edge',
+  seoTitle: 'Koleksi Edge Dihapus? Pengganti Terbaik (dan Cara Memindahkannya)',
+  description:
+    'Microsoft menghapus Koleksi (Collections) dari Edge mulai versi 149. Inilah nasib koleksi Anda, cara mengeluarkannya, dan cara membawanya ke TabMerger, pengganti Edge Collections, sebagai grup bernama.',
+  shareSummary: 'Koleksi dihentikan di Edge 149. Ke mana halaman Anda pergi dan apa yang dipakai sekarang.',
+  dek: 'Halaman yang Anda simpan tidak hilang. Inilah tempatnya sekarang, dan rumah yang lebih baik untuknya.',
+  published: '2026-12-06',
+  updated: '2026-12-06',
+  testedOn: ['Edge 158.0.4370.33', 'Chrome 157.0.8103.80'],
+  keyFacts: [
+    {
+      text: 'Koleksi tidak lagi tersedia sejak Edge 149, yang dirilis 4 Juni 2026.',
+      source: 'Dukungan Microsoft',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'Sejak Edge 145, halaman tidak bisa lagi ditambahkan ke Koleksi.', source: 'Dukungan Microsoft' },
+    {
+      text: '“Pindahkan ke Favorit” menyimpan alamat halaman, bukan gambar atau catatan.',
+      source: 'Dukungan Microsoft',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'TabMerger mengubah setiap folder di “Favorit lainnya” menjadi grup bernama.', source: 'Diuji di TabMerger 3.16.1, 21 November 2026' },
+  ],
+  faq: [
+    {
+      question: 'Apakah Microsoft sudah menghapus Koleksi Edge?',
+      answer:
+        'Ya. Halaman dukungan Microsoft menyebutkan bahwa Koleksi tidak lagi tersedia mulai Edge 149, yang dirilis 4 Juni 2026; sejak Edge 145 halaman baru sudah tidak bisa ditambahkan.',
+    },
+    {
+      question: 'Ke mana koleksi saya pergi?',
+      answer:
+        'Microsoft menyediakan “Pindahkan ke Favorit”, yang mengubah setiap koleksi menjadi folder favorit (hanya halamannya). Akun pribadi juga bisa melihat koleksi tersimpan di bing.com/saves; akun kerja atau sekolah bisa mengekspornya.',
+    },
+    {
+      question: 'Apa pengganti terbaik untuk Koleksi Edge?',
+      answer:
+        'TabMerger: grup tab bernama dengan kode warna yang bisa Anda cari, beri catatan dan pengingat, serta sinkronkan dengan enkripsi end-to-end di Pro. TabMerger juga berjalan di Chrome dan Firefox.',
+    },
+    {
+      question: 'Bisakah saya mengimpor koleksi saya ke TabMerger?',
+      answer: 'Bisa. Pindahkan folder koleksi ke “Favorit lainnya”, ekspor favorit Anda sebagai file HTML, lalu impor di Pengaturan → Data: setiap folder itu menjadi grup TabMerger.',
+    },
+  ],
+  images: [
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-light.webp', alt: 'Dialog TabMerger yang menanyakan Import 2 groups? (Impor 2 grup?) untuk file favorites_edge.html, tema terang' },
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-dark.webp', alt: 'Dialog TabMerger yang menanyakan Import 2 groups? (Impor 2 grup?) untuk file favorites_edge.html, tema gelap' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-light.webp', alt: 'Bilah samping TabMerger dengan grup Trip to Lisbon dan Thesis reading, diimpor dari folder favorit, tema terang' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-dark.webp', alt: 'Bilah samping TabMerger dengan grup Trip to Lisbon dan Thesis reading, diimpor dari folder favorit, tema gelap' },
+  ],
+  tags: ['edge', 'bookmarks', 'save-tabs', 'tab-manager'],
+  sources: [
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'EdgeCollectionsEnabled policy (obsolete)',
+      publisher: 'Microsoft Learn',
+      url: 'https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies/EdgeCollectionsEnabled',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/edge-collections-replacement/cover-edge-light.webp' },
+  ogImage: { src: '/blog/edge-collections-replacement/og.png', alt: 'Koleksi Edge sudah tiada: apa penggantinya? Panduan TabMerger, dengan folder favorit yang diimpor sebagai grup' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'what-happened', label: 'Apa yang terjadi' },
+    { id: 'where', label: 'Di mana halaman Anda' },
+    { id: 'move', label: 'Pindahkan ke TabMerger' },
+    { id: 'why', label: 'Mengapa TabMerger' },
+    { id: 'faq', label: 'Tanya jawab' },
+  ],
+}
+
+<QuickAnswer>
+
+Ya, sudah tiada: menurut Microsoft, **Koleksi (Collections) tidak lagi tersedia mulai Edge 149** (dirilis 4 Juni 2026). Halaman Anda tidak terhapus: **Pindahkan ke Favorit** (Move to Favorites) mengubah setiap koleksi menjadi folder favorit. Rumah baru terbaiknya adalah [TabMerger](/features): ekspor favorit Anda sebagai HTML, impor filenya, dan setiap folder di “Favorit lainnya” menjadi grup bernama yang bisa dicari, lengkap dengan catatan, pengingat, dan sinkronisasi terenkripsi, di Edge, Chrome, dan Firefox.
+
+</QuickAnswer>
+
+<InstallCta>Kembalikan koleksi lama Anda sebagai grup bernama yang bisa dicari. Gratis untuk Edge, Chrome, dan Firefox.</InstallCta>
+
+<Section id="what-happened" title="Apakah Microsoft benar-benar menghapus Koleksi Edge?">
+
+Ya, secara bertahap, menurut halaman Microsoft sendiri:
+
+<ComparisonTable
+  head={['Versi Edge', 'Apa yang berubah']}
+  rowHeaders
+  rows={[
+    ['145', 'Halaman tidak bisa lagi ditambahkan ke Koleksi; koleksi yang ada tetap terlihat'],
+    ['149 (4 Juni 2026)', 'Koleksi tidak lagi tersedia'],
+    ['153', 'Kebijakan admin untuk Koleksi menjadi usang “because the Collections feature was removed” (karena fitur Koleksi telah dihapus)'],
+  ]}
+/>
+
+Alasan Microsoft, dengan kata-katanya sendiri: Microsoft sedang “retiring Collections in Edge, to better simplify our offerings” (menghentikan Koleksi di Edge agar penawarannya lebih sederhana).
+
+</Section>
+
+<Section id="where" title="Ke mana koleksi saya pergi?">
+
+Selama masa penghentian, Edge menampilkan dua opsi di panel Koleksi:
+
+- **Pindahkan ke Favorit** (disarankan Microsoft): setiap koleksi menjadi folder di favorit Anda. Hanya halaman web tersimpan yang dipindahkan; gambar dan catatan tidak.
+- **Mengekspor Data Anda** (Export your data): hanya untuk akun kerja atau sekolah.
+
+Akun Microsoft pribadi juga bisa menemukan koleksi yang tersimpan sebelumnya di `bing.com/saves`. Jadi periksa dulu favorit Anda (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>): koleksi Anda kemungkinan besar ada di sana sebagai folder.
+
+</Section>
+
+<Section id="move" title="Bagaimana cara memindahkan koleksi saya ke TabMerger?">
+
+Hanya beberapa menit, dan setiap bekas koleksi menjadi grup:
+
+1. Di Edge, buka Favorit (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>). Jika bekas koleksi Anda ada di dalam **Bilah Favorit** (Favorites bar), pindahkan folder-folder itu ke **Favorit lainnya** (Other favorites). Ekspor menulis seluruh Bilah Favorit sebagai satu folder, jadi folder yang tertinggal di dalamnya akan tiba tergabung dalam satu grup.
+2. Pilih **Export favorites** dan simpan file HTML-nya.
+3. Buka TabMerger → **Pengaturan → Data** → **Impor file** (Settings → Data → Import file), lalu pilih file tersebut.
+4. Konfirmasi. Setiap folder di “Favorit lainnya” menjadi grup dengan nama folder itu, dan subfoldernya digabungkan ke dalam grup tersebut. Bilah Favorit masuk sebagai grup tersendiri.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Mengimpor favorit yang diekspor" steps={[{ title: 'Konfirmasi' }, { title: 'Grup Anda' }]}>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-import-confirm" alt="Dialog TabMerger yang menanyakan Import 2 groups? (Impor 2 grup?) untuk file favorites_edge.html, tema terang" darkAlt="Dialog TabMerger yang menanyakan Import 2 groups? (Impor 2 grup?) untuk file favorites_edge.html, tema gelap" boxes={[{ id: 'import-confirm', label: 'Impor' }]} source="TabMerger 3.16.1">TabMerger menghitung folder yang ditemukannya dan bertanya terlebih dahulu.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-imported-groups" alt="Bilah samping TabMerger dengan grup Trip to Lisbon dan Thesis reading, diimpor dari folder favorit, tema terang" darkAlt="Bilah samping TabMerger dengan grup Trip to Lisbon dan Thesis reading, diimpor dari folder favorit, tema gelap" boxes={[{ id: 'imported', label: 'Grup bernama sesuai folder' }]} source="TabMerger 3.16.1">Setiap folder kini menjadi grup dengan nama dan halaman yang sama.</ThemedScreenshot>
+</Carousel>
+
+Folder lain di “Favorit lainnya” juga ikut masuk; hapus grup yang tidak Anda perlukan. Semua format impor dibahas di [mengimpor tab ke TabMerger](/blog/import-tabs-into-tabmerger). Versi gratis memuat 5 grup dan 50 tab, dan impor yang akan melewati batas itu dihentikan sebelum apa pun ditambahkan; [Pro](/pricing) tidak punya batas.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Edge Favorites page menu with Export favorites. */}
+
+</Section>
+
+<Section id="why" title="Mengapa TabMerger rumah yang lebih baik daripada Koleksi?">
+
+- **Seluruh kumpulan tab, sekali klik.** **Gabungkan dengan sesi saat ini** (Merge with current) menyimpan semua jendela yang terbuka ke dalam grup bernama.
+- **Catatan dan pengingat di tab mana pun,** pengganti catatan yang tidak bisa dipindahkan Koleksi: klik kanan sebuah tab lalu pilih **Tambah catatan** (Add note) atau **Ingatkan saya…** (Remind me…).
+- **Satu pencarian** untuk tab yang terbuka, tersimpan, dan baru ditutup: <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+- **Lintas browser.** Grup yang sama di Edge, Chrome, dan Firefox, disinkronkan dengan enkripsi end-to-end di Pro.
+- **Tetap milik Anda.** Ekspor semuanya ke JSON kapan saja; tidak ada yang bergantung pada satu perusahaan yang mempertahankan sebuah fitur.
+
+Baru mengenal pengelola tab? [Apa yang dilakukan pengelola sesi browser](/blog/browser-session-manager) dan [ekstensi pengelola tab terbaik](/blog/best-tab-manager-extensions) memberi gambaran lengkapnya.
+
+<InstallCta>Gratis untuk Edge, Chrome, dan Firefox. Tidak perlu akun untuk memulai.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Tanya jawab">
+
+<Faq items={post.faq} />
+
+</Section>

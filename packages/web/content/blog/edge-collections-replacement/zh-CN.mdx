@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'edge-collections-replacement',
+  title: 'Edge 集合功能已下线：该用什么替代？',
+  navTitle: 'Edge 集合的替代方案',
+  seoTitle: 'Edge 集合被移除了？最佳替代方案及迁移方法',
+  description:
+    '从 149 版开始，Microsoft 已从 Edge 中移除集合（Collections）功能。本文介绍你的集合去了哪里、如何导出，以及如何把它们以命名分组的形式导入 Edge 集合的替代方案 TabMerger。',
+  shareSummary: 'Edge 149 已停用集合功能。你的网页去了哪里，现在该用什么。',
+  dek: '你保存的网页并没有丢失。来看看它们去了哪里，以及更好的安放之处。',
+  published: '2026-12-06',
+  updated: '2026-12-06',
+  testedOn: ['Edge 158.0.4370.33', 'Chrome 157.0.8103.80'],
+  keyFacts: [
+    {
+      text: '从 2026 年 6 月 4 日发布的 Edge 149 开始，集合不再可用。',
+      source: 'Microsoft 支持',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: '从 Edge 145 起，就无法再向集合添加网页。', source: 'Microsoft 支持' },
+    {
+      text: '“移动到收藏夹”只保留网页地址，不保留图片和笔记。',
+      source: 'Microsoft 支持',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'TabMerger 会把“其他收藏夹”中的每个文件夹变成一个命名分组。', source: '已在 TabMerger 3.16.1 中测试，2026 年 11 月 21 日' },
+  ],
+  faq: [
+    {
+      question: 'Microsoft 已经移除 Edge 集合了吗？',
+      answer:
+        '是的。Microsoft 的支持页面称，从 2026 年 6 月 4 日发布的 Edge 149 开始，集合不再可用；从 Edge 145 起就已无法添加新网页。',
+    },
+    {
+      question: '我的集合去哪儿了？',
+      answer:
+        'Microsoft 提供了“移动到收藏夹”，它会把每个集合变成一个收藏夹文件夹（仅限网页）。个人帐户还可以在 bing.com/saves 查看已保存的集合；工作或学校帐户则可以导出它们。',
+    },
+    {
+      question: 'Edge 集合最好的替代方案是什么？',
+      answer:
+        'TabMerger：带名称和颜色标记的标签页分组，可以搜索、添加备注和提醒，Pro 版还能端到端加密同步。它同样适用于 Chrome 和 Firefox。',
+    },
+    {
+      question: '可以把我的集合导入 TabMerger 吗？',
+      answer: '可以。把集合文件夹移到“其他收藏夹”，将收藏夹导出为 HTML 文件，再在 设置 → 数据 中导入：每个文件夹都会成为一个 TabMerger 分组。',
+    },
+  ],
+  images: [
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-light.webp', alt: 'TabMerger 对话框针对文件 favorites_edge.html 询问 Import 2 groups?（导入 2 个分组？），浅色主题' },
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-dark.webp', alt: 'TabMerger 对话框针对文件 favorites_edge.html 询问 Import 2 groups?（导入 2 个分组？），深色主题' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-light.webp', alt: 'TabMerger 侧边栏，显示从收藏夹文件夹导入的分组 Trip to Lisbon 和 Thesis reading，浅色主题' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-dark.webp', alt: 'TabMerger 侧边栏，显示从收藏夹文件夹导入的分组 Trip to Lisbon 和 Thesis reading，深色主题' },
+  ],
+  tags: ['edge', 'bookmarks', 'save-tabs', 'tab-manager'],
+  sources: [
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'EdgeCollectionsEnabled policy (obsolete)',
+      publisher: 'Microsoft Learn',
+      url: 'https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies/EdgeCollectionsEnabled',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/edge-collections-replacement/cover-edge-light.webp' },
+  ogImage: { src: '/blog/edge-collections-replacement/og.png', alt: 'Edge 集合功能已下线：该用什么替代？一篇 TabMerger 指南，演示将收藏夹文件夹导入为分组' },
+  toc: [
+    { id: 'quick', label: '快速解答' },
+    { id: 'what-happened', label: '发生了什么' },
+    { id: 'where', label: '网页在哪里' },
+    { id: 'move', label: '迁移到 TabMerger' },
+    { id: 'why', label: '为什么选 TabMerger' },
+    { id: 'faq', label: '常见问题' },
+  ],
+}
+
+<QuickAnswer>
+
+是的，已经下线：Microsoft 表示，**从 Edge 149 开始，集合（Collections）不再可用**（2026 年 6 月 4 日发布）。不过你的网页并没有被删除：**移动到收藏夹**（Move to Favorites）已把每个集合变成了一个收藏夹文件夹。最好的新去处是 [TabMerger](/features)：把收藏夹导出为 HTML，导入该文件后，“其他收藏夹”中的每个文件夹都会成为可搜索的命名分组，并支持备注、提醒和加密同步，适用于 Edge、Chrome 和 Firefox。
+
+</QuickAnswer>
+
+<InstallCta>把旧集合找回来，变成可搜索的命名分组。Edge、Chrome 和 Firefox 均可免费使用。</InstallCta>
+
+<Section id="what-happened" title="Microsoft 真的移除了 Edge 集合吗？">
+
+是的，而且是分阶段进行的，这一点 Microsoft 自己的页面写得很清楚：
+
+<ComparisonTable
+  head={['Edge 版本', '变化']}
+  rowHeaders
+  rows={[
+    ['145', '无法再向集合添加网页；现有集合仍然可见'],
+    ['149（2026 年 6 月 4 日）', '集合不再可用'],
+    ['153', '集合的管理策略已过时，“because the Collections feature was removed”（因为集合功能已被移除）'],
+  ]}
+/>
+
+Microsoft 给出的理由，原话是：“retiring Collections in Edge, to better simplify our offerings”（停用 Edge 中的集合，以简化产品）。
+
+</Section>
+
+<Section id="where" title="我的集合去哪儿了？">
+
+在停用期间，Edge 在集合窗格中提供了两个选项：
+
+- **移动到收藏夹**（Microsoft 推荐）：每个集合都变成了收藏夹中的一个文件夹。只移动了保存的网页，图片和笔记没有移动。
+- **导出数据**（Export your data）：仅限工作或学校帐户。
+
+个人 Microsoft 帐户还可以在 `bing.com/saves` 找到以前保存的集合。所以请先查看收藏夹（<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>）：你的集合很可能就以文件夹的形式在那里。
+
+</Section>
+
+<Section id="move" title="如何把集合迁移到 TabMerger？">
+
+只需几分钟，每个旧集合都会变成一个分组：
+
+1. 在 Edge 中打开收藏夹（<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>）。如果旧集合在 **收藏夹栏**（Favorites bar）里，请把这些文件夹移到 **其他收藏夹**（Other favorites）。导出时整个收藏夹栏会被写成一个文件夹，留在里面的文件夹会被合并成一个分组。
+2. 选择 **Export favorites**，保存 HTML 文件。
+3. 打开 TabMerger → **设置 → 数据** → **导入文件**（Settings → Data → Import file），选择该文件。
+4. 确认。“其他收藏夹”中的每个文件夹都会成为与文件夹同名的分组，其中的子文件夹会并入该分组。收藏夹栏会单独成为一个分组。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="导入导出的收藏夹" steps={[{ title: '确认' }, { title: '你的分组' }]}>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-import-confirm" alt="TabMerger 对话框针对文件 favorites_edge.html 询问 Import 2 groups?（导入 2 个分组？），浅色主题" darkAlt="TabMerger 对话框针对文件 favorites_edge.html 询问 Import 2 groups?（导入 2 个分组？），深色主题" boxes={[{ id: 'import-confirm', label: '导入' }]} source="TabMerger 3.16.1">TabMerger 会统计找到的文件夹数量，并先征求你的确认。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-imported-groups" alt="TabMerger 侧边栏，显示从收藏夹文件夹导入的分组 Trip to Lisbon 和 Thesis reading，浅色主题" darkAlt="TabMerger 侧边栏，显示从收藏夹文件夹导入的分组 Trip to Lisbon 和 Thesis reading，深色主题" boxes={[{ id: 'imported', label: '以文件夹命名的分组' }]} source="TabMerger 3.16.1">现在每个文件夹都是一个同名分组，网页也完全一样。</ThemedScreenshot>
+</Carousel>
+
+“其他收藏夹”中的其他文件夹也会一并导入；删掉不需要的分组即可。所有导入格式都在[将标签页导入 TabMerger](/blog/import-tabs-into-tabmerger)中有介绍。免费版最多容纳 5 个分组和 50 个标签页，超出上限的导入会在添加任何内容之前停止；[Pro](/pricing) 没有限制。
+
+{/* Screenshot still to capture by hand (needs a visible browser): Edge Favorites page menu with Export favorites. */}
+
+</Section>
+
+<Section id="why" title="为什么 TabMerger 比当年的集合更适合安放网页？">
+
+- **整组标签页，一键保存**。**与当前合并**（Merge with current）会把所有打开的窗口保存到一个命名分组中。
+- **任何标签页都能加备注和提醒**，弥补集合没能迁移的笔记：右键单击标签页，选择 **添加备注**（Add note）或 **提醒我…**（Remind me…）。
+- **一次搜索**，覆盖打开的、已保存的和最近关闭的标签页：<Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>。
+- **跨浏览器**。在 Edge、Chrome 和 Firefox 中使用相同的分组，Pro 版端到端加密同步。
+- **数据归你所有**。随时把所有内容导出为 JSON；一切都不取决于某家公司是否保留某项功能。
+
+刚接触标签页管理器？[浏览器会话管理器能做什么](/blog/browser-session-manager)和[最好的标签页管理扩展](/blog/best-tab-manager-extensions)可以帮你了解全貌。
+
+<InstallCta>Edge、Chrome 和 Firefox 均可免费使用。无需帐户即可开始。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

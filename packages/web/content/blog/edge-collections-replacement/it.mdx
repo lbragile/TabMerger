@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'edge-collections-replacement',
+  title: 'Le Raccolte di Edge non ci sono più: cosa usare al loro posto',
+  navTitle: 'Alternativa alle Raccolte di Edge',
+  seoTitle: 'Raccolte di Edge rimosse? La migliore alternativa (e come trasferirle)',
+  description:
+    'Microsoft ha rimosso le Raccolte (Collections) da Edge a partire dalla versione 149. Ecco che fine hanno fatto le tue raccolte, come recuperarle e come portarle in TabMerger, l’alternativa alle Raccolte di Edge, come gruppi con un nome.',
+  shareSummary: 'Edge 149 ha ritirato le Raccolte. Dove sono finite le tue pagine e cosa usare adesso.',
+  dek: 'Le pagine che avevi salvato non sono perse. Ecco dove sono finite e una casa migliore per loro.',
+  published: '2026-12-06',
+  updated: '2026-12-06',
+  testedOn: ['Edge 158.0.4370.33', 'Chrome 157.0.8103.80'],
+  keyFacts: [
+    {
+      text: 'Le Raccolte non sono più disponibili da Edge 149, rilasciato il 4 giugno 2026.',
+      source: 'Supporto Microsoft',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'Da Edge 145 non era più possibile aggiungere pagine alle Raccolte.', source: 'Supporto Microsoft' },
+    {
+      text: '«Sposta nei Preferiti» conserva gli indirizzi delle pagine, non le immagini né le note.',
+      source: 'Supporto Microsoft',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'TabMerger trasforma ogni cartella di «Altri preferiti» in un gruppo con un nome.', source: 'Testato in TabMerger 3.16.1, 21 nov 2026' },
+  ],
+  faq: [
+    {
+      question: 'Microsoft ha rimosso le Raccolte di Edge?',
+      answer:
+        'Sì. La pagina di supporto di Microsoft dice che le Raccolte non sono più disponibili a partire da Edge 149, rilasciato il 4 giugno 2026; da Edge 145 non si potevano più aggiungere nuove pagine.',
+    },
+    {
+      question: 'Dove sono finite le mie raccolte?',
+      answer:
+        'Microsoft offriva «Sposta nei Preferiti», che trasforma ogni raccolta in una cartella dei preferiti (solo le pagine). Con un account personale puoi vedere le raccolte salvate anche su bing.com/saves; gli account aziendali o dell’istituto di istruzione potevano esportarle.',
+    },
+    {
+      question: 'Qual è la migliore alternativa alle Raccolte di Edge?',
+      answer:
+        'TabMerger: gruppi di schede con nome e colore che puoi cercare, arricchire con note e promemoria e sincronizzare con crittografia end-to-end con Pro. Funziona anche in Chrome e Firefox.',
+    },
+    {
+      question: 'Posso importare le mie raccolte in TabMerger?',
+      answer: 'Sì. Sposta le cartelle delle raccolte in «Altri preferiti», esporta i preferiti come file HTML e importalo in Impostazioni → Dati: ognuna di quelle cartelle diventa un gruppo di TabMerger.',
+    },
+  ],
+  images: [
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-light.webp', alt: 'Finestra di dialogo di TabMerger che chiede Import 2 groups? (Importare 2 gruppi?) per il file favorites_edge.html, tema chiaro' },
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-dark.webp', alt: 'Finestra di dialogo di TabMerger che chiede Import 2 groups? (Importare 2 gruppi?) per il file favorites_edge.html, tema scuro' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-light.webp', alt: 'Barra laterale di TabMerger con i gruppi Trip to Lisbon e Thesis reading, importati da cartelle dei preferiti, tema chiaro' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-dark.webp', alt: 'Barra laterale di TabMerger con i gruppi Trip to Lisbon e Thesis reading, importati da cartelle dei preferiti, tema scuro' },
+  ],
+  tags: ['edge', 'bookmarks', 'save-tabs', 'tab-manager'],
+  sources: [
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'EdgeCollectionsEnabled policy (obsolete)',
+      publisher: 'Microsoft Learn',
+      url: 'https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies/EdgeCollectionsEnabled',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/edge-collections-replacement/cover-edge-light.webp' },
+  ogImage: { src: '/blog/edge-collections-replacement/og.png', alt: 'Le Raccolte di Edge non ci sono più: cosa usare al loro posto. Una guida di TabMerger, con le cartelle dei preferiti importate come gruppi' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'what-happened', label: 'Cosa è successo' },
+    { id: 'where', label: 'Dove sono le tue pagine' },
+    { id: 'move', label: 'Spostale in TabMerger' },
+    { id: 'why', label: 'Perché TabMerger' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+}
+
+<QuickAnswer>
+
+Sì, non ci sono più: secondo Microsoft **le Raccolte (Collections) non sono più disponibili a partire da Edge 149** (rilasciato il 4 giugno 2026). Le tue pagine però non sono state cancellate: **Sposta nei Preferiti** (Move to Favorites) ha trasformato ogni raccolta in una cartella dei preferiti. La nuova casa migliore è [TabMerger](/features): esporta i preferiti in HTML, importa il file e ogni cartella di «Altri preferiti» diventa un gruppo con un nome, in cui puoi cercare, con note, promemoria e sincronizzazione crittografata, in Edge, Chrome e Firefox.
+
+</QuickAnswer>
+
+<InstallCta>Ritrova le tue vecchie raccolte come gruppi con un nome, in cui puoi cercare. Gratis per Edge, Chrome e Firefox.</InstallCta>
+
+<Section id="what-happened" title="Microsoft ha davvero rimosso le Raccolte di Edge?">
+
+Sì, per fasi, secondo le pagine della stessa Microsoft:
+
+<ComparisonTable
+  head={['Versione di Edge', 'Cosa è cambiato']}
+  rowHeaders
+  rows={[
+    ['145', 'Non era più possibile aggiungere pagine alle Raccolte; quelle esistenti restavano visibili'],
+    ['149 (4 giugno 2026)', 'Le Raccolte non sono più disponibili'],
+    ['153', 'Il criterio amministrativo per le Raccolte è diventato obsoleto «because the Collections feature was removed» (perché la funzionalità Raccolte è stata rimossa)'],
+  ]}
+/>
+
+Il motivo di Microsoft, con le sue parole: sta «retiring Collections in Edge, to better simplify our offerings» (ritirando le Raccolte da Edge per semplificare la propria offerta).
+
+</Section>
+
+<Section id="where" title="Dove sono finite le mie raccolte?">
+
+Durante il ritiro, Edge mostrava due opzioni nel riquadro Raccolte:
+
+- **Sposta nei Preferiti** (consigliata da Microsoft): ogni raccolta è diventata una cartella dei tuoi preferiti. Sono state spostate solo le pagine web salvate; immagini e note no.
+- **Esporta i tuoi dati** (Export your data): solo per gli account aziendali o dell’istituto di istruzione.
+
+Con un account Microsoft personale puoi trovare le raccolte salvate in precedenza anche su `bing.com/saves`. Quindi controlla prima i preferiti (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>): con ogni probabilità le tue raccolte sono lì, sotto forma di cartelle.
+
+</Section>
+
+<Section id="move" title="Come sposto le mie raccolte in TabMerger?">
+
+Bastano pochi minuti, e ogni vecchia raccolta diventa un gruppo:
+
+1. In Edge apri i Preferiti (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>). Se le tue vecchie raccolte sono dentro **Barra Preferiti** (Favorites bar), sposta quelle cartelle in **Altri preferiti** (Other favorites). L’esportazione scrive l’intera Barra Preferiti come un’unica cartella, quindi le cartelle rimaste lì dentro arriverebbero unite in un solo gruppo.
+2. Scegli **Export favorites** e salva il file HTML.
+3. Apri TabMerger → **Impostazioni → Dati** → **Importa file** (Settings → Data → Import file) e scegli quel file.
+4. Conferma. Ogni cartella di «Altri preferiti» diventa un gruppo con il nome della cartella, e le sottocartelle confluiscono in quel gruppo. La Barra Preferiti arriva come un gruppo a sé.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Importare i preferiti esportati" steps={[{ title: 'Conferma' }, { title: 'I tuoi gruppi' }]}>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-import-confirm" alt="Finestra di dialogo di TabMerger che chiede Import 2 groups? (Importare 2 gruppi?) per il file favorites_edge.html, tema chiaro" darkAlt="Finestra di dialogo di TabMerger che chiede Import 2 groups? (Importare 2 gruppi?) per il file favorites_edge.html, tema scuro" boxes={[{ id: 'import-confirm', label: 'Importa' }]} source="TabMerger 3.16.1">TabMerger conta le cartelle trovate e chiede prima di procedere.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-imported-groups" alt="Barra laterale di TabMerger con i gruppi Trip to Lisbon e Thesis reading, importati da cartelle dei preferiti, tema chiaro" darkAlt="Barra laterale di TabMerger con i gruppi Trip to Lisbon e Thesis reading, importati da cartelle dei preferiti, tema scuro" boxes={[{ id: 'imported', label: 'Gruppi con il nome delle cartelle' }]} source="TabMerger 3.16.1">Ogni cartella ora è un gruppo con lo stesso nome e le stesse pagine.</ThemedScreenshot>
+</Carousel>
+
+Arrivano anche le altre cartelle di «Altri preferiti»; elimina i gruppi che non ti servono. Tutti i formati di importazione sono spiegati in [importare schede in TabMerger](/blog/import-tabs-into-tabmerger). La versione gratuita contiene 5 gruppi e 50 schede, e un’importazione che supererebbe questo limite viene fermata prima di aggiungere qualsiasi cosa; [Pro](/pricing) non ha limiti.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Edge Favorites page menu with Export favorites. */}
+
+</Section>
+
+<Section id="why" title="Perché TabMerger è una casa migliore di quanto fossero le Raccolte?">
+
+- **Interi gruppi di schede, con un clic.** **Unisci con l'attuale** (Merge with current) salva tutte le finestre aperte in un gruppo con un nome.
+- **Note e promemoria su qualsiasi scheda,** per sostituire le note che le Raccolte non potevano spostare: fai clic con il tasto destro su una scheda e scegli **Aggiungi nota** (Add note) o **Ricordamelo…** (Remind me…).
+- **Un’unica ricerca** per le schede aperte, salvate e chiuse di recente: <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+- **Su più browser.** Gli stessi gruppi in Edge, Chrome e Firefox, sincronizzati con crittografia end-to-end con Pro.
+- **Restano tuoi.** Esporta tutto in JSON quando vuoi; niente dipende da un’azienda che tiene in vita una funzionalità.
+
+Ti avvicini ora ai gestori di schede? [Cosa fa un gestore di sessioni del browser](/blog/browser-session-manager) e [le migliori estensioni per gestire le schede](/blog/best-tab-manager-extensions) ti danno il quadro completo.
+
+<InstallCta>Gratis per Edge, Chrome e Firefox. Per iniziare non serve un account.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>
