@@ -1,0 +1,170 @@
+export const post = {
+  slug: 'too-many-tabs-slow-browser',
+  title: 'Çok fazla sekme bilgisayarı yavaşlatır mı?',
+  navTitle: 'Çok fazla sekme, yavaş bilgisayar',
+  seoTitle: 'Çok Fazla Sekme Tarayıcıyı Yavaşlatıyor mu? Nasıl Düzeltilir',
+  description:
+    'Çok fazla açık sekme yüzünden tarayıcı mı yavaşladı? Her sekme bellek kullanır. Tarayıcının sekmeleri uyutma ayarını açın, kullanmadığınız sekmeleri de TabMerger ile kaydedip kapatın; tek bir sekme bile kaybetmeden.',
+  shareSummary: 'Açık sekmeler neden her şeyi yavaşlatır ve onları kaybetmeden bellek nasıl boşaltılır.',
+  dek: 'En hızlı sekme, açık olmayan sekmedir. Kaydedin, kapatın ve tek tıkla geri getirin.',
+  published: '2026-12-04',
+  updated: '2026-12-04',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Chrome’un Bellek Tasarrufu özelliği etkin olmayan sekmelerin belleğini boşaltır.',
+      source: 'Chrome Yardım',
+      href: 'https://support.google.com/chrome/answer/12929150',
+    },
+    { text: 'Edge 158, etkin olmayan sekmeleri varsayılan olarak 15 dakika sonra uyku moduna alır.', source: 'edge://settings, 20 Kas 2026' },
+    { text: 'Firefox 159, sağ tık menüsünden bir sekmeyi boşaltabilir.', source: 'Firefox 159 menü metni' },
+    { text: 'TabMerger açık pencerelerin hepsini kaydeder, sonra tek tıkla hepsini kapatır.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Çok sayıda sekme daha fazla bellek kullanır mı?',
+      answer:
+        'Evet. Her açık sayfa içeriğini bellekte tutar; komut dosyası çalıştıran ya da medya oynatan sayfalar işlemciyi de kullanır. Ne kadar kullandığı sitelere bağlıdır, yani sekme sayısı tek başına bir şey söylemez.',
+    },
+    {
+      question: 'Sekmeleri kapatmak bilgisayarımı hızlandırır mı?',
+      answer:
+        'Sekmeleri kapatmak kullandıkları belleği boşaltır. Önce TabMerger ile kaydedin (Mevcutla birleştir, ardından Tüm pencereleri kapat), hiçbir şey kaybetmezsiniz: istediğinizi tek tıkla yeniden açarsınız.',
+    },
+    {
+      question: 'Bellek Tasarrufu ya da uyuyan sekmeler yeterli mi?',
+      answer:
+        'Boştaki sekmelerin belleğini boşaltırlar ama sekmeleri sekme şeridinde tutarlar; bu, bilgisayara yardımcı olur. Yine de sekmeler orada durur ve göz gezdirmeniz gerekir; onları kaydedip kapatmak size de yardımcı olur.',
+    },
+    {
+      question: 'Hangi sekmenin en çok bellek kullandığını nasıl görürüm?',
+      answer: 'Chrome’da Chrome Görev Yöneticisi’ni açmak için Shift+Esc tuşlarına basın ve en çok bellek kullanan sekmelere bakın.',
+    },
+  ],
+  images: [
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-light.webp', alt: 'TabMerger’da Now Open (Şu An Açık) menüsü, Close all windows (Tüm pencereleri kapat), Close all browser windows in this group (Bu gruptaki tüm tarayıcı pencerelerini kapatın) vurgulanmış, açık tema' },
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-dark.webp', alt: 'TabMerger’da Now Open (Şu An Açık) menüsü, Close all windows (Tüm pencereleri kapat), Close all browser windows in this group (Bu gruptaki tüm tarayıcı pencerelerini kapatın) vurgulanmış, koyu tema' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Chrome Ayarları, Performance (Performans) bölümü ve Memory Saver (Bellek Tasarrufu) anahtarı' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Edge Ayarları, Performance bölümü: Automatically put tabs to sleep açık ve 15 dakikaya ayarlı' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/too-many-tabs-slow-browser/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/too-many-tabs-slow-browser/og.png', alt: '“Do too many tabs slow your computer down?” başlık kartı: Close all windows (Tüm pencereleri kapat) menüsüyle bir TabMerger rehberi' },
+  toc: [
+    { id: 'quick', label: 'Kısa yanıt' },
+    { id: 'why', label: 'Sekmeler neden yavaşlatır' },
+    { id: 'tabmerger', label: 'Tek seferde kaydedip kapatın' },
+    { id: 'browser', label: 'Sekmeleri tarayıcı uyutsun' },
+    { id: 'which', label: 'Ağır sekmeyi bulun' },
+    { id: 'faq', label: 'SSS' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'Bellek ayarı',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Ayarlar → System and performance → Performance',
+      firefox: 'Sekmeye sağ tıklayın → Sekmeyi boşalt',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Evet: her açık sekme bellek kullanır ve yeterince çok olduklarında bütün bilgisayar yavaşlar. En büyük kazanç, **kullanmadığınız sekmeleri kaybetmeden kapatmaktır**. [TabMerger](/features)’da açık pencerelerin hepsini bir gruba kaydetmek için **Mevcutla birleştir**’i, ardından **Tüm pencereleri kapat**’ı seçin: bellek boşalır ve her sekme bir tık uzakta kalır. Açık tuttuğunuz sekmeler için **Bellek Tasarrufu** (Memory Saver, Chrome) ya da **uyuyan sekmeler** (Edge) özelliğini açın.
+
+</QuickAnswer>
+
+<InstallCta>Bütün pencereleri kaydedin, hepsini kapatın, belleği geri alın. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="why" title="Açık sekmeler bilgisayarı neden yavaşlatır?">
+
+Her açık sekme canlı bir web sayfasıdır: metni, görselleri ve komut dosyaları bellekte kalır; yoğun sayfalar (video, canlı akışlar, web uygulamaları) işlemciyi de kullanmaya devam eder. Tarayıcı ve diğer uygulamalarınız bilgisayarda olandan fazla bellek istediğinde her şey yavaşlar. Chrome’un kendi kilitlenme yardımı, belleğin tükenmesini kilitlenme nedenleri arasında sayar ve ilk çözüm olarak sekmeleri kapatmayı önerir.
+
+Bir sekmenin maliyeti tamamen siteye bağlıdır, bu yüzden güvenli bir sayı yoktur. Pratik kural: bugün ona bakmadıysanız açık olması gerekmez.
+
+</Section>
+
+<Section id="tabmerger" title="Sekmeleri kaybetmeden nasıl kapatırım?">
+
+İşte [TabMerger](/features)’ın parladığı yer burası. İki adım, bütün pencereler tek seferde:
+
+1. **Grup Ekle**’ye tıklayın, ardından grubun **⋯** menüsünden **Mevcutla birleştir**’i seçin: açık pencerelerin ve sekmelerin hepsi gruba kaydedilir.
+2. Kenar çubuğunda **Şu An Açık**’a sağ tıklayın ve **Tüm pencereleri kapat**’ı seçin. Tarayıcı pencereleri kapanır; grup her sekmeyi saklar.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/too-many-tabs-slow-browser/tm-close-all-menu" alt="TabMerger’da Now Open (Şu An Açık) menüsü, Close all windows (Tüm pencereleri kapat), Close all browser windows in this group (Bu gruptaki tüm tarayıcı pencerelerini kapatın) vurgulanmış, açık tema" darkAlt="TabMerger’da Now Open (Şu An Açık) menüsü, Close all windows (Tüm pencereleri kapat), Close all browser windows in this group (Bu gruptaki tüm tarayıcı pencerelerini kapatın) vurgulanmış, koyu tema" boxes={[{ id: 'close-all', label: 'Tüm pencereleri kapat' }]} source="TabMerger 3.16.1">Kaydettikten sonra tek bir menü öğesi açık pencerelerin hepsini kapatır.</ThemedScreenshot>
+
+Onlara yeniden ihtiyaç duyduğunuzda grubu açın ve tek bir sekmeyi, tek bir pencereyi ya da hepsini yeniden açın. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> kayıtlı her sekmeyi tek tuşla bulur, otomatik kaydetme de kaydetme işini bir zamanlamayla üstlenebilir. Daha fazla alışkanlık için [çok fazla sekme rutinimize](/blog/manage-too-many-tabs) göz atın.
+
+</Section>
+
+<Section id="browser" title="Tarayıcının boştaki sekmeleri uyutmasını nasıl sağlarım?">
+
+Açık tuttuğunuz sekmeler kullanılmadan beklerken tarayıcı onların belleğini boşaltabilir. Tıkladığınızda yeniden yüklenirler.
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+**Bellek Tasarrufu** (Memory Saver) özelliğini açın: **Ayarlar → Performans** (Settings → Performance) veya adres çubuğuna `chrome://settings/performance` yapıştırın. Sekmelerin ne kadar çabuk etkin olmayan duruma geçeceğini seçin: Orta (Moderate), Dengeli (Balanced) veya Maksimum (Maximum).
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Chrome Ayarları, Performance (Performans) bölümü ve Memory Saver (Bellek Tasarrufu) anahtarı" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">Chrome’un Memory Saver (Bellek Tasarrufu) özelliği, yeni bir Chrome 157 profilinde kapalı.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+**Ayarlar → System and performance → Performance** altında **Automatically put tabs to sleep** seçeneğini işaretleyin ve bir sekmenin uykuya geçmeden önce ne kadar bekleyeceğini seçin.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Edge Ayarları, Performance bölümü: Automatically put tabs to sleep açık ve 15 dakikaya ayarlı" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Edge’in uyuyan sekmeleri varsayılan olarak açık: etkin olmayan sekmeler 15 dakika sonra uykuya geçer.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Belleğini hemen boşaltmak için bir sekmeye sağ tıklayıp **Sekmeyi boşalt** (Unload Tab) seçeneğini seçin; birkaç sekmeyi birlikte boşaltmak için önce onları seçin.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>uyuyan sekmeler yine de sekme şeridini doldurur. Bilgisayara yardımcı olurlar, odağınıza değil.</Catch>
+
+</Section>
+
+<Section id="which" title="Her şeyi yavaşlatan sekmeyi nasıl bulurum?">
+
+Chrome’da <Kbd>Shift</Kbd>+<Kbd>Esc</Kbd> tuşlarına basarak **Chrome Görev Yöneticisi**’ni (Chrome Task Manager) açın ve en çok bellek kullanan sekmelere bakın. Ağır olanları bir TabMerger grubuna kaydedip kapatın.
+
+{/* Screenshot still to capture by hand (needs a visible browser): the Chrome Task Manager window sorted by memory. */}
+
+<InstallCta>Chrome, Edge ve Firefox için ücretsiz. Başlamak için hesap gerekmez.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

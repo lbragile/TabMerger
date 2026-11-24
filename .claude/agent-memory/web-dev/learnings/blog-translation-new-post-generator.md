@@ -122,3 +122,8 @@ Run the template check again just before writing into the repo, to confirm en.md
 - Dual plurals: for count 2, ar (`_two`) and he give forms with no digit ("استيراد مجموعتين؟"), so check labels built from the catalog, not for a "2".
 - RTL ComparisonTable cells: a leading ".txt" or a Latin word next to a parenthesis is misplaced; start the cell with a native word ("ملف TXT من OneTab"). In RTL verifiers, strip `<bdi dir="ltr">…</bdi>` before rejecting →.
 - Keep a whole bold imperative in one bold (hi/tr can split the verb and add a second bold, breaking the strong-count parity).
+
+**Same-count bold mis-pairing:** a CJK bold like `**…閉じる。**こと` can pair with the next `**`, keeping the `<strong>` count and leaving no literal `**`, so the compile and count checks both miss it. Run a CommonMark flanking check over each `**X**` in the source: flag X ending in `p{P}`/`p{S}` with a letter right after, or starting with punctuation with a letter right before.
+
+- Strip `{/* … */}` MDX comments before English-token checks; a comment can satisfy a gloss check when the gloss itself is gone.
+- When a post reuses another post's figures and panels, a `{S:name}` token that extracts strings from the sibling's `<loc>.mdx` keeps alts, captions, browserFact and settings paths identical with no hand copying.

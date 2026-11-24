@@ -1,0 +1,170 @@
+export const post = {
+  slug: 'too-many-tabs-slow-browser',
+  title: 'Тормозит ли компьютер из-за большого количества вкладок?',
+  navTitle: 'Много вкладок — медленный компьютер',
+  seoTitle: 'Браузер тормозит из-за большого количества вкладок? Как это исправить',
+  description:
+    'Браузер тормозит из-за большого количества открытых вкладок? Каждая вкладка занимает память. Включите в браузере режим сна для вкладок, а неиспользуемые вкладки сохраните и закройте в TabMerger, не потеряв ни одной.',
+  shareSummary: 'Почему открытые вкладки всё замедляют и как освободить память, не потеряв их.',
+  dek: 'Самая быстрая вкладка та, что не открыта. Сохраните её, закройте и верните одним щелчком.',
+  published: '2026-12-04',
+  updated: '2026-12-04',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Функция Экономия памяти в Chrome освобождает память неактивных вкладок.',
+      source: 'Справка Chrome',
+      href: 'https://support.google.com/chrome/answer/12929150',
+    },
+    { text: 'Edge 158 переводит неактивные вкладки в спящий режим, по умолчанию через 15 минут.', source: 'edge://settings, 20 нояб. 2026 г.' },
+    { text: 'Firefox 159 умеет выгружать вкладку из её контекстного меню.', source: 'Текст меню Firefox 159' },
+    { text: 'TabMerger сохраняет все открытые окна, а затем закрывает их одним щелчком.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Много вкладок расходует больше памяти?',
+      answer:
+        'Да. Каждая открытая страница держит своё содержимое в памяти, а страницы, которые выполняют скрипты или воспроизводят медиа, нагружают ещё и процессор. Сколько именно, зависит от сайтов, поэтому одно лишь количество вкладок мало о чём говорит.',
+    },
+    {
+      question: 'Станет ли компьютер быстрее, если закрыть вкладки?',
+      answer:
+        'Закрытие вкладок освобождает занятую ими память. Сначала сохраните их в TabMerger (Объединить с текущими, затем Закрыть все окна), и вы ничего не потеряете: любую из них можно снова открыть одним щелчком.',
+    },
+    {
+      question: 'Хватит ли функции Экономия памяти или спящих вкладок?',
+      answer:
+        'Они освобождают память простаивающих вкладок, оставляя их на панели вкладок, и это помогает компьютеру. Но вкладки по-прежнему там, и их приходится просматривать; сохранить и закрыть их полезно и вам.',
+    },
+    {
+      question: 'Как узнать, какая вкладка занимает больше всего памяти?',
+      answer: 'В Chrome нажмите Shift+Esc, чтобы открыть диспетчер задач Chrome, и найдите вкладки, которые занимают больше всего памяти.',
+    },
+  ],
+  images: [
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-light.webp', alt: 'Меню Now Open («Сейчас открыто») в TabMerger с выделенным пунктом Close all windows («Закрыть все окна»), Close all browser windows in this group («Закрыть все окна браузера этой группы»), светлая тема' },
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-dark.webp', alt: 'Меню Now Open («Сейчас открыто») в TabMerger с выделенным пунктом Close all windows («Закрыть все окна»), Close all browser windows in this group («Закрыть все окна браузера этой группы»), тёмная тема' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Настройки Chrome, раздел Performance («Производительность») с переключателем Memory Saver («Экономия памяти»)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Параметры Edge, раздел Performance: включено Automatically put tabs to sleep, выбрано 15 минут' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/too-many-tabs-slow-browser/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/too-many-tabs-slow-browser/og.png', alt: 'Обложка «Do too many tabs slow your computer down?»: руководство TabMerger с меню Close all windows («Закрыть все окна»)' },
+  toc: [
+    { id: 'quick', label: 'Коротко' },
+    { id: 'why', label: 'Почему вкладки тормозят' },
+    { id: 'tabmerger', label: 'Сохранить и закрыть разом' },
+    { id: 'browser', label: 'Пусть браузер усыпляет вкладки' },
+    { id: 'which', label: 'Найти тяжёлую вкладку' },
+    { id: 'faq', label: 'Частые вопросы' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'Настройка памяти',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Параметры → System and performance → Performance',
+      firefox: 'Правый щелчок по вкладке → Выгрузить вкладку',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Да: каждая открытая вкладка занимает память, и когда их достаточно много, тормозит весь компьютер. Больше всего поможет **закрыть вкладки, которыми вы не пользуетесь, не теряя их**. В [TabMerger](/features) выберите **Объединить с текущими**, чтобы сохранить все открытые окна в группу, а затем **Закрыть все окна**: память освобождается, а любая вкладка остаётся на расстоянии одного щелчка. Для вкладок, которые остаются открытыми, включите функцию **Экономия памяти** (Memory Saver, Chrome) или **спящие вкладки** (Edge).
+
+</QuickAnswer>
+
+<InstallCta>Сохраните все окна, закройте их и верните память. Бесплатно для Chrome, Edge и Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="why" title="Почему открытые вкладки замедляют компьютер?">
+
+Каждая открытая вкладка — это живая веб-страница: её текст, изображения и скрипты остаются в памяти, а активные страницы (видео, прямые трансляции, веб-приложения) ещё и постоянно нагружают процессор. Когда браузеру и другим приложениям нужно больше памяти, чем есть у компьютера, всё начинает тормозить. Справка Chrome о сбоях сама называет нехватку памяти одной из причин сбоев, и первое её решение — закрыть вкладки.
+
+Сколько стоит вкладка, целиком зависит от сайта, так что безопасного числа нет. Практическое правило: если вы сегодня в неё не заглядывали, ей незачем быть открытой.
+
+</Section>
+
+<Section id="tabmerger" title="Как закрыть вкладки, не потеряв их?">
+
+Здесь [TabMerger](/features) показывает себя во всей красе. Два шага, все окна сразу:
+
+1. Нажмите **Добавить группу**, затем в её меню **⋯** выберите **Объединить с текущими**: все открытые окна и вкладки сохранятся в группе.
+2. Нажмите правой кнопкой мыши на **Сейчас открыто** на боковой панели и выберите **Закрыть все окна**. Окна браузера закроются, а группа сохранит все вкладки.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/too-many-tabs-slow-browser/tm-close-all-menu" alt="Меню Now Open («Сейчас открыто») в TabMerger с выделенным пунктом Close all windows («Закрыть все окна»), Close all browser windows in this group («Закрыть все окна браузера этой группы»), светлая тема" darkAlt="Меню Now Open («Сейчас открыто») в TabMerger с выделенным пунктом Close all windows («Закрыть все окна»), Close all browser windows in this group («Закрыть все окна браузера этой группы»), тёмная тема" boxes={[{ id: 'close-all', label: 'Закрыть все окна' }]} source="TabMerger 3.16.1">После сохранения один пункт меню закрывает все открытые окна.</ThemedScreenshot>
+
+Когда вкладки снова понадобятся, откройте группу и снова откройте одну вкладку, одно окно или всё сразу. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> находит любую сохранённую вкладку одним нажатием, а автосохранение может сохранять вкладки по расписанию. Больше привычек — в нашей [системе для тех, у кого слишком много вкладок](/blog/manage-too-many-tabs).
+
+</Section>
+
+<Section id="browser" title="Как заставить браузер усыплять неиспользуемые вкладки?">
+
+Для вкладок, которые остаются открытыми, браузер может освобождать память, пока вы ими не пользуетесь. При щелчке они загружаются заново.
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+Включите **Экономию памяти** (Memory Saver): **Настройки → Производительность** (Settings → Performance) или вставьте `chrome://settings/performance` в адресную строку. Выберите, как быстро вкладки становятся неактивными: Умеренная экономия памяти (Moderate), Сбалансированная экономия памяти (Balanced) или Максимальная экономия памяти (Maximum).
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Настройки Chrome, раздел Performance («Производительность») с переключателем Memory Saver («Экономия памяти»)" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">Memory Saver («Экономия памяти») в Chrome, выключенная в новом профиле Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Включите **Automatically put tabs to sleep** в разделе **Параметры → System and performance → Performance** и выберите, сколько вкладка ждёт, прежде чем уснуть.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Параметры Edge, раздел Performance: включено Automatically put tabs to sleep, выбрано 15 минут" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Спящие вкладки Edge включены по умолчанию: неактивные вкладки засыпают через 15 минут.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Щёлкните вкладку правой кнопкой мыши и выберите **Выгрузить вкладку** (Unload Tab), чтобы сразу освободить её память; чтобы выгрузить несколько вкладок вместе, сначала выделите их.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>спящие вкладки всё равно загромождают панель вкладок. Они помогают компьютеру, а не вашей сосредоточенности.</Catch>
+
+</Section>
+
+<Section id="which" title="Как найти вкладку, которая всё тормозит?">
+
+В Chrome нажмите <Kbd>Shift</Kbd>+<Kbd>Esc</Kbd>, чтобы открыть **диспетчер задач Chrome** (Chrome Task Manager), и найдите вкладки, которые занимают больше всего памяти. Тяжёлые сохраните в группу TabMerger и закройте.
+
+{/* Screenshot still to capture by hand (needs a visible browser): the Chrome Task Manager window sorted by memory. */}
+
+<InstallCta>Бесплатно для Chrome, Edge и Firefox. Для начала аккаунт не нужен.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Частые вопросы">
+
+<Faq items={post.faq} />
+
+</Section>

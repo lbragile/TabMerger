@@ -1,0 +1,170 @@
+export const post = {
+  slug: 'too-many-tabs-slow-browser',
+  title: 'האם יותר מדי כרטיסיות מאטות את המחשב?',
+  navTitle: 'יותר מדי כרטיסיות, מחשב איטי',
+  seoTitle: 'יותר מדי כרטיסיות מאטות את הדפדפן? כך פותרים את זה',
+  description:
+    'הדפדפן איטי בגלל יותר מדי כרטיסיות פתוחות? כל כרטיסייה צורכת זיכרון. מפעילים את ההגדרה של הדפדפן שמרדימה כרטיסיות, ושומרים וסוגרים עם TabMerger את הכרטיסיות שלא משתמשים בהן, בלי לאבד אף אחת.',
+  shareSummary: 'למה כרטיסיות פתוחות מאטות הכול, ואיך משחררים זיכרון בלי לאבד אותן.',
+  dek: 'הכרטיסייה המהירה ביותר היא זו שלא פתוחה. שומרים, סוגרים ומחזירים אותה בלחיצה.',
+  published: '2026-12-04',
+  updated: '2026-12-04',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'מצב חיסכון בזיכרון של Chrome משחרר זיכרון מכרטיסיות לא פעילות.',
+      source: 'העזרה של Chrome',
+      href: 'https://support.google.com/chrome/answer/12929150',
+    },
+    { text: 'Edge 158 מעביר כרטיסיות לא פעילות למצב שינה, כברירת מחדל אחרי 15 דקות.', source: 'edge://settings, 20 בנובמבר 2026' },
+    { text: 'ב-Firefox 159 אפשר לבטל טעינה של כרטיסייה מתפריט הלחיצה הימנית שלה.', source: 'נוסח התפריטים של Firefox 159' },
+    { text: 'TabMerger שומר את כל החלונות הפתוחים, ואז סוגר את כולם בלחיצה אחת.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'האם הרבה כרטיסיות צורכות יותר זיכרון?',
+      answer:
+        'כן. כל דף פתוח מחזיק את התוכן שלו בזיכרון, ודפים שמריצים סקריפטים או מנגנים מדיה צורכים גם את המעבד. כמה בדיוק תלוי באתרים, כך שמספר הכרטיסיות לבדו לא אומר הרבה.',
+    },
+    {
+      question: 'האם סגירת כרטיסיות תאיץ את המחשב?',
+      answer:
+        'סגירת כרטיסיות משחררת את הזיכרון שהן צורכות. שומרים אותן קודם עם TabMerger (מיזוג עם הנוכחיים, ואז סגירת כל החלונות) ולא מאבדים כלום: כל אחת מהן נפתחת שוב בלחיצה.',
+    },
+    {
+      question: 'האם מצב חיסכון בזיכרון או כרטיסיות רדומות מספיקים?',
+      answer:
+        'הם משחררים זיכרון מכרטיסיות שלא בשימוש ומשאירים אותן בשורת הכרטיסיות, וזה עוזר למחשב. אבל הכרטיסיות עדיין שם וצריך לעבור עליהן; שמירה וסגירה שלהן עוזרות גם לכם.',
+    },
+    {
+      question: 'איך רואים איזו כרטיסייה צורכת הכי הרבה זיכרון?',
+      answer: 'ב-Chrome לוחצים על Shift+Esc כדי לפתוח את מנהל המשימות של Chrome, ומחפשים את הכרטיסיות שצורכות הכי הרבה זיכרון.',
+    },
+  ],
+  images: [
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-light.webp', alt: 'התפריט של Now Open (פתוח עכשיו) ב-TabMerger, כשהאפשרות Close all windows (סגירת כל החלונות), Close all browser windows in this group (סגירת כל חלונות הדפדפן בקבוצה), מודגשת, ערכת נושא בהירה' },
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-dark.webp', alt: 'התפריט של Now Open (פתוח עכשיו) ב-TabMerger, כשהאפשרות Close all windows (סגירת כל החלונות), Close all browser windows in this group (סגירת כל חלונות הדפדפן בקבוצה), מודגשת, ערכת נושא כהה' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'ההגדרות של Chrome בקטע Performance (ביצועים), עם המתג Memory Saver (מצב חיסכון בזיכרון)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'ההגדרות של Edge בקטע Performance, כשהאפשרות Automatically put tabs to sleep מופעלת ומוגדרת ל-15 דקות' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/too-many-tabs-slow-browser/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/too-many-tabs-slow-browser/og.png', alt: 'כרטיס הכותרת Do too many tabs slow your computer down?: מדריך של TabMerger, עם התפריט Close all windows (סגירת כל החלונות)' },
+  toc: [
+    { id: 'quick', label: 'תשובה קצרה' },
+    { id: 'why', label: 'למה כרטיסיות מאטות' },
+    { id: 'tabmerger', label: 'שומרים וסוגרים בבת אחת' },
+    { id: 'browser', label: 'נותנים לדפדפן להרדים כרטיסיות' },
+    { id: 'which', label: 'מוצאים את הכרטיסייה הכבדה' },
+    { id: 'faq', label: 'שאלות נפוצות' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'הגדרת זיכרון',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'הגדרות ← System and performance → Performance',
+      firefox: 'לחיצה ימנית על כרטיסייה ← ביטול טעינת לשונית',
+    },
+  },
+}
+
+<QuickAnswer>
+
+כן: כל כרטיסייה פתוחה צורכת זיכרון, ומספיק מהן מאטות את המחשב כולו. הרווח הגדול ביותר הוא **לסגור את הכרטיסיות שלא משתמשים בהן, בלי לאבד אותן**. ב-[TabMerger](/features) בוחרים **מיזוג עם הנוכחיים** כדי לשמור את כל החלונות הפתוחים בקבוצה, ואז **סגירת כל החלונות**: הזיכרון משתחרר וכל כרטיסייה נמצאת במרחק לחיצה. לכרטיסיות שנשארות פתוחות, מפעילים את **מצב חיסכון בזיכרון** (<bdi dir="ltr">Memory Saver</bdi> ב-Chrome) או את **הכרטיסיות הרדומות** (ב-Edge).
+
+</QuickAnswer>
+
+<InstallCta>שומרים כל חלון, סוגרים את כולם ומקבלים את הזיכרון בחזרה. בחינם ל-Chrome, ל-Edge ול-Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="why" title="למה כרטיסיות פתוחות מאטות את המחשב?">
+
+כל כרטיסייה פתוחה היא דף אינטרנט חי: הטקסט, התמונות והסקריפטים שלו נשארים בזיכרון, ודפים עמוסים (וידאו, פידים חיים, אפליקציות אינטרנט) ממשיכים לצרוך גם את המעבד. כשהדפדפן והאפליקציות האחרות צריכים יותר זיכרון ממה שיש במחשב, הכול נעשה איטי יותר. העזרה של Chrome לקריסות בעצמה מונה מחסור בזיכרון כאחת מסיבות הקריסה, והפתרון הראשון שלה הוא לסגור כרטיסיות.
+
+כמה כרטיסייה עולה תלוי לגמרי באתר, כך שאין מספר בטוח. כלל האצבע: אם לא הסתכלתם עליה היום, היא לא צריכה להיות פתוחה.
+
+</Section>
+
+<Section id="tabmerger" title="איך סוגרים כרטיסיות בלי לאבד אותן?">
+
+כאן [TabMerger](/features) מצטיין. שני צעדים, כל החלונות בבת אחת:
+
+1. לוחצים על **הוספת קבוצה**, ואז בוחרים **מיזוג עם הנוכחיים** בתפריט **⋯** שלה: כל החלונות והכרטיסיות הפתוחים נשמרים בקבוצה.
+2. לוחצים לחיצה ימנית על **פתוח עכשיו** בסרגל הצד ובוחרים **סגירת כל החלונות**. חלונות הדפדפן נסגרים; הקבוצה שומרת כל כרטיסייה.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/too-many-tabs-slow-browser/tm-close-all-menu" alt="התפריט של Now Open (פתוח עכשיו) ב-TabMerger, כשהאפשרות Close all windows (סגירת כל החלונות), Close all browser windows in this group (סגירת כל חלונות הדפדפן בקבוצה), מודגשת, ערכת נושא בהירה" darkAlt="התפריט של Now Open (פתוח עכשיו) ב-TabMerger, כשהאפשרות Close all windows (סגירת כל החלונות), Close all browser windows in this group (סגירת כל חלונות הדפדפן בקבוצה), מודגשת, ערכת נושא כהה" boxes={[{ id: 'close-all', label: 'סגירת כל החלונות' }]} source="TabMerger 3.16.1">אחרי השמירה, פריט תפריט אחד סוגר את כל החלונות הפתוחים.</ThemedScreenshot>
+
+כשצריך אותן שוב, פותחים את הקבוצה ופותחים מחדש כרטיסייה אחת, חלון אחד או הכול. <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> מוצא כל כרטיסייה שמורה בהקשה אחת, והשמירה האוטומטית יכולה לשמור בשבילכם לפי לוח זמנים. עוד הרגלים בשגרה שלנו [להתמודדות עם יותר מדי כרטיסיות](/blog/manage-too-many-tabs).
+
+</Section>
+
+<Section id="browser" title="איך גורמים לדפדפן להרדים כרטיסיות לא פעילות?">
+
+בכרטיסיות שנשארות פתוחות, הדפדפן יכול לשחרר את הזיכרון שלהן כל עוד לא משתמשים בהן. הן נטענות מחדש כשלוחצים עליהן.
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+מפעילים את **מצב חיסכון בזיכרון** (<bdi dir="ltr">Memory Saver</bdi>): **הגדרות ← ביצועים** (<bdi dir="ltr">Settings → Performance</bdi>), או מדביקים את <bdi dir="ltr">`chrome://settings/performance`</bdi> בשורת הכתובת. בוחרים כמה מהר כרטיסיות הופכות ללא פעילות: בינוני (<bdi dir="ltr">Moderate</bdi>), מאוזן (<bdi dir="ltr">Balanced</bdi>) או מקסימום (<bdi dir="ltr">Maximum</bdi>).
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="ההגדרות של Chrome בקטע Performance (ביצועים), עם המתג Memory Saver (מצב חיסכון בזיכרון)" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">ההגדרה <bdi dir="ltr">Memory Saver</bdi> (מצב חיסכון בזיכרון) ב-Chrome, כבויה בפרופיל חדש של Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+מסמנים את <bdi dir="ltr">**Automatically put tabs to sleep**</bdi> תחת **הגדרות** ← <bdi dir="ltr">**System and performance → Performance**</bdi>, ובוחרים כמה זמן כרטיסייה מחכה לפני שהיא נרדמת.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="ההגדרות של Edge בקטע Performance, כשהאפשרות Automatically put tabs to sleep מופעלת ומוגדרת ל-15 דקות" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">הכרטיסיות הרדומות של Edge מופעלות כברירת מחדל: כרטיסיות לא פעילות נרדמות אחרי 15 דקות.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+לוחצים לחיצה ימנית על כרטיסייה ובוחרים **ביטול טעינת לשונית** (<bdi dir="ltr">Unload Tab</bdi>) כדי לשחרר את הזיכרון שלה מיד; כדי לבטל טעינה של כמה כרטיסיות יחד, בוחרים אותן קודם.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>כרטיסיות רדומות עדיין מצופפות את שורת הכרטיסיות. הן עוזרות למחשב, לא לריכוז שלכם.</Catch>
+
+</Section>
+
+<Section id="which" title="איך מוצאים את הכרטיסייה שמאטה את הכול?">
+
+ב-Chrome לוחצים על <bdi dir="ltr"><Kbd>Shift</Kbd>+<Kbd>Esc</Kbd></bdi> כדי לפתוח את **מנהל המשימות של Chrome** (<bdi dir="ltr">Chrome Task Manager</bdi>), ומחפשים את הכרטיסיות שצורכות הכי הרבה זיכרון. שומרים את הכבדות בקבוצה של TabMerger וסוגרים אותן.
+
+{/* Screenshot still to capture by hand (needs a visible browser): the Chrome Task Manager window sorted by memory. */}
+
+<InstallCta>בחינם ל-Chrome, ל-Edge ול-Firefox. לא צריך חשבון כדי להתחיל.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="שאלות נפוצות">
+
+<Faq items={post.faq} />
+
+</Section>

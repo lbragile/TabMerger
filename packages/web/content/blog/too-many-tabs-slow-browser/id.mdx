@@ -1,0 +1,170 @@
+export const post = {
+  slug: 'too-many-tabs-slow-browser',
+  title: 'Apakah terlalu banyak tab membuat komputer lambat?',
+  navTitle: 'Terlalu banyak tab, komputer lambat',
+  seoTitle: 'Terlalu Banyak Tab Bikin Browser Lambat? Begini Cara Mengatasinya',
+  description:
+    'Browser lambat karena terlalu banyak tab terbuka? Setiap tab memakai memori. Aktifkan setelan browser yang menidurkan tab, lalu simpan dan tutup tab yang tidak Anda pakai dengan TabMerger, tanpa kehilangan satu pun.',
+  shareSummary: 'Kenapa tab yang terbuka bikin semuanya lambat, dan cara membebaskan memori tanpa kehilangannya.',
+  dek: 'Tab tercepat adalah tab yang tidak terbuka. Simpan, tutup, dan buka lagi dengan sekali klik.',
+  published: '2026-12-04',
+  updated: '2026-12-04',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Penghemat Memori di Chrome membebaskan memori dari tab yang tidak aktif.',
+      source: 'Bantuan Chrome',
+      href: 'https://support.google.com/chrome/answer/12929150',
+    },
+    { text: 'Edge 158 menidurkan tab yang tidak aktif, secara default setelah 15 menit.', source: 'edge://settings, 20 Nov 2026' },
+    { text: 'Firefox 159 bisa membongkar tab dari menu klik kanannya.', source: 'Teks menu Firefox 159' },
+    { text: 'TabMerger menyimpan semua jendela yang terbuka, lalu menutupnya dengan sekali klik.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Apakah banyak tab memakai lebih banyak memori?',
+      answer:
+        'Ya. Setiap halaman yang terbuka menyimpan kontennya di memori, dan halaman yang menjalankan skrip atau memutar media juga memakai prosesor. Seberapa banyak bergantung pada situsnya, jadi jumlah tab saja tidak cukup untuk menilainya.',
+    },
+    {
+      question: 'Apakah menutup tab akan membuat komputer saya lebih cepat?',
+      answer:
+        'Menutup tab membebaskan memori yang dipakainya. Simpan dulu dengan TabMerger (Gabungkan dengan sesi saat ini, lalu Tutup semua jendela) dan tidak ada yang hilang: buka lagi tab mana pun dengan sekali klik.',
+    },
+    {
+      question: 'Apakah Penghemat Memori atau tab tidur sudah cukup?',
+      answer:
+        'Keduanya membebaskan memori dari tab yang menganggur sambil tetap menyimpannya di strip tab, dan itu membantu komputer. Namun, tab-tab itu masih ada dan harus Anda telusuri; menyimpan lalu menutupnya juga membantu Anda.',
+    },
+    {
+      question: 'Bagaimana cara melihat tab mana yang paling banyak memakai memori?',
+      answer: 'Di Chrome, tekan Shift+Esc untuk membuka Pengelola Tugas Chrome, lalu cari tab yang paling banyak memakai memori.',
+    },
+  ],
+  images: [
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-light.webp', alt: 'Menu Now Open (Sedang Terbuka) di TabMerger dengan Close all windows (Tutup semua jendela), Close all browser windows in this group (Tutup semua jendela browser di grup ini), disorot, tema terang' },
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-dark.webp', alt: 'Menu Now Open (Sedang Terbuka) di TabMerger dengan Close all windows (Tutup semua jendela), Close all browser windows in this group (Tutup semua jendela browser di grup ini), disorot, tema gelap' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Setelan Chrome, Performance (Performa), dengan tombol Memory Saver (Penghemat Memori)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Pengaturan Edge, Performance, dengan Automatically put tabs to sleep aktif dan disetel ke 15 menit' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/too-many-tabs-slow-browser/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/too-many-tabs-slow-browser/og.png', alt: 'Kartu judul “Do too many tabs slow your computer down?”: panduan TabMerger, dengan menu Close all windows (Tutup semua jendela)' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'why', label: 'Kenapa tab bikin lambat' },
+    { id: 'tabmerger', label: 'Simpan dan tutup sekaligus' },
+    { id: 'browser', label: 'Biarkan browser menidurkan tab' },
+    { id: 'which', label: 'Temukan tab yang berat' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'Setelan memori',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Pengaturan → System and performance → Performance',
+      firefox: 'Klik kanan tab → Bongkar Tab',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Ya: setiap tab yang terbuka memakai memori, dan kalau sudah cukup banyak, seluruh komputer jadi lambat. Cara paling ampuh adalah **menutup tab yang tidak Anda pakai, tanpa kehilangannya**. Di [TabMerger](/features), pilih **Gabungkan dengan sesi saat ini** untuk menyimpan semua jendela yang terbuka ke dalam grup, lalu **Tutup semua jendela**: memori pun bebas dan setiap tab hanya sejauh satu klik. Untuk tab yang tetap Anda buka, aktifkan **Penghemat Memori** (Memory Saver, Chrome) atau **tab tidur** (Edge).
+
+</QuickAnswer>
+
+<InstallCta>Simpan semua jendela, tutup semuanya, dapatkan kembali memorinya. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="why" title="Kenapa tab yang terbuka membuat komputer lambat?">
+
+Setiap tab yang terbuka adalah halaman web yang hidup: teks, gambar, dan skripnya tetap di memori, dan halaman yang sibuk (video, siaran langsung, aplikasi web) juga terus memakai prosesor. Saat browser dan aplikasi lain membutuhkan lebih banyak memori daripada yang dimiliki komputer, semuanya melambat. Bantuan Chrome sendiri tentang crash menyebut kehabisan memori sebagai salah satu penyebab crash, dan solusi pertamanya adalah menutup tab.
+
+Beban sebuah tab sepenuhnya bergantung pada situsnya, jadi tidak ada angka yang aman. Aturan praktisnya: kalau Anda belum melihatnya hari ini, tab itu tidak perlu terbuka.
+
+</Section>
+
+<Section id="tabmerger" title="Bagaimana cara menutup tab tanpa kehilangannya?">
+
+Di sinilah [TabMerger](/features) unggul. Dua langkah, semua jendela sekaligus:
+
+1. Klik **Tambah Grup**, lalu pilih **Gabungkan dengan sesi saat ini** di menu **⋯** grup itu: semua jendela dan tab yang terbuka disimpan ke dalam grup.
+2. Klik kanan **Sedang Terbuka** di bilah samping dan pilih **Tutup semua jendela**. Jendela browser tertutup; grup menyimpan setiap tab.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/too-many-tabs-slow-browser/tm-close-all-menu" alt="Menu Now Open (Sedang Terbuka) di TabMerger dengan Close all windows (Tutup semua jendela), Close all browser windows in this group (Tutup semua jendela browser di grup ini), disorot, tema terang" darkAlt="Menu Now Open (Sedang Terbuka) di TabMerger dengan Close all windows (Tutup semua jendela), Close all browser windows in this group (Tutup semua jendela browser di grup ini), disorot, tema gelap" boxes={[{ id: 'close-all', label: 'Tutup semua jendela' }]} source="TabMerger 3.16.1">Setelah disimpan, satu item menu menutup semua jendela yang terbuka.</ThemedScreenshot>
+
+Saat Anda membutuhkannya lagi, buka grupnya dan buka kembali satu tab, satu jendela, atau semuanya. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> menemukan tab tersimpan mana pun dalam satu ketukan, dan simpan otomatis bisa menyimpan sesuai jadwal. Kebiasaan lainnya ada di [rutinitas kami untuk terlalu banyak tab](/blog/manage-too-many-tabs).
+
+</Section>
+
+<Section id="browser" title="Bagaimana cara membuat browser menidurkan tab yang menganggur?">
+
+Untuk tab yang tetap Anda buka, browser bisa membebaskan memorinya selama tab itu tidak dipakai. Tab dimuat ulang saat Anda mengkliknya.
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+Aktifkan **Penghemat Memori** (Memory Saver): **Setelan → Performa** (Settings → Performance), atau tempel `chrome://settings/performance` di kolom alamat. Pilih seberapa cepat tab menjadi tidak aktif: Sedang (Moderate), Seimbang (Balanced), atau Maksimum (Maximum).
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Setelan Chrome, Performance (Performa), dengan tombol Memory Saver (Penghemat Memori)" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">Memory Saver (Penghemat Memori) Chrome, nonaktif di profil Chrome 157 yang baru.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Centang **Automatically put tabs to sleep** di **Pengaturan → System and performance → Performance**, lalu pilih berapa lama sebuah tab menunggu sebelum tidur.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Pengaturan Edge, Performance, dengan Automatically put tabs to sleep aktif dan disetel ke 15 menit" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Tab tidur di Edge, aktif secara default: tab yang tidak aktif tidur setelah 15 menit.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Klik kanan sebuah tab dan pilih **Bongkar Tab** (Unload Tab) untuk langsung membebaskan memorinya; pilih beberapa tab terlebih dulu untuk membongkarnya sekaligus.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>tab yang tidur tetap memenuhi strip tab. Fitur ini membantu komputer, bukan fokus Anda.</Catch>
+
+</Section>
+
+<Section id="which" title="Bagaimana cara menemukan tab yang bikin semuanya lambat?">
+
+Di Chrome, tekan <Kbd>Shift</Kbd>+<Kbd>Esc</Kbd> untuk membuka **Pengelola Tugas Chrome** (Chrome Task Manager), lalu cari tab yang paling banyak memakai memori. Simpan tab yang berat ke grup TabMerger, lalu tutup.
+
+{/* Screenshot still to capture by hand (needs a visible browser): the Chrome Task Manager window sorted by memory. */}
+
+<InstallCta>Gratis untuk Chrome, Edge, dan Firefox. Tidak perlu akun untuk memulai.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

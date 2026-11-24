@@ -1,0 +1,170 @@
+export const post = {
+  slug: 'too-many-tabs-slow-browser',
+  title: 'هل كثرة علامات التبويب تبطئ الكمبيوتر؟',
+  navTitle: 'علامات تبويب كثيرة وكمبيوتر بطيء',
+  seoTitle: 'كثرة علامات التبويب تبطئ المتصفح؟ إليك الحل',
+  description:
+    'هل أصبح المتصفح بطيئًا بسبب كثرة علامات التبويب المفتوحة؟ كل علامة تبويب تستهلك الذاكرة. فعّل إعداد المتصفح الذي يضع علامات التبويب في وضع السكون، واحفظ علامات التبويب التي لا تستخدمها وأغلقها باستخدام TabMerger، دون أن تفقد أيًّا منها.',
+  shareSummary: 'لماذا تبطئ علامات التبويب المفتوحة كل شيء، وكيف تحرر الذاكرة دون أن تفقدها.',
+  dek: 'أسرع علامة تبويب هي التي ليست مفتوحة. احفظها وأغلقها واستعدها بنقرة.',
+  published: '2026-12-04',
+  updated: '2026-12-04',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'تحرر ميزة توفير الذاكرة في Chrome الذاكرة من علامات التبويب غير النشطة.',
+      source: 'مساعدة Chrome',
+      href: 'https://support.google.com/chrome/answer/12929150',
+    },
+    { text: 'يضع Edge 158 علامات التبويب غير النشطة في وضع السكون، بعد 15 دقيقة افتراضيًا.', source: 'edge://settings، 20 نوفمبر 2026' },
+    { text: 'يستطيع Firefox 159 إلغاء تحميل علامة تبويب من قائمة النقر بزر الماوس الأيمن.', source: 'نص قوائم Firefox 159' },
+    { text: 'يحفظ TabMerger كل نافذة مفتوحة، ثم يغلقها كلها بنقرة واحدة.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'هل تستهلك علامات التبويب الكثيرة ذاكرة أكبر؟',
+      answer:
+        'نعم. تحتفظ كل صفحة مفتوحة بمحتواها في الذاكرة، والصفحات التي تشغّل نصوصًا برمجية أو تعرض وسائط تستهلك المعالج أيضًا. المقدار يعتمد على المواقع، لذلك لا يكفي عدد علامات التبويب وحده للحكم.',
+    },
+    {
+      question: 'هل يصبح الكمبيوتر أسرع إذا أغلقت علامات التبويب؟',
+      answer:
+        'إغلاق علامات التبويب يحرر الذاكرة التي تستهلكها. احفظها أولًا باستخدام TabMerger (دمج مع الحالية، ثم إغلاق كل النوافذ) ولن تفقد شيئًا: أعد فتح أي منها بنقرة.',
+    },
+    {
+      question: 'هل تكفي ميزة توفير الذاكرة أو علامات التبويب النائمة؟',
+      answer:
+        'تحرر الذاكرة من علامات التبويب الخاملة مع إبقائها في شريط علامات التبويب، وهذا يساعد الكمبيوتر. لكن علامات التبويب تبقى أمامك وعليك تصفحها؛ وحفظها ثم إغلاقها يساعدك أنت أيضًا.',
+    },
+    {
+      question: 'كيف أعرف أي علامة تبويب تستهلك أكبر قدر من الذاكرة؟',
+      answer: 'في Chrome، اضغط Shift+Esc لفتح إدارة مهام Chrome وابحث عن علامات التبويب التي تستهلك أكبر قدر من الذاكرة.',
+    },
+  ],
+  images: [
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-light.webp', alt: 'قائمة Now Open (المفتوحة الآن) في TabMerger مع تمييز الخيار Close all windows (إغلاق كل النوافذ)، Close all browser windows in this group (إغلاق كل نوافذ المتصفح في هذه المجموعة)، المظهر الفاتح' },
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-dark.webp', alt: 'قائمة Now Open (المفتوحة الآن) في TabMerger مع تمييز الخيار Close all windows (إغلاق كل النوافذ)، Close all browser windows in this group (إغلاق كل نوافذ المتصفح في هذه المجموعة)، المظهر الداكن' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'إعدادات Chrome، قسم Performance (الأداء)، مع مفتاح Memory Saver (توفير الذاكرة)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'إعدادات Edge، قسم Performance، والخيار Automatically put tabs to sleep مفعّل ومضبوط على 15 دقيقة' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/too-many-tabs-slow-browser/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/too-many-tabs-slow-browser/og.png', alt: 'بطاقة العنوان Do too many tabs slow your computer down?: دليل من TabMerger، مع قائمة Close all windows (إغلاق كل النوافذ)' },
+  toc: [
+    { id: 'quick', label: 'إجابة سريعة' },
+    { id: 'why', label: 'لماذا تبطئ علامات التبويب' },
+    { id: 'tabmerger', label: 'احفظ وأغلق دفعة واحدة' },
+    { id: 'browser', label: 'دع المتصفح ينوّم علامات التبويب' },
+    { id: 'which', label: 'اعثر على علامة التبويب الثقيلة' },
+    { id: 'faq', label: 'الأسئلة الشائعة' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'إعداد الذاكرة',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'الإعدادات ← System and performance → Performance',
+      firefox: 'انقر بزر الماوس الأيمن على علامة تبويب ← ألغ التحميل',
+    },
+  },
+}
+
+<QuickAnswer>
+
+نعم: كل علامة تبويب مفتوحة تستهلك الذاكرة، وإذا كثرت بما يكفي أبطأت الكمبيوتر كله. أكبر مكسب هو أن **تغلق علامات التبويب التي لا تستخدمها، دون أن تفقدها**. في [TabMerger](/features)، اختر **دمج مع الحالية** لحفظ كل نافذة مفتوحة في مجموعة، ثم **إغلاق كل النوافذ**: تتحرر الذاكرة وتبقى كل علامة تبويب على بعد نقرة. ولعلامات التبويب التي تبقيها مفتوحة، فعّل **توفير الذاكرة** (<bdi dir="ltr">Memory Saver</bdi> في Chrome) أو **علامات التبويب النائمة** (في Edge).
+
+</QuickAnswer>
+
+<InstallCta>احفظ كل النوافذ، وأغلقها كلها، واستعد الذاكرة. مجاني لـ Chrome وEdge وFirefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="why" title="لماذا تبطئ علامات التبويب المفتوحة الكمبيوتر؟">
+
+كل علامة تبويب مفتوحة هي صفحة ويب حية: نصوصها وصورها ونصوصها البرمجية تبقى في الذاكرة، والصفحات النشطة (الفيديو، والبث المباشر، وتطبيقات الويب) تواصل استهلاك المعالج أيضًا. وعندما يحتاج المتصفح وتطبيقاتك الأخرى إلى ذاكرة أكثر مما في الكمبيوتر، يصبح كل شيء أبطأ. ومساعدة Chrome نفسها الخاصة بالأعطال تذكر نفاد الذاكرة سببًا للأعطال، وأول حل تقترحه هو إغلاق علامات التبويب.
+
+تكلفة علامة التبويب تعتمد كليًا على الموقع، لذلك لا يوجد عدد آمن. القاعدة العملية: إن لم تنظر إليها اليوم، فلا داعي لأن تبقى مفتوحة.
+
+</Section>
+
+<Section id="tabmerger" title="كيف أغلق علامات التبويب دون أن أفقدها؟">
+
+هنا يتألق [TabMerger](/features). خطوتان، وكل النوافذ دفعة واحدة:
+
+1. انقر على **إضافة مجموعة**، ثم اختر **دمج مع الحالية** من قائمة **⋯** الخاصة بها: تُحفظ كل نافذة وعلامة تبويب مفتوحة في المجموعة.
+2. انقر بزر الماوس الأيمن على **المفتوحة الآن** في الشريط الجانبي واختر **إغلاق كل النوافذ**. تُغلق نوافذ المتصفح، وتحتفظ المجموعة بكل علامة تبويب.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/too-many-tabs-slow-browser/tm-close-all-menu" alt="قائمة Now Open (المفتوحة الآن) في TabMerger مع تمييز الخيار Close all windows (إغلاق كل النوافذ)، Close all browser windows in this group (إغلاق كل نوافذ المتصفح في هذه المجموعة)، المظهر الفاتح" darkAlt="قائمة Now Open (المفتوحة الآن) في TabMerger مع تمييز الخيار Close all windows (إغلاق كل النوافذ)، Close all browser windows in this group (إغلاق كل نوافذ المتصفح في هذه المجموعة)، المظهر الداكن" boxes={[{ id: 'close-all', label: 'إغلاق كل النوافذ' }]} source="TabMerger 3.16.1">بعد الحفظ، عنصر واحد في القائمة يغلق كل النوافذ المفتوحة.</ThemedScreenshot>
+
+عندما تحتاج إليها مجددًا، افتح المجموعة وأعد فتح علامة تبويب واحدة أو نافذة واحدة أو كل شيء. يعثر <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> على أي علامة تبويب محفوظة بضغطة واحدة، ويمكن للحفظ التلقائي أن يتولى الحفظ وفق جدول. مزيد من العادات في [روتيننا لكثرة علامات التبويب](/blog/manage-too-many-tabs).
+
+</Section>
+
+<Section id="browser" title="كيف أجعل المتصفح ينوّم علامات التبويب الخاملة؟">
+
+بالنسبة إلى علامات التبويب التي تبقيها مفتوحة، يستطيع المتصفح تحرير ذاكرتها ما دامت غير مستخدمة. ويُعاد تحميلها عندما تنقر عليها.
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+فعّل **توفير الذاكرة** (<bdi dir="ltr">Memory Saver</bdi>): **الإعدادات ← الأداء** (<bdi dir="ltr">Settings → Performance</bdi>)، أو الصق <bdi dir="ltr">`chrome://settings/performance`</bdi> في شريط العناوين. اختر مدى سرعة تحول علامات التبويب إلى غير نشطة: متوسطة (<bdi dir="ltr">Moderate</bdi>)، أو معتدلة (<bdi dir="ltr">Balanced</bdi>)، أو قصوى (<bdi dir="ltr">Maximum</bdi>).
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="إعدادات Chrome، قسم Performance (الأداء)، مع مفتاح Memory Saver (توفير الذاكرة)" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">ميزة <bdi dir="ltr">Memory Saver</bdi> (توفير الذاكرة) في Chrome، متوقفة في ملف شخصي جديد على Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+فعّل <bdi dir="ltr">**Automatically put tabs to sleep**</bdi> ضمن **الإعدادات** ← <bdi dir="ltr">**System and performance → Performance**</bdi>، واختر المدة التي تنتظرها علامة التبويب قبل أن تنام.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="إعدادات Edge، قسم Performance، والخيار Automatically put tabs to sleep مفعّل ومضبوط على 15 دقيقة" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">علامات التبويب النائمة في Edge مفعّلة افتراضيًا: تنام علامات التبويب غير النشطة بعد 15 دقيقة.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+انقر بزر الماوس الأيمن على علامة تبويب واختر **ألغ التحميل** (<bdi dir="ltr">Unload Tab</bdi>) لتحرير ذاكرتها فورًا؛ وحدد عدة علامات تبويب أولًا لإلغاء تحميلها معًا.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>علامات التبويب النائمة تظل تزحم شريط علامات التبويب. إنها تساعد الكمبيوتر، لا تركيزك.</Catch>
+
+</Section>
+
+<Section id="which" title="كيف أعثر على علامة التبويب التي تبطئ كل شيء؟">
+
+في Chrome، اضغط <bdi dir="ltr"><Kbd>Shift</Kbd>+<Kbd>Esc</Kbd></bdi> لفتح **إدارة مهام Chrome** (<bdi dir="ltr">Chrome Task Manager</bdi>) وابحث عن علامات التبويب التي تستهلك أكبر قدر من الذاكرة. احفظ الثقيلة منها في مجموعة TabMerger وأغلقها.
+
+{/* Screenshot still to capture by hand (needs a visible browser): the Chrome Task Manager window sorted by memory. */}
+
+<InstallCta>مجاني لـ Chrome وEdge وFirefox. لا تحتاج إلى حساب للبدء.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="الأسئلة الشائعة">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,170 @@
+export const post = {
+  slug: 'too-many-tabs-slow-browser',
+  title: 'क्या बहुत सारे टैब खोलने से कंप्यूटर स्लो हो जाता है?',
+  navTitle: 'बहुत सारे टैब, स्लो कंप्यूटर',
+  seoTitle: 'ज़्यादा टैब से ब्राउज़र स्लो हो रहा है? ऐसे ठीक करें',
+  description:
+    'बहुत सारे टैब खुले होने से ब्राउज़र स्लो हो गया है? हर खुला टैब मेमोरी इस्तेमाल करता है। ब्राउज़र में टैब को स्लीप में डालने वाली सेटिंग चालू करें, और जो टैब इस्तेमाल नहीं कर रहे उन्हें TabMerger से सेव करके बंद करें, एक भी टैब खोए बिना।',
+  shareSummary: 'खुले टैब सब कुछ स्लो क्यों करते हैं, और उन्हें खोए बिना मेमोरी कैसे खाली करें।',
+  dek: 'सबसे तेज़ टैब वह है जो खुला ही नहीं है। उसे सेव करें, बंद करें और एक क्लिक में वापस पाएँ।',
+  published: '2026-12-04',
+  updated: '2026-12-04',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Chrome का मेमोरी सेवर इनऐक्टिव टैब की मेमोरी खाली करता है।',
+      source: 'Chrome सहायता',
+      href: 'https://support.google.com/chrome/answer/12929150',
+    },
+    { text: 'Edge 158 इनऐक्टिव टैब को स्लीप में डाल देता है, डिफ़ॉल्ट रूप से 15 मिनट बाद।', source: 'edge://settings, 20 नवंबर 2026' },
+    { text: 'Firefox 159 राइट-क्लिक मेन्यू से किसी टैब को अनलोड कर सकता है।', source: 'Firefox 159 के मेन्यू का टेक्स्ट' },
+    { text: 'TabMerger हर खुली विंडो सेव करता है, फिर एक क्लिक में सबको बंद कर देता है।', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'क्या ज़्यादा टैब ज़्यादा मेमोरी इस्तेमाल करते हैं?',
+      answer:
+        'हाँ। हर खुला पेज अपना कंटेंट मेमोरी में रखता है, और जो पेज स्क्रिप्ट चलाते हैं या मीडिया चलाते हैं वे प्रोसेसर भी इस्तेमाल करते हैं। कितना, यह साइटों पर निर्भर करता है, इसलिए सिर्फ़ टैब की गिनती से पता नहीं चलता।',
+    },
+    {
+      question: 'क्या टैब बंद करने से मेरा कंप्यूटर तेज़ हो जाएगा?',
+      answer:
+        'टैब बंद करने से उनकी इस्तेमाल की हुई मेमोरी खाली हो जाती है। पहले उन्हें TabMerger से सेव करें (वर्तमान के साथ विलय करें, फिर सभी विंडो बंद करें) और कुछ नहीं खोएगा: किसी भी टैब को एक क्लिक में फिर से खोलें।',
+    },
+    {
+      question: 'क्या मेमोरी सेवर या स्लीपिंग टैब काफ़ी हैं?',
+      answer:
+        'ये बेकार पड़े टैब की मेमोरी खाली करते हैं और उन्हें टैब स्ट्रिप में बनाए रखते हैं, जिससे कंप्यूटर को मदद मिलती है। लेकिन टैब फिर भी वहीं रहते हैं और आपको उन्हें देखना पड़ता है; उन्हें सेव करके बंद करने से आपको भी मदद मिलती है।',
+    },
+    {
+      question: 'कैसे देखें कि कौन-सा टैब सबसे ज़्यादा मेमोरी इस्तेमाल कर रहा है?',
+      answer: 'Chrome में Chrome टास्क मैनेजर खोलने के लिए Shift+Esc दबाएँ और सबसे ज़्यादा मेमोरी इस्तेमाल करने वाले टैब ढूँढें।',
+    },
+  ],
+  images: [
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-light.webp', alt: 'TabMerger का Now Open (अभी खुले हुए) मेन्यू, जिसमें Close all windows (सभी विंडो बंद करें), Close all browser windows in this group (इस समूह की सभी ब्राउज़र विंडो बंद करें) हाइलाइट है, लाइट थीम' },
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-dark.webp', alt: 'TabMerger का Now Open (अभी खुले हुए) मेन्यू, जिसमें Close all windows (सभी विंडो बंद करें), Close all browser windows in this group (इस समूह की सभी ब्राउज़र विंडो बंद करें) हाइलाइट है, डार्क थीम' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Chrome की सेटिंग, Performance (परफ़ॉर्मेंस), Memory Saver (मेमोरी सेवर) स्विच के साथ' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Edge की Settings, Performance: Automatically put tabs to sleep चालू और 15 मिनट पर सेट' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/too-many-tabs-slow-browser/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/too-many-tabs-slow-browser/og.png', alt: 'टाइटल कार्ड “Do too many tabs slow your computer down?”: Close all windows (सभी विंडो बंद करें) मेन्यू के साथ एक TabMerger गाइड' },
+  toc: [
+    { id: 'quick', label: 'छोटा जवाब' },
+    { id: 'why', label: 'टैब से स्लो क्यों होता है' },
+    { id: 'tabmerger', label: 'एक बार में सेव करें और बंद करें' },
+    { id: 'browser', label: 'ब्राउज़र को टैब स्लीप में डालने दें' },
+    { id: 'which', label: 'भारी टैब ढूँढें' },
+    { id: 'faq', label: 'अक्सर पूछे जाने वाले प्रश्न' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'मेमोरी सेटिंग',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Settings → System and performance → Performance',
+      firefox: 'टैब पर राइट-क्लिक करें → Unload Tab',
+    },
+  },
+}
+
+<QuickAnswer>
+
+हाँ: हर खुला टैब मेमोरी इस्तेमाल करता है, और जब ये काफ़ी हो जाते हैं तो पूरा कंप्यूटर स्लो हो जाता है। सबसे बड़ा फ़ायदा है **जो टैब इस्तेमाल नहीं हो रहे उन्हें बिना खोए बंद करना**। [TabMerger](/features) में हर खुली विंडो को एक ग्रुप में सेव करने के लिए **वर्तमान के साथ विलय करें** चुनें, फिर **सभी विंडो बंद करें**: मेमोरी खाली हो जाती है और हर टैब बस एक क्लिक दूर रहता है। जो टैब आप खुले रखते हैं, उनके लिए **मेमोरी सेवर** (Memory Saver, Chrome) या **स्लीपिंग टैब** (Edge) चालू करें।
+
+</QuickAnswer>
+
+<InstallCta>हर विंडो सेव करें, सब बंद करें, मेमोरी वापस पाएँ। Chrome, Edge और Firefox के लिए मुफ़्त।</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="why" title="खुले टैब कंप्यूटर को स्लो क्यों करते हैं?">
+
+हर खुला टैब एक चालू वेब पेज है: उसका टेक्स्ट, इमेज और स्क्रिप्ट मेमोरी में रहते हैं, और व्यस्त पेज (वीडियो, लाइव फ़ीड, वेब ऐप) प्रोसेसर भी इस्तेमाल करते रहते हैं। जब ब्राउज़र और आपके दूसरे ऐप को कंप्यूटर में मौजूद मेमोरी से ज़्यादा मेमोरी चाहिए होती है, तो सब कुछ स्लो हो जाता है। Chrome की क्रैश वाली सहायता खुद मेमोरी खत्म होने को क्रैश की एक वजह बताती है, और उसका पहला उपाय टैब बंद करना है।
+
+एक टैब कितना भारी है, यह पूरी तरह साइट पर निर्भर करता है, इसलिए कोई सुरक्षित संख्या नहीं है। काम का नियम: अगर आपने आज उसे देखा ही नहीं, तो उसे खुला रहने की ज़रूरत नहीं।
+
+</Section>
+
+<Section id="tabmerger" title="टैब को खोए बिना बंद कैसे करें?">
+
+यहीं [TabMerger](/features) कमाल दिखाता है। दो स्टेप, सारी विंडो एक साथ:
+
+1. **समूह जोड़ें** पर क्लिक करें, फिर उसके **⋯** मेन्यू में **वर्तमान के साथ विलय करें** चुनें: हर खुली विंडो और टैब ग्रुप में सेव हो जाते हैं।
+2. साइडबार में **अभी खुले हुए** पर राइट-क्लिक करें और **सभी विंडो बंद करें** चुनें। ब्राउज़र विंडो बंद हो जाती हैं; ग्रुप हर टैब संभालकर रखता है।
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/too-many-tabs-slow-browser/tm-close-all-menu" alt="TabMerger का Now Open (अभी खुले हुए) मेन्यू, जिसमें Close all windows (सभी विंडो बंद करें), Close all browser windows in this group (इस समूह की सभी ब्राउज़र विंडो बंद करें) हाइलाइट है, लाइट थीम" darkAlt="TabMerger का Now Open (अभी खुले हुए) मेन्यू, जिसमें Close all windows (सभी विंडो बंद करें), Close all browser windows in this group (इस समूह की सभी ब्राउज़र विंडो बंद करें) हाइलाइट है, डार्क थीम" boxes={[{ id: 'close-all', label: 'सभी विंडो बंद करें' }]} source="TabMerger 3.16.1">सेव करने के बाद, मेन्यू का एक आइटम हर खुली विंडो बंद कर देता है।</ThemedScreenshot>
+
+जब उनकी फिर ज़रूरत हो, ग्रुप खोलें और एक टैब, एक विंडो या सब कुछ फिर से खोलें। <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> किसी भी सेव किए गए टैब को एक कीस्ट्रोक में ढूँढ लेता है, और ऑटो-सेव तय शेड्यूल पर सेव करने का काम कर सकता है। ज़्यादा आदतें हमारे [बहुत सारे टैब वाले रूटीन](/blog/manage-too-many-tabs) में देखें।
+
+</Section>
+
+<Section id="browser" title="ब्राउज़र से बेकार पड़े टैब को स्लीप में कैसे डलवाएँ?">
+
+जो टैब आप खुले रखते हैं, उनके इस्तेमाल न होने पर ब्राउज़र उनकी मेमोरी खाली कर सकता है। क्लिक करने पर वे फिर से लोड हो जाते हैं।
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+**मेमोरी सेवर** (Memory Saver) चालू करें: **सेटिंग → परफ़ॉर्मेंस** (Settings → Performance) पर जाएँ, या एड्रेस बार में `chrome://settings/performance` चिपकाएँ। चुनें कि टैब कितनी जल्दी इनऐक्टिव हों: मॉडरेट तरीके से (Moderate), बैलेंस तरीके से (Balanced) या ज़्यादा से ज़्यादा (Maximum)।
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Chrome की सेटिंग, Performance (परफ़ॉर्मेंस), Memory Saver (मेमोरी सेवर) स्विच के साथ" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">Chrome का Memory Saver (मेमोरी सेवर), नई Chrome 157 प्रोफ़ाइल में बंद।</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+**Settings → System and performance → Performance** में **Automatically put tabs to sleep** चालू करें, और चुनें कि कोई टैब स्लीप में जाने से पहले कितनी देर रुके।
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Edge की Settings, Performance: Automatically put tabs to sleep चालू और 15 मिनट पर सेट" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Edge के स्लीपिंग टैब डिफ़ॉल्ट रूप से चालू रहते हैं: इनऐक्टिव टैब 15 मिनट बाद स्लीप में चले जाते हैं।</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+किसी टैब पर राइट-क्लिक करें और उसकी मेमोरी तुरंत खाली करने के लिए **Unload Tab** चुनें; कई टैब एक साथ अनलोड करने के लिए पहले उन्हें चुन लें।
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>स्लीपिंग टैब फिर भी टैब स्ट्रिप में भीड़ लगाते हैं। ये कंप्यूटर की मदद करते हैं, आपके फ़ोकस की नहीं।</Catch>
+
+</Section>
+
+<Section id="which" title="सब कुछ स्लो करने वाला टैब कैसे ढूँढें?">
+
+Chrome में <Kbd>Shift</Kbd>+<Kbd>Esc</Kbd> दबाकर **Chrome टास्क मैनेजर** (Chrome Task Manager) खोलें और सबसे ज़्यादा मेमोरी इस्तेमाल करने वाले टैब ढूँढें। भारी टैब को TabMerger ग्रुप में सेव करें और बंद कर दें।
+
+{/* Screenshot still to capture by hand (needs a visible browser): the Chrome Task Manager window sorted by memory. */}
+
+<InstallCta>Chrome, Edge और Firefox के लिए मुफ़्त। शुरू करने के लिए किसी अकाउंट की ज़रूरत नहीं।</InstallCta>
+
+</Section>
+
+<Section id="faq" title="अक्सर पूछे जाने वाले प्रश्न">
+
+<Faq items={post.faq} />
+
+</Section>

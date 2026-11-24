@@ -1,0 +1,170 @@
+export const post = {
+  slug: 'too-many-tabs-slow-browser',
+  title: 'Czy za dużo otwartych kart spowalnia komputer?',
+  navTitle: 'Za dużo kart, wolny komputer',
+  seoTitle: 'Za dużo kart spowalnia przeglądarkę? Jak to naprawić',
+  description:
+    'Przeglądarka zwalnia przez za dużo otwartych kart? Każda karta zajmuje pamięć. Włącz w przeglądarce usypianie kart, a nieużywane karty zapisz i zamknij w TabMergerze, nie tracąc ani jednej.',
+  shareSummary: 'Dlaczego otwarte karty spowalniają komputer i jak zwolnić pamięć, nie tracąc ich.',
+  dek: 'Najszybsza karta to ta, która nie jest otwarta. Zapisz ją, zamknij i odzyskaj jednym kliknięciem.',
+  published: '2026-12-04',
+  updated: '2026-12-04',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Oszczędzanie pamięci w Chrome zwalnia pamięć nieaktywnych kart.',
+      source: 'Pomoc Chrome',
+      href: 'https://support.google.com/chrome/answer/12929150',
+    },
+    { text: 'Edge 158 usypia nieaktywne karty, domyślnie po 15 minutach.', source: 'edge://settings, 20 lis 2026' },
+    { text: 'Firefox 159 potrafi uśpić kartę z jej menu kontekstowego.', source: 'Tekst menu Firefoksa 159' },
+    { text: 'TabMerger zapisuje wszystkie otwarte okna, a potem zamyka je jednym kliknięciem.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Czy dużo kart zużywa więcej pamięci?',
+      answer:
+        'Tak. Każda otwarta strona trzyma swoją zawartość w pamięci, a strony, które uruchamiają skrypty lub odtwarzają multimedia, obciążają też procesor. Ile, zależy od stron, więc sama liczba kart niewiele mówi.',
+    },
+    {
+      question: 'Czy zamknięcie kart przyspieszy mój komputer?',
+      answer:
+        'Zamknięcie kart zwalnia pamięć, której używają. Najpierw zapisz je w TabMergerze (Scal z bieżącą sesją, potem Zamknij wszystkie okna), a nic nie stracisz: każdą otworzysz ponownie jednym kliknięciem.',
+    },
+    {
+      question: 'Czy wystarczy Oszczędzanie pamięci albo usypianie kart?',
+      answer:
+        'Zwalniają pamięć bezczynnych kart i zostawiają je na pasku kart, co pomaga komputerowi. Karty jednak wciąż tam są i trzeba je przeglądać; zapisanie i zamknięcie ich pomaga także tobie.',
+    },
+    {
+      question: 'Jak sprawdzić, która karta zużywa najwięcej pamięci?',
+      answer: 'W Chrome naciśnij Shift+Esc, aby otworzyć menedżera zadań Chrome, i poszukaj kart, które zajmują najwięcej pamięci.',
+    },
+  ],
+  images: [
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-light.webp', alt: 'Menu „Now Open” (Teraz Otwarte) w TabMergerze z podświetloną opcją „Close all windows” (Zamknij wszystkie okna), „Close all browser windows in this group” (Zamknij wszystkie okna przeglądarki w tej grupie), jasny motyw' },
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-dark.webp', alt: 'Menu „Now Open” (Teraz Otwarte) w TabMergerze z podświetloną opcją „Close all windows” (Zamknij wszystkie okna), „Close all browser windows in this group” (Zamknij wszystkie okna przeglądarki w tej grupie), ciemny motyw' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Ustawienia Chrome, „Performance” (Wydajność), z przełącznikiem „Memory Saver” (Oszczędzanie pamięci)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Ustawienia Edge, „Performance”, z włączoną opcją „Automatically put tabs to sleep” ustawioną na 15 minut' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/too-many-tabs-slow-browser/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/too-many-tabs-slow-browser/og.png', alt: 'Karta tytułowa „Do too many tabs slow your computer down?”: poradnik TabMergera z menu „Close all windows” (Zamknij wszystkie okna)' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'why', label: 'Dlaczego karty spowalniają' },
+    { id: 'tabmerger', label: 'Zapisz i zamknij za jednym razem' },
+    { id: 'browser', label: 'Niech przeglądarka usypia karty' },
+    { id: 'which', label: 'Znajdź ciężką kartę' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'Ustawienie pamięci',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Ustawienia → System and performance → Performance',
+      firefox: 'Prawy przycisk myszy na karcie → Uśpij kartę',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Tak: każda otwarta karta zajmuje pamięć, a gdy jest ich dość dużo, zwalnia cały komputer. Najwięcej daje **zamknięcie kart, których nie używasz, bez ich utraty**. W [TabMergerze](/features) wybierz **Scal z bieżącą sesją**, aby zapisać wszystkie otwarte okna w grupie, a potem **Zamknij wszystkie okna**: pamięć się zwalnia, a każda karta jest o jedno kliknięcie. Dla kart, które zostają otwarte, włącz **Oszczędzanie pamięci** („Memory Saver”, Chrome) albo **usypianie kart** (Edge).
+
+</QuickAnswer>
+
+<InstallCta>Zapisz wszystkie okna, zamknij je i odzyskaj pamięć. Za darmo dla Chrome, Edge i Firefoksa.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="why" title="Dlaczego otwarte karty spowalniają komputer?">
+
+Każda otwarta karta to żywa strona internetowa: jej tekst, obrazy i skrypty zostają w pamięci, a aktywne strony (wideo, transmisje na żywo, aplikacje webowe) cały czas obciążają też procesor. Gdy przeglądarka i inne aplikacje potrzebują więcej pamięci, niż ma komputer, wszystko zwalnia. Sama pomoc Chrome dotycząca awarii wymienia brak pamięci jako przyczynę awarii, a jej pierwsze rozwiązanie to zamknięcie kart.
+
+Ile kosztuje karta, zależy całkowicie od strony, więc nie ma bezpiecznej liczby. Praktyczna zasada: jeśli nie zaglądałeś do niej dzisiaj, nie musi być otwarta.
+
+</Section>
+
+<Section id="tabmerger" title="Jak zamknąć karty, nie tracąc ich?">
+
+Tu [TabMerger](/features) pokazuje, co potrafi. Dwa kroki, wszystkie okna naraz:
+
+1. Kliknij **Dodaj Grupę**, a potem w jej menu **⋯** wybierz **Scal z bieżącą sesją**: wszystkie otwarte okna i karty zostaną zapisane w grupie.
+2. Kliknij prawym przyciskiem **Teraz Otwarte** na pasku bocznym i wybierz **Zamknij wszystkie okna**. Okna przeglądarki się zamkną, a grupa zachowa każdą kartę.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/too-many-tabs-slow-browser/tm-close-all-menu" alt="Menu „Now Open” (Teraz Otwarte) w TabMergerze z podświetloną opcją „Close all windows” (Zamknij wszystkie okna), „Close all browser windows in this group” (Zamknij wszystkie okna przeglądarki w tej grupie), jasny motyw" darkAlt="Menu „Now Open” (Teraz Otwarte) w TabMergerze z podświetloną opcją „Close all windows” (Zamknij wszystkie okna), „Close all browser windows in this group” (Zamknij wszystkie okna przeglądarki w tej grupie), ciemny motyw" boxes={[{ id: 'close-all', label: 'Zamknij wszystkie okna' }]} source="TabMerger 3.16.1">Po zapisaniu jedna pozycja menu zamyka wszystkie otwarte okna.</ThemedScreenshot>
+
+Gdy znów będą potrzebne, otwórz grupę i otwórz ponownie jedną kartę, jedno okno albo wszystko. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> znajduje każdą zapisaną kartę jednym skrótem, a autozapis może zapisywać je według harmonogramu. Więcej nawyków znajdziesz w naszej [rutynie na zbyt wiele kart](/blog/manage-too-many-tabs).
+
+</Section>
+
+<Section id="browser" title="Jak sprawić, by przeglądarka usypiała bezczynne karty?">
+
+Dla kart, które zostają otwarte, przeglądarka może zwolnić pamięć, dopóki ich nie używasz. Wczytują się ponownie po kliknięciu.
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+Włącz **Oszczędzanie pamięci** („Memory Saver”): **Ustawienia → Wydajność** („Settings → Performance”) albo wklej `chrome://settings/performance` w pasek adresu. Wybierz, jak szybko karty stają się nieaktywne: Umiarkowane („Moderate”), Zrównoważone („Balanced”) lub Maksymalne („Maximum”).
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Ustawienia Chrome, „Performance” (Wydajność), z przełącznikiem „Memory Saver” (Oszczędzanie pamięci)" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">„Memory Saver” (Oszczędzanie pamięci) w Chrome, wyłączone w nowym profilu Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Zaznacz **Automatically put tabs to sleep** w **Ustawienia → System and performance → Performance** i wybierz, jak długo karta czeka, zanim zostanie uśpiona.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Ustawienia Edge, „Performance”, z włączoną opcją „Automatically put tabs to sleep” ustawioną na 15 minut" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Usypianie kart w Edge, domyślnie włączone: nieaktywne karty zasypiają po 15 minutach.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Kliknij kartę prawym przyciskiem myszy i wybierz **Uśpij kartę** („Unload Tab”), żeby od razu zwolnić jej pamięć; zaznacz wcześniej kilka kart, aby uśpić je razem.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>uśpione karty wciąż zaśmiecają pasek kart. Pomagają komputerowi, nie twojemu skupieniu.</Catch>
+
+</Section>
+
+<Section id="which" title="Jak znaleźć kartę, która wszystko spowalnia?">
+
+W Chrome naciśnij <Kbd>Shift</Kbd>+<Kbd>Esc</Kbd>, aby otworzyć **menedżera zadań Chrome** („Chrome Task Manager”), i poszukaj kart, które zajmują najwięcej pamięci. Ciężkie zapisz w grupie TabMergera i je zamknij.
+
+{/* Screenshot still to capture by hand (needs a visible browser): the Chrome Task Manager window sorted by memory. */}
+
+<InstallCta>Za darmo dla Chrome, Edge i Firefoksa. Na start nie potrzebujesz konta.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>
