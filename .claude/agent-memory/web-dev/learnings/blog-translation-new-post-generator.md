@@ -82,3 +82,9 @@ Run the template check again just before writing into the repo, to confirm en.md
 - The restore confirm's Cancel is `modals.confirmDialog.cancel` (ConfirmDialog's default), not `common.cancel`.
 - Convert real ZWNJ in fa drafts to `{z}` by script before generating rather than typing hundreds of tokens; then grep the output for `(^|s)می ` and ` ها ` to catch missing ones.
 - Fact-token checks must accept inflected product names (pl "Firefoksa": match `Firefo`).
+
+**Web-catalog token:** a `{W:file.key}` token pulls `messages/<loc>/pricing.json` `tierNames.free` and `compare.json` `states.yes`/`states.no` for ComparisonTable heads and Yes/No cells, so blog tables match /pricing and /compare.
+
+- CJK labels ending in `…` (ja 後で通知…, zh 提醒我…, ko 알림 설정…): a closing `**` right before a particle or letter doesn't parse. Use ja `「**…**」`, a space after in ko, or punctuation/a gloss bracket right after.
+- Korean particle after 내일 is 을 (ㄹ final). A symbolic N with a plural catalog label: use ar `_few`, ru/pl `_many`.
+- RTL verifiers must accept ← in settings paths.

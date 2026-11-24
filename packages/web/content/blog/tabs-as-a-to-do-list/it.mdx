@@ -1,0 +1,150 @@
+export const post = {
+  slug: 'tabs-as-a-to-do-list',
+  title: 'Usa le schede come lista di cose da fare, senza lasciarle aperte',
+  navTitle: 'Schede come lista di cose da fare',
+  seoTitle: 'Schede del browser come to-do list, con note e promemoria',
+  description:
+    'Trasforma le schede “devo leggerlo” in una vera lista di cose da fare in TabMerger: una nota su ogni scheda, un promemoria che compare al momento giusto, un titolo chiaro e un clic per ripulire le schede ferme da troppo tempo.',
+  shareSummary: 'Note, promemoria e pulizia delle schede inattive: una to-do list fatta di schede, già chiuse.',
+  dek: 'Ogni scheda aperta è una promessa di tornarci. Scrivi perché, fissa un orario e chiudila.',
+  published: '2026-12-16',
+  updated: '2026-12-16',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Promemoria: tra 30 minuti, 1 ora, 3 ore, 24 ore o a una data e ora.', source: 'TabMerger 3.16.1' },
+    { text: 'Un promemoria mostra una notifica del browser; un clic sulla notifica apre la scheda.', source: 'TabMerger 3.16.1, codice sorgente' },
+    { text: 'Le schede salvate più di 7, 14, 30 o 60 giorni fa (scegli tu) vengono segnate come inattive.', source: 'TabMerger 3.16.1' },
+    { text: 'Note, promemoria e rinomina sono tutti nel piano gratuito.', source: 'Prezzi di TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Come trasformo le schede in una lista di cose da fare?',
+      answer:
+        'Salva le schede in un gruppo di TabMerger come «Questa settimana», aggiungi a ognuna una nota con cosa fare, imposta promemoria su quelle con una scadenza e rimuovi una scheda quando hai finito. Poi chiudi le schede: la lista resta in TabMerger.',
+    },
+    {
+      question: 'Posso ricevere un promemoria per tornare a una scheda?',
+      answer:
+        'Sì. Fai clic destro su una scheda salvata e scegli Ricordamelo…: 30 min, 1 ora, 3 ore, Domani (tra 24 ore) o una data e ora, con una nota facoltativa. A quell’ora compare una notifica del browser, e un clic sulla notifica apre la scheda.',
+    },
+    {
+      question: 'Cosa sono le schede inattive?',
+      answer:
+        'Le schede salvate da più tempo della tua soglia (30 giorni, se non la cambi in Impostazioni → Generale). Hanno un piccolo punto, e l’intestazione del gruppo propone di rimuoverle tutte in una volta.',
+    },
+    {
+      question: 'I promemoria funzionano sugli altri miei dispositivi?',
+      answer: 'Un promemoria ti avvisa nel browser in cui l’hai impostato. Con Pro, la scheda e l’orario del suo promemoria si sincronizzano con gli altri tuoi dispositivi insieme al gruppo.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp', alt: 'Un gruppo «This week» con una nota su una scheda, una scheda rinominata con un promemoria e due schede inattive, tema chiaro' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-dark.webp', alt: 'Un gruppo «This week» con una nota su una scheda, una scheda rinominata con un promemoria e due schede inattive, tema scuro' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-light.webp', alt: 'Opzioni di promemoria di TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Domani), una data e un’ora e una nota, tema chiaro' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-dark.webp', alt: 'Opzioni di promemoria di TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Domani), una data e un’ora e una nota, tema scuro' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'research'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp' },
+  ogImage: { src: '/blog/tabs-as-a-to-do-list/og.png', alt: 'Usa le schede come lista di cose da fare: un gruppo di TabMerger con note, un promemoria e schede inattive' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'problem', label: 'Schede come promesse' },
+    { id: 'why', label: 'Perché funziona così' },
+    { id: 'steps', label: 'Crea la lista' },
+    { id: 'remind', label: 'Imposta un promemoria' },
+    { id: 'benefit', label: 'Cosa ci guadagni' },
+    { id: 'habits', label: 'Buone abitudini' },
+    { id: 'plans', label: 'Free o Pro' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+}
+
+<QuickAnswer>
+
+Salva le schede “da vedere dopo” in un gruppo di [TabMerger](/features) come «Questa settimana». Con un clic destro su una scheda hai **Aggiungi nota** (Add note) per scrivere cosa farne, **Ricordamelo…** (Remind me…) per decidere quando e **Rinomina scheda** (Rename tab) per un titolo che si legge come un compito. Rimuovi la scheda quando hai finito. Le schede ferme da troppo tempo ricevono un punto, e un pulsante nell’intestazione del gruppo le ripulisce. Poi chiudi le schede: la lista vive in TabMerger, non nella barra delle schede.
+
+</QuickAnswer>
+
+<InstallCta>Una lista di cose da fare fatta di schede, con le schede chiuse. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="problem" title="Ogni scheda aperta è una promessa">
+
+Un articolo da leggere entro giovedì. Una segnalazione da smistare prima dello stand-up. Un orario dei treni da controllare quando le date saranno fissate. Ognuna resta aperta perché chiuderla sembra dimenticarla. Una settimana dopo sono quaranta, nessuno ricorda perché metà di loro sia lì, e quella che contava è finita dietro alle altre.
+
+Una scheda non sa dirti perché l’hai aperta né entro quando va fatta. Una lista di cose da fare sì.
+
+</Section>
+
+<Section id="why" title="Perché gli strumenti da to-do list di TabMerger funzionano così">
+
+- **La nota sta sulla scheda.** Una nota è legata alla scheda stessa, quindi il motivo viaggia con il link: nelle sessioni, nei backup e nelle esportazioni, e sugli altri tuoi dispositivi con Pro.
+- **Un titolo che si legge come un compito.** **Rinomina scheda** dà a una scheda un titolo tuo, segnato come «rinominata», e **Ripristina il titolo originale** (Reset to original title) lo annulla. «Smistare le nuove segnalazioni» è un compito; «Issues · lbragile/TabMerger» è il nome di una pagina.
+- **Promemoria che non puoi perderti.** All’ora che scegli, il browser mostra una notifica con il titolo della scheda e la tua nota. Resta sullo schermo finché non te ne occupi, e un clic apre la scheda. Dopo un riavvio del browser i promemoria vengono reimpostati, quindi un riavvio non li fa sparire.
+- **Inattiva vuol dire salvata un po’ di tempo fa.** Una scheda salvata da più tempo della tua soglia (7, 14, 30 o 60 giorni; 30 se non la cambi) riceve un punto del colore del suo gruppo, e l’intestazione del gruppo mostra **Rimuovi N schede inattive** (Remove N stale tabs). Le vecchie schede “prima o poi” spariscono con un clic.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-todo-group" alt="Un gruppo «This week» con una nota su una scheda, una scheda rinominata con un promemoria e due schede inattive, tema chiaro" darkAlt="Un gruppo «This week» con una nota su una scheda, una scheda rinominata con un promemoria e due schede inattive, tema scuro" boxes={[{ id: 'note', label: 'Una nota sulla scheda' }, { id: 'reminder', label: 'C’è un promemoria' }, { id: 'stale', label: 'Ripulisci le schede inattive' }]} source="TabMerger 3.16.1">La lista di questa settimana: perché, quando e cosa aspetta da troppo tempo.</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="Crea la lista">
+
+1. Crea con **Aggiungi gruppo** (Add Group), nella barra laterale, un gruppo che porti il nome del periodo, come «Questa settimana» («This week» negli screenshot).
+2. Trascinaci le schede da **Aperte ora** (Now Open). La scheda aperta si chiude e ne viene salvata una copia (Annulla la riporta indietro).
+3. Fai clic destro su ogni scheda: **Aggiungi nota** per cosa fare, **Rinomina scheda** per un titolo da compito.
+4. Aggiungi una stella alla finestra o al gruppo su cui stai lavorando, così resta in cima.
+5. Quando un compito è fatto, fai clic destro sulla scheda e scegli **Rimuovi scheda** (Remove tab).
+
+</Section>
+
+<Section id="remind" title="Imposta un promemoria">
+
+Fai clic destro sulla scheda e scegli **Ricordamelo…**. Scegli **30 min**, **1 ora**, **3 ore** o **Domani** (tra 24 ore), oppure imposta una data e un’ora; aggiungi una nota se vuoi. Un orologio sulla scheda indica che c’è un promemoria; con un altro clic destro puoi scegliere **Modifica promemoria** (Edit reminder) o **Rimuovi promemoria** (Clear reminder).
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-reminder" alt="Opzioni di promemoria di TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Domani), una data e un’ora e una nota, tema chiaro" darkAlt="Opzioni di promemoria di TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Domani), una data e un’ora e una nota, tema scuro" boxes={[{ id: 'remind-in', label: 'Ricordamelo tra…' }]} source="TabMerger 3.16.1">Un orario veloce o uno preciso, più una nota per il te del futuro.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Cosa ci guadagni">
+
+Nella barra delle schede c’è solo quello che stai facendo adesso. Tutto il resto ha accanto il suo motivo scritto e, dove serve, un orario in cui tornerà da te. Niente dipende dalla memoria, e niente resta aperto “non si sa mai”.
+
+</Section>
+
+<Section id="habits" title="Buone abitudini">
+
+- **Scrivi la nota come un’azione:** «Riassumere per giovedì», non «interessante».
+- **Promemoria solo per ciò che ha una scadenza.** Il resto aspetta nella lista.
+- **Ripulisci le schede inattive ogni settimana.** Se ha aspettato 30 giorni, di rado è urgente.
+- **Una lista per orizzonte:** «Oggi», «Questa settimana», «Prima o poi». Sposta le schede dall’una all’altra con **Sposta nel gruppo** (Move to group).
+- Per il lavoro pieno di fonti, vedi [come organizzare le schede per la ricerca](/blog/organize-tabs-for-research); per l’intera giornata, [una routine quotidiana con TabMerger](/blog/tabmerger-daily-workflow).
+
+</Section>
+
+<Section id="plans" title="Free o Pro">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Note, promemoria, schede rinominate, schede inattive', 'Sì', 'Sì'],
+    ['Schede nelle tue liste', '50 in tutto', 'Illimitate'],
+    ['Liste sugli altri tuoi dispositivi', 'No', 'Sì, con note e orari dei promemoria'],
+  ]}
+/>
+
+Ogni strumento da to-do list è nel piano gratuito. [Pro](/pricing) aggiunge spazio e sincronizzazione. Un promemoria ti avvisa nel browser in cui l’hai impostato.
+
+<InstallCta>Chiudi le schede, mantieni le promesse. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

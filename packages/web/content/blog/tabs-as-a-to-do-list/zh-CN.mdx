@@ -1,0 +1,150 @@
+export const post = {
+  slug: 'tabs-as-a-to-do-list',
+  title: '把标签页当作待办清单，而不用一直开着',
+  navTitle: '把标签页当作待办清单',
+  seoTitle: '把浏览器标签页变成带备注和提醒的待办清单',
+  description:
+    '把“回头要看”的标签页变成 TabMerger 里真正的待办清单：每个标签页一条备注，到点弹出的提醒，一目了然的标题，还能一键清掉放了太久的标签页。',
+  shareSummary: '备注、提醒和过期标签页清理：用标签页做待办清单，标签页本身都关掉。',
+  dek: '每个开着的标签页，都是一个“回头再看”的承诺。写下原因，定个时间，然后关掉它。',
+  published: '2026-12-16',
+  updated: '2026-12-16',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: '提醒：30 分钟、1 小时、3 小时、24 小时后，或指定的日期和时间。', source: 'TabMerger 3.16.1' },
+    { text: '提醒会显示浏览器通知，点击通知即可打开该标签页。', source: 'TabMerger 3.16.1 源代码' },
+    { text: '保存时间超过 7、14、30 或 60 天（可自选）的标签页会被标记为过期。', source: 'TabMerger 3.16.1' },
+    { text: '备注、提醒和重命名都包含在免费版中。', source: 'TabMerger 价格', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '怎样把标签页变成待办清单？',
+      answer:
+        '把标签页保存到一个 TabMerger 分组里，比如“本周”，给每个标签页加一条备注写明要做什么，给有时间要求的设置提醒，做完就移除该标签页。然后关掉这些标签页：清单留在 TabMerger 里。',
+    },
+    {
+      question: '能设置提醒，让我回头再看某个标签页吗？',
+      answer:
+        '可以。右键点击一个已保存的标签页，选择“提醒我…”：可选 30 分钟、1 小时、3 小时、明天（从现在起 24 小时后），或指定日期和时间，还可以附上一条备注。到时浏览器会弹出通知，点击即可打开该标签页。',
+    },
+    {
+      question: '什么是过期标签页？',
+      answer:
+        '保存时间超过过期阈值的标签页（默认 30 天，可在“设置 → 通用”中修改）。它们会显示一个小圆点，分组标题栏会提供一键全部移除。',
+    },
+    {
+      question: '提醒在我的其他设备上也有效吗？',
+      answer: '提醒会在你设置它的那个浏览器里通知你。使用 Pro 时，标签页及其提醒时间会随分组一起同步到你的其他设备。',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp', alt: 'This week 分组：一个标签页带备注，一个重命名的标签页设有提醒，另有两个过期标签页，浅色主题' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-dark.webp', alt: 'This week 分组：一个标签页带备注，一个重命名的标签页设有提醒，另有两个过期标签页，深色主题' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-light.webp', alt: 'TabMerger 提醒选项：30 min, 1 hour, 3 hours, Tomorrow（明天）、指定日期和时间，以及备注，浅色主题' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-dark.webp', alt: 'TabMerger 提醒选项：30 min, 1 hour, 3 hours, Tomorrow（明天）、指定日期和时间，以及备注，深色主题' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'research'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp' },
+  ogImage: { src: '/blog/tabs-as-a-to-do-list/og.png', alt: '把标签页当作待办清单：带有备注、提醒和过期标签页的 TabMerger 分组' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'problem', label: '标签页就是承诺' },
+    { id: 'why', label: '为什么这样设计' },
+    { id: 'steps', label: '建立清单' },
+    { id: 'remind', label: '设置提醒' },
+    { id: 'benefit', label: '你能得到什么' },
+    { id: 'habits', label: '好习惯' },
+    { id: 'plans', label: '免费版与 Pro' },
+    { id: 'faq', label: '常见问题' },
+  ],
+}
+
+<QuickAnswer>
+
+把“以后再看”的标签页保存到一个 [TabMerger](/features) 分组里，比如“本周”。右键点击标签页：用**添加备注**（Add note）写下要做什么，用**提醒我…**（Remind me…）定下什么时候做，用**重命名标签页**（Rename tab）起一个读起来像任务的标题。做完就移除该标签页。放得太久的标签页会出现一个过期圆点，分组标题栏里的一个按钮就能把它们清掉。然后关掉标签页：清单在 TabMerger 里，而不是在你的标签栏上。
+
+</QuickAnswer>
+
+<InstallCta>用标签页做待办清单，标签页本身都关掉。适用于 Chrome、Edge 和 Firefox，免费。</InstallCta>
+
+<Section id="problem" title="每个开着的标签页都是一个承诺">
+
+一篇要在周四前读完的文章。一个要在站会前分类的 issue。一张等日期定下来再查的火车时刻表。每个都开着，因为关掉它就像忘了它。一周后变成了四十个，没人记得其中一半为什么还开着，而真正重要的那个被埋在其他标签页后面。
+
+标签页没法告诉你当初为什么打开它，也没法告诉你什么时候要完成。待办清单可以。
+
+</Section>
+
+<Section id="why" title="TabMerger 的待办工具为什么这样设计">
+
+- **备注就在标签页上**。备注附在标签页本身，所以原因会跟着链接走：进入会话、备份和导出，有 Pro 的话还会同步到你的其他设备。
+- **读起来像任务的标题**。**重命名标签页**可以给标签页起你自己的标题，并标上“已重命名”；**重置为原标题**（Reset to original title）可以撤销。“分类新的 issue”是一项任务；“Issues · lbragile/TabMerger”只是个页面名。
+- **不会错过的提醒**。到了你选的时间，浏览器会弹出通知，显示标签页标题和你的备注。通知会一直留在屏幕上，直到你处理它，点击即可打开该标签页。浏览器重启后提醒会重新设置，所以重启不会让它们丢失。
+- **过期，就是你保存它已经有一阵子了**。保存时间超过阈值（7、14、30 或 60 天；不改的话是 30 天）的标签页会出现一个与分组同色的圆点，分组标题栏会显示**移除 N 个过期标签页**（Remove N stale tabs）。那些“总有一天”的旧标签页一键就清掉了。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-todo-group" alt="This week 分组：一个标签页带备注，一个重命名的标签页设有提醒，另有两个过期标签页，浅色主题" darkAlt="This week 分组：一个标签页带备注，一个重命名的标签页设有提醒，另有两个过期标签页，深色主题" boxes={[{ id: 'note', label: '标签页上的备注' }, { id: 'reminder', label: '已设置提醒' }, { id: 'stale', label: '清除过期标签页' }]} source="TabMerger 3.16.1">本周清单：为什么、什么时候，以及哪些已经等得太久。</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="建立清单">
+
+1. 在侧边栏用**添加分组**（Add Group）建一个以时间段命名的分组，比如“本周”（截图中为“This week”）。
+2. 把标签页从**当前打开**（Now Open）拖到这个分组上。打开的标签页会关闭，并保存一份副本（撤销可以恢复）。
+3. 右键点击每个标签页：用**添加备注**写下要做什么，用**重命名标签页**起一个任务式的标题。
+4. 给你正在处理的窗口或分组加星标，让它留在最上面。
+5. 任务完成后，右键点击该标签页，选择**移除标签页**（Remove tab）。
+
+</Section>
+
+<Section id="remind" title="设置提醒">
+
+右键点击标签页，选择**提醒我…**。选 **30 分钟**、**1 小时**、**3 小时** 或**明天**（从现在起 24 小时后），或者设置日期和时间；愿意的话再加一条备注。标签页上的时钟图标表示已设置提醒；再次右键点击即可选择**编辑提醒**（Edit reminder）或**清除提醒**（Clear reminder）。
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-reminder" alt="TabMerger 提醒选项：30 min, 1 hour, 3 hours, Tomorrow（明天）、指定日期和时间，以及备注，浅色主题" darkAlt="TabMerger 提醒选项：30 min, 1 hour, 3 hours, Tomorrow（明天）、指定日期和时间，以及备注，深色主题" boxes={[{ id: 'remind-in', label: '多久后提醒我…' }]} source="TabMerger 3.16.1">选个快捷时间或精确时间，再给未来的自己留条备注。</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="你能得到什么">
+
+你的标签栏里只剩下你此刻正在做的事。其他一切旁边都写着原因，需要的话还定好了它回到你面前的时间。不靠记性，也没有哪个标签页是“以防万一”开着的。
+
+</Section>
+
+<Section id="habits" title="好习惯">
+
+- **把备注写成行动**：写“周四前做好摘要”，而不是“有意思”。
+- **只给有截止时间的事设提醒**。其他的都在清单里等着。
+- **每周清理一次过期标签页**。等了 30 天的东西，很少是急事。
+- **每个时间范围一份清单**：“今天”“本周”“总有一天”。用**移动到分组**（Move to group）在它们之间移动标签页。
+- 资料来源多的工作，请看[做研究时如何整理标签页](/blog/organize-tabs-for-research)；整天的安排，请看[用 TabMerger 管理每天的标签页](/blog/tabmerger-daily-workflow)。
+
+</Section>
+
+<Section id="plans" title="免费版与 Pro">
+
+<ComparisonTable
+  head={['', '免费版', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['备注、提醒、重命名的标签页、过期标签页', '是', '是'],
+    ['清单中的标签页', '共 50 个', '无限制'],
+    ['其他设备上的清单', '否', '是，包括备注和提醒时间'],
+  ]}
+/>
+
+所有待办工具都包含在免费版中。[Pro](/pricing) 带来更多空间和同步。提醒会在你设置它的那个浏览器里通知你。
+
+<InstallCta>关掉标签页，守住承诺。适用于 Chrome、Edge 和 Firefox，免费。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

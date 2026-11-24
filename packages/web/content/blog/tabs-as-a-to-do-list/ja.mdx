@@ -1,0 +1,150 @@
+export const post = {
+  slug: 'tabs-as-a-to-do-list',
+  title: 'タブを開きっぱなしにせず ToDo リストとして使う方法',
+  navTitle: 'タブを ToDo リストとして使う',
+  seoTitle: 'ブラウザのタブをメモとリマインダー付きの ToDo リストにする方法',
+  description:
+    '「あとで読む」タブを TabMerger で本物の ToDo リストに。タブごとのメモ、時間になると届くリマインダー、わかりやすいタイトル、そして放置しすぎたタブをワンクリックで片付ける機能。',
+  shareSummary: 'メモ、リマインダー、古いタブの一掃。タブを閉じたまま、タブで作る ToDo リスト。',
+  dek: '開いているタブは、どれも「あとで戻る」という約束です。理由を書き、時間を決めて、閉じましょう。',
+  published: '2026-12-16',
+  updated: '2026-12-16',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'リマインダー：30 分後、1 時間後、3 時間後、24 時間後、または指定した日時。', source: 'TabMerger 3.16.1' },
+    { text: 'リマインダーはブラウザの通知を表示し、クリックするとタブが開きます。', source: 'TabMerger 3.16.1 のソースコード' },
+    { text: '7、14、30、60 日（選択可）より前に保存したタブは「古い」とマークされます。', source: 'TabMerger 3.16.1' },
+    { text: 'メモ、リマインダー、名前の変更はすべて無料プランで使えます。', source: 'TabMerger の料金', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'タブを ToDo リストにするには？',
+      answer:
+        'タブを「今週」のような TabMerger のグループに保存し、それぞれにやることをメモし、期限のあるものにはリマインダーを設定して、終わったらタブを削除します。あとはタブを閉じれば、リストは TabMerger に残ります。',
+    },
+    {
+      question: 'タブに戻るためのリマインダーを受け取れますか？',
+      answer:
+        'はい。保存したタブを右クリックして「後で通知…」を選び、30分、1時間、3時間、明日（今から 24 時間後）、または日時を選びます。メモも任意で付けられます。その時刻にブラウザの通知が表示され、クリックするとタブが開きます。',
+    },
+    {
+      question: '古いタブとは何ですか？',
+      answer:
+        '古いタブのしきい値（変更しなければ 30 日。設定 → 一般 で変更できます）より前に保存したタブです。小さな点が付き、グループのヘッダーからまとめて削除できます。',
+    },
+    {
+      question: 'リマインダーは他のデバイスでも使えますか？',
+      answer: 'リマインダーは、設定したブラウザで通知されます。Pro なら、タブとそのリマインダーの時刻がグループと一緒に他のデバイスへ同期されます。',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp', alt: '1 つのタブにメモ、名前を変えたタブにリマインダー、古いタブが 2 つある This week グループ、ライトテーマ' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-dark.webp', alt: '1 つのタブにメモ、名前を変えたタブにリマインダー、古いタブが 2 つある This week グループ、ダークテーマ' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-light.webp', alt: 'TabMerger のリマインダーの選択肢：30 min, 1 hour, 3 hours, Tomorrow（明日）、日時の指定、メモ、ライトテーマ' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-dark.webp', alt: 'TabMerger のリマインダーの選択肢：30 min, 1 hour, 3 hours, Tomorrow（明日）、日時の指定、メモ、ダークテーマ' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'research'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp' },
+  ogImage: { src: '/blog/tabs-as-a-to-do-list/og.png', alt: 'タブを ToDo リストとして使う：メモ、リマインダー、古いタブがある TabMerger のグループ' },
+  toc: [
+    { id: 'quick', label: '簡単な答え' },
+    { id: 'problem', label: 'タブは約束' },
+    { id: 'why', label: 'この仕組みの理由' },
+    { id: 'steps', label: 'リストを作る' },
+    { id: 'remind', label: 'リマインダーを設定する' },
+    { id: 'benefit', label: '得られるもの' },
+    { id: 'habits', label: 'よい習慣' },
+    { id: 'plans', label: '無料と Pro' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+}
+
+<QuickAnswer>
+
+「あとで」のタブを、「今週」のような [TabMerger](/features) のグループに保存しましょう。タブを右クリックすれば、**メモを追加**（Add note）でやることを、「**後で通知…**」（Remind me…）でいつやるかを、**タブ名を変更**（Rename tab）でタスクらしいタイトルを付けられます。終わったらタブを削除します。放置しすぎたタブには古さを示す点が付き、グループのヘッダーのボタン 1 つで片付けられます。あとはタブを閉じるだけ。リストはタブバーではなく TabMerger の中にあります。
+
+</QuickAnswer>
+
+<InstallCta>タブで作る ToDo リスト、タブは閉じたまま。Chrome、Edge、Firefox 向けに無料。</InstallCta>
+
+<Section id="problem" title="開いているタブは、どれも約束">
+
+木曜までに読む記事。朝会の前に振り分ける Issue。日程が決まったら確認する電車の時刻表。閉じると忘れてしまう気がして、どれも開いたままになります。1 週間後には 40 個に増え、半分はなぜ開いているのか誰も覚えておらず、肝心の 1 つはほかのタブの陰に埋もれています。
+
+タブは、なぜ開いたのかも、いつまでにやるのかも教えてくれません。ToDo リストなら教えてくれます。
+
+</Section>
+
+<Section id="why" title="TabMerger の ToDo 機能がこう動く理由">
+
+- **メモはタブに付く**。メモはタブそのものに付くので、理由がリンクと一緒に移動します。セッション、バックアップ、エクスポートにも、Pro なら他のデバイスにも。
+- **タスクとして読めるタイトル**。**タブ名を変更**でタブに自分のタイトルを付けると「変更済み」と表示され、**元のタイトルに戻す**（Reset to original title）で元に戻せます。「新しい Issue を振り分ける」はタスクで、「Issues · lbragile/TabMerger」はページ名です。
+- **見逃さないリマインダー**。選んだ時刻になると、ブラウザがタブのタイトルとメモを添えた通知を表示します。対応するまで画面に残り、クリックするとタブが開きます。ブラウザを再起動してもリマインダーは設定し直されるので、再起動で消えることはありません。
+- **古いとは、少し前に保存したということ**。しきい値（7、14、30、60 日。変更しなければ 30 日）より前に保存したタブにはグループの色の点が付き、グループのヘッダーに **N個の古いタブを削除**（Remove N stale tabs）が表示されます。「いつか」のまま古くなったタブはワンクリックで片付きます。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-todo-group" alt="1 つのタブにメモ、名前を変えたタブにリマインダー、古いタブが 2 つある This week グループ、ライトテーマ" darkAlt="1 つのタブにメモ、名前を変えたタブにリマインダー、古いタブが 2 つある This week グループ、ダークテーマ" boxes={[{ id: 'note', label: 'タブのメモ' }, { id: 'reminder', label: 'リマインダー設定済み' }, { id: 'stale', label: '古いタブを片付ける' }]} source="TabMerger 3.16.1">今週のリスト：理由、期限、そして待たせすぎているもの。</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="リストを作る">
+
+1. サイドバーの **グループを追加**（Add Group）で、「今週」のような期間名のグループを作ります（スクリーンショットでは「This week」）。
+2. **現在開いているタブ**（Now Open）からタブをドラッグしてグループに入れます。開いていたタブは閉じ、コピーが保存されます（元に戻すで戻せます）。
+3. 各タブを右クリックし、**メモを追加**でやることを、**タブ名を変更**でタスクらしいタイトルを付けます。
+4. 取り組んでいるウィンドウやグループにスターを付けて、上に固定します。
+5. タスクが終わったら、タブを右クリックして **タブを削除**（Remove tab）を選びます。
+
+</Section>
+
+<Section id="remind" title="リマインダーを設定する">
+
+タブを右クリックして「**後で通知…**」を選びます。**30分**、**1時間**、**3時間**、**明日**（今から 24 時間後）のどれかを選ぶか、日時を指定します。必要ならメモも追加しましょう。タブの時計アイコンがリマインダー設定済みの印です。もう一度右クリックすると、**リマインダーを編集**（Edit reminder）や **リマインダーを解除**（Clear reminder）を選べます。
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-reminder" alt="TabMerger のリマインダーの選択肢：30 min, 1 hour, 3 hours, Tomorrow（明日）、日時の指定、メモ、ライトテーマ" darkAlt="TabMerger のリマインダーの選択肢：30 min, 1 hour, 3 hours, Tomorrow（明日）、日時の指定、メモ、ダークテーマ" boxes={[{ id: 'remind-in', label: '後で通知…' }]} source="TabMerger 3.16.1">すぐの時間でも正確な日時でも。未来の自分へのメモも添えて。</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="得られるもの">
+
+タブバーには、今やっていることだけが残ります。それ以外のものにはすべて理由が書き添えられ、必要なものには、また目の前に戻ってくる時刻が決まっています。覚えておく必要はなく、「念のため」に開いておくタブもありません。
+
+</Section>
+
+<Section id="habits" title="よい習慣">
+
+- **メモは行動として書く**：「面白い」ではなく「木曜までに要約する」。
+- **リマインダーは期限のあるものだけに**。それ以外はリストで待たせておきます。
+- **古いタブは毎週片付ける**。30 日待ったものが急ぎであることはまずありません。
+- **期間ごとにリストを 1 つ**：「今日」「今週」「いつか」。タブは **グループに移動**（Move to group）でリスト間を移動できます。
+- 情報源の多い作業には[リサーチ用にタブを整理する方法](/blog/organize-tabs-for-research)、1 日の流れには [TabMerger を使った毎日のタブ管理](/blog/tabmerger-daily-workflow)をご覧ください。
+
+</Section>
+
+<Section id="plans" title="無料と Pro">
+
+<ComparisonTable
+  head={['', '無料', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['メモ、リマインダー、名前を変えたタブ、古いタブ', 'はい', 'はい'],
+    ['リスト内のタブ', '合計 50 個', '無制限'],
+    ['他のデバイスのリスト', 'いいえ', 'はい、メモとリマインダーの時刻も含めて'],
+  ]}
+/>
+
+ToDo 機能はすべて無料プランで使えます。[Pro](/pricing) では容量が増え、同期が加わります。リマインダーは、設定したブラウザで通知されます。
+
+<InstallCta>タブは閉じて、約束は守る。Chrome、Edge、Firefox 向けに無料。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

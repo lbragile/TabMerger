@@ -1,0 +1,150 @@
+export const post = {
+  slug: 'tabs-as-a-to-do-list',
+  title: 'Karty jako lista zadań, bez trzymania ich otwartych',
+  navTitle: 'Karty jako lista zadań',
+  seoTitle: 'Karty przeglądarki jako lista zadań, z notatkami i przypomnieniami',
+  description:
+    'Zamień karty „muszę to przeczytać” w prawdziwą listę zadań w TabMerger: notatka przy każdej karcie, przypomnienie, które pojawi się w porę, jasny tytuł i jedno kliknięcie, które sprząta karty leżące zbyt długo.',
+  shareSummary: 'Notatki, przypomnienia i sprzątanie starych kart: lista zadań z kart, bez otwartych kart.',
+  dek: 'Każda otwarta karta to obietnica, że do niej wrócisz. Zapisz, po co, ustaw termin i zamknij ją.',
+  published: '2026-12-16',
+  updated: '2026-12-16',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Przypomnienia: za 30 minut, 1 godzinę, 3 godziny, 24 godziny albo o wybranej dacie i godzinie.', source: 'TabMerger 3.16.1' },
+    { text: 'Przypomnienie pokazuje powiadomienie przeglądarki; kliknięcie go otwiera kartę.', source: 'TabMerger 3.16.1, kod źródłowy' },
+    { text: 'Karty zapisane ponad 7, 14, 30 lub 60 dni temu (do wyboru) są oznaczane jako nieaktywne.', source: 'TabMerger 3.16.1' },
+    { text: 'Notatki, przypomnienia i zmiana nazw są dostępne w darmowym planie.', source: 'Cennik TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Jak zrobić z kart listę zadań?',
+      answer:
+        'Zapisz karty w grupie TabMerger, na przykład „Ten tydzień”, dodaj do każdej notatkę, co trzeba zrobić, ustaw przypomnienia przy tych, które mają termin, i usuń kartę, gdy sprawa jest załatwiona. Potem zamknij karty: lista zostaje w TabMerger.',
+    },
+    {
+      question: 'Czy mogę dostać przypomnienie, żeby wrócić do karty?',
+      answer:
+        'Tak. Kliknij prawym przyciskiem zapisaną kartę i wybierz Przypomnij mi…: 30 min, 1 godzinę, 3 godziny, Jutro (za 24 godziny) albo datę i godzinę, z opcjonalną notatką. O tej porze pojawi się powiadomienie przeglądarki, a kliknięcie go otworzy kartę.',
+    },
+    {
+      question: 'Czym są nieaktywne karty?',
+      answer:
+        'To karty zapisane dawniej, niż wynosi Twój próg (30 dni, chyba że zmienisz go w Ustawienia → Ogólne). Dostają małą kropkę, a nagłówek grupy proponuje usunięcie ich wszystkich naraz.',
+    },
+    {
+      question: 'Czy przypomnienia działają na moich innych urządzeniach?',
+      answer: 'Przypomnienie powiadamia Cię w przeglądarce, w której je ustawiono. W planie Pro karta i godzina przypomnienia synchronizują się z Twoimi innymi urządzeniami razem z grupą.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp', alt: 'Grupa „This week” z notatką przy jednej karcie, kartą o zmienionej nazwie z przypomnieniem i dwiema nieaktywnymi kartami, motyw jasny' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-dark.webp', alt: 'Grupa „This week” z notatką przy jednej karcie, kartą o zmienionej nazwie z przypomnieniem i dwiema nieaktywnymi kartami, motyw ciemny' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-light.webp', alt: 'Opcje przypomnienia w TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Jutro), data i godzina oraz notatka, motyw jasny' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-dark.webp', alt: 'Opcje przypomnienia w TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Jutro), data i godzina oraz notatka, motyw ciemny' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'research'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp' },
+  ogImage: { src: '/blog/tabs-as-a-to-do-list/og.png', alt: 'Karty jako lista zadań: grupa TabMerger z notatkami, przypomnieniem i nieaktywnymi kartami' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'problem', label: 'Karty jako obietnice' },
+    { id: 'why', label: 'Dlaczego to tak działa' },
+    { id: 'steps', label: 'Zbuduj listę' },
+    { id: 'remind', label: 'Ustaw przypomnienie' },
+    { id: 'benefit', label: 'Co zyskujesz' },
+    { id: 'habits', label: 'Dobre nawyki' },
+    { id: 'plans', label: 'Darmowy czy Pro' },
+    { id: 'faq', label: 'Najczęstsze pytania' },
+  ],
+}
+
+<QuickAnswer>
+
+Zapisz karty „na później” w grupie [TabMerger](/features), na przykład „Ten tydzień”. Prawym przyciskiem na karcie wybierzesz **Dodaj notatkę** (Add note), czyli co z nią zrobić, **Przypomnij mi…** (Remind me…), czyli kiedy, albo **Zmień nazwę karty** (Rename tab), czyli tytuł, który brzmi jak zadanie. Usuń kartę, gdy sprawa jest załatwiona. Karty, które leżą zbyt długo, dostają kropkę, a jeden przycisk w nagłówku grupy je usuwa. Potem zamknij karty: lista żyje w TabMerger, nie na pasku kart.
+
+</QuickAnswer>
+
+<InstallCta>Lista zadań z kart, a karty zamknięte. Za darmo dla Chrome, Edge i Firefoksa.</InstallCta>
+
+<Section id="problem" title="Każda otwarta karta to obietnica">
+
+Artykuł do przeczytania przed czwartkiem. Zgłoszenie do przejrzenia przed daily. Rozkład jazdy pociągów do sprawdzenia, gdy daty będą już ustalone. Każda zostaje otwarta, bo zamknięcie przypomina zapomnienie. Tydzień później jest ich czterdzieści, nikt nie pamięta, po co jest połowa z nich, a ta ważna chowa się za resztą.
+
+Karta nie powie Ci, po co ją otworzyłeś ani na kiedy jest. Lista zadań powie.
+
+</Section>
+
+<Section id="why" title="Dlaczego narzędzia do zadań w TabMerger działają właśnie tak">
+
+- **Notatka jest przy karcie.** Notatka należy do samej karty, więc powód wędruje razem z linkiem: do sesji, kopii zapasowych i eksportów, a z Pro także na Twoje inne urządzenia.
+- **Tytuł, który brzmi jak zadanie.** **Zmień nazwę karty** nadaje karcie Twój własny tytuł, oznaczony jako „zmieniono nazwę”, a **Przywróć oryginalny tytuł** (Reset to original title) to cofa. „Przejrzeć nowe zgłoszenia” to zadanie; „Issues · lbragile/TabMerger” to nazwa strony.
+- **Przypomnień nie przegapisz.** O wybranej porze przeglądarka pokazuje powiadomienie z tytułem karty i Twoją notatką. Zostaje na ekranie, dopóki się nim nie zajmiesz, a kliknięcie otwiera kartę. Po ponownym uruchomieniu przeglądarki przypomnienia są ustawiane od nowa, więc restart ich nie gubi.
+- **Nieaktywna znaczy zapisana jakiś czas temu.** Karta zapisana dawniej, niż wynosi Twój próg (7, 14, 30 lub 60 dni; 30, jeśli go nie zmienisz), dostaje kropkę w kolorze swojej grupy, a nagłówek grupy pokazuje **Usuń N nieaktywnych kart** (Remove N stale tabs). Stare karty „kiedyś” znikają jednym kliknięciem.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-todo-group" alt="Grupa „This week” z notatką przy jednej karcie, kartą o zmienionej nazwie z przypomnieniem i dwiema nieaktywnymi kartami, motyw jasny" darkAlt="Grupa „This week” z notatką przy jednej karcie, kartą o zmienionej nazwie z przypomnieniem i dwiema nieaktywnymi kartami, motyw ciemny" boxes={[{ id: 'note', label: 'Notatka przy karcie' }, { id: 'reminder', label: 'Ustawiono przypomnienie' }, { id: 'stale', label: 'Usuń nieaktywne karty' }]} source="TabMerger 3.16.1">Lista na ten tydzień: po co, kiedy i co czeka już zbyt długo.</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="Zbuduj listę">
+
+1. Utwórz przyciskiem **Dodaj Grupę** (Add Group) na pasku bocznym grupę nazwaną od okresu, na przykład „Ten tydzień” („This week” na zrzutach ekranu).
+2. Przeciągnij do niej karty z **Teraz Otwarte** (Now Open). Otwarta karta się zamyka, a jej kopia zostaje zapisana (Cofnij ją przywraca).
+3. Kliknij prawym przyciskiem każdą kartę: **Dodaj notatkę**, by zapisać, co zrobić, **Zmień nazwę karty**, by nadać tytuł jak zadanie.
+4. Oznacz gwiazdką okno lub grupę, nad którą właśnie pracujesz, żeby zostały na górze.
+5. Gdy zadanie jest zrobione, kliknij kartę prawym przyciskiem i wybierz **Usuń kartę** (Remove tab).
+
+</Section>
+
+<Section id="remind" title="Ustaw przypomnienie">
+
+Kliknij kartę prawym przyciskiem i wybierz **Przypomnij mi…**. Wybierz **30 min**, **1 godzinę**, **3 godziny** lub **Jutro** (za 24 godziny) albo ustaw datę i godzinę; jeśli chcesz, dodaj notatkę. Zegar na karcie pokazuje, że przypomnienie jest ustawione; kliknij ponownie prawym przyciskiem, by wybrać **Edytuj przypomnienie** (Edit reminder) lub **Usuń przypomnienie** (Clear reminder).
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-reminder" alt="Opcje przypomnienia w TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Jutro), data i godzina oraz notatka, motyw jasny" darkAlt="Opcje przypomnienia w TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Jutro), data i godzina oraz notatka, motyw ciemny" boxes={[{ id: 'remind-in', label: 'Przypomnij mi za…' }]} source="TabMerger 3.16.1">Szybki termin albo dokładny, plus notatka dla siebie z przyszłości.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Co zyskujesz">
+
+Na pasku kart jest tylko to, czym zajmujesz się teraz. Wszystko inne ma obok zapisany powód, a tam, gdzie to ważne, także porę, o której samo do Ciebie wróci. Nic nie zależy od pamięci i nic nie zostaje otwarte na wszelki wypadek.
+
+</Section>
+
+<Section id="habits" title="Dobre nawyki">
+
+- **Pisz notatkę jako działanie:** „Streścić na czwartek”, a nie „ciekawe”.
+- **Przypomnienia tylko dla tego, co ma termin.** Reszta czeka na liście.
+- **Co tydzień sprzątaj nieaktywne karty.** Jeśli coś czekało 30 dni, rzadko jest pilne.
+- **Jedna lista na horyzont:** „Dziś”, „Ten tydzień”, „Kiedyś”. Przenoś karty między nimi opcją **Przenieś do grupy** (Move to group).
+- Przy pracy z wieloma źródłami zobacz [porządkowanie kart do researchu](/blog/organize-tabs-for-research); na cały dzień [codzienny sposób pracy z kartami w TabMerger](/blog/tabmerger-daily-workflow).
+
+</Section>
+
+<Section id="plans" title="Darmowy czy Pro">
+
+<ComparisonTable
+  head={['', 'Darmowy', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Notatki, przypomnienia, karty o zmienionej nazwie, nieaktywne karty', 'Tak', 'Tak'],
+    ['Karty na Twoich listach', '50 łącznie', 'Bez limitu'],
+    ['Listy na Twoich innych urządzeniach', 'Nie', 'Tak, razem z notatkami i godzinami przypomnień'],
+  ]}
+/>
+
+Każde narzędzie do zadań jest w darmowym planie. [Pro](/pricing) dodaje miejsce i synchronizację. Przypomnienie powiadamia Cię w przeglądarce, w której je ustawiono.
+
+<InstallCta>Zamknij karty, dotrzymaj obietnic. Za darmo dla Chrome, Edge i Firefoksa.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Najczęstsze pytania">
+
+<Faq items={post.faq} />
+
+</Section>

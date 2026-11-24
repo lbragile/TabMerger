@@ -1,0 +1,150 @@
+export const post = {
+  slug: 'tabs-as-a-to-do-list',
+  title: 'Dùng tab như danh sách việc cần làm mà không cần để chúng mở',
+  navTitle: 'Tab như danh sách việc cần làm',
+  seoTitle: 'Biến tab trình duyệt thành danh sách việc cần làm với ghi chú và lời nhắc',
+  description:
+    'Giữ những tab “phải đọc cái này” thành một danh sách việc cần làm thực sự trong TabMerger: ghi chú trên từng tab, lời nhắc hiện lên đúng lúc, tiêu đề rõ ràng và một cú nhấp để dọn những tab đã nằm quá lâu.',
+  shareSummary: 'Ghi chú, lời nhắc và dọn tab cũ: danh sách việc cần làm từ các tab, còn tab thì đã đóng.',
+  dek: 'Mỗi tab đang mở là một lời hứa sẽ quay lại. Hãy ghi lại lý do, đặt thời gian rồi đóng nó.',
+  published: '2026-12-16',
+  updated: '2026-12-16',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Lời nhắc: sau 30 phút, 1 giờ, 3 giờ, 24 giờ hoặc vào một ngày giờ cụ thể.', source: 'TabMerger 3.16.1' },
+    { text: 'Lời nhắc hiển thị thông báo của trình duyệt; nhấp vào đó sẽ mở tab.', source: 'TabMerger 3.16.1, mã nguồn' },
+    { text: 'Tab được lưu cách đây hơn 7, 14, 30 hoặc 60 ngày (tùy bạn chọn) sẽ bị đánh dấu là cũ.', source: 'TabMerger 3.16.1' },
+    { text: 'Ghi chú, lời nhắc và đổi tên đều có trong gói Miễn phí.', source: 'Bảng giá TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Làm sao biến tab thành danh sách việc cần làm?',
+      answer:
+        'Lưu các tab vào một nhóm TabMerger như “Tuần này”, thêm cho mỗi tab một ghi chú về việc cần làm, đặt lời nhắc cho những tab có hạn, và xóa tab khi đã xong. Sau đó đóng các tab: danh sách vẫn nằm trong TabMerger.',
+    },
+    {
+      question: 'Tôi có thể nhận lời nhắc để quay lại một tab không?',
+      answer:
+        'Có. Nhấp chuột phải vào một tab đã lưu và chọn Nhắc tôi…: chọn 30 phút, 1 giờ, 3 giờ, Ngày mai (24 giờ kể từ bây giờ) hoặc một ngày giờ, kèm ghi chú nếu muốn. Đến giờ đó, một thông báo của trình duyệt sẽ hiện lên, và nhấp vào đó sẽ mở tab.',
+    },
+    {
+      question: 'Tab cũ là gì?',
+      answer:
+        'Là những tab bạn đã lưu lâu hơn ngưỡng tab cũ của bạn (30 ngày, trừ khi bạn đổi trong Cài đặt → Chung). Chúng có một chấm nhỏ, và phần đầu của nhóm sẽ đề nghị xóa tất cả cùng lúc.',
+    },
+    {
+      question: 'Lời nhắc có hoạt động trên các thiết bị khác của tôi không?',
+      answer: 'Lời nhắc sẽ báo cho bạn trong trình duyệt nơi bạn đặt nó. Với Pro, tab và thời gian nhắc của nó được đồng bộ sang các thiết bị khác của bạn cùng với nhóm.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp', alt: 'Nhóm “This week” với một ghi chú trên một tab, một tab đã đổi tên có lời nhắc và hai tab cũ, giao diện sáng' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-dark.webp', alt: 'Nhóm “This week” với một ghi chú trên một tab, một tab đã đổi tên có lời nhắc và hai tab cũ, giao diện tối' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-light.webp', alt: 'Các tùy chọn lời nhắc của TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Ngày mai), một ngày giờ và một ghi chú, giao diện sáng' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-dark.webp', alt: 'Các tùy chọn lời nhắc của TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Ngày mai), một ngày giờ và một ghi chú, giao diện tối' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'research'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp' },
+  ogImage: { src: '/blog/tabs-as-a-to-do-list/og.png', alt: 'Dùng tab như danh sách việc cần làm: một nhóm TabMerger có ghi chú, lời nhắc và tab cũ' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'problem', label: 'Tab là những lời hứa' },
+    { id: 'why', label: 'Vì sao lại hoạt động như vậy' },
+    { id: 'steps', label: 'Lập danh sách' },
+    { id: 'remind', label: 'Đặt lời nhắc' },
+    { id: 'benefit', label: 'Bạn được gì' },
+    { id: 'habits', label: 'Thói quen tốt' },
+    { id: 'plans', label: 'Miễn phí hay Pro' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+}
+
+<QuickAnswer>
+
+Lưu các tab “để sau” của bạn vào một nhóm [TabMerger](/features) như “Tuần này”. Nhấp chuột phải vào tab để chọn **Thêm ghi chú** (Add note) cho việc cần làm, **Nhắc tôi…** (Remind me…) cho thời điểm, hoặc **Đổi tên thẻ** (Rename tab) để đặt một tiêu đề đọc như một nhiệm vụ. Xóa tab khi đã xong. Những tab nằm quá lâu sẽ có chấm báo cũ, và một nút ở đầu nhóm sẽ dọn chúng. Sau đó đóng các tab: danh sách nằm trong TabMerger, không phải trên thanh tab của bạn.
+
+</QuickAnswer>
+
+<InstallCta>Danh sách việc cần làm từ các tab, còn tab thì đã đóng. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+<Section id="problem" title="Mỗi tab đang mở là một lời hứa">
+
+Một bài viết cần đọc trước thứ Năm. Một issue cần phân loại trước buổi stand-up. Một lịch tàu cần xem khi ngày đi đã chốt. Tab nào cũng được để mở vì đóng nó có cảm giác như quên mất. Một tuần sau đã có bốn mươi tab, chẳng ai nhớ vì sao một nửa trong số đó ở đấy, và cái tab quan trọng thì bị khuất sau những tab còn lại.
+
+Một tab không thể cho bạn biết vì sao bạn mở nó hay khi nào phải xong. Một danh sách việc cần làm thì có thể.
+
+</Section>
+
+<Section id="why" title="Vì sao các công cụ việc cần làm của TabMerger hoạt động như vậy">
+
+- **Ghi chú nằm trên tab.** Ghi chú gắn với chính tab đó, nên lý do đi cùng đường liên kết: vào phiên, bản sao lưu và tệp xuất, và sang các thiết bị khác của bạn với Pro.
+- **Tiêu đề đọc như một nhiệm vụ.** **Đổi tên thẻ** đặt cho tab tiêu đề của riêng bạn, kèm nhãn “đã đổi tên”, và **Đặt lại về tiêu đề gốc** (Reset to original title) sẽ hoàn tác. “Phân loại issue mới” là một việc cần làm; “Issues · lbragile/TabMerger” là tên trang.
+- **Lời nhắc khó bỏ lỡ.** Đến thời điểm bạn chọn, trình duyệt hiển thị một thông báo với tiêu đề tab và ghi chú của bạn. Thông báo ở lại trên màn hình cho đến khi bạn xử lý, và nhấp vào sẽ mở tab. Lời nhắc được đặt lại sau khi trình duyệt khởi động lại, nên khởi động lại không làm mất chúng.
+- **Cũ nghĩa là bạn đã lưu nó từ lâu.** Một tab được lưu lâu hơn ngưỡng của bạn (7, 14, 30 hoặc 60 ngày; 30 nếu bạn không đổi) sẽ có một chấm cùng màu với nhóm, và phần đầu nhóm hiển thị **Xóa N thẻ cũ** (Remove N stale tabs). Những tab “để khi nào rảnh” lâu ngày được dọn chỉ bằng một cú nhấp.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-todo-group" alt="Nhóm “This week” với một ghi chú trên một tab, một tab đã đổi tên có lời nhắc và hai tab cũ, giao diện sáng" darkAlt="Nhóm “This week” với một ghi chú trên một tab, một tab đã đổi tên có lời nhắc và hai tab cũ, giao diện tối" boxes={[{ id: 'note', label: 'Ghi chú trên tab' }, { id: 'reminder', label: 'Đã đặt lời nhắc' }, { id: 'stale', label: 'Dọn tab cũ' }]} source="TabMerger 3.16.1">Danh sách của tuần này: vì sao, khi nào, và cái gì đã chờ quá lâu.</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="Lập danh sách">
+
+1. Tạo một nhóm đặt tên theo khoảng thời gian, như “Tuần này” (“This week” trong ảnh chụp màn hình), bằng **Thêm Nhóm** (Add Group) ở thanh bên.
+2. Kéo tab từ **Đang Mở** (Now Open) vào nhóm đó. Tab đang mở sẽ đóng lại và một bản sao được lưu (Hoàn tác sẽ đưa nó trở lại).
+3. Nhấp chuột phải vào từng tab: **Thêm ghi chú** cho việc cần làm, **Đổi tên thẻ** cho một tiêu đề như nhiệm vụ.
+4. Gắn sao cho cửa sổ hoặc nhóm bạn đang xử lý để nó luôn ở trên cùng.
+5. Khi xong một việc, nhấp chuột phải vào tab và chọn **Xóa thẻ** (Remove tab).
+
+</Section>
+
+<Section id="remind" title="Đặt lời nhắc">
+
+Nhấp chuột phải vào tab và chọn **Nhắc tôi…**. Chọn **30 phút**, **1 giờ**, **3 giờ** hoặc **Ngày mai** (24 giờ kể từ bây giờ), hoặc đặt một ngày giờ; thêm ghi chú nếu muốn. Biểu tượng đồng hồ trên tab cho biết đã có lời nhắc; nhấp chuột phải lần nữa để **Sửa lời nhắc** (Edit reminder) hoặc **Xóa lời nhắc** (Clear reminder).
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-reminder" alt="Các tùy chọn lời nhắc của TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Ngày mai), một ngày giờ và một ghi chú, giao diện sáng" darkAlt="Các tùy chọn lời nhắc của TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Ngày mai), một ngày giờ và một ghi chú, giao diện tối" boxes={[{ id: 'remind-in', label: 'Nhắc tôi sau…' }]} source="TabMerger 3.16.1">Một khoảng thời gian nhanh hoặc một giờ chính xác, cùng một ghi chú cho bạn của sau này.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Bạn được gì">
+
+Thanh tab của bạn chỉ chứa những gì bạn đang làm ngay lúc này. Mọi thứ khác đều có lý do ghi ngay bên cạnh và, khi cần, một thời điểm nó sẽ quay lại với bạn. Không gì phụ thuộc vào trí nhớ, và không gì phải để mở chỉ để phòng hờ.
+
+</Section>
+
+<Section id="habits" title="Thói quen tốt">
+
+- **Viết ghi chú như một hành động:** “Tóm tắt cho thứ Năm”, chứ không phải “thú vị”.
+- **Chỉ đặt lời nhắc cho việc có hạn chót.** Mọi thứ khác chờ trong danh sách.
+- **Dọn tab cũ mỗi tuần.** Đã chờ 30 ngày thì hiếm khi còn gấp.
+- **Mỗi mốc thời gian một danh sách:** “Hôm nay”, “Tuần này”, “Khi nào rảnh”. Chuyển tab giữa chúng bằng **Di chuyển vào nhóm** (Move to group).
+- Với công việc cần nhiều nguồn, xem [cách sắp xếp tab để nghiên cứu](/blog/organize-tabs-for-research); cho cả ngày làm việc, xem [quy trình làm việc hằng ngày với TabMerger](/blog/tabmerger-daily-workflow).
+
+</Section>
+
+<Section id="plans" title="Miễn phí hay Pro">
+
+<ComparisonTable
+  head={['', 'Miễn phí', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Ghi chú, lời nhắc, tab đã đổi tên, tab cũ', 'Có', 'Có'],
+    ['Tab trong danh sách của bạn', 'Tổng cộng 50', 'Không giới hạn'],
+    ['Danh sách trên các thiết bị khác', 'Không', 'Có, kèm ghi chú và thời gian nhắc'],
+  ]}
+/>
+
+Mọi công cụ việc cần làm đều có trong gói Miễn phí. [Pro](/pricing) thêm dung lượng và đồng bộ. Lời nhắc sẽ báo cho bạn trong trình duyệt nơi bạn đặt nó.
+
+<InstallCta>Đóng tab, giữ lời hứa. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+</Section>

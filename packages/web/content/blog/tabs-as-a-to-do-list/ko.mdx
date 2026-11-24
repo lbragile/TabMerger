@@ -1,0 +1,150 @@
+export const post = {
+  slug: 'tabs-as-a-to-do-list',
+  title: '탭을 열어 두지 않고 할 일 목록처럼 쓰는 방법',
+  navTitle: '탭을 할 일 목록처럼 쓰기',
+  seoTitle: '브라우저 탭을 메모와 알림이 있는 할 일 목록으로 만드는 방법',
+  description:
+    '\'나중에 읽어야지\' 하는 탭을 TabMerger에서 진짜 할 일 목록으로 관리하세요. 탭마다 메모를 달고, 때가 되면 뜨는 알림을 설정하고, 알아보기 쉬운 제목을 붙이고, 너무 오래 묵은 탭은 클릭 한 번으로 정리할 수 있습니다.',
+  shareSummary: '메모, 알림, 오래된 탭 정리: 탭은 닫아 둔 채 탭으로 만드는 할 일 목록.',
+  dek: '열려 있는 탭은 모두 다시 돌아오겠다는 약속입니다. 이유를 적고, 시간을 정하고, 닫으세요.',
+  published: '2026-12-16',
+  updated: '2026-12-16',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: '알림: 30분 후, 1시간 후, 3시간 후, 24시간 후 또는 지정한 날짜와 시간.', source: 'TabMerger 3.16.1' },
+    { text: '알림은 브라우저 알림으로 표시되고, 클릭하면 탭이 열립니다.', source: 'TabMerger 3.16.1 소스 코드' },
+    { text: '7일, 14일, 30일 또는 60일(직접 선택)보다 오래전에 저장한 탭은 오래된 탭으로 표시됩니다.', source: 'TabMerger 3.16.1' },
+    { text: '메모, 알림, 이름 바꾸기는 모두 무료 요금제에 포함됩니다.', source: 'TabMerger 요금제', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '탭을 할 일 목록으로 만들려면 어떻게 하나요?',
+      answer:
+        '탭을 \'이번 주\' 같은 TabMerger 그룹에 저장하고, 탭마다 할 일을 메모로 적고, 시간이 중요한 탭에는 알림을 설정한 뒤, 일이 끝나면 탭을 제거하세요. 그런 다음 탭을 닫으면 목록은 TabMerger에 그대로 남습니다.',
+    },
+    {
+      question: '탭으로 돌아오라는 알림을 받을 수 있나요?',
+      answer:
+        '네. 저장된 탭을 마우스 오른쪽 버튼으로 클릭하고 \'알림 설정…\'을 선택한 뒤 30분 후, 1시간 후, 3시간 후, 내일(지금부터 24시간 후) 또는 날짜와 시간을 고르고, 원하면 메모도 남기세요. 그 시간에 브라우저 알림이 뜨고, 알림을 클릭하면 탭이 열립니다.',
+    },
+    {
+      question: '오래된 탭이란 무엇인가요?',
+      answer:
+        '오래된 탭 기준보다 오래전에 저장한 탭입니다(기본값은 30일이며 설정 → 일반에서 바꿀 수 있습니다). 작은 점이 표시되고, 그룹 머리글에서 한 번에 모두 제거할 수 있습니다.',
+    },
+    {
+      question: '알림이 다른 기기에서도 작동하나요?',
+      answer: '알림은 설정한 브라우저에서 표시됩니다. Pro에서는 탭과 알림 시간이 그룹과 함께 다른 기기로 동기화됩니다.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp', alt: '한 탭에 메모가 있고, 이름을 바꾼 탭에 알림이 설정되어 있고, 오래된 탭이 두 개 있는 This week 그룹, 라이트 테마' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-dark.webp', alt: '한 탭에 메모가 있고, 이름을 바꾼 탭에 알림이 설정되어 있고, 오래된 탭이 두 개 있는 This week 그룹, 다크 테마' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-light.webp', alt: 'TabMerger 알림 옵션: 30 min, 1 hour, 3 hours, Tomorrow(내일), 날짜와 시간 지정, 메모, 라이트 테마' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-dark.webp', alt: 'TabMerger 알림 옵션: 30 min, 1 hour, 3 hours, Tomorrow(내일), 날짜와 시간 지정, 메모, 다크 테마' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'research'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp' },
+  ogImage: { src: '/blog/tabs-as-a-to-do-list/og.png', alt: '탭을 할 일 목록처럼 쓰기: 메모, 알림, 오래된 탭이 있는 TabMerger 그룹' },
+  toc: [
+    { id: 'quick', label: '간단한 답' },
+    { id: 'problem', label: '탭은 약속이다' },
+    { id: 'why', label: '이렇게 작동하는 이유' },
+    { id: 'steps', label: '목록 만들기' },
+    { id: 'remind', label: '알림 설정하기' },
+    { id: 'benefit', label: '얻는 것' },
+    { id: 'habits', label: '좋은 습관' },
+    { id: 'plans', label: '무료와 Pro 비교' },
+    { id: 'faq', label: '자주 묻는 질문' },
+  ],
+}
+
+<QuickAnswer>
+
+'나중에' 볼 탭을 '이번 주' 같은 [TabMerger](/features) 그룹에 저장하세요. 탭을 마우스 오른쪽 버튼으로 클릭하면 **메모 추가**(Add note)로 할 일을, **알림 설정…**(Remind me…)으로 언제 할지를, **탭 이름 바꾸기**(Rename tab)로 할 일처럼 읽히는 제목을 정할 수 있습니다. 일이 끝나면 탭을 제거하세요. 너무 오래 묵은 탭에는 점이 표시되고, 그룹 머리글의 버튼 하나로 정리됩니다. 그런 다음 탭을 닫으세요. 목록은 탭 표시줄이 아니라 TabMerger 안에 있습니다.
+
+</QuickAnswer>
+
+<InstallCta>탭으로 만드는 할 일 목록, 탭은 닫아 둔 채로. Chrome, Edge, Firefox용 무료.</InstallCta>
+
+<Section id="problem" title="열려 있는 탭은 모두 약속이다">
+
+목요일 전에 읽을 기사. 스탠드업 전에 분류할 이슈. 날짜가 정해지면 확인할 기차 시간표. 닫으면 잊어버릴 것 같아서 하나같이 열어 둡니다. 일주일 뒤에는 마흔 개가 되고, 절반은 왜 열려 있는지 아무도 기억하지 못하며, 정작 중요했던 하나는 나머지 뒤에 묻혀 있습니다.
+
+탭은 왜 열었는지도, 언제까지 해야 하는지도 알려 주지 않습니다. 할 일 목록은 알려 줍니다.
+
+</Section>
+
+<Section id="why" title="TabMerger의 할 일 도구가 이렇게 작동하는 이유">
+
+- **메모는 탭에 붙어 있습니다.** 메모는 탭 자체에 연결되므로 이유가 링크와 함께 이동합니다. 세션, 백업, 내보내기에도, Pro라면 다른 기기에도요.
+- **할 일처럼 읽히는 제목.** **탭 이름 바꾸기**로 탭에 직접 제목을 붙이면 '이름 바뀜' 표시가 붙고, **원래 제목으로 되돌리기**(Reset to original title)로 되돌릴 수 있습니다. '새 이슈 분류하기'는 할 일이고, 'Issues · lbragile/TabMerger'는 페이지 이름입니다.
+- **놓칠 수 없는 알림.** 고른 시간이 되면 브라우저가 탭 제목과 메모가 담긴 알림을 띄웁니다. 처리할 때까지 화면에 남아 있고, 클릭하면 탭이 열립니다. 브라우저를 다시 시작해도 알림이 다시 설정되므로 재시작으로 사라지지 않습니다.
+- **오래된 탭이란 저장한 지 꽤 된 탭입니다.** 기준(7일, 14일, 30일 또는 60일, 바꾸지 않으면 30일)보다 오래전에 저장한 탭에는 그룹 색의 점이 표시되고, 그룹 머리글에 **오래된 탭 N개 제거**(Remove N stale tabs)가 나타납니다. '언젠가' 하려던 오래된 탭이 클릭 한 번으로 정리됩니다.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-todo-group" alt="한 탭에 메모가 있고, 이름을 바꾼 탭에 알림이 설정되어 있고, 오래된 탭이 두 개 있는 This week 그룹, 라이트 테마" darkAlt="한 탭에 메모가 있고, 이름을 바꾼 탭에 알림이 설정되어 있고, 오래된 탭이 두 개 있는 This week 그룹, 다크 테마" boxes={[{ id: 'note', label: '탭에 단 메모' }, { id: 'reminder', label: '알림 설정됨' }, { id: 'stale', label: '오래된 탭 정리' }]} source="TabMerger 3.16.1">이번 주 목록: 왜, 언제, 그리고 무엇이 너무 오래 기다렸는지.</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="목록 만들기">
+
+1. 사이드바의 **그룹 추가**(Add Group)를 눌러 '이번 주'처럼 기간 이름을 붙인 그룹을 만드세요(스크린샷에서는 'This week').
+2. **현재 열린 탭**(Now Open)에서 탭을 끌어 그룹에 놓으세요. 열린 탭은 닫히고 사본이 저장됩니다(실행 취소로 되돌릴 수 있습니다).
+3. 각 탭을 마우스 오른쪽 버튼으로 클릭해 **메모 추가**로 할 일을, **탭 이름 바꾸기**로 할 일 같은 제목을 정하세요.
+4. 지금 처리 중인 창이나 그룹에 별표를 달아 맨 위에 두세요.
+5. 일이 끝나면 탭을 마우스 오른쪽 버튼으로 클릭하고 **탭 제거**(Remove tab)를 선택하세요.
+
+</Section>
+
+<Section id="remind" title="알림 설정하기">
+
+탭을 마우스 오른쪽 버튼으로 클릭하고 **알림 설정…** 메뉴를 선택하세요. **30분 후**, **1시간 후**, **3시간 후** 또는 **내일**(지금부터 24시간 후)을 고르거나 날짜와 시간을 지정하고, 원하면 메모를 추가하세요. 탭의 시계 아이콘은 알림이 설정되어 있다는 뜻입니다. 다시 마우스 오른쪽 버튼을 클릭하면 **알림 편집**(Edit reminder)이나 **알림 지우기**(Clear reminder)를 선택할 수 있습니다.
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-reminder" alt="TabMerger 알림 옵션: 30 min, 1 hour, 3 hours, Tomorrow(내일), 날짜와 시간 지정, 메모, 라이트 테마" darkAlt="TabMerger 알림 옵션: 30 min, 1 hour, 3 hours, Tomorrow(내일), 날짜와 시간 지정, 메모, 다크 테마" boxes={[{ id: 'remind-in', label: '알림 시간…' }]} source="TabMerger 3.16.1">빠른 시간이든 정확한 시간이든, 미래의 나를 위한 메모와 함께.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="얻는 것">
+
+탭 표시줄에는 지금 하고 있는 일만 남습니다. 나머지는 모두 옆에 이유가 적혀 있고, 필요한 것에는 다시 찾아올 시간이 정해져 있습니다. 기억에 의존할 일도, 혹시 몰라 열어 둘 탭도 없습니다.
+
+</Section>
+
+<Section id="habits" title="좋은 습관">
+
+- **메모는 행동으로 적으세요**: '흥미로움'이 아니라 '목요일까지 요약하기'.
+- **마감이 있는 일에만 알림을 설정하세요.** 나머지는 목록에서 기다립니다.
+- **오래된 탭은 매주 정리하세요.** 30일을 기다렸다면 급한 일은 거의 없습니다.
+- **기간마다 목록 하나**: '오늘', '이번 주', '언젠가'. 탭은 **그룹으로 이동**(Move to group)으로 목록 사이를 옮기세요.
+- 출처가 많은 작업이라면 [리서치용 탭 정리 방법](/blog/organize-tabs-for-research)을, 하루 전체의 흐름은 [TabMerger로 하는 하루 탭 관리](/blog/tabmerger-daily-workflow)를 참고하세요.
+
+</Section>
+
+<Section id="plans" title="무료와 Pro 비교">
+
+<ComparisonTable
+  head={['', '무료', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['메모, 알림, 이름을 바꾼 탭, 오래된 탭', '예', '예'],
+    ['목록에 담는 탭', '전체 50개', '무제한'],
+    ['다른 기기의 목록', '아니요', '예, 메모와 알림 시간 포함'],
+  ]}
+/>
+
+모든 할 일 도구는 무료 요금제에 있습니다. [Pro](/pricing)는 공간과 동기화를 더합니다. 알림은 설정한 브라우저에서 표시됩니다.
+
+<InstallCta>탭은 닫고, 약속은 지키세요. Chrome, Edge, Firefox용 무료.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="자주 묻는 질문">
+
+<Faq items={post.faq} />
+
+</Section>
