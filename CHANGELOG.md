@@ -1,3 +1,16 @@
+## [3.16.2](https://github.com/lbragile/TabMerger/compare/v3.16.1...v3.16.2) (2026-11-24)
+
+
+### Bug Fixes
+
+* **extension:** make auto-deduplicate on merge work and pick save shortcuts every browser assigns ([#140](https://github.com/lbragile/TabMerger/issues/140)) ([00a7f28](https://github.com/lbragile/TabMerger/commit/00a7f28a16db4488bb8749311868f4e902527696))
+
+
+### Features
+
+* **web:** show every blog tag in the index's topic chips ([#138](https://github.com/lbragile/TabMerger/issues/138)) ([1556bea](https://github.com/lbragile/TabMerger/commit/1556bea4b79ae0038d32c3516fc41e3a60733b8e))
+* **web:** tab management blog with a first guide on saving all open tabs ([#136](https://github.com/lbragile/TabMerger/issues/136)) ([98a4a59](https://github.com/lbragile/TabMerger/commit/98a4a596141556da000cd459982c3901fafaecad))
+
 ## [3.16.1](https://github.com/lbragile/TabMerger/compare/v3.16.0...v3.16.1) (2026-11-21)
 
 
