@@ -1,0 +1,184 @@
+export const post = {
+  slug: 'tabmerger-daily-workflow',
+  title: 'Una routine quotidiana per le schede con TabMerger',
+  navTitle: 'Una routine quotidiana per le schede',
+  seoTitle: 'Organizzare le schede ogni giorno con TabMerger: dalla mattina alla sera',
+  description:
+    'Una routine semplice per organizzare le schede del browser con TabMerger: apri le schede della giornata con un clic, metti in ordine quelle nuove per ritrovarle sempre e chiudi la giornata con tutto salvato e niente lasciato aperto.',
+  shareSummary: 'Apri le schede del giorno con un clic, ritrovale sempre e chiudi la giornata senza perdere nulla.',
+  dek: 'Tre abitudini, pochi clic ciascuna: parti da un insieme salvato, archivia le schede man mano e chiudi la giornata con tutto salvato.',
+  published: '2026-12-11',
+  updated: '2026-12-11',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'I gruppi contengono intere finestre di schede e restano salvati dopo la chiusura delle finestre.', source: 'TabMerger 3.16.1' },
+    { text: 'Una sessione ripristina tutti i gruppi salvati in una volta, ogni finestra com’era al salvataggio.', source: 'Codice sorgente di TabMerger 3.16.1' },
+    { text: 'Ctrl+K cerca insieme tra le schede aperte, salvate e chiuse di recente.', source: 'TabMerger 3.16.1' },
+    { text: 'Free: 5 gruppi, 50 schede, 3 sessioni. Pro: nessun limite, più la sincronizzazione.', source: 'Prezzi di TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Qual è la migliore routine quotidiana per le schede del browser?',
+      answer:
+        'Inizia la giornata da un insieme di schede salvato invece che dagli avanzi di ieri, metti le nuove schede nei gruppi man mano e chiudi la giornata salvando ciò che è aperto e chiudendolo. TabMerger fa ogni passaggio in pochi clic, e il salvataggio automatico ti copre nei giorni in cui te ne dimentichi.',
+    },
+    {
+      question: 'Serve un account per seguire questa routine?',
+      answer: 'No. Gruppi, sessioni, ricerca, salvataggio automatico e schede chiuse di recente funzionano tutti nel piano Free senza account. L’account serve solo per le funzioni Pro, come la sincronizzazione tra dispositivi.',
+    },
+    {
+      question: 'Funziona in Chrome, Edge e Firefox?',
+      answer: 'Sì. TabMerger è gratuito per Chrome, Edge e Firefox, e la routine è la stessa in tutti e tre.',
+    },
+    {
+      question: 'Che differenza c’è tra un gruppo e una sessione?',
+      answer:
+        'Un gruppo è un insieme salvato di schede, in una o più finestre, che apri, modifichi e arricchisci. Una sessione è un’istantanea con nome di tutti i gruppi salvati in un colpo solo, che ripristini insieme.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp', alt: 'TabMerger con quattro gruppi salvati (Work, Reading list, Thesis sources, Trip to Lisbon) e una sessione salvata, “Monday plan”, tema chiaro' },
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-dark.webp', alt: 'TabMerger con quattro gruppi salvati (Work, Reading list, Thesis sources, Trip to Lisbon) e una sessione salvata, “Monday plan”, tema scuro' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-light.webp', alt: '“Now Open” (Aperte ora) di TabMerger con due finestre del browser aperte e sei schede, tema chiaro' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-dark.webp', alt: '“Now Open” (Aperte ora) di TabMerger con due finestre del browser aperte e sei schede, tema scuro' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp' },
+  ogImage: { src: '/blog/tabmerger-daily-workflow/og.png', alt: 'Una routine quotidiana per le schede con TabMerger, con gruppi salvati e una sessione nella barra laterale' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'problem', label: 'Perché le schede si accumulano' },
+    { id: 'idea', label: 'Come ragiona TabMerger' },
+    { id: 'morning', label: 'La mattina' },
+    { id: 'day', label: 'Durante il giorno' },
+    { id: 'evening', label: 'La sera' },
+    { id: 'net', label: 'La rete di sicurezza' },
+    { id: 'plans', label: 'Free o Pro' },
+    { id: 'series', label: 'La serie completa' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+}
+
+<QuickAnswer>
+
+Tieni le schede nei gruppi di [TabMerger](/features), non nelle finestre aperte. **La mattina:** ripristina una sessione salvata, oppure apri solo il gruppo che ti serve. **Durante il giorno:** metti le nuove schede nei gruppi e ritrovane una qualsiasi con <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>. **La sera:** salva ciò che è aperto nel suo gruppo e chiudi le finestre. Il salvataggio automatico e “Chiusi di recente” recuperano quello che dimentichi. Bastano pochi clic al giorno, e ogni mattina riparti dalle schede che volevi tenere.
+
+</QuickAnswer>
+
+<InstallCta>Domani parti dalle schede giuste, non dal mucchio di ieri. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="problem" title="Perché le schede si accumulano ogni giorno?">
+
+Pensa a un martedì qualunque. Apri la posta e il calendario, poi una pull request, poi le tre pagine di documentazione che le servono. Una collega ti manda un link da leggere più tardi. A pranzo le finestre sono due; la sera, quattro. Non le chiudi, perché alcune di quelle schede sono ancora “in corso” e ritrovarle vorrebbe dire scavare nella cronologia.
+
+Così il browser diventa la lista delle cose da fare. Non è mai stato pensato per questo: una barra delle schede non ha nomi, né sezioni, né un modo per mettere via il lavoro senza perderlo. Ogni giorno comincia con gli avanzi di ieri, il browser rallenta e l’unica scheda che ti serve è un’icona di 16 pixel da qualche parte nella finestra tre.
+
+</Section>
+
+<Section id="idea" title="Come lo risolve TabMerger?">
+
+TabMerger separa due cose che il browser mescola: ciò che è **aperto** e ciò che **tieni**.
+
+- **Aperte ora** è una vista in tempo reale delle finestre e delle schede aperte. È sempre la prima voce dell’elenco e non si può eliminare, quindi è sempre a un clic di distanza.
+- **I gruppi** sono ciò che tieni. Ogni gruppo contiene una o più finestre di schede, con nomi, note e colori, e resta salvato dopo la chiusura delle finestre.
+- **Sessioni**: istantanee con nome di tutti i gruppi insieme, per i giorni in cui vuoi riavere tutto in una volta.
+
+Dato che tenere una scheda non vuol più dire lasciarla aperta, puoi chiudere le finestre senza pensieri. Tutta la routine è questa.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Ciò che tieni e ciò che è aperto, fianco a fianco" steps={[{ title: 'I tuoi gruppi' }, { title: 'Aperte ora' }]}>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-workspace" alt="TabMerger con quattro gruppi salvati (Work, Reading list, Thesis sources, Trip to Lisbon) e una sessione salvata, “Monday plan”, tema chiaro" darkAlt="TabMerger con quattro gruppi salvati (Work, Reading list, Thesis sources, Trip to Lisbon) e una sessione salvata, “Monday plan”, tema scuro" boxes={[{ id: 'groups', label: 'I tuoi gruppi salvati' }, { id: 'session', label: 'Una sessione salvata' }]} source="TabMerger 3.16.1">Quattro gruppi per quattro parti della settimana, e una sessione che li riporta tutti.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-now-open" alt="“Now Open” (Aperte ora) di TabMerger con due finestre del browser aperte e sei schede, tema chiaro" darkAlt="“Now Open” (Aperte ora) di TabMerger con due finestre del browser aperte e sei schede, tema scuro" boxes={[{ id: 'now-open-summary', label: 'Ciò che è aperto' }]} source="TabMerger 3.16.1">“Now Open” (Aperte ora): tutto ciò che è aperto in questo momento, finestra per finestra.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="morning" title="La mattina: parti da un insieme salvato">
+
+Due modi per iniziare, a seconda della giornata:
+
+1. **Tutto in una volta.** Apri la sezione **Sessioni** nella barra laterale e ripristina la tua sessione. TabMerger chiede prima conferma, perché il ripristino chiude le finestre aperte e al loro posto apre quelle salvate, ognuna com’era al salvataggio.
+2. **Un solo progetto.** Fai clic destro su un gruppo nella barra laterale e scegli **Apri tutto in una nuova finestra**. Nient’altro viene toccato.
+
+La versione passo passo, con i motivi della conferma, è in [inizia la giornata con le schede salvate](/blog/start-your-workday-with-saved-tabs).
+
+</Section>
+
+<Section id="day" title="Durante il giorno: archivia man mano">
+
+- **Metti via una scheda** trascinandola da Aperte ora su un gruppo nella barra laterale: viene salvata lì e la scheda aperta si chiude (Annulla la riporta indietro). Oppure usa una scorciatoia da tastiera ([l’elenco completo](/blog/tab-keyboard-shortcuts)).
+- **Lascia che le regole archivino per te.** Le regole URL copiano automaticamente in un gruppo le nuove schede corrispondenti; vedi [ordinare le schede in automatico con le regole URL](/blog/auto-sort-tabs-with-url-rules).
+- **Trova qualsiasi cosa** con <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> su Mac): schede aperte, salvate e chiuse di recente in un unico elenco. Tutti i filtri sono in [cerca in tutte le schede con TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+- **Lasciati una nota** su una scheda, o un promemoria per tornarci; [organizzare le schede per la ricerca](/blog/organize-tabs-for-research) mostra entrambe le cose.
+- **Elimina le copie** con **Rimuovi schede duplicate**; altro in [chiudere le schede duplicate](/blog/close-duplicate-tabs).
+
+</Section>
+
+<Section id="evening" title="La sera: salva, poi chiudi">
+
+1. Apri il gruppo in cui hai lavorato, poi il suo menu **⋯**. **Unisci con l'attuale** gli aggiunge le finestre aperte; **Sostituisci con l'attuale** sostituisce le finestre salvate con quelle aperte.
+2. Chiudi le finestre. Le schede sono nel gruppo, dove il passaggio di domattina le troverà.
+3. Ti piace com’è l’insieme dei tuoi gruppi? **Salva la sessione attuale** (il pulsante a forma di segnalibro accanto a **Sessioni**) li salva in un’istantanea con un nome come “Monday plan”.
+
+L’abitudine che fa funzionare tutto: **salva il gruppo, chiudi le finestre.** Meno finestre ti porti nel giorno dopo, più veloce è il browser e più breve la ricerca.
+
+</Section>
+
+<Section id="net" title="La rete di sicurezza: per i giorni in cui te ne dimentichi">
+
+Nessuno salva tutte le sere. Due funzioni coprono il buco:
+
+- **Salva automaticamente le schede aperte** (Impostazioni → Dati) salva le schede aperte come nuovo gruppo a intervalli programmati, oppure quando superano un numero che scegli tu.
+- **Chiusi di recente** conserva le schede e le finestre che chiudi, giorno per giorno, e <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> con `closed:` ci cerca dentro.
+
+Come funzionano entrambe, e perché si comportano così, è spiegato in [non perdere mai più una scheda](/blog/never-lose-a-tab-again). Per un crash del browser, vedi [recuperare le schede dopo un crash](/blog/restore-tabs-after-crash).
+
+</Section>
+
+<Section id="plans" title="Cosa è gratis e cosa aggiunge Pro">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Gruppi e schede', '5 gruppi, 50 schede', 'Illimitati'],
+    ['Sessioni', '3, in questo browser', 'Illimitate, sincronizzate'],
+    ['Regole URL', '3', 'Illimitate'],
+    ['Salvataggio automatico', 'Tenuti i 2 più recenti', 'Tenuti tutti'],
+    ['Chiusi di recente', 'Gli ultimi 2 giorni', 'Gli ultimi 30 giorni'],
+    ['Ricerca, note, importazione ed esportazione', 'Sì', 'Sì'],
+    ['Sincronizzazione tra dispositivi, backup automatici', 'No', 'Sì'],
+  ]}
+/>
+
+Il piano Free fa girare tutta questa routine, senza account; Pro toglie i limiti e aggiunge la sincronizzazione. I dettagli sono nella [pagina dei prezzi](/pricing).
+
+<InstallCta>Una routine, ogni browser: Chrome, Edge e Firefox. Gratis per iniziare, senza account.</InstallCta>
+
+</Section>
+
+<Section id="series" title="La serie completa delle guide di TabMerger">
+
+Una funzione per guida, con i motivi per cui funziona così:
+
+1. [Inizia la giornata con le schede salvate](/blog/start-your-workday-with-saved-tabs): sessioni e gruppi, ripristinati ogni mattina.
+2. [Non perdere mai più una scheda](/blog/never-lose-a-tab-again): salvataggio automatico e “Chiusi di recente”.
+3. [Cerca in tutte le schede](/blog/search-all-your-tabs-with-tabmerger): <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> e i suoi filtri.
+4. [Organizzare le schede per progetto](/blog/organize-tabs-by-project): gruppi, finestre con nome e l’archivio.
+5. [Le schede come lista di cose da fare](/blog/tabs-as-a-to-do-list): note, promemoria e schede dimenticate.
+6. [Ordinare le schede in automatico con le regole URL](/blog/auto-sort-tabs-with-url-rules): schede che si archiviano da sole.
+7. [Sincronizzare le schede tra dispositivi](/blog/sync-tabs-between-devices-with-tabmerger): crittografia end-to-end, e cosa può vedere il nostro server.
+8. [Importare schede in TabMerger](/blog/import-tabs-into-tabmerger): elenchi di OneTab, segnalibri e backup.
+9. [TabMerger Free o Pro](/blog/tabmerger-free-vs-pro): cosa include esattamente ogni piano.
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

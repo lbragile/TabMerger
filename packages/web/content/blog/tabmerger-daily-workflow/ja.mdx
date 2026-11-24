@@ -1,0 +1,184 @@
+export const post = {
+  slug: 'tabmerger-daily-workflow',
+  title: 'TabMerger で作る毎日のタブ整理ルーティン',
+  navTitle: '毎日のタブ整理ルーティン',
+  seoTitle: 'TabMerger でタブ整理を習慣に：朝から夜までの毎日のタブ管理術',
+  description:
+    'TabMerger を使ったブラウザのタブ整理のシンプルな習慣。その日のタブはワンクリックで開き、新しいタブはその都度しまっていつでも見つけられるようにし、1 日の終わりにはすべて保存して何も開いたままにしません。',
+  shareSummary: 'その日のタブをワンクリックで開き、いつでも見つけられ、1 日の終わりには何もなくさない。',
+  dek: 'それぞれ数クリックの 3 つの習慣。保存したセットから始め、タブはその都度しまい、すべて保存して 1 日を終えます。',
+  published: '2026-12-11',
+  updated: '2026-12-11',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'グループはタブの入ったウィンドウを丸ごと保持し、ウィンドウを閉じても保存されたままです。', source: 'TabMerger 3.16.1' },
+    { text: 'セッションは保存したすべてのグループを一度に復元し、各ウィンドウを保存したときの状態に戻します。', source: 'TabMerger 3.16.1 のソースコード' },
+    { text: 'Ctrl+K で、開いているタブ、保存したタブ、最近閉じたタブをまとめて検索できます。', source: 'TabMerger 3.16.1' },
+    { text: '無料：5 グループ、50 タブ、3 セッション。Pro：制限なし、さらに同期。', source: 'TabMerger の料金', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'ブラウザのタブを整理する毎日の習慣で、いちばん良い方法は？',
+      answer:
+        '前日の残りではなく保存したタブのセットから 1 日を始め、新しいタブはその都度グループにしまい、1 日の終わりに開いているものを保存して閉じます。TabMerger ならどのステップも数クリックで、忘れた日は自動保存がカバーします。',
+    },
+    {
+      question: 'この習慣にアカウントは必要ですか？',
+      answer: 'いいえ。グループ、セッション、検索、自動保存、最近閉じたタブは、無料プランでアカウントなしで使えます。アカウントが必要なのは、デバイス間の同期などの Pro 機能だけです。',
+    },
+    {
+      question: 'Chrome、Edge、Firefox で使えますか？',
+      answer: 'はい。TabMerger は Chrome、Edge、Firefox 向けに無料で、ルーティンは 3 つとも同じです。',
+    },
+    {
+      question: 'グループとセッションの違いは？',
+      answer:
+        'グループは、1 つ以上のウィンドウからなる保存済みのタブのセットで、開いたり、編集したり、追加したりします。セッションは、保存したすべてのグループを一度に記録した名前付きのスナップショットで、まとめて復元します。',
+    },
+  ],
+  images: [
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp', alt: '4 つの保存済みグループ（Work、Reading list、Thesis sources、Trip to Lisbon）と保存済みセッション「Monday plan」がある TabMerger、ライトテーマ' },
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-dark.webp', alt: '4 つの保存済みグループ（Work、Reading list、Thesis sources、Trip to Lisbon）と保存済みセッション「Monday plan」がある TabMerger、ダークテーマ' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-light.webp', alt: '開いている 2 つのブラウザウィンドウと 6 つのタブを一覧表示する TabMerger の「Now Open」（現在開いているタブ）、ライトテーマ' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-dark.webp', alt: '開いている 2 つのブラウザウィンドウと 6 つのタブを一覧表示する TabMerger の「Now Open」（現在開いているタブ）、ダークテーマ' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp' },
+  ogImage: { src: '/blog/tabmerger-daily-workflow/og.png', alt: 'TabMerger で作る毎日のタブ整理ルーティン。サイドバーに保存済みグループとセッション' },
+  toc: [
+    { id: 'quick', label: '簡単な答え' },
+    { id: 'problem', label: 'タブがたまる理由' },
+    { id: 'idea', label: 'TabMerger の考え方' },
+    { id: 'morning', label: '朝' },
+    { id: 'day', label: '日中' },
+    { id: 'evening', label: '夜' },
+    { id: 'net', label: 'セーフティネット' },
+    { id: 'plans', label: '無料版と Pro' },
+    { id: 'series', label: 'シリーズ一覧' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+}
+
+<QuickAnswer>
+
+タブは開いたウィンドウではなく、[TabMerger](/features) のグループに置いておきましょう。**朝**：保存したセッションを復元するか、必要なグループだけを開きます。**日中**：新しいタブはグループにしまい、どのタブも <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> で見つけます。**夜**：開いているものをそのグループに保存し、ウィンドウを閉じます。忘れたものは自動保存と「最近閉じたタブ」が拾ってくれます。1 日数クリックで、毎朝、残しておきたかったタブから始められます。
+
+</QuickAnswer>
+
+<InstallCta>明日は昨日の山ではなく、必要なタブから始めましょう。Chrome、Edge、Firefox 向けに無料。</InstallCta>
+
+<Section id="problem" title="なぜタブは毎日たまっていくのか">
+
+ごく普通の火曜日を思い浮かべてください。メールとカレンダーを開き、次にプルリクエスト、さらにそれに必要なドキュメントのページを 3 つ。同僚から、あとで読みたいリンクが届きます。昼にはウィンドウが 2 つ、夜には 4 つ。いくつかのタブはまだ「作業中」で、閉じたら履歴を掘り返して探すことになるので、閉じられません。
+
+こうしてブラウザが ToDo リストになります。でも、そのためには作られていません。タブバーには名前も区切りもなく、作業をなくさずに片付ける方法もありません。毎日が前日の残りから始まり、ブラウザは重くなり、必要な 1 つのタブは 3 つ目のウィンドウのどこかにある 16 ピクセルのアイコンです。
+
+</Section>
+
+<Section id="idea" title="TabMerger はどう解決するのか">
+
+TabMerger は、ブラウザが混ぜてしまう 2 つのものを分けます。**開いている**ものと、**残しておく**ものです。
+
+- **現在開いているタブ** は、開いているウィンドウとタブをリアルタイムで映すビューです。常にリストの先頭にあって削除できないので、いつでもワンクリックで開けます。
+- **グループ**は残しておくものです。各グループには名前、メモ、色の付いた 1 つ以上のタブのウィンドウが入り、ウィンドウを閉じても保存されたままです。
+- **セッション**は、すべてのグループをまとめて記録した名前付きのスナップショットです。全部を一度に戻したい日に使います。
+
+残しておくためにタブを開きっぱなしにする必要がなくなるので、ウィンドウは気兼ねなく閉じられます。ルーティンはこれだけです。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="残しておくものと開いているもの" steps={[{ title: 'グループ' }, { title: '現在開いているタブ' }]}>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-workspace" alt="4 つの保存済みグループ（Work、Reading list、Thesis sources、Trip to Lisbon）と保存済みセッション「Monday plan」がある TabMerger、ライトテーマ" darkAlt="4 つの保存済みグループ（Work、Reading list、Thesis sources、Trip to Lisbon）と保存済みセッション「Monday plan」がある TabMerger、ダークテーマ" boxes={[{ id: 'groups', label: '保存済みのグループ' }, { id: 'session', label: '保存済みのセッション' }]} source="TabMerger 3.16.1">1 週間の 4 つの用事に 4 つのグループ、それを全部呼び戻すセッションが 1 つ。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-now-open" alt="開いている 2 つのブラウザウィンドウと 6 つのタブを一覧表示する TabMerger の「Now Open」（現在開いているタブ）、ライトテーマ" darkAlt="開いている 2 つのブラウザウィンドウと 6 つのタブを一覧表示する TabMerger の「Now Open」（現在開いているタブ）、ダークテーマ" boxes={[{ id: 'now-open-summary', label: '開いているもの' }]} source="TabMerger 3.16.1">「Now Open」（現在開いているタブ）：いま開いているすべてを、ウィンドウごとに表示。</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="morning" title="朝：保存したセットから始める">
+
+その日に合わせて、始め方は 2 通り：
+
+1. **まとめて全部**。サイドバーの **セッション** セクションを開き、セッションを復元します。復元すると開いているウィンドウが閉じられ、代わりに保存したウィンドウが保存時の状態で開くため、TabMerger は先に確認します。
+2. **1 つのプロジェクトだけ**。サイドバーでグループを右クリックし、**すべて新しいウィンドウで開く** を選びます。ほかには何も影響しません。
+
+確認が出る理由も含めた手順は、[保存したタブで仕事の 1 日を始める](/blog/start-your-workday-with-saved-tabs)で紹介しています。
+
+</Section>
+
+<Section id="day" title="日中：その都度しまう">
+
+- **タブをしまう**には、現在開いているタブ からサイドバーのグループへドラッグします。タブはそこに保存され、開いていたタブは閉じます（元に戻す で戻せます）。キーボードショートカットも使えます（[一覧はこちら](/blog/tab-keyboard-shortcuts)）。
+- **ルールに任せる**。URL ルールは、条件に合う新しいタブを自動でグループにコピーします。詳しくは [URL ルールでタブを自動仕分け](/blog/auto-sort-tabs-with-url-rules)へ。
+- **何でも見つける**には <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>（Mac では <Kbd>⌘</Kbd>+<Kbd>K</Kbd>）。開いているタブ、保存したタブ、最近閉じたタブが 1 つのリストに並びます。フィルターの一覧は [TabMerger ですべてのタブを検索する](/blog/search-all-your-tabs-with-tabmerger)にあります。
+- **自分にメモを残す**。タブにメモを付けたり、あとで戻るためのリマインダーを設定したりできます。どちらも [調べものに合わせたタブの整理](/blog/organize-tabs-for-research)で紹介しています。
+- **重複を片付ける**には**重複タブを削除**を使います。詳しくは [重複タブを閉じる](/blog/close-duplicate-tabs)へ。
+
+</Section>
+
+<Section id="evening" title="夜：保存してから閉じる">
+
+1. 作業したグループを開き、その **⋯** メニューを開きます。**現在の内容と統合**は開いているウィンドウをグループに追加し、**現在の内容で置き換え**は保存済みのウィンドウを開いているウィンドウに入れ替えます。
+2. ウィンドウを閉じます。タブはグループに入っているので、明日の朝のステップで見つかります。
+3. すべてのグループの状態に満足したら、**現在のセッションを保存**（**セッション** の隣にあるブックマークのボタン）で、「Monday plan」のような名前を付けてスナップショットを残します。
+
+これを機能させる習慣は、**グループを保存して、ウィンドウを閉じる**。明日に持ち越すウィンドウが少ないほど、ブラウザは速く、探す時間は短くなります。
+
+</Section>
+
+<Section id="net" title="セーフティネット：忘れた日のために">
+
+毎晩保存できる人はいません。その穴を 2 つの機能が埋めます：
+
+- **開いているタブを自動保存**（設定 → データ）は、開いているタブをスケジュールに沿って、または開いているタブが決めた数を超えたときに、新しいグループとして保存します。
+- **最近閉じたタブ**は閉じたタブとウィンドウを日ごとに残し、<Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> で `closed:` を付けて検索できます。
+
+両方の仕組みと、そう動く理由は [もうタブをなくさない](/blog/never-lose-a-tab-again)で解説しています。ブラウザがクラッシュしたときは [クラッシュ後にタブを取り戻す](/blog/restore-tabs-after-crash)をご覧ください。
+
+</Section>
+
+<Section id="plans" title="無料でできることと、Pro で増えること">
+
+<ComparisonTable
+  head={['', '無料', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['グループとタブ', '5 グループ、50 タブ', '無制限'],
+    ['セッション', '3 つ、このブラウザ内', '無制限、同期あり'],
+    ['URL ルール', '3', '無制限'],
+    ['自動保存', '最新の 2 つを保持', 'すべて保持'],
+    ['最近閉じたタブ', '直近 2 日分', '直近 30 日分'],
+    ['検索、メモ、インポートとエクスポート', 'はい', 'はい'],
+    ['デバイス間の同期、自動バックアップ', 'いいえ', 'はい'],
+  ]}
+/>
+
+このルーティンは、無料プランでアカウントなしにすべて使えます。Pro では制限がなくなり、同期が加わります。詳しくは[料金ページ](/pricing)へ。
+
+<InstallCta>どのブラウザでも同じルーティン：Chrome、Edge、Firefox。無料で始められ、アカウントは不要です。</InstallCta>
+
+</Section>
+
+<Section id="series" title="TabMerger ガイドシリーズ一覧">
+
+1 つのガイドで 1 つの機能を、そう動く理由とともに紹介しています：
+
+1. [保存したタブで仕事の 1 日を始める](/blog/start-your-workday-with-saved-tabs)：セッションとグループを毎朝復元。
+2. [もうタブをなくさない](/blog/never-lose-a-tab-again)：自動保存と「最近閉じたタブ」。
+3. [すべてのタブを検索する](/blog/search-all-your-tabs-with-tabmerger)：<Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> とそのフィルター。
+4. [プロジェクトごとにタブを整理する](/blog/organize-tabs-by-project)：グループ、名前付きウィンドウ、アーカイブ。
+5. [タブを ToDo リストにする](/blog/tabs-as-a-to-do-list)：メモ、リマインダー、放置タブ。
+6. [URL ルールでタブを自動仕分け](/blog/auto-sort-tabs-with-url-rules)：タブが自分で行き先に収まる。
+7. [デバイス間でタブを同期する](/blog/sync-tabs-between-devices-with-tabmerger)：エンドツーエンドの暗号化と、サーバーから見えるもの。
+8. [TabMerger にタブをインポートする](/blog/import-tabs-into-tabmerger)：OneTab のリスト、ブックマーク、バックアップ。
+9. [TabMerger の無料版と Pro](/blog/tabmerger-free-vs-pro)：各プランに含まれるものを正確に。
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

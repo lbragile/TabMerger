@@ -1,0 +1,184 @@
+export const post = {
+  slug: 'tabmerger-daily-workflow',
+  title: 'TabMerger로 만드는 하루 탭 정리 루틴',
+  navTitle: '하루 탭 정리 루틴',
+  seoTitle: 'TabMerger로 매일 탭 관리하기: 아침부터 저녁까지 탭 정리 루틴',
+  description:
+    'TabMerger로 브라우저 탭을 관리하는 간단한 하루 루틴: 그날의 탭은 클릭 한 번으로 열고, 새 탭은 바로바로 정리해 언제든 찾을 수 있게 하고, 하루를 마칠 때는 모두 저장하고 아무것도 열어 두지 않습니다.',
+  shareSummary: '그날의 탭은 클릭 한 번으로 열고, 언제든 찾고, 하루를 마칠 때 아무것도 잃지 않습니다.',
+  dek: '각각 몇 번의 클릭이면 되는 세 가지 습관: 저장된 세트로 시작하고, 탭은 그때그때 정리하고, 모두 저장한 채 하루를 마칩니다.',
+  published: '2026-12-11',
+  updated: '2026-12-11',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: '그룹은 탭이 담긴 창을 통째로 보관하며, 창을 닫아도 저장된 상태로 남습니다.', source: 'TabMerger 3.16.1' },
+    { text: '세션은 저장된 모든 그룹을 한 번에 복원하며, 각 창을 저장했던 모습 그대로 되살립니다.', source: 'TabMerger 3.16.1 소스 코드' },
+    { text: 'Ctrl+K로 열린 탭, 저장된 탭, 최근에 닫은 탭을 함께 검색합니다.', source: 'TabMerger 3.16.1' },
+    { text: '무료: 그룹 5개, 탭 50개, 세션 3개. Pro: 제한 없음, 동기화 포함.', source: 'TabMerger 요금제', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '브라우저 탭을 위한 가장 좋은 하루 루틴은 무엇인가요?',
+      answer:
+        '어제 남은 탭이 아니라 저장된 탭 세트로 하루를 시작하고, 새 탭은 그때그때 그룹에 정리하고, 하루를 마칠 때 열려 있는 것을 저장한 뒤 닫으세요. TabMerger는 각 단계를 몇 번의 클릭으로 끝내며, 깜빡한 날은 자동 저장이 챙겨 줍니다.',
+    },
+    {
+      question: '이 루틴을 쓰려면 계정이 필요한가요?',
+      answer: '아니요. 그룹, 세션, 검색, 자동 저장, 최근에 닫은 탭은 모두 무료 요금제에서 계정 없이 작동합니다. 계정은 기기 간 동기화 같은 Pro 기능에만 필요합니다.',
+    },
+    {
+      question: 'Chrome, Edge, Firefox에서 모두 되나요?',
+      answer: '네. TabMerger는 Chrome, Edge, Firefox용으로 무료이며, 루틴은 세 브라우저에서 모두 같습니다.',
+    },
+    {
+      question: '그룹과 세션은 무엇이 다른가요?',
+      answer:
+        '그룹은 하나 이상의 창으로 이루어진 저장된 탭 세트로, 열고 편집하고 탭을 더해 가며 씁니다. 세션은 저장된 모든 그룹을 한 번에 담은 이름 붙은 스냅샷으로, 함께 복원합니다.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp', alt: '저장된 그룹 4개(Work, Reading list, Thesis sources, Trip to Lisbon)와 저장된 세션 \'Monday plan\'이 있는 TabMerger, 밝은 테마' },
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-dark.webp', alt: '저장된 그룹 4개(Work, Reading list, Thesis sources, Trip to Lisbon)와 저장된 세션 \'Monday plan\'이 있는 TabMerger, 어두운 테마' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-light.webp', alt: '열린 브라우저 창 2개와 탭 6개를 보여 주는 TabMerger의 \'Now Open\'(현재 열린 탭), 밝은 테마' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-dark.webp', alt: '열린 브라우저 창 2개와 탭 6개를 보여 주는 TabMerger의 \'Now Open\'(현재 열린 탭), 어두운 테마' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp' },
+  ogImage: { src: '/blog/tabmerger-daily-workflow/og.png', alt: 'TabMerger로 만드는 하루 탭 정리 루틴, 사이드바의 저장된 그룹과 세션' },
+  toc: [
+    { id: 'quick', label: '간단한 답' },
+    { id: 'problem', label: '탭이 쌓이는 이유' },
+    { id: 'idea', label: 'TabMerger의 방식' },
+    { id: 'morning', label: '아침' },
+    { id: 'day', label: '낮 동안' },
+    { id: 'evening', label: '저녁' },
+    { id: 'net', label: '안전망' },
+    { id: 'plans', label: '무료와 Pro' },
+    { id: 'series', label: '전체 시리즈' },
+    { id: 'faq', label: '자주 묻는 질문' },
+  ],
+}
+
+<QuickAnswer>
+
+탭은 열린 창이 아니라 [TabMerger](/features) 그룹에 보관하세요. **아침:** 저장된 세션을 복원하거나 필요한 그룹만 엽니다. **낮 동안:** 새 탭은 그룹에 정리하고, 어떤 탭이든 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>로 찾습니다. **저녁:** 열려 있는 것을 해당 그룹에 저장하고 창을 닫습니다. 깜빡한 것은 자동 저장과 '최근에 닫은 탭'이 챙깁니다. 하루 몇 번의 클릭이면 매일 아침 남겨 두려던 탭으로 시작할 수 있습니다.
+
+</QuickAnswer>
+
+<InstallCta>내일은 어제 쌓인 탭 더미가 아니라 필요한 탭으로 시작하세요. Chrome, Edge, Firefox용 무료.</InstallCta>
+
+<Section id="problem" title="탭은 왜 매일 쌓일까요?">
+
+평범한 화요일을 떠올려 보세요. 메일과 캘린더를 열고, 이어서 풀 리퀘스트를, 그다음 거기에 필요한 문서 페이지 세 개를 엽니다. 동료가 나중에 읽고 싶은 링크를 보내 줍니다. 점심때는 창이 두 개, 저녁에는 네 개입니다. 일부 탭이 아직 '작업 중'이라 닫지 못합니다. 닫으면 다시 찾기 위해 방문 기록을 뒤져야 하니까요.
+
+그렇게 브라우저가 할 일 목록이 됩니다. 원래 그런 용도로 만들어지지 않았는데도요. 탭 표시줄에는 이름도, 구역도, 작업을 잃지 않고 치워 둘 방법도 없습니다. 매일 어제 남은 탭으로 하루가 시작되고, 브라우저는 느려지고, 정작 필요한 탭 하나는 세 번째 창 어딘가에 있는 16픽셀 아이콘이 됩니다.
+
+</Section>
+
+<Section id="idea" title="TabMerger는 이 문제를 어떻게 해결할까요?">
+
+TabMerger는 브라우저가 뒤섞어 버리는 두 가지를 나눕니다. **열려 있는** 것과 **보관하는** 것입니다.
+
+- **현재 열린 탭**은 열린 창과 탭을 실시간으로 보여 주는 화면입니다. 항상 목록 맨 위에 있고 삭제할 수 없어서 언제나 클릭 한 번이면 닿습니다.
+- **그룹**은 보관하는 것입니다. 각 그룹에는 이름, 메모, 색이 붙은 하나 이상의 탭 창이 담기며, 창을 닫아도 저장된 상태로 남습니다.
+- **세션**은 모든 그룹을 함께 담은 이름 붙은 스냅샷으로, 모든 것을 한 번에 되돌리고 싶은 날을 위한 것입니다.
+
+보관하려고 탭을 열어 둘 필요가 없어졌으니 창은 마음 놓고 닫으면 됩니다. 루틴은 이게 전부입니다.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="보관한 것과 열린 것을 나란히" steps={[{ title: '내 그룹' }, { title: '현재 열린 탭' }]}>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-workspace" alt="저장된 그룹 4개(Work, Reading list, Thesis sources, Trip to Lisbon)와 저장된 세션 'Monday plan'이 있는 TabMerger, 밝은 테마" darkAlt="저장된 그룹 4개(Work, Reading list, Thesis sources, Trip to Lisbon)와 저장된 세션 'Monday plan'이 있는 TabMerger, 어두운 테마" boxes={[{ id: 'groups', label: '저장된 그룹' }, { id: 'session', label: '저장된 세션' }]} source="TabMerger 3.16.1">한 주의 네 가지 일을 위한 그룹 네 개, 그리고 그 모두를 되살리는 세션 하나.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-now-open" alt="열린 브라우저 창 2개와 탭 6개를 보여 주는 TabMerger의 'Now Open'(현재 열린 탭), 밝은 테마" darkAlt="열린 브라우저 창 2개와 탭 6개를 보여 주는 TabMerger의 'Now Open'(현재 열린 탭), 어두운 테마" boxes={[{ id: 'now-open-summary', label: '열려 있는 것' }]} source="TabMerger 3.16.1">'Now Open'(현재 열린 탭): 지금 열려 있는 모든 것을 창별로 보여 줍니다.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="morning" title="아침: 저장된 세트로 시작하기">
+
+그날 상황에 따라 두 가지로 시작합니다.
+
+1. **모두 한 번에.** 사이드바의 **세션** 섹션을 열고 세션을 복원합니다. 복원하면 열린 창이 닫히고 그 자리에 저장된 창이 저장했던 모습 그대로 열리기 때문에 TabMerger가 먼저 확인합니다.
+2. **프로젝트 하나만.** 사이드바에서 그룹을 마우스 오른쪽 버튼으로 클릭하고 **모두 새 창에서 열기**를 선택합니다. 다른 것은 건드리지 않습니다.
+
+확인 단계를 두는 이유까지 담은 단계별 안내는 [저장된 탭으로 업무 시작하기](/blog/start-your-workday-with-saved-tabs)에 있습니다.
+
+</Section>
+
+<Section id="day" title="낮 동안: 그때그때 정리하기">
+
+- **탭 치워 두기:** 현재 열린 탭에서 사이드바의 그룹으로 탭을 끌어다 놓으면 그곳에 저장되고 열린 탭은 닫힙니다(실행 취소로 되돌릴 수 있습니다). 키보드 단축키를 써도 됩니다([전체 목록](/blog/tab-keyboard-shortcuts)).
+- **규칙에 맡기기.** URL 규칙은 조건에 맞는 새 탭을 자동으로 그룹에 복사합니다. [URL 규칙으로 탭 자동 정리하기](/blog/auto-sort-tabs-with-url-rules)를 참고하세요.
+- **무엇이든 찾기:** <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>(Mac에서는 <Kbd>⌘</Kbd>+<Kbd>K</Kbd>)를 누르면 열린 탭, 저장된 탭, 최근에 닫은 탭이 한 목록에 나옵니다. 모든 필터는 [TabMerger로 모든 탭 검색하기](/blog/search-all-your-tabs-with-tabmerger)에 정리되어 있습니다.
+- **나에게 메모 남기기:** 탭에 메모를 달거나 다시 돌아올 알림을 설정할 수 있습니다. [리서치용 탭 정리하기](/blog/organize-tabs-for-research)에서 둘 다 보여 줍니다.
+- **중복 정리하기:** **중복 탭 제거**를 쓰면 됩니다. 자세한 내용은 [중복 탭 닫기](/blog/close-duplicate-tabs)에 있습니다.
+
+</Section>
+
+<Section id="evening" title="저녁: 저장한 다음 닫기">
+
+1. 작업한 그룹을 연 다음 그 그룹의 **⋯** 메뉴를 엽니다. **현재 상태와 합치기**는 열린 창을 그룹에 더하고, **현재 상태로 바꾸기**는 저장된 창을 열린 창으로 바꿉니다.
+2. 창을 닫습니다. 탭은 그룹에 들어 있어서 내일 아침 단계에서 그대로 찾을 수 있습니다.
+3. 모든 그룹이 마음에 드나요? **현재 세션 저장**(**세션** 옆의 북마크 버튼)으로 'Monday plan' 같은 이름을 붙여 스냅샷을 남기세요.
+
+이 루틴을 굴러가게 하는 습관: **그룹은 저장하고, 창은 닫는다.** 내일로 넘기는 창이 적을수록 브라우저는 빨라지고 찾는 시간은 짧아집니다.
+
+</Section>
+
+<Section id="net" title="안전망: 깜빡한 날을 위해">
+
+매일 저녁 저장하는 사람은 없습니다. 그 빈틈을 두 가지 기능이 메웁니다.
+
+- **열린 탭 자동 저장**(설정 → 데이터)은 열린 탭을 일정에 따라, 또는 열린 탭이 정해 둔 개수를 넘으면 새 그룹으로 저장합니다.
+- **최근에 닫은 탭**은 닫은 탭과 창을 날짜별로 보관하며, <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>에서 `closed:`로 검색할 수 있습니다.
+
+두 기능이 어떻게 작동하고 왜 그렇게 동작하는지는 [다시는 탭을 잃어버리지 않기](/blog/never-lose-a-tab-again)에서 설명합니다. 브라우저가 비정상 종료됐다면 [브라우저 충돌 후 탭 되찾기](/blog/restore-tabs-after-crash)를 보세요.
+
+</Section>
+
+<Section id="plans" title="무료로 되는 것과 Pro가 더하는 것">
+
+<ComparisonTable
+  head={['', '무료', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['그룹과 탭', '그룹 5개, 탭 50개', '무제한'],
+    ['세션', '3개, 이 브라우저에서', '무제한, 동기화'],
+    ['URL 규칙', '3', '무제한'],
+    ['자동 저장', '최신 2개 보관', '모두 보관'],
+    ['최근에 닫은 탭', '최근 2일', '최근 30일'],
+    ['검색, 메모, 가져오기 및 내보내기', '예', '예'],
+    ['기기 간 동기화, 자동 백업', '아니요', '예'],
+  ]}
+/>
+
+무료 요금제로도 계정 없이 이 루틴을 모두 쓸 수 있고, Pro는 제한을 없애고 동기화를 더합니다. 자세한 내용은 [요금제 페이지](/pricing)에 있습니다.
+
+<InstallCta>어느 브라우저에서나 같은 루틴: Chrome, Edge, Firefox. 무료로 시작하고, 계정은 필요 없습니다.</InstallCta>
+
+</Section>
+
+<Section id="series" title="TabMerger 가이드 전체 시리즈">
+
+가이드마다 기능 하나씩, 그렇게 작동하는 이유와 함께 소개합니다.
+
+1. [저장된 탭으로 업무 시작하기](/blog/start-your-workday-with-saved-tabs): 매일 아침 복원하는 세션과 그룹.
+2. [다시는 탭을 잃어버리지 않기](/blog/never-lose-a-tab-again): 자동 저장과 '최근에 닫은 탭'.
+3. [모든 탭 검색하기](/blog/search-all-your-tabs-with-tabmerger): <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>와 필터.
+4. [프로젝트별로 탭 정리하기](/blog/organize-tabs-by-project): 그룹, 이름 붙은 창, 보관함.
+5. [탭을 할 일 목록으로 쓰기](/blog/tabs-as-a-to-do-list): 메모, 알림, 묵은 탭.
+6. [URL 규칙으로 탭 자동 정리하기](/blog/auto-sort-tabs-with-url-rules): 스스로 자리를 찾아가는 탭.
+7. [기기 간 탭 동기화하기](/blog/sync-tabs-between-devices-with-tabmerger): 엔드투엔드 암호화, 그리고 서버가 볼 수 있는 것.
+8. [TabMerger로 탭 가져오기](/blog/import-tabs-into-tabmerger): OneTab 목록, 북마크, 백업.
+9. [TabMerger 무료와 Pro](/blog/tabmerger-free-vs-pro): 요금제별로 정확히 무엇이 포함되는지.
+
+</Section>
+
+<Section id="faq" title="자주 묻는 질문">
+
+<Faq items={post.faq} />
+
+</Section>

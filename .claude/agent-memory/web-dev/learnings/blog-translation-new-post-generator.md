@@ -69,3 +69,6 @@ Run the template check again just before writing into the repo, to confirm en.md
 - KeyFact text is free prose, so localized key names (fr "Maj") slip in; shortcuts there stay English like the `Kbd` keys.
 - `vitest -t "<slug>/"` runs 15 tests per locale (14 for en); `--reporter=verbose | grep -o "<slug>/[a-zA-Z-]*" | sort | uniq -c` confirms every locale ran.
 - Only `navTitle` and `shareSummary` have schema length limits; a long `seoTitle` passes silently.
+- Don't `.trim()` data values: French keys that start right after a link (`](…) : …`) need their leading space. Strip only blank lines and trailing whitespace.
+- Make every number cell a data key, even a bare `'3'`: fa uses Persian digits in table cells.
+- Alts in JSX attributes can't hold ASCII `"`; where a language's body uses ASCII quotes (id, he), alts need “ ” or no quotes.

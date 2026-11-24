@@ -1,0 +1,184 @@
+export const post = {
+  slug: 'tabmerger-daily-workflow',
+  title: 'TabMerger ile günlük sekme düzeni',
+  navTitle: 'Günlük sekme düzeni',
+  seoTitle: 'TabMerger ile Günlük Sekme Düzeni: Sabahtan Akşama Sekme Yönetimi',
+  description:
+    'TabMerger ile tarayıcı sekmeleriniz için basit bir günlük düzen: günün sekmelerini tek tıkla açın, yeni sekmeleri yerine koyup her zaman bulun ve günü her şey kayıtlı, hiçbir şey açık kalmadan bitirin.',
+  shareSummary: 'Günün sekmeleri tek tıkla, her şey kolayca bulunur, akşam hiçbir şey kaybolmaz.',
+  dek: 'Her biri birkaç tık süren üç alışkanlık: kayıtlı bir setle başlayın, sekmeleri gün içinde yerine koyun ve günü her şey kayıtlı olarak kapatın.',
+  published: '2026-12-11',
+  updated: '2026-12-11',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Gruplar sekmelerden oluşan pencerelerin tamamını tutar ve pencereler kapandıktan sonra da kayıtlı kalır.', source: 'TabMerger 3.16.1' },
+    { text: 'Bir oturum kayıtlı tüm grupları tek seferde, her pencereyi kaydedildiği gibi geri yükler.', source: 'TabMerger 3.16.1 kaynak kodu' },
+    { text: 'Ctrl+K açık, kayıtlı ve son kapatılan sekmeleri birlikte arar.', source: 'TabMerger 3.16.1' },
+    { text: 'Ücretsiz: 5 grup, 50 sekme, 3 oturum. Pro: sınır yok, üstüne senkronizasyon.', source: 'TabMerger fiyatları', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Tarayıcı sekmeleri için en iyi günlük düzen nedir?',
+      answer:
+        'Güne dünden kalanlarla değil kayıtlı bir sekme setiyle başlayın, yeni sekmeleri gün içinde gruplara yerleştirin ve günü açık olanı kaydedip kapatarak bitirin. TabMerger her adımı birkaç tıkla yapar; unuttuğunuz günlerde otomatik kaydetme devreye girer.',
+    },
+    {
+      question: 'Bu düzen için hesap gerekir mi?',
+      answer: 'Hayır. Gruplar, oturumlar, arama, otomatik kaydetme ve son kapatılan sekmeler Ücretsiz planda hesap olmadan çalışır. Hesap yalnızca cihazlar arası senkronizasyon gibi Pro özellikleri için gerekir.',
+    },
+    {
+      question: 'Chrome, Edge ve Firefox’ta çalışır mı?',
+      answer: 'Evet. TabMerger Chrome, Edge ve Firefox için ücretsizdir ve düzen üçünde de aynıdır.',
+    },
+    {
+      question: 'Grup ile oturum arasındaki fark nedir?',
+      answer:
+        'Grup; açtığınız, düzenlediğiniz ve eklemeler yaptığınız, bir veya daha fazla pencereden oluşan kayıtlı bir sekme setidir. Oturum ise kayıtlı tüm gruplarınızın tek seferde alınmış, adlandırılmış bir anlık görüntüsüdür ve birlikte geri yüklenir.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp', alt: 'Dört kayıtlı grubu (Work, Reading list, Thesis sources, Trip to Lisbon) ve “Monday plan” adlı kayıtlı oturumuyla TabMerger, açık tema' },
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-dark.webp', alt: 'Dört kayıtlı grubu (Work, Reading list, Thesis sources, Trip to Lisbon) ve “Monday plan” adlı kayıtlı oturumuyla TabMerger, koyu tema' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-light.webp', alt: 'TabMerger’da iki açık tarayıcı penceresi ve altı sekme listeleyen “Now Open” (Şu An Açık), açık tema' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-dark.webp', alt: 'TabMerger’da iki açık tarayıcı penceresi ve altı sekme listeleyen “Now Open” (Şu An Açık), koyu tema' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp' },
+  ogImage: { src: '/blog/tabmerger-daily-workflow/og.png', alt: 'TabMerger ile günlük sekme düzeni: kenar çubuğunda kayıtlı gruplar ve bir oturum' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'problem', label: 'Sekmeler neden birikir' },
+    { id: 'idea', label: 'TabMerger nasıl düşünür' },
+    { id: 'morning', label: 'Sabah' },
+    { id: 'day', label: 'Gün içinde' },
+    { id: 'evening', label: 'Akşam' },
+    { id: 'net', label: 'Güvenlik ağı' },
+    { id: 'plans', label: 'Ücretsiz ve Pro' },
+    { id: 'series', label: 'Serinin tamamı' },
+    { id: 'faq', label: 'SSS' },
+  ],
+}
+
+<QuickAnswer>
+
+Sekmelerinizi açık pencerelerde değil, [TabMerger](/features) gruplarında tutun. **Sabah:** kayıtlı bir oturumu geri yükleyin ya da yalnızca ihtiyacınız olan grubu açın. **Gün içinde:** yeni sekmeleri gruplara yerleştirin ve herhangi birini <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> ile bulun. **Akşam:** açık olanı kendi grubuna kaydedin ve pencereleri kapatın. Unuttuklarınızı otomatik kaydetme ve “Son kapatılanlar” yakalar. Günde birkaç tık sürer ve her sabah saklamak istediğiniz sekmelerle başlarsınız.
+
+</QuickAnswer>
+
+<InstallCta>Yarına dünün yığınıyla değil, doğru sekmelerle başlayın. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+<Section id="problem" title="Sekmeler neden her gün birikir?">
+
+Sıradan bir salı gününü düşünün. E-postayı ve takvimi açıyorsunuz, sonra bir pull request’i, sonra onun için gereken üç doküman sayfasını. Bir iş arkadaşınız sonra okumak istediğiniz bir bağlantı gönderiyor. Öğlene kadar iki pencere oluyor; akşama dört. Onları kapatmıyorsunuz, çünkü bazı sekmeler hâlâ “devam ediyor” ve yeniden bulmak geçmişi didiklemek demek.
+
+Böylece tarayıcı yapılacaklar listesine dönüşüyor. Oysa bunun için hiç tasarlanmadı: sekme şeridinin adları, bölümleri ve işi kaybetmeden kaldırmanın bir yolu yok. Her gün dünden kalanlarla başlıyor, tarayıcı yavaşlıyor ve ihtiyacınız olan tek sekme üçüncü pencerede bir yerlerde duran 16 piksellik bir simge oluyor.
+
+</Section>
+
+<Section id="idea" title="TabMerger bunu nasıl çözer?">
+
+TabMerger, tarayıcının birbirine karıştırdığı iki şeyi ayırır: **açık** olan ve **sakladığınız**.
+
+- **Şu An Açık**, açık pencerelerinizin ve sekmelerinizin canlı görünümüdür. Listede hep ilk sıradadır ve silinemez; yani her zaman bir tık uzağınızdadır.
+- **Gruplar** sakladıklarınızdır. Her grup adları, notları ve renkleriyle bir veya daha fazla sekme penceresi tutar ve pencereler kapandıktan sonra da kayıtlı kalır.
+- **Oturumlar**, tüm gruplarınızın birlikte alınmış, adlandırılmış anlık görüntüleridir; her şeyi tek seferde geri istediğiniz günler için.
+
+Saklamak artık bir sekmeyi açık bırakmaya bağlı olmadığı için pencereleri gönül rahatlığıyla kapatabilirsiniz. Bütün düzen bu kadar.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Saklanan ve açık olan, yan yana" steps={[{ title: 'Gruplarınız' }, { title: 'Şu An Açık' }]}>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-workspace" alt="Dört kayıtlı grubu (Work, Reading list, Thesis sources, Trip to Lisbon) ve “Monday plan” adlı kayıtlı oturumuyla TabMerger, açık tema" darkAlt="Dört kayıtlı grubu (Work, Reading list, Thesis sources, Trip to Lisbon) ve “Monday plan” adlı kayıtlı oturumuyla TabMerger, koyu tema" boxes={[{ id: 'groups', label: 'Kayıtlı gruplarınız' }, { id: 'session', label: 'Kayıtlı bir oturum' }]} source="TabMerger 3.16.1">Haftanın dört bölümü için dört grup ve hepsini geri getiren bir oturum.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-now-open" alt="TabMerger’da iki açık tarayıcı penceresi ve altı sekme listeleyen “Now Open” (Şu An Açık), açık tema" darkAlt="TabMerger’da iki açık tarayıcı penceresi ve altı sekme listeleyen “Now Open” (Şu An Açık), koyu tema" boxes={[{ id: 'now-open-summary', label: 'Şu an açık olanlar' }]} source="TabMerger 3.16.1">“Now Open” (Şu An Açık): şu anda açık olan her şey, pencere pencere.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="morning" title="Sabah: kayıtlı bir setle başlayın">
+
+Güne göre iki başlangıç yolu:
+
+1. **Her şey bir arada.** Kenar çubuğundaki **Oturumlar** bölümünü açın ve oturumunuzu geri yükleyin. TabMerger önce sorar, çünkü geri yükleme açık pencereleri kapatır ve yerlerine kayıtlı olanları, her pencereyi kaydedildiği gibi açar.
+2. **Yalnızca bir proje.** Kenar çubuğunda bir gruba sağ tıklayın ve **Tümünü yeni pencerede aç** seçeneğini seçin. Başka hiçbir şeye dokunulmaz.
+
+Onayın nedenleriyle birlikte adım adım anlatım için [iş gününüze kayıtlı sekmelerle başlayın](/blog/start-your-workday-with-saved-tabs) rehberine bakın.
+
+</Section>
+
+<Section id="day" title="Gün içinde: hemen yerine koyun">
+
+- **Bir sekmeyi kaldırmak** için onu Şu An Açık bölümünden kenar çubuğundaki bir gruba sürükleyin: sekme orada kaydedilir ve açık sekme kapanır (Geri al geri getirir). Ya da bir klavye kısayolu kullanın ([tam liste](/blog/tab-keyboard-shortcuts)).
+- **Bırakın kurallar yerleştirsin.** URL kuralları eşleşen yeni sekmeleri otomatik olarak bir gruba kopyalar; bkz. [URL kurallarıyla sekmeleri otomatik sıralayın](/blog/auto-sort-tabs-with-url-rules).
+- **Her şeyi bulun:** <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (Mac’te <Kbd>⌘</Kbd>+<Kbd>K</Kbd>) açık, kayıtlı ve son kapatılan sekmeleri tek listede gösterir. Tüm filtreler [TabMerger ile tüm sekmelerinizde arayın](/blog/search-all-your-tabs-with-tabmerger) rehberinde.
+- **Kendinize not bırakın**: bir sekmeye not ya da ona geri dönmek için bir hatırlatıcı ekleyin; [araştırma için sekmeleri düzenleme](/blog/organize-tabs-for-research) ikisini de gösteriyor.
+- **Kopyaları temizleyin**: **Yinelenen sekmeleri kaldır** bunu yapar; ayrıntılar [yinelenen sekmeleri kapatma](/blog/close-duplicate-tabs) rehberinde.
+
+</Section>
+
+<Section id="evening" title="Akşam: kaydedin, sonra kapatın">
+
+1. Üzerinde çalıştığınız grubu, ardından onun **⋯** menüsünü açın. **Mevcutla birleştir** açık pencerelerinizi gruba ekler; **Mevcutla değiştir** kayıtlı pencereleri açık olanlarla değiştirir.
+2. Pencereleri kapatın. Sekmeler grupta; yarın sabahki adım onları orada bulacak.
+3. Tüm gruplarınızın hâlinden memnun musunuz? **Mevcut oturumu kaydet** (**Oturumlar** yanındaki yer işareti düğmesi) onları “Monday plan” gibi bir adla anlık görüntü olarak kaydeder.
+
+İşin sırrı şu alışkanlık: **grubu kaydedin, pencereleri kapatın.** Yarına ne kadar az pencere taşırsanız tarayıcı o kadar hızlı, arayış o kadar kısa olur.
+
+</Section>
+
+<Section id="net" title="Güvenlik ağı: unuttuğunuz günler için">
+
+Kimse her akşam kaydetmez. Bu boşluğu iki özellik kapatır:
+
+- **Açık sekmeleri otomatik kaydet** (Ayarlar → Veri), açık sekmelerinizi bir zamanlamaya göre ya da sayıları seçtiğiniz bir sınırı aştığında yeni bir grup olarak kaydeder.
+- **Son kapatılanlar**, kapattığınız sekme ve pencereleri güne göre saklar; <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> ile `closed:` yazarak bunlarda arama yapabilirsiniz.
+
+İkisinin nasıl çalıştığı ve neden böyle davrandığı [bir daha asla sekme kaybetmeyin](/blog/never-lose-a-tab-again) rehberinde. Tarayıcı çökmesi için [çökmeden sonra sekmeleri geri getirme](/blog/restore-tabs-after-crash) rehberine bakın.
+
+</Section>
+
+<Section id="plans" title="Neler ücretsiz, Pro neler ekler">
+
+<ComparisonTable
+  head={['', 'Ücretsiz', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Gruplar ve sekmeler', '5 grup, 50 sekme', 'Sınırsız'],
+    ['Oturumlar', '3, bu tarayıcıda', 'Sınırsız, senkronize'],
+    ['URL kuralları', '3', 'Sınırsız'],
+    ['Otomatik kaydetme', 'En yeni 2 tanesi saklanır', 'Hepsi saklanır'],
+    ['Son kapatılanlar', 'Son 2 gününüz', 'Son 30 gününüz'],
+    ['Arama, notlar, içe ve dışa aktarma', 'Evet', 'Evet'],
+    ['Cihazlar arası senkronizasyon, otomatik yedekler', 'Hayır', 'Evet'],
+  ]}
+/>
+
+Ücretsiz plan bu düzenin tamamını hesap olmadan çalıştırır; Pro sınırları kaldırır ve senkronizasyon ekler. Ayrıntılar [fiyatlandırma sayfasında](/pricing).
+
+<InstallCta>Tek düzen, her tarayıcı: Chrome, Edge ve Firefox. Başlamak ücretsiz, hesap gerekmez.</InstallCta>
+
+</Section>
+
+<Section id="series" title="TabMerger rehber serisinin tamamı">
+
+Her rehberde bir özellik ve neden öyle çalıştığı:
+
+1. [İş gününüze kayıtlı sekmelerle başlayın](/blog/start-your-workday-with-saved-tabs): her sabah geri yüklenen oturumlar ve gruplar.
+2. [Bir daha asla sekme kaybetmeyin](/blog/never-lose-a-tab-again): otomatik kaydetme ve “Son kapatılanlar”.
+3. [Tüm sekmelerinizde arayın](/blog/search-all-your-tabs-with-tabmerger): <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> ve filtreleri.
+4. [Sekmeleri projeye göre düzenleyin](/blog/organize-tabs-by-project): gruplar, adlandırılmış pencereler ve arşiv.
+5. [Yapılacaklar listesi olarak sekmeler](/blog/tabs-as-a-to-do-list): notlar, hatırlatıcılar ve unutulan sekmeler.
+6. [URL kurallarıyla sekmeleri otomatik sıralayın](/blog/auto-sort-tabs-with-url-rules): kendi yerini bulan sekmeler.
+7. [Sekmeleri cihazlar arasında senkronize edin](/blog/sync-tabs-between-devices-with-tabmerger): uçtan uca şifreli ve sunucumuzun neleri görebildiği.
+8. [Sekmeleri TabMerger’a aktarın](/blog/import-tabs-into-tabmerger): OneTab listeleri, yer işaretleri ve yedekler.
+9. [TabMerger Ücretsiz ve Pro](/blog/tabmerger-free-vs-pro): her planın tam olarak neleri içerdiği.
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

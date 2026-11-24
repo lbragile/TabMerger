@@ -1,0 +1,184 @@
+export const post = {
+  slug: 'tabmerger-daily-workflow',
+  title: 'Thói quen quản lý tab mỗi ngày với TabMerger',
+  navTitle: 'Thói quen quản lý tab mỗi ngày',
+  seoTitle: 'Quản lý tab trình duyệt mỗi ngày với TabMerger: từ sáng đến tối',
+  description:
+    'Một thói quen đơn giản để quản lý tab trình duyệt với TabMerger: mở các tab của ngày chỉ bằng một cú nhấp, cất tab mới vào đúng chỗ để luôn tìm thấy, và kết thúc ngày với mọi thứ đã lưu, không để lại tab nào đang mở.',
+  shareSummary: 'Mở tab của ngày bằng một cú nhấp, luôn tìm thấy chúng và kết thúc ngày không mất gì.',
+  dek: 'Ba thói quen, mỗi thói quen vài cú nhấp: bắt đầu từ một bộ đã lưu, cất tab ngay khi làm và kết thúc ngày với mọi thứ đã lưu.',
+  published: '2026-12-11',
+  updated: '2026-12-11',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Nhóm chứa nguyên các cửa sổ tab và vẫn được lưu sau khi cửa sổ đóng.', source: 'TabMerger 3.16.1' },
+    { text: 'Một phiên khôi phục mọi nhóm đã lưu cùng lúc, mỗi cửa sổ đúng như khi được lưu.', source: 'Mã nguồn TabMerger 3.16.1' },
+    { text: 'Ctrl+K tìm cùng lúc trong các tab đang mở, đã lưu và mới đóng gần đây.', source: 'TabMerger 3.16.1' },
+    { text: 'Miễn phí: 5 nhóm, 50 tab, 3 phiên. Pro: không giới hạn, kèm đồng bộ.', source: 'Bảng giá TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Thói quen hằng ngày tốt nhất cho tab trình duyệt là gì?',
+      answer:
+        'Bắt đầu ngày từ một bộ tab đã lưu thay vì đống tab còn sót từ hôm qua, cất tab mới vào nhóm ngay khi làm, và kết thúc ngày bằng cách lưu những gì đang mở rồi đóng lại. TabMerger làm mỗi bước chỉ bằng vài cú nhấp, và tính năng tự động lưu lo giúp những ngày bạn quên.',
+    },
+    {
+      question: 'Tôi có cần tài khoản để áp dụng thói quen này không?',
+      answer: 'Không. Nhóm, phiên, tìm kiếm, tự động lưu và tab mới đóng gần đây đều hoạt động trên gói Miễn phí mà không cần tài khoản. Bạn chỉ cần tài khoản cho các tính năng Pro như đồng bộ giữa các thiết bị.',
+    },
+    {
+      question: 'Cách này có dùng được trên Chrome, Edge và Firefox không?',
+      answer: 'Có. TabMerger miễn phí cho Chrome, Edge và Firefox, và thói quen này giống nhau trên cả ba.',
+    },
+    {
+      question: 'Nhóm và phiên khác nhau thế nào?',
+      answer:
+        'Nhóm là một bộ tab đã lưu, gồm một hoặc nhiều cửa sổ, mà bạn mở, chỉnh sửa và thêm vào. Phiên là một bản chụp có tên của tất cả các nhóm đã lưu cùng lúc, được khôi phục cùng nhau.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp', alt: 'TabMerger với bốn nhóm đã lưu (Work, Reading list, Thesis sources, Trip to Lisbon) và một phiên đã lưu, “Monday plan”, giao diện sáng' },
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-dark.webp', alt: 'TabMerger với bốn nhóm đã lưu (Work, Reading list, Thesis sources, Trip to Lisbon) và một phiên đã lưu, “Monday plan”, giao diện tối' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-light.webp', alt: '“Now Open” (Đang Mở) của TabMerger liệt kê hai cửa sổ trình duyệt đang mở với sáu tab, giao diện sáng' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-dark.webp', alt: '“Now Open” (Đang Mở) của TabMerger liệt kê hai cửa sổ trình duyệt đang mở với sáu tab, giao diện tối' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp' },
+  ogImage: { src: '/blog/tabmerger-daily-workflow/og.png', alt: 'Thói quen quản lý tab mỗi ngày với TabMerger, với các nhóm đã lưu và một phiên ở thanh bên' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'problem', label: 'Vì sao tab dồn đống' },
+    { id: 'idea', label: 'Cách TabMerger vận hành' },
+    { id: 'morning', label: 'Buổi sáng' },
+    { id: 'day', label: 'Trong ngày' },
+    { id: 'evening', label: 'Buổi tối' },
+    { id: 'net', label: 'Lưới an toàn' },
+    { id: 'plans', label: 'Miễn phí và Pro' },
+    { id: 'series', label: 'Trọn bộ loạt bài' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+}
+
+<QuickAnswer>
+
+Giữ tab trong các nhóm của [TabMerger](/features), không phải trong các cửa sổ đang mở. **Buổi sáng:** khôi phục một phiên đã lưu, hoặc chỉ mở nhóm bạn cần. **Trong ngày:** cất tab mới vào nhóm và tìm bất kỳ tab nào bằng <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>. **Buổi tối:** lưu những gì đang mở vào nhóm của nó rồi đóng cửa sổ. Tự động lưu và “Đã đóng gần đây” giữ lại những gì bạn quên. Chỉ vài cú nhấp mỗi ngày, và sáng nào bạn cũng bắt đầu với đúng những tab bạn muốn giữ.
+
+</QuickAnswer>
+
+<InstallCta>Ngày mai hãy bắt đầu với đúng tab, không phải đống tab hôm qua. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+<Section id="problem" title="Vì sao tab cứ dồn đống mỗi ngày?">
+
+Hãy hình dung một ngày thứ Ba bình thường. Bạn mở email và lịch, rồi một pull request, rồi ba trang tài liệu mà nó cần. Một đồng nghiệp gửi đường liên kết bạn muốn đọc sau. Đến trưa đã có hai cửa sổ; đến tối, bốn. Bạn không đóng chúng, vì vài tab vẫn còn “đang làm dở”, và tìm lại chúng nghĩa là phải lục lọi lịch sử duyệt web.
+
+Thế là trình duyệt trở thành danh sách việc cần làm. Nó chưa bao giờ được tạo ra cho việc đó: thanh tab không có tên, không có mục, và không có cách nào cất công việc đi mà không làm mất. Mỗi ngày bắt đầu bằng đống tab còn sót từ hôm qua, trình duyệt chậm dần, và tab duy nhất bạn cần chỉ là một biểu tượng 16 pixel ở đâu đó trong cửa sổ thứ ba.
+
+</Section>
+
+<Section id="idea" title="TabMerger giải quyết chuyện này thế nào?">
+
+TabMerger tách riêng hai thứ mà trình duyệt trộn lẫn: những gì đang **mở** và những gì bạn **giữ lại**.
+
+- **Đang Mở** là chế độ xem trực tiếp các cửa sổ và tab đang mở. Nó luôn đứng đầu danh sách và không thể xóa, nên lúc nào cũng chỉ cách bạn một cú nhấp.
+- **Nhóm** là những gì bạn giữ lại. Mỗi nhóm chứa một hoặc nhiều cửa sổ tab, có tên, ghi chú và màu sắc, và vẫn được lưu sau khi cửa sổ đóng.
+- **Phiên** là các bản chụp có tên của tất cả các nhóm cùng lúc, dành cho những ngày bạn muốn lấy lại mọi thứ một lượt.
+
+Vì việc giữ lại không còn phụ thuộc vào việc để tab mở, bạn có thể thoải mái đóng cửa sổ. Toàn bộ thói quen chỉ có vậy.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Thứ đã giữ và thứ đang mở, đặt cạnh nhau" steps={[{ title: 'Các nhóm của bạn' }, { title: 'Đang Mở' }]}>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-workspace" alt="TabMerger với bốn nhóm đã lưu (Work, Reading list, Thesis sources, Trip to Lisbon) và một phiên đã lưu, “Monday plan”, giao diện sáng" darkAlt="TabMerger với bốn nhóm đã lưu (Work, Reading list, Thesis sources, Trip to Lisbon) và một phiên đã lưu, “Monday plan”, giao diện tối" boxes={[{ id: 'groups', label: 'Các nhóm đã lưu của bạn' }, { id: 'session', label: 'Một phiên đã lưu' }]} source="TabMerger 3.16.1">Bốn nhóm cho bốn mảng trong tuần, và một phiên đưa tất cả trở lại.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-now-open" alt="“Now Open” (Đang Mở) của TabMerger liệt kê hai cửa sổ trình duyệt đang mở với sáu tab, giao diện sáng" darkAlt="“Now Open” (Đang Mở) của TabMerger liệt kê hai cửa sổ trình duyệt đang mở với sáu tab, giao diện tối" boxes={[{ id: 'now-open-summary', label: 'Những gì đang mở' }]} source="TabMerger 3.16.1">“Now Open” (Đang Mở): mọi thứ đang mở lúc này, từng cửa sổ một.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="morning" title="Buổi sáng: bắt đầu từ một bộ đã lưu">
+
+Hai cách bắt đầu, tùy từng ngày:
+
+1. **Tất cả cùng lúc.** Mở mục **Phiên** ở thanh bên và khôi phục phiên của bạn. TabMerger sẽ hỏi trước, vì khôi phục sẽ đóng các cửa sổ đang mở và mở các cửa sổ đã lưu thay vào, mỗi cửa sổ đúng như khi được lưu.
+2. **Chỉ một dự án.** Nhấp chuột phải vào một nhóm ở thanh bên và chọn **Mở tất cả trong cửa sổ mới**. Không có gì khác bị động đến.
+
+Bản hướng dẫn từng bước, kèm lý do của bước xác nhận, có trong [bắt đầu ngày làm việc với các tab đã lưu](/blog/start-your-workday-with-saved-tabs).
+
+</Section>
+
+<Section id="day" title="Trong ngày: cất ngay khi làm">
+
+- **Cất một tab** bằng cách kéo nó từ Đang Mở thả vào một nhóm ở thanh bên: tab được lưu ở đó và tab đang mở sẽ đóng lại (Hoàn tác đưa nó trở lại). Hoặc dùng phím tắt ([danh sách đầy đủ](/blog/tab-keyboard-shortcuts)).
+- **Để quy tắc cất tab giúp bạn.** Quy tắc URL tự động sao chép các tab mới khớp quy tắc vào một nhóm; xem [tự động sắp xếp tab bằng quy tắc URL](/blog/auto-sort-tabs-with-url-rules).
+- **Tìm mọi thứ** bằng <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> trên Mac): tab đang mở, đã lưu và mới đóng gần đây trong cùng một danh sách. Mọi bộ lọc có trong [tìm kiếm mọi tab với TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+- **Để lại ghi chú** cho chính bạn trên một tab, hoặc lời nhắc quay lại với nó; [sắp xếp tab cho việc nghiên cứu](/blog/organize-tabs-for-research) hướng dẫn cả hai.
+- **Dọn bản trùng** bằng **Loại bỏ thẻ trùng lặp**; xem thêm ở [đóng tab trùng lặp](/blog/close-duplicate-tabs).
+
+</Section>
+
+<Section id="evening" title="Buổi tối: lưu rồi đóng">
+
+1. Mở nhóm bạn đã làm việc, rồi mở menu **⋯** của nhóm. **Hợp nhất với phiên hiện tại** thêm các cửa sổ đang mở vào nhóm; **Thay thế bằng phiên hiện tại** thay các cửa sổ đã lưu bằng các cửa sổ đang mở.
+2. Đóng các cửa sổ. Các tab đã nằm trong nhóm, nơi bước buổi sáng ngày mai sẽ tìm thấy chúng.
+3. Hài lòng với tất cả các nhóm của mình? **Lưu phiên hiện tại** (nút dấu trang cạnh **Phiên**) chụp lại chúng dưới một cái tên như “Monday plan”.
+
+Thói quen làm nên tất cả: **lưu nhóm, đóng cửa sổ.** Bạn mang càng ít cửa sổ sang ngày mai thì trình duyệt càng nhanh và việc tìm kiếm càng ngắn.
+
+</Section>
+
+<Section id="net" title="Lưới an toàn: cho những ngày bạn quên">
+
+Không ai lưu được mỗi tối. Hai tính năng lấp khoảng trống đó:
+
+- **Tự động lưu các thẻ đang mở** (Cài đặt → Dữ liệu) lưu các tab đang mở thành một nhóm mới theo lịch, hoặc khi số tab đang mở vượt quá con số bạn chọn.
+- **Đã đóng gần đây** giữ các tab và cửa sổ bạn đóng, theo từng ngày, và <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> với `closed:` sẽ tìm trong đó.
+
+Cách cả hai hoạt động, và vì sao chúng hoạt động như vậy, có trong [không bao giờ mất tab nữa](/blog/never-lose-a-tab-again). Khi trình duyệt bị sập, xem [lấy lại tab sau khi trình duyệt bị sập](/blog/restore-tabs-after-crash).
+
+</Section>
+
+<Section id="plans" title="Những gì miễn phí, và Pro thêm gì">
+
+<ComparisonTable
+  head={['', 'Miễn phí', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Nhóm và tab', '5 nhóm, 50 tab', 'Không giới hạn'],
+    ['Phiên', '3, trong trình duyệt này', 'Không giới hạn, có đồng bộ'],
+    ['Quy tắc URL', '3', 'Không giới hạn'],
+    ['Tự động lưu', 'Giữ 2 bản mới nhất', 'Giữ tất cả'],
+    ['Đã đóng gần đây', '2 ngày gần nhất', '30 ngày gần nhất'],
+    ['Tìm kiếm, ghi chú, nhập và xuất', 'Có', 'Có'],
+    ['Đồng bộ giữa các thiết bị, sao lưu tự động', 'Không', 'Có'],
+  ]}
+/>
+
+Gói Miễn phí chạy được toàn bộ thói quen này mà không cần tài khoản; Pro bỏ giới hạn và thêm đồng bộ. Chi tiết ở [trang bảng giá](/pricing).
+
+<InstallCta>Một thói quen cho mọi trình duyệt: Chrome, Edge và Firefox. Miễn phí để bắt đầu, không cần tài khoản.</InstallCta>
+
+</Section>
+
+<Section id="series" title="Trọn bộ hướng dẫn TabMerger">
+
+Mỗi bài một tính năng, kèm lý do nó hoạt động như vậy:
+
+1. [Bắt đầu ngày làm việc với các tab đã lưu](/blog/start-your-workday-with-saved-tabs): phiên và nhóm, khôi phục mỗi sáng.
+2. [Không bao giờ mất tab nữa](/blog/never-lose-a-tab-again): tự động lưu và “Đã đóng gần đây”.
+3. [Tìm kiếm mọi tab](/blog/search-all-your-tabs-with-tabmerger): <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> và các bộ lọc.
+4. [Sắp xếp tab theo dự án](/blog/organize-tabs-by-project): nhóm, cửa sổ có tên và kho lưu trữ.
+5. [Dùng tab làm danh sách việc cần làm](/blog/tabs-as-a-to-do-list): ghi chú, lời nhắc và tab bị bỏ quên.
+6. [Tự động sắp xếp tab bằng quy tắc URL](/blog/auto-sort-tabs-with-url-rules): tab tự tìm về chỗ của mình.
+7. [Đồng bộ tab giữa các thiết bị](/blog/sync-tabs-between-devices-with-tabmerger): mã hóa đầu cuối, và những gì máy chủ của chúng tôi có thể thấy.
+8. [Nhập tab vào TabMerger](/blog/import-tabs-into-tabmerger): danh sách OneTab, dấu trang và bản sao lưu.
+9. [TabMerger Miễn phí và Pro](/blog/tabmerger-free-vs-pro): chính xác mỗi gói có gì.
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+</Section>

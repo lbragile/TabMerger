@@ -1,0 +1,184 @@
+export const post = {
+  slug: 'tabmerger-daily-workflow',
+  title: 'Uma rotina diária para suas abas com o TabMerger',
+  navTitle: 'Uma rotina diária para suas abas',
+  seoTitle: 'Como organizar as abas no dia a dia com o TabMerger: da manhã à noite',
+  description:
+    'Uma rotina simples para organizar as abas do navegador com o TabMerger: abra as abas do dia com um clique, guarde as novas no lugar certo para achá-las sempre e termine o dia com tudo salvo e nada aberto.',
+  shareSummary: 'Abra as abas do dia com um clique, ache tudo sempre e termine o dia sem perder nada.',
+  dek: 'Três hábitos, poucos cliques cada: comece de um conjunto salvo, organize as abas ao longo do dia e termine com tudo salvo.',
+  published: '2026-12-11',
+  updated: '2026-12-11',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Os grupos guardam janelas inteiras de abas e continuam salvos depois que as janelas são fechadas.', source: 'TabMerger 3.16.1' },
+    { text: 'Uma sessão restaura todos os grupos salvos de uma vez, cada janela como foi salva.', source: 'Código-fonte do TabMerger 3.16.1' },
+    { text: 'Ctrl+K pesquisa ao mesmo tempo as abas abertas, salvas e fechadas recentemente.', source: 'TabMerger 3.16.1' },
+    { text: 'Gratuito: 5 grupos, 50 abas, 3 sessões. Pro: sem limites, mais sincronização.', source: 'Preços do TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Qual é a melhor rotina diária para as abas do navegador?',
+      answer:
+        'Comece o dia com um conjunto de abas salvo em vez das sobras de ontem, organize as abas novas em grupos ao longo do dia e termine salvando o que está aberto e fechando tudo. O TabMerger faz cada etapa em poucos cliques, e o salvamento automático cobre os dias em que você esquece.',
+    },
+    {
+      question: 'Preciso de uma conta para seguir essa rotina?',
+      answer: 'Não. Grupos, sessões, pesquisa, salvamento automático e abas fechadas recentemente funcionam no plano Gratuito, sem conta. A conta só é necessária para recursos Pro, como a sincronização entre dispositivos.',
+    },
+    {
+      question: 'Funciona no Chrome, no Edge e no Firefox?',
+      answer: 'Sim. O TabMerger é gratuito para Chrome, Edge e Firefox, e a rotina é a mesma nos três.',
+    },
+    {
+      question: 'Qual é a diferença entre um grupo e uma sessão?',
+      answer:
+        'Um grupo é um conjunto salvo de abas, em uma ou mais janelas, que você abre, edita e completa. Uma sessão é um retrato com nome de todos os seus grupos salvos de uma vez, que você restaura em conjunto.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp', alt: 'TabMerger com quatro grupos salvos (Work, Reading list, Thesis sources, Trip to Lisbon) e uma sessão salva, “Monday plan”, tema claro' },
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-dark.webp', alt: 'TabMerger com quatro grupos salvos (Work, Reading list, Thesis sources, Trip to Lisbon) e uma sessão salva, “Monday plan”, tema escuro' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-light.webp', alt: '“Now Open” (Abertas agora) do TabMerger com duas janelas do navegador abertas e seis abas, tema claro' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-dark.webp', alt: '“Now Open” (Abertas agora) do TabMerger com duas janelas do navegador abertas e seis abas, tema escuro' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp' },
+  ogImage: { src: '/blog/tabmerger-daily-workflow/og.png', alt: 'Uma rotina diária para suas abas com o TabMerger, com grupos salvos e uma sessão na barra lateral' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'problem', label: 'Por que as abas se acumulam' },
+    { id: 'idea', label: 'A lógica do TabMerger' },
+    { id: 'morning', label: 'De manhã' },
+    { id: 'day', label: 'Durante o dia' },
+    { id: 'evening', label: 'No fim do dia' },
+    { id: 'net', label: 'A rede de segurança' },
+    { id: 'plans', label: 'Gratuito ou Pro' },
+    { id: 'series', label: 'A série completa' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Guarde suas abas em grupos do [TabMerger](/features), não em janelas abertas. **De manhã:** restaure uma sessão salva ou abra só o grupo de que precisa. **Durante o dia:** organize as abas novas em grupos e encontre qualquer uma com <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>. **No fim do dia:** salve o que está aberto no grupo certo e feche as janelas. O salvamento automático e “Fechadas recentemente” pegam o que você esquecer. São poucos cliques por dia, e toda manhã começa com as abas que você queria manter.
+
+</QuickAnswer>
+
+<InstallCta>Comece amanhã com as abas certas, não com a pilha de ontem. Gratuito para Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="problem" title="Por que as abas se acumulam todo dia?">
+
+Pense numa terça-feira comum. Você abre o e-mail e a agenda, depois um pull request, depois as três páginas de documentação de que ele precisa. Uma colega manda um link que você quer ler mais tarde. Na hora do almoço já são duas janelas; à noite, quatro. Você não fecha, porque algumas dessas abas ainda estão “em andamento”, e achá-las de novo significaria vasculhar o histórico.
+
+Assim o navegador vira sua lista de tarefas. Ele nunca foi feito para isso: uma barra de abas não tem nomes, nem seções, nem um jeito de guardar o trabalho sem perdê-lo. Cada dia começa com as sobras de ontem, o navegador fica mais lento e a única aba de que você precisa é um ícone de 16 pixels em algum lugar da janela três.
+
+</Section>
+
+<Section id="idea" title="Como o TabMerger resolve isso?">
+
+O TabMerger separa duas coisas que o navegador mistura: o que está **aberto** e o que você **guarda**.
+
+- **Abertas agora** é uma visão ao vivo das suas janelas e abas abertas. É sempre a primeira da lista e não pode ser excluída, então está sempre a um clique.
+- **Grupos** são o que você guarda. Cada grupo tem uma ou mais janelas de abas, com nomes, notas e cores, e continua salvo depois que as janelas são fechadas.
+- **Sessões** são retratos com nome de todos os seus grupos juntos, para os dias em que você quer tudo de volta de uma vez.
+
+Como guardar não depende mais de deixar uma aba aberta, você pode fechar janelas à vontade. A rotina é só isso.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="O que está guardado e o que está aberto, lado a lado" steps={[{ title: 'Seus grupos' }, { title: 'Abertas agora' }]}>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-workspace" alt="TabMerger com quatro grupos salvos (Work, Reading list, Thesis sources, Trip to Lisbon) e uma sessão salva, “Monday plan”, tema claro" darkAlt="TabMerger com quatro grupos salvos (Work, Reading list, Thesis sources, Trip to Lisbon) e uma sessão salva, “Monday plan”, tema escuro" boxes={[{ id: 'groups', label: 'Seus grupos salvos' }, { id: 'session', label: 'Uma sessão salva' }]} source="TabMerger 3.16.1">Quatro grupos para quatro partes da semana, e uma sessão que traz todos de volta.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-now-open" alt="“Now Open” (Abertas agora) do TabMerger com duas janelas do navegador abertas e seis abas, tema claro" darkAlt="“Now Open” (Abertas agora) do TabMerger com duas janelas do navegador abertas e seis abas, tema escuro" boxes={[{ id: 'now-open-summary', label: 'O que está aberto' }]} source="TabMerger 3.16.1">“Now Open” (Abertas agora): tudo o que está aberto agora, janela por janela.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="morning" title="De manhã: comece de um conjunto salvo">
+
+Dois jeitos de começar, conforme o dia:
+
+1. **Tudo de uma vez.** Abra a seção **Sessões** na barra lateral e restaure sua sessão. O TabMerger pergunta antes, porque restaurar fecha as janelas abertas e abre as salvas no lugar delas, cada janela como foi salva.
+2. **Só um projeto.** Clique com o botão direito em um grupo na barra lateral e escolha **Abrir tudo em nova janela**. Nada mais é alterado.
+
+A versão passo a passo, com os motivos da confirmação, está em [comece o dia de trabalho com abas salvas](/blog/start-your-workday-with-saved-tabs).
+
+</Section>
+
+<Section id="day" title="Durante o dia: organize na hora">
+
+- **Guarde uma aba** arrastando-a de Abertas agora para um grupo na barra lateral: ela fica salva ali e a aba aberta se fecha (Desfazer traz de volta). Ou use um atalho de teclado ([a lista completa](/blog/tab-keyboard-shortcuts)).
+- **Deixe as regras organizarem por você.** As regras de URL copiam automaticamente para um grupo as abas novas que correspondem a elas; veja [organize abas automaticamente com regras de URL](/blog/auto-sort-tabs-with-url-rules).
+- **Encontre qualquer coisa** com <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> no Mac): abas abertas, salvas e fechadas recentemente numa só lista. Todos os filtros estão em [pesquise em todas as suas abas com o TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+- **Deixe uma nota** para você numa aba, ou um lembrete para voltar a ela; [organizar abas para pesquisa](/blog/organize-tabs-for-research) mostra as duas coisas.
+- **Elimine as cópias** com **Remover abas duplicadas**; mais em [fechar abas duplicadas](/blog/close-duplicate-tabs).
+
+</Section>
+
+<Section id="evening" title="No fim do dia: salve e depois feche">
+
+1. Abra o grupo em que você trabalhou e depois o menu **⋯** dele. **Mesclar com as atuais** adiciona suas janelas abertas a ele; **Substituir pelas atuais** troca as janelas salvas pelas abertas.
+2. Feche as janelas. As abas estão no grupo, onde a etapa da manhã seguinte vai encontrá-las.
+3. Gostou de como todos os seus grupos ficaram? Use **Salvar sessão atual** (o botão de favorito ao lado de **Sessões**) para guardar um retrato deles com um nome como “Monday plan”.
+
+O hábito que faz tudo funcionar: **salve o grupo, feche as janelas.** Quanto menos janelas você levar para o dia seguinte, mais rápido fica o navegador e menor a busca.
+
+</Section>
+
+<Section id="net" title="A rede de segurança: para os dias em que você esquece">
+
+Ninguém salva toda noite. Dois recursos cobrem essa falha:
+
+- **Salvar abas abertas automaticamente** (Configurações → Dados) salva suas abas abertas como um novo grupo em intervalos programados, ou quando elas passam de um número que você escolhe.
+- **Fechadas recentemente** guarda as abas e janelas que você fecha, por dia, e <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> com `closed:` pesquisa nelas.
+
+Como os dois funcionam, e por que se comportam assim, está em [nunca mais perca uma aba](/blog/never-lose-a-tab-again). Para uma falha do navegador, veja [recuperar as abas depois de uma falha](/blog/restore-tabs-after-crash).
+
+</Section>
+
+<Section id="plans" title="O que é gratuito e o que o Pro acrescenta">
+
+<ComparisonTable
+  head={['', 'Gratuito', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Grupos e abas', '5 grupos, 50 abas', 'Ilimitados'],
+    ['Sessões', '3, neste navegador', 'Ilimitadas, sincronizadas'],
+    ['Regras de URL', '3', 'Ilimitadas'],
+    ['Salvamento automático', 'Os 2 mais recentes ficam', 'Todos ficam'],
+    ['Fechadas recentemente', 'Seus últimos 2 dias', 'Seus últimos 30 dias'],
+    ['Pesquisa, notas, importação e exportação', 'Sim', 'Sim'],
+    ['Sincronização entre dispositivos, backups automáticos', 'Não', 'Sim'],
+  ]}
+/>
+
+O plano Gratuito roda toda essa rotina, sem conta; o Pro tira os limites e adiciona a sincronização. Detalhes na [página de preços](/pricing).
+
+<InstallCta>Uma rotina para todos os navegadores: Chrome, Edge e Firefox. Grátis para começar, sem conta.</InstallCta>
+
+</Section>
+
+<Section id="series" title="A série completa de guias do TabMerger">
+
+Um recurso por guia, com os motivos de ele funcionar do jeito que funciona:
+
+1. [Comece o dia de trabalho com abas salvas](/blog/start-your-workday-with-saved-tabs): sessões e grupos, restaurados toda manhã.
+2. [Nunca mais perca uma aba](/blog/never-lose-a-tab-again): salvamento automático e “Fechadas recentemente”.
+3. [Pesquise em todas as suas abas](/blog/search-all-your-tabs-with-tabmerger): <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> e seus filtros.
+4. [Organize abas por projeto](/blog/organize-tabs-by-project): grupos, janelas com nome e o arquivo.
+5. [Abas como lista de tarefas](/blog/tabs-as-a-to-do-list): notas, lembretes e abas esquecidas.
+6. [Organize abas automaticamente com regras de URL](/blog/auto-sort-tabs-with-url-rules): abas que se organizam sozinhas.
+7. [Sincronize abas entre dispositivos](/blog/sync-tabs-between-devices-with-tabmerger): criptografia de ponta a ponta, e o que nosso servidor consegue ver.
+8. [Importe abas para o TabMerger](/blog/import-tabs-into-tabmerger): listas do OneTab, favoritos e backups.
+9. [TabMerger Gratuito ou Pro](/blog/tabmerger-free-vs-pro): o que cada plano inclui, exatamente.
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,184 @@
+export const post = {
+  slug: 'tabmerger-daily-workflow',
+  title: 'Codzienna rutyna z kartami w TabMerger',
+  navTitle: 'Codzienna rutyna z kartami',
+  seoTitle: 'Jak organizować karty przeglądarki na co dzień z TabMerger: od rana do wieczora',
+  description:
+    'Prosta rutyna porządkowania kart przeglądarki z TabMerger: otwórz karty na cały dzień jednym kliknięciem, odkładaj nowe na miejsce, żeby zawsze je znaleźć, i kończ dzień ze wszystkim zapisanym i niczym otwartym.',
+  shareSummary: 'Karty na cały dzień jednym kliknięciem, zawsze pod ręką, a wieczorem nic nie ginie.',
+  dek: 'Trzy nawyki po kilka kliknięć: zacznij od zapisanego zestawu, odkładaj karty na bieżąco i zakończ dzień ze wszystkim zapisanym.',
+  published: '2026-12-11',
+  updated: '2026-12-11',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Grupy przechowują całe okna kart i pozostają zapisane po zamknięciu okien.', source: 'TabMerger 3.16.1' },
+    { text: 'Sesja przywraca naraz wszystkie zapisane grupy, każde okno tak, jak zostało zapisane.', source: 'Kod źródłowy TabMerger 3.16.1' },
+    { text: 'Ctrl+K przeszukuje razem karty otwarte, zapisane i ostatnio zamknięte.', source: 'TabMerger 3.16.1' },
+    { text: 'Darmowy: 5 grup, 50 kart, 3 sesje. Pro: bez limitów, do tego synchronizacja.', source: 'Cennik TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Jaka jest najlepsza codzienna rutyna dla kart przeglądarki?',
+      answer:
+        'Zaczynaj dzień od zapisanego zestawu kart zamiast od wczorajszych resztek, odkładaj nowe karty do grup na bieżąco, a na koniec dnia zapisz to, co otwarte, i zamknij. TabMerger załatwia każdy krok w kilku kliknięciach, a autozapis ratuje dni, w które zapomnisz.',
+    },
+    {
+      question: 'Czy do tej rutyny potrzebne jest konto?',
+      answer: 'Nie. Grupy, sesje, wyszukiwanie, autozapis i ostatnio zamknięte karty działają w planie Darmowym bez konta. Konto jest potrzebne tylko do funkcji Pro, takich jak synchronizacja między urządzeniami.',
+    },
+    {
+      question: 'Czy to działa w Chrome, Edge i Firefox?',
+      answer: 'Tak. TabMerger jest darmowy dla Chrome, Edge i Firefox, a rutyna wygląda tak samo we wszystkich trzech.',
+    },
+    {
+      question: 'Czym różni się grupa od sesji?',
+      answer:
+        'Grupa to jeden zapisany zestaw kart, w jednym lub kilku oknach, który otwierasz, edytujesz i uzupełniasz. Sesja to nazwana migawka wszystkich zapisanych grup naraz, którą przywracasz w całości.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp', alt: 'TabMerger z czterema zapisanymi grupami (Work, Reading list, Thesis sources, Trip to Lisbon) i zapisaną sesją „Monday plan”, motyw jasny' },
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-dark.webp', alt: 'TabMerger z czterema zapisanymi grupami (Work, Reading list, Thesis sources, Trip to Lisbon) i zapisaną sesją „Monday plan”, motyw ciemny' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-light.webp', alt: '„Now Open” (Teraz Otwarte) w TabMerger z dwoma otwartymi oknami przeglądarki i sześcioma kartami, motyw jasny' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-dark.webp', alt: '„Now Open” (Teraz Otwarte) w TabMerger z dwoma otwartymi oknami przeglądarki i sześcioma kartami, motyw ciemny' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp' },
+  ogImage: { src: '/blog/tabmerger-daily-workflow/og.png', alt: 'Codzienna rutyna z kartami w TabMerger, z zapisanymi grupami i sesją na pasku bocznym' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'problem', label: 'Skąd się biorą stosy kart' },
+    { id: 'idea', label: 'Jak myśli TabMerger' },
+    { id: 'morning', label: 'Rano' },
+    { id: 'day', label: 'W ciągu dnia' },
+    { id: 'evening', label: 'Wieczorem' },
+    { id: 'net', label: 'Siatka bezpieczeństwa' },
+    { id: 'plans', label: 'Darmowy czy Pro' },
+    { id: 'series', label: 'Cała seria' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Trzymaj karty w grupach [TabMerger](/features), a nie w otwartych oknach. **Rano:** przywróć zapisaną sesję albo otwórz tylko potrzebną grupę. **W ciągu dnia:** odkładaj nowe karty do grup i znajduj każdą z nich przez <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>. **Wieczorem:** zapisz to, co otwarte, w odpowiedniej grupie i zamknij okna. Autozapis i „Ostatnio zamknięte” wyłapią to, o czym zapomnisz. To kilka kliknięć dziennie, a każdy poranek zaczynasz od kart, które chciałeś zachować.
+
+</QuickAnswer>
+
+<InstallCta>Zacznij jutro od właściwych kart, a nie od wczorajszego stosu. Za darmo dla Chrome, Edge i Firefox.</InstallCta>
+
+<Section id="problem" title="Dlaczego karty piętrzą się każdego dnia?">
+
+Wyobraź sobie zwykły wtorek. Otwierasz pocztę i kalendarz, potem pull request, potem trzy strony dokumentacji, których on wymaga. Koleżanka przysyła link do przeczytania na później. W porze lunchu masz dwa okna, wieczorem cztery. Nie zamykasz ich, bo część kart jest jeszcze „w toku”, a ich odnalezienie oznaczałoby przekopywanie się przez historię.
+
+I tak przeglądarka staje się listą zadań. Nigdy jej do tego nie zbudowano: pasek kart nie ma nazw, sekcji ani sposobu, by odłożyć pracę bez jej utraty. Każdy dzień zaczyna się od wczorajszych resztek, przeglądarka zwalnia, a jedyna potrzebna karta to 16-pikselowa ikona gdzieś w oknie numer trzy.
+
+</Section>
+
+<Section id="idea" title="Jak TabMerger to rozwiązuje?">
+
+TabMerger rozdziela dwie rzeczy, które przeglądarka miesza: to, co **otwarte**, i to, co **zachowujesz**.
+
+- **Teraz Otwarte** to widok na żywo otwartych okien i kart. Zawsze jest pierwszy na liście i nie da się go usunąć, więc zawsze jest o jedno kliknięcie.
+- **Grupy** to to, co zachowujesz. Każda grupa zawiera jedno lub więcej okien kart, z nazwami, notatkami i kolorami, i pozostaje zapisana po zamknięciu okien.
+- **Sesje** to nazwane migawki wszystkich grup razem, na dni, w które chcesz odzyskać wszystko naraz.
+
+Skoro zachowanie karty nie zależy już od zostawienia jej otwartej, możesz swobodnie zamykać okna. Na tym polega cała rutyna.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Zachowane i otwarte, obok siebie" steps={[{ title: 'Twoje grupy' }, { title: 'Teraz Otwarte' }]}>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-workspace" alt="TabMerger z czterema zapisanymi grupami (Work, Reading list, Thesis sources, Trip to Lisbon) i zapisaną sesją „Monday plan”, motyw jasny" darkAlt="TabMerger z czterema zapisanymi grupami (Work, Reading list, Thesis sources, Trip to Lisbon) i zapisaną sesją „Monday plan”, motyw ciemny" boxes={[{ id: 'groups', label: 'Twoje zapisane grupy' }, { id: 'session', label: 'Zapisana sesja' }]} source="TabMerger 3.16.1">Cztery grupy na cztery części tygodnia i sesja, która przywraca je wszystkie.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-now-open" alt="„Now Open” (Teraz Otwarte) w TabMerger z dwoma otwartymi oknami przeglądarki i sześcioma kartami, motyw jasny" darkAlt="„Now Open” (Teraz Otwarte) w TabMerger z dwoma otwartymi oknami przeglądarki i sześcioma kartami, motyw ciemny" boxes={[{ id: 'now-open-summary', label: 'Co jest otwarte' }]} source="TabMerger 3.16.1">„Now Open” (Teraz Otwarte): wszystko, co jest teraz otwarte, okno po oknie.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="morning" title="Rano: zacznij od zapisanego zestawu">
+
+Dwa sposoby na start, zależnie od dnia:
+
+1. **Wszystko naraz.** Otwórz sekcję **Sesje** na pasku bocznym i przywróć swoją sesję. TabMerger najpierw pyta, bo przywracanie zamyka otwarte okna i otwiera na ich miejscu zapisane, każde okno tak, jak zostało zapisane.
+2. **Tylko jeden projekt.** Kliknij prawym przyciskiem grupę na pasku bocznym i wybierz **Otwórz wszystkie w nowym oknie**. Nic innego się nie zmienia.
+
+Wersja krok po kroku, z wyjaśnieniem, po co jest potwierdzenie, jest w poradniku [zacznij dzień pracy od zapisanych kart](/blog/start-your-workday-with-saved-tabs).
+
+</Section>
+
+<Section id="day" title="W ciągu dnia: odkładaj na bieżąco">
+
+- **Odłóż kartę**, przeciągając ją z Teraz Otwarte na grupę na pasku bocznym: zostaje tam zapisana, a otwarta karta się zamyka (Cofnij ją przywraca). Możesz też użyć skrótu klawiszowego ([pełna lista](/blog/tab-keyboard-shortcuts)).
+- **Niech reguły odkładają za ciebie.** Reguły URL automatycznie kopiują pasujące nowe karty do grupy; zobacz [automatyczne sortowanie kart regułami URL](/blog/auto-sort-tabs-with-url-rules).
+- **Znajdź wszystko** przez <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> na Macu): karty otwarte, zapisane i ostatnio zamknięte na jednej liście. Wszystkie filtry opisuje [przeszukiwanie wszystkich kart w TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+- **Zostaw sobie notatkę** przy karcie albo przypomnienie, żeby do niej wrócić; [porządkowanie kart do researchu](/blog/organize-tabs-for-research) pokazuje jedno i drugie.
+- **Pozbądź się kopii** za pomocą **Usuń duplikaty kart**; więcej w poradniku [zamykanie zduplikowanych kart](/blog/close-duplicate-tabs).
+
+</Section>
+
+<Section id="evening" title="Wieczorem: zapisz, potem zamknij">
+
+1. Otwórz grupę, w której pracowałeś, a potem jej menu **⋯**. **Scal z bieżącą sesją** dodaje do niej otwarte okna; **Zastąp bieżącą sesją** zamienia zapisane okna na otwarte.
+2. Zamknij okna. Karty są w grupie, gdzie jutro rano je znajdziesz.
+3. Podoba ci się, jak wyglądają wszystkie grupy? **Zapisz bieżącą sesję** (przycisk zakładki obok **Sesje**) zapisuje ich migawkę pod nazwą w rodzaju „Monday plan”.
+
+Nawyk, dzięki któremu to działa: **zapisz grupę, zamknij okna.** Im mniej okien przeniesiesz na jutro, tym szybsza przeglądarka i krótsze szukanie.
+
+</Section>
+
+<Section id="net" title="Siatka bezpieczeństwa: na dni, kiedy zapomnisz">
+
+Nikt nie zapisuje kart każdego wieczoru. Dwie funkcje wypełniają tę lukę:
+
+- **Autozapis otwartych kart** (Ustawienia → Dane) zapisuje otwarte karty jako nową grupę według harmonogramu albo gdy ich liczba przekroczy wybrany przez ciebie próg.
+- **Ostatnio zamknięte** przechowuje zamknięte karty i okna, dzień po dniu, a <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> z `closed:` je przeszukuje.
+
+Jak działają obie funkcje i dlaczego zachowują się właśnie tak, wyjaśnia [nigdy więcej nie zgub karty](/blog/never-lose-a-tab-again). Po awarii przeglądarki zajrzyj do poradnika [odzyskiwanie kart po awarii](/blog/restore-tabs-after-crash).
+
+</Section>
+
+<Section id="plans" title="Co jest za darmo, a co dodaje Pro">
+
+<ComparisonTable
+  head={['', 'Darmowy', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Grupy i karty', '5 grup, 50 kart', 'Bez limitu'],
+    ['Sesje', '3, w tej przeglądarce', 'Bez limitu, synchronizowane'],
+    ['Reguły URL', '3', 'Bez limitu'],
+    ['Autozapis', 'Zostają 2 najnowsze', 'Zostają wszystkie'],
+    ['Ostatnio zamknięte', 'Ostatnie 2 dni', 'Ostatnie 30 dni'],
+    ['Wyszukiwanie, notatki, import i eksport', 'Tak', 'Tak'],
+    ['Synchronizacja między urządzeniami, automatyczne kopie zapasowe', 'Nie', 'Tak'],
+  ]}
+/>
+
+Plan Darmowy obsługuje całą tę rutynę, bez konta; Pro znosi limity i dodaje synchronizację. Szczegóły na [stronie z cennikiem](/pricing).
+
+<InstallCta>Jedna rutyna w każdej przeglądarce: Chrome, Edge i Firefox. Na start za darmo, bez konta.</InstallCta>
+
+</Section>
+
+<Section id="series" title="Cała seria poradników TabMerger">
+
+Jedna funkcja na poradnik, z wyjaśnieniem, dlaczego działa tak, a nie inaczej:
+
+1. [Zacznij dzień pracy od zapisanych kart](/blog/start-your-workday-with-saved-tabs): sesje i grupy, przywracane każdego ranka.
+2. [Nigdy więcej nie zgub karty](/blog/never-lose-a-tab-again): autozapis i „Ostatnio zamknięte”.
+3. [Przeszukaj wszystkie karty](/blog/search-all-your-tabs-with-tabmerger): <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> i jego filtry.
+4. [Porządkuj karty według projektów](/blog/organize-tabs-by-project): grupy, nazwane okna i archiwum.
+5. [Karty jako lista zadań](/blog/tabs-as-a-to-do-list): notatki, przypomnienia i zapomniane karty.
+6. [Automatyczne sortowanie kart regułami URL](/blog/auto-sort-tabs-with-url-rules): karty, które same trafiają na miejsce.
+7. [Synchronizuj karty między urządzeniami](/blog/sync-tabs-between-devices-with-tabmerger): szyfrowanie end-to-end i to, co widzi nasz serwer.
+8. [Importuj karty do TabMerger](/blog/import-tabs-into-tabmerger): listy z OneTab, zakładki i kopie zapasowe.
+9. [TabMerger Darmowy czy Pro](/blog/tabmerger-free-vs-pro): co dokładnie obejmuje każdy plan.
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>
