@@ -129,3 +129,9 @@ Run the template check again just before writing into the repo, to confirm en.md
 - When a post reuses another post's figures and panels, a `{S:name}` token that extracts strings from the sibling's `<loc>.mdx` keeps alts, captions, browserFact and settings paths identical with no hand copying.
 
 - Count label occurrences against English (each `**label**` count vs `**enLabel**`), not just presence: a label swapped at one of several mentions passes a presence check.
+
+- Template extraction: lazy `(.*?)` slots split quoted table cells at the wrong `, `; use `'(?:[^'\
+]|\.)*'` for quoted slots and `"[^"
+]*"` for attributes.
+- Gloss checks must look only at the numbered step lines, because shared figure alts and captions repeat the English names.
+- Korean particle after 중복 탭 제거 (vowel ending) is 는/가, not 은/이.

@@ -1,0 +1,183 @@
+export const post = {
+  slug: 'browser-tab-features-compared',
+  title: 'Chrome vs. Edge vs. Firefox: comparativa de las funciones de pestañas integradas',
+  navTitle: 'Funciones de pestañas: Chrome, Edge, Firefox',
+  seoTitle: 'Chrome vs. Edge vs. Firefox: funciones de pestañas comparadas (2026)',
+  description:
+    'Grupos de pestañas, búsqueda de pestañas, pestañas verticales, vista dividida, pestañas suspendidas y cierre de duplicadas: qué funciones de pestañas traen Chrome 157, Edge 158 y Firefox 159, y cómo TabMerger añade la misma capa a los tres.',
+  shareSummary: 'Qué funciones de pestañas traen Chrome, Edge y Firefox, una al lado de la otra.',
+  dek: 'Cada navegador resuelve una parte del problema de las pestañas. Aquí verás qué parte, y cómo conseguir el resto en los tres.',
+  published: '2026-12-05',
+  updated: '2026-12-05',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Los tres tienen grupos de pestañas, búsqueda de pestañas, pestañas verticales y vista dividida.', source: 'Sus páginas de ayuda y textos de la interfaz, 21 nov 2026' },
+    { text: 'Solo Firefox 159 trae de serie «Cerrar pestañas duplicadas» (Close Duplicate Tabs).', source: 'Texto de menú de Firefox 159' },
+    {
+      text: 'Chrome sincroniza los grupos de pestañas con tu cuenta de Google.',
+      source: 'Ayuda de Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'TabMerger añade a los tres una sola búsqueda, guardado automático y sincronización cifrada.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: '¿Qué navegador tiene las mejores funciones de pestañas?',
+      answer:
+        'Cada uno destaca en algo: Chrome en los grupos de pestañas guardados y sincronizados, Edge en las pestañas suspendidas, activadas por defecto, y Firefox en cerrar duplicadas. TabMerger da a los tres los mismos grupos, la misma búsqueda, el guardado automático y la sincronización.',
+    },
+    {
+      question: '¿Chrome, Edge y Firefox tienen grupos de pestañas?',
+      answer: 'Sí. Los tres te dejan agrupar pestañas con un nombre y un color; Chrome y Firefox además pueden cerrar un grupo y volver a abrirlo más tarde.',
+    },
+    {
+      question: '¿Puedo usar el mismo gestor de pestañas en Chrome, Edge y Firefox?',
+      answer: 'Sí. TabMerger funciona en los tres, y Pro sincroniza tus grupos entre ellos con cifrado de extremo a extremo.',
+    },
+    {
+      question: '¿Qué navegador cierra las pestañas duplicadas?',
+      answer: 'Firefox, desde el menú contextual de cualquier pestaña. En Chrome y Edge lo hace «Quitar duplicadas» de TabMerger, en todas las ventanas.',
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'Búsqueda de TabMerger abierta y vacía, con la lista de filtros group:, window:, tag: y closed:, tema claro' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'Búsqueda de TabMerger abierta y vacía, con la lista de filtros group:, window:, tag: y closed:, tema oscuro' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Configuración de Chrome, «Performance» (Rendimiento), con el interruptor «Memory Saver» (Ahorro de memoria)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Configuración de Edge, «Performance», con «Automatically put tabs to sleep» activado y fijado en 15 minutos' },
+  ],
+  tags: ['cross-browser', 'comparison', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    { title: 'Chrome keyboard shortcuts', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/157179', checked: '2026-11-21' },
+    { title: 'Personalize Chrome performance', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/12929150', checked: '2026-11-21' },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp' },
+  ogImage: { src: '/blog/browser-tab-features-compared/og.png', alt: 'Chrome vs. Edge vs. Firefox: comparativa de las funciones de pestañas integradas. Una guía de TabMerger, con los filtros de búsqueda de TabMerger' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'matrix', label: 'La tabla de funciones' },
+    { id: 'turn-on', label: 'Ajustes que vale la pena activar' },
+    { id: 'tabmerger', label: 'Una capa para los tres' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+  browserSections: ['turn-on'],
+  browserFact: {
+    label: 'Ajuste de memoria',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Configuración → System and performance → Performance',
+      firefox: 'Clic derecho en una pestaña → Descargar pestaña',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Los tres navegadores ya tienen **grupos de pestañas, búsqueda de pestañas, pestañas verticales y vista dividida**. Chrome va por delante al guardar y sincronizar grupos, Edge suspende por defecto las pestañas inactivas y Firefox es el único que cierra pestañas duplicadas por sí solo. Ninguno busca en tus pestañas guardadas y cerradas, guarda tus ventanas automáticamente ni funciona entre navegadores, y esa es la capa que añade [TabMerger](/features), igual en Chrome, Edge y Firefox.
+
+</QuickAnswer>
+
+<InstallCta>Los mismos grupos, la misma búsqueda y sincronización en Chrome, Edge y Firefox. Gratis.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="matrix" title="¿Qué funciones de pestañas tiene cada navegador?">
+
+Comprobado en Chrome 157, Edge 158 y Firefox 159 con las páginas de ayuda de cada navegador y los textos de su propia interfaz, 21 nov 2026. «No figura» significa que no encontramos rastro de la función ni en las páginas de ayuda ni en los textos del navegador, no que esté demostrado que falta.
+
+<ComparisonTable
+  head={['Función', 'Chrome 157', 'Edge 158', 'Firefox 159', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="52rem"
+  rows={[
+    ['Grupos de pestañas', 'Sí', 'Sí', 'Sí', 'Grupos con nombre y color en todas las ventanas'],
+    ['Cerrar un grupo y reabrirlo después', 'Sí (⋮ → Grupos de pestañas)', 'Close group (reabrir no figura)', 'Sí (Guardar y cerrar grupo)', 'Cada grupo queda guardado'],
+    ['Grupos en otros dispositivos', 'Sí, con la cuenta de Google', 'No figura', 'No está en los ajustes de Sync', 'Pro, con cifrado de extremo a extremo'],
+    ['Buscar pestañas', 'Pestañas abiertas (Ctrl+Shift+A, @tabs)', 'Search tabs (sin atajo indicado)', 'Mostrar todas las pestañas (Ctrl+Shift+A)', 'Abiertas, guardadas y cerradas (Ctrl+K)'],
+    ['Pestañas verticales', 'Sí', 'Sí', 'Sí', 'No aplica'],
+    ['Vista dividida', 'Sí', 'Sí', 'Sí', 'No aplica'],
+    ['Liberar memoria de pestañas inactivas', 'Ahorro de memoria (desactivado por defecto)', 'Pestañas suspendidas (activadas por defecto)', 'Descargar pestaña, a mano', 'Guardar y luego cerrar todas las ventanas en un clic'],
+    ['Cerrar pestañas duplicadas', 'No figura', 'No figura', 'Cerrar pestañas duplicadas', '«Quitar duplicadas» en todas las ventanas'],
+    ['Reabrir una ventana cerrada', 'Ctrl+Shift+T', 'No figura', 'Ctrl+Shift+N', 'Cerrado recientemente: 2 días (Gratis), 30 (Pro)'],
+    ['Guardar las pestañas abiertas según un horario', 'No figura', 'No figura', 'No figura', 'Guardado automático según un horario o un número de pestañas'],
+    ['Exportar pestañas', 'Mediante marcadores (HTML)', 'Mediante favoritos (HTML)', 'Mediante marcadores (HTML)', 'JSON, pestañas abiertas y guardadas juntas'],
+  ]}
+/>
+
+Las Colecciones de Edge, su antigua forma de guardar conjuntos de páginas, ya no existen: Microsoft las retiró en Edge 149. Mira [qué usar en lugar de las Colecciones de Edge](/blog/edge-collections-replacement).
+
+</Section>
+
+<Section id="turn-on" title="¿Qué ajustes integrados vale la pena activar?">
+
+<BrowserPanels section="turn-on">
+<BrowserPanel browser="chrome">
+
+1. **Ahorro de memoria** («Memory Saver»): Configuración → Rendimiento («Settings → Performance», `chrome://settings/performance`). Está desactivado en un perfil nuevo.
+2. **Pestañas verticales**, si tienes muchas abiertas: haz clic derecho en la barra de pestañas y elige **Mostrar pestañas verticalmente** («Show Tabs Vertically»), o Configuración → Aspecto → Posición de la pestaña («Settings → Appearance → Tab position»).
+3. **Búsqueda en pestañas** («Tab Search»): <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>, o escribe `@tabs` en la barra de direcciones.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Configuración de Chrome, «Performance» (Rendimiento), con el interruptor «Memory Saver» (Ahorro de memoria)" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">«Memory Saver» (Ahorro de memoria) de Chrome, desactivado en un perfil nuevo de Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Las **pestañas suspendidas** («Sleeping tabs») ya están activadas: ajusta el tiempo de espera en Configuración → System and performance → Performance.
+2. Edge 158 también tiene **pestañas verticales** y **Search tabs** (ambas aparecen en los textos de su interfaz); la lista de atajos de Microsoft no le asigna ninguna tecla a Search tabs.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Configuración de Edge, «Performance», con «Automatically put tabs to sleep» activado y fijado en 15 minutos" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Las pestañas suspendidas de Edge, activadas de forma predeterminada: las pestañas inactivas se suspenden a los 15 minutos.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. **Pestañas verticales**: haz clic derecho en la barra lateral y elige **Activar pestañas verticales** («Turn on Vertical Tabs»).
+2. **Cerrar pestañas duplicadas** («Close Duplicate Tabs») y **Descargar pestaña** («Unload Tab») están en el menú contextual de cada pestaña.
+3. **Mostrar todas las pestañas** («List all tabs»): <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox tab right-click menu with Close Duplicate Tabs and Unload Tab. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+Todas las teclas están en nuestra [referencia de atajos de teclado para pestañas](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="tabmerger" title="La capa que falta, en todos los navegadores">
+
+La tabla tiene una fila vacía para cada navegador: ninguno mantiene tus pestañas organizadas **más allá** de su propia ventana, ni entre navegadores. [TabMerger](/features) sí, y del mismo modo en Chrome, Edge y Firefox:
+
+1. **Abiertas ahora** muestra todas las ventanas que tienes abiertas; **Combinar con lo actual** las guarda todas en un grupo con nombre en un clic.
+2. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> busca a la vez en las pestañas abiertas, guardadas y cerradas recientemente, con los filtros `group:`, `window:`, `tag:` y `closed:`.
+3. El **guardado automático** conserva una copia reciente de tus pestañas según un horario; **Quitar duplicadas** elimina las repeticiones de todas las ventanas.
+4. Con [Pro](/pricing), tus grupos se sincronizan entre todos tus navegadores, con cifrado de extremo a extremo.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="Búsqueda de TabMerger abierta y vacía, con la lista de filtros group:, window:, tag: y closed:, tema claro" darkAlt="Búsqueda de TabMerger abierta y vacía, con la lista de filtros group:, window:, tag: y closed:, tema oscuro" boxes={[{ id: 'search-input', label: 'Búsqueda' }]} source="TabMerger 3.16.1">Una sola búsqueda para todas las pestañas, en cada navegador donde funciona TabMerger.</ThemedScreenshot>
+
+Para una comparación con otras extensiones, consulta [las mejores extensiones para gestionar pestañas](/blog/best-tab-manager-extensions).
+
+<InstallCta>Gratis para Chrome, Edge y Firefox. No necesitas una cuenta para empezar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

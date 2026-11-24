@@ -1,0 +1,183 @@
+export const post = {
+  slug: 'browser-tab-features-compared',
+  title: 'Chrome vs. Edge vs. Firefox: os recursos de abas nativos comparados',
+  navTitle: 'Recursos de abas: Chrome, Edge, Firefox',
+  seoTitle: 'Chrome vs. Edge vs. Firefox: recursos de abas comparados (2026)',
+  description:
+    'Grupos de abas, pesquisa de abas, abas verticais, tela dividida, abas em suspensão e fechar duplicadas: quais recursos de abas o Chrome 157, o Edge 158 e o Firefox 159 têm, e como o TabMerger adiciona a mesma camada aos três.',
+  shareSummary: 'Quais recursos de abas o Chrome, o Edge e o Firefox têm, lado a lado.',
+  dek: 'Cada navegador resolve uma parte do problema das abas. Veja qual parte, e como ter o resto nos três.',
+  published: '2026-12-05',
+  updated: '2026-12-05',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Os três têm grupos de abas, pesquisa de abas, abas verticais e tela dividida.', source: 'Páginas de ajuda e textos da interface, 21 nov. 2026' },
+    { text: 'Só o Firefox 159 tem “Fechar abas duplicadas” (Close Duplicate Tabs) nativo.', source: 'Texto do menu do Firefox 159' },
+    {
+      text: 'O Chrome sincroniza os grupos de abas pela sua Conta do Google.',
+      source: 'Ajuda do Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'O TabMerger adiciona aos três uma única pesquisa, salvamento automático e sincronização criptografada.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Qual navegador tem os melhores recursos de abas?',
+      answer:
+        'Cada um se destaca em algo: o Chrome nos grupos de abas salvos e sincronizados, o Edge nas abas em suspensão ativadas por padrão, o Firefox em fechar duplicadas. O TabMerger dá aos três os mesmos grupos, a mesma pesquisa, o salvamento automático e a sincronização.',
+    },
+    {
+      question: 'O Chrome, o Edge e o Firefox têm grupos de abas?',
+      answer: 'Sim. Os três permitem agrupar abas com um nome e uma cor; o Chrome e o Firefox também podem fechar um grupo e reabri-lo depois.',
+    },
+    {
+      question: 'Posso usar o mesmo gerenciador de abas no Chrome, no Edge e no Firefox?',
+      answer: 'Sim. O TabMerger funciona nos três, e o Pro sincroniza seus grupos entre eles, com criptografia de ponta a ponta.',
+    },
+    {
+      question: 'Qual navegador fecha abas duplicadas?',
+      answer: 'O Firefox, pelo menu de contexto de qualquer aba. No Chrome e no Edge, o “Remover abas duplicadas” do TabMerger faz isso em todas as janelas.',
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'Pesquisa do TabMerger aberta e vazia, listando os filtros group:, window:, tag: e closed:, tema claro' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'Pesquisa do TabMerger aberta e vazia, listando os filtros group:, window:, tag: e closed:, tema escuro' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Configurações do Chrome, “Performance” (Desempenho), com a chave “Memory Saver” (Economia de memória)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Configurações do Edge, “Performance”, com “Automatically put tabs to sleep” ativado e definido em 15 minutos' },
+  ],
+  tags: ['cross-browser', 'comparison', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    { title: 'Chrome keyboard shortcuts', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/157179', checked: '2026-11-21' },
+    { title: 'Personalize Chrome performance', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/12929150', checked: '2026-11-21' },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp' },
+  ogImage: { src: '/blog/browser-tab-features-compared/og.png', alt: 'Chrome vs. Edge vs. Firefox: os recursos de abas nativos comparados. Um guia do TabMerger, com os filtros de pesquisa do TabMerger' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'matrix', label: 'A tabela de recursos' },
+    { id: 'turn-on', label: 'Configurações que vale a pena ativar' },
+    { id: 'tabmerger', label: 'Uma camada para os três' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+  browserSections: ['turn-on'],
+  browserFact: {
+    label: 'Configuração de memória',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Configurações → System and performance → Performance',
+      firefox: 'Clique com o botão direito em uma aba → Descarregar aba',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Os três navegadores agora têm **grupos de abas, pesquisa de abas, abas verticais e tela dividida**. O Chrome sai na frente ao salvar e sincronizar grupos, o Edge coloca as abas ociosas em suspensão por padrão e o Firefox é o único que fecha abas duplicadas sozinho. Nenhum deles pesquisa suas abas salvas e fechadas, salva suas janelas automaticamente ou funciona entre navegadores, e essa é a camada que o [TabMerger](/features) adiciona, de forma idêntica, ao Chrome, ao Edge e ao Firefox.
+
+</QuickAnswer>
+
+<InstallCta>Os mesmos grupos, a mesma pesquisa e a mesma sincronização no Chrome, no Edge e no Firefox. Grátis.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="matrix" title="Quais recursos de abas cada navegador tem?">
+
+Verificado no Chrome 157, no Edge 158 e no Firefox 159 com as páginas de ajuda de cada navegador e os textos da própria interface, em 21 nov. 2026. “Não listado” significa que não encontramos sinal do recurso nas páginas de ajuda nem nos textos do navegador, não que ele com certeza não exista.
+
+<ComparisonTable
+  head={['Recurso', 'Chrome 157', 'Edge 158', 'Firefox 159', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="52rem"
+  rows={[
+    ['Grupos de abas', 'Sim', 'Sim', 'Sim', 'Grupos com nome e cor em todas as janelas'],
+    ['Fechar um grupo e reabrir depois', 'Sim (⋮ → Grupos de guias)', 'Close group (reabrir não listado)', 'Sim (Salvar e fechar grupo)', 'Todo grupo fica salvo'],
+    ['Grupos em outros dispositivos', 'Sim, pela Conta do Google', 'Não listado', 'Não está nas configurações do Sync', 'Pro, com criptografia de ponta a ponta'],
+    ['Pesquisar abas', 'Abas abertas (Ctrl+Shift+A, @tabs)', 'Search tabs (nenhum atalho listado)', 'Listar todas as abas (Ctrl+Shift+A)', 'Abertas, salvas e fechadas (Ctrl+K)'],
+    ['Abas verticais', 'Sim', 'Sim', 'Sim', 'Não se aplica'],
+    ['Tela dividida', 'Sim', 'Sim', 'Sim', 'Não se aplica'],
+    ['Liberar memória de abas ociosas', 'Economia de memória (desativada por padrão)', 'Abas em suspensão (ativadas por padrão)', 'Descarregar aba, manualmente', 'Salvar e depois fechar todas as janelas com um clique'],
+    ['Fechar abas duplicadas', 'Não listado', 'Não listado', 'Fechar abas duplicadas', '“Remover abas duplicadas” em todas as janelas'],
+    ['Reabrir uma janela fechada', 'Ctrl+Shift+T', 'Não listado', 'Ctrl+Shift+N', 'Fechadas recentemente: 2 dias (Gratuito), 30 (Pro)'],
+    ['Salvar as abas abertas em um horário programado', 'Não listado', 'Não listado', 'Não listado', 'Salvamento automático programado ou a partir de um número de abas'],
+    ['Exportar abas', 'Pelos favoritos (HTML)', 'Pelos Favoritos (HTML)', 'Pelos favoritos (HTML)', 'JSON, abas abertas e salvas juntas'],
+  ]}
+/>
+
+As Coleções do Edge, a antiga forma de salvar conjuntos de páginas nele, acabaram: a Microsoft as descontinuou no Edge 149. Veja [o que usar no lugar das Coleções do Edge](/blog/edge-collections-replacement).
+
+</Section>
+
+<Section id="turn-on" title="Quais configurações nativas vale a pena ativar?">
+
+<BrowserPanels section="turn-on">
+<BrowserPanel browser="chrome">
+
+1. **Economia de memória** (“Memory Saver”): Configurações → Desempenho (“Settings → Performance”, `chrome://settings/performance`). Ela vem desativada em um perfil novo.
+2. **Abas verticais**, se você mantém muitas abertas: clique com o botão direito na barra de guias (é assim que o Chrome chama as abas) e escolha **Mostrar guias verticalmente** (“Show Tabs Vertically”), ou Configurações → Aparência → Posição da guia (“Settings → Appearance → Tab position”).
+3. **Pesquisa em Todas as Guias** (“Tab Search”): <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>, ou digite `@tabs` na barra de endereço.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Configurações do Chrome, “Performance” (Desempenho), com a chave “Memory Saver” (Economia de memória)" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">“Memory Saver” (Economia de memória) do Chrome, desativada em um perfil novo do Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. As **abas em suspensão** (“Sleeping tabs”) já vêm ativadas: ajuste o tempo de espera em Configurações → System and performance → Performance.
+2. O Edge 158 também tem **abas verticais** e **Search tabs** (as duas aparecem nos textos da interface); a lista de atalhos da Microsoft não dá nenhuma tecla ao Search tabs.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Configurações do Edge, “Performance”, com “Automatically put tabs to sleep” ativado e definido em 15 minutos" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">As abas em suspensão do Edge, ativadas por padrão: abas inativas entram em suspensão depois de 15 minutos.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. **Abas verticais**: clique com o botão direito na barra lateral e escolha **Ativar abas na vertical** (“Turn on Vertical Tabs”).
+2. **Fechar abas duplicadas** (“Close Duplicate Tabs”) e **Descarregar aba** (“Unload Tab”) ficam no menu de contexto de cada aba.
+3. **Listar todas as abas** (“List all tabs”): <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox tab right-click menu with Close Duplicate Tabs and Unload Tab. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+Todas as teclas estão na nossa [referência de atalhos de teclado para abas](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="tabmerger" title="A camada que falta, em todos os navegadores">
+
+A tabela tem uma linha vazia para cada navegador: nenhum mantém suas abas organizadas **além** da própria janela do navegador, nem entre navegadores. O [TabMerger](/features) mantém, do mesmo jeito no Chrome, no Edge e no Firefox:
+
+1. **Abertas agora** mostra todas as janelas abertas; **Mesclar com as atuais** salva todas elas em um grupo com nome com um clique.
+2. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> pesquisa ao mesmo tempo as abas abertas, salvas e fechadas recentemente, com os filtros `group:`, `window:`, `tag:` e `closed:`.
+3. O **salvamento automático** guarda uma cópia atualizada das suas abas em um horário programado; **Remover abas duplicadas** elimina as repetições de todas as janelas.
+4. No [Pro](/pricing), seus grupos são sincronizados entre todos os seus navegadores, com criptografia de ponta a ponta.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="Pesquisa do TabMerger aberta e vazia, listando os filtros group:, window:, tag: e closed:, tema claro" darkAlt="Pesquisa do TabMerger aberta e vazia, listando os filtros group:, window:, tag: e closed:, tema escuro" boxes={[{ id: 'search-input', label: 'Pesquisa' }]} source="TabMerger 3.16.1">Uma só pesquisa para todas as abas, em cada navegador em que o TabMerger roda.</ThemedScreenshot>
+
+Para uma comparação com outras extensões, veja [as melhores extensões para gerenciar abas](/blog/best-tab-manager-extensions).
+
+<InstallCta>Grátis para Chrome, Edge e Firefox. Não precisa de conta para começar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

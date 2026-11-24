@@ -1,0 +1,183 @@
+export const post = {
+  slug: 'browser-tab-features-compared',
+  title: 'Chrome vs Edge vs Firefox: 기본 탭 기능 비교',
+  navTitle: '탭 기능 비교: Chrome, Edge, Firefox',
+  seoTitle: 'Chrome vs Edge vs Firefox 탭 기능 비교 (2026)',
+  description:
+    '탭 그룹, 탭 검색, 세로 탭, 분할 화면, 절전 탭, 중복 탭 닫기까지. Chrome 157, Edge 158, Firefox 159에 기본으로 있는 탭 기능과 TabMerger가 세 브라우저 모두에 같은 기능을 더하는 방법을 정리했습니다.',
+  shareSummary: 'Chrome, Edge, Firefox에 기본으로 있는 탭 기능을 나란히 비교합니다.',
+  dek: '브라우저마다 탭 문제의 일부만 해결합니다. 어느 부분인지, 그리고 나머지를 세 브라우저 모두에서 얻는 방법을 알아봅니다.',
+  published: '2026-12-05',
+  updated: '2026-12-05',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '세 브라우저 모두 탭 그룹, 탭 검색, 세로 탭, 분할 화면이 있습니다.', source: '각 브라우저의 도움말 페이지와 UI 텍스트, 2026년 11월 21일' },
+    { text: '기본 \'중복 탭 닫기\'(Close Duplicate Tabs) 기능은 Firefox 159에만 있습니다.', source: 'Firefox 159 메뉴 텍스트' },
+    {
+      text: 'Chrome은 Google 계정으로 탭 그룹을 동기화합니다.',
+      source: 'Chrome 고객센터',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'TabMerger는 세 브라우저 모두에 하나의 검색, 자동 저장, 암호화된 동기화를 더합니다.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: '탭 기능이 가장 좋은 브라우저는 어디인가요?',
+      answer:
+        '저마다 앞서는 분야가 있습니다. Chrome은 저장·동기화되는 탭 그룹, Edge는 기본으로 켜져 있는 절전 탭, Firefox는 중복 탭 닫기에서 앞섭니다. TabMerger는 세 브라우저 모두에 같은 그룹, 검색, 자동 저장, 동기화를 제공합니다.',
+    },
+    {
+      question: 'Chrome, Edge, Firefox 모두 탭 그룹이 있나요?',
+      answer: '네. 세 브라우저 모두 이름과 색으로 탭을 그룹으로 묶을 수 있고, Chrome과 Firefox는 그룹을 닫았다가 나중에 다시 열 수도 있습니다.',
+    },
+    {
+      question: 'Chrome, Edge, Firefox에서 같은 탭 관리자를 쓸 수 있나요?',
+      answer: '네. TabMerger는 세 브라우저 모두에서 작동하고, Pro에서는 그룹이 브라우저 사이에 엔드투엔드 암호화로 동기화됩니다.',
+    },
+    {
+      question: '중복 탭을 닫아 주는 브라우저는 어디인가요?',
+      answer: 'Firefox입니다. 아무 탭의 우클릭 메뉴에서 할 수 있습니다. Chrome과 Edge에서는 TabMerger의 \'중복 탭 제거\'가 모든 창에서 이 작업을 합니다.',
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: '비어 있는 상태로 열린 TabMerger 검색, group:, window:, tag:, closed: 필터 목록 표시, 밝은 테마' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: '비어 있는 상태로 열린 TabMerger 검색, group:, window:, tag:, closed: 필터 목록 표시, 어두운 테마' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Chrome 설정의 Performance(성능) 화면과 Memory Saver(메모리 절약 모드) 스위치' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Edge 설정의 Performance 화면: Automatically put tabs to sleep이 켜져 있고 15분으로 설정됨' },
+  ],
+  tags: ['cross-browser', 'comparison', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    { title: 'Chrome keyboard shortcuts', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/157179', checked: '2026-11-21' },
+    { title: 'Personalize Chrome performance', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/12929150', checked: '2026-11-21' },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp' },
+  ogImage: { src: '/blog/browser-tab-features-compared/og.png', alt: 'Chrome vs Edge vs Firefox: 기본 탭 기능 비교. TabMerger 가이드, TabMerger 검색 필터 화면 포함' },
+  toc: [
+    { id: 'quick', label: '간단한 답변' },
+    { id: 'matrix', label: '기능 비교표' },
+    { id: 'turn-on', label: '켜 둘 만한 설정' },
+    { id: 'tabmerger', label: '세 브라우저에 하나의 레이어' },
+    { id: 'faq', label: '자주 묻는 질문' },
+  ],
+  browserSections: ['turn-on'],
+  browserFact: {
+    label: '메모리 설정',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: '설정 → System and performance → Performance',
+      firefox: '탭을 마우스 오른쪽 버튼으로 클릭 → 탭 언로드',
+    },
+  },
+}
+
+<QuickAnswer>
+
+이제 세 브라우저 모두 **탭 그룹, 탭 검색, 세로 탭, 분할 화면**을 갖추고 있습니다. 그룹 저장과 동기화는 Chrome이 앞서고, Edge는 기본으로 쓰지 않는 탭을 절전 상태로 만들며, 중복 탭을 스스로 닫는 브라우저는 Firefox뿐입니다. 하지만 저장하거나 닫은 탭까지 검색하거나, 창을 자동 저장하거나, 브라우저를 넘나들며 작동하는 브라우저는 없습니다. 바로 이 레이어를 [TabMerger](/features)가 Chrome, Edge, Firefox에 똑같이 더합니다.
+
+</QuickAnswer>
+
+<InstallCta>Chrome, Edge, Firefox에서 같은 그룹, 검색, 동기화를. 무료입니다.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="matrix" title="브라우저별로 어떤 탭 기능이 있나요?">
+
+2026년 11월 21일, Chrome 157, Edge 158, Firefox 159에서 각 브라우저의 도움말 페이지와 브라우저 자체의 UI 텍스트를 기준으로 확인했습니다. '언급 없음'은 도움말 페이지나 브라우저 텍스트에서 흔적을 찾지 못했다는 뜻이지, 기능이 없다는 증거는 아닙니다.
+
+<ComparisonTable
+  head={['기능', 'Chrome 157', 'Edge 158', 'Firefox 159', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="52rem"
+  rows={[
+    ['탭 그룹', '예', '예', '예', '모든 창에 걸친, 이름과 색이 있는 그룹'],
+    ['그룹 닫기, 나중에 다시 열기', '예(⋮ → 탭 그룹)', 'Close group(다시 열기는 언급 없음)', '예(그룹 저장 후 닫기)', '모든 그룹이 저장된 상태로 유지'],
+    ['다른 기기의 그룹', '예, Google 계정으로', '언급 없음', 'Sync 설정에 없음', 'Pro, 엔드투엔드 암호화'],
+    ['탭 검색', '열린 탭(Ctrl+Shift+A, @tabs)', 'Search tabs(단축키 없음)', '탭 전체 목록(Ctrl+Shift+A)', '열린 탭, 저장한 탭, 닫은 탭(Ctrl+K)'],
+    ['세로 탭', '예', '예', '예', '해당 없음'],
+    ['분할 화면', '예', '예', '예', '해당 없음'],
+    ['쓰지 않는 탭의 메모리 확보', '메모리 절약 모드(기본값 꺼짐)', '절전 탭(기본값 켜짐)', '탭 언로드, 수동', '저장한 뒤 클릭 한 번으로 모든 창 닫기'],
+    ['중복 탭 닫기', '언급 없음', '언급 없음', '중복 탭 닫기', '모든 창에서 \'중복 탭 제거\''],
+    ['닫은 창 다시 열기', 'Ctrl+Shift+T', '언급 없음', 'Ctrl+Shift+N', '최근에 닫은 탭: 2일(무료), 30일(Pro)'],
+    ['열린 탭을 일정에 따라 저장', '언급 없음', '언급 없음', '언급 없음', '일정이나 탭 개수에 따라 자동 저장'],
+    ['탭 내보내기', '북마크를 통해(HTML)', '즐겨찾기를 통해(HTML)', '북마크를 통해(HTML)', 'JSON, 열린 탭과 저장한 탭을 함께'],
+  ]}
+/>
+
+페이지 묶음을 저장하던 Edge의 옛 기능인 컬렉션은 사라졌습니다. Microsoft가 Edge 149에서 종료했습니다. [Edge 컬렉션 대신 쓸 수 있는 방법](/blog/edge-collections-replacement)을 확인하세요.
+
+</Section>
+
+<Section id="turn-on" title="켜 둘 만한 기본 설정은 무엇인가요?">
+
+<BrowserPanels section="turn-on">
+<BrowserPanel browser="chrome">
+
+1. **메모리 절약 모드**(Memory Saver): 설정 → 성능(Settings → Performance, `chrome://settings/performance`). 새 프로필에서는 꺼져 있습니다.
+2. 탭을 많이 열어 둔다면 **세로 탭**: 탭 표시줄을 우클릭하고 **세로로 탭 표시**(Show Tabs Vertically)를 선택하거나, 설정 → 모양 → 탭 위치(Settings → Appearance → Tab position)에서 바꿉니다.
+3. **탭 검색**(Tab Search): <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>를 누르거나 주소창에 `@tabs`를 입력합니다.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Chrome 설정의 Performance(성능) 화면과 Memory Saver(메모리 절약 모드) 스위치" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">새 Chrome 157 프로필에서 꺼져 있던 Chrome의 Memory Saver(메모리 절약 모드).</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. **절전 탭**(Sleeping tabs)은 이미 켜져 있습니다. 대기 시간은 설정 → System and performance → Performance에서 조정합니다.
+2. Edge 158에는 **세로 탭**과 **Search tabs**도 있습니다(둘 다 UI 텍스트에 있음). 다만 Microsoft의 단축키 목록에는 Search tabs에 지정된 키가 없습니다.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Edge 설정의 Performance 화면: Automatically put tabs to sleep이 켜져 있고 15분으로 설정됨" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">기본으로 켜져 있는 Edge의 절전 탭: 비활성 탭은 15분 후 절전 모드로 들어갑니다.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. **세로 탭**: 사이드바를 우클릭하고 **세로 탭 켜기**(Turn on Vertical Tabs)를 선택합니다.
+2. **중복 탭 닫기**(Close Duplicate Tabs)와 **탭 언로드**(Unload Tab)는 모든 탭의 우클릭 메뉴에 있습니다.
+3. **탭 전체 목록**(List all tabs): <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox tab right-click menu with Close Duplicate Tabs and Unload Tab. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+모든 키는 [탭 키보드 단축키 정리](/blog/tab-keyboard-shortcuts)에 있습니다.
+
+</Section>
+
+<Section id="tabmerger" title="모든 브라우저에 빠진 레이어를 더하세요">
+
+비교표에는 브라우저마다 빈 행이 하나 있습니다. 어떤 브라우저도 자기 창을 **넘어서** 탭을 정리해 두거나 브라우저를 넘나들지 못합니다. [TabMerger](/features)는 Chrome, Edge, Firefox에서 똑같은 방식으로 이를 해냅니다.
+
+1. **현재 열린 탭**에는 열려 있는 모든 창이 표시되고, **현재 상태와 합치기**로 클릭 한 번에 모두 이름 있는 그룹에 저장합니다.
+2. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>로 열린 탭, 저장한 탭, 최근에 닫은 탭을 한 번에 검색하고, `group:`, `window:`, `tag:`, `closed:` 필터도 쓸 수 있습니다.
+3. **자동 저장**은 일정에 따라 탭의 최신 사본을 남기고, **중복 탭 제거**는 모든 창에서 반복된 탭을 정리합니다.
+4. [Pro](/pricing)에서는 그룹이 모든 브라우저 사이에서 엔드투엔드 암호화로 동기화됩니다.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="비어 있는 상태로 열린 TabMerger 검색, group:, window:, tag:, closed: 필터 목록 표시, 밝은 테마" darkAlt="비어 있는 상태로 열린 TabMerger 검색, group:, window:, tag:, closed: 필터 목록 표시, 어두운 테마" boxes={[{ id: 'search-input', label: '검색' }]} source="TabMerger 3.16.1">TabMerger가 실행되는 모든 브라우저에서, 모든 탭을 하나의 검색으로.</ThemedScreenshot>
+
+다른 확장 프로그램과의 비교는 [최고의 탭 관리 확장 프로그램](/blog/best-tab-manager-extensions)을 참고하세요.
+
+<InstallCta>Chrome, Edge, Firefox용 무료 확장 프로그램. 계정 없이 시작할 수 있습니다.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="자주 묻는 질문">
+
+<Faq items={post.faq} />
+
+</Section>

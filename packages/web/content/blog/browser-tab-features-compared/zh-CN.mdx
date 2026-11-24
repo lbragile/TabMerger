@@ -1,0 +1,183 @@
+export const post = {
+  slug: 'browser-tab-features-compared',
+  title: 'Chrome、Edge、Firefox 内置标签页功能对比',
+  navTitle: '标签页功能对比：Chrome、Edge、Firefox',
+  seoTitle: 'Chrome vs Edge vs Firefox 标签页功能对比（2026）',
+  description:
+    '标签页分组、标签页搜索、垂直标签页、分屏、睡眠标签页和关闭重复标签页：Chrome 157、Edge 158 和 Firefox 159 各自内置了哪些标签页功能，以及 TabMerger 如何为三者加上同一层功能。',
+  shareSummary: 'Chrome、Edge 和 Firefox 内置了哪些标签页功能，并排对比。',
+  dek: '每个浏览器都只解决了标签页问题的一部分。这里告诉你是哪一部分，以及如何在三个浏览器里补齐其余部分。',
+  published: '2026-12-05',
+  updated: '2026-12-05',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '三者都有标签页分组、标签页搜索、垂直标签页和分屏。', source: '各自的帮助页面和界面文字，2026 年 11 月 21 日' },
+    { text: '只有 Firefox 159 内置“关闭重复标签页”（Close Duplicate Tabs）。', source: 'Firefox 159 菜单文字' },
+    {
+      text: 'Chrome 通过你的 Google 账号同步标签页分组。',
+      source: 'Chrome 帮助',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'TabMerger 为三者都加上统一的搜索、自动保存和加密同步。', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: '哪个浏览器的标签页功能最好？',
+      answer:
+        '各有所长：Chrome 强在可保存、可同步的标签页分组，Edge 强在默认开启的睡眠标签页，Firefox 强在关闭重复标签页。TabMerger 为三者提供同样的分组、搜索、自动保存和同步。',
+    },
+    {
+      question: 'Chrome、Edge 和 Firefox 都有标签页分组吗？',
+      answer: '都有。三者都能给标签页分组并设置名称和颜色；Chrome 和 Firefox 还能关闭一个分组，之后再重新打开。',
+    },
+    {
+      question: '能在 Chrome、Edge 和 Firefox 里用同一个标签页管理器吗？',
+      answer: '能。TabMerger 在三者中都能使用，Pro 会在它们之间同步你的分组，并采用端到端加密。',
+    },
+    {
+      question: '哪个浏览器能关闭重复标签页？',
+      answer: 'Firefox，在任意标签页的右键菜单里即可。在 Chrome 和 Edge 中，TabMerger 的“去除重复标签页”可以在所有窗口中完成这件事。',
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'TabMerger 搜索已打开且为空，列出了筛选器 group:、window:、tag: 和 closed:，浅色主题' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'TabMerger 搜索已打开且为空，列出了筛选器 group:、window:、tag: 和 closed:，深色主题' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Chrome 设置中的“Performance”（性能）页面，带有“Memory Saver”（省内存模式）开关' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Edge 设置中的“Performance”页面，“Automatically put tabs to sleep”已开启并设为 15 分钟' },
+  ],
+  tags: ['cross-browser', 'comparison', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    { title: 'Chrome keyboard shortcuts', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/157179', checked: '2026-11-21' },
+    { title: 'Personalize Chrome performance', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/12929150', checked: '2026-11-21' },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp' },
+  ogImage: { src: '/blog/browser-tab-features-compared/og.png', alt: 'Chrome、Edge、Firefox 内置标签页功能对比。TabMerger 指南，附 TabMerger 的搜索筛选器' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'matrix', label: '功能对比表' },
+    { id: 'turn-on', label: '值得开启的设置' },
+    { id: 'tabmerger', label: '三者共用的一层' },
+    { id: 'faq', label: '常见问题' },
+  ],
+  browserSections: ['turn-on'],
+  browserFact: {
+    label: '内存设置',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: '设置 → System and performance → Performance',
+      firefox: '右键点击标签页 → 卸载标签页',
+    },
+  },
+}
+
+<QuickAnswer>
+
+如今三个浏览器都有 **标签页分组、标签页搜索、垂直标签页和分屏**。Chrome 在保存和同步分组方面领先，Edge 默认让闲置标签页进入睡眠，Firefox 则是唯一能自己关闭重复标签页的浏览器。但它们都无法搜索你保存过和关闭过的标签页，不会自动保存窗口，也不能跨浏览器使用，而这正是 [TabMerger](/features) 为 Chrome、Edge 和 Firefox 一模一样加上的一层。
+
+</QuickAnswer>
+
+<InstallCta>在 Chrome、Edge 和 Firefox 中使用同样的分组、搜索和同步。免费。</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="matrix" title="每个浏览器都有哪些标签页功能？">
+
+2026 年 11 月 21 日在 Chrome 157、Edge 158 和 Firefox 159 中，依据各浏览器的帮助页面和其自身的界面文字核对。“未提及”表示我们在帮助页面和浏览器文字中都没找到相关线索，并不代表一定没有这个功能。
+
+<ComparisonTable
+  head={['功能', 'Chrome 157', 'Edge 158', 'Firefox 159', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="52rem"
+  rows={[
+    ['标签页分组', '是', '是', '是', '跨所有窗口、带名称和颜色的分组'],
+    ['关闭分组，之后重新打开', '是（⋮ → 标签页分组）', 'Close group（未提及重新打开）', '是（保存群组并关闭）', '每个分组都会保存'],
+    ['其他设备上的分组', '是，通过 Google 账号', '未提及', '同步设置中没有', 'Pro，端到端加密'],
+    ['搜索标签页', '已打开的标签页（Ctrl+Shift+A、@tabs）', 'Search tabs（未列出快捷键）', '列出所有标签页（Ctrl+Shift+A）', '已打开、已保存和已关闭（Ctrl+K）'],
+    ['垂直标签页', '是', '是', '是', '不适用'],
+    ['分屏', '是', '是', '是', '不适用'],
+    ['释放闲置标签页的内存', '省内存模式（默认关闭）', '睡眠标签页（默认开启）', '卸载标签页，手动', '先保存，再一键关闭所有窗口'],
+    ['关闭重复标签页', '未提及', '未提及', '关闭重复标签页', '在所有窗口中“去除重复标签页”'],
+    ['重新打开已关闭的窗口', 'Ctrl+Shift+T', '未提及', 'Ctrl+Shift+N', '最近关闭：免费版 2 天，Pro 30 天'],
+    ['按计划保存打开的标签页', '未提及', '未提及', '未提及', '按计划或按标签页数量自动保存'],
+    ['导出标签页', '通过书签（HTML）', '通过收藏夹（HTML）', '通过书签（HTML）', 'JSON，已打开和已保存的标签页一起'],
+  ]}
+/>
+
+Edge 的集合，也就是它以前保存网页合集的方式，已经没有了：Microsoft 在 Edge 149 中停用了它。看看 [可以用什么代替 Edge 集合](/blog/edge-collections-replacement)。
+
+</Section>
+
+<Section id="turn-on" title="哪些内置设置值得开启？">
+
+<BrowserPanels section="turn-on">
+<BrowserPanel browser="chrome">
+
+1. **省内存模式**（Memory Saver）：设置 → 性能（Settings → Performance，`chrome://settings/performance`）。新的个人资料中它是关闭的。
+2. 如果你常开很多标签页，可以用 **垂直标签页**：右键点击标签栏并选择 **垂直显示标签页**（Show Tabs Vertically），或前往 设置 → 外观 → 标签页位置（Settings → Appearance → Tab position）。
+3. **标签页搜索**（Tab Search）：按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>，或在地址栏中输入 `@tabs`。
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Chrome 设置中的“Performance”（性能）页面，带有“Memory Saver”（省内存模式）开关" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">Chrome 的“Memory Saver”（省内存模式），在全新的 Chrome 157 配置文件中处于关闭状态。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. **睡眠标签页**（Sleeping tabs）已经默认开启：在 设置 → System and performance → Performance 中调整等待时间。
+2. Edge 158 也有 **垂直标签页** 和 **Search tabs**（两者都出现在它的界面文字中）；Microsoft 的快捷键列表没有给 Search tabs 分配按键。
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Edge 设置中的“Performance”页面，“Automatically put tabs to sleep”已开启并设为 15 分钟" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Edge 的睡眠标签页默认开启：闲置的标签页在 15 分钟后进入睡眠。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. **垂直标签页**：右键点击侧边栏并选择 **开启垂直标签页**（Turn on Vertical Tabs）。
+2. **关闭重复标签页**（Close Duplicate Tabs）和 **卸载标签页**（Unload Tab）在每个标签页的右键菜单里。
+3. **列出所有标签页**（List all tabs）：<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>。
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox tab right-click menu with Close Duplicate Tabs and Unload Tab. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+所有按键都在我们的 [标签页键盘快捷键参考](/blog/tab-keyboard-shortcuts) 中。
+
+</Section>
+
+<Section id="tabmerger" title="为每个浏览器补上缺少的一层">
+
+对比表里，每个浏览器都有一行空着：没有一个能在浏览器自身窗口 **之外** 整理你的标签页，也不能跨浏览器。[TabMerger](/features) 可以，而且在 Chrome、Edge 和 Firefox 中用法相同：
+
+1. **当前打开** 显示你打开的每个窗口；**与当前合并** 一键把它们全部保存到一个命名分组。
+2. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> 可同时搜索已打开、已保存和最近关闭的标签页，并支持 `group:`、`window:`、`tag:` 和 `closed:` 筛选器。
+3. **自动保存** 按计划保留标签页的最新副本；**去除重复标签页** 清除每个窗口中的重复项。
+4. 使用 [Pro](/pricing)，你的分组会在你所有的浏览器之间同步，并采用端到端加密。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="TabMerger 搜索已打开且为空，列出了筛选器 group:、window:、tag: 和 closed:，浅色主题" darkAlt="TabMerger 搜索已打开且为空，列出了筛选器 group:、window:、tag: 和 closed:，深色主题" boxes={[{ id: 'search-input', label: '搜索' }]} source="TabMerger 3.16.1">一次搜索覆盖所有标签页，在每个运行 TabMerger 的浏览器中都一样。</ThemedScreenshot>
+
+想和其他扩展对比，请看 [最佳标签页管理扩展](/blog/best-tab-manager-extensions)。
+
+<InstallCta>Chrome、Edge 和 Firefox 均可免费使用。无需账号即可开始。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

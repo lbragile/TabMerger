@@ -1,0 +1,183 @@
+export const post = {
+  slug: 'browser-tab-features-compared',
+  title: 'Chrome vs Edge vs Firefox: le funzioni per le schede integrate a confronto',
+  navTitle: 'Funzioni per le schede: Chrome, Edge, Firefox',
+  seoTitle: 'Chrome vs Edge vs Firefox: funzioni per le schede a confronto (2026)',
+  description:
+    'Gruppi di schede, ricerca nelle schede, schede verticali, visualizzazione divisa, schede in sospensione e chiusura dei duplicati: quali funzioni per le schede hanno Chrome 157, Edge 158 e Firefox 159, e come TabMerger aggiunge lo stesso livello a tutti e tre.',
+  shareSummary: 'Quali funzioni per le schede hanno Chrome, Edge e Firefox, una accanto all’altra.',
+  dek: 'Ogni browser risolve una parte del problema delle schede. Ecco quale, e come avere il resto in tutti e tre.',
+  published: '2026-12-05',
+  updated: '2026-12-05',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Tutti e tre hanno gruppi di schede, ricerca nelle schede, schede verticali e visualizzazione divisa.', source: 'Le loro pagine di assistenza e i testi dell’interfaccia, 21 nov 2026' },
+    { text: 'Solo Firefox 159 ha di serie «Chiudi schede duplicate» (Close Duplicate Tabs).', source: 'Testo del menu di Firefox 159' },
+    {
+      text: 'Chrome sincronizza i gruppi di schede tramite il tuo Account Google.',
+      source: 'Guida di Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'TabMerger aggiunge a tutti e tre un’unica ricerca, il salvataggio automatico e la sincronizzazione crittografata.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Quale browser ha le migliori funzioni per le schede?',
+      answer:
+        'Ognuno eccelle in qualcosa: Chrome nei gruppi di schede salvati e sincronizzati, Edge nelle schede in sospensione attive per impostazione predefinita, Firefox nella chiusura dei duplicati. TabMerger dà a tutti e tre gli stessi gruppi, la stessa ricerca, il salvataggio automatico e la sincronizzazione.',
+    },
+    {
+      question: 'Chrome, Edge e Firefox hanno tutti i gruppi di schede?',
+      answer: 'Sì. Tutti e tre ti permettono di raggruppare le schede con un nome e un colore; Chrome e Firefox possono anche chiudere un gruppo e riaprirlo più tardi.',
+    },
+    {
+      question: 'Posso usare lo stesso gestore di schede in Chrome, Edge e Firefox?',
+      answer: 'Sì. TabMerger funziona in tutti e tre, e con Pro i tuoi gruppi si sincronizzano tra di loro, con crittografia end-to-end.',
+    },
+    {
+      question: 'Quale browser chiude le schede duplicate?',
+      answer: 'Firefox, dal menu contestuale di qualsiasi scheda. In Chrome e in Edge lo fa «Rimuovi schede duplicate» di TabMerger, in tutte le finestre.',
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'Ricerca di TabMerger aperta e vuota, con l’elenco dei filtri group:, window:, tag: e closed:, tema chiaro' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'Ricerca di TabMerger aperta e vuota, con l’elenco dei filtri group:, window:, tag: e closed:, tema scuro' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Impostazioni di Chrome, «Performance» (Prestazioni), con l’interruttore «Memory Saver» (Risparmio memoria)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Impostazioni di Edge, «Performance», con «Automatically put tabs to sleep» attivo e impostato su 15 minuti' },
+  ],
+  tags: ['cross-browser', 'comparison', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    { title: 'Chrome keyboard shortcuts', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/157179', checked: '2026-11-21' },
+    { title: 'Personalize Chrome performance', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/12929150', checked: '2026-11-21' },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp' },
+  ogImage: { src: '/blog/browser-tab-features-compared/og.png', alt: 'Chrome vs Edge vs Firefox: le funzioni per le schede integrate a confronto. Una guida di TabMerger, con i filtri di ricerca di TabMerger' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'matrix', label: 'La tabella delle funzioni' },
+    { id: 'turn-on', label: 'Impostazioni da attivare' },
+    { id: 'tabmerger', label: 'Un livello per tutti e tre' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+  browserSections: ['turn-on'],
+  browserFact: {
+    label: 'Impostazione della memoria',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Impostazioni → System and performance → Performance',
+      firefox: 'Clic destro su una scheda → Scarica scheda dalla memoria',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Tutti e tre i browser ora hanno **gruppi di schede, ricerca nelle schede, schede verticali e visualizzazione divisa**. Chrome è in testa nel salvare e sincronizzare i gruppi, Edge mette in sospensione le schede inattive per impostazione predefinita e Firefox è l’unico che chiude da solo le schede duplicate. Nessuno cerca tra le schede salvate e chiuse, salva automaticamente le finestre o funziona tra browser diversi: è questo il livello che [TabMerger](/features) aggiunge, identico, a Chrome, Edge e Firefox.
+
+</QuickAnswer>
+
+<InstallCta>Gli stessi gruppi, la stessa ricerca e la stessa sincronizzazione in Chrome, Edge e Firefox. Gratis.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="matrix" title="Quali funzioni per le schede ha ogni browser?">
+
+Verificato in Chrome 157, Edge 158 e Firefox 159 sulle pagine di assistenza di ogni browser e sui testi della sua interfaccia, 21 nov 2026. «Non indicato» significa che non ne abbiamo trovato traccia né nelle pagine di assistenza né nei testi del browser, non che manchi di sicuro.
+
+<ComparisonTable
+  head={['Funzione', 'Chrome 157', 'Edge 158', 'Firefox 159', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="52rem"
+  rows={[
+    ['Gruppi di schede', 'Sì', 'Sì', 'Sì', 'Gruppi con nome e colore in tutte le finestre'],
+    ['Chiudere un gruppo e riaprirlo dopo', 'Sì (⋮ → Gruppi di schede)', 'Close group (riapertura non indicata)', 'Sì (Salva e chiudi gruppo)', 'Ogni gruppo resta salvato'],
+    ['Gruppi sugli altri dispositivi', 'Sì, tramite l’Account Google', 'Non indicato', 'Non nelle impostazioni di Sync', 'Pro, con crittografia end-to-end'],
+    ['Cercare nelle schede', 'Schede aperte (Ctrl+Shift+A, @tabs)', 'Search tabs (nessuna scorciatoia indicata)', 'Elenco di tutte le schede (Ctrl+Shift+A)', 'Aperte, salvate e chiuse (Ctrl+K)'],
+    ['Schede verticali', 'Sì', 'Sì', 'Sì', 'Non applicabile'],
+    ['Visualizzazione divisa', 'Sì', 'Sì', 'Sì', 'Non applicabile'],
+    ['Liberare memoria dalle schede inattive', 'Risparmio memoria (disattivato per impostazione predefinita)', 'Schede in sospensione (attive per impostazione predefinita)', 'Scarica scheda dalla memoria, a mano', 'Salva, poi chiudi tutte le finestre con un clic'],
+    ['Chiudere le schede duplicate', 'Non indicato', 'Non indicato', 'Chiudi schede duplicate', '«Rimuovi schede duplicate» in tutte le finestre'],
+    ['Riaprire una finestra chiusa', 'Ctrl+Shift+T', 'Non indicato', 'Ctrl+Shift+N', 'Chiusi di recente: 2 giorni (Free), 30 (Pro)'],
+    ['Salvare le schede aperte con una pianificazione', 'Non indicato', 'Non indicato', 'Non indicato', 'Salvataggio automatico pianificato o oltre un numero di schede'],
+    ['Esportare le schede', 'Tramite i preferiti (HTML)', 'Tramite i Preferiti (HTML)', 'Tramite i segnalibri (HTML)', 'JSON, schede aperte e salvate insieme'],
+  ]}
+/>
+
+Le Raccolte di Edge, il suo vecchio modo per salvare insiemi di pagine, non ci sono più: Microsoft le ha ritirate in Edge 149. Scopri [cosa usare al posto delle Raccolte di Edge](/blog/edge-collections-replacement).
+
+</Section>
+
+<Section id="turn-on" title="Quali impostazioni integrate conviene attivare?">
+
+<BrowserPanels section="turn-on">
+<BrowserPanel browser="chrome">
+
+1. **Risparmio memoria** («Memory Saver»): Impostazioni → Prestazioni («Settings → Performance», `chrome://settings/performance`). In un profilo nuovo è disattivato.
+2. **Schede verticali**, se ne tieni aperte molte: fai clic con il tasto destro sulla barra delle schede e scegli **Mostra schede verticalmente** («Show Tabs Vertically»), oppure Impostazioni → Aspetto → Posizione schede («Settings → Appearance → Tab position»).
+3. **Ricerca di schede** («Tab Search»): <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>, oppure scrivi `@tabs` nella barra degli indirizzi.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Impostazioni di Chrome, «Performance» (Prestazioni), con l’interruttore «Memory Saver» (Risparmio memoria)" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">«Memory Saver» (Risparmio memoria) di Chrome, disattivato in un nuovo profilo di Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Le **schede in sospensione** («Sleeping tabs») sono già attive: regola il ritardo in Impostazioni → System and performance → Performance.
+2. Edge 158 ha anche le **schede verticali** e **Search tabs** (entrambe nei testi della sua interfaccia); l’elenco delle scorciatoie di Microsoft non assegna alcun tasto a Search tabs.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Impostazioni di Edge, «Performance», con «Automatically put tabs to sleep» attivo e impostato su 15 minuti" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Le schede in sospensione di Edge, attive per impostazione predefinita: le schede inattive vanno in sospensione dopo 15 minuti.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. **Schede verticali**: fai clic con il tasto destro sulla barra laterale e scegli **Attiva schede verticali** («Turn on Vertical Tabs»).
+2. **Chiudi schede duplicate** («Close Duplicate Tabs») e **Scarica scheda dalla memoria** («Unload Tab») sono nel menu contestuale di ogni scheda.
+3. **Elenco di tutte le schede** («List all tabs»): <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox tab right-click menu with Close Duplicate Tabs and Unload Tab. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+Tutti i tasti sono nel nostro [riepilogo delle scorciatoie da tastiera per le schede](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="tabmerger" title="Il livello che manca, in ogni browser">
+
+La tabella ha una riga vuota per ogni browser: nessuno tiene in ordine le tue schede **oltre** la propria finestra, né tra browser diversi. [TabMerger](/features) sì, allo stesso modo in Chrome, Edge e Firefox:
+
+1. **Aperte ora** mostra tutte le finestre aperte; **Unisci con l'attuale** le salva tutte in un gruppo con nome con un clic.
+2. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> cerca insieme tra le schede aperte, salvate e chiuse di recente, con i filtri `group:`, `window:`, `tag:` e `closed:`.
+3. Il **salvataggio automatico** conserva una copia aggiornata delle tue schede secondo una pianificazione; **Rimuovi schede duplicate** elimina le ripetizioni da tutte le finestre.
+4. Con [Pro](/pricing), i tuoi gruppi si sincronizzano tra tutti i tuoi browser, con crittografia end-to-end.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="Ricerca di TabMerger aperta e vuota, con l’elenco dei filtri group:, window:, tag: e closed:, tema chiaro" darkAlt="Ricerca di TabMerger aperta e vuota, con l’elenco dei filtri group:, window:, tag: e closed:, tema scuro" boxes={[{ id: 'search-input', label: 'Ricerca' }]} source="TabMerger 3.16.1">Un’unica ricerca per ogni scheda, in ogni browser in cui funziona TabMerger.</ThemedScreenshot>
+
+Per un confronto con altre estensioni, vedi [le migliori estensioni per gestire le schede](/blog/best-tab-manager-extensions).
+
+<InstallCta>Gratis per Chrome, Edge e Firefox. Nessun account necessario per iniziare.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

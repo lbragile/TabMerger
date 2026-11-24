@@ -1,0 +1,183 @@
+export const post = {
+  slug: 'browser-tab-features-compared',
+  title: 'Chrome מול Edge מול Firefox: השוואת תכונות הכרטיסיות המובנות',
+  navTitle: 'תכונות כרטיסיות: Chrome, Edge, Firefox',
+  seoTitle: 'השוואת תכונות כרטיסיות: Chrome מול Edge מול Firefox (2026)',
+  description:
+    'קבוצות כרטיסיות, חיפוש בכרטיסיות, כרטיסיות אנכיות, תצוגה מפוצלת, כרטיסיות במצב שינה וסגירת כפולות: אילו תכונות כרטיסיות מובנות יש ב-Chrome 157, ב-Edge 158 וב-Firefox 159, ואיך TabMerger מוסיף את אותה שכבה לשלושתם.',
+  shareSummary: 'אילו תכונות כרטיסיות מובנות יש ב-Chrome, ב-Edge וב-Firefox, זו לצד זו.',
+  dek: 'כל דפדפן פותר חלק מבעיית הכרטיסיות. הנה איזה חלק, ואיך מקבלים את השאר בשלושתם.',
+  published: '2026-12-05',
+  updated: '2026-12-05',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'בכל השלושה יש קבוצות כרטיסיות, חיפוש בכרטיסיות, כרטיסיות אנכיות ותצוגה מפוצלת.', source: 'דפי העזרה וטקסטי הממשק שלהם, 21 בנובמבר 2026' },
+    { text: 'רק ב-Firefox 159 יש פקודה מובנית "סגירת לשוניות כפולות" (Close Duplicate Tabs).', source: 'טקסט התפריט של Firefox 159' },
+    {
+      text: 'Chrome מסנכרן קבוצות כרטיסיות דרך חשבון Google שלכם.',
+      source: 'העזרה של Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'TabMerger מוסיף לשלושתם חיפוש אחד, שמירה אוטומטית וסנכרון מוצפן.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'לאיזה דפדפן יש את תכונות הכרטיסיות הטובות ביותר?',
+      answer:
+        'כל אחד מוביל במשהו: Chrome בקבוצות כרטיסיות שנשמרות ומסתנכרנות, Edge בכרטיסיות במצב שינה שמופעלות כברירת מחדל, Firefox בסגירת כפולות. TabMerger נותן לשלושתם את אותן קבוצות, אותו חיפוש, שמירה אוטומטית וסנכרון.',
+    },
+    {
+      question: 'האם ב-Chrome, ב-Edge וב-Firefox יש קבוצות כרטיסיות?',
+      answer: 'כן. בכל השלושה אפשר לקבץ כרטיסיות עם שם וצבע; Chrome ו-Firefox יכולים גם לסגור קבוצה ולפתוח אותה שוב מאוחר יותר.',
+    },
+    {
+      question: 'אפשר להשתמש באותו מנהל כרטיסיות ב-Chrome, ב-Edge וב-Firefox?',
+      answer: 'כן. TabMerger עובד בשלושתם, ובתוכנית Pro הקבוצות שלכם מסתנכרנות ביניהם, עם הצפנה מקצה לקצה.',
+    },
+    {
+      question: 'איזה דפדפן סוגר כרטיסיות כפולות?',
+      answer: 'Firefox, מתפריט הלחיצה הימנית של כל כרטיסייה. ב-Chrome וב-Edge עושה את זה "הסרת כרטיסיות כפולות" של TabMerger, בכל החלונות.',
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'החיפוש של TabMerger פתוח וריק, עם רשימת המסננים group:, window:, tag: ו-closed:, ערכת נושא בהירה' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'החיפוש של TabMerger פתוח וריק, עם רשימת המסננים group:, window:, tag: ו-closed:, ערכת נושא כהה' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'ההגדרות של Chrome בקטע Performance (ביצועים), עם המתג Memory Saver (מצב חיסכון בזיכרון)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'ההגדרות של Edge בקטע Performance, כשהאפשרות Automatically put tabs to sleep מופעלת ומוגדרת ל-15 דקות' },
+  ],
+  tags: ['cross-browser', 'comparison', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    { title: 'Chrome keyboard shortcuts', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/157179', checked: '2026-11-21' },
+    { title: 'Personalize Chrome performance', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/12929150', checked: '2026-11-21' },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp' },
+  ogImage: { src: '/blog/browser-tab-features-compared/og.png', alt: 'Chrome מול Edge מול Firefox: השוואת תכונות הכרטיסיות המובנות. מדריך של TabMerger, עם מסנני החיפוש של TabMerger' },
+  toc: [
+    { id: 'quick', label: 'תשובה קצרה' },
+    { id: 'matrix', label: 'טבלת התכונות' },
+    { id: 'turn-on', label: 'הגדרות ששווה להפעיל' },
+    { id: 'tabmerger', label: 'שכבה אחת לשלושתם' },
+    { id: 'faq', label: 'שאלות נפוצות' },
+  ],
+  browserSections: ['turn-on'],
+  browserFact: {
+    label: 'הגדרת זיכרון',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'הגדרות ← System and performance → Performance',
+      firefox: 'לחיצה ימנית על כרטיסייה ← ביטול טעינת לשונית',
+    },
+  },
+}
+
+<QuickAnswer>
+
+בכל שלושת הדפדפנים יש היום **קבוצות כרטיסיות, חיפוש בכרטיסיות, כרטיסיות אנכיות ותצוגה מפוצלת**. Chrome מוביל בשמירה ובסנכרון של קבוצות, Edge מעביר כרטיסיות לא פעילות למצב שינה כברירת מחדל, ו-Firefox הוא היחיד שסוגר כרטיסיות כפולות בעצמו. אף אחד מהם לא מחפש בכרטיסיות ששמרתם וסגרתם, לא שומר את החלונות שלכם אוטומטית ולא עובד בין דפדפנים, וזו בדיוק השכבה ש-[TabMerger](/features) מוסיף, באופן זהה, ל-Chrome, ל-Edge ול-Firefox.
+
+</QuickAnswer>
+
+<InstallCta>אותן קבוצות, אותו חיפוש ואותו סנכרון ב-Chrome, ב-Edge וב-Firefox. בחינם.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="matrix" title="אילו תכונות כרטיסיות יש בכל דפדפן?">
+
+נבדק ב-Chrome 157, ב-Edge 158 וב-Firefox 159 מול דפי העזרה של כל דפדפן וטקסטי הממשק שלו, 21 בנובמבר 2026. "לא מצוין" אומר שלא מצאנו לזה זכר בדפי העזרה או בטקסטים של הדפדפן, לא שזו הוכחה שהתכונה חסרה.
+
+<ComparisonTable
+  head={['תכונה', 'Chrome 157', 'Edge 158', 'Firefox 159', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="52rem"
+  rows={[
+    ['קבוצות כרטיסיות', 'כן', 'כן', 'כן', 'קבוצות עם שם וצבע בכל החלונות'],
+    ['סגירת קבוצה ופתיחה מחדש בהמשך', 'כן (⋮ ← קבוצות של כרטיסיות)', <><bdi dir="ltr">Close group</bdi> (פתיחה מחדש לא מצוינת)</>, 'כן (שמירה וסגירת הקבוצה)', 'כל קבוצה נשארת שמורה'],
+    ['קבוצות במכשירים אחרים', 'כן, דרך חשבון Google', 'לא מצוין', 'לא בהגדרות הסנכרון', <><bdi dir="ltr">Pro</bdi>, עם הצפנה מקצה לקצה</>],
+    ['חיפוש בכרטיסיות', <>כרטיסיות פתוחות (<bdi dir="ltr">Ctrl+Shift+A, @tabs</bdi>)</>, <><bdi dir="ltr">Search tabs</bdi> (אין קיצור ברשימה)</>, <>רשימת כל הלשוניות (<bdi dir="ltr">Ctrl+Shift+A</bdi>)</>, <>פתוחות, שמורות וסגורות (<bdi dir="ltr">Ctrl+K</bdi>)</>],
+    ['כרטיסיות אנכיות', 'כן', 'כן', 'כן', 'לא רלוונטי'],
+    ['תצוגה מפוצלת', 'כן', 'כן', 'כן', 'לא רלוונטי'],
+    ['פינוי זיכרון מכרטיסיות לא פעילות', 'מצב חיסכון בזיכרון (כבוי כברירת מחדל)', 'כרטיסיות במצב שינה (מופעלות כברירת מחדל)', 'ביטול טעינת לשונית, באופן ידני', 'שמירה, ואז סגירת כל החלונות בלחיצה אחת'],
+    ['סגירת כרטיסיות כפולות', 'לא מצוין', 'לא מצוין', 'סגירת לשוניות כפולות', '"הסרת כרטיסיות כפולות" בכל החלונות'],
+    ['פתיחה מחדש של חלון שנסגר', 'Ctrl+Shift+T', 'לא מצוין', 'Ctrl+Shift+N', <>נסגרו לאחרונה: יומיים (<bdi dir="ltr">Free</bdi>), 30 ימים (<bdi dir="ltr">Pro</bdi>)</>],
+    ['שמירת הכרטיסיות הפתוחות לפי לוח זמנים', 'לא מצוין', 'לא מצוין', 'לא מצוין', 'שמירה אוטומטית לפי לוח זמנים או לפי מספר כרטיסיות'],
+    ['ייצוא כרטיסיות', <>דרך הסימניות (<bdi dir="ltr">HTML</bdi>)</>, <>דרך המועדפים (<bdi dir="ltr">HTML</bdi>)</>, <>דרך הסימניות (<bdi dir="ltr">HTML</bdi>)</>, <><bdi dir="ltr">JSON</bdi>, כרטיסיות פתוחות ושמורות יחד</>],
+  ]}
+/>
+
+האוספים של Edge, הדרך הישנה שלו לשמור קבוצות של דפים, כבר לא קיימים: Microsoft הוציאה אותם משימוש ב-Edge 149. כדאי לקרוא [במה להשתמש במקום האוספים של Edge](/blog/edge-collections-replacement).
+
+</Section>
+
+<Section id="turn-on" title="אילו הגדרות מובנות שווה להפעיל?">
+
+<BrowserPanels section="turn-on">
+<BrowserPanel browser="chrome">
+
+1. **מצב חיסכון בזיכרון** (<bdi dir="ltr">Memory Saver</bdi>): הגדרות ← ביצועים (<bdi dir="ltr">Settings → Performance</bdi>, <bdi dir="ltr">`chrome://settings/performance`</bdi>). בפרופיל חדש הוא כבוי.
+2. **כרטיסיות אנכיות**, אם אתם מחזיקים הרבה כרטיסיות פתוחות: לוחצים לחיצה ימנית על שורת הכרטיסיות ובוחרים **הצגת הכרטיסיות לאורך** (<bdi dir="ltr">Show Tabs Vertically</bdi>), או הגדרות ← מראה ← מיקום הכרטיסייה (<bdi dir="ltr">Settings → Appearance → Tab position</bdi>).
+3. **החיפוש בכרטיסיות** (<bdi dir="ltr">Tab Search</bdi>): <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi>, או מקלידים <bdi dir="ltr">`@tabs`</bdi> בשורת הכתובת.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="ההגדרות של Chrome בקטע Performance (ביצועים), עם המתג Memory Saver (מצב חיסכון בזיכרון)" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">ההגדרה <bdi dir="ltr">Memory Saver</bdi> (מצב חיסכון בזיכרון) ב-Chrome, כבויה בפרופיל חדש של Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. **כרטיסיות במצב שינה** (<bdi dir="ltr">Sleeping tabs</bdi>) כבר מופעלות: את זמן ההמתנה משנים בהגדרות ← <bdi dir="ltr">System and performance → Performance</bdi>.
+2. ב-Edge 158 יש גם **כרטיסיות אנכיות** ו-<bdi dir="ltr">**Search tabs**</bdi> (שתיהן מופיעות בטקסטי הממשק שלו); ברשימת קיצורי המקשים של Microsoft אין ל-<bdi dir="ltr">Search tabs</bdi> מקש.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="ההגדרות של Edge בקטע Performance, כשהאפשרות Automatically put tabs to sleep מופעלת ומוגדרת ל-15 דקות" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">הכרטיסיות הרדומות של Edge מופעלות כברירת מחדל: כרטיסיות לא פעילות נרדמות אחרי 15 דקות.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. **כרטיסיות אנכיות**: לוחצים לחיצה ימנית על סרגל הצד ובוחרים **הפעלת לשוניות אנכיות** (<bdi dir="ltr">Turn on Vertical Tabs</bdi>).
+2. **סגירת לשוניות כפולות** (<bdi dir="ltr">Close Duplicate Tabs</bdi>) ו**ביטול טעינת לשונית** (<bdi dir="ltr">Unload Tab</bdi>) נמצאות בתפריט הלחיצה הימנית של כל כרטיסייה.
+3. **רשימת כל הלשוניות** (<bdi dir="ltr">List all tabs</bdi>): <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi>.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox tab right-click menu with Close Duplicate Tabs and Unload Tab. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+כל המקשים מרוכזים ב[מדריך קיצורי המקשים לכרטיסיות](/blog/tab-keyboard-shortcuts) שלנו.
+
+</Section>
+
+<Section id="tabmerger" title="השכבה החסרה בכל דפדפן">
+
+בטבלה יש שורה ריקה לכל דפדפן: אף אחד מהם לא שומר על הכרטיסיות שלכם מסודרות **מעבר** לחלון של הדפדפן עצמו, או בין דפדפנים. [TabMerger](/features) כן, ובאותה דרך ב-Chrome, ב-Edge וב-Firefox:
+
+1. **פתוח עכשיו** מציג כל חלון פתוח; **מיזוג עם הנוכחיים** שומר את כולם בקבוצה עם שם בלחיצה אחת.
+2. <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> מחפש בבת אחת בכרטיסיות פתוחות, שמורות ושנסגרו לאחרונה, עם המסננים <bdi dir="ltr">`group:`</bdi>, <bdi dir="ltr">`window:`</bdi>, <bdi dir="ltr">`tag:`</bdi> ו-<bdi dir="ltr">`closed:`</bdi>.
+3. **שמירה אוטומטית** שומרת עותק עדכני של הכרטיסיות שלכם לפי לוח זמנים; **הסרת כרטיסיות כפולות** מנקה כפילויות מכל חלון.
+4. בתוכנית [Pro](/pricing) הקבוצות שלכם מסתנכרנות בין כל הדפדפנים שלכם, עם הצפנה מקצה לקצה.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="החיפוש של TabMerger פתוח וריק, עם רשימת המסננים group:, window:, tag: ו-closed:, ערכת נושא בהירה" darkAlt="החיפוש של TabMerger פתוח וריק, עם רשימת המסננים group:, window:, tag: ו-closed:, ערכת נושא כהה" boxes={[{ id: 'search-input', label: 'חיפוש' }]} source="TabMerger 3.16.1">חיפוש אחד לכל כרטיסייה, בכל דפדפן ש-TabMerger רץ בו.</ThemedScreenshot>
+
+להשוואה מול תוספים אחרים, כדאי לקרוא על [תוספי ניהול הכרטיסיות הטובים ביותר](/blog/best-tab-manager-extensions).
+
+<InstallCta>בחינם ל-Chrome, ל-Edge ול-Firefox. אין צורך בחשבון כדי להתחיל.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="שאלות נפוצות">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,183 @@
+export const post = {
+  slug: 'browser-tab-features-compared',
+  title: 'مقایسهٔ Chrome و Edge و Firefox: قابلیت‌های داخلی زبانه‌ها',
+  navTitle: 'قابلیت‌های زبانه: Chrome و Edge و Firefox',
+  seoTitle: 'مقایسهٔ قابلیت‌های زبانه در Chrome و Edge و Firefox (۲۰۲۶)',
+  description:
+    'گروه زبانه‌ها، جست‌وجوی زبانه، زبانه‌های عمودی، نمای دوتایی، زبانه‌های خواب و بستن زبانه‌های تکراری: Chrome 157 و Edge 158 و Firefox 159 کدام قابلیت‌های زبانه را به‌صورت داخلی دارند و TabMerger چطور همان لایه را به هر سه اضافه می‌کند.',
+  shareSummary: 'قابلیت‌های داخلی زبانه در Chrome و Edge و Firefox، کنار هم.',
+  dek: 'هر مرورگری بخشی از مشکل زبانه‌ها را حل می‌کند. اینجا می‌بینید کدام بخش را، و بقیه را چطور در هر سه به دست بیاورید.',
+  published: '2026-12-05',
+  updated: '2026-12-05',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'هر سه گروه زبانه‌ها، جست‌وجوی زبانه، زبانه‌های عمودی و نمای دوتایی دارند.', source: 'صفحه‌های راهنما و متن رابط کاربری آن‌ها، ۲۱ نوامبر ۲۰۲۶' },
+    { text: 'فقط Firefox 159 فرمان داخلی «بستن زبانه‌های تکراری» (Close Duplicate Tabs) را دارد.', source: 'متن منوی Firefox 159' },
+    {
+      text: 'Chrome گروه زبانه‌ها را از طریق حساب Google شما همگام می‌کند.',
+      source: 'راهنمای Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'TabMerger به هر سه یک جست‌وجوی واحد، ذخیرهٔ خودکار و همگام‌سازی رمزگذاری‌شده اضافه می‌کند.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'کدام مرورگر بهترین قابلیت‌های زبانه را دارد؟',
+      answer:
+        'هرکدام در چیزی جلوترند: Chrome در گروه زبانه‌های ذخیره‌شده و همگام‌شده، Edge در زبانه‌های خوابی که به‌طور پیش‌فرض روشن‌اند، و Firefox در بستن زبانه‌های تکراری. TabMerger به هر سه همان گروه‌ها، همان جست‌وجو، ذخیرهٔ خودکار و همگام‌سازی را می‌دهد.',
+    },
+    {
+      question: 'آیا Chrome و Edge و Firefox همه گروه زبانه دارند؟',
+      answer: 'بله. در هر سه می‌توانید زبانه‌ها را با یک نام و رنگ گروه کنید؛ Chrome و Firefox می‌توانند یک گروه را ببندند و بعداً دوباره باز کنند.',
+    },
+    {
+      question: 'آیا می‌توانم یک مدیر زبانهٔ واحد را در Chrome و Edge و Firefox استفاده کنم؟',
+      answer: 'بله. TabMerger در هر سه کار می‌کند و Pro گروه‌های شما را بین آن‌ها همگام می‌کند، با رمزگذاری سرتاسری.',
+    },
+    {
+      question: 'کدام مرورگر زبانه‌های تکراری را می‌بندد؟',
+      answer: 'Firefox، از منوی راست‌کلیک هر زبانه. در Chrome و Edge این کار را «حذف زبانه‌های تکراری» در TabMerger در همهٔ پنجره‌ها انجام می‌دهد.',
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'جست‌وجوی TabMerger، باز و خالی، با فهرست فیلترهای group: و window: و tag: و closed:، پوستهٔ روشن' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'جست‌وجوی TabMerger، باز و خالی، با فهرست فیلترهای group: و window: و tag: و closed:، پوستهٔ تیره' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'تنظیمات Chrome، بخش Performance (عملکرد)، با کلید Memory Saver (بهینه‌سازی حافظه)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'تنظیمات Edge، بخش Performance، با گزینهٔ Automatically put tabs to sleep روشن و تنظیم‌شده روی ۱۵ دقیقه' },
+  ],
+  tags: ['cross-browser', 'comparison', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    { title: 'Chrome keyboard shortcuts', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/157179', checked: '2026-11-21' },
+    { title: 'Personalize Chrome performance', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/12929150', checked: '2026-11-21' },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp' },
+  ogImage: { src: '/blog/browser-tab-features-compared/og.png', alt: 'مقایسهٔ Chrome و Edge و Firefox: قابلیت‌های داخلی زبانه‌ها. راهنمایی از TabMerger، همراه با فیلترهای جست‌وجوی TabMerger' },
+  toc: [
+    { id: 'quick', label: 'پاسخ کوتاه' },
+    { id: 'matrix', label: 'جدول قابلیت‌ها' },
+    { id: 'turn-on', label: 'تنظیماتی که ارزش روشن کردن دارند' },
+    { id: 'tabmerger', label: 'یک لایه برای هر سه' },
+    { id: 'faq', label: 'پرسش‌های متداول' },
+  ],
+  browserSections: ['turn-on'],
+  browserFact: {
+    label: 'تنظیم حافظه',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Settings → System and performance → Performance',
+      firefox: 'راست‌کلیک روی زبانه ← تخلیهٔ زبانه از حافظه',
+    },
+  },
+}
+
+<QuickAnswer>
+
+حالا هر سه مرورگر **گروه زبانه‌ها، جست‌وجوی زبانه، زبانه‌های عمودی و نمای دوتایی** دارند. Chrome در ذخیره و همگام‌سازی گروه‌ها جلوتر است، Edge به‌طور پیش‌فرض زبانه‌های بی‌کار را به خواب می‌برد و Firefox تنها مرورگری است که خودش زبانه‌های تکراری را می‌بندد. هیچ‌کدام در زبانه‌های ذخیره‌شده و بسته‌شدهٔ شما جست‌وجو نمی‌کند، پنجره‌هایتان را خودکار ذخیره نمی‌کند یا بین مرورگرها کار نمی‌کند، و این همان لایه‌ای است که [TabMerger](/features) به‌طور یکسان به Chrome و Edge و Firefox اضافه می‌کند.
+
+</QuickAnswer>
+
+<InstallCta>همان گروه‌ها، همان جست‌وجو و همان همگام‌سازی در Chrome و Edge و Firefox. رایگان.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="matrix" title="هر مرورگر کدام قابلیت‌های زبانه را دارد؟">
+
+در Chrome 157 و Edge 158 و Firefox 159، بر اساس صفحه‌های راهنمای هر مرورگر و متن رابط کاربری خودش، در ۲۱ نوامبر ۲۰۲۶ بررسی شد. «ذکر نشده» یعنی در صفحه‌های راهنما یا متن مرورگر نشانی از آن پیدا نکردیم، نه اینکه ثابت شده باشد وجود ندارد.
+
+<ComparisonTable
+  head={['قابلیت', 'Chrome 157', 'Edge 158', 'Firefox 159', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="52rem"
+  rows={[
+    ['گروه زبانه‌ها', 'بله', 'بله', 'بله', 'گروه‌های نام‌دار و رنگی در همهٔ پنجره‌ها'],
+    ['بستن گروه و باز کردن دوباره در آینده', 'بله (⋮ ← گروه برگه)', <><bdi dir="ltr">Close group</bdi> (باز کردن دوباره ذکر نشده)</>, 'بله (ذخیره و بستن گروه)', 'هر گروه ذخیره می‌ماند'],
+    ['گروه‌ها در دستگاه‌های دیگر', 'بله، از طریق حساب Google', 'ذکر نشده', 'در تنظیمات همگام‌سازی نیست', <><bdi dir="ltr">Pro</bdi>، با رمزگذاری سرتاسری</>],
+    ['جست‌وجوی زبانه‌ها', <>زبانه‌های باز (<bdi dir="ltr">Ctrl+Shift+A, @tabs</bdi>)</>, <><bdi dir="ltr">Search tabs</bdi> (میان‌بری ذکر نشده)</>, <>فهرست کردن همهٔ زبانه‌ها (<bdi dir="ltr">Ctrl+Shift+A</bdi>)</>, <>باز، ذخیره‌شده و بسته‌شده (<bdi dir="ltr">Ctrl+K</bdi>)</>],
+    ['زبانه‌های عمودی', 'بله', 'بله', 'بله', 'کاربرد ندارد'],
+    ['نمای دوتایی', 'بله', 'بله', 'بله', 'کاربرد ندارد'],
+    ['آزاد کردن حافظهٔ زبانه‌های بی‌کار', 'بهینه‌سازی حافظه (به‌طور پیش‌فرض خاموش)', 'زبانه‌های خواب (به‌طور پیش‌فرض روشن)', 'تخلیهٔ زبانه از حافظه، به‌صورت دستی', 'ذخیره کنید، بعد همهٔ پنجره‌ها را با یک کلیک ببندید'],
+    ['بستن زبانه‌های تکراری', 'ذکر نشده', 'ذکر نشده', 'بستن زبانه‌های تکراری', '«حذف زبانه‌های تکراری» در همهٔ پنجره‌ها'],
+    ['باز کردن دوبارهٔ پنجرهٔ بسته‌شده', 'Ctrl+Shift+T', 'ذکر نشده', 'Ctrl+Shift+N', <>اخیراً بسته‌شده: ۲ روز (رایگان)، ۳۰ روز (<bdi dir="ltr">Pro</bdi>)</>],
+    ['ذخیرهٔ زبانه‌های باز طبق زمان‌بندی', 'ذکر نشده', 'ذکر نشده', 'ذکر نشده', 'ذخیرهٔ خودکار طبق زمان‌بندی یا با رسیدن به تعدادی زبانه'],
+    ['صادر کردن زبانه‌ها', <>از طریق نشانک‌ها (<bdi dir="ltr">HTML</bdi>)</>, <>از طریق <bdi dir="ltr">Favorites</bdi> (<bdi dir="ltr">HTML</bdi>)</>, <>از طریق نشانک‌ها (<bdi dir="ltr">HTML</bdi>)</>, <><bdi dir="ltr">JSON</bdi>، زبانه‌های باز و ذخیره‌شده با هم</>],
+  ]}
+/>
+
+<bdi dir="ltr">Collections</bdi> در Edge، روش قدیمی آن برای ذخیرهٔ مجموعه‌ای از صفحه‌ها، دیگر وجود ندارد: Microsoft آن را در Edge 149 کنار گذاشت. ببینید [به جای Collections در Edge از چه استفاده کنید](/blog/edge-collections-replacement).
+
+</Section>
+
+<Section id="turn-on" title="کدام تنظیمات داخلی ارزش روشن کردن دارند؟">
+
+<BrowserPanels section="turn-on">
+<BrowserPanel browser="chrome">
+
+1. **بهینه‌سازی حافظه** (<bdi dir="ltr">Memory Saver</bdi>): تنظیمات ← عملکرد (<bdi dir="ltr">Settings → Performance</bdi>، <bdi dir="ltr">`chrome://settings/performance`</bdi>). در یک نمایهٔ تازه خاموش است.
+2. **زبانه‌های عمودی**، اگر زبانه‌های زیادی باز نگه می‌دارید: روی نوار زبانه راست‌کلیک کنید و **نمایش عمودی زبانه‌ها** (<bdi dir="ltr">Show Tabs Vertically</bdi>) را انتخاب کنید، یا تنظیمات ← ظاهر ← جایگاه زبانه (<bdi dir="ltr">Settings → Appearance → Tab position</bdi>).
+3. **جستجوی زبانه** (<bdi dir="ltr">Tab Search</bdi>): <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi>، یا در نوار نشانی <bdi dir="ltr">`@tabs`</bdi> را تایپ کنید.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="تنظیمات Chrome، بخش Performance (عملکرد)، با کلید Memory Saver (بهینه‌سازی حافظه)" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">گزینهٔ <bdi dir="ltr">Memory Saver</bdi> (بهینه‌سازی حافظه) در Chrome، خاموش در یک نمایهٔ تازهٔ Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. **زبانه‌های خواب** (<bdi dir="ltr">Sleeping tabs</bdi>) از قبل روشن‌اند: زمان انتظار را در <bdi dir="ltr">Settings → System and performance → Performance</bdi> تنظیم کنید.
+2. Edge 158 **زبانه‌های عمودی** و <bdi dir="ltr">**Search tabs**</bdi> را هم دارد (هر دو در متن رابط کاربری‌اش هستند)؛ فهرست میان‌برهای Microsoft هیچ کلیدی برای <bdi dir="ltr">Search tabs</bdi> نمی‌دهد.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="تنظیمات Edge، بخش Performance، با گزینهٔ Automatically put tabs to sleep روشن و تنظیم‌شده روی ۱۵ دقیقه" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">زبانه‌های خواب Edge به‌طور پیش‌فرض روشن‌اند: زبانه‌های غیرفعال پس از ۱۵ دقیقه به خواب می‌روند.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. **زبانه‌های عمودی**: روی نوار کناری راست‌کلیک کنید و **روشن کردن زبانه‌های عمودی** (<bdi dir="ltr">Turn on Vertical Tabs</bdi>) را انتخاب کنید.
+2. **بستن زبانه‌های تکراری** (<bdi dir="ltr">Close Duplicate Tabs</bdi>) و **تخلیهٔ زبانه از حافظه** (<bdi dir="ltr">Unload Tab</bdi>) در منوی راست‌کلیک هر زبانه هستند.
+3. **فهرست کردن همهٔ زبانه‌ها** (<bdi dir="ltr">List all tabs</bdi>): <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi>.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox tab right-click menu with Close Duplicate Tabs and Unload Tab. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+همهٔ کلیدها در [راهنمای میان‌برهای صفحه‌کلید برای زبانه‌ها](/blog/tab-keyboard-shortcuts) آمده است.
+
+</Section>
+
+<Section id="tabmerger" title="لایهٔ گمشده را به هر مرورگر اضافه کنید">
+
+در جدول، هر مرورگر یک ردیف خالی دارد: هیچ‌کدام زبانه‌های شما را **فراتر از** پنجرهٔ خود مرورگر یا بین مرورگرها مرتب نگه نمی‌دارد. [TabMerger](/features) این کار را می‌کند، به همان شکل در Chrome و Edge و Firefox:
+
+1. **هم‌اکنون باز** همهٔ پنجره‌های باز شما را نشان می‌دهد؛ **ادغام با وضعیت فعلی** همه را با یک کلیک در یک گروه نام‌دار ذخیره می‌کند.
+2. <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> هم‌زمان در زبانه‌های باز، ذخیره‌شده و اخیراً بسته‌شده جست‌وجو می‌کند، با فیلترهای <bdi dir="ltr">`group:`</bdi> و <bdi dir="ltr">`window:`</bdi> و <bdi dir="ltr">`tag:`</bdi> و <bdi dir="ltr">`closed:`</bdi>.
+3. **ذخیرهٔ خودکار** طبق زمان‌بندی یک نسخهٔ تازه از زبانه‌هایتان نگه می‌دارد؛ **حذف زبانه‌های تکراری** تکراری‌ها را از همهٔ پنجره‌ها پاک می‌کند.
+4. با [Pro](/pricing)، گروه‌های شما بین همهٔ مرورگرهایتان همگام می‌شوند، با رمزگذاری سرتاسری.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="جست‌وجوی TabMerger، باز و خالی، با فهرست فیلترهای group: و window: و tag: و closed:، پوستهٔ روشن" darkAlt="جست‌وجوی TabMerger، باز و خالی، با فهرست فیلترهای group: و window: و tag: و closed:، پوستهٔ تیره" boxes={[{ id: 'search-input', label: 'جست‌وجو' }]} source="TabMerger 3.16.1">یک جست‌وجو برای همهٔ زبانه‌ها، در هر مرورگری که TabMerger در آن اجرا می‌شود.</ThemedScreenshot>
+
+برای مقایسه با افزونه‌های دیگر، [بهترین افزونه‌های مدیریت زبانه](/blog/best-tab-manager-extensions) را ببینید.
+
+<InstallCta>رایگان برای Chrome و Edge و Firefox. برای شروع به حساب کاربری نیازی نیست.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="پرسش‌های متداول">
+
+<Faq items={post.faq} />
+
+</Section>

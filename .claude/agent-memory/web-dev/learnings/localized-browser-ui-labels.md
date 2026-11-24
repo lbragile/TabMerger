@@ -124,3 +124,9 @@ A 15 KB MDX body in a Bash heredoc failed ("unexpected EOF while looking for mat
 - hi-IN lacks the whole tab-group editor block, the colours, `pane-sync-title3` and the Sync passwords/payment-method strings; id lacks `tab-groups-list-title`, `toolbar-button-tab-groups`, share-group and copy-links. Those labels stay English with a gloss, saying once that Firefox shows them in English.
 - pl ftl labels contain U+00A0 after single-letter words ("Zachowaj i zamknij grupę"): normalize NBSP on both sides in byte-exact label checks.
 - When an earlier translated post already settled a count-dropped plural label (copy links), lift it from that post so the posts agree.
+
+**Microsoft Support Edge pages moved (checked 2026-11-24):** the sleeping-tabs (`4d4d3a46…`) and group-tabs (`db6e2deb…`) topic pages return 404 in every locale. Sleeping-tabs content now lives at `/edge/learn-about-performance-features-in-microsoft-edge`, which is visibly machine-translated (ru "Вкладки для сна"), so Edge sub-labels stay English with a gloss.
+
+**Chrome Help rate limit:** after about 18 quick requests it answers 429 (`google.com/sorry`); check status and final URL, not just length, and reuse cached copies from other runs.
+
+**Firefox rename upstream:** `tabs-toolbar-list-all-tabs` became `tabs-toolbar-list-all-tabs-2` ("Search and manage tabs") in en-US main; the l10n repos still carry the old key, which Firefox 159 uses. If a post's English wording changes to the new name, the translations must follow.
