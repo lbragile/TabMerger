@@ -1,0 +1,162 @@
+export const post = {
+  slug: 'merge-browser-windows',
+  title: 'Jak połączyć kilka okien przeglądarki w jedno',
+  navTitle: 'Łączenie okien przeglądarki',
+  seoTitle: 'Jak połączyć okna Chrome (oraz Edge i Firefoksa) w jedno',
+  description:
+    'Pięć okien i wszędzie karty? Przenoś karty między oknami w Chrome, Edge i Firefoksie albo pozwól, by TabMerger zebrał wszystkie otwarte okna i otworzył je ponownie jako jedno, w trzech kliknięciach.',
+  shareSummary: 'Połącz wszystkie otwarte okna przeglądarki w jedno w Chrome, Edge i Firefoksie.',
+  dek: 'Przeciąganie kart po jednej działa przy dwóch oknach. Przy pięciu niech zbieraniem zajmie się TabMerger.',
+  published: '2026-11-30',
+  updated: '2026-11-30',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger zapisuje wszystkie otwarte okna w jednej grupie, a potem otwiera ją ponownie jako jedno okno.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome przenosi zaznaczone karty poleceniem „Przenieś karty do innego okna”.',
+      source: 'Pomoc Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Menu karty w Edge 158 ma polecenie „Move tab to another window”.', source: 'Tekst menu Edge 158' },
+    { text: 'Menu „Przenieś kartę” w Firefoksie 159 oferuje tylko początek, koniec lub nowe okno.', source: 'Tekst menu Firefoksa 159' },
+  ],
+  faq: [
+    {
+      question: 'Jak połączyć dwa okna Chrome?',
+      answer:
+        'Zaznacz karty w jednym oknie (Ctrl + kliknięcie lub Shift + kliknięcie), kliknij jedną z nich prawym przyciskiem, wybierz „Przenieś karty do innego okna”, a potem drugie okno. Gdy okien jest dużo, TabMerger połączy je wszystkie w trzech kliknięciach.',
+    },
+    {
+      question: 'Czy mogę połączyć wszystkie okna naraz?',
+      answer:
+        'Tak, w TabMergerze: dodaj grupę, wybierz „Scal z bieżącą sesją”, aby zapisać w niej wszystkie otwarte okna, a potem kliknij grupę prawym przyciskiem i wybierz „Otwórz wszystkie w nowym oknie”. Zamknij stare okna i zostanie jedno.',
+    },
+    {
+      question: 'Czy przy łączeniu okien stracę karty?',
+      answer: 'Nie z TabMergerem: grupa przechowuje każdą kartę, więc możesz bezpiecznie zamknąć stare okna i w każdej chwili otworzyć cały zestaw ponownie.',
+    },
+    {
+      question: 'Czy to działa w Firefoksie?',
+      answer: 'Tak. TabMerger działa tak samo w Chrome, Edge i Firefoksie. Własne menu „Przenieś kartę” w Firefoksie potrafi przenieść karty tylko na początek, na koniec albo do nowego okna.',
+    },
+  ],
+  images: [
+    { src: '/blog/merge-browser-windows/tm-three-windows-light.webp', alt: 'TabMerger, „Now Open” (Teraz Otwarte), z trzema oknami przeglądarki po trzy karty, jasny motyw' },
+    { src: '/blog/merge-browser-windows/tm-three-windows-dark.webp', alt: 'TabMerger, „Now Open” (Teraz Otwarte), z trzema oknami przeglądarki po trzy karty, ciemny motyw' },
+    { src: '/blog/merge-browser-windows/tm-open-all-menu-light.webp', alt: 'Menu grupy „All in one” w TabMergerze z podświetloną opcją „Open all in new window” (Otwórz wszystkie w nowym oknie), jasny motyw' },
+    { src: '/blog/merge-browser-windows/tm-open-all-menu-dark.webp', alt: 'Menu grupy „All in one” w TabMergerze z podświetloną opcją „Open all in new window” (Otwórz wszystkie w nowym oknie), ciemny motyw' },
+    { src: '/blog/merge-browser-windows/tm-one-window-light.webp', alt: 'TabMerger, „Now Open” (Teraz Otwarte), z jednym oknem przeglądarki i wszystkimi dziewięcioma kartami, jasny motyw' },
+    { src: '/blog/merge-browser-windows/tm-one-window-dark.webp', alt: 'TabMerger, „Now Open” (Teraz Otwarte), z jednym oknem przeglądarki i wszystkimi dziewięcioma kartami, ciemny motyw' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (mouse shortcuts)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/merge-browser-windows/tm-one-window-light.webp' },
+  ogImage: { src: '/blog/merge-browser-windows/og.png', alt: 'Jak połączyć kilka okien przeglądarki w jedno: poradnik TabMergera, z dziewięcioma kartami w jednym oknie' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'tabmerger', label: 'Wszystkie okna naraz' },
+    { id: 'builtin', label: 'Ręczne przenoszenie kart' },
+    { id: 'after', label: 'Utrzymaj porządek' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Przenoszenie zaznaczonych kart',
+    values: {
+      chrome: 'Prawy przycisk → Przenieś karty do innego okna',
+      edge: 'Prawy przycisk → Move tab to another window',
+      firefox: 'Prawy przycisk → Przenieś kartę → Przenieś do nowego okna',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Aby połączyć **wszystkie** okna naraz, użyj [TabMergera](/features): kliknij **Dodaj Grupę**, w jej menu **⋯** wybierz **Scal z bieżącą sesją**, aby zapisać w niej wszystkie otwarte okna, a potem kliknij grupę prawym przyciskiem i wybierz **Otwórz wszystkie w nowym oknie**. Zamknij stare okna i zostanie jedno, a każda karta pozostanie zapisana na wypadek, gdybyś chciał ją odzyskać. Aby ręcznie przenieść kilka kart, zaznacz je, kliknij prawym przyciskiem i wybierz **Przenieś karty do innego okna** (Move tabs to another window; Chrome, Edge).
+
+</QuickAnswer>
+
+<InstallCta>Połącz wszystkie otwarte okna w jedno w trzech kliknięciach. Za darmo dla Chrome, Edge i Firefoksa.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Jak połączyć wszystkie okna naraz?">
+
+Przeglądarki przenoszą karty po jednym oknie. TabMerger widzi wszystkie twoje okna razem w sekcji **Teraz Otwarte**, więc może zebrać je za jednym razem:
+
+1. Kliknij **Dodaj Grupę** i nadaj jej nazwę, na przykład „Wszystko w jednym” (na zrzutach ekranu „All in one”).
+2. Otwórz menu **⋯** grupy i wybierz **Scal z bieżącą sesją**: wszystkie otwarte okna wraz z kartami zostaną zapisane w grupie.
+3. Kliknij grupę na pasku bocznym prawym przyciskiem i wybierz **Otwórz wszystkie w nowym oknie**: otworzy się jedno nowe okno ze wszystkimi kartami.
+4. Zamknij stare okna. Nic nie przepada: grupa wciąż przechowuje je wszystkie.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Łączenie trzech okien w jedno" steps={[{ title: 'Trzy okna' }, { title: 'Otwórz wszystkie' }, { title: 'Jedno okno' }]}>
+<ThemedScreenshot src="/blog/merge-browser-windows/tm-three-windows" alt="TabMerger, „Now Open” (Teraz Otwarte), z trzema oknami przeglądarki po trzy karty, jasny motyw" darkAlt="TabMerger, „Now Open” (Teraz Otwarte), z trzema oknami przeglądarki po trzy karty, ciemny motyw" boxes={[{ id: 'summary', label: 'Trzy okna' }]} source="TabMerger 3.16.1">Przed: trzy okna, dziewięć kart.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/merge-browser-windows/tm-open-all-menu" alt="Menu grupy „All in one” w TabMergerze z podświetloną opcją „Open all in new window” (Otwórz wszystkie w nowym oknie), jasny motyw" darkAlt="Menu grupy „All in one” w TabMergerze z podświetloną opcją „Open all in new window” (Otwórz wszystkie w nowym oknie), ciemny motyw" boxes={[{ id: 'open-all', label: 'Otwórz wszystkie w nowym oknie' }]} source="TabMerger 3.16.1">Po „Merge with current” (Scal z bieżącą sesją) menu kontekstowe grupy otwiera wszystko w jednym oknie.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/merge-browser-windows/tm-one-window" alt="TabMerger, „Now Open” (Teraz Otwarte), z jednym oknem przeglądarki i wszystkimi dziewięcioma kartami, jasny motyw" darkAlt="TabMerger, „Now Open” (Teraz Otwarte), z jednym oknem przeglądarki i wszystkimi dziewięcioma kartami, ciemny motyw" boxes={[{ id: 'summary', label: 'Jedno okno' }]} source="TabMerger 3.16.1">Po zamknięciu starych okien: jedno okno, wszystkie dziewięć kart.</ThemedScreenshot>
+</Carousel>
+
+Chcesz, żeby zapisana kopia też była uporządkowana? W menu **⋯** grupy jest również **Połącz okna**, które łączy jej zapisane okna w jedno (i **Rozdziel okna**, żeby to cofnąć).
+
+</Section>
+
+<Section id="builtin" title="Jak ręcznie przenosić karty między oknami?">
+
+Wystarczy przy dwóch oknach i kilku kartach:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. Zaznacz karty: <Kbd>Ctrl</Kbd> + kliknięcie każdej z nich albo kliknięcie pierwszej i <Kbd>Shift</Kbd> + kliknięcie ostatniej.
+2. Kliknij zaznaczoną kartę prawym przyciskiem, wybierz **Przenieś karty do innego okna** (Move tabs to another window), a potem okno.
+3. Możesz też przeciągnąć kartę na pasek kart drugiego okna.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Zaznacz karty za pomocą <Kbd>Ctrl</Kbd> + kliknięcia lub <Kbd>Shift</Kbd> + kliknięcia.
+2. Kliknij zaznaczoną kartę prawym przyciskiem, wybierz **Move tab to another window** (lub **Move tabs…**, gdy zaznaczonych jest kilka), a potem okno.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Kliknij kartę (lub kilka zaznaczonych kart) prawym przyciskiem i otwórz **Przenieś kartę** (Move Tab): Firefox 159 oferuje **Przenieś na początek**, **Przenieś na koniec** i **Przenieś do nowego okna**, ale nie ma opcji dla innego, już otwartego okna. Aby połączyć kilka okien w jedno w Firefoksie, skorzystaj z powyższych kroków w TabMergerze.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>każde przeniesienie dotyczy jednego okna. Przy pięciu oknach to mnóstwo klikania prawym przyciskiem, a opróżnione okna i tak musisz zamknąć sam.</Catch>
+
+</Section>
+
+<Section id="after" title="Jak zostać przy jednym oknie?">
+
+- **Zapisz przed zamknięciem.** „Scal z bieżącą sesją” zajmuje sekundę i pozwala zamknąć każde okno bez wahania.
+- **Jedna grupa na projekt.** Jeśli połączone okno nadal jest za długie, podziel je z powrotem na nazwane grupy; nasza [metoda na zbyt wiele kart](/blog/manage-too-many-tabs) pokazuje, jak to zrobić.
+- **Usuń duplikaty.** Połączone okna często zawierają tę samą stronę dwa razy; [zamknięcie zduplikowanych kart](/blog/close-duplicate-tabs) to w TabMergerze jedno kliknięcie więcej.
+- **Zachowaj wszystko.** Aby wstrzymać cały zestaw i wrócić do niego później, zobacz, [jak zapisać wszystkie otwarte karty](/blog/save-all-open-tabs).
+
+<InstallCta>Za darmo dla Chrome, Edge i Firefoksa. Na początek nie potrzebujesz konta.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

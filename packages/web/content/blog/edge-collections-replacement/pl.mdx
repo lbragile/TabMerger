@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'edge-collections-replacement',
+  title: 'Kolekcji w Edge już nie ma: czego używać zamiast nich',
+  navTitle: 'Alternatywa dla Kolekcji w Edge',
+  seoTitle: 'Kolekcje usunięte z Edge? Najlepsza alternatywa (i jak się przenieść)',
+  description:
+    'Microsoft usunął Kolekcje (Collections) z Edge od wersji 149. Co stało się z Twoimi kolekcjami, jak je wydobyć i jak przenieść je do TabMerger, alternatywy dla Kolekcji w Edge, jako nazwane grupy.',
+  shareSummary: 'Edge 149 wycofał Kolekcje. Gdzie trafiły Twoje strony i czego używać teraz.',
+  dek: 'Zapisane strony nie przepadły. Oto gdzie trafiły i gdzie będzie im lepiej.',
+  published: '2026-12-06',
+  updated: '2026-12-06',
+  testedOn: ['Edge 158.0.4370.33', 'Chrome 157.0.8103.80'],
+  keyFacts: [
+    {
+      text: 'Kolekcje nie są dostępne od Edge 149, wydanego 4 czerwca 2026 r.',
+      source: 'Pomoc techniczna Microsoft',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'Od Edge 145 nie dało się już dodawać stron do Kolekcji.', source: 'Pomoc techniczna Microsoft' },
+    {
+      text: '„Przenieś do ulubionych” zachowuje adresy stron, ale nie obrazy ani notatki.',
+      source: 'Pomoc techniczna Microsoft',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'TabMerger zamienia każdy folder z „Inne ulubione” w nazwaną grupę.', source: 'Sprawdzone w TabMerger 3.16.1, 21 lis 2026' },
+  ],
+  faq: [
+    {
+      question: 'Czy Microsoft usunął Kolekcje z Edge?',
+      answer:
+        'Tak. Strona pomocy Microsoftu podaje, że Kolekcje nie są dostępne od Edge 149, wydanego 4 czerwca 2026 r.; od Edge 145 nie dało się już dodawać nowych stron.',
+    },
+    {
+      question: 'Gdzie podziały się moje kolekcje?',
+      answer:
+        'Microsoft udostępnił opcję „Przenieś do ulubionych”, która zamienia każdą kolekcję w folder ulubionych (tylko strony). Na koncie osobistym zapisane kolekcje widać też pod adresem bing.com/saves; konta służbowe i szkolne mogły je wyeksportować.',
+    },
+    {
+      question: 'Jaka jest najlepsza alternatywa dla Kolekcji w Edge?',
+      answer:
+        'TabMerger: nazwane, oznaczone kolorami grupy kart, które możesz przeszukiwać, opatrywać notatkami i przypomnieniami oraz synchronizować z szyfrowaniem end-to-end w Pro. Działa też w Chrome i Firefoksie.',
+    },
+    {
+      question: 'Czy mogę zaimportować moje kolekcje do TabMerger?',
+      answer: 'Tak. Przenieś foldery kolekcji do „Inne ulubione”, wyeksportuj ulubione do pliku HTML i zaimportuj go w Ustawienia → Dane: każdy z tych folderów stanie się grupą TabMerger.',
+    },
+  ],
+  images: [
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-light.webp', alt: 'Okno TabMerger z pytaniem Import 2 groups? (Zaimportować 2 grupy?) dla pliku favorites_edge.html, motyw jasny' },
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-dark.webp', alt: 'Okno TabMerger z pytaniem Import 2 groups? (Zaimportować 2 grupy?) dla pliku favorites_edge.html, motyw ciemny' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-light.webp', alt: 'Panel boczny TabMerger z grupami Trip to Lisbon i Thesis reading, zaimportowanymi z folderów ulubionych, motyw jasny' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-dark.webp', alt: 'Panel boczny TabMerger z grupami Trip to Lisbon i Thesis reading, zaimportowanymi z folderów ulubionych, motyw ciemny' },
+  ],
+  tags: ['edge', 'bookmarks', 'save-tabs', 'tab-manager'],
+  sources: [
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'EdgeCollectionsEnabled policy (obsolete)',
+      publisher: 'Microsoft Learn',
+      url: 'https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies/EdgeCollectionsEnabled',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/edge-collections-replacement/cover-edge-light.webp' },
+  ogImage: { src: '/blog/edge-collections-replacement/og.png', alt: 'Kolekcji w Edge już nie ma: czego używać zamiast nich. Poradnik TabMerger z folderami ulubionych zaimportowanymi jako grupy' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'what-happened', label: 'Co się stało' },
+    { id: 'where', label: 'Gdzie są Twoje strony' },
+    { id: 'move', label: 'Przenieś je do TabMerger' },
+    { id: 'why', label: 'Dlaczego TabMerger' },
+    { id: 'faq', label: 'Najczęstsze pytania' },
+  ],
+}
+
+<QuickAnswer>
+
+Tak, już ich nie ma: według Microsoftu **Kolekcje (Collections) nie są dostępne od Edge 149** (wydanego 4 czerwca 2026 r.). Twoje strony nie zostały jednak usunięte: **Przenieś do ulubionych** („Move to Favorites”) zamieniło każdą kolekcję w folder ulubionych. Najlepszym nowym miejscem jest [TabMerger](/features): wyeksportuj ulubione do HTML, zaimportuj plik, a każdy folder z „Inne ulubione” stanie się nazwaną grupą, którą łatwo przeszukać, z notatkami, przypomnieniami i szyfrowaną synchronizacją, w Edge, Chrome i Firefoksie.
+
+</QuickAnswer>
+
+<InstallCta>Odzyskaj stare kolekcje jako nazwane grupy, które łatwo przeszukać. Za darmo dla Edge, Chrome i Firefoksa.</InstallCta>
+
+<Section id="what-happened" title="Czy Microsoft naprawdę usunął Kolekcje z Edge?">
+
+Tak, etapami, jak podają strony samego Microsoftu:
+
+<ComparisonTable
+  head={['Wersja Edge', 'Co się zmieniło']}
+  rowHeaders
+  rows={[
+    ['145', 'Nie dało się już dodawać stron do Kolekcji; istniejące pozostały widoczne'],
+    ['149 (4 czerwca 2026 r.)', 'Kolekcje nie są już dostępne'],
+    ['153', 'Zasada administracyjna dla Kolekcji stała się przestarzała, „because the Collections feature was removed” (bo funkcję Kolekcje usunięto)'],
+  ]}
+/>
+
+Powód podany przez Microsoft, jego własnymi słowami: firma jest „retiring Collections in Edge, to better simplify our offerings” (w trakcie wycofywania Kolekcji z Edge, by uprościć swoją ofertę).
+
+</Section>
+
+<Section id="where" title="Gdzie podziały się moje kolekcje?">
+
+W trakcie wycofywania Edge pokazywał w panelu Kolekcje dwie opcje:
+
+- **Przenieś do ulubionych** (zalecana przez Microsoft): każda kolekcja stała się folderem w Twoich ulubionych. Przeniesiono tylko zapisane strony internetowe; obrazów i notatek nie.
+- **Eksportowanie danych** („Export your data”): tylko dla kont służbowych lub szkolnych.
+
+Na osobistym koncie Microsoft wcześniej zapisane kolekcje znajdziesz też pod adresem `bing.com/saves`. Najpierw więc zajrzyj do ulubionych (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>): Twoje kolekcje najpewniej są tam jako foldery.
+
+</Section>
+
+<Section id="move" title="Jak przenieść kolekcje do TabMerger?">
+
+Kilka minut i każda dawna kolekcja staje się grupą:
+
+1. W Edge otwórz Ulubione (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>). Jeśli dawne kolekcje są w folderze **Pasek ulubionych** („Favorites bar”), przenieś te foldery do **Inne ulubione** („Other favorites”). Eksport zapisuje cały Pasek ulubionych jako jeden folder, więc pozostawione w nim foldery trafiłyby do jednej, połączonej grupy.
+2. Wybierz **Export favorites** i zapisz plik HTML.
+3. Otwórz TabMerger → **Ustawienia → Dane** → **Importuj plik** („Settings → Data → Import file”) i wybierz ten plik.
+4. Potwierdź. Każdy folder z „Inne ulubione” staje się grupą o nazwie folderu, a jego podfoldery trafiają do tej samej grupy. Pasek ulubionych przychodzi jako osobna grupa.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Import wyeksportowanych ulubionych" steps={[{ title: 'Potwierdź' }, { title: 'Twoje grupy' }]}>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-import-confirm" alt="Okno TabMerger z pytaniem Import 2 groups? (Zaimportować 2 grupy?) dla pliku favorites_edge.html, motyw jasny" darkAlt="Okno TabMerger z pytaniem Import 2 groups? (Zaimportować 2 grupy?) dla pliku favorites_edge.html, motyw ciemny" boxes={[{ id: 'import-confirm', label: 'Importuj' }]} source="TabMerger 3.16.1">TabMerger liczy znalezione foldery i najpierw pyta.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-imported-groups" alt="Panel boczny TabMerger z grupami Trip to Lisbon i Thesis reading, zaimportowanymi z folderów ulubionych, motyw jasny" darkAlt="Panel boczny TabMerger z grupami Trip to Lisbon i Thesis reading, zaimportowanymi z folderów ulubionych, motyw ciemny" boxes={[{ id: 'imported', label: 'Grupy nazwane jak foldery' }]} source="TabMerger 3.16.1">Każdy folder jest teraz grupą o tej samej nazwie i z tymi samymi stronami.</ThemedScreenshot>
+</Carousel>
+
+Pozostałe foldery z „Inne ulubione” też zostaną zaimportowane; usuń grupy, których nie potrzebujesz. Wszystkie formaty importu opisuje [import kart do TabMerger](/blog/import-tabs-into-tabmerger). Wersja darmowa mieści 5 grup i 50 kart, a import, który przekroczyłby ten limit, zostaje zatrzymany, zanim cokolwiek zostanie dodane; [Pro](/pricing) nie ma limitu.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Edge Favorites page menu with Export favorites. */}
+
+</Section>
+
+<Section id="why" title="Dlaczego TabMerger jest lepszym miejscem, niż były Kolekcje?">
+
+- **Całe zestawy kart jednym kliknięciem.** **Scal z bieżącą sesją** („Merge with current”) zapisuje wszystkie otwarte okna w nazwanej grupie.
+- **Notatki i przypomnienia przy każdej karcie,** w miejsce notatek, których Kolekcje nie mogły przenieść: kliknij kartę prawym przyciskiem i wybierz **Dodaj notatkę** („Add note”) lub **Przypomnij mi…** („Remind me…”).
+- **Jedno wyszukiwanie** w otwartych, zapisanych i niedawno zamkniętych kartach: <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+- **W wielu przeglądarkach.** Te same grupy w Edge, Chrome i Firefoksie, synchronizowane z szyfrowaniem end-to-end w Pro.
+- **Twoje na zawsze.** Wyeksportuj wszystko do JSON w dowolnej chwili; nic nie zależy od tego, czy jakaś firma utrzyma daną funkcję.
+
+Dopiero poznajesz menedżery kart? [Co robi menedżer sesji przeglądarki](/blog/browser-session-manager) i [najlepsze rozszerzenia do zarządzania kartami](/blog/best-tab-manager-extensions) dają pełny obraz.
+
+<InstallCta>Za darmo dla Edge, Chrome i Firefoksa. Na start nie potrzebujesz konta.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Najczęstsze pytania">
+
+<Faq items={post.faq} />
+
+</Section>

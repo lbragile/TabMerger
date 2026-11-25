@@ -1,0 +1,184 @@
+export const post = {
+  slug: 'tabmerger-daily-workflow',
+  title: 'Una rutina diaria para tus pestañas con TabMerger',
+  navTitle: 'Rutina diaria de pestañas',
+  seoTitle: 'Cómo organizar tus pestañas cada día con TabMerger: de la mañana a la noche',
+  description:
+    'Una rutina sencilla para organizar las pestañas del navegador con TabMerger: abre las pestañas del día con un clic, guarda las nuevas en su sitio para encontrarlas siempre y termina el día con todo guardado y nada abierto.',
+  shareSummary: 'Abre las pestañas del día con un clic, tenlas siempre a mano y cierra el día sin perder nada.',
+  dek: 'Tres hábitos de pocos clics: empieza con un conjunto guardado, ordena las pestañas sobre la marcha y termina el día con todo guardado.',
+  published: '2026-12-11',
+  updated: '2026-12-11',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Los grupos guardan ventanas enteras de pestañas y siguen guardados después de cerrar las ventanas.', source: 'TabMerger 3.16.1' },
+    { text: 'Una sesión restaura todos los grupos guardados a la vez, cada ventana tal como se guardó.', source: 'Código fuente de TabMerger 3.16.1' },
+    { text: 'Ctrl+K busca a la vez en las pestañas abiertas, guardadas y cerradas recientemente.', source: 'TabMerger 3.16.1' },
+    { text: 'Gratis: 5 grupos, 50 pestañas, 3 sesiones. Pro: sin límites y con sincronización.', source: 'Precios de TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '¿Cuál es la mejor rutina diaria para las pestañas del navegador?',
+      answer:
+        'Empieza el día con un conjunto de pestañas guardado en lugar de con las sobras de ayer, ordena las pestañas nuevas en grupos sobre la marcha y termina el día guardando lo que tienes abierto y cerrándolo. TabMerger hace cada paso en pocos clics, y el guardado automático te cubre los días que se te olvida.',
+    },
+    {
+      question: '¿Necesito una cuenta para seguir esta rutina?',
+      answer: 'No. Los grupos, las sesiones, la búsqueda, el guardado automático y las pestañas cerradas recientemente funcionan en el plan Gratis sin cuenta. Solo necesitas una cuenta para las funciones Pro, como la sincronización entre dispositivos.',
+    },
+    {
+      question: '¿Funciona en Chrome, Edge y Firefox?',
+      answer: 'Sí. TabMerger es gratis para Chrome, Edge y Firefox, y la rutina es la misma en los tres.',
+    },
+    {
+      question: '¿Qué diferencia hay entre un grupo y una sesión?',
+      answer:
+        'Un grupo es un conjunto guardado de pestañas, en una o varias ventanas, que abres, editas y amplías. Una sesión es una instantánea con nombre de todos tus grupos guardados a la vez, que restauras en conjunto.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp', alt: 'TabMerger con cuatro grupos guardados (Work, Reading list, Thesis sources, Trip to Lisbon) y una sesión guardada, «Monday plan», tema claro' },
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-dark.webp', alt: 'TabMerger con cuatro grupos guardados (Work, Reading list, Thesis sources, Trip to Lisbon) y una sesión guardada, «Monday plan», tema oscuro' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-light.webp', alt: '«Now Open» (Abiertas ahora) de TabMerger con dos ventanas del navegador abiertas y seis pestañas, tema claro' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-dark.webp', alt: '«Now Open» (Abiertas ahora) de TabMerger con dos ventanas del navegador abiertas y seis pestañas, tema oscuro' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp' },
+  ogImage: { src: '/blog/tabmerger-daily-workflow/og.png', alt: 'Una rutina diaria para tus pestañas con TabMerger, con grupos guardados y una sesión en la barra lateral' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'problem', label: 'Por qué se acumulan las pestañas' },
+    { id: 'idea', label: 'Cómo piensa TabMerger' },
+    { id: 'morning', label: 'Por la mañana' },
+    { id: 'day', label: 'Durante el día' },
+    { id: 'evening', label: 'Por la tarde' },
+    { id: 'net', label: 'La red de seguridad' },
+    { id: 'plans', label: 'Gratis o Pro' },
+    { id: 'series', label: 'La serie completa' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Guarda tus pestañas en grupos de [TabMerger](/features), no en ventanas abiertas. **Por la mañana:** restaura una sesión guardada o abre solo el grupo que necesitas. **Durante el día:** ordena las pestañas nuevas en grupos y encuentra cualquiera con <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>. **Por la tarde:** guarda lo que tienes abierto en su grupo y cierra las ventanas. El guardado automático y «Cerrado recientemente» recogen lo que se te olvide. Son unos pocos clics al día, y cada mañana empiezas con las pestañas que querías conservar.
+
+</QuickAnswer>
+
+<InstallCta>Empieza mañana con las pestañas correctas, no con el montón de ayer. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+<Section id="problem" title="¿Por qué se acumulan las pestañas cada día?">
+
+Imagina un martes cualquiera. Abres el correo y el calendario, luego una pull request y después las tres páginas de documentación que necesita. Una compañera te manda un enlace que quieres leer más tarde. A la hora de comer hay dos ventanas; por la tarde, cuatro. No las cierras, porque algunas de esas pestañas siguen «en curso», y encontrarlas otra vez significaría rebuscar en el historial.
+
+Así el navegador se convierte en tu lista de tareas. Nunca se diseñó para eso: una barra de pestañas no tiene nombres, ni secciones, ni forma de guardar el trabajo sin perderlo. Cada día empieza con las sobras de ayer, el navegador va más lento y la única pestaña que necesitas es un icono de 16 píxeles perdido en la ventana tres.
+
+</Section>
+
+<Section id="idea" title="¿Cómo lo resuelve TabMerger?">
+
+TabMerger separa dos cosas que el navegador mezcla: lo que está **abierto** y lo que **conservas**.
+
+- **Abiertas ahora** es una vista en directo de tus ventanas y pestañas abiertas. Siempre aparece la primera de la lista y no se puede eliminar, así que siempre está a un clic.
+- **Los grupos** son lo que conservas. Cada grupo contiene una o varias ventanas de pestañas, con nombres, notas y colores, y sigue guardado después de cerrar las ventanas.
+- **Sesiones** son instantáneas con nombre de todos tus grupos juntos, para los días en que quieres recuperarlo todo a la vez.
+
+Como conservar ya no depende de dejar una pestaña abierta, puedes cerrar ventanas sin miedo. Esa es toda la rutina.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Lo guardado y lo abierto, lado a lado" steps={[{ title: 'Tus grupos' }, { title: 'Abiertas ahora' }]}>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-workspace" alt="TabMerger con cuatro grupos guardados (Work, Reading list, Thesis sources, Trip to Lisbon) y una sesión guardada, «Monday plan», tema claro" darkAlt="TabMerger con cuatro grupos guardados (Work, Reading list, Thesis sources, Trip to Lisbon) y una sesión guardada, «Monday plan», tema oscuro" boxes={[{ id: 'groups', label: 'Tus grupos guardados' }, { id: 'session', label: 'Una sesión guardada' }]} source="TabMerger 3.16.1">Cuatro grupos para cuatro partes de la semana, y una sesión que los recupera todos.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-now-open" alt="«Now Open» (Abiertas ahora) de TabMerger con dos ventanas del navegador abiertas y seis pestañas, tema claro" darkAlt="«Now Open» (Abiertas ahora) de TabMerger con dos ventanas del navegador abiertas y seis pestañas, tema oscuro" boxes={[{ id: 'now-open-summary', label: 'Lo que está abierto' }]} source="TabMerger 3.16.1">«Now Open» (Abiertas ahora): todo lo que está abierto ahora mismo, ventana por ventana.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="morning" title="Por la mañana: empieza con un conjunto guardado">
+
+Dos formas de empezar, según el día:
+
+1. **Todo a la vez.** Abre la sección **Sesiones** de la barra lateral y restaura tu sesión. TabMerger pregunta antes, porque al restaurar se cierran las ventanas abiertas y se abren las guardadas en su lugar, cada ventana tal como se guardó.
+2. **Solo un proyecto.** Haz clic derecho en un grupo de la barra lateral y elige **Abrir todo en una ventana nueva**. No se toca nada más.
+
+La versión paso a paso, con los motivos de la confirmación, está en [empieza tu jornada con pestañas guardadas](/blog/start-your-workday-with-saved-tabs).
+
+</Section>
+
+<Section id="day" title="Durante el día: ordena sobre la marcha">
+
+- **Guarda una pestaña** arrastrándola desde Abiertas ahora a un grupo de la barra lateral: queda guardada allí y la pestaña abierta se cierra (Deshacer la recupera). O usa un atajo de teclado ([la lista completa](/blog/tab-keyboard-shortcuts)).
+- **Deja que las reglas ordenen por ti.** Las reglas de URL copian automáticamente en un grupo las pestañas nuevas que coinciden; consulta [ordena pestañas automáticamente con reglas de URL](/blog/auto-sort-tabs-with-url-rules).
+- **Encuentra lo que sea** con <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> en Mac): pestañas abiertas, guardadas y cerradas recientemente en una sola lista. Todos los filtros están en [busca en todas tus pestañas con TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+- **Déjate una nota** en una pestaña, o un recordatorio para volver a ella; [organizar pestañas para investigar](/blog/organize-tabs-for-research) muestra las dos cosas.
+- **Elimina las copias** con **Quitar duplicadas**; más en [cerrar pestañas duplicadas](/blog/close-duplicate-tabs).
+
+</Section>
+
+<Section id="evening" title="Por la tarde: guarda y luego cierra">
+
+1. Abre el grupo en el que has trabajado y luego su menú **⋯**. **Combinar con lo actual** le añade tus ventanas abiertas; **Reemplazar con lo actual** cambia las ventanas guardadas por las abiertas.
+2. Cierra las ventanas. Las pestañas están en el grupo, donde el paso de mañana por la mañana las encontrará.
+3. ¿Te gusta cómo han quedado todos tus grupos? Usa **Guardar sesión actual** (el botón de marcador junto a **Sesiones**) para guardarlos como instantánea con un nombre como «Monday plan».
+
+El hábito que lo hace funcionar: **guarda el grupo, cierra las ventanas.** Cuantas menos ventanas te lleves al día siguiente, más rápido va el navegador y menos tienes que buscar.
+
+</Section>
+
+<Section id="net" title="La red de seguridad: para los días en que se te olvida">
+
+Nadie guarda todas las tardes. Dos funciones cubren ese hueco:
+
+- **Guardar pestañas abiertas automáticamente** (Ajustes → Datos) guarda tus pestañas abiertas como un grupo nuevo según una programación, o cuando superan la cantidad que elijas.
+- **Cerrado recientemente** conserva las pestañas y ventanas que cierras, por días, y <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> con `closed:` busca en ellas.
+
+Cómo funcionan las dos, y por qué se comportan así, está en [no vuelvas a perder una pestaña](/blog/never-lose-a-tab-again). Si el navegador se cierra de golpe, consulta [recuperar las pestañas después de un fallo](/blog/restore-tabs-after-crash).
+
+</Section>
+
+<Section id="plans" title="Qué es gratis y qué añade Pro">
+
+<ComparisonTable
+  head={['', 'Gratis', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Grupos y pestañas', '5 grupos, 50 pestañas', 'Ilimitados'],
+    ['Sesiones', '3, en este navegador', 'Ilimitadas, sincronizadas'],
+    ['Reglas de URL', '3', 'Ilimitadas'],
+    ['Guardado automático', 'Se conservan los 2 más recientes', 'Se conservan todos'],
+    ['Cerrado recientemente', 'Tus últimos 2 días', 'Tus últimos 30 días'],
+    ['Búsqueda, notas, importar y exportar', 'Sí', 'Sí'],
+    ['Sincronización entre dispositivos, copias de seguridad automáticas', 'No', 'Sí'],
+  ]}
+/>
+
+El plan Gratis cubre toda esta rutina, sin cuenta; Pro quita los límites y añade la sincronización. Los detalles, en la [página de precios](/pricing).
+
+<InstallCta>Una rutina para todos los navegadores: Chrome, Edge y Firefox. Gratis para empezar, sin cuenta.</InstallCta>
+
+</Section>
+
+<Section id="series" title="La serie completa de guías de TabMerger">
+
+Una función por guía, con los motivos de por qué funciona como funciona:
+
+1. [Empieza tu jornada con pestañas guardadas](/blog/start-your-workday-with-saved-tabs): sesiones y grupos, restaurados cada mañana.
+2. [No vuelvas a perder una pestaña](/blog/never-lose-a-tab-again): guardado automático y «Cerrado recientemente».
+3. [Busca en todas tus pestañas](/blog/search-all-your-tabs-with-tabmerger): <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> y sus filtros.
+4. [Organiza las pestañas por proyecto](/blog/organize-tabs-by-project): grupos, ventanas con nombre y el archivo.
+5. [Las pestañas como lista de tareas](/blog/tabs-as-a-to-do-list): notas, recordatorios y pestañas olvidadas.
+6. [Ordena pestañas automáticamente con reglas de URL](/blog/auto-sort-tabs-with-url-rules): pestañas que se ordenan solas.
+7. [Sincroniza pestañas entre dispositivos](/blog/sync-tabs-between-devices-with-tabmerger): con cifrado de extremo a extremo, y lo que puede ver nuestro servidor.
+8. [Importa pestañas en TabMerger](/blog/import-tabs-into-tabmerger): listas de OneTab, marcadores y copias de seguridad.
+9. [TabMerger Gratis o Pro](/blog/tabmerger-free-vs-pro): qué incluye exactamente cada plan.
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

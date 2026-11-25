@@ -1,0 +1,141 @@
+export const post = {
+  slug: 'share-a-set-of-tabs',
+  title: 'Cómo compartir varias pestañas a la vez con otra persona',
+  navTitle: 'Compartir varias pestañas',
+  seoTitle: 'Cómo compartir varias pestañas a la vez (Chrome, Edge, Firefox)',
+  description:
+    'Envía a un compañero o a un amigo un conjunto completo de pestañas: copia los enlaces, comparte un archivo de marcadores o crea un enlace de TabMerger cifrado de extremo a extremo que se abre con un clic, sin necesidad de cuenta.',
+  shareSummary: 'Comparte varias pestañas a la vez: enlaces, un archivo de marcadores o un enlace cifrado de un clic.',
+  dek: 'Pegar doce enlaces en un chat es un fastidio para los dos. Un solo enlace a todo el conjunto, no.',
+  published: '2026-12-10',
+  updated: '2026-12-10',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Un enlace para compartir de TabMerger abre una página de solo lectura; no hace falta cuenta para verla.', source: 'Página de enlaces compartidos de TabMerger' },
+    { text: 'La clave de descifrado va en el #fragmento del enlace, que los navegadores nunca envían al servidor.', source: 'Código fuente de TabMerger', href: 'https://github.com/lbragile/TabMerger' },
+    { text: 'Para crear enlaces para compartir se necesita Pro.', source: 'Precios de TabMerger', href: '/pricing' },
+    { text: 'Firefox 159 puede copiar todos los enlaces de un grupo de pestañas.', source: 'Texto del menú de Firefox 159' },
+  ],
+  faq: [
+    {
+      question: '¿Cómo comparto varias pestañas a la vez?',
+      answer:
+        'Con TabMerger Pro, selecciona los grupos y pulsa Compartir: un único enlace cifrado los abre todos en una página de solo lectura. Con las herramientas del navegador, puedes guardar las pestañas como marcadores y enviar el archivo de marcadores exportado, o en Firefox copiar todos los enlaces de un grupo de pestañas.',
+    },
+    {
+      question: '¿La otra persona necesita TabMerger?',
+      answer: 'No. Un enlace para compartir se abre en cualquier navegador, y se puede abrir una pestaña, una ventana o todo. Si tiene TabMerger instalado, después puede guardar las pestañas como un grupo propio.',
+    },
+    {
+      question: '¿Puede TabMerger leer las pestañas que comparto?',
+      answer: 'No. Las pestañas se cifran en tu navegador antes de subirse, y la clave solo está en el #fragmento del enlace, que nunca llega al servidor.',
+    },
+    {
+      question: '¿Compartir es gratis?',
+      answer: 'Crear enlaces para compartir forma parte de Pro. Copiar enlaces y compartir un archivo de marcadores o JSON es gratis.',
+    },
+  ],
+  images: [
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp', alt: 'TabMerger con los grupos «Work» y «Reading list» seleccionados y la barra de selección con Star (Destacar), Unstar (Quitar destacado), Share (Compartir) y Delete (Eliminar), tema claro' },
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-dark.webp', alt: 'TabMerger con los grupos «Work» y «Reading list» seleccionados y la barra de selección con Star (Destacar), Unstar (Quitar destacado), Share (Compartir) y Delete (Eliminar), tema oscuro' },
+    { src: '/blog/share-a-set-of-tabs/share-page-light.webp', alt: 'La página de solo lectura Shared Groups (Grupos compartidos) de TabMerger, con dos grupos y los botones Open window (Abrir ventana) y Open all tabs (Abrir todas las pestañas), tema claro' },
+    { src: '/blog/share-a-set-of-tabs/share-page-dark.webp', alt: 'La página de solo lectura Shared Groups (Grupos compartidos) de TabMerger, con dos grupos y los botones Open window (Abrir ventana) y Open all tabs (Abrir todas las pestañas), tema oscuro' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'bookmarks', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Import Chrome bookmarks & settings (export section)', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/96816', checked: '2026-11-21' },
+    {
+      title: 'TabMerger source code (sharing)',
+      publisher: 'GitHub',
+      url: 'https://github.com/lbragile/TabMerger',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp' },
+  ogImage: { src: '/blog/share-a-set-of-tabs/og.png', alt: 'Cómo compartir varias pestañas a la vez con otra persona: una guía de TabMerger, con dos grupos seleccionados para compartir' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'manual', label: 'Sin extensión' },
+    { id: 'tabmerger', label: 'Un solo enlace cifrado' },
+    { id: 'what-they-see', label: 'Qué ve la otra persona' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+  browserSections: ['manual'],
+  browserFact: {
+    label: 'Copiar o exportar enlaces',
+    values: { chrome: 'Administrador de marcadores → Exportar marcadores', edge: 'Favorites → Export favorites', firefox: 'Grupo de pestañas → Copiar enlaces en el grupo' },
+  },
+}
+
+<QuickAnswer>
+
+La forma de hacerlo en un clic es un enlace para compartir de [TabMerger](/features): selecciona tus grupos, pulsa **Compartir** (Share) y pega el enlace. Quien lo abra verá todas las pestañas en una página de solo lectura y podrá abrir una pestaña, una ventana o todo, sin necesidad de cuenta. Además, las pestañas están **cifradas de extremo a extremo**, así que ni siquiera TabMerger puede leerlas. Sin extensión, guarda las pestañas como marcadores y envía el archivo de marcadores exportado, o en Firefox copia todos los enlaces de un grupo de pestañas.
+
+</QuickAnswer>
+
+<InstallCta>Comparte un conjunto completo de pestañas con un solo enlace cifrado. Empieza gratis; compartir forma parte de Pro.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="manual" title="¿Cómo comparto pestañas sin una extensión?">
+
+<BrowserPanels section="manual">
+<BrowserPanel browser="chrome">
+
+1. Pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> para guardar las pestañas de la ventana como marcadores en una carpeta nueva.
+2. Abre **⋮ → Marcadores y listas → Administrador de marcadores** (Bookmark Manager) y, después, **⋮ (Más) → Exportar marcadores** (Export bookmarks).
+3. Envía el archivo HTML. La otra persona lo importa en su navegador (o en TabMerger).
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> para añadir las pestañas de la ventana a favoritos, en una carpeta nueva.
+2. Abre Favoritos (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>) y elige **Export favorites**.
+3. Envía el archivo HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Pon las pestañas en un grupo de pestañas (arrastra una pestaña sobre otra).
+2. Haz clic derecho en la etiqueta del grupo y elige **Copiar enlaces en el grupo** (Copy links in group).
+3. Pega los enlaces en un mensaje o un documento.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>un archivo de marcadores exporta *todos* tus marcadores, y los enlaces pegados llegan como un muro de direcciones que la otra persona tiene que abrir de uno en uno.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="¿Cómo comparto pestañas con un solo enlace?">
+
+1. En TabMerger, guarda las pestañas en un grupo (**Combinar con lo actual**, Merge with current, guarda todas las ventanas abiertas).
+2. Haz **Ctrl+clic** (<Kbd>⌘</Kbd>+clic en Mac) en la barra lateral sobre cada grupo que quieras compartir.
+3. Pulsa **Compartir** en la barra de selección. El enlace se copia al portapapeles; pégalo donde quieras.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/tm-selection-share" alt="TabMerger con los grupos «Work» y «Reading list» seleccionados y la barra de selección con Star (Destacar), Unstar (Quitar destacado), Share (Compartir) y Delete (Eliminar), tema claro" darkAlt="TabMerger con los grupos «Work» y «Reading list» seleccionados y la barra de selección con Star (Destacar), Unstar (Quitar destacado), Share (Compartir) y Delete (Eliminar), tema oscuro" boxes={[{ id: 'share', label: 'Share' }]} source="TabMerger 3.16.1">Dos grupos seleccionados; Share (Compartir) crea un solo enlace para ambos (aquí en una cuenta gratuita, donde el botón está desactivado).</ThemedScreenshot>
+
+Cómo se mantiene privado: TabMerger genera una clave nueva en tu navegador, cifra los grupos con ella y sube solo la copia cifrada. La clave va en el enlace después del `#`, una parte de la dirección que los navegadores nunca envían a un servidor, así que solo quien tenga el enlace completo puede leer las pestañas. Crear enlaces forma parte de [Pro](/pricing).
+
+</Section>
+
+<Section id="what-they-see" title="¿Qué ve la otra persona?">
+
+Una página de solo lectura con cada grupo y ventana, el número de pestañas y botones para **Abrir todas las pestañas** (Open all tabs) de una ventana, **Abrir ventana** (Open window) para un grupo entero o abrir pestañas sueltas. No necesita cuenta ni TabMerger. Si usa TabMerger, puede abrir las pestañas y guardarlas como un grupo propio con **Combinar con lo actual**.
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/share-page" width={1600} height={1115} alt="La página de solo lectura Shared Groups (Grupos compartidos) de TabMerger, con dos grupos y los botones Open window (Abrir ventana) y Open all tabs (Abrir todas las pestañas), tema claro" darkAlt="La página de solo lectura Shared Groups (Grupos compartidos) de TabMerger, con dos grupos y los botones Open window (Abrir ventana) y Open all tabs (Abrir todas las pestañas), tema oscuro" source="tabmerger.com/share/demo">La página para compartir, desde el enlace de demostración público de TabMerger.</ThemedScreenshot>
+
+¿Prefieres un archivo? [Exportar JSON](/blog/export-open-tabs) (Export JSON) de TabMerger funciona en el plan gratuito, y [mover pestañas a otro ordenador](/blog/move-tabs-between-computers) explica cómo hacerlo entre tus propios dispositivos.
+
+<InstallCta>Gratis para Chrome, Edge y Firefox. No necesitas cuenta para empezar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

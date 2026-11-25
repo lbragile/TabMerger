@@ -1,0 +1,179 @@
+export const post = {
+  slug: 'auto-sort-tabs-with-url-rules',
+  title: 'Trier automatiquement les onglets en groupes avec des règles d’URL',
+  navTitle: 'Trier les onglets automatiquement avec des règles d’URL',
+  seoTitle: 'Regrouper automatiquement les onglets du navigateur par URL',
+  description:
+    'Laissez TabMerger ranger vos onglets à votre place : une règle d’URL copie chaque page correspondante dans le bon groupe pendant que vous naviguez. Le fonctionnement des modèles et du joker *, l’ordre des règles et des modèles qui marchent bien.',
+  shareSummary: 'Un modèle et un groupe : TabMerger range chaque onglet correspondant pendant que vous naviguez.',
+  dek: 'Écrivez la règle une fois. Chaque page correspondante que vous ouvrez ensuite est rangée dans le bon groupe.',
+  published: '2026-12-17',
+  updated: '2026-12-17',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Une règle, c’est un modèle et un groupe ; * correspond à n’importe quelle suite de caractères.', source: 'TabMerger 3.16.1' },
+    { text: 'Les modèles portent sur l’adresse entière, sans http:// ni https://.', source: 'Code source de TabMerger 3.16.1' },
+    { text: 'Les règles sont vérifiées de haut en bas ; la première qui correspond l’emporte.', source: 'TabMerger 3.16.1' },
+    { text: 'L’offre gratuite inclut 3 règles d’URL ; Pro n’a pas de limite.', source: 'Tarifs de TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Peut-on trier automatiquement les onglets du navigateur en groupes ?',
+      answer:
+        'Oui, avec les règles d’URL de TabMerger. Une règle associe un modèle d’adresse, comme github.com/your-org/*, à un groupe. Chaque fois qu’une page correspondante s’ouvre ou termine de charger, TabMerger en enregistre une copie dans ce groupe. L’onglet, lui, reste ouvert.',
+    },
+    {
+      question: 'Comment fonctionnent les modèles des règles d’URL ?',
+      answer:
+        'Un modèle doit correspondre à l’adresse entière, sans la partie http:// ou https://. * remplace n’importe quelle suite de caractères, y compris aucune, et c’est le seul joker. Ainsi, github.com/* correspond à toutes les pages de GitHub, et *wikipedia.org/* à Wikipedia dans toutes les langues.',
+    },
+    {
+      question: 'Et si deux règles correspondent à la même page ?',
+      answer: 'Les règles sont vérifiées du haut de la liste vers le bas, et la première qui correspond l’emporte. Utilisez les flèches à côté de chaque règle pour placer les règles précises au-dessus des règles générales.',
+    },
+    {
+      question: 'Une règle d’URL ferme-t-elle l’onglet ?',
+      answer: 'Non. La règle enregistre une copie dans le groupe ; l’onglet reste ouvert là où il est.',
+    },
+    {
+      question: 'Combien de règles d’URL puis-je avoir ?',
+      answer: 'L’offre gratuite en inclut 3. Pro n’a pas de limite. Les règles que vous avez déjà continuent de fonctionner si votre offre change.',
+    },
+  ],
+  images: [
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-light.webp', alt: 'Boîte de dialogue « Add URL Rule » (Ajouter une règle d’URL) de TabMerger avec le modèle *wikivoyage.org/wiki/* et le groupe « Trip to Lisbon », thème clair' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-dark.webp', alt: 'Boîte de dialogue « Add URL Rule » (Ajouter une règle d’URL) de TabMerger avec le modèle *wikivoyage.org/wiki/* et le groupe « Trip to Lisbon », thème sombre' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-light.webp', alt: '« URL Rules » (Règles d’URL) de TabMerger avec trois règles, chacune avec des flèches pour changer son ordre, et « 3/3 used » (3/3 utilisées), thème clair' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-dark.webp', alt: '« URL Rules » (Règles d’URL) de TabMerger avec trois règles, chacune avec des flèches pour changer son ordre, et « 3/3 used » (3/3 utilisées), thème sombre' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp', alt: 'Le groupe « Trip to Lisbon » avec la page de Sintra ajoutée par une règle d’URL, thème clair' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-dark.webp', alt: 'Le groupe « Trip to Lisbon » avec la page de Sintra ajoutée par une règle d’URL, thème sombre' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'developers'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp' },
+  ogImage: { src: '/blog/auto-sort-tabs-with-url-rules/og.png', alt: 'Trier les onglets automatiquement avec des règles d’URL : trois règles TabMerger qui rangent les onglets dans des groupes' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'problem', label: 'Ranger à la main' },
+    { id: 'why', label: 'Pourquoi ça marche ainsi' },
+    { id: 'steps', label: 'Ajouter une règle' },
+    { id: 'patterns', label: 'Écrire des modèles' },
+    { id: 'order', label: 'Ordre des règles' },
+    { id: 'benefit', label: 'Ce que vous y gagnez' },
+    { id: 'habits', label: 'Bonnes habitudes' },
+    { id: 'plans', label: 'Gratuit ou Pro' },
+    { id: 'faq', label: 'Questions fréquentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Dans [TabMerger](/features), ouvrez **Paramètres → Général → Règles d’URL → Gérer** (Settings → General → URL rules → Manage) et ajoutez une règle : un modèle d’adresse comme `github.com/your-org/*` et le groupe auquel il appartient. Dès lors, chaque page correspondante est enregistrée dans ce groupe pendant que vous naviguez, et l’onglet reste ouvert. `*` correspond à tout ; la première règle qui correspond l’emporte.
+
+</QuickAnswer>
+
+<InstallCta>Des onglets qui se rangent tout seuls dans le bon groupe. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+<Section id="problem" title="Ranger ses onglets à la main ne tient pas">
+
+Vous commencez la semaine bien organisé : le travail dans un groupe, le voyage dans un autre, la lecture dans un troisième. Puis la journée suit son cours. Un collègue partage le lien d’un ticket, vous cherchez deux horaires de train, une recherche fait remonter un article. Chacun devrait aller quelque part, et chacun est un glisser-déposer que vous ne ferez pas. Le vendredi, les groupes sont dépassés et Ouverts maintenant (Now Open) est redevenu un fouillis.
+
+Les pages que vous ouvrez le plus souvent viennent des mêmes quelques sites. C’est exactement ce qu’une règle sait reconnaître.
+
+</Section>
+
+<Section id="why" title="Pourquoi les règles d’URL fonctionnent ainsi">
+
+- **Copier, pas déplacer.** Une règle enregistre une copie de la page dans le groupe et laisse l’onglet ouvert. Le rangement n’interrompt jamais votre lecture.
+- **Surveille pendant que vous naviguez.** Une règle est vérifiée quand un onglet s’ouvre avec une adresse et chaque fois qu’une page termine de charger : un lien suivi à l’intérieur d’un onglet est donc rangé lui aussi. La copie va dans la première fenêtre du groupe. Une page qui se recharge (actualisation, visite ultérieure) est enregistrée de nouveau ; **Dédupliquer les onglets** (Deduplicate tabs), dans le menu **⋯** du groupe, supprime les doublons.
+- **L’adresse entière, sans schéma.** Un modèle est comparé à toute l’adresse qui suit `http://` ou `https://` : vous ne les tapez jamais, et `localhost:3000/*` fonctionne tel quel.
+- **Un seul joker, volontairement.** `*` désigne n’importe quelle suite de caractères, y compris aucune. Il n’y a aucun autre caractère spécial à échapper. Les modèles sont comparés en texte brut, jamais transformés en expression régulière, si bien que même les modèles longs sont vérifiés rapidement.
+- **L’ordre décide.** Quand deux règles correspondent, celle du haut l’emporte : une règle précise peut donc se placer au-dessus d’une règle générale.
+
+</Section>
+
+<Section id="steps" title="Ajouter une règle">
+
+1. Ouvrez TabMerger, puis **Paramètres** → **Général** (Settings → General). À côté de **Règles d’URL**, cliquez sur **Gérer** (Manage).
+2. Cliquez sur **Ajouter une règle** (Add rule). Saisissez le modèle, choisissez le groupe cible, puis cliquez sur **Ajouter une règle** dans la boîte de dialogue.
+3. Recommencez pour chaque site à ranger, puis cliquez sur **Enregistrer** (Save) pour conserver la liste.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Une règle d’URL du début à la fin" steps={[{ title: 'Ajout' }, { title: 'La liste' }, { title: 'Le résultat' }]}>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-add-rule" alt="Boîte de dialogue « Add URL Rule » (Ajouter une règle d’URL) de TabMerger avec le modèle *wikivoyage.org/wiki/* et le groupe « Trip to Lisbon », thème clair" darkAlt="Boîte de dialogue « Add URL Rule » (Ajouter une règle d’URL) de TabMerger avec le modèle *wikivoyage.org/wiki/* et le groupe « Trip to Lisbon », thème sombre" boxes={[{ id: 'pattern', label: 'Le modèle d’adresse' }, { id: 'group', label: 'Le groupe cible' }]} source="TabMerger 3.16.1">Chaque article Wikivoyage va dans le voyage.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rules-list" alt="« URL Rules » (Règles d’URL) de TabMerger avec trois règles, chacune avec des flèches pour changer son ordre, et « 3/3 used » (3/3 utilisées), thème clair" darkAlt="« URL Rules » (Règles d’URL) de TabMerger avec trois règles, chacune avec des flèches pour changer son ordre, et « 3/3 used » (3/3 utilisées), thème sombre" boxes={[{ id: 'order', label: 'Vérifiées de haut en bas' }, { id: 'used', label: 'Compteur de l’offre gratuite' }]} source="TabMerger 3.16.1">Trois règles, trois groupes. Les flèches fixent la règle essayée en premier.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rule-result" alt="Le groupe « Trip to Lisbon » avec la page de Sintra ajoutée par une règle d’URL, thème clair" darkAlt="Le groupe « Trip to Lisbon » avec la page de Sintra ajoutée par une règle d’URL, thème sombre" boxes={[{ id: 'new-tab', label: 'Rangée par la règle' }]} source="TabMerger 3.16.1">L’ouverture de l’article sur Sintra l’a enregistré tout seul dans « Trip to Lisbon ».</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="patterns" title="Écrire des modèles qui correspondent">
+
+<ComparisonTable
+  head={['Modèle', 'Correspond à', 'Ne correspond pas à']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['github.com/your-org/*', 'Chaque dépôt, ticket et pull request de your-org', 'github.com/other-org/…'],
+    ['*wikipedia.org/wiki/*', 'Les articles dans toutes les langues (en., de., …)', 'la page d’accueil de wikipedia.org'],
+    ['localhost:3000/*', 'Chaque page de votre serveur de développement local', 'localhost:8080/…'],
+    ['docs.example.com/*', 'Le site de documentation', 'www.docs.example.com/… (ajoutez *docs.example.com/*)'],
+    ['github.com', 'Uniquement l’adresse github.com elle-même', 'github.com/nimporte-quoi (ajoutez /*)'],
+  ]}
+/>
+
+Des astuces qui vous épargnent une séance de débogage :
+
+- **Terminez par `/*`** pour couvrir un site entier. Sans `*`, un modèle correspond à une seule adresse exacte.
+- **Commencez par `*`** quand un site utilise des sous-domaines ou `www.` : `*example.com/*`.
+- **Les lettres doivent correspondre telles quelles.** Les navigateurs écrivent les noms de domaine en minuscules ; faites de même.
+- **Les paramètres de requête comptent.** `*youtube.com/watch*` correspond aux vidéos, quoi qu’il y ait après `watch`.
+
+</Section>
+
+<Section id="order" title="Ordre des règles : le précis d’abord">
+
+Les règles sont essayées à partir du haut. Placez la règle étroite (`github.com/your-org/design-system/*` → « Design system ») au-dessus de la règle large (`github.com/your-org/*` → « Work ») avec les flèches à côté de chaque règle. La première règle qui correspond range la page, et les autres sont ignorées.
+
+</Section>
+
+<Section id="benefit" title="Ce que vous y gagnez">
+
+Vos groupes restent à jour sans aucun rangement de votre part. Une page ouverte le mardi est déjà dans le groupe de son projet le vendredi, et une recherche dans ce groupe la retrouve.
+
+</Section>
+
+<Section id="habits" title="Bonnes habitudes">
+
+- **Créez des règles pour les sites que vous ouvrez chaque jour,** pas pour chaque site visité une fois.
+- **Une règle par domaine ou chemin de projet**, les règles précises en premier.
+- **Associez les règles à un groupe par projet :** voir [organiser ses onglets par projet](/blog/organize-tabs-by-project). Les développeurs trouveront d’autres modèles dans [la gestion des onglets pour les développeurs](/blog/tab-management-for-developers).
+- **Faites le ménage de temps en temps** avec **Dédupliquer les onglets** dans les groupes que les règles remplissent souvent.
+
+</Section>
+
+<Section id="plans" title="Gratuit ou Pro">
+
+<ComparisonTable
+  head={['', 'Gratuit', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Règles d’URL', '3', 'Illimitées'],
+    ['Modèles, ordre, toutes les options ci-dessus', 'Oui', 'Oui'],
+  ]}
+/>
+
+Les règles d’URL sont enregistrées dans le navigateur où vous les avez créées. Si un abonnement Pro prend fin, les règles que vous avez déjà continuent de ranger les onglets ; seul l’ajout d’une quatrième règle nécessite [Pro](/pricing).
+
+<InstallCta>Écrivez trois règles aujourd’hui et arrêtez de ranger vos onglets à la main. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Questions fréquentes">
+
+<Faq items={post.faq} />
+
+</Section>

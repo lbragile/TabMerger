@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'chrome-tab-groups',
+  title: 'Grup tab Chrome: cara menyimpan, membuka lagi, dan menyinkronkannya',
+  seoTitle: 'Grup Tab Chrome: Simpan, Buka Lagi, dan Sinkronkan (Beserta Batasannya)',
+  description:
+    'Cara kerja grup tab Chrome: membuat, menciutkan, menutup, dan membuka lagi grup yang tersimpan, apa yang disinkronkan ke perangkat Anda yang lain, serta apa yang bisa dan tidak bisa dilihat ekstensi.',
+  shareSummary: 'Buat, simpan, buka lagi, dan sinkronkan grup tab Chrome, serta kenali batasannya.',
+  dek: 'Grup yang ditutup tidak hilang: grup itu disimpan. Inilah tempatnya, apa yang ikut ke perangkat lain, dan apa yang tidak.',
+  published: '2026-11-23',
+  updated: '2026-11-23',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Menutup grup berarti menyimpannya; buka lagi dari kolom bookmark atau ⋮ → Grup tab.',
+      source: 'Bantuan Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Menghapus atau memisahkan grup akan menghapusnya di setiap perangkat yang login.', source: 'Bantuan Chrome' },
+    {
+      text: 'chrome.tabGroups hanya melihat grup di jendela yang terbuka.',
+      source: 'Dokumentasi chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'Kedua setelan grup tab untuk kolom bookmark aktif di Chrome 157 yang baru dipasang.', source: 'chrome://settings/appearance, 20 Nov 2026' },
+  ],
+  faq: [
+    {
+      question: 'Bagaimana cara menyimpan grup tab di Chrome?',
+      answer:
+        'Klik kanan nama grup, lalu pilih Tutup grup. Chrome menyimpan grup itu, dan Anda bisa membukanya lagi dari kolom bookmark atau dari ⋮ → Grup tab.',
+    },
+    {
+      question: 'Apakah grup tab Chrome disinkronkan antarperangkat?',
+      answer:
+        'Grup yang tersimpan mengikuti Akun Google Anda: bantuan Chrome mengingatkan bahwa menghapus atau memisahkan grup akan menghapusnya di setiap perangkat yang login dengan akun yang sama.',
+    },
+    {
+      question: 'Apa bedanya Tutup grup dan Hapus grup?',
+      answer: 'Tutup grup menutup tab dan menyimpan grupnya agar bisa dibuka lagi nanti. Hapus grup menghapusnya, termasuk di perangkat Anda yang lain.',
+    },
+    {
+      question: 'Bisakah ekstensi pengelola tab menyimpan grup Chrome saya yang sudah ditutup?',
+      answer:
+        'Tidak selama grup itu tertutup: API ekstensi hanya menjelaskan grup di jendela yang terbuka. Buka lagi grupnya terlebih dahulu, lalu simpan dengan ekstensi.',
+    },
+  ],
+  images: [
+    { src: '/blog/chrome-tab-groups/chrome-tab-groups-setting.webp', alt: 'Setelan Chrome, Appearance (Tampilan), dengan Show tab groups in bookmarks bar (Tampilkan grup tab di kolom bookmark) dan Automatically pin new tab groups created on any device to the bookmarks bar (Sematkan grup tab baru ke kolom bookmark secara otomatis) sama-sama aktif' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp', alt: 'TabMerger Now Open (Sedang Terbuka): enam tab, tiga bertanda Sprint berwarna biru dan tiga bertanda Thesis berwarna hijau, tema terang' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-dark.webp', alt: 'TabMerger Now Open (Sedang Terbuka): enam tab, tiga bertanda Sprint berwarna biru dan tiga bertanda Thesis berwarna hijau, tema gelap' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-light.webp', alt: 'Grup TabMerger Sprint + thesis berisi enam tab yang sama dengan tanda Sprint dan Thesis-nya, tema terang' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-dark.webp', alt: 'Grup TabMerger Sprint + thesis berisi enam tab yang sama dengan tanda Sprint dan Thesis-nya, tema gelap' },
+  ],
+  tags: ['chrome', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (tab groups with the keyboard)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp' },
+  ogImage: { src: '/blog/chrome-tab-groups/og.png', alt: 'Kartu judul Chrome tab groups: how to save, reopen and sync them: panduan TabMerger, dengan tab yang ditandai menurut grup Chrome-nya' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'basics', label: 'Membuat dan menciutkan' },
+    { id: 'save', label: 'Menyimpan dan membuka lagi' },
+    { id: 'sync', label: 'Apakah tersinkron?' },
+    { id: 'limits', label: 'Batasannya' },
+    { id: 'tabmerger', label: 'Simpan grup selamanya' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Klik kanan sebuah tab dan pilih **Tambahkan tab ke grup** (“Add tab to group”) untuk memulai grup, lalu beri nama dan pilih warnanya. Untuk menyimpan grup, klik kanan namanya dan pilih **Tutup grup** (“Close group”): Chrome menyimpannya, dan Anda bisa membukanya lagi dari kolom bookmark atau dari **⋮ → Grup tab** (“Tab groups”). Grup yang tersimpan mengikuti Akun Google Anda, jadi menghapus satu grup berarti menghapusnya di mana saja. Agar grup tetap aman selamanya, simpan di [TabMerger](/features): TabMerger menyimpan nama dan warna grup Chrome setiap tab, lalu memasukkan tab kembali ke grupnya saat Anda membukanya lagi.
+
+</QuickAnswer>
+
+<InstallCta>Simpan grup tab Chrome Anda dengan aman, mudah dicari, dan tersinkron. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+<Section id="basics" title="Bagaimana cara kerja grup tab Chrome?">
+
+Grup tab adalah deretan tab berlabel dan berwarna di dalam satu jendela.
+
+1. Klik kanan sebuah tab dan pilih **Tambahkan tab ke grup** → **Grup baru** (“New group”) atau grup yang sudah ada.
+2. Beri nama grup dan pilih warnanya. Nanti, klik kanan namanya untuk mengganti nama, mengubah warna, atau menambahkan tab baru ke grup.
+3. Seret tab ke dalam grup untuk menambahkannya; klik kanan tab → **Keluarkan dari grup** (“Remove from group”) untuk mengeluarkannya.
+4. Klik nama grup untuk menciutkannya menjadi satu label, lalu klik lagi untuk meluaskannya.
+
+Dengan keyboard: tekan <Kbd>F6</Kbd> sampai fokus berada di tab, tekan <Kbd>Tab</Kbd> untuk menuju grup, lalu tombol Menu membuka menu grup. <Kbd>Space</Kbd> atau <Kbd>Enter</Kbd> menciutkannya, dan <Kbd>Ctrl</Kbd>+<Kbd>←</Kbd>/<Kbd>→</Kbd> memindahkannya.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with Close group and Delete group. */}
+
+</Section>
+
+<Section id="save" title="Bagaimana cara menyimpan grup tab dan mendapatkannya kembali?">
+
+**Tutup grup** adalah tombol simpan di Chrome. Tabnya tertutup, grupnya tidak: Chrome menyimpannya dan menampilkannya di dua tempat.
+
+- **Kolom bookmark:** ikon petak dengan nama grup. Klik untuk membukanya lagi.
+- **Menu ⋮ → Grup tab:** grup yang Anda simpan.
+
+Dua setelan di **Setelan → Tampilan** (“Settings → Appearance”) mengatur bagian kolom bookmark. Keduanya aktif di profil Chrome 157 yang baru.
+
+<AnnotatedFigure src="/blog/chrome-tab-groups/chrome-tab-groups-setting.webp" alt="Setelan Chrome, Appearance (Tampilan), dengan Show tab groups in bookmarks bar (Tampilkan grup tab di kolom bookmark) dan Automatically pin new tab groups created on any device to the bookmarks bar (Sematkan grup tab baru ke kolom bookmark secara otomatis) sama-sama aktif" width={1600} height={844} eager boxes={[{ id: 'tab-groups-setting', label: 'Tampilkan di kolom bookmark' }, { id: 'auto-pin', label: 'Sematkan grup baru' }]} source="chrome://settings/appearance · Chrome 157.0.8103.80">Dua setelan grup tab di halaman Appearance (Tampilan) Chrome.</AnnotatedFigure>
+
+<Catch>grup yang tersimpan hanya berisi alamat. Grup itu bukan cadangan: sekali dihapus, grup itu hilang dari semua perangkat.</Catch>
+
+</Section>
+
+<Section id="sync" title="Apakah grup tab disinkronkan antarperangkat?">
+
+Ya, melalui Akun Google Anda. Bantuan Chrome menjelaskan efek sampingnya dengan tegas: saat Anda **menghapus** grup, atau **memisahkan** tab-tabnya (**Pisahkan**, “Ungroup”), grup itu dihapus di perangkat Anda *dan* di semua perangkat lain yang login dengan akun yang sama. Setelan **Sematkan grup tab baru ke kolom bookmark secara otomatis** (“Automatically pin new tab groups created on any device to the bookmarks bar”) juga menyematkan grup yang Anda buat di tempat lain.
+
+Artinya dalam praktik:
+
+- Grup yang Anda buat di satu komputer bisa muncul di komputer lain yang login dengan akun yang sama; itulah yang dimaksud setelan sematkan tadi.
+- Membereskan grup di laptop juga menghapus grup yang sama di desktop.
+
+Firefox 159 juga punya grup tab, dengan **Simpan dan tutup grup** (“Save and close group”) dan daftar **Grup Tertutup** (“Closed Groups”); langkah dan screenshot di panduan ini dari Chrome. Pengguna Firefox: lihat [grup tab Firefox](/blog/firefox-tab-groups).
+
+</Section>
+
+<Section id="limits" title="Di mana grup tab kurang memadai?">
+
+- **Masing-masing satu jendela.** Grup hanya ada di satu jendela. Menyimpan “semua yang sedang saya buka” di tiga jendela berarti tiga grup atau lebih.
+- **Hanya alamat.** Seperti bookmark, grup yang tersimpan membuka ulang halaman dari awal: posisi gulir dan isian formulir hilang.
+- **Tersembunyi dari ekstensi saat tertutup.** API `chrome.tabGroups` menjelaskan grup yang ada di jendela terbuka: setiap grup yang dikembalikannya punya `windowId`, menutup grup memicu `onRemoved`, dan tidak ada panggilan yang mencantumkan grup tersimpan yang sudah ditutup. Pengelola tab tidak bisa mencadangkan grup yang Anda tutup sampai Anda membukanya lagi.
+- **Penghapusan ikut menyebar.** Sinkronisasi yang membuat grup praktis juga menyebarkan kesalahan ke setiap perangkat.
+
+Panduan kami untuk [menyimpan semua tab yang terbuka](/blog/save-all-open-tabs) membandingkan grup dengan bookmark, pemulihan saat startup, dan pengelola sesi, sementara [rutinitas untuk tab yang terlalu banyak](/blog/manage-too-many-tabs) menunjukkan tempat grup dalam keseharian.
+
+</Section>
+
+<Section id="tabmerger" title="Simpan grup Anda selamanya dengan TabMerger">
+
+[TabMerger](/features), ekstensi gratis kami untuk Chrome, Edge, dan Firefox, membaca grup tab Chrome Anda yang terbuka. **Sedang Terbuka** menandai setiap tab dengan nama dan warna grupnya, dan menyimpan jendela ke grup TabMerger akan mempertahankan tanda itu. Setelah disimpan di sana, tab tidak tersentuh saat grup Chrome dihapus di perangkat lain.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Menyimpan grup tab Chrome di TabMerger" steps={[{ title: 'Sedang Terbuka' }, { title: 'Grup tersimpan' }]}>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-now-open-groups" alt="TabMerger Now Open (Sedang Terbuka): enam tab, tiga bertanda Sprint berwarna biru dan tiga bertanda Thesis berwarna hijau, tema terang" darkAlt="TabMerger Now Open (Sedang Terbuka): enam tab, tiga bertanda Sprint berwarna biru dan tiga bertanda Thesis berwarna hijau, tema gelap" boxes={[{ id: 'group-badge-1', label: 'Grup Sprint' }, { id: 'group-badge-4', label: 'Grup Thesis' }]} source="TabMerger 3.16.1">Dua grup tab Chrome, Sprint dan Thesis, seperti yang ditampilkan Now Open (Sedang Terbuka).</ThemedScreenshot>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-saved-groups" alt="Grup TabMerger Sprint + thesis berisi enam tab yang sama dengan tanda Sprint dan Thesis-nya, tema terang" darkAlt="Grup TabMerger Sprint + thesis berisi enam tab yang sama dengan tanda Sprint dan Thesis-nya, tema gelap" boxes={[{ id: 'group-badge-1', label: 'Grup Sprint' }, { id: 'group-badge-4', label: 'Grup Thesis' }]} source="TabMerger 3.16.1">Setelah Merge with current (Gabungkan dengan sesi saat ini): grup tersimpan mempertahankan grup Chrome setiap tab.</ThemedScreenshot>
+</Carousel>
+
+Buka lagi jendela yang tersimpan di Chrome atau Edge, dan tab-tabnya kembali ke grup tab dengan nama dan warna yang sama.
+
+<InstallCta>Gratis untuk Chrome, Edge, dan Firefox. Tidak perlu akun untuk mulai.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

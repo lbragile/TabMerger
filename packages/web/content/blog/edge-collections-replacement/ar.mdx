@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'edge-collections-replacement',
+  title: 'انتهت المجموعات في Edge: ما البديل؟',
+  navTitle: 'بديل المجموعات في Edge',
+  seoTitle: 'هل أُزيلت المجموعات من Edge؟ أفضل بديل لـ Edge Collections وطريقة النقل',
+  description:
+    'أزالت Microsoft ميزة المجموعات (Collections) من Edge بدءًا من الإصدار 149. إليك ما حدث لمجموعاتك، وكيف تستخرجها، وكيف تنقلها إلى TabMerger، البديل الأفضل لـ Edge Collections، في صورة مجموعات تحمل أسماء.',
+  shareSummary: 'أوقف Edge 149 ميزة المجموعات. أين ذهبت صفحاتك، وما الذي تستخدمه الآن.',
+  dek: 'صفحاتك المحفوظة لم تضِع. إليك أين ذهبت، ومكانًا أفضل لها.',
+  published: '2026-12-06',
+  updated: '2026-12-06',
+  testedOn: ['Edge 158.0.4370.33', 'Chrome 157.0.8103.80'],
+  keyFacts: [
+    {
+      text: 'لم تعد المجموعات متوفرة بدءًا من Edge 149، الصادر في 4 يونيو 2026.',
+      source: 'دعم Microsoft',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'منذ Edge 145 لم يعد بالإمكان إضافة صفحات إلى المجموعات.', source: 'دعم Microsoft' },
+    {
+      text: 'خيار Move to Favorites يحتفظ بعناوين الصفحات، لا بالصور ولا بالملاحظات.',
+      source: 'دعم Microsoft',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'يحوّل TabMerger كل مجلد في Other favorites إلى مجموعة تحمل اسمًا.', source: 'جرّبناه في TabMerger 3.16.1، 21 نوفمبر 2026' },
+  ],
+  faq: [
+    {
+      question: 'هل أزالت Microsoft ميزة المجموعات من Edge؟',
+      answer:
+        'نعم. تقول صفحة الدعم من Microsoft إن المجموعات لم تعد متوفرة بدءًا من Edge 149، الصادر في 4 يونيو 2026؛ ومنذ Edge 145 لم يعد بالإمكان إضافة صفحات جديدة.',
+    },
+    {
+      question: 'أين ذهبت مجموعاتي؟',
+      answer:
+        'وفّرت Microsoft خيار Move to Favorites الذي يحوّل كل مجموعة إلى مجلد في المفضلة (الصفحات فقط). ويمكن لأصحاب الحسابات الشخصية أيضًا رؤية المجموعات المحفوظة على bing.com/saves، أما حسابات العمل أو المؤسسات التعليمية فكان بإمكانها تصديرها.',
+    },
+    {
+      question: 'ما أفضل بديل للمجموعات في Edge؟',
+      answer:
+        'TabMerger: مجموعات علامات تبويب تحمل أسماء وألوانًا، يمكنك البحث فيها، وإضافة ملاحظات وتذكيرات إليها، ومزامنتها بتشفير تام بين الطرفين مع Pro. ويعمل أيضًا في Chrome وFirefox.',
+    },
+    {
+      question: 'هل يمكنني استيراد مجموعاتي إلى TabMerger؟',
+      answer: 'نعم. انقل مجلدات المجموعات إلى Other favorites، وصدّر المفضلة كملف HTML، ثم استورده من الإعدادات ← البيانات: يصبح كل مجلد من هذه المجلدات مجموعة في TabMerger.',
+    },
+  ],
+  images: [
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-light.webp', alt: 'مربع حوار في TabMerger يسأل Import 2 groups? (استيراد مجموعتين؟) للملف favorites_edge.html، المظهر الفاتح' },
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-dark.webp', alt: 'مربع حوار في TabMerger يسأل Import 2 groups? (استيراد مجموعتين؟) للملف favorites_edge.html، المظهر الداكن' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-light.webp', alt: 'الشريط الجانبي في TabMerger مع المجموعتين Trip to Lisbon وThesis reading، المستوردتين من مجلدات المفضلة، المظهر الفاتح' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-dark.webp', alt: 'الشريط الجانبي في TabMerger مع المجموعتين Trip to Lisbon وThesis reading، المستوردتين من مجلدات المفضلة، المظهر الداكن' },
+  ],
+  tags: ['edge', 'bookmarks', 'save-tabs', 'tab-manager'],
+  sources: [
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'EdgeCollectionsEnabled policy (obsolete)',
+      publisher: 'Microsoft Learn',
+      url: 'https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies/EdgeCollectionsEnabled',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/edge-collections-replacement/cover-edge-light.webp' },
+  ogImage: { src: '/blog/edge-collections-replacement/og.png', alt: 'انتهت المجموعات في Edge: ما البديل؟ دليل من TabMerger تُستورد فيه مجلدات المفضلة كمجموعات' },
+  toc: [
+    { id: 'quick', label: 'الإجابة باختصار' },
+    { id: 'what-happened', label: 'ماذا حدث' },
+    { id: 'where', label: 'أين صفحاتك' },
+    { id: 'move', label: 'انقلها إلى TabMerger' },
+    { id: 'why', label: 'لماذا TabMerger' },
+    { id: 'faq', label: 'الأسئلة الشائعة' },
+  ],
+}
+
+<QuickAnswer>
+
+نعم، انتهت: تقول Microsoft إن **المجموعات (<bdi dir="ltr">Collections</bdi>) لم تعد متوفرة بدءًا من Edge 149** (الصادر في 4 يونيو 2026). لكن صفحاتك لم تُحذف: فقد حوّل خيار <bdi dir="ltr">**Move to Favorites**</bdi> (النقل إلى المفضلة) كل مجموعة إلى مجلد في المفضلة. وأفضل مكان جديد لها هو [TabMerger](/features): صدّر المفضلة بصيغة HTML، واستورد الملف، فيصبح كل مجلد في <bdi dir="ltr">Other favorites</bdi> مجموعة تحمل اسمًا ويمكن البحث فيها، مع ملاحظات وتذكيرات ومزامنة مشفّرة، في Edge وChrome وFirefox.
+
+</QuickAnswer>
+
+<InstallCta>استعد مجموعاتك القديمة في صورة مجموعات تحمل أسماء ويمكن البحث فيها. مجاني لـ Edge وChrome وFirefox.</InstallCta>
+
+<Section id="what-happened" title="هل أزالت Microsoft المجموعات من Edge فعلًا؟">
+
+نعم، على مراحل، بحسب صفحات Microsoft نفسها:
+
+<ComparisonTable
+  head={['إصدار Edge', 'ما الذي تغيّر']}
+  rowHeaders
+  rows={[
+    ['145', 'لم يعد بالإمكان إضافة صفحات إلى المجموعات؛ وبقيت المجموعات الموجودة ظاهرة'],
+    ['149 (4 يونيو 2026)', 'لم تعد المجموعات متوفرة'],
+    ['153', 'أصبحت سياسة المسؤول الخاصة بالمجموعات قديمة «لأن ميزة المجموعات أُزيلت»'],
+  ]}
+/>
+
+سبب Microsoft بكلماتها: إنها <bdi dir="ltr">“retiring Collections in Edge, to better simplify our offerings”</bdi> (توقف المجموعات في Edge لتبسيط ما تقدّمه).
+
+</Section>
+
+<Section id="where" title="أين ذهبت مجموعاتي؟">
+
+أثناء الإيقاف، عرض Edge خيارين في جزء المجموعات:
+
+- <bdi dir="ltr">**Move to Favorites**</bdi> (الخيار الذي توصي به Microsoft): أصبحت كل مجموعة مجلدًا في المفضلة. نُقلت صفحات الويب المحفوظة فقط، أما الصور والملاحظات فلم تُنقل.
+- **تصدير بياناتك** (<bdi dir="ltr">Export your data</bdi>): لحسابات العمل أو المؤسسات التعليمية فقط.
+
+ويمكن لأصحاب حسابات Microsoft الشخصية أيضًا العثور على المجموعات المحفوظة سابقًا على <bdi dir="ltr">`bing.com/saves`</bdi>. لذا تحقّق من المفضلة أولًا (<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd></bdi>): على الأرجح ستجد مجموعاتك هناك على شكل مجلدات.
+
+</Section>
+
+<Section id="move" title="كيف أنقل مجموعاتي إلى TabMerger؟">
+
+بضع دقائق فقط، وتصبح كل مجموعة سابقة مجموعة في TabMerger:
+
+1. في Edge، افتح المفضلة (<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd></bdi>). إذا كانت مجموعاتك السابقة داخل **شريط المفضلة** (<bdi dir="ltr">Favorites bar</bdi>)، فانقل تلك المجلدات إلى <bdi dir="ltr">**Other favorites**</bdi>. فالتصدير يكتب شريط المفضلة كله كمجلد واحد، لذا ستصل المجلدات المتروكة داخله مدمجة في مجموعة واحدة.
+2. اختر <bdi dir="ltr">**Export favorites**</bdi> واحفظ ملف HTML.
+3. افتح TabMerger ← **الإعدادات ← البيانات** ← **استيراد ملف** (<bdi dir="ltr">Settings → Data → Import file</bdi>)، واختر ذلك الملف.
+4. أكّد. يصبح كل مجلد في <bdi dir="ltr">Other favorites</bdi> مجموعة تحمل اسم المجلد، وتُضمّ المجلدات الموجودة داخله إلى تلك المجموعة. أما شريط المفضلة فيصل كمجموعة مستقلة.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="استيراد المفضلة المُصدَّرة" steps={[{ title: 'التأكيد' }, { title: 'مجموعاتك' }]}>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-import-confirm" alt="مربع حوار في TabMerger يسأل Import 2 groups? (استيراد مجموعتين؟) للملف favorites_edge.html، المظهر الفاتح" darkAlt="مربع حوار في TabMerger يسأل Import 2 groups? (استيراد مجموعتين؟) للملف favorites_edge.html، المظهر الداكن" boxes={[{ id: 'import-confirm', label: 'استيراد' }]} source="TabMerger 3.16.1">يحسب TabMerger المجلدات التي وجدها ويسألك أولًا.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-imported-groups" alt="الشريط الجانبي في TabMerger مع المجموعتين Trip to Lisbon وThesis reading، المستوردتين من مجلدات المفضلة، المظهر الفاتح" darkAlt="الشريط الجانبي في TabMerger مع المجموعتين Trip to Lisbon وThesis reading، المستوردتين من مجلدات المفضلة، المظهر الداكن" boxes={[{ id: 'imported', label: 'مجموعات بأسماء المجلدات' }]} source="TabMerger 3.16.1">أصبح كل مجلد الآن مجموعة بالاسم نفسه والصفحات نفسها.</ThemedScreenshot>
+</Carousel>
+
+ستصل مجلداتك الأخرى في <bdi dir="ltr">Other favorites</bdi> أيضًا؛ احذف المجموعات التي لا تحتاجها. كل صيغ الاستيراد مشروحة في [استيراد علامات التبويب إلى TabMerger](/blog/import-tabs-into-tabmerger). تتسع النسخة المجانية لـ 5 مجموعات و50 علامة تبويب، وأي استيراد قد يتجاوز ذلك يتوقف قبل إضافة أي شيء؛ أما [Pro](/pricing) فبلا حدود.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Edge Favorites page menu with Export favorites. */}
+
+</Section>
+
+<Section id="why" title="لماذا يُعد TabMerger مكانًا أفضل مما كانت عليه المجموعات؟">
+
+- **مجموعات كاملة من علامات التبويب بنقرة واحدة.** يحفظ **دمج مع الحالية** (<bdi dir="ltr">Merge with current</bdi>) كل النوافذ المفتوحة في مجموعة تحمل اسمًا.
+- **ملاحظات وتذكيرات على أي علامة تبويب،** بدلًا من الملاحظات التي عجزت المجموعات عن نقلها: انقر بزر الماوس الأيمن على علامة تبويب واختر **إضافة ملاحظة** (<bdi dir="ltr">Add note</bdi>) أو **ذكّرني…** (<bdi dir="ltr">Remind me…</bdi>).
+- **بحث واحد** في علامات التبويب المفتوحة والمحفوظة والمغلقة مؤخرًا: <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi>.
+- **عبر المتصفحات.** المجموعات نفسها في Edge وChrome وFirefox، بمزامنة مشفّرة تشفيرًا تامًا بين الطرفين مع Pro.
+- **بياناتك ملكك.** صدّر كل شيء إلى JSON في أي وقت؛ لا شيء يعتمد على إبقاء شركة واحدة لميزة ما.
+
+جديد على مديري علامات التبويب؟ يقدّم [ما الذي يفعله مدير جلسات المتصفح](/blog/browser-session-manager) و[أفضل إضافات إدارة علامات التبويب](/blog/best-tab-manager-extensions) صورة شاملة.
+
+<InstallCta>مجاني لـ Edge وChrome وFirefox. لا حاجة إلى حساب للبدء.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="الأسئلة الشائعة">
+
+<Faq items={post.faq} />
+
+</Section>

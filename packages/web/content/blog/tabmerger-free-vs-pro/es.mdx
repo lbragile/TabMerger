@@ -1,0 +1,149 @@
+export const post = {
+  slug: 'tabmerger-free-vs-pro',
+  title: 'TabMerger gratis vs. Pro: qué incluye exactamente cada plan',
+  navTitle: 'TabMerger gratis vs. Pro',
+  seoTitle: 'TabMerger gratis vs. Pro: límites, sincronización, precio y qué pasa si cancelas',
+  description:
+    'Todo lo que incluye el plan gratuito de TabMerger, todo lo que añade Pro, cómo se aplican los límites y qué pasa con tus pestañas si un plan Pro termina. Sin letra pequeña.',
+  shareSummary: 'Qué incluye el plan gratuito, qué añade Pro y qué pasa si cancelas. Sin letra pequeña.',
+  dek: 'El plan gratuito es un gestor de pestañas completo. Pro es para más pestañas, más ordenadores y copias de seguridad en las que nunca tienes que pensar.',
+  published: '2026-12-20',
+  updated: '2026-12-20',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Gratis: 5 grupos, 50 pestañas, 3 reglas de URL, 3 sesiones, sin necesidad de cuenta.', source: 'Precios de TabMerger', href: '/pricing' },
+    { text: 'Pro: US$3.99 al mes o US$42.99 al año, sin límites y con sincronización cifrada.', source: 'Precios de TabMerger', href: '/pricing' },
+    { text: 'Todo lo que usa nuestros servidores lo comprueba el servidor, no solo la aplicación.', source: 'Código fuente de TabMerger 3.16.1' },
+    { text: 'Si Pro termina, no se borra nada.', source: 'Código fuente de TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: '¿TabMerger es gratis?',
+      answer:
+        'Sí. El plan gratuito no necesita cuenta e incluye grupos, sesiones, búsqueda, guardado automático, «Cerrado recientemente», reglas de URL, importación y exportación, dentro de sus límites: 5 grupos, 50 pestañas, 3 reglas de URL y 3 sesiones.',
+    },
+    {
+      question: '¿Qué añade TabMerger Pro?',
+      answer:
+        'Sin límites de grupos, pestañas, reglas ni sesiones; sincronización con cifrado de extremo a extremo entre dispositivos; copias de seguridad cifradas automáticas; se conservan todos los guardados automáticos; 30 días de «Cerrado recientemente» en lugar de 2; y soporte prioritario.',
+    },
+    {
+      question: '¿Cuánto cuesta TabMerger Pro?',
+      answer: 'US$3.99 al mes o US$42.99 al año (alrededor de un 10 % menos que pagando mes a mes). Puedes cancelar cuando quieras y conservas Pro hasta el final del periodo que pagaste.',
+    },
+    {
+      question: '¿Qué pasa con mis pestañas si cancelo Pro?',
+      answer:
+        'No se borra nada. Los grupos y las pestañas que superan los límites del plan gratuito se quedan en tu dispositivo, bloqueados, hasta que vuelvas a mejorar tu plan o hagas sitio. Los cambios nuevos dejan de sincronizarse; lo que ya está en tu cuenta se queda ahí.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabmerger-free-vs-pro/tm-over-limit-light.webp', alt: 'TabMerger en el plan gratuito con 7 grupos guardados: los dos últimos están bloqueados y un aviso ofrece Pro, tema claro' },
+    { src: '/blog/tabmerger-free-vs-pro/tm-over-limit-dark.webp', alt: 'TabMerger en el plan gratuito con 7 grupos guardados: los dos últimos están bloqueados y un aviso ofrece Pro, tema oscuro' },
+  ],
+  tags: ['tabmerger-guides', 'tab-manager', 'comparison', 'browser-productivity'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabmerger-free-vs-pro/tm-over-limit-light.webp' },
+  ogImage: { src: '/blog/tabmerger-free-vs-pro/og.png', alt: 'TabMerger gratis vs. Pro: el plan gratuito con dos grupos bloqueados por superar su límite' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'problem', label: '¿Gratis o de pago?' },
+    { id: 'compare', label: 'Uno al lado del otro' },
+    { id: 'why', label: 'Por qué el límite está aquí' },
+    { id: 'enforce', label: 'Cómo se comprueban los límites' },
+    { id: 'cancel', label: 'Si Pro termina' },
+    { id: 'choose', label: 'Qué plan te conviene' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+}
+
+<QuickAnswer>
+
+**Gratis** tienes un gestor de pestañas completo y sin cuenta: 5 grupos, 50 pestañas, 3 reglas de URL y 3 sesiones, además de búsqueda, guardado automático (se conservan los 2 más recientes), 2 días de «Cerrado recientemente» e importación y exportación. **Pro** (US$3.99 al mes o US$42.99 al año) elimina todos los límites y añade sincronización con cifrado de extremo a extremo entre dispositivos, copias de seguridad cifradas automáticas, todos los guardados automáticos conservados y 30 días de «Cerrado recientemente». Si Pro termina, no se borra nada.
+
+</QuickAnswer>
+
+<InstallCta>Empieza gratis, sin necesidad de cuenta. Chrome, Edge y Firefox.</InstallCta>
+
+<Section id="problem" title="¿Gratis o de pago? La pregunta de verdad">
+
+Antes de instalar un gestor de pestañas, la mayoría se pregunta dos cosas: «¿De verdad servirá la versión gratuita?» y «Si pago y luego lo dejo, ¿pierdo mis pestañas?». Las dos merecen una respuesta directa, así que aquí tienes todo lo que incluye cada plan, cómo se aplica y qué pasa en los casos límite.
+
+</Section>
+
+<Section id="compare" title="Gratis y Pro, uno al lado del otro">
+
+<ComparisonTable
+  head={['', 'Gratis', 'Pro']}
+  rowHeaders
+  minWidth="34rem"
+  rows={[
+    ['Precio', 'US$0, sin necesidad de cuenta', 'US$3.99 al mes o US$42.99 al año'],
+    ['Grupos', 'Hasta 5', 'Ilimitados'],
+    ['Pestañas', 'Hasta 50', 'Ilimitadas'],
+    ['Reglas de URL', 'Hasta 3', 'Ilimitadas'],
+    ['Sesiones', 'Hasta 3, en este navegador', 'Ilimitadas, sincronizadas entre dispositivos'],
+    ['Guardar pestañas abiertas automáticamente', 'Se conservan las 2 más recientes', 'Se conservan todas'],
+    ['Pestañas cerradas recientemente', 'Tus últimos 2 días', 'Tus últimos 30 días'],
+    ['Búsqueda, notas, recordatorios, importar y exportar', 'Sí', 'Sí'],
+    ['Arrastrar y soltar, atajos de teclado', 'Sí', 'Sí'],
+    ['Sincronización en la nube entre dispositivos (con cifrado de extremo a extremo)', 'No, se guarda en este dispositivo', 'Sí'],
+    ['Copias de seguridad cifradas automáticas', 'No', 'Sí'],
+    ['Enlaces para compartir, Ajustes → Dispositivos', 'No', 'Sí'],
+    ['Soporte', 'Sí', 'Prioritario'],
+  ]}
+/>
+
+La [página de precios](/pricing) es la referencia para los precios; el plan anual cuesta alrededor de un 10 % menos que doce pagos mensuales.
+
+</Section>
+
+<Section id="why" title="Por qué el límite entre planes está donde está">
+
+La línea sigue al coste. Todo lo que funciona solo en tu navegador no nos cuesta nada regalarlo, así que el plan gratuito incluye el gestor de pestañas entero: grupos, búsqueda, guardado automático, «Cerrado recientemente», reglas de URL, importación y exportación, con límites pensados para el trabajo diario de una persona.
+
+Pro paga lo que funciona en nuestros servidores: sincronizar y almacenar tus grupos, sesiones y copias de seguridad cifrados, y las pestañas abiertas que tus dispositivos comparten en Ajustes → Dispositivos. Además quita los límites locales, para quienes ya superaron los 5 grupos y las 50 pestañas.
+
+</Section>
+
+<Section id="enforce" title="Cómo se comprueban los límites">
+
+- **En tu dispositivo:** los límites de grupos, pestañas, reglas y sesiones, la rotación del guardado automático y la conservación de «Cerrado recientemente» los aplica la extensión. Esos datos nunca salen de tu navegador, así que no hay nada que un servidor tenga que comprobar.
+- **En nuestros servidores:** la base de datos rechaza, para una cuenta sin un plan Pro activo, cualquier función que guarde datos con nosotros (sincronización, sesiones y copias de seguridad en tu cuenta, las pestañas abiertas de tus dispositivos, enlaces para compartir, la configuración del cifrado). Un botón oculto nunca es el único candado.
+
+Cuando te acercas a los límites del plan gratuito, TabMerger te lo indica con un aviso y te ofrece Pro; nunca borra tus grupos ni tus pestañas para hacer sitio.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabmerger-free-vs-pro/tm-over-limit" alt="TabMerger en el plan gratuito con 7 grupos guardados: los dos últimos están bloqueados y un aviso ofrece Pro, tema claro" darkAlt="TabMerger en el plan gratuito con 7 grupos guardados: los dos últimos están bloqueados y un aviso ofrece Pro, tema oscuro" boxes={[{ id: 'banner', label: 'Aviso del plan gratuito' }, { id: 'locked', label: 'Por encima del límite' }]} source="TabMerger 3.16.1">Siete grupos en el plan gratuito: los cinco primeros funcionan como siempre y los dos últimos se conservan, pero bloqueados.</ThemedScreenshot>
+
+</Section>
+
+<Section id="cancel" title="Si un plan Pro termina">
+
+Conservas Pro hasta el final del periodo que pagaste. Después:
+
+- **No se borra nada.** Los grupos y las pestañas que superan los límites del plan gratuito se quedan en tu dispositivo, marcados con un candado, hasta que vuelvas a mejorar tu plan o quites otros para hacer sitio.
+- **Tus reglas de URL siguen funcionando**, aunque tengas más de 3; solo añadir reglas nuevas por encima de 3 requiere Pro.
+- **Los cambios nuevos dejan de sincronizarse.** Lo que ya está en tu cuenta se queda ahí; en el panel todavía puedes abrir o borrar sesiones guardadas y descargar o borrar copias de seguridad.
+- **Todo lo local sigue funcionando:** búsqueda, guardado automático (los nuevos guardados automáticos rotan y se conservan los 2 más recientes), «Cerrado recientemente» (de vuelta a 2 días), importación y exportación.
+
+</Section>
+
+<Section id="choose" title="Qué plan te conviene">
+
+- **Quédate en el plan gratuito** si usas un solo ordenador y llevas un puñado de proyectos: es completo, privado por defecto y no necesita cuenta.
+- **Elige Pro** si trabajas en más de un ordenador, tienes más de 5 grupos o 50 pestañas, o quieres copias de seguridad y un mes de pestañas cerradas sin pensar en ello.
+
+¿No lo tienes claro? Empieza con el plan gratuito; mejorar más adelante conserva todo lo que ya tienes. Para la rutina que hace funcionar cualquiera de los dos planes, mira [una rutina diaria de pestañas con TabMerger](/blog/tabmerger-daily-workflow); para saber cómo protege la sincronización tus datos, [sincronizar pestañas entre dispositivos](/blog/sync-tabs-between-devices-with-tabmerger).
+
+<InstallCta>Gratis para un ordenador, Pro cuando necesites más. Chrome, Edge y Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

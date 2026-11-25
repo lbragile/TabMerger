@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'chrome-tab-groups',
+  title: 'Gruppi di schede in Chrome: come salvarli, riaprirli e sincronizzarli',
+  seoTitle: 'Gruppi di schede di Chrome: salvare, riaprire e sincronizzare (e i limiti)',
+  description:
+    'Come funzionano i gruppi di schede di Chrome: crearli, comprimerli, chiuderli e riaprire un gruppo salvato, cosa si sincronizza con gli altri dispositivi e cosa possono vedere le estensioni, e cosa no.',
+  shareSummary: 'Crea, salva, riapri e sincronizza i gruppi di schede di Chrome, e scopri dove non bastano.',
+  dek: 'Un gruppo chiuso non è sparito: è salvato. Ecco dove finisce, cosa ti segue sugli altri dispositivi e cosa no.',
+  published: '2026-11-23',
+  updated: '2026-11-23',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Chiudere un gruppo lo salva; lo riapri dalla barra dei preferiti o da ⋮ → Gruppi di schede.',
+      source: 'Guida di Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Eliminare o separare un gruppo lo rimuove da tutti i dispositivi su cui hai eseguito l’accesso.', source: 'Guida di Chrome' },
+    {
+      text: 'chrome.tabGroups vede solo i gruppi nelle finestre aperte.',
+      source: 'Documentazione di chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'Entrambe le impostazioni dei gruppi di schede nella barra dei preferiti erano attive in un Chrome 157 appena installato.', source: 'chrome://settings/appearance, 20 nov 2026' },
+  ],
+  faq: [
+    {
+      question: 'Come si salva un gruppo di schede in Chrome?',
+      answer:
+        'Fai clic con il tasto destro sul nome del gruppo e scegli «Chiudi gruppo». Chrome lo conserva e lo riapri dalla barra dei preferiti o da ⋮ → Gruppi di schede.',
+    },
+    {
+      question: 'I gruppi di schede di Chrome si sincronizzano tra dispositivi?',
+      answer:
+        'I gruppi salvati seguono il tuo Account Google: la guida di Chrome avverte che eliminare o separare un gruppo lo rimuove da tutti i dispositivi collegati allo stesso account.',
+    },
+    {
+      question: 'Che differenza c’è tra «Chiudi gruppo» ed «Elimina gruppo»?',
+      answer: '«Chiudi gruppo» chiude le schede e conserva il gruppo per riaprirlo più tardi. «Elimina gruppo» lo rimuove, anche dagli altri dispositivi.',
+    },
+    {
+      question: 'Un’estensione per gestire le schede può salvare i miei gruppi di Chrome chiusi?',
+      answer:
+        'Non finché sono chiusi: l’API delle estensioni descrive solo i gruppi nelle finestre aperte. Prima riapri il gruppo, poi salvalo con l’estensione.',
+    },
+  ],
+  images: [
+    { src: '/blog/chrome-tab-groups/chrome-tab-groups-setting.webp', alt: 'Impostazioni di Chrome, «Appearance» (Aspetto), con «Show tab groups in bookmarks bar» (Mostra gruppi di schede nella barra dei preferiti) e «Automatically pin new tab groups created on any device to the bookmarks bar» (Blocca automaticamente i nuovi gruppi di schede nella barra dei preferiti) entrambe attive' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp', alt: 'TabMerger, «Now Open» (Aperte ora): sei schede, tre contrassegnate Sprint in blu e tre Thesis in verde, tema chiaro' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-dark.webp', alt: 'TabMerger, «Now Open» (Aperte ora): sei schede, tre contrassegnate Sprint in blu e tre Thesis in verde, tema scuro' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-light.webp', alt: 'Il gruppo di TabMerger «Sprint + thesis» con le stesse sei schede e i loro contrassegni Sprint e Thesis, tema chiaro' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-dark.webp', alt: 'Il gruppo di TabMerger «Sprint + thesis» con le stesse sei schede e i loro contrassegni Sprint e Thesis, tema scuro' },
+  ],
+  tags: ['chrome', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (tab groups with the keyboard)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp' },
+  ogImage: { src: '/blog/chrome-tab-groups/og.png', alt: 'Copertina «Chrome tab groups: how to save, reopen and sync them»: una guida di TabMerger, con schede contrassegnate dal loro gruppo di Chrome' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'basics', label: 'Creare e comprimere' },
+    { id: 'save', label: 'Salvare e riaprire' },
+    { id: 'sync', label: 'Si sincronizzano?' },
+    { id: 'limits', label: 'I limiti' },
+    { id: 'tabmerger', label: 'Tenere i gruppi per sempre' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+}
+
+<QuickAnswer>
+
+Per creare un gruppo, fai clic con il tasto destro su una scheda e scegli **Aggiungi scheda a gruppo** («Add tab to group»), poi dagli un nome e scegli un colore. Per salvare un gruppo, fai clic con il tasto destro sul suo nome e scegli **Chiudi gruppo** («Close group»): Chrome lo conserva e lo riapri dalla barra dei preferiti o da **⋮ → Gruppi di schede** («Tab groups»). I gruppi salvati seguono il tuo Account Google, quindi se ne elimini uno sparisce ovunque. Per tenere i gruppi al sicuro per sempre, salvali in [TabMerger](/features): conserva il nome e il colore del gruppo di Chrome di ogni scheda e, quando le riapri, rimette le schede nei loro gruppi.
+
+</QuickAnswer>
+
+<InstallCta>Tieni i tuoi gruppi di schede di Chrome al sicuro, facili da cercare e sincronizzati. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="basics" title="Come funzionano i gruppi di schede di Chrome?">
+
+Un gruppo di schede è una serie di schede con un nome e un colore, all’interno di una finestra.
+
+1. Fai clic con il tasto destro su una scheda e scegli **Aggiungi scheda a gruppo** → **Nuovo gruppo** («New group») o un gruppo esistente.
+2. Dai un nome al gruppo e scegli un colore. In seguito, fai clic con il tasto destro sul nome per rinominarlo, cambiarne il colore o aggiungere una nuova scheda.
+3. Trascina una scheda nel gruppo per aggiungerla; per toglierla, fai clic con il tasto destro sulla scheda → **Rimuovi dal gruppo** («Remove from group»).
+4. Fai clic sul nome del gruppo per comprimerlo in una sola etichetta, e di nuovo per espanderlo.
+
+Da tastiera: premi <Kbd>F6</Kbd> finché lo stato attivo non passa alle schede, raggiungi il gruppo con <Kbd>Tab</Kbd>, poi il tasto Menu apre il menu del gruppo. <Kbd>Space</Kbd> o <Kbd>Enter</Kbd> lo comprime, e <Kbd>Ctrl</Kbd>+<Kbd>←</Kbd>/<Kbd>→</Kbd> lo sposta.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with Close group and Delete group. */}
+
+</Section>
+
+<Section id="save" title="Come si salva un gruppo di schede e come lo si recupera?">
+
+**Chiudi gruppo** è il pulsante di salvataggio di Chrome. Le schede si chiudono, il gruppo no: Chrome lo conserva e lo elenca in due posti.
+
+- **Barra dei preferiti:** un’icona a griglia con il nome del gruppo. Fai clic per riaprirlo.
+- **Menu ⋮ → Gruppi di schede:** i tuoi gruppi salvati.
+
+Due impostazioni in **Impostazioni → Aspetto** («Settings → Appearance») controllano la parte della barra dei preferiti. Erano attive entrambe in un profilo nuovo di Chrome 157.
+
+<AnnotatedFigure src="/blog/chrome-tab-groups/chrome-tab-groups-setting.webp" alt="Impostazioni di Chrome, «Appearance» (Aspetto), con «Show tab groups in bookmarks bar» (Mostra gruppi di schede nella barra dei preferiti) e «Automatically pin new tab groups created on any device to the bookmarks bar» (Blocca automaticamente i nuovi gruppi di schede nella barra dei preferiti) entrambe attive" width={1600} height={844} eager boxes={[{ id: 'tab-groups-setting', label: 'Mostra nella barra dei preferiti' }, { id: 'auto-pin', label: 'Blocca i nuovi gruppi' }]} source="chrome://settings/appearance · Chrome 157.0.8103.80">Le due impostazioni dei gruppi di schede nella pagina «Appearance» (Aspetto) di Chrome.</AnnotatedFigure>
+
+<Catch>un gruppo salvato contiene solo indirizzi. Non è un backup: eliminalo una volta e sparisce da tutti i dispositivi.</Catch>
+
+</Section>
+
+<Section id="sync" title="I gruppi di schede si sincronizzano tra dispositivi?">
+
+Sì, tramite il tuo Account Google. La guida di Chrome è esplicita sull’effetto collaterale: quando **elimini** un gruppo, o ne **separi** le schede (**Separa**, «Ungroup»), il gruppo viene rimosso dal tuo dispositivo *e* da tutti gli altri dispositivi collegati allo stesso account. L’impostazione **Blocca automaticamente i nuovi gruppi di schede nella barra dei preferiti** («Automatically pin new tab groups created on any device to the bookmarks bar») blocca anche i gruppi creati altrove.
+
+In pratica:
+
+- I gruppi creati su un computer possono comparire su un altro collegato allo stesso account; è a questo che si riferisce l’impostazione di blocco.
+- Se fai pulizia sul portatile, elimini gli stessi gruppi anche sul computer fisso.
+
+Anche Firefox 159 ha i gruppi di schede, con **Salva e chiudi gruppo** («Save and close group») e un elenco **Gruppi chiusi** («Closed Groups»); i passaggi e gli screenshot di questa guida sono di Chrome. Se usi Firefox, leggi [Gruppi di schede in Firefox](/blog/firefox-tab-groups).
+
+</Section>
+
+<Section id="limits" title="Dove non bastano i gruppi di schede?">
+
+- **Una finestra ciascuno.** Un gruppo vive in una sola finestra. Salvare «tutto quello che ho aperto» su tre finestre vuol dire tre gruppi o più.
+- **Solo indirizzi.** Come un preferito, un gruppo salvato ricarica la pagina da capo: la posizione di scorrimento e i dati inseriti nei moduli si perdono.
+- **Invisibili alle estensioni quando sono chiusi.** L’API `chrome.tabGroups` descrive i gruppi presenti in una finestra aperta: ogni gruppo che restituisce ha un `windowId`, chiudere un gruppo genera `onRemoved` e non esiste una chiamata che elenchi i gruppi salvati e chiusi. Un gestore di schede non può fare il backup di un gruppo che hai chiuso finché non lo riapri.
+- **Le eliminazioni viaggiano.** La sincronizzazione che rende i gruppi così comodi diffonde anche un errore su ogni dispositivo.
+
+La nostra guida per [salvare tutte le schede aperte](/blog/save-all-open-tabs) confronta i gruppi con i preferiti, il ripristino all’avvio e i gestori di sessioni, e la [routine per le troppe schede](/blog/manage-too-many-tabs) mostra dove i gruppi trovano posto ogni giorno.
+
+</Section>
+
+<Section id="tabmerger" title="Tieni i tuoi gruppi per sempre con TabMerger">
+
+[TabMerger](/features), la nostra estensione gratuita per Chrome, Edge e Firefox, legge i tuoi gruppi di schede di Chrome aperti. **Aperte ora** contrassegna ogni scheda con il nome e il colore del suo gruppo, e salvando una finestra in un gruppo di TabMerger quei contrassegni restano. Salvate lì, le schede non vengono toccate quando un gruppo di Chrome viene eliminato su un altro dispositivo.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Salvare i gruppi di schede di Chrome in TabMerger" steps={[{ title: 'Aperte ora' }, { title: 'Gruppo salvato' }]}>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-now-open-groups" alt="TabMerger, «Now Open» (Aperte ora): sei schede, tre contrassegnate Sprint in blu e tre Thesis in verde, tema chiaro" darkAlt="TabMerger, «Now Open» (Aperte ora): sei schede, tre contrassegnate Sprint in blu e tre Thesis in verde, tema scuro" boxes={[{ id: 'group-badge-1', label: 'Gruppo Sprint' }, { id: 'group-badge-4', label: 'Gruppo Thesis' }]} source="TabMerger 3.16.1">Due gruppi di schede di Chrome, Sprint e Thesis, come li mostra «Now Open» (Aperte ora).</ThemedScreenshot>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-saved-groups" alt="Il gruppo di TabMerger «Sprint + thesis» con le stesse sei schede e i loro contrassegni Sprint e Thesis, tema chiaro" darkAlt="Il gruppo di TabMerger «Sprint + thesis» con le stesse sei schede e i loro contrassegni Sprint e Thesis, tema scuro" boxes={[{ id: 'group-badge-1', label: 'Gruppo Sprint' }, { id: 'group-badge-4', label: 'Gruppo Thesis' }]} source="TabMerger 3.16.1">Dopo «Merge with current» (Unisci con l’attuale): il gruppo salvato conserva il gruppo di Chrome di ogni scheda.</ThemedScreenshot>
+</Carousel>
+
+Riapri la finestra salvata in Chrome o Edge e le sue schede tornano nei gruppi di schede, con gli stessi nomi e colori.
+
+<InstallCta>Gratis per Chrome, Edge e Firefox. Per iniziare non serve un account.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

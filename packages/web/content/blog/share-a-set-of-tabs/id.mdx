@@ -1,0 +1,141 @@
+export const post = {
+  slug: 'share-a-set-of-tabs',
+  title: 'Cara membagikan beberapa tab sekaligus kepada orang lain',
+  navTitle: 'Membagikan beberapa tab sekaligus',
+  seoTitle: 'Cara Membagikan Banyak Tab Sekaligus (Chrome, Edge, Firefox)',
+  description:
+    'Kirim satu set tab lengkap ke rekan kerja atau teman: salin tautannya, bagikan file bookmark, atau buat tautan berbagi TabMerger terenkripsi end-to-end yang bisa dibuka dengan sekali klik, tanpa perlu akun.',
+  shareSummary: 'Bagikan banyak tab sekaligus: tautan, file bookmark, atau tautan terenkripsi sekali klik.',
+  dek: 'Menempelkan dua belas tautan ke obrolan itu merepotkan kedua pihak. Satu tautan untuk seluruh set tidak.',
+  published: '2026-12-10',
+  updated: '2026-12-10',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Tautan berbagi TabMerger membuka halaman hanya baca; tidak perlu akun untuk melihatnya.', source: 'Halaman berbagi TabMerger' },
+    { text: 'Kunci dekripsi tetap berada di #fragmen tautan, yang tidak pernah dikirim browser ke server.', source: 'Kode sumber TabMerger', href: 'https://github.com/lbragile/TabMerger' },
+    { text: 'Membuat tautan berbagi memerlukan Pro.', source: 'Harga TabMerger', href: '/pricing' },
+    { text: 'Firefox 159 bisa menyalin semua tautan dalam grup tab.', source: 'Teks menu Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Bagaimana cara membagikan banyak tab sekaligus?',
+      answer:
+        'Dengan TabMerger Pro, pilih grupnya lalu tekan Bagikan: satu tautan terenkripsi membuka semuanya di halaman hanya baca. Dengan fitur bawaan browser, Anda bisa mem-bookmark tab lalu mengirim file bookmark hasil ekspor, atau di Firefox menyalin semua tautan dalam grup tab.',
+    },
+    {
+      question: 'Apakah penerima perlu TabMerger?',
+      answer: 'Tidak. Tautan berbagi bisa dibuka di browser apa pun, dan penerima bisa membuka satu tab, satu jendela, atau semuanya. Jika TabMerger terpasang, mereka lalu bisa menyimpan tab tersebut sebagai grup mereka sendiri.',
+    },
+    {
+      question: 'Bisakah TabMerger membaca tab yang saya bagikan?',
+      answer: 'Tidak. Tab dienkripsi di browser Anda sebelum diunggah, dan kuncinya hanya ada di #fragmen tautan, yang tidak pernah sampai ke server.',
+    },
+    {
+      question: 'Apakah berbagi itu gratis?',
+      answer: 'Membuat tautan berbagi adalah bagian dari Pro. Menyalin tautan dan membagikan file bookmark atau JSON gratis.',
+    },
+  ],
+  images: [
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp', alt: 'TabMerger dengan grup “Work” dan “Reading list” dipilih dan bilah pilihan menampilkan Star (Bintangi), Unstar (Batalkan bintang), Share (Bagikan), dan Delete (Hapus), tema terang' },
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-dark.webp', alt: 'TabMerger dengan grup “Work” dan “Reading list” dipilih dan bilah pilihan menampilkan Star (Bintangi), Unstar (Batalkan bintang), Share (Bagikan), dan Delete (Hapus), tema gelap' },
+    { src: '/blog/share-a-set-of-tabs/share-page-light.webp', alt: 'Halaman Shared Groups (Grup Bersama) TabMerger, hanya baca, berisi dua grup dengan tombol Open window (Buka jendela) dan Open all tabs (Buka semua tab), tema terang' },
+    { src: '/blog/share-a-set-of-tabs/share-page-dark.webp', alt: 'Halaman Shared Groups (Grup Bersama) TabMerger, hanya baca, berisi dua grup dengan tombol Open window (Buka jendela) dan Open all tabs (Buka semua tab), tema gelap' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'bookmarks', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Import Chrome bookmarks & settings (export section)', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/96816', checked: '2026-11-21' },
+    {
+      title: 'TabMerger source code (sharing)',
+      publisher: 'GitHub',
+      url: 'https://github.com/lbragile/TabMerger',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp' },
+  ogImage: { src: '/blog/share-a-set-of-tabs/og.png', alt: 'Cara membagikan beberapa tab sekaligus kepada orang lain: panduan TabMerger, dengan dua grup dipilih untuk dibagikan' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'manual', label: 'Tanpa ekstensi' },
+    { id: 'tabmerger', label: 'Satu tautan terenkripsi' },
+    { id: 'what-they-see', label: 'Yang dilihat penerima' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['manual'],
+  browserFact: {
+    label: 'Salin atau ekspor tautan',
+    values: { chrome: 'Pengelola Bookmark → Ekspor Bookmark', edge: 'Favorites → Export favorites', firefox: 'Grup tab → Copy links in group' },
+  },
+}
+
+<QuickAnswer>
+
+Cara sekali klik adalah tautan berbagi [TabMerger](/features): pilih grup Anda, tekan **Bagikan** (Share), lalu tempelkan tautannya. Siapa pun yang membukanya melihat semua tab di halaman hanya baca dan bisa membuka satu tab, satu jendela, atau semuanya, tanpa perlu akun. Tab-tab itu juga **terenkripsi end-to-end**, jadi TabMerger pun tidak bisa membacanya. Tanpa ekstensi, bookmark tab-tab tersebut lalu kirim file bookmark hasil ekspor, atau di Firefox salin semua tautan dalam grup tab.
+
+</QuickAnswer>
+
+<InstallCta>Bagikan satu set tab lengkap dengan satu tautan terenkripsi. Mulai gratis; berbagi adalah bagian dari Pro.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="manual" title="Bagaimana cara membagikan tab tanpa ekstensi?">
+
+<BrowserPanels section="manual">
+<BrowserPanel browser="chrome">
+
+1. Tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> untuk mem-bookmark tab di jendela ke folder baru.
+2. Buka **⋮ → Bookmark dan daftar → Pengelola Bookmark** (Bookmark Manager), lalu **⋮ (Lainnya) → Ekspor Bookmark** (Export bookmarks).
+3. Kirim file HTML-nya. Penerima mengimpornya ke browser mereka (atau ke TabMerger).
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> untuk menambahkan tab di jendela ke favorit, dalam folder baru.
+2. Buka Favorit (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>) lalu pilih **Export favorites**.
+3. Kirim file HTML-nya.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Masukkan tab ke dalam grup tab (seret satu tab ke tab lain).
+2. Klik kanan label grup dan pilih **Copy links in group**.
+3. Tempelkan tautannya ke pesan atau dokumen.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>file bookmark mengekspor *semua* bookmark Anda, dan tautan yang ditempelkan tiba sebagai tumpukan alamat yang harus dibuka penerima satu per satu.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="Bagaimana cara membagikan tab dengan satu tautan?">
+
+1. Di TabMerger, simpan tab ke dalam grup (**Gabungkan dengan sesi saat ini**, Merge with current, menyimpan semua jendela yang terbuka).
+2. Lakukan **Ctrl+klik** (<Kbd>⌘</Kbd>+klik di Mac) di bilah sisi pada setiap grup yang ingin Anda bagikan.
+3. Tekan **Bagikan** di bilah pilihan. Tautan akan disalin ke papan klip; tempelkan di mana saja.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/tm-selection-share" alt="TabMerger dengan grup “Work” dan “Reading list” dipilih dan bilah pilihan menampilkan Star (Bintangi), Unstar (Batalkan bintang), Share (Bagikan), dan Delete (Hapus), tema terang" darkAlt="TabMerger dengan grup “Work” dan “Reading list” dipilih dan bilah pilihan menampilkan Star (Bintangi), Unstar (Batalkan bintang), Share (Bagikan), dan Delete (Hapus), tema gelap" boxes={[{ id: 'share', label: 'Share' }]} source="TabMerger 3.16.1">Dua grup dipilih; Share (Bagikan) membuat satu tautan untuk keduanya (ditampilkan di akun Gratis, tempat tombol ini nonaktif).</ThemedScreenshot>
+
+Cara privasinya terjaga: TabMerger membuat kunci baru di browser Anda, mengenkripsi grup dengan kunci itu, dan hanya mengunggah salinan terenkripsinya. Kunci dimasukkan ke tautan setelah `#`, bagian alamat yang tidak pernah dikirim browser ke server, sehingga hanya orang yang memiliki tautan lengkap yang bisa membaca tab-tab itu. Membuat tautan adalah bagian dari [Pro](/pricing).
+
+</Section>
+
+<Section id="what-they-see" title="Apa yang dilihat penerima?">
+
+Halaman hanya baca berisi setiap grup dan jendela, jumlah tab, serta tombol **Buka semua tab** (Open all tabs) untuk satu jendela, **Buka jendela** (Open window) untuk satu grup utuh, atau untuk membuka tab satu per satu. Mereka tidak perlu akun, atau TabMerger. Jika mereka memakai TabMerger, mereka bisa membuka tab-tab itu dan menyimpannya sebagai grup sendiri dengan **Gabungkan dengan sesi saat ini**.
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/share-page" width={1600} height={1115} alt="Halaman Shared Groups (Grup Bersama) TabMerger, hanya baca, berisi dua grup dengan tombol Open window (Buka jendela) dan Open all tabs (Buka semua tab), tema terang" darkAlt="Halaman Shared Groups (Grup Bersama) TabMerger, hanya baca, berisi dua grup dengan tombol Open window (Buka jendela) dan Open all tabs (Buka semua tab), tema gelap" source="tabmerger.com/share/demo">Halaman berbagi, dari tautan demo publik TabMerger.</ThemedScreenshot>
+
+Lebih suka file? [Ekspor JSON](/blog/export-open-tabs) (Export JSON) di TabMerger bisa dipakai di paket Gratis, dan [memindahkan tab ke komputer lain](/blog/move-tabs-between-computers) membahas cara memindahkannya antarperangkat Anda sendiri.
+
+<InstallCta>Gratis untuk Chrome, Edge, dan Firefox. Tidak perlu akun untuk mulai.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

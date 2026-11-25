@@ -1,0 +1,134 @@
+export const post = {
+  slug: 'firefox-tab-groups',
+  title: 'Groupes d’onglets Firefox : les enregistrer, les rouvrir et les garder',
+  navTitle: 'Groupes d’onglets dans Firefox',
+  seoTitle: 'Groupes d’onglets Firefox : enregistrer, rouvrir, synchroniser (et leurs limites)',
+  description:
+    'Comment fonctionnent les groupes d’onglets dans Firefox 159 : créer un groupe, le colorer, le réduire, l’enregistrer et le fermer puis le rouvrir plus tard, ce que couvre Firefox Sync, et comment garder vos groupes en sécurité sur tous vos appareils avec TabMerger.',
+  shareSummary: 'Créer, enregistrer, rouvrir et garder des groupes d’onglets Firefox, et ce que couvre Firefox Sync.',
+  dek: 'Les groupes de Firefox peuvent désormais être enregistrés et fermés. Voici où ils vont, et comment les garder pour de bon.',
+  published: '2026-12-07',
+  updated: '2026-12-07',
+  testedOn: ['Firefox 159.0.1'],
+  keyFacts: [
+    { text: '« Enregistrer et fermer le groupe » garde un groupe pour le rouvrir plus tard.', source: 'Texte des menus de Firefox 159' },
+    { text: 'Les groupes fermés sont listés sous « Groupes fermés » et « Groupes d’onglets récents ».', source: 'Texte des menus de Firefox 159' },
+    { text: 'Les paramètres de Firefox Sync listent « Onglets ouverts », sans entrée distincte pour les groupes d’onglets.', source: 'Texte des paramètres de Firefox 159' },
+    { text: 'Le menu d’un groupe permet de copier tous ses liens d’un coup.', source: 'Texte des menus de Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Comment enregistrer un groupe d’onglets dans Firefox ?',
+      answer: 'Faites un clic droit sur l’étiquette du groupe et choisissez « Enregistrer et fermer le groupe ». Rouvrez-le plus tard depuis « Groupes fermés » ou la liste « Groupes d’onglets ».',
+    },
+    {
+      question: 'Les groupes d’onglets Firefox sont-ils synchronisés ?',
+      answer:
+        'Les paramètres de synchronisation de Firefox 159 listent Marque-pages, Historique, Onglets ouverts et d’autres données, sans entrée distincte pour les groupes d’onglets. Pour retrouver les mêmes groupes sur chaque appareil, TabMerger Pro les synchronise avec un chiffrement de bout en bout.',
+    },
+    {
+      question: 'Quelle différence entre « Enregistrer et fermer le groupe » et « Supprimer le groupe » ?',
+      answer: '« Enregistrer et fermer le groupe » garde le groupe pour le rouvrir plus tard. « Supprimer le groupe » le supprime ; « Dissocier les onglets » laisse les onglets ouverts mais retire le groupe.',
+    },
+    {
+      question: 'Peut-on copier tous les liens d’un groupe d’onglets Firefox ?',
+      answer: 'Oui : le menu du groupe dans Firefox 159 propose « Copier les liens dans le groupe ». TabMerger peut aussi exporter des groupes entiers dans un fichier JSON.',
+    },
+  ],
+  images: [
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp', alt: 'Le groupe TabMerger « Home renovation » contenant trois fenêtres enregistrées et neuf onglets, certains marqués de leurs groupes d’onglets « Kitchen » et « Quotes », thème clair' },
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-dark.webp', alt: 'Le groupe TabMerger « Home renovation » contenant trois fenêtres enregistrées et neuf onglets, certains marqués de leurs groupes d’onglets « Kitchen » et « Quotes », thème sombre' },
+  ],
+  tags: ['firefox', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Tab groups in Firefox',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/tab-groups',
+      checked: '2026-11-21',
+      note: 'Menu names and settings were read from Firefox 159.0.1’s own interface text; this page blocked our automated check.',
+    },
+    {
+      title: 'Firefox Sync: what it is and how it works',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/firefox-sync-what-it-is-and-how-it-works',
+      checked: '2026-11-21',
+      note: 'The list of synced data was read from Firefox 159.0.1’s settings text.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-23',
+  cover: { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp' },
+  ogImage: { src: '/blog/firefox-tab-groups/og.png', alt: 'Carte de titre « Firefox tab groups: how to save, reopen and keep them » : un guide TabMerger, avec un groupe enregistré de deux fenêtres' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'basics', label: 'Créer un groupe' },
+    { id: 'save', label: 'Enregistrer et rouvrir' },
+    { id: 'sync', label: 'Sont-ils synchronisés ?' },
+    { id: 'tabmerger', label: 'Les garder pour de bon' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Faites glisser un onglet sur un autre, ou faites un clic droit sur un onglet, pour créer un groupe dans Firefox. Pour le garder pour plus tard, faites un clic droit sur l’étiquette du groupe et choisissez **Enregistrer et fermer le groupe** (« Save and close group ») ; rouvrez-le depuis **Groupes fermés** (« Closed Groups ») ou la liste **Groupes d’onglets** (« Tab groups »). Les paramètres de Firefox Sync n’ont pas d’entrée distincte pour les groupes d’onglets : pour retrouver les mêmes groupes sur chaque appareil, et pouvoir les rechercher avec tout le reste, enregistrez-les dans [TabMerger](/features).
+
+</QuickAnswer>
+
+<InstallCta>Gardez vos groupes Firefox enregistrés, consultables et synchronisés. Gratuit pour Firefox, Chrome et Edge.</InstallCta>
+
+<Section id="basics" title="Comment fonctionnent les groupes d’onglets dans Firefox ?">
+
+D’après l’interface de Firefox 159 elle-même :
+
+1. **Créer :** faites glisser un onglet sur un autre, ou faites un clic droit sur un onglet et ajoutez-le à un nouveau groupe. Firefox demande un **Nom** (« Name ») et une couleur (bleu, cyan, gris, vert, orange, rose, violet, rouge ou jaune).
+2. **Réduire :** cliquez sur l’étiquette du groupe pour le replier à la largeur d’un seul onglet.
+3. **Gérer :** un clic droit sur l’étiquette donne **Enregistrer et fermer le groupe**, **Dissocier les onglets** (« Ungroup tabs »), **Supprimer le groupe** (« Delete group »), **Déplacer vers une nouvelle fenêtre** (« Move group to new window »), **Copier les liens dans le groupe** (« Copy links in group ») et **Partager le groupe** (« Share group »).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's tab group editor with Name, colours and Save and close group. */}
+
+</Section>
+
+<Section id="save" title="Comment enregistrer un groupe et le récupérer ?">
+
+- **Enregistrer :** clic droit sur l’étiquette du groupe → **Enregistrer et fermer le groupe**. Les onglets se ferment ; le groupe est conservé.
+- **Rouvrir :** clic droit sur un onglet → ajouter à un groupe → **Groupes fermés**, ou ouvrez la liste **Groupes d’onglets** (Firefox y affiche **Groupes d’onglets récents**, « Recent tab groups »), choisissez le groupe, puis **Rouvrir le groupe d’onglets** (« Reopen tab group »).
+- **Supprimer :** **Supprimer le groupe** le retire définitivement.
+
+<Catch>un groupe enregistré vit dans ce profil Firefox. Ce n’est pas une sauvegarde et, d’après ce que montrent les paramètres de synchronisation, il ne vous suit pas sur un autre appareil.</Catch>
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's Tab groups list with a closed group. */}
+
+</Section>
+
+<Section id="sync" title="Les groupes d’onglets Firefox sont-ils synchronisés ?">
+
+Les paramètres **Synchronisation** (« Sync ») de Firefox 159 listent ce qui est synchronisé : **Marque-pages, Historique, Onglets ouverts, Mots de passe, Adresses, Moyens de paiement, Modules complémentaires et Paramètres** (« Bookmarks, History, Open tabs, Passwords, Addresses, Payment methods, Add-ons and Settings »). « Onglets ouverts » est décrit comme « Une liste de ce qui est actuellement ouvert sur tous vos appareils synchronisés ». Il n’y a pas d’entrée distincte pour les groupes d’onglets : ne comptez donc pas voir un groupe enregistré apparaître sur votre autre ordinateur.
+
+Pour la même chose dans Chrome, consultez notre [guide des groupes d’onglets de Chrome](/blog/chrome-tab-groups), qui eux se synchronisent via un compte Google.
+
+</Section>
+
+<Section id="tabmerger" title="Gardez vos groupes pour de bon avec TabMerger">
+
+[TabMerger](/features) fonctionne dans Firefox, Chrome et Edge, et garde les groupes que le navigateur ne peut pas garder :
+
+1. Cliquez sur **Ajouter un groupe**, nommez-le, puis choisissez **Fusionner avec l’actuel** dans son menu **⋯** : toutes les fenêtres et tous les onglets ouverts y sont enregistrés.
+2. Fermez les fenêtres. Le groupe reste, avec chaque onglet, et se recherche avec <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+3. Rouvrez un onglet, une fenêtre ou tout, à tout moment.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/firefox-tab-groups/tm-kept-groups" alt="Le groupe TabMerger « Home renovation » contenant trois fenêtres enregistrées et neuf onglets, certains marqués de leurs groupes d’onglets « Kitchen » et « Quotes », thème clair" darkAlt="Le groupe TabMerger « Home renovation » contenant trois fenêtres enregistrées et neuf onglets, certains marqués de leurs groupes d’onglets « Kitchen » et « Quotes », thème sombre" boxes={[{ id: 'summary', label: 'Fenêtres et onglets enregistrés' }]} source="TabMerger 3.16.1">Un groupe enregistré : trois fenêtres, neuf onglets, prêts à être rouverts.</ThemedScreenshot>
+
+Avec [Pro](/pricing), vos groupes se synchronisent entre Firefox, Chrome et Edge sur tous vos appareils, chiffrés de bout en bout, si bien que le serveur ne peut pas les lire. D’autres habitudes dans la [routine contre les onglets trop nombreux](/blog/manage-too-many-tabs).
+
+<InstallCta>Gratuit pour Firefox, Chrome et Edge. Aucun compte requis pour commencer.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'edge-collections-replacement',
+  title: 'Edge Collections बंद हो गया: अब इसकी जगह क्या इस्तेमाल करें',
+  navTitle: 'Edge Collections का विकल्प',
+  seoTitle: 'Edge Collections हटा दिया गया? सबसे अच्छा विकल्प (और डेटा कैसे ले जाएं)',
+  description:
+    'Microsoft ने वर्ज़न 149 से Edge से Collections हटा दिया है। जानिए आपके collections का क्या हुआ, उन्हें कैसे निकालें और Edge Collections के विकल्प TabMerger में उन्हें नाम वाले ग्रुप के रूप में कैसे लाएं।',
+  shareSummary: 'Edge 149 में Collections बंद हो गया। आपके पेज कहां गए और अब क्या इस्तेमाल करें।',
+  dek: 'आपके सेव किए पेज खोए नहीं हैं। जानिए वे कहां गए, और उनके लिए एक बेहतर ठिकाना।',
+  published: '2026-12-06',
+  updated: '2026-12-06',
+  testedOn: ['Edge 158.0.4370.33', 'Chrome 157.0.8103.80'],
+  keyFacts: [
+    {
+      text: '4 जून 2026 को रिलीज़ हुए Edge 149 से Collections उपलब्ध नहीं है।',
+      source: 'Microsoft सहायता',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'Edge 145 से Collections में पेज जोड़ना बंद हो गया था।', source: 'Microsoft सहायता' },
+    {
+      text: 'Move to Favorites पेजों के पते रखता है, इमेज या नोट्स नहीं।',
+      source: 'Microsoft सहायता',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'TabMerger, Other favorites के हर फ़ोल्डर को एक नाम वाले ग्रुप में बदल देता है।', source: 'TabMerger 3.16.1 में टेस्ट किया गया, 21 नवंबर 2026' },
+  ],
+  faq: [
+    {
+      question: 'क्या Microsoft ने Edge Collections हटा दिया है?',
+      answer:
+        'हां। Microsoft के सहायता पेज के अनुसार, 4 जून 2026 को रिलीज़ हुए Edge 149 से Collections उपलब्ध नहीं है; Edge 145 से नए पेज जोड़े नहीं जा सकते थे।',
+    },
+    {
+      question: 'मेरे collections कहां गए?',
+      answer:
+        'Microsoft ने Move to Favorites का विकल्प दिया, जो हर collection को एक favorites फ़ोल्डर में बदल देता है (सिर्फ़ पेज)। निजी अकाउंट वाले सेव किए गए collections bing.com/saves पर भी देख सकते हैं; ऑफ़िस या स्कूल अकाउंट उन्हें एक्सपोर्ट कर सकते थे।',
+    },
+    {
+      question: 'Edge Collections का सबसे अच्छा विकल्प क्या है?',
+      answer:
+        'TabMerger: नाम और रंग वाले टैब ग्रुप, जिन्हें आप सर्च कर सकते हैं, जिनमें नोट्स और रिमाइंडर जोड़ सकते हैं, और Pro पर एंड-टू-एंड एन्क्रिप्शन के साथ सिंक कर सकते हैं। यह Chrome और Firefox में भी काम करता है।',
+    },
+    {
+      question: 'क्या मैं अपने collections को TabMerger में इंपोर्ट कर सकता हूं?',
+      answer: 'हां। collection फ़ोल्डरों को Other favorites में ले जाएं, अपने favorites को HTML फ़ाइल के रूप में एक्सपोर्ट करें और उसे सेटिंग्स → डेटा में इंपोर्ट करें: इनमें से हर फ़ोल्डर एक TabMerger ग्रुप बन जाता है।',
+    },
+  ],
+  images: [
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-light.webp', alt: 'favorites_edge.html फ़ाइल के लिए Import 2 groups? (2 समूह आयात करें?) पूछता TabMerger डायलॉग, लाइट थीम' },
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-dark.webp', alt: 'favorites_edge.html फ़ाइल के लिए Import 2 groups? (2 समूह आयात करें?) पूछता TabMerger डायलॉग, डार्क थीम' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-light.webp', alt: 'favorites फ़ोल्डरों से इंपोर्ट किए गए Trip to Lisbon और Thesis reading ग्रुप वाला TabMerger साइडबार, लाइट थीम' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-dark.webp', alt: 'favorites फ़ोल्डरों से इंपोर्ट किए गए Trip to Lisbon और Thesis reading ग्रुप वाला TabMerger साइडबार, डार्क थीम' },
+  ],
+  tags: ['edge', 'bookmarks', 'save-tabs', 'tab-manager'],
+  sources: [
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'EdgeCollectionsEnabled policy (obsolete)',
+      publisher: 'Microsoft Learn',
+      url: 'https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies/EdgeCollectionsEnabled',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/edge-collections-replacement/cover-edge-light.webp' },
+  ogImage: { src: '/blog/edge-collections-replacement/og.png', alt: 'Edge Collections बंद हो गया: अब इसकी जगह क्या इस्तेमाल करें। favorites फ़ोल्डरों को ग्रुप के रूप में इंपोर्ट करती TabMerger गाइड' },
+  toc: [
+    { id: 'quick', label: 'छोटा जवाब' },
+    { id: 'what-happened', label: 'क्या हुआ' },
+    { id: 'where', label: 'आपके पेज कहां हैं' },
+    { id: 'move', label: 'TabMerger में ले जाएं' },
+    { id: 'why', label: 'TabMerger क्यों' },
+    { id: 'faq', label: 'अक्सर पूछे जाने वाले सवाल' },
+  ],
+}
+
+<QuickAnswer>
+
+हां, यह बंद हो गया है: Microsoft के अनुसार **Edge 149 से Collections उपलब्ध नहीं है** (4 जून 2026 को रिलीज़)। आपके पेज डिलीट नहीं हुए: **Move to Favorites** ने हर collection को एक favorites फ़ोल्डर में बदल दिया। इनका सबसे अच्छा नया ठिकाना [TabMerger](/features) है: अपने favorites को HTML के रूप में एक्सपोर्ट करें, फ़ाइल इंपोर्ट करें, और Other favorites का हर फ़ोल्डर नाम वाला, सर्च करने लायक ग्रुप बन जाता है, जिसमें नोट्स, रिमाइंडर और एन्क्रिप्टेड सिंक मिलते हैं, Edge, Chrome और Firefox में।
+
+</QuickAnswer>
+
+<InstallCta>अपने पुराने collections को नाम वाले, सर्च करने लायक ग्रुप के रूप में वापस लाएं। Edge, Chrome और Firefox के लिए मुफ़्त।</InstallCta>
+
+<Section id="what-happened" title="क्या Microsoft ने सच में Edge Collections हटा दिया है?">
+
+हां, चरणों में, Microsoft के अपने पेजों के अनुसार:
+
+<ComparisonTable
+  head={['Edge वर्ज़न', 'क्या बदला']}
+  rowHeaders
+  rows={[
+    ['145', 'Collections में पेज जोड़ना बंद हो गया; मौजूदा collections दिखते रहे'],
+    ['149 (4 जून 2026)', 'Collections अब उपलब्ध नहीं है'],
+    ['153', 'Collections की एडमिन पॉलिसी अप्रचलित हो गई, “because the Collections feature was removed” (क्योंकि Collections फ़ीचर हटा दिया गया)'],
+  ]}
+/>
+
+Microsoft की वजह, उसी के शब्दों में: वह “retiring Collections in Edge, to better simplify our offerings” (अपनी सेवाओं को आसान बनाने के लिए Edge में Collections बंद कर रहा है)।
+
+</Section>
+
+<Section id="where" title="मेरे collections कहां गए?">
+
+बंद होने के दौरान Edge ने Collections पैन में दो विकल्प दिखाए:
+
+- **Move to Favorites** (Microsoft का सुझाया विकल्प): हर collection आपके favorites में एक फ़ोल्डर बन गया। सिर्फ़ सेव किए वेब पेज ले जाए गए; इमेज और नोट्स नहीं।
+- **Export your data**: सिर्फ़ ऑफ़िस या स्कूल अकाउंट के लिए।
+
+निजी Microsoft अकाउंट वाले पहले सेव किए गए collections `bing.com/saves` पर भी ढूंढ सकते हैं। इसलिए पहले अपने favorites देखें (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>): आपके collections शायद वहीं फ़ोल्डर के रूप में हैं।
+
+</Section>
+
+<Section id="move" title="मैं अपने collections को TabMerger में कैसे ले जाऊं?">
+
+कुछ ही मिनट, और हर पुराना collection एक ग्रुप बन जाता है:
+
+1. Edge में Favorites खोलें (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>)। अगर आपके पुराने collections **Favorites bar** के अंदर हैं, तो उन फ़ोल्डरों को **Other favorites** में ले जाएं। एक्सपोर्ट पूरे Favorites bar को एक ही फ़ोल्डर के रूप में लिखता है, इसलिए उसके अंदर बचे फ़ोल्डर एक ही ग्रुप में मिलकर आएंगे।
+2. **Export favorites** चुनें और HTML फ़ाइल सेव करें।
+3. TabMerger खोलें → **सेटिंग्स → डेटा** → **फ़ाइल आयात करें** (Settings → Data → Import file), और वह फ़ाइल चुनें।
+4. पुष्टि करें। Other favorites का हर फ़ोल्डर उसी नाम का एक ग्रुप बन जाता है, और उसके अंदर के फ़ोल्डर उसी ग्रुप में मिला दिए जाते हैं। Favorites bar अपना अलग ग्रुप बनकर आता है।
+
+<ScreenshotThemeToggle />
+
+<Carousel label="एक्सपोर्ट किए गए favorites इंपोर्ट करना" steps={[{ title: 'पुष्टि करें' }, { title: 'आपके ग्रुप' }]}>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-import-confirm" alt="favorites_edge.html फ़ाइल के लिए Import 2 groups? (2 समूह आयात करें?) पूछता TabMerger डायलॉग, लाइट थीम" darkAlt="favorites_edge.html फ़ाइल के लिए Import 2 groups? (2 समूह आयात करें?) पूछता TabMerger डायलॉग, डार्क थीम" boxes={[{ id: 'import-confirm', label: 'इंपोर्ट' }]} source="TabMerger 3.16.1">TabMerger मिले हुए फ़ोल्डर गिनता है और पहले पूछता है।</ThemedScreenshot>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-imported-groups" alt="favorites फ़ोल्डरों से इंपोर्ट किए गए Trip to Lisbon और Thesis reading ग्रुप वाला TabMerger साइडबार, लाइट थीम" darkAlt="favorites फ़ोल्डरों से इंपोर्ट किए गए Trip to Lisbon और Thesis reading ग्रुप वाला TabMerger साइडबार, डार्क थीम" boxes={[{ id: 'imported', label: 'फ़ोल्डरों के नाम वाले ग्रुप' }]} source="TabMerger 3.16.1">हर फ़ोल्डर अब उसी नाम और उन्हीं पेजों वाला ग्रुप है।</ThemedScreenshot>
+</Carousel>
+
+Other favorites के आपके बाकी फ़ोल्डर भी साथ आ जाते हैं; जिन ग्रुप की ज़रूरत नहीं, उन्हें डिलीट कर दें। हर इंपोर्ट फ़ॉर्मेट [TabMerger में टैब इंपोर्ट करना](/blog/import-tabs-into-tabmerger) में बताया गया है। मुफ़्त वर्ज़न में 5 ग्रुप और 50 टैब आते हैं, और जो इंपोर्ट इस सीमा से आगे जाता, उसे कुछ भी जोड़ने से पहले रोक दिया जाता है; [Pro](/pricing) में कोई सीमा नहीं है।
+
+{/* Screenshot still to capture by hand (needs a visible browser): Edge Favorites page menu with Export favorites. */}
+
+</Section>
+
+<Section id="why" title="TabMerger, Collections से बेहतर ठिकाना क्यों है?">
+
+- **टैब के पूरे सेट, एक क्लिक में।** **वर्तमान के साथ विलय करें** (Merge with current) सभी खुली विंडो को एक नाम वाले ग्रुप में सेव करता है।
+- **किसी भी टैब पर नोट्स और रिमाइंडर,** उन नोट्स की जगह जिन्हें Collections नहीं ले जा सका: टैब पर राइट-क्लिक करें और **नोट जोड़ें** (Add note) या **मुझे याद दिलाएं…** (Remind me…) चुनें।
+- **एक ही सर्च** खुले, सेव किए और हाल में बंद किए टैब के लिए: <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>।
+- **सभी ब्राउज़र में।** Edge, Chrome और Firefox में वही ग्रुप, Pro पर एंड-टू-एंड एन्क्रिप्शन के साथ सिंक।
+- **हमेशा आपका।** कभी भी सब कुछ JSON में एक्सपोर्ट करें; कुछ भी इस पर निर्भर नहीं कि कोई कंपनी कोई फ़ीचर चालू रखे।
+
+टैब मैनेजर में नए हैं? [ब्राउज़र सेशन मैनेजर क्या करता है](/blog/browser-session-manager) और [सबसे अच्छे टैब मैनेजर एक्सटेंशन](/blog/best-tab-manager-extensions) पूरी तस्वीर देते हैं।
+
+<InstallCta>Edge, Chrome और Firefox के लिए मुफ़्त। शुरू करने के लिए अकाउंट की ज़रूरत नहीं।</InstallCta>
+
+</Section>
+
+<Section id="faq" title="अक्सर पूछे जाने वाले सवाल">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,187 @@
+export const post = {
+  slug: 'find-a-tab-among-hundreds',
+  title: '수백 개의 탭 중에서 원하는 탭 하나를 찾는 방법',
+  navTitle: '수백 개의 탭 중에서 탭 하나 찾기',
+  seoTitle: 'Chrome, Edge, Firefox에서 열린 탭 검색하는 방법',
+  description:
+    '열린 탭을 몇 초 만에 검색하세요. Chrome, Edge, Firefox에 내장된 탭 검색과, 열린 탭·저장한 탭·닫은 탭을 group:, closed: 같은 필터로 한 번에 찾는 TabMerger의 Ctrl+K를 소개합니다.',
+  shareSummary: 'Chrome, Edge, Firefox에서 열린 탭을 검색하고, 저장하거나 닫은 탭까지 찾으세요.',
+  dek: '아이콘만 한 탭을 하나하나 훑어보지 마세요. 단축키 하나와 제목 몇 글자면 바로 찾아갑니다.',
+  published: '2026-11-29',
+  updated: '2026-11-29',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Chrome에서는 Ctrl+Shift+A로 탭 검색이 열립니다.',
+      source: 'Chrome 고객센터',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Firefox 159는 Ctrl+Shift+A에 전체 탭 목록을 지정합니다.', source: 'Firefox 159 단축키 정의' },
+    { text: 'TabMerger의 Ctrl+K는 열린 탭, 저장한 탭, 최근에 닫은 탭을 함께 검색합니다.', source: 'TabMerger 3.16.1' },
+    { text: 'TabMerger 필터: group:, window:, tag:, closed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: '열린 탭은 어떻게 검색하나요?',
+      answer:
+        'TabMerger에서 Ctrl+K를 누르고 입력하면 열린 탭, 저장한 탭, 최근에 닫은 탭을 함께 검색합니다. 브라우저 기본 기능으로는 Chrome에 탭 검색(Ctrl+Shift+A 또는 주소 표시줄에 @tabs)이 있고, Firefox는 Ctrl+Shift+A로 모든 탭을 목록으로 보여 줍니다.',
+    },
+    {
+      question: '탭 검색 단축키가 있나요?',
+      answer: 'Chrome과 Firefox에서는 Ctrl+Shift+A(Mac의 Chrome에서는 ⌘+Shift+A), TabMerger 안에서는 Ctrl+K입니다. Microsoft의 Edge 단축키 목록에는 탭 검색 키가 없습니다.',
+    },
+    {
+      question: '이미 닫은 탭도 검색할 수 있나요?',
+      answer: '네, TabMerger에서는 검색어 앞에 closed:를 붙이면 최근에 닫은 탭만 검색합니다. 무료 버전은 2일, Pro는 30일 동안 보관합니다.',
+    },
+    {
+      question: '다른 기기의 탭도 검색할 수 있나요?',
+      answer:
+        'TabMerger Pro는 저장한 그룹을 엔드투엔드 암호화로 기기 간에 동기화하므로, 같은 Ctrl+K로 어디서든 찾을 수 있습니다. 브라우저 기본 방법은 컴퓨터 간에 탭 옮기기 가이드에서 다룹니다.',
+      link: { text: '컴퓨터 간에 탭 옮기기', href: '/blog/move-tabs-between-computers' },
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: '비어 있는 상태로 열린 TabMerger 검색, group:, window:, tag:, closed: 필터 목록 표시, 밝은 테마' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: '비어 있는 상태로 열린 TabMerger 검색, group:, window:, tag:, closed: 필터 목록 표시, 어두운 테마' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp', alt: 'TabMerger에서 group:"Work" pull을 검색해 Work 그룹에 저장된 Pull requests 탭을 찾은 화면, 밝은 테마' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-dark.webp', alt: 'TabMerger에서 group:"Work" pull을 검색해 Work 그룹에 저장된 Pull requests 탭을 찾은 화면, 어두운 테마' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-light.webp', alt: 'TabMerger에서 tag:Sprint를 검색해 Chrome 탭 그룹 Sprint의 열린 탭 세 개가 표시된 화면, 밝은 테마' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-dark.webp', alt: 'TabMerger에서 tag:Sprint를 검색해 Chrome 탭 그룹 Sprint의 열린 탭 세 개가 표시된 화면, 어두운 테마' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-21',
+      note: 'Firefox 정보는 Firefox 159.0.1 자체의 키 정의와 메뉴 문구에서 직접 확인했습니다. 이 페이지는 자동 확인을 차단했습니다.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp' },
+  ogImage: { src: '/blog/find-a-tab-among-hundreds/og.png', alt: '\'How to find one tab among hundreds\': 필터로 좁힌 탭 검색이 담긴 TabMerger 가이드' },
+  toc: [
+    { id: 'quick', label: '간단한 답변' },
+    { id: 'tabmerger', label: 'Ctrl+K로 모두 검색' },
+    { id: 'filters', label: '검색을 좁히는 필터' },
+    { id: 'builtin', label: '브라우저 기본 탭 검색' },
+    { id: 'tips', label: '탭을 찾기 쉽게 만들기' },
+    { id: 'faq', label: '자주 묻는 질문' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: '기본 탭 검색',
+    values: { chrome: 'Ctrl+Shift+A 또는 @tabs', edge: 'Search tabs(단축키 없음)', firefox: 'Ctrl+Shift+A' },
+  },
+}
+
+<QuickAnswer>
+
+[TabMerger](/features)에서 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>(Mac에서는 <Kbd>⌘</Kbd>+<Kbd>K</Kbd>)를 누르고 몇 글자만 입력하면, 탭이 **열려 있든, 그룹에 저장되어 있든, 최근에 닫혔든** 찾아 줍니다. `group:`, `closed:` 같은 필터를 쓰면 수백 개의 탭을 하나로 좁힐 수 있습니다. 브라우저 기본 기능으로는 Chrome의 **탭 검색**(Tab Search, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>)과 Firefox의 **탭 전체 목록**(List all tabs, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>)이 지금 열려 있는 탭을 검색합니다.
+
+</QuickAnswer>
+
+<InstallCta>열린 탭, 저장한 탭, 닫은 탭 무엇이든 키 하나로 찾으세요. Chrome, Edge, Firefox용 무료 확장 프로그램입니다.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Ctrl+K로 모두 검색">
+
+브라우저의 탭 검색은 그 브라우저에 지금 열려 있는 것만 압니다. 하지만 필요한 탭은 다른 곳에 있을 때가 많습니다. 어제 저장한 창이나 한 시간 전에 닫은 창 같은 곳이죠. TabMerger는 검색창 하나로 이 모든 곳을 검색합니다.
+
+1. TabMerger를 열고 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>를 누릅니다.
+2. 제목이나 주소의 일부를 입력합니다. 결과에는 열린 탭, 저장한 탭, 최근에 닫은 탭이 함께 표시되고, 각 탭에는 어디에 있는지 알려 주는 표시가 붙습니다.
+3. 화살표 키로 고르고 <Kbd>Enter</Kbd>를 누릅니다.
+
+모든 필터, 결과 순서, 숨기기 또는 흐리게 표시하는 보기는 [TabMerger로 모든 탭 검색하기](/blog/search-all-your-tabs-with-tabmerger)에서 자세히 다룹니다.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="비어 있는 상태로 열린 TabMerger 검색, group:, window:, tag:, closed: 필터 목록 표시, 밝은 테마" darkAlt="비어 있는 상태로 열린 TabMerger 검색, group:, window:, tag:, closed: 필터 목록 표시, 어두운 테마" boxes={[{ id: 'search-input', label: '검색' }]} source="TabMerger 3.16.1">Ctrl+K로 검색이 열리고, 입력하기 전부터 필터 목록이 보입니다.</ThemedScreenshot>
+
+</Section>
+
+<Section id="filters" title="어떤 필터로 검색을 좁힐 수 있나요?">
+
+검색어 앞에 필터를 붙이면 원하는 곳으로 바로 갈 수 있습니다.
+
+<ComparisonTable
+  head={['필터', '찾는 대상']}
+  rows={[
+    [<code>group:"Work"</code>, '이름에 \'Work\'가 들어간 그룹의 탭'],
+    [<code>window:"Docs"</code>, '이름에 \'Docs\'가 들어간 창의 탭'],
+    [<code>tag:Sprint</code>, '라벨에 \'Sprint\'가 들어간 Chrome 탭 그룹의 탭'],
+    [<code>closed:</code>, '최근에 닫은 탭만'],
+  ]}
+/>
+
+필터와 단어를 함께 쓰세요. `group:"Work" pull`은 탭이 수백 개라도 Work 그룹에 있는 풀 리퀘스트 탭을 찾아 줍니다. 이름 뒤에 단어를 더 붙일 때는 이름을 따옴표로 감싸세요. 따옴표가 없는 필터는 줄의 나머지 전체를 이름으로 받아들입니다.
+
+<Carousel label="필터를 쓴 검색" steps={[{ title: 'group: 필터' }, { title: 'tag: 필터' }]}>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-group-filter" alt="TabMerger에서 group:&quot;Work&quot; pull을 검색해 Work 그룹에 저장된 Pull requests 탭을 찾은 화면, 밝은 테마" darkAlt="TabMerger에서 group:&quot;Work&quot; pull을 검색해 Work 그룹에 저장된 Pull requests 탭을 찾은 화면, 어두운 테마" boxes={[{ id: 'search-input', label: '그룹 필터' }]} source="TabMerger 3.16.1">그룹 하나, 단어 하나로 원하던 저장된 탭을 찾았습니다.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-tag-filter" alt="TabMerger에서 tag:Sprint를 검색해 Chrome 탭 그룹 Sprint의 열린 탭 세 개가 표시된 화면, 밝은 테마" darkAlt="TabMerger에서 tag:Sprint를 검색해 Chrome 탭 그룹 Sprint의 열린 탭 세 개가 표시된 화면, 어두운 테마" boxes={[{ id: 'search-input', label: 'tag:Sprint' }]} source="TabMerger 3.16.1">tag:는 Chrome 탭 그룹의 탭을 찾습니다.</ThemedScreenshot>
+</Carousel>
+
+최근에 닫은 탭은 무료 버전에서 2일, [Pro](/pricing)에서 30일 동안 보관되므로, 필요하면 `closed:`로 몇 주 전까지 거슬러 올라갈 수 있습니다.
+
+</Section>
+
+<Section id="builtin" title="확장 프로그램 없이 열린 탭을 검색하려면?">
+
+모든 브라우저에서 지금 열려 있는 탭을 검색할 수 있습니다.
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>(Mac에서는 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>)를 눌러 **탭 검색**(Tab Search)을 열고, 키워드를 입력한 뒤 탭을 고릅니다. 줄마다 닫기 버튼도 있습니다.
+- 또는 주소 표시줄에 `@tabs`를 입력하고 <Kbd>Tab</Kbd>이나 <Kbd>Space</Kbd>를 누른 뒤 입력합니다.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge 158의 메뉴에는 **Search tabs**(탭 검색)가 있지만, Microsoft의 키보드 단축키 목록에는 이 기능의 키가 없습니다. 탭이 많을 때는 <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd>로 위치에 따라 탭으로 이동하고, <Kbd>Ctrl</Kbd>+<Kbd>9</Kbd>로 마지막 탭으로 이동합니다.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>(Mac에서는 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>)를 누르면 **탭 전체 목록**(List all tabs)이 열리고, 그 안에서 검색할 수 있습니다.
+- 주소 표시줄의 검색 바로가기에도 **탭** 검색 모드가 있습니다.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>이 기능들은 그 브라우저에 지금 열려 있는 탭만 봅니다. 닫았거나 다른 곳에 저장한 탭은 나타나지 않습니다.</Catch>
+
+더 많은 키는 [탭 키보드 단축키 모음](/blog/tab-keyboard-shortcuts)에 정리해 두었습니다.
+
+</Section>
+
+<Section id="tips" title="다음번에 탭을 더 쉽게 찾으려면?">
+
+- **작업별로 묶으세요.** 이름 있는 그룹은 '200개 중 하나의 탭'을 'Work 그룹'으로 바꿔 줍니다. 방법은 [탭이 너무 많을 때의 정리 루틴](/blog/manage-too-many-tabs)에서 볼 수 있습니다.
+- **끝난 것은 닫으세요.** 저장한 다음에요. 열린 탭이 줄면 결과 목록도 짧아집니다.
+- **중요한 탭의 이름을 바꾸세요.** TabMerger에서는 저장한 탭에 원하는 제목을 붙일 수 있어서, 나중에 검색할 단어와 맞출 수 있습니다.
+
+<InstallCta>Chrome, Edge, Firefox용으로 무료입니다. 시작할 때 계정이 필요 없습니다.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="자주 묻는 질문">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,166 @@
+export const post = {
+  slug: 'import-tabs-into-tabmerger',
+  title: 'ייבוא כרטיסיות ל-TabMerger: רשימות OneTab, סימניות וגיבויים',
+  navTitle: 'ייבוא כרטיסיות ל-TabMerger',
+  seoTitle: 'ייבוא OneTab, סימניות וגיבויים ל-TabMerger',
+  description:
+    'לוקחים את הכרטיסיות השמורות איתכם: TabMerger מייבא קובצי ייצוא של OneTab, רשימות פשוטות של קישורים, קובצי סימניות מהדפדפן וגיבויי JSON משלו. למה הופך כל פורמט, ומה מדולג.',
+  shareSummary: 'רשימות OneTab, קובצי סימניות וגיבויי TabMerger הופכים לקבוצות בצעד אחד.',
+  dek: 'החלפת כלי לא צריכה להיות התחלה מאפס. לוקחים איתכם כל רשימה ששמרתם.',
+  published: '2026-12-19',
+  updated: '2026-12-19',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'מייבא קובצי TXT (של OneTab או רשימת קישורים פשוטה), HTML (סימניות) ו-JSON (של TabMerger).', source: 'TabMerger 3.16.1' },
+    { text: 'כל רשימה של OneTab הופכת לקבוצה נפרדת.', source: 'TabMerger 3.16.1' },
+    { text: 'ייבוא תמיד מוסיף קבוצות; הוא אף פעם לא מחליף את מה שכבר יש לכם.', source: 'TabMerger 3.16.1' },
+    { text: 'ייבוא וייצוא כלולים בתוכנית החינמית.', source: 'המחירים של TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'איך מייבאים את OneTab ל-TabMerger?',
+      answer:
+        'ב-OneTab בוחרים ב"ייבוא וייצוא", מעתיקים את הטקסט ושומרים אותו כקובץ TXT. ב-TabMerger פותחים את הגדרות ← נתונים ← ייבוא קובץ ובוחרים את הקובץ. כל רשימה של OneTab הופכת לקבוצה נפרדת.',
+    },
+    {
+      question: 'אפשר לייבא סימניות ל-TabMerger?',
+      answer:
+        'כן. מייצאים את הסימניות כקובץ HTML ומייבאים אותו דרך הגדרות ← נתונים. כל תיקייה ברמה העליונה של הקובץ הופכת לקבוצה בשמה, והתיקיות שבתוכה מצורפות אליה.',
+    },
+    {
+      question: 'האם ייבוא יחליף את הקבוצות שלי?',
+      answer: 'לא. ייבוא תמיד מוסיף את הקבוצות מהקובץ לצד הקבוצות שכבר יש לכם, אחרי אישור שמציין כמה קבוצות נמצאו.',
+    },
+    {
+      question: 'מה קורה לקישורים שאי אפשר לייבא?',
+      answer: 'רשומות שאינן כתובות אינטרנט אמיתיות, כמו בוקמרקלטים, מדולגות, וההודעה שמופיעה אחרי הייבוא מציינת כמה מהן נשארו בחוץ.',
+    },
+  ],
+  images: [
+    { src: '/blog/import-tabs-into-tabmerger/tm-data-tab-light.webp', alt: 'ההגדרות של TabMerger בלשונית Data (נתונים) תחת Settings (הגדרות): האזור Import & export (ייבוא וייצוא) עם Export JSON (ייצוא JSON) ו-Import file (ייבוא קובץ), ערכת נושא בהירה' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-data-tab-dark.webp', alt: 'ההגדרות של TabMerger בלשונית Data (נתונים) תחת Settings (הגדרות): האזור Import & export (ייבוא וייצוא) עם Export JSON (ייצוא JSON) ו-Import file (ייבוא קובץ), ערכת נושא כהה' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-light.webp', alt: 'TabMerger ששואל Import 2 groups? (לייבא שתי קבוצות?) עבור הקובץ onetab-export.txt, ערכת נושא בהירה' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-dark.webp', alt: 'TabMerger ששואל Import 2 groups? (לייבא שתי קבוצות?) עבור הקובץ onetab-export.txt, ערכת נושא כהה' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-imported-light.webp', alt: 'שתי רשימות OneTab שיובאו כקבוצות Imported 1 ו-Imported 2, ערכת נושא בהירה' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-imported-dark.webp', alt: 'שתי רשימות OneTab שיובאו כקבוצות Imported 1 ו-Imported 2, ערכת נושא כהה' },
+  ],
+  tags: ['tabmerger-guides', 'save-tabs', 'bookmarks', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-light.webp' },
+  ogImage: { src: '/blog/import-tabs-into-tabmerger/og.png', alt: 'ייבוא כרטיסיות ל-TabMerger: שתי רשימות OneTab שיובאו כקבוצות' },
+  toc: [
+    { id: 'quick', label: 'תשובה קצרה' },
+    { id: 'problem', label: 'כרטיסיות שמורות שתקועות במקום אחר' },
+    { id: 'why', label: 'למה הייבוא עובד כך' },
+    { id: 'formats', label: 'כל הפורמטים' },
+    { id: 'steps', label: 'ייבוא קובץ' },
+    { id: 'benefit', label: 'מה מקבלים' },
+    { id: 'habits', label: 'הרגלים טובים' },
+    { id: 'plans', label: 'Free או Pro' },
+    { id: 'faq', label: 'שאלות נפוצות' },
+  ],
+}
+
+<QuickAnswer>
+
+פותחים את [TabMerger](/features), עוברים אל **הגדרות ← נתונים** (<bdi dir="ltr">Settings → Data</bdi>) ולוחצים על **ייבוא קובץ** (<bdi dir="ltr">Import file</bdi>). בוחרים קובץ ייצוא של OneTab או רשימת קישורים פשוטה (<bdi dir="ltr">`.txt`</bdi>), קובץ סימניות (<bdi dir="ltr">`.html`</bdi>) או גיבוי של TabMerger (<bdi dir="ltr">`.json`</bdi>). TabMerger מראה כמה קבוצות נמצאו, ואחרי האישור מוסיף אותן לצד הקבוצות שלכם. כל רשימה של OneTab וכל תיקיית סימניות ברמה העליונה הופכות לקבוצה נפרדת.
+
+</QuickAnswer>
+
+<InstallCta>לוקחים איתכם כל רשימה ששמרתם. בחינם ל-Chrome, ל-Edge ול-Firefox.</InstallCta>
+
+<Section id="problem" title="כרטיסיות שמורות, תקועות במקום אחר">
+
+שנים של רשימות ב-OneTab. תיקיית סימניות לכל טיול. גיבוי מהמחשב הנייד הישן. הכול שמור, שום דבר לא ניתן לחיפוש במקום אחד, והעברה ידנית, קישור אחרי קישור, היא בדיוק סוג המשימה שאף פעם לא קורה.
+
+הייבוא הופך את המשימה הזאת לקובץ אחד ולחיצה אחת.
+
+</Section>
+
+<Section id="why" title="למה הייבוא עובד כמו שהוא עובד">
+
+- **הוא רק מוסיף.** ייבוא מציב את הקבוצות מהקובץ לצד שלכם ולא נוגע במה שכבר יש לכם, כך שמותר לנסות כל קובץ בלי חשש.
+- **הוא שואל קודם.** לפני שמשהו נוסף, TabMerger מציין כמה קבוצות נמצאו ובאיזה קובץ, ומחכה ללחיצה שלכם על **ייבוא** (<bdi dir="ltr">Import</bdi>).
+- **כל רשומה נבדקת.** רק כתובות אינטרנט אמיתיות נכנסות. בוקמרקלטים, קישורי <bdi dir="ltr">`javascript:`</bdi> וכל מה שאינו כתובת מלאה (מוחלטת) מדולגים ונספרים, וההודעה שאחר כך מציינת כמה היו.
+- **המבנה נשמר כשיש לקובץ מבנה.** גיבוי של TabMerger מחזיר חלונות, שמות, צבעים, הערות, כוכבים ושעות תזכורת; הפורמטים של כלים אחרים הופכים לקבוצה אחת לכל רשימה או תיקייה.
+- **מגבלות התוכנית נבדקות מראש.** בתוכנית החינמית, ייבוא שהיה עובר את 5 הקבוצות או את 50 הכרטיסיות נעצר לפני שמשהו נוסף, ומציין מה יש בקובץ.
+
+</Section>
+
+<Section id="formats" title="כל הפורמטים, ולמה הם הופכים">
+
+<ComparisonTable
+  head={['קובץ', 'מה זה', 'מה מקבלים']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['קובץ TXT של OneTab', 'הטקסט מ"ייבוא וייצוא" ב-OneTab: שורה אחת "כתובת | כותרת" לכל קישור, ושורה ריקה בין הרשימות', 'קבוצה לכל רשימה בשם Imported 1 ואז Imported 2 וכן הלאה, עם הכותרות'],
+    ['קובץ TXT עם רשימה פשוטה', 'כתובות, אחת בכל שורה', 'קבוצה לכל גוש של שורות; הכתובת משמשת גם ככותרת'],
+    ['קובץ HTML של סימניות', 'קובץ ייצוא של סימניות או מועדפים מהדפדפן שלכם', 'קבוצה לכל תיקייה ברמה העליונה, בשם התיקייה; התיקיות שבתוכה מצורפות אליה'],
+    ['קובץ JSON של TabMerger', 'קובץ מ"ייצוא JSON" ב-TabMerger', 'הקבוצות שלכם עם חלונות, שמות, צבעים, הערות, כוכבים ושעות תזכורת'],
+  ]}
+/>
+
+שני פרטים שכדאי להכיר:
+
+- **סימניות:** רק תיקיות ברמה העליונה של הקובץ הופכות לקבוצות, וקישורים שנמצאים מחוץ לכל תיקייה נשארים בחוץ. בייצוא מלא מ-Chrome או מ-Edge, סרגל הסימניות מגיע כקבוצה אחת (עם תיקיות המשנה שלו בתוכה), ואילו כל תיקייה שנמצאת ב**סימניות אחרות** (<bdi dir="ltr">Other bookmarks</bdi>) או ב**מועדפים אחרים** (<bdi dir="ltr">Other favorites</bdi>) הופכת לקבוצה נפרדת.
+- **גיבויים של TabMerger:** **פתוח עכשיו** (<bdi dir="ltr">Now Open</bdi>) שבקובץ, כלומר הכרטיסיות שהיו פתוחות בזמן הייצוא, לא מיובא. אם אתם רוצים אותן בקובץ, שמרו את הכרטיסיות הפתוחות בקבוצה לפני הייצוא.
+
+</Section>
+
+<Section id="steps" title="ייבוא קובץ">
+
+1. פותחים את TabMerger, ואז **הגדרות** ← **נתונים**.
+2. תחת **ייבוא וייצוא** (<bdi dir="ltr">Import & export</bdi>) לוחצים על **ייבוא קובץ** ובוחרים את קובץ ה-<bdi dir="ltr">`.txt`</bdi>, ה-<bdi dir="ltr">`.html`</bdi> או ה-<bdi dir="ltr">`.json`</bdi>.
+3. בודקים את המספר ולוחצים על **ייבוא**. הקבוצות החדשות מופיעות בסרגל הצד; משנים את שמן כרצונכם.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="ייבוא קובץ ייצוא של OneTab" steps={[{ title: 'הגדרות ← נתונים' }, { title: 'אישור' }, { title: 'הקבוצות שלכם' }]}>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-data-tab" alt="ההגדרות של TabMerger בלשונית Data (נתונים) תחת Settings (הגדרות): האזור Import & export (ייבוא וייצוא) עם Export JSON (ייצוא JSON) ו-Import file (ייבוא קובץ), ערכת נושא בהירה" darkAlt="ההגדרות של TabMerger בלשונית Data (נתונים) תחת Settings (הגדרות): האזור Import & export (ייבוא וייצוא) עם Export JSON (ייצוא JSON) ו-Import file (ייבוא קובץ), ערכת נושא כהה" boxes={[{ id: 'import', label: 'ייבוא קובץ' }, { id: 'export', label: 'ייצוא הקבוצות שלכם' }]} source="TabMerger 3.16.1">הייבוא והייצוא נמצאים זה לצד זה ב-<bdi dir="ltr">Settings → Data</bdi> (הגדרות ← נתונים).</ThemedScreenshot>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-import-confirm" alt="TabMerger ששואל Import 2 groups? (לייבא שתי קבוצות?) עבור הקובץ onetab-export.txt, ערכת נושא בהירה" darkAlt="TabMerger ששואל Import 2 groups? (לייבא שתי קבוצות?) עבור הקובץ onetab-export.txt, ערכת נושא כהה" boxes={[{ id: 'import-confirm', label: 'ייבוא שתי קבוצות' }]} source="TabMerger 3.16.1">נמצאו שתי רשימות OneTab; שום דבר לא נוסף עד שתאשרו.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-imported" alt="שתי רשימות OneTab שיובאו כקבוצות Imported 1 ו-Imported 2, ערכת נושא בהירה" darkAlt="שתי רשימות OneTab שיובאו כקבוצות Imported 1 ו-Imported 2, ערכת נושא כהה" boxes={[{ id: 'imported', label: 'קבוצה לכל רשימה' }]} source="TabMerger 3.16.1">כל רשימה היא עכשיו קבוצה, מוכנה לשינוי שם, לחיפוש ולסנכרון.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="benefit" title="מה מקבלים">
+
+כל מה ששמרתם במקומות אחרים, במקום אחד, תוך דקות: אפשר לחפש בו עם <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi>, הוא מאורגן בקבוצות, וב-Pro הוא נמצא בכל מחשב. מגיעים במיוחד מ-OneTab? כדאי לקרוא על [חלופות ל-OneTab](/blog/onetab-alternatives). מגיעים מהאוספים של Edge? כדאי לקרוא [במה להשתמש במקום האוספים של Edge](/blog/edge-collections-replacement).
+
+</Section>
+
+<Section id="habits" title="הרגלים טובים">
+
+- **משנים את שמות הקבוצות המיובאות** מיד; "<bdi dir="ltr">Imported 1</bdi>" הוא רק שם זמני.
+- **מייבאים ארכיונים גדולים בחלקים** בתוכנית החינמית, או משדרגים קודם, כי ייבוא שעובר את המגבלות נעצר כולו.
+- **שומרים ייצוא של TabMerger** כגיבוי משלכם: **ייצוא JSON** (<bdi dir="ltr">Export JSON</bdi>) שומר את כל הקבוצות בקובץ אחד. מה יש בו מוסבר ב[ייצוא כרטיסיות פתוחות](/blog/export-open-tabs).
+- **ממיינים אחרי הייבוא** עם **מיון לפי כותרת** (<bdi dir="ltr">Sort by title</bdi>) או **מיון לפי URL** (<bdi dir="ltr">Sort by URL</bdi>) בתפריט **⋯** של הקבוצה, ומנקים כפילויות עם **הסרת כרטיסיות כפולות** (<bdi dir="ltr">Deduplicate tabs</bdi>).
+
+</Section>
+
+<Section id="plans" title="Free או Pro">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['ייבוא וייצוא', 'כן', 'כן'],
+    ['כמה ייבוא יכול להוסיף', 'עד 5 קבוצות ו-50 כרטיסיות בסך הכול', 'ללא הגבלה'],
+    ['קבוצות מיובאות במכשירים האחרים שלכם', 'לא', 'כן, עם הצפנה מקצה לקצה'],
+  ]}
+/>
+
+ייבוא וייצוא חינמיים לכולם, בלי חשבון. [Pro](/pricing) מסיר את מגבלות הגודל ומסנכרן את מה שאתם מייבאים.
+
+<InstallCta>מייבאים את הרשימה הראשונה בפחות מדקה. בחינם ל-Chrome, ל-Edge ול-Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="שאלות נפוצות">
+
+<Faq items={post.faq} />
+
+</Section>

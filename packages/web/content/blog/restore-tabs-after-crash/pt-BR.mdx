@@ -1,0 +1,270 @@
+export const post = {
+  slug: 'restore-tabs-after-crash',
+  title: 'Como recuperar suas abas depois de uma falha, uma atualização ou um fechamento acidental',
+  navTitle: 'Recupere suas abas depois de uma falha',
+  seoTitle: 'Restaurar abas depois de uma falha no Chrome, Edge e Firefox',
+  description:
+    'O navegador fechou e levou suas abas junto? Para restaurar abas depois de uma falha, siga estes passos na ordem: reabrir, histórico, outros dispositivos e, por fim, as configurações que evitam que isso aconteça de novo.',
+  shareSummary: 'Perdeu suas abas numa falha ou reinicialização? Os passos para recuperá-las, na ordem.',
+  dek: 'Tente primeiro as soluções rápidas, na ordem. A maioria das sessões perdidas volta em menos de um minuto.',
+  published: '2026-11-24',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'A ajuda do Chrome sobre falhas diz que Ctrl+Shift+T reabre as abas que você tinha abertas.',
+      source: 'Ajuda do Chrome',
+      href: 'https://support.google.com/chrome/answer/142063',
+    },
+    { text: 'O menu Histórico do Firefox tem “Restaurar sessão anterior”.', source: 'Firefox 159' },
+    {
+      text: 'O Chrome só mostra as abas de outros dispositivos com a sincronização de “Histórico e guias” ativada.',
+      source: 'Ajuda do Chrome',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'A página Histórico do Edge tem sua própria lista “Recently closed”.', source: 'edge://history, Edge 157' },
+  ],
+  faq: [
+    {
+      question: 'Como recupero minhas abas depois que o Chrome fecha?',
+      answer:
+        'Abra o Chrome de novo e pressione Ctrl+Shift+T (⌘+Shift+T no Mac), várias vezes se precisar. Se elas não voltarem, abra o histórico com Ctrl+H e procure entre as abas fechadas recentemente.',
+    },
+    {
+      question: 'Por que minhas abas não foram restauradas?',
+      answer:
+        'Geralmente porque a configuração de inicialização abre uma página de nova aba, as abas estavam numa janela privada, você fechou as janelas uma por uma antes de sair ou abriu outro perfil.',
+    },
+    {
+      question: 'Posso restaurar as abas de ontem?',
+      answer: 'Não como sessão, mas todas as páginas que você visitou estão no histórico (Ctrl+H), a menos que você o tenha apagado. Uma sessão salva ou o salvamento automático é o jeito confiável.',
+    },
+    {
+      question: 'Como evito que isso aconteça de novo?',
+      answer: 'Ative a configuração de inicialização e salve suas abas abertas antes de momentos de risco, como atualizações. Nosso guia para salvar todas as abas abertas explica as duas coisas.',
+      link: { text: 'salvar todas as abas abertas', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Histórico do Edge com “All”, “Recently closed” e “Tabs from other devices” na barra lateral' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Configurações do Chrome, “On startup” (Inicialização), com “Continue where you left off” (Continuar de onde você parou) selecionado' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Configurações do Edge, “Start, home, and new tab page”, com “Open tabs from the previous session” selecionado' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Configurações do Firefox, “Home and startup” (Página inicial e início), com “Open previous windows and tabs” (Abrir janelas e abas anteriores) marcado' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-light.webp', alt: 'Configurações do TabMerger, “Data” (Dados): “Auto-save open tabs” (Salvar abas abertas automaticamente) ativado, com o horário em “Every 30 minutes” (A cada 30 minutos), tema claro' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-dark.webp', alt: 'Configurações do TabMerger, “Data” (Dados): “Auto-save open tabs” (Salvar abas abertas automaticamente) ativado, com o horário em “Every 30 minutes” (A cada 30 minutos), tema escuro' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-light.webp', alt: 'TabMerger, “Recently closed” (Fechadas recentemente), hoje: três abas fechadas com o horário em que cada uma foi fechada, tema claro' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-dark.webp', alt: 'TabMerger, “Recently closed” (Fechadas recentemente), hoje: três abas fechadas com o horário em que cada uma foi fechada, tema escuro' },
+  ],
+  tags: ['restore-closed-tabs', 'session-management', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-20',
+      note: 'Os nomes dos menus do Firefox foram lidos no próprio Firefox 159.0.1; esta página bloqueou nossa verificação automática.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/restore-tabs-after-crash/cover-edge-light.webp' },
+  ogImage: { src: '/blog/restore-tabs-after-crash/og.png', alt: 'Cartão de título “How to get your tabs back after a crash, an update or an accidental quit”: um guia do TabMerger, com uma lista de abas fechadas recentemente' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'first', label: '1. Reabrir e Ctrl+Shift+T' },
+    { id: 'recover', label: '2. Histórico, por navegador' },
+    { id: 'devices', label: '3. Outros dispositivos' },
+    { id: 'why', label: 'Por que não restaurou' },
+    { id: 'prevent', label: 'Da próxima vez' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+  browserSections: ['first', 'recover', 'devices', 'prevent'],
+  browserFact: {
+    label: 'Histórico',
+    values: { chrome: 'chrome://history', edge: 'edge://history', firefox: 'Ctrl+Shift+H (Biblioteca)' },
+  },
+}
+
+<QuickAnswer>
+
+Abra o navegador de novo e pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> no Mac), várias vezes, até suas janelas voltarem. Se não der certo, abra o histórico (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) e reabra a partir das abas **fechadas recentemente**; no Firefox, use **Histórico → Restaurar sessão anterior** (“History → Restore Previous Session”). Ainda falta algo? Veja as **abas de outros dispositivos** e depois procure as próprias páginas no histórico. Da próxima vez, deixe o [TabMerger](/features) salvar suas abas abertas automaticamente num horário definido, para que uma falha nunca custe mais do que alguns minutos.
+
+</QuickAnswer>
+
+<InstallCta>Nunca mais perca uma janela: salve suas abas abertas automaticamente num horário definido. Grátis para Chrome, Edge e Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="first" title="1. Reabra o navegador e pressione Ctrl+Shift+T">
+
+Não abra abas novas antes: comece de uma janela limpa, para recuperar exatamente o que está na lista de “últimas fechadas” do navegador.
+
+<BrowserPanels section="first">
+<BrowserPanel browser="chrome">
+
+1. Abra o Chrome. Se ele oferecer restaurar suas páginas, aceite.
+2. Pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> no Mac). A própria ajuda do Chrome sobre falhas indica isso: o atalho reabre as abas que estavam abertas antes.
+3. Pressione de novo para cada janela perdida. O Chrome reabre abas e janelas na ordem em que foram fechadas.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Abra o Edge. Se ele oferecer restaurar suas páginas, aceite.
+2. Pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> no Mac) para reabrir a última aba fechada, e de novo para continuar voltando.
+3. Está faltando uma janela inteira? Vá direto para o passo 2, o histórico.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Abra o Firefox. Se ele oferecer restaurar suas páginas, aceite.
+2. Pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> no Mac). O Firefox 159 liga o atalho a um comando que restaura a última aba, janela ou sessão fechada; depois de reiniciar, ele pode trazer de volta a sessão anterior inteira.
+3. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> reabre uma janela fechada; pressione uma vez por janela.
+
+</BrowserPanel>
+</BrowserPanels>
+
+A lista completa de atalhos está no nosso [guia de atalhos de teclado para abas](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="recover" title="2. Reabra pelo histórico">
+
+Se o atalho não trouxer nada, o histórico do navegador ainda sabe o que estava aberto.
+
+<BrowserPanels section="recover">
+<BrowserPanel browser="chrome">
+
+1. Clique em **⋮ → Histórico** (“History”). O submenu lista as abas e janelas fechadas recentemente.
+2. Clique numa janela para reabrir todas as abas dela.
+3. Não está lá? Pressione <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> e procure uma página de que você se lembre.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Pressione <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> para abrir o **Histórico**.
+2. Escolha **Recently closed** (fechadas recentemente) e reabra a janela ou as abas que você perdeu.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Histórico do Edge com “All”, “Recently closed” e “Tabs from other devices” na barra lateral" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60">A página Histórico do Edge, com “Recently closed” na barra lateral.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Abra o menu **Histórico** (“History”; pressione <Kbd>Alt</Kbd> para mostrar a barra de menus) ou **☰ → Histórico**.
+2. Escolha **Restaurar sessão anterior** (“Restore Previous Session”) para trazer de volta todas as janelas da última vez.
+3. Ou escolha em **Janelas fechadas recentemente** e **Abas fechadas recentemente**.
+
+Se foi o próprio Firefox que travou, ele pode abrir uma página **Restaurar sessão** (“Restore Session”) com o aviso “Houve um problema ao restaurar suas páginas.”. **Exibir abas da sessão anterior** (“View Previous Tabs”) permite desmarcar uma aba que possa estar causando a falha antes de clicar em **Restaurar sessão**.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with Restore Previous Session. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="devices" title="3. Procure nos seus outros dispositivos">
+
+Se você estava conectado e sincronizando, as abas perdidas ainda podem aparecer em outro dispositivo.
+
+<BrowserPanels section="devices">
+<BrowserPanel browser="chrome">
+
+O Chrome mostra as abas de outros dispositivos no histórico, mas só com a sincronização de **Histórico e guias** (“History and tabs”) ativada: **Configurações → Você e o Google** (“Settings → You and Google”), selecione o nome da sua conta e ative **Histórico e guias**.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Abra o histórico (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) e escolha **Tabs from other devices** (abas de outros dispositivos) na barra lateral.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Abra o **Firefox View** e veja em **Abas de outros dispositivos** (“Tabs from other devices”). É preciso ter o Firefox Sync com a sincronização de abas abertas ativada.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox View, Tabs from other devices. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="why" title="Por que minhas abas não foram restauradas?">
+
+- **A configuração de inicialização abre uma página de nova aba.** Só a opção de inicialização da “sessão anterior” reabre suas abas toda vez que o navegador inicia; a próxima seção mostra onde ela fica no seu navegador.
+- **Elas estavam numa janela privada.** Janelas Incognito e InPrivate nunca são restauradas.
+- **Você fechou as janelas uma por uma.** A inicialização restaura o que estava aberto quando o navegador foi *encerrado*. Janelas que você fechou antes só ficam no histórico.
+- **Você abriu outro perfil.** Cada perfil tem a própria sessão; confira o ícone do perfil.
+
+</Section>
+
+<Section id="prevent" title="Evite que isso aconteça da próxima vez">
+
+Ative a configuração de inicialização agora: é a única mudança que cobre atualizações e reinicializações.
+
+<BrowserPanels section="prevent">
+<BrowserPanel browser="chrome">
+
+**Configurações → Inicialização → Continuar de onde você parou** (“Settings → On startup → Continue where you left off”). Ou cole `chrome://settings/onStartup` na barra de endereços.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Configurações do Chrome, “On startup” (Inicialização), com “Continue where you left off” (Continuar de onde você parou) selecionado" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">A configuração Inicialização do Chrome, definida para reabrir a última sessão.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+**Configurações → Start, home, and new tab page → On startup → Open tabs from the previous session**. Ou cole `edge://settings/startHomeNTP` na barra de endereços.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Configurações do Edge, “Start, home, and new tab page”, com “Open tabs from the previous session” selecionado" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">A página “Start, home, and new tab page” do Edge, definida para reabrir a última sessão.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+**Configurações → Página inicial e início → Iniciar → Abrir janelas e abas anteriores** (“Settings → Home and startup → Startup → Open previous windows and tabs”). Ou cole `about:preferences#home` na barra de endereços.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Configurações do Firefox, “Home and startup” (Página inicial e início), com “Open previous windows and tabs” (Abrir janelas e abas anteriores) marcado" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">As configurações Página inicial e início do Firefox, com “Abrir janelas e abas anteriores” marcado.</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+A restauração na inicialização não ajuda com uma janela que você fechou sem querer na semana passada. Para isso, você precisa de uma cópia salva: adicione as janelas aos favoritos ou use um [gerenciador de sessões](/blog/browser-session-manager). Nosso guia para [salvar todas as abas abertas](/blog/save-all-open-tabs) compara as opções.
+
+O [TabMerger](/features), nossa extensão gratuita para Chrome, Edge e Firefox, pode salvar por você. **Configurações → Dados → Salvar abas abertas automaticamente** salva suas abas abertas como um grupo num horário definido (de a cada 15 minutos até diariamente). **Fechadas recentemente** guarda cada aba e janela que você fecha, separadas por dia: 2 dias no plano gratuito e 30 no Pro. Como as duas funcionam e como ajustá-las está em [nunca mais perca uma aba](/blog/never-lose-a-tab-again).
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Salvar num horário definido e encontrar abas fechadas" steps={[{ title: 'Salvamento automático' }, { title: 'Fechadas recentemente' }]}>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-auto-save-schedule" alt="Configurações do TabMerger, “Data” (Dados): “Auto-save open tabs” (Salvar abas abertas automaticamente) ativado, com o horário em “Every 30 minutes” (A cada 30 minutos), tema claro" darkAlt="Configurações do TabMerger, “Data” (Dados): “Auto-save open tabs” (Salvar abas abertas automaticamente) ativado, com o horário em “Every 30 minutes” (A cada 30 minutos), tema escuro" boxes={[{ id: 'schedule', label: 'Horário' }]} source="TabMerger 3.16.1">“Auto-save open tabs” (Salvar abas abertas automaticamente) a cada 30 minutos: uma cópia recente das suas abas abertas, aconteça o que acontecer com o navegador.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-recently-closed" alt="TabMerger, “Recently closed” (Fechadas recentemente), hoje: três abas fechadas com o horário em que cada uma foi fechada, tema claro" darkAlt="TabMerger, “Recently closed” (Fechadas recentemente), hoje: três abas fechadas com o horário em que cada uma foi fechada, tema escuro" boxes={[{ id: 'today-row', label: 'Hoje' }]} source="TabMerger 3.16.1">“Recently closed” (Fechadas recentemente): as abas fechadas hoje, com o horário em que cada uma saiu.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Grátis para Chrome, Edge e Firefox. Não precisa de conta para começar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,175 @@
+export const post = {
+  slug: 'search-all-your-tabs-with-tabmerger',
+  title: 'Przeszukuj wszystkie karty w TabMerger: Ctrl+K i jego filtry',
+  navTitle: 'Przeszukuj wszystkie karty',
+  seoTitle: 'Wyszukiwanie otwartych, zapisanych i zamkniętych kart naraz w TabMerger',
+  description:
+    'Jedno pole wyszukiwania dla wszystkich kart: otwartych, zapisanych w grupach i zamkniętych w tym tygodniu. Jak działa wyszukiwanie kart pod Ctrl+K w TabMerger, każdy filtr (group:, window:, tag:, closed:) i dlaczego dopasowuje tak, a nie inaczej.',
+  shareSummary: 'Otwarte, zapisane i zamknięte karty w jednym polu wyszukiwania, z filtrami, które szybko je zawężą.',
+  dek: 'Otwarta, zapisana czy zamknięta godzinę temu: wpisz kilka liter i już jest, podświetlona.',
+  published: '2026-12-14',
+  updated: '2026-12-14',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Ctrl+K (⌘+K na Macu) przeszukuje naraz karty otwarte, zapisane i niedawno zamknięte.', source: 'TabMerger 3.16.1' },
+    { text: 'Filtry: group:, window:, tag: (etykieta grupy kart Chrome) i closed:.', source: 'TabMerger 3.16.1' },
+    { text: 'Dopasowania to dokładne ciągi liter, nigdy przybliżone, więc każdy wynik ma podświetlenie.', source: 'Kod źródłowy TabMerger 3.16.1' },
+    { text: 'Wyszukiwanie i wszystkie filtry są bezpłatne.', source: 'Cennik TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Jak przeszukać wszystkie karty naraz?',
+      answer:
+        'Otwórz TabMerger, naciśnij Ctrl+K (⌘+K na Macu) i wpisz fragment tytułu lub adresu strony. Wyniki obejmują otwarte karty, każdą zapisaną grupę oraz, pod nimi, niedawno zamknięte karty.',
+    },
+    {
+      question: 'Jak przeszukać tylko jedną grupę?',
+      answer:
+        'Wpisz group: i wybierz grupę z listy; TabMerger uzupełni group:"Name". Potem dopisz swoje słowa, na przykład group:"Thesis sources" wiki.',
+    },
+    {
+      question: 'Czy mogę przeszukać karty, które już zamknąłem?',
+      answer: 'Tak. Zacznij wyszukiwanie od closed:, a zobaczysz tylko niedawno zamknięte karty i okna. Wybierz jedną, aby ją ponownie otworzyć; Ctrl+kliknięcie lub kliknięcie środkowym przyciskiem otwiera ją w tle.',
+    },
+    {
+      question: 'Dlaczego wyszukiwanie nie znajduje strony, gdy zrobię literówkę?',
+      answer:
+        'TabMerger dopasowuje litery dokładnie tak, jak je wpiszesz (bez względu na wielkość liter), nigdy litery rozrzucone po tytule. Dzięki temu wyniki są przewidywalne: każdy wynik ma podświetlone dopasowanie, a każde podświetlenie to prawdziwe dopasowanie.',
+    },
+    {
+      question: 'Czy wyszukiwanie jest bezpłatne?',
+      answer: 'Tak, wyszukiwanie i wszystkie jego filtry są w planie Free. Pro przechowuje zamknięte karty do przeszukania przez 30 dni zamiast 2.',
+    },
+  ],
+  images: [
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-light.webp', alt: 'Wyszukiwanie TabMerger otwarte skrótem Ctrl+K, z przykładowymi wyszukiwaniami react, group:, window:, tag: i closed:, jasny motyw' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-dark.webp', alt: 'Wyszukiwanie TabMerger otwarte skrótem Ctrl+K, z przykładowymi wyszukiwaniami react, group:, window:, tag: i closed:, ciemny motyw' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-light.webp', alt: 'Wyszukiwanie docs w TabMerger: cztery wyniki z Now Open (Teraz Otwarte) i Reading list, z podświetlonym docs w każdym adresie, jasny motyw' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-dark.webp', alt: 'Wyszukiwanie docs w TabMerger: cztery wyniki z Now Open (Teraz Otwarte) i Reading list, z podświetlonym docs w każdym adresie, ciemny motyw' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-light.webp', alt: 'Wyszukiwanie TabMerger z wpisanym window: i listą okien Window, Papers i Tools do wyboru, jasny motyw' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-dark.webp', alt: 'Wyszukiwanie TabMerger z wpisanym window: i listą okien Window, Papers i Tools do wyboru, ciemny motyw' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp', alt: 'Grupa Thesis sources podczas wyszukiwania w niej wiki, z jedynym dopasowaniem podświetlonym i pozostałymi kartami przyciemnionymi, jasny motyw' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-dark.webp', alt: 'Grupa Thesis sources podczas wyszukiwania w niej wiki, z jedynym dopasowaniem podświetlonym i pozostałymi kartami przyciemnionymi, ciemny motyw' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'browser-tips'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp' },
+  ogImage: { src: '/blog/search-all-your-tabs-with-tabmerger/og.png', alt: 'Przeszukuj wszystkie karty w TabMerger: wyniki dla docs z otwartych i zapisanych kart' },
+  toc: [
+    { id: 'quick', label: 'Szybka odpowiedź' },
+    { id: 'problem', label: 'Gdzie była ta karta?' },
+    { id: 'why', label: 'Dlaczego wyszukiwanie tak działa' },
+    { id: 'steps', label: 'Wyszukiwanie krok po kroku' },
+    { id: 'filters', label: 'Wszystkie filtry' },
+    { id: 'panel', label: 'Po wyszukiwaniu' },
+    { id: 'benefit', label: 'Co zyskujesz' },
+    { id: 'habits', label: 'Dobre nawyki' },
+    { id: 'plans', label: 'Free czy Pro' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Otwórz [TabMerger](/features) i naciśnij <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> na Macu). Wpisz kilka liter tytułu lub adresu: wyniki pochodzą z otwartych kart, każdej zapisanej grupy oraz, pod nimi, z niedawno zamkniętych kart, a przy każdym widać, gdzie się znajduje. Zawęź je filtrem `group:`, `window:`, `tag:` lub `closed:` i naciśnij <Kbd>Enter</Kbd>, aby przejść prosto do karty.
+
+</QuickAnswer>
+
+<InstallCta>Każda Twoja karta jest o jedno wyszukiwanie stąd. Za darmo dla Chrome, Edge i Firefoksa.</InstallCta>
+
+<Section id="problem" title="„Gdzie była ta karta?”">
+
+Wiesz, że ta strona istnieje. We wtorek była otwarta obok pull requesta. Była w oknie roboczym czy w tym do czytania? Zapisałeś ją w grupie czy zamknąłeś? Wbudowane wyszukiwanie kart w przeglądarce widzi tylko to, co jest w niej otwarte w tej chwili; historia widzi wszystko, co kiedykolwiek odwiedziłeś, nie wiedząc, co zachowałeś celowo.
+
+Potrzebujesz jednego pola, które wie wszystko: co jest otwarte, co zapisałeś i co zamknąłeś w tym tygodniu. Tym polem jest <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> w TabMerger. (O wbudowanym wyszukiwaniu kart w przeglądarkach przeczytasz w poradniku [jak znaleźć jedną kartę wśród setek](/blog/find-a-tab-among-hundreds).)
+
+</Section>
+
+<Section id="why" title="Dlaczego wyszukiwanie w TabMerger działa właśnie tak">
+
+- **Wszystko na jednej liście.** Otwarte karty, zapisane grupy i niedawno zamknięte karty odpowiadają na to samo pytanie („gdzie to jest?”), więc wracają razem. Każdy wynik ma plakietkę ze swoją grupą oraz, jeśli ją ma, etykietą grupy kart Chrome.
+- **Dokładnie, nie w przybliżeniu.** Wynikiem jest karta, której tytuł lub adres zawiera wpisane litery w jednym ciągu, bez względu na wielkość liter. Litery rozrzucone po tytule nigdy się nie liczą. To celowe: każdy wynik ma podświetlenie, a każde podświetlenie jest prawdziwym dopasowaniem, więc możesz ufać temu, co widzisz.
+- **Najlepsze dopasowanie najpierw.** Dokładne dopasowanie stoi wyżej niż tytuł zaczynający się od wpisanego tekstu, potem słowo, które się od niego zaczyna, a na końcu dopasowanie w dowolnym miejscu. Lista pokazuje 12 najlepszych wyników, więc właściwa karta jest na górze.
+- **Wybieraj, zamiast literować.** Wpisanie `group:`, `window:` lub `tag:` otwiera listę Twoich grup, okien lub etykiet do wyboru. TabMerger wstawia nazwę w cudzysłowie, więc długie nazwy ze spacjami po prostu działają.
+- **Zamknięte karty nie przeszkadzają.** Pod zapisanymi wynikami pojawiają się maksymalnie 3 niedawno zamknięte karty; zacznij od `closed:`, aby zobaczyć tylko zamknięte karty.
+- **Wystarczy klawiatura.** <Kbd>↑</Kbd> <Kbd>↓</Kbd>, aby się poruszać, <Kbd>Enter</Kbd>, aby otworzyć, <Kbd>Esc</Kbd> lub <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>, aby zamknąć. Zamknięcie zostawia to, co wpisałeś, więc możesz do tego wrócić.
+
+</Section>
+
+<Section id="steps" title="Wyszukiwanie krok po kroku">
+
+1. Otwórz TabMerger i naciśnij <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> na Macu) albo kliknij pole wyszukiwania na górze.
+2. Dopóki nic nie wpiszesz, pole podsuwa wyszukiwania do wypróbowania. Kliknij jedno, aby od niego zacząć.
+3. Wpisz kilka liter tytułu lub adresu, na przykład `docs`. Dopasowania są podświetlone.
+4. Naciśnij <Kbd>Enter</Kbd> na karcie: TabMerger otworzy jej grupę i ustawi fokus na tej karcie. Na zamkniętej karcie <Kbd>Enter</Kbd> otwiera ją ponownie.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Wyszukiwanie w TabMerger" steps={[{ title: 'Ctrl+K' }, { title: 'Wyniki' }, { title: 'window:' }]}>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-examples" alt="Wyszukiwanie TabMerger otwarte skrótem Ctrl+K, z przykładowymi wyszukiwaniami react, group:, window:, tag: i closed:, jasny motyw" darkAlt="Wyszukiwanie TabMerger otwarte skrótem Ctrl+K, z przykładowymi wyszukiwaniami react, group:, window:, tag: i closed:, ciemny motyw" boxes={[{ id: 'search-input', label: 'Pole wyszukiwania' }, { id: 'examples', label: 'Proponowane wyszukiwania' }]} source="TabMerger 3.16.1">Puste wyszukiwanie podpowiada, od czego zacząć.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-results" alt="Wyszukiwanie docs w TabMerger: cztery wyniki z Now Open (Teraz Otwarte) i Reading list, z podświetlonym docs w każdym adresie, jasny motyw" darkAlt="Wyszukiwanie docs w TabMerger: cztery wyniki z Now Open (Teraz Otwarte) i Reading list, z podświetlonym docs w każdym adresie, ciemny motyw" boxes={[{ id: 'search-input', label: 'docs' }]} source="TabMerger 3.16.1">Otwarte i zapisane karty na jednej liście, każda oznaczona swoją grupą.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker" alt="Wyszukiwanie TabMerger z wpisanym window: i listą okien Window, Papers i Tools do wyboru, jasny motyw" darkAlt="Wyszukiwanie TabMerger z wpisanym window: i listą okien Window, Papers i Tools do wyboru, ciemny motyw" boxes={[{ id: 'search-input', label: 'Filtr window:' }, { id: 'pick-window', label: 'Twoje nazwane okna' }]} source="TabMerger 3.16.1">Wpisz window: i wybierz; nie trzeba literować nazwy.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="filters" title="Wszystkie filtry z przykładami">
+
+<ComparisonTable
+  head={['Filtr', 'Znajduje', 'Przykład']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['(zwykłe słowa)', 'Karty, których tytuł lub adres je zawiera, oraz grupy po nazwie', 'pull request'],
+    ['group:', 'Karty w jednej grupie', 'group:"Thesis sources" wiki'],
+    ['window:', 'Karty w jednym oknie (nazwij je w jego menu ⋯)', 'window:"Papers"'],
+    ['tag:', 'Karty w grupie kart Chrome z tą etykietą', 'tag:"Sprint"'],
+    ['closed:', 'Tylko niedawno zamknięte karty i okna', 'closed: seat'],
+  ]}
+/>
+
+Filtry łączą się ze słowami i ze sobą nawzajem. Użyj cudzysłowu, gdy dopisujesz słowa po filtrze: bez niego filtr bierze resztę wiersza, więc `group:Work pull` szuka grupy o nazwie „Work pull”. Wybór z listy dodaje cudzysłów za Ciebie.
+
+</Section>
+
+<Section id="panel" title="Po wyszukiwaniu: ukryj lub przyciemnij resztę">
+
+Zamknij wyszukiwanie klawiszem <Kbd>Esc</Kbd>, a ono nadal działa w widoku głównym. Pasek boczny pokazuje, ile dopasowań ma każda grupa („Znaleziono 1”), a w grupie karty, które nie pasują, są domyślnie **ukryte**. Wolisz nie tracić orientacji? W **Ustawienia → Ogólne** (Settings → General) ustaw **Karty, które nie pasują do wyszukiwania** (Tabs that do not match a search) na **Przyciemnij** (Dim): każda karta zostaje na swoim miejscu, przyciemniona, a dopasowania są podświetlone. **Wyczyść wyszukiwanie** (Clear search) kończy wyszukiwanie.
+
+Gdy karty są ukryte, zmiana kolejności przez przeciąganie jest wstrzymana („Wyczyść wyszukiwanie, aby przenosić elementy”): gdy część wierszy jest niewidoczna, miejsce, w którym upuszczona karta powinna wylądować, byłoby zgadywaniem.
+
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-dim" alt="Grupa Thesis sources podczas wyszukiwania w niej wiki, z jedynym dopasowaniem podświetlonym i pozostałymi kartami przyciemnionymi, jasny motyw" darkAlt="Grupa Thesis sources podczas wyszukiwania w niej wiki, z jedynym dopasowaniem podświetlonym i pozostałymi kartami przyciemnionymi, ciemny motyw" boxes={[{ id: 'match', label: 'Dopasowanie' }]} source="TabMerger 3.16.1">Tryb przyciemniania: dopasowanie się wyróżnia, a cała reszta zostaje na swoim miejscu.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Co zyskujesz">
+
+Przeglądanie okien pełnych 16-pikselowych ikon i przewijanie historii zamienia się w kilka naciśnięć klawiszy. Działa tak samo bez względu na to, ile kart trzymasz: grupa zapisana kilka miesięcy temu jest równie blisko jak karta otwarta minutę temu. Właśnie dlatego można bezpiecznie zamykać okna: wszystko, co zapisałeś, jest o jedno wyszukiwanie stąd.
+
+</Section>
+
+<Section id="habits" title="Dobre nawyki">
+
+- **Przeszukuj adres, nie tylko tytuł.** `github.com/your-org` lub `localhost:3000` znajduje strony, których tytuły wyglądają tak samo.
+- **Nazwij okna, które często przeszukujesz.** „Papers”, „PRs”, „Docs”: wtedy `window:` od razu Cię tam zaprowadzi.
+- **Zacznij od `closed:`**, gdy wiesz, że kartę zamknąłeś; lista jest krótsza i zawiera tylko to, czego potrzebujesz.
+- **Łącz wyszukiwanie z grupami.** Im lepsze grupy (zobacz [codzienny sposób pracy z kartami](/blog/tabmerger-daily-workflow)), tym bardziej filtr `group:` zawęża wyniki.
+
+</Section>
+
+<Section id="plans" title="Free czy Pro">
+
+Wyszukiwanie, wszystkie filtry, listy wyboru oraz Ukryj i Przyciemnij są w planie Free, bez konta. Jedyna różnica to, jak daleko wstecz sięgają zamknięte karty: Free przechowuje karty zamknięte w ciągu ostatnich 2 dni, Pro z ostatnich 30 dni. A z nieograniczonymi grupami i kartami w Pro jest po prostu więcej do znalezienia. Zobacz [cennik](/pricing).
+
+<InstallCta>Znajdź jednym naciśnięciem klawisza każdą kartę, którą zachowałeś. Za darmo dla Chrome, Edge i Firefoksa.</InstallCta>
+
+Więcej o obsłudze z klawiatury poza wyszukiwaniem znajdziesz w poradniku [skróty klawiaturowe do kart](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

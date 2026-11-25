@@ -1,0 +1,270 @@
+export const post = {
+  slug: 'restore-tabs-after-crash',
+  title: 'كيف تستعيد علامات التبويب بعد تعطّل المتصفح أو تحديثه أو إغلاقه بالخطأ',
+  navTitle: 'استعادة علامات التبويب بعد تعطّل المتصفح',
+  seoTitle: 'استعادة علامات التبويب بعد تعطّل المتصفح في Chrome وEdge وFirefox',
+  description:
+    'أُغلق المتصفح وأخذ معه علامات التبويب؟ لاستعادة علامات التبويب بعد تعطّل المتصفح، اتبع هذه الخطوات بالترتيب: إعادة الفتح، ثم السجلّ، ثم أجهزتك الأخرى، ثم الإعدادات التي تمنع تكرار ذلك.',
+  shareSummary: 'فقدت علامات التبويب بسبب تعطّل أو إعادة تشغيل؟ خطوات الاستعادة بالترتيب، لكل متصفح.',
+  dek: 'جرّب الحلول السريعة أولًا، بالترتيب. معظم الجلسات المفقودة تعود في أقل من دقيقة.',
+  published: '2026-11-24',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'بحسب مساعدة Chrome الخاصة بالأعطال، يعيد Ctrl+Shift+T فتح علامات التبويب التي كانت مفتوحة لديك.',
+      source: 'مساعدة Chrome',
+      href: 'https://support.google.com/chrome/answer/142063',
+    },
+    { text: 'تحتوي قائمة «التأريخ» في Firefox على «استعد الجلسة السابقة».', source: 'Firefox 159' },
+    {
+      text: 'لا يعرض Chrome علامات التبويب من أجهزتك الأخرى إلا عند تفعيل مزامنة «السجلّ وعلامات التبويب».',
+      source: 'مساعدة Chrome',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'لصفحة السجلّ في Edge قائمة Recently closed خاصة بها.', source: 'edge://history, Edge 157' },
+  ],
+  faq: [
+    {
+      question: 'كيف أستعيد علامات التبويب بعد إغلاق Chrome؟',
+      answer:
+        'أعد فتح Chrome واضغط Ctrl+Shift+T (أو ⌘+Shift+T على Mac)، وكرّر ذلك عند الحاجة. إن لم تعد علامات التبويب، افتح السجلّ بالاختصار Ctrl+H وابحث ضمن ما أُغلق مؤخرًا.',
+    },
+    {
+      question: 'لماذا لم تُستعَد علامات التبويب؟',
+      answer:
+        'غالبًا لأن إعداد بدء التشغيل يفتح صفحة علامة تبويب جديدة، أو لأن علامات التبويب كانت في نافذة خاصة، أو لأنك أغلقت النوافذ واحدة تلو الأخرى قبل الخروج، أو لأنك فتحت ملفًا شخصيًا آخر.',
+    },
+    {
+      question: 'هل يمكنني استعادة علامات تبويب الأمس؟',
+      answer: 'ليس كجلسة، لكن كل صفحة زرتها موجودة في السجلّ (Ctrl+H) ما لم تكن قد مسحته. الطريقة المضمونة هي جلسة محفوظة أو الحفظ التلقائي.',
+    },
+    {
+      question: 'كيف أمنع تكرار ذلك؟',
+      answer: 'فعّل إعداد بدء التشغيل واحفظ علامات التبويب المفتوحة قبل اللحظات الخطرة مثل التحديثات. يشرح دليلنا لحفظ جميع علامات التبويب المفتوحة الأمرين معًا.',
+      link: { text: 'حفظ جميع علامات التبويب المفتوحة', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'صفحة السجلّ في Edge، وفي الشريط الجانبي All وRecently closed وTabs from other devices' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'إعدادات Chrome، قسم On startup (عند بدء التشغيل)، والخيار Continue where you left off (المتابعة من حيث توقفت) محدد' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'إعدادات Edge، قسم Start, home, and new tab page، والخيار Open tabs from the previous session محدد' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'إعدادات Firefox، قسم Home and startup (الصفحة الرئيسية والبدء)، والخيار Open previous windows and tabs (افتح النوافذ والألسنة السابقة) مفعّل' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-light.webp', alt: 'إعدادات TabMerger، تبويب Data (البيانات): الخيار Auto-save open tabs (الحفظ التلقائي لعلامات التبويب المفتوحة) مفعّل، والجدول مضبوط على Every 30 minutes (كل 30 دقيقة)، المظهر الفاتح' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-dark.webp', alt: 'إعدادات TabMerger، تبويب Data (البيانات): الخيار Auto-save open tabs (الحفظ التلقائي لعلامات التبويب المفتوحة) مفعّل، والجدول مضبوط على Every 30 minutes (كل 30 دقيقة)، المظهر الداكن' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-light.webp', alt: 'قسم Recently closed (المغلقة مؤخرًا) في TabMerger لليوم: ثلاث علامات تبويب مغلقة مع وقت إغلاق كل منها، المظهر الفاتح' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-dark.webp', alt: 'قسم Recently closed (المغلقة مؤخرًا) في TabMerger لليوم: ثلاث علامات تبويب مغلقة مع وقت إغلاق كل منها، المظهر الداكن' },
+  ],
+  tags: ['restore-closed-tabs', 'session-management', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-20',
+      note: 'أُخذت أسماء قوائم Firefox من Firefox 159.0.1 نفسه؛ إذ حجبت هذه الصفحة فحصنا الآلي.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/restore-tabs-after-crash/cover-edge-light.webp' },
+  ogImage: { src: '/blog/restore-tabs-after-crash/og.png', alt: 'بطاقة العنوان «How to get your tabs back after a crash, an update or an accidental quit»: دليل من TabMerger مع قائمة بعلامات التبويب المغلقة مؤخرًا' },
+  toc: [
+    { id: 'quick', label: 'إجابة سريعة' },
+    { id: 'first', label: '1. أعد الفتح ثم Ctrl+Shift+T' },
+    { id: 'recover', label: '2. السجلّ في كل متصفح' },
+    { id: 'devices', label: '3. الأجهزة الأخرى' },
+    { id: 'why', label: 'لماذا لم تُستعَد علامات التبويب' },
+    { id: 'prevent', label: 'في المرة القادمة' },
+    { id: 'faq', label: 'الأسئلة الشائعة' },
+  ],
+  browserSections: ['first', 'recover', 'devices', 'prevent'],
+  browserFact: {
+    label: 'السجلّ',
+    values: { chrome: 'chrome://history', edge: 'edge://history', firefox: 'Ctrl+Shift+H (المكتبة)' },
+  },
+}
+
+<QuickAnswer>
+
+أعد فتح المتصفح واضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> على Mac) مرة بعد مرة حتى تعود نوافذك. إن لم ينجح ذلك، فافتح السجلّ (<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi>) وأعد الفتح من **المغلقة مؤخرًا**؛ وفي Firefox استخدم **التأريخ ← استعد الجلسة السابقة** (<bdi dir="ltr">History → Restore Previous Session</bdi>). ما زال شيء ناقصًا؟ تحقّق من **علامات التبويب من الأجهزة الأخرى**، ثم ابحث في السجلّ عن الصفحات نفسها. وفي المرة القادمة، دع [TabMerger](/features) يحفظ علامات التبويب المفتوحة تلقائيًا وفق جدول، فلا يكلّفك أي تعطّل أكثر من بضع دقائق.
+
+</QuickAnswer>
+
+<InstallCta>لن تفقد نافذة بعد اليوم: احفظ علامات التبويب المفتوحة تلقائيًا وفق جدول. مجاني لـ Chrome وEdge وFirefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="first" title="1. أعد فتح المتصفح ثم اضغط Ctrl+Shift+T">
+
+لا تفتح علامات تبويب جديدة أولًا: ابدأ من نافذة نظيفة، حتى تستعيد بالضبط ما في قائمة «آخر ما أُغلق» في المتصفح.
+
+<BrowserPanels section="first">
+<BrowserPanel browser="chrome">
+
+1. شغّل Chrome. إن عرض عليك استعادة صفحاتك، فاقبل.
+2. اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> على Mac). هذا ما تشير إليه مساعدة Chrome نفسها الخاصة بالأعطال: يعيد الاختصار فتح علامات التبويب التي كانت مفتوحة من قبل.
+3. اضغطه مرة أخرى لكل نافذة فقدتها. يعيد Chrome فتح علامات التبويب والنوافذ بالترتيب الذي أُغلقت به.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. شغّل Edge. إن عرض عليك استعادة صفحاتك، فاقبل.
+2. اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> على Mac) لإعادة فتح آخر علامة تبويب أُغلقت، واضغطه مجددًا لتعود أبعد.
+3. تفتقد نافذة كاملة؟ انتقل مباشرة إلى الخطوة 2، السجلّ.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. شغّل Firefox. إن عرض عليك استعادة صفحاتك، فاقبل.
+2. اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> على Mac). يربط Firefox 159 هذا الاختصار بأمر يستعيد آخر علامة تبويب أو نافذة أو جلسة أُغلقت، لذا يمكنه بعد إعادة التشغيل أن يعيد الجلسة السابقة كاملة.
+3. يعيد <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd></bdi> فتح نافذة مغلقة؛ اضغطه مرة لكل نافذة.
+
+</BrowserPanel>
+</BrowserPanels>
+
+تجد قائمة الاختصارات كاملة في [مرجع اختصارات لوحة المفاتيح لعلامات التبويب](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="recover" title="2. أعد الفتح من السجلّ">
+
+إن لم يُعِد الاختصار شيئًا، فسجلّ المتصفح ما زال يعرف ما كان مفتوحًا.
+
+<BrowserPanels section="recover">
+<BrowserPanel browser="chrome">
+
+1. انقر **⋮ ← السجلّ** (<bdi dir="ltr">History</bdi>). تعرض القائمة الفرعية علامات التبويب والنوافذ المغلقة مؤخرًا.
+2. انقر نافذة لإعادة فتح كل علامات التبويب فيها.
+3. لا شيء هناك؟ اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi> وابحث عن صفحة تتذكرها.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi> لفتح **السجلّ**.
+2. اختر <bdi dir="ltr">**Recently closed**</bdi> (المغلقة مؤخرًا) وأعد فتح النافذة أو علامات التبويب التي فقدتها.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="صفحة السجلّ في Edge، وفي الشريط الجانبي All وRecently closed وTabs from other devices" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60">صفحة السجلّ في Edge، مع <bdi dir="ltr">Recently closed</bdi> في الشريط الجانبي.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. افتح قائمة **التأريخ** (<bdi dir="ltr">History</bdi>؛ اضغط <bdi dir="ltr"><Kbd>Alt</Kbd></bdi> لإظهار شريط القوائم) أو **☰ ← التأريخ**.
+2. اختر **استعد الجلسة السابقة** (<bdi dir="ltr">Restore Previous Session</bdi>) لاستعادة كل النوافذ من المرة السابقة.
+3. أو اختر من **النوافذ المغلقة مؤخرًا** و**الألسنة المُغلقة مؤخرًا**.
+
+إذا كان Firefox نفسه هو الذي تعطّل، فقد يفتح صفحة **استعد الجلسة** (<bdi dir="ltr">Restore Session</bdi>) وفيها «نأسف، فنحن نواجه مشكلة في استعادة صفحاتك.». ويتيح لك **اعرض الألسنة السابقة** (<bdi dir="ltr">View Previous Tabs</bdi>) إلغاء تحديد علامة تبويب قد تكون سبب التعطّل قبل أن تضغط **استعِد الجلسة**.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with Restore Previous Session. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="devices" title="3. ابحث في أجهزتك الأخرى">
+
+إن كنت مسجّل الدخول والمزامنة مفعّلة، فقد تظل علامات التبويب المفقودة ظاهرة على جهاز آخر.
+
+<BrowserPanels section="devices">
+<BrowserPanel browser="chrome">
+
+يعرض Chrome علامات التبويب من الأجهزة الأخرى في السجلّ، لكن فقط عند تفعيل مزامنة **السجلّ وعلامات التبويب** (<bdi dir="ltr">History and tabs</bdi>): انتقل إلى **الإعدادات ← أنت وGoogle** (<bdi dir="ltr">Settings → You and Google</bdi>)، واختر اسم حسابك، ثم فعّل **السجلّ وعلامات التبويب**.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+افتح السجلّ (<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi>) واختر <bdi dir="ltr">**Tabs from other devices**</bdi> (علامات التبويب من الأجهزة الأخرى) في الشريط الجانبي.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+افتح **واجهة عرض Firefox** (<bdi dir="ltr">Firefox View</bdi>) وابحث تحت **ألسنة من أجهزة أخرى** (<bdi dir="ltr">Tabs from other devices</bdi>). يتطلّب ذلك Firefox Sync مع تفعيل مزامنة علامات التبويب المفتوحة.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox View, Tabs from other devices. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="why" title="لماذا لم تُستعَد علامات التبويب؟">
+
+- **إعداد بدء التشغيل يفتح صفحة علامة تبويب جديدة.** خيار بدء التشغيل الخاص بـ«الجلسة السابقة» وحده يعيد فتح علامات التبويب في كل مرة؛ يوضح القسم التالي مكانه في متصفحك.
+- **كانت في نافذة خاصة.** نوافذ <bdi dir="ltr">Incognito</bdi> و<bdi dir="ltr">InPrivate</bdi> لا تُستعاد أبدًا.
+- **أغلقت النوافذ واحدة تلو الأخرى.** عند بدء التشغيل يُستعاد ما كان مفتوحًا لحظة *الخروج* من المتصفح. أما النوافذ التي أغلقتها قبل ذلك فموجودة في السجلّ فقط.
+- **فتحت ملفًا شخصيًا آخر.** لكل ملف شخصي جلسته الخاصة؛ تحقّق من أيقونة الملف الشخصي.
+
+</Section>
+
+<Section id="prevent" title="تأكّد من ألا يتكرر ذلك في المرة القادمة">
+
+فعّل إعداد بدء التشغيل الآن؛ فهذا التغيير وحده يغطي التحديثات وإعادة التشغيل.
+
+<BrowserPanels section="prevent">
+<BrowserPanel browser="chrome">
+
+**الإعدادات ← عند بدء التشغيل ← المتابعة من حيث توقفت** (<bdi dir="ltr">Settings → On startup → Continue where you left off</bdi>). أو الصق <bdi dir="ltr">`chrome://settings/onStartup`</bdi> في شريط العناوين.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="إعدادات Chrome، قسم On startup (عند بدء التشغيل)، والخيار Continue where you left off (المتابعة من حيث توقفت) محدد" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">إعداد <bdi dir="ltr">On startup</bdi> (عند بدء التشغيل) في Chrome مضبوط على إعادة فتح الجلسة الأخيرة.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+**الإعدادات** ← <bdi dir="ltr">**Start, home, and new tab page → On startup → Open tabs from the previous session**</bdi>. أو الصق <bdi dir="ltr">`edge://settings/startHomeNTP`</bdi> في شريط العناوين.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="إعدادات Edge، قسم Start, home, and new tab page، والخيار Open tabs from the previous session محدد" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">إعدادات <bdi dir="ltr">Start, home, and new tab page</bdi> في Edge مضبوطة على إعادة فتح الجلسة الأخيرة.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+**الإعدادات ← الصفحة الرئيسية والبدء ← البدء ← افتح النوافذ والألسنة السابقة** (<bdi dir="ltr">Settings → Home and startup → Startup → Open previous windows and tabs</bdi>). أو الصق <bdi dir="ltr">`about:preferences#home`</bdi> في شريط العناوين.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="إعدادات Firefox، قسم Home and startup (الصفحة الرئيسية والبدء)، والخيار Open previous windows and tabs (افتح النوافذ والألسنة السابقة) مفعّل" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">إعدادات Firefox في قسم «الصفحة الرئيسية والبدء»، والخيار «افتح النوافذ والألسنة السابقة» مفعّل.</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+لا تفيد الاستعادة عند بدء التشغيل مع نافذة أغلقتها بالخطأ الأسبوع الماضي. لذلك تحتاج إلى نسخة محفوظة: أضف النوافذ إلى الإشارات المرجعية، أو استخدم [مدير جلسات](/blog/browser-session-manager). يقارن دليلنا إلى [حفظ جميع علامات التبويب المفتوحة](/blog/save-all-open-tabs) بين الخيارات.
+
+يستطيع [TabMerger](/features)، إضافتنا المجانية لـ Chrome وEdge وFirefox، أن يتولى الحفظ عنك. في **الإعدادات ← البيانات**، يحفظ خيار **الحفظ التلقائي لعلامات التبويب المفتوحة** علامات التبويب المفتوحة كمجموعة وفق جدول (من كل 15 دقيقة حتى يوميًا). ويحتفظ **المغلقة مؤخرًا** بكل علامة تبويب ونافذة تغلقها، مرتّبة حسب اليوم: يومان في الخطة المجانية و30 يومًا مع Pro. تجد طريقة عمل الميزتين وضبطهما في [لا تفقد علامة تبويب بعد اليوم](/blog/never-lose-a-tab-again).
+
+<ScreenshotThemeToggle />
+
+<Carousel label="الحفظ وفق جدول والعثور على علامات التبويب المغلقة" steps={[{ title: 'الحفظ التلقائي' }, { title: 'المغلقة مؤخرًا' }]}>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-auto-save-schedule" alt="إعدادات TabMerger، تبويب Data (البيانات): الخيار Auto-save open tabs (الحفظ التلقائي لعلامات التبويب المفتوحة) مفعّل، والجدول مضبوط على Every 30 minutes (كل 30 دقيقة)، المظهر الفاتح" darkAlt="إعدادات TabMerger، تبويب Data (البيانات): الخيار Auto-save open tabs (الحفظ التلقائي لعلامات التبويب المفتوحة) مفعّل، والجدول مضبوط على Every 30 minutes (كل 30 دقيقة)، المظهر الداكن" boxes={[{ id: 'schedule', label: 'الجدول' }]} source="TabMerger 3.16.1"><bdi dir="ltr">Auto-save open tabs</bdi> (الحفظ التلقائي لعلامات التبويب المفتوحة) كل 30 دقيقة: نسخة حديثة من علامات التبويب المفتوحة، مهما حدث للمتصفح.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-recently-closed" alt="قسم Recently closed (المغلقة مؤخرًا) في TabMerger لليوم: ثلاث علامات تبويب مغلقة مع وقت إغلاق كل منها، المظهر الفاتح" darkAlt="قسم Recently closed (المغلقة مؤخرًا) في TabMerger لليوم: ثلاث علامات تبويب مغلقة مع وقت إغلاق كل منها، المظهر الداكن" boxes={[{ id: 'today-row', label: 'اليوم' }]} source="TabMerger 3.16.1"><bdi dir="ltr">Recently closed</bdi> (المغلقة مؤخرًا): علامات التبويب التي أُغلقت اليوم، مع وقت إغلاق كل منها.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>مجاني لـ Chrome وEdge وFirefox. لا تحتاج إلى حساب لتبدأ.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="الأسئلة الشائعة">
+
+<Faq items={post.faq} />
+
+</Section>

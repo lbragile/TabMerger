@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'move-tabs-between-computers',
+  title: 'Comment transférer vos onglets sur un autre ordinateur',
+  navTitle: 'Transférer ses onglets sur un autre ordinateur',
+  seoTitle: 'Transférer ses onglets vers un autre ordinateur (Chrome, Edge, Firefox)',
+  description:
+    'Transférez vos onglets ouverts d’un ordinateur à un autre : la synchronisation du navigateur et les onglets d’autres appareils, l’envoi d’onglets, un fichier que vous emportez, ou la synchronisation chiffrée de bout en bout de TabMerger Pro entre Chrome, Edge et Firefox.',
+  shareSummary: 'Vos onglets d’un ordinateur à l’autre : synchro, envoi d’onglet, un fichier ou synchro chiffrée.',
+  dek: 'Du portable au fixe, du bureau à la maison, de l’ancien PC au nouveau : quatre façons d’emporter vos onglets.',
+  published: '2026-12-03',
+  updated: '2026-12-03',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger Pro synchronise groupes et sessions, chiffrés de bout en bout, entre Chrome, Edge et Firefox.', source: 'Tarifs et fonctionnalités de TabMerger', href: '/pricing' },
+    { text: '« Exporter en JSON » et « Importer un fichier » de TabMerger transfèrent tout avec l’offre gratuite.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome n’affiche les onglets des autres appareils que si la synchronisation « Historique et onglets » est activée.',
+      source: 'Aide Chrome',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'Firefox peut envoyer un onglet vers un autre appareil depuis le menu de l’onglet.', source: 'Texte des menus de Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Comment envoyer des onglets vers mon téléphone ou mon portable ?',
+      answer:
+        'Dans un même navigateur, connectez-vous sur les deux appareils et utilisez sa synchronisation : Chrome et Edge listent les onglets des autres appareils dans l’historique, et Firefox peut envoyer un onglet depuis son menu contextuel. D’un navigateur à l’autre, TabMerger Pro synchronise vos groupes enregistrés.',
+    },
+    {
+      question: 'Puis-je transférer des onglets de Chrome vers Firefox ?',
+      answer:
+        'La synchronisation du navigateur reste dans ce navigateur. TabMerger fonctionne dans Chrome, Edge et Firefox : exportez un fichier JSON et importez-le de l’autre côté gratuitement, ou laissez la synchronisation Pro garder les deux à jour.',
+    },
+    {
+      question: 'Faut-il un compte ?',
+      answer: 'Pas pour un fichier : « Exporter en JSON » et « Importer un fichier » de TabMerger ne demandent aucun compte. La synchronisation du navigateur et celle de TabMerger Pro, si.',
+    },
+    {
+      question: 'Les données des onglets synchronisés sont-elles privées ?',
+      answer:
+        'TabMerger Pro chiffre les groupes et les sessions sur votre appareil avant leur synchronisation, donc le serveur ne peut pas les lire. La confidentialité de la synchronisation du navigateur dépend des réglages du navigateur lui-même.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: 'Paramètres de TabMerger, « Data » (Données), avec les boutons « Export JSON » (Exporter en JSON) et « Import file » (Importer un fichier) sous « Import & export » (Import et export), thème clair' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: 'Paramètres de TabMerger, « Data » (Données), avec les boutons « Export JSON » (Exporter en JSON) et « Import file » (Importer un fichier) sous « Import & export » (Import et export), thème sombre' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'session-management', 'cross-browser', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/move-tabs-between-computers/tm-merge-menu-light.webp' },
+  ogImage: { src: '/blog/move-tabs-between-computers/og.png', alt: 'Comment transférer vos onglets sur un autre ordinateur : un guide TabMerger, avec les boutons « Export JSON » et « Import file »' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'pick', label: 'Quelle méthode choisir' },
+    { id: 'tabmerger', label: 'Avec TabMerger' },
+    { id: 'browser', label: 'Avec la synchronisation du navigateur' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'Onglets des autres appareils',
+    values: { chrome: 'Historique → Onglets d\'autres appareils', edge: 'History → Tabs from other devices', firefox: 'Firefox View → Onglets d’autres appareils' },
+  },
+}
+
+<QuickAnswer>
+
+Pour un transfert ponctuel, utilisez dans [TabMerger](/features) **Paramètres → Données → Exporter en JSON** (Settings → Data → Export JSON) sur l’ancien ordinateur et **Importer un fichier** (Import file) sur le nouveau : tous vos groupes enregistrés suivent (enregistrez d’abord vos fenêtres ouvertes dans un groupe), gratuitement, sans compte, dans Chrome, Edge ou Firefox. Pour garder deux ordinateurs à jour, **TabMerger Pro** synchronise automatiquement vos groupes et vos sessions, chiffrés de bout en bout. Vous restez sur un seul navigateur ? Connectez-vous sur les deux et utilisez sa synchronisation.
+
+</QuickAnswer>
+
+<InstallCta>Emportez tous vos onglets sur votre nouvel ordinateur en deux clics. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="pick" title="Quelle méthode choisir ?">
+
+<ComparisonTable
+  head={['Vous voulez…', 'La meilleure méthode']}
+  rowHeaders
+  minWidth="34rem"
+  rows={[
+    ['Tout transférer une fois vers un nouvel ordinateur', 'TabMerger : Exporter en JSON → Importer un fichier (gratuit)'],
+    ['Garder deux ordinateurs ou plus à jour', 'Synchronisation TabMerger Pro, chiffrée de bout en bout'],
+    ['Passer d’un navigateur à un autre', 'TabMerger (fichier en gratuit, synchronisation avec Pro)'],
+    ['Récupérer un onglet de votre autre appareil, dans le même navigateur', 'Synchronisation du navigateur ou envoi d’onglet'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabmerger" title="Comment transférer ses onglets avec TabMerger ?">
+
+**Une fois, avec un fichier (gratuit) :**
+
+1. Sur l’ancien ordinateur, enregistrez dans un groupe les fenêtres ouvertes à transférer : dans le menu **⋯** d’un groupe, choisissez **Fusionner avec l’actuel** (« Merge with current »). L’import ajoute les groupes enregistrés ; « Ouverts maintenant » (« Now Open ») du fichier est laissé de côté, car c’étaient les onglets ouverts de l’ancien navigateur.
+2. Ouvrez TabMerger → **Paramètres → Données** → **Exporter en JSON**.
+3. Copiez le fichier sur le nouvel ordinateur (une clé USB, un e-mail à vous-même, un stockage cloud).
+4. Sur le nouvel ordinateur, installez TabMerger, puis **Paramètres → Données** → **Importer un fichier**. Vos groupes apparaissent à côté de ceux que vous avez déjà.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="Paramètres de TabMerger, « Data » (Données), avec les boutons « Export JSON » (Exporter en JSON) et « Import file » (Importer un fichier) sous « Import & export » (Import et export), thème clair" darkAlt="Paramètres de TabMerger, « Data » (Données), avec les boutons « Export JSON » (Exporter en JSON) et « Import file » (Importer un fichier) sous « Import & export » (Import et export), thème sombre" boxes={[{ id: 'export-json', label: 'Exporter en JSON' }, { id: 'import-file', label: 'Importer un fichier' }]} source="TabMerger 3.16.1">Exportez sur un ordinateur, importez sur l’autre.</ThemedScreenshot>
+
+**Toujours, avec la synchronisation ([Pro](/pricing)) :** connectez-vous à TabMerger sur chaque ordinateur et vos groupes et sessions vous suivent, dans Chrome, Edge ou Firefox. Tout est chiffré sur votre appareil avant d’être synchronisé, donc le serveur ne peut pas lire vos onglets. Pro affiche aussi les onglets ouverts sur vos autres appareils et les restaure ici, et garde des sauvegardes automatiques. Comment ça marche, et ce que notre serveur peut voir ou non : [synchroniser ses onglets entre appareils](/blog/sync-tabs-between-devices-with-tabmerger).
+
+Le contenu du fichier est détaillé dans [comment exporter vos onglets ouverts](/blog/export-open-tabs).
+
+</Section>
+
+<Section id="browser" title="Comment transférer ses onglets avec la synchronisation du navigateur ?">
+
+Cela fonctionne quand les deux ordinateurs utilisent le même navigateur et que vous y êtes connecté sur les deux :
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+1. Connectez-vous à Chrome sur les deux ordinateurs.
+2. Activez **Historique et onglets** (« History and tabs ») : **Paramètres → Google et vous** (« Settings → You and Google »), sélectionnez le nom de votre compte, puis activez l’option.
+3. Sur l’autre ordinateur, ouvrez l’historique (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) et choisissez **Onglets d'autres appareils** (« Tabs from other devices »).
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Connectez-vous à Edge sur les deux ordinateurs et activez la synchronisation.
+2. Sur l’autre ordinateur, ouvrez l’historique (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) et choisissez **Tabs from other devices** (onglets d’autres appareils).
+3. Edge 158 propose aussi **Send tab to your devices** (envoyer l’onglet à vos appareils) pour une seule page.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Connectez-vous à Firefox sur les deux ordinateurs, avec la synchronisation des onglets ouverts activée.
+2. Faites un clic droit sur un onglet et choisissez **Envoyer à un appareil** (« Send to Device ») pour l’envoyer vers l’autre ordinateur.
+3. Ou ouvrez **Firefox View** sur celui-ci et regardez sous **Onglets d’autres appareils** (« Tabs from other devices »).
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>la synchronisation du navigateur ne fonctionne qu’à l’intérieur d’un même navigateur, ne montre que ce qui est ouvert sur l’autre appareil en ce moment et ne garde pas les onglets que vous avez fermés. Pour tous vos onglets, d’un navigateur à l’autre, utilisez TabMerger.</Catch>
+
+Des onglets perdus après un plantage sur l’ancienne machine ? Commencez par [comment restaurer ses onglets après un plantage](/blog/restore-tabs-after-crash). Pour la vue d’ensemble, voyez [ce que fait un gestionnaire de sessions](/blog/browser-session-manager).
+
+<InstallCta>Gratuit pour Chrome, Edge et Firefox. Aucun compte nécessaire pour commencer.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,145 @@
+export const post = {
+  slug: 'tab-management-for-developers',
+  title: 'Gestione delle schede per sviluppatori: un progetto, un gruppo',
+  navTitle: 'Gestione delle schede per sviluppatori',
+  seoTitle: 'Gestione delle schede per sviluppatori: progetti, docs e regole URL',
+  description:
+    'Documentazione, pull request, localhost e dashboard: un modo di organizzare le schede per sviluppatori, con un gruppo di TabMerger per progetto, regole URL che archiviano le schede in automatico e una ricerca che trova qualsiasi pagina di docs con un tasto.',
+  shareSummary: 'Un gruppo per progetto, regole URL che archiviano le schede per te e la documentazione a un tasto.',
+  dek: 'Il browser è metà del tuo IDE. Dagli la stessa struttura: un gruppo per progetto, che si riempie da solo.',
+  published: '2026-12-08',
+  updated: '2026-12-08',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Le regole URL copiano in un gruppo le nuove schede corrispondenti, con * come carattere jolly.', source: 'TabMerger 3.16.1' },
+    { text: 'Le regole confrontano l\'indirizzo senza http:// o https://, quindi localhost:3000/* funziona.', source: 'Codice sorgente di TabMerger 3.16.1' },
+    { text: 'Il piano gratuito ha 3 regole URL; Pro non ha limiti.', source: 'Prezzi di TabMerger', href: '/pricing' },
+    { text: 'Ctrl+K filtra per group:, window:, tag: e closed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Come dovrebbero organizzare le schede del browser gli sviluppatori?',
+      answer:
+        'Un gruppo di TabMerger per progetto o ticket, regole URL che archiviano in automatico le nuove schede nel gruppo giusto e la ricerca con Ctrl+K per saltare a qualsiasi pagina di documentazione. Salva e chiudi le schede di un progetto quando cambi attività.',
+    },
+    {
+      question: 'Si possono ordinare le schede in gruppi automaticamente in base all\'URL?',
+      answer:
+        'Sì, con le regole URL di TabMerger: un pattern come github.com/your-org/* manda in un gruppo ogni nuova scheda corrispondente. La scheda resta aperta; nel gruppo viene salvata una copia. Il piano gratuito ha 3 regole, Pro regole illimitate.',
+    },
+    {
+      question: 'Funziona con localhost?',
+      answer: 'Sì. Le regole ignorano la parte http:// o https://, quindi un pattern come localhost:3000/* corrisponde alle pagine del tuo server di sviluppo.',
+    },
+    {
+      question: 'Come trovo velocemente una scheda di documentazione?',
+      answer: 'Premi Ctrl+K in TabMerger e digita parte del titolo o dell\'indirizzo; aggiungi group:"Docs" per cercare in un solo gruppo.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp', alt: 'Finestra di dialogo «URL Rules» (Regole URL) di TabMerger con la regola github.com/lbragile/* che manda le schede nel gruppo «Work», tema chiaro' },
+    { src: '/blog/tab-management-for-developers/tm-url-rules-dark.webp', alt: 'Finestra di dialogo «URL Rules» (Regole URL) di TabMerger con la regola github.com/lbragile/* che manda le schede nel gruppo «Work», tema scuro' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-light.webp', alt: 'Il gruppo «Work» con la scheda «Issues» appena aperta, aggiunta dalla regola URL, tema chiaro' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-dark.webp', alt: 'Il gruppo «Work» con la scheda «Issues» appena aperta, aggiunta dalla regola URL, tema scuro' },
+  ],
+  tags: ['developers', 'tab-management', 'tab-manager', 'browser-productivity'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp' },
+  ogImage: { src: '/blog/tab-management-for-developers/og.png', alt: 'Scheda con il titolo «Tab management for developers»: una guida di TabMerger, con una regola URL che archivia le schede di GitHub in un gruppo' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'setup', label: 'Un progetto, un gruppo' },
+    { id: 'rules', label: 'Archiviare le schede in automatico' },
+    { id: 'find', label: 'Trovare subito qualsiasi doc' },
+    { id: 'switch', label: 'Cambiare progetto in ordine' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+}
+
+<QuickAnswer>
+
+Dai a ogni progetto il suo gruppo di [TabMerger](/features) e lascia che siano le **Regole URL** (URL rules) ad archiviare: un pattern come `github.com/your-org/*` o `localhost:3000/*` manda automaticamente ogni nuova scheda corrispondente nel gruppo giusto. Trova qualsiasi pagina di documentazione con <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> e, quando cambi attività, salva le finestre del progetto e chiudile. Niente si perde, niente da cercare.
+
+</QuickAnswer>
+
+<InstallCta>Un gruppo per progetto, riempito per te dalle regole URL. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="setup" title="Come dovrebbe organizzare le schede uno sviluppatore?">
+
+Come organizzi il codice: per progetto. Un progetto tipico ha quattro tipi di schede:
+
+<ComparisonTable
+  head={['Tipo', 'Esempi', 'Dove va']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['Lavoro in corso', 'Pull request, issue, il ticket', 'Il gruppo del progetto, in una finestra a sé'],
+    ['Documentazione e riferimenti', 'Docs delle API, MDN, una specifica', 'Una finestra «Docs» nel gruppo del progetto'],
+    ['Locale e staging', 'localhost, deploy di anteprima', 'Aperte mentre gira; salvate da una regola URL'],
+    ['Dashboard', 'CI, log, monitoraggio', 'Una finestra fissata, o il gruppo del progetto'],
+  ]}
+/>
+
+In TabMerger un gruppo può contenere più finestre, quindi lo stesso gruppo di progetto tiene separate «PRs», «Docs» e «Local». Rinomina una finestra dal suo menu **⋯** e aggiungi al gruppo una nota con il branch o il numero del ticket.
+
+</Section>
+
+<Section id="rules" title="Come archivio le schede nel gruppo giusto in automatico?">
+
+Le **Regole URL** di TabMerger tengono d'occhio le tue schede. Quando una scheda apre o finisce di caricare un indirizzo che corrisponde a una regola, una copia viene salvata nel gruppo di quella regola; la scheda resta aperta.
+
+1. Apri **Impostazioni → Generale** (Settings → General), trova **Regole URL** e premi **Gestisci** (Manage).
+2. Premi **Aggiungi regola** (Add rule), scrivi un pattern e scegli il gruppo. `*` è un carattere jolly; vince la prima regola che corrisponde.
+3. Premi **Salva** (Save).
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Una regola URL all'opera" steps={[{ title: 'La regola' }, { title: 'Il risultato' }]}>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-url-rules" alt="Finestra di dialogo «URL Rules» (Regole URL) di TabMerger con la regola github.com/lbragile/* che manda le schede nel gruppo «Work», tema chiaro" darkAlt="Finestra di dialogo «URL Rules» (Regole URL) di TabMerger con la regola github.com/lbragile/* che manda le schede nel gruppo «Work», tema scuro" boxes={[{ id: 'rule', label: 'Il pattern' }]} source="TabMerger 3.16.1">Una regola: tutto ciò che sta sotto github.com/lbragile/ finisce in «Work».</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-rule-result" alt="Il gruppo «Work» con la scheda «Issues» appena aperta, aggiunta dalla regola URL, tema chiaro" darkAlt="Il gruppo «Work» con la scheda «Issues» appena aperta, aggiunta dalla regola URL, tema scuro" boxes={[{ id: 'new-tab', label: 'Aggiunta dalla regola' }]} source="TabMerger 3.16.1">Aprendo la pagina «Issues» del repo, è finita da sola in «Work».</ThemedScreenshot>
+</Carousel>
+
+Pattern che funzionano bene:
+
+- `github.com/your-org/*` per ogni repo, PR e issue di un progetto
+- `localhost:3000/*` per il tuo server di sviluppo (le regole ignorano `http://` e `https://`)
+- `docs.your-framework.dev/*` per la documentazione che riapri di continuo
+
+Il piano gratuito include 3 regole; [Pro](/pricing) non ha limiti. Tutte le opzioni dei pattern, e l'ordine delle regole, sono in [ordinare le schede in automatico con le regole URL](/blog/auto-sort-tabs-with-url-rules).
+
+</Section>
+
+<Section id="find" title="Come trovo una pagina di documentazione con un tasto?">
+
+Premi <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> in TabMerger e digita qualche lettera del titolo o dell'indirizzo. I risultati comprendono le schede aperte, salvate e chiuse di recente. Restringi la ricerca con i filtri: `group:"Docs" fetch`, `window:"Local"` oppure `closed:` per la pagina che hai chiuso un'ora fa. Altro in [come trovare una scheda tra centinaia](/blog/find-a-tab-among-hundreds).
+
+I menu dei gruppi hanno anche **Ordina per URL** (Sort by URL), comodo per una lunga finestra di documentazione, e **Rimuovi schede duplicate** (Deduplicate tabs) per le cinque copie della stessa issue.
+
+</Section>
+
+<Section id="switch" title="Come cambio progetto senza perdere il contesto?">
+
+1. Nel gruppo del progetto, scegli **Unisci con l'attuale** (Merge with current) per salvarne le finestre aperte. **Sostituisci con l'attuale** (Replace with current) sovrascrive invece la copia salvata.
+2. Chiudi le finestre.
+3. Quando ci torni, riapri il gruppo: ogni PR, ogni doc e ogni dashboard, dove li avevi lasciati.
+
+<InstallCta>Gratis per Chrome, Edge e Firefox. Per iniziare non serve un account.</InstallCta>
+
+Per lavorare da tastiera, vedi le [scorciatoie da tastiera per le schede](/blog/tab-keyboard-shortcuts); per la routine generale, [gestire troppe schede](/blog/manage-too-many-tabs).
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,270 @@
+export const post = {
+  slug: 'restore-tabs-after-crash',
+  title: 'Cách lấy lại các tab sau khi trình duyệt bị sập, cập nhật hoặc lỡ tay thoát',
+  navTitle: 'Lấy lại tab sau khi trình duyệt bị sập',
+  seoTitle: 'Khôi phục tab sau khi trình duyệt bị sập trên Chrome, Edge và Firefox',
+  description:
+    'Trình duyệt đóng lại và mang theo hết các tab? Để khôi phục tab sau khi trình duyệt bị sập, hãy làm lần lượt: mở lại, xem lịch sử, kiểm tra thiết bị khác, rồi bật các cài đặt để chuyện này không lặp lại.',
+  shareSummary: 'Mất tab vì trình duyệt bị sập hoặc khởi động lại? Các bước khôi phục, theo thứ tự.',
+  dek: 'Hãy thử các cách nhanh trước, theo thứ tự. Phần lớn phiên bị mất sẽ quay lại trong chưa đầy một phút.',
+  published: '2026-11-24',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Trang trợ giúp của Chrome về sự cố bị sập cho biết Ctrl+Shift+T mở lại các tab bạn đã mở.',
+      source: 'Trợ giúp Chrome',
+      href: 'https://support.google.com/chrome/answer/142063',
+    },
+    { text: 'Menu Lịch sử của Firefox có “Khôi phục phiên làm việc trước”.', source: 'Firefox 159' },
+    {
+      text: 'Chrome chỉ hiện tab từ thiết bị khác khi bật đồng bộ “Nhật ký và thẻ”.',
+      source: 'Trợ giúp Chrome',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'Trang Lịch sử của Edge có danh sách “Recently closed” riêng.', source: 'edge://history, Edge 157' },
+  ],
+  faq: [
+    {
+      question: 'Làm sao lấy lại các tab sau khi Chrome bị đóng?',
+      answer:
+        'Mở lại Chrome và nhấn Ctrl+Shift+T (⌘+Shift+T trên Mac), nhấn nhiều lần nếu cần. Nếu các tab vẫn chưa quay lại, hãy mở Lịch sử bằng Ctrl+H và xem trong mục vừa đóng gần đây.',
+    },
+    {
+      question: 'Vì sao các tab của tôi không được khôi phục?',
+      answer:
+        'Thường là do cài đặt khởi động mở trang thẻ mới, các tab nằm trong cửa sổ riêng tư, bạn đã đóng từng cửa sổ trước khi thoát, hoặc bạn mở một hồ sơ khác.',
+    },
+    {
+      question: 'Tôi có khôi phục được các tab của hôm qua không?',
+      answer: 'Không khôi phục được dưới dạng một phiên, nhưng mọi trang bạn đã truy cập đều nằm trong Lịch sử (Ctrl+H), trừ khi bạn đã xóa. Phiên đã lưu hoặc tự động lưu mới là cách chắc chắn.',
+    },
+    {
+      question: 'Làm sao để chuyện này không xảy ra nữa?',
+      answer: 'Bật cài đặt khởi động và lưu các tab đang mở trước những lúc dễ gặp rủi ro như khi cập nhật. Hướng dẫn lưu tất cả tab đang mở của chúng tôi nói về cả hai.',
+      link: { text: 'lưu tất cả tab đang mở', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Trang History của Edge với All, Recently closed và Tabs from other devices ở thanh bên' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Cài đặt Chrome, mục On startup (Khi khởi động), đã chọn Continue where you left off (Tiếp tục từ nơi bạn đã dừng lại)' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Cài đặt Edge, mục Start, home, and new tab page, đã chọn Open tabs from the previous session' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Cài đặt Firefox, mục Home and startup (Trang chủ và khởi động), đã đánh dấu Open previous windows and tabs (Mở các cửa sổ và thẻ trước đó)' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-light.webp', alt: 'Cài đặt TabMerger, Data (Dữ liệu): Auto-save open tabs (Tự động lưu các thẻ đang mở) đang bật, lịch đặt ở Every 30 minutes (Mỗi 30 phút), giao diện sáng' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-dark.webp', alt: 'Cài đặt TabMerger, Data (Dữ liệu): Auto-save open tabs (Tự động lưu các thẻ đang mở) đang bật, lịch đặt ở Every 30 minutes (Mỗi 30 phút), giao diện tối' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-light.webp', alt: 'TabMerger Recently closed (Đã đóng gần đây), hôm nay: ba tab đã đóng kèm thời điểm đóng của từng tab, giao diện sáng' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-dark.webp', alt: 'TabMerger Recently closed (Đã đóng gần đây), hôm nay: ba tab đã đóng kèm thời điểm đóng của từng tab, giao diện tối' },
+  ],
+  tags: ['restore-closed-tabs', 'session-management', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-20',
+      note: 'Tên các menu của Firefox được đọc trực tiếp từ Firefox 159.0.1; trang này đã chặn bước kiểm tra tự động của chúng tôi.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/restore-tabs-after-crash/cover-edge-light.webp' },
+  ogImage: { src: '/blog/restore-tabs-after-crash/og.png', alt: 'Thẻ tiêu đề “How to get your tabs back after a crash, an update or an accidental quit”: hướng dẫn của TabMerger, kèm danh sách các tab vừa đóng' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'first', label: '1. Mở lại, rồi Ctrl+Shift+T' },
+    { id: 'recover', label: '2. Lịch sử của từng trình duyệt' },
+    { id: 'devices', label: '3. Thiết bị khác' },
+    { id: 'why', label: 'Vì sao tab không được khôi phục' },
+    { id: 'prevent', label: 'Lần sau' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+  browserSections: ['first', 'recover', 'devices', 'prevent'],
+  browserFact: {
+    label: 'Lịch sử',
+    values: { chrome: 'chrome://history', edge: 'edge://history', firefox: 'Ctrl+Shift+H (Thư viện)' },
+  },
+}
+
+<QuickAnswer>
+
+Mở lại trình duyệt và nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> trên Mac) nhiều lần cho đến khi các cửa sổ quay lại. Nếu không được, hãy mở Lịch sử (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) và mở lại từ mục **vừa đóng gần đây**; trên Firefox, dùng **Lịch sử → Khôi phục phiên làm việc trước** (“History → Restore Previous Session”). Vẫn còn thiếu? Hãy xem **tab từ thiết bị khác**, rồi tìm chính các trang đó trong Lịch sử. Lần sau, hãy để [TabMerger](/features) tự động lưu các tab đang mở theo lịch, để một lần bị sập không bao giờ khiến bạn mất quá vài phút.
+
+</QuickAnswer>
+
+<InstallCta>Không bao giờ mất cửa sổ nào nữa: tự động lưu các tab đang mở theo lịch. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="first" title="1. Mở lại trình duyệt, rồi nhấn Ctrl+Shift+T">
+
+Đừng mở tab mới trước: hãy bắt đầu từ một cửa sổ trống, để thứ bạn lấy lại đúng là danh sách “vừa đóng” của trình duyệt.
+
+<BrowserPanels section="first">
+<BrowserPanel browser="chrome">
+
+1. Khởi động Chrome. Nếu Chrome đề nghị khôi phục các trang, hãy đồng ý.
+2. Nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> trên Mac). Chính trang trợ giúp của Chrome về sự cố bị sập chỉ đến bước này: phím tắt mở lại các tab đã mở trước đó.
+3. Nhấn lại cho mỗi cửa sổ bị mất. Chrome mở lại tab và cửa sổ theo đúng thứ tự chúng bị đóng.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Khởi động Edge. Nếu Edge đề nghị khôi phục các trang, hãy đồng ý.
+2. Nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> trên Mac) để mở lại tab vừa đóng, và nhấn tiếp để lùi xa hơn.
+3. Mất cả một cửa sổ? Chuyển thẳng tới bước 2, Lịch sử.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Khởi động Firefox. Nếu Firefox đề nghị khôi phục các trang, hãy đồng ý.
+2. Nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> trên Mac). Firefox 159 gắn phím tắt này với một lệnh khôi phục tab, cửa sổ hoặc phiên vừa đóng, nên sau khi khởi động lại, nó có thể đưa cả phiên trước quay về.
+3. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> mở lại một cửa sổ đã đóng; nhấn một lần cho mỗi cửa sổ.
+
+</BrowserPanel>
+</BrowserPanels>
+
+Danh sách phím tắt đầy đủ có trong [bảng phím tắt cho tab](/blog/tab-keyboard-shortcuts) của chúng tôi.
+
+</Section>
+
+<Section id="recover" title="2. Mở lại từ Lịch sử">
+
+Nếu phím tắt không mang lại gì, Lịch sử của trình duyệt vẫn biết những gì đã mở.
+
+<BrowserPanels section="recover">
+<BrowserPanel browser="chrome">
+
+1. Nhấp vào **⋮ → Nhật ký** (“History”). Menu con liệt kê các tab và cửa sổ vừa đóng.
+2. Nhấp vào một cửa sổ để mở lại tất cả tab của nó.
+3. Không thấy gì? Nhấn <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> và tìm một trang bạn còn nhớ.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Nhấn <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> để mở **Lịch sử**.
+2. Chọn **Recently closed** (đã đóng gần đây) và mở lại cửa sổ hoặc các tab bị mất.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Trang History của Edge với All, Recently closed và Tabs from other devices ở thanh bên" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60">Trang Lịch sử của Edge, với Recently closed ở thanh bên.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Mở menu **Lịch sử** (“History”; nhấn <Kbd>Alt</Kbd> để hiện thanh menu) hoặc **☰ → Lịch sử**.
+2. Chọn **Khôi phục phiên làm việc trước** (“Restore Previous Session”) để đưa mọi cửa sổ của lần trước quay lại.
+3. Hoặc chọn từ **Các cửa sổ mới đóng** và **Thẻ mới đóng gần đây**.
+
+Nếu chính Firefox bị sập, nó có thể mở trang **Khôi phục phiên làm việc** (“Restore Session”) với dòng “Xin lỗi. Chúng tôi đang gặp sự cố khi khôi phục lại các trang của bạn.”. **Xem thẻ trước đó** (“View Previous Tabs”) cho phép bạn bỏ chọn một tab có thể gây sập trước khi nhấn **Khôi phục phiên làm việc**.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with Restore Previous Session. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="devices" title="3. Xem trên các thiết bị khác">
+
+Nếu bạn đã đăng nhập và bật đồng bộ, các tab bị mất có thể vẫn hiện trên một thiết bị khác.
+
+<BrowserPanels section="devices">
+<BrowserPanel browser="chrome">
+
+Chrome hiện tab từ thiết bị khác trong Nhật ký, nhưng chỉ khi bật đồng bộ **Nhật ký và thẻ** (“History and tabs”): vào **Cài đặt → Bạn và Google** (“Settings → You and Google”), chọn tên tài khoản của bạn, rồi bật **Nhật ký và thẻ**.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Mở Lịch sử (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) và chọn **Tabs from other devices** (tab từ thiết bị khác) ở thanh bên.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Mở **Firefox View** và xem mục **Thẻ từ thiết bị khác** (“Tabs from other devices”). Bạn cần dùng Firefox Sync và bật đồng bộ các thẻ đang mở.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox View, Tabs from other devices. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="why" title="Vì sao các tab của tôi không được khôi phục?">
+
+- **Cài đặt khởi động mở trang thẻ mới.** Chỉ tùy chọn khởi động “phiên trước” mới mở lại các tab mỗi lần khởi động; phần tiếp theo chỉ ra tùy chọn này nằm ở đâu trong trình duyệt của bạn.
+- **Các tab nằm trong cửa sổ riêng tư.** Cửa sổ Incognito và InPrivate không bao giờ được khôi phục.
+- **Bạn đã đóng từng cửa sổ một.** Khôi phục khi khởi động sẽ đưa lại những gì đang mở lúc trình duyệt *thoát*. Các cửa sổ bạn đóng trước đó chỉ còn trong Lịch sử.
+- **Bạn đã mở một hồ sơ khác.** Mỗi hồ sơ có phiên riêng; hãy kiểm tra biểu tượng hồ sơ.
+
+</Section>
+
+<Section id="prevent" title="Để lần sau không xảy ra nữa">
+
+Hãy bật cài đặt khởi động ngay bây giờ; chỉ một thay đổi này là đủ cho cả cập nhật lẫn khởi động lại.
+
+<BrowserPanels section="prevent">
+<BrowserPanel browser="chrome">
+
+**Cài đặt → Khi khởi động → Tiếp tục từ nơi bạn đã dừng lại** (“Settings → On startup → Continue where you left off”). Hoặc dán `chrome://settings/onStartup` vào thanh địa chỉ.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Cài đặt Chrome, mục On startup (Khi khởi động), đã chọn Continue where you left off (Tiếp tục từ nơi bạn đã dừng lại)" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">Cài đặt On startup (Khi khởi động) của Chrome, đặt để mở lại phiên trước.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+**Cài đặt → Start, home, and new tab page → On startup → Open tabs from the previous session**. Hoặc dán `edge://settings/startHomeNTP` vào thanh địa chỉ.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Cài đặt Edge, mục Start, home, and new tab page, đã chọn Open tabs from the previous session" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">Cài đặt Start, home, and new tab page của Edge, đặt để mở lại phiên trước.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+**Cài đặt → Trang chủ và khởi động → Khởi động → Mở các cửa sổ và thẻ trước đó** (“Settings → Home and startup → Startup → Open previous windows and tabs”). Hoặc dán `about:preferences#home` vào thanh địa chỉ.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Cài đặt Firefox, mục Home and startup (Trang chủ và khởi động), đã đánh dấu Open previous windows and tabs (Mở các cửa sổ và thẻ trước đó)" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Cài đặt Trang chủ và khởi động của Firefox, với Mở các cửa sổ và thẻ trước đó đã được đánh dấu.</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+Khôi phục khi khởi động vẫn không giúp được với một cửa sổ bạn lỡ đóng từ tuần trước. Trường hợp đó bạn cần một bản đã lưu: đánh dấu trang các cửa sổ, hoặc dùng một [trình quản lý phiên](/blog/browser-session-manager). Hướng dẫn [lưu tất cả tab đang mở](/blog/save-all-open-tabs) của chúng tôi so sánh các lựa chọn.
+
+[TabMerger](/features), tiện ích miễn phí của chúng tôi cho Chrome, Edge và Firefox, có thể lưu thay bạn. **Cài đặt → Dữ liệu → Tự động lưu các thẻ đang mở** lưu các tab đang mở thành một nhóm theo lịch (từ mỗi 15 phút đến hằng ngày). **Đã đóng gần đây** giữ lại mọi tab và cửa sổ bạn đóng, chia theo ngày: bản miễn phí giữ 2 ngày, Pro giữ 30 ngày. Cách hai tính năng này hoạt động và cách tinh chỉnh chúng có trong bài [không bao giờ mất tab nữa](/blog/never-lose-a-tab-again).
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Lưu theo lịch và tìm các tab đã đóng" steps={[{ title: 'Tự động lưu' }, { title: 'Đã đóng gần đây' }]}>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-auto-save-schedule" alt="Cài đặt TabMerger, Data (Dữ liệu): Auto-save open tabs (Tự động lưu các thẻ đang mở) đang bật, lịch đặt ở Every 30 minutes (Mỗi 30 phút), giao diện sáng" darkAlt="Cài đặt TabMerger, Data (Dữ liệu): Auto-save open tabs (Tự động lưu các thẻ đang mở) đang bật, lịch đặt ở Every 30 minutes (Mỗi 30 phút), giao diện tối" boxes={[{ id: 'schedule', label: 'Lịch' }]} source="TabMerger 3.16.1">Auto-save open tabs (Tự động lưu các thẻ đang mở) mỗi 30 phút: một bản sao mới của các tab đang mở, dù trình duyệt có ra sao.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-recently-closed" alt="TabMerger Recently closed (Đã đóng gần đây), hôm nay: ba tab đã đóng kèm thời điểm đóng của từng tab, giao diện sáng" darkAlt="TabMerger Recently closed (Đã đóng gần đây), hôm nay: ba tab đã đóng kèm thời điểm đóng của từng tab, giao diện tối" boxes={[{ id: 'today-row', label: 'Hôm nay' }]} source="TabMerger 3.16.1">Recently closed (Đã đóng gần đây): các tab đóng hôm nay, kèm thời điểm từng tab bị đóng.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Miễn phí cho Chrome, Edge và Firefox. Không cần tài khoản để bắt đầu.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,183 @@
+export const post = {
+  slug: 'browser-tab-features-compared',
+  title: 'Chrome vs Edge vs Firefox: сравнение встроенных функций для вкладок',
+  navTitle: 'Функции вкладок: Chrome, Edge, Firefox',
+  seoTitle: 'Chrome vs Edge vs Firefox: сравнение функций для вкладок (2026)',
+  description:
+    'Группы вкладок, поиск по вкладкам, вертикальные вкладки, разделённый экран, спящие вкладки и закрытие дубликатов: какие встроенные функции для вкладок есть в Chrome 157, Edge 158 и Firefox 159 и как TabMerger добавляет один и тот же слой во все три.',
+  shareSummary: 'Какие функции для вкладок встроены в Chrome, Edge и Firefox, рядом друг с другом.',
+  dek: 'Каждый браузер решает часть проблемы с вкладками. Здесь видно, какую именно, и как получить остальное во всех трёх.',
+  published: '2026-12-05',
+  updated: '2026-12-05',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Во всех трёх есть группы вкладок, поиск по вкладкам, вертикальные вкладки и разделённый экран.', source: 'Их справочные страницы и тексты интерфейса, 21 нояб. 2026' },
+    { text: 'Только в Firefox 159 есть встроенная команда «Закрыть дублирующиеся вкладки» (Close Duplicate Tabs).', source: 'Текст меню Firefox 159' },
+    {
+      text: 'Chrome синхронизирует группы вкладок через ваш аккаунт Google.',
+      source: 'Справка Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'TabMerger добавляет во все три единый поиск, автосохранение и зашифрованную синхронизацию.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'В каком браузере лучшие функции для вкладок?',
+      answer:
+        'Каждый в чём-то впереди: Chrome в сохранённых и синхронизируемых группах вкладок, Edge в спящих вкладках, включённых по умолчанию, Firefox в закрытии дубликатов. TabMerger даёт всем трём одинаковые группы, поиск, автосохранение и синхронизацию.',
+    },
+    {
+      question: 'Есть ли группы вкладок в Chrome, Edge и Firefox?',
+      answer: 'Да. Все три позволяют объединять вкладки в группу с названием и цветом; Chrome и Firefox также умеют закрыть группу и открыть её позже.',
+    },
+    {
+      question: 'Можно ли пользоваться одним менеджером вкладок в Chrome, Edge и Firefox?',
+      answer: 'Да. TabMerger работает во всех трёх, а Pro синхронизирует ваши группы между ними со сквозным шифрованием.',
+    },
+    {
+      question: 'Какой браузер закрывает дубликаты вкладок?',
+      answer: 'Firefox, из контекстного меню любой вкладки. В Chrome и Edge это делает «Удалить дубликаты вкладок» в TabMerger, сразу во всех окнах.',
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'Поиск TabMerger открыт и пуст, со списком фильтров group:, window:, tag: и closed:, светлая тема' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'Поиск TabMerger открыт и пуст, со списком фильтров group:, window:, tag: и closed:, тёмная тема' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Настройки Chrome, раздел Performance («Производительность») с переключателем Memory Saver («Экономия памяти»)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Параметры Edge, раздел Performance: включено Automatically put tabs to sleep, выбрано 15 минут' },
+  ],
+  tags: ['cross-browser', 'comparison', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    { title: 'Chrome keyboard shortcuts', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/157179', checked: '2026-11-21' },
+    { title: 'Personalize Chrome performance', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/12929150', checked: '2026-11-21' },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp' },
+  ogImage: { src: '/blog/browser-tab-features-compared/og.png', alt: 'Chrome vs Edge vs Firefox: сравнение встроенных функций для вкладок. Руководство TabMerger, с фильтрами поиска TabMerger' },
+  toc: [
+    { id: 'quick', label: 'Коротко' },
+    { id: 'matrix', label: 'Таблица функций' },
+    { id: 'turn-on', label: 'Что стоит включить' },
+    { id: 'tabmerger', label: 'Один слой для всех трёх' },
+    { id: 'faq', label: 'Частые вопросы' },
+  ],
+  browserSections: ['turn-on'],
+  browserFact: {
+    label: 'Настройка памяти',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Параметры → System and performance → Performance',
+      firefox: 'Правый щелчок по вкладке → Выгрузить вкладку',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Во всех трёх браузерах теперь есть **группы вкладок, поиск по вкладкам, вертикальные вкладки и разделённый экран**. Chrome впереди в сохранении и синхронизации групп, Edge по умолчанию усыпляет неактивные вкладки, а Firefox единственный сам закрывает дубликаты вкладок. Ни один не ищет по сохранённым и закрытым вкладкам, не сохраняет окна автоматически и не работает между браузерами. Этот слой и добавляет [TabMerger](/features), одинаково в Chrome, Edge и Firefox.
+
+</QuickAnswer>
+
+<InstallCta>Одни и те же группы, поиск и синхронизация в Chrome, Edge и Firefox. Бесплатно.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="matrix" title="Какие функции для вкладок есть в каждом браузере?">
+
+Проверено в Chrome 157, Edge 158 и Firefox 159 по справочным страницам каждого браузера и текстам его собственного интерфейса, 21 нояб. 2026. «Не указано» значит, что мы не нашли упоминаний ни в справке, ни в текстах браузера, но это не доказывает, что функции нет.
+
+<ComparisonTable
+  head={['Функция', 'Chrome 157', 'Edge 158', 'Firefox 159', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="52rem"
+  rows={[
+    ['Группы вкладок', 'Да', 'Да', 'Да', 'Группы с названием и цветом во всех окнах'],
+    ['Закрыть группу и открыть её позже', 'Да (⋮ → Группы вкладок)', 'Close group (повторное открытие не указано)', 'Да (Сохранить и закрыть группу)', 'Каждая группа остаётся сохранённой'],
+    ['Группы на других устройствах', 'Да, через аккаунт Google', 'Не указано', 'Нет в настройках синхронизации', 'Pro, со сквозным шифрованием'],
+    ['Поиск по вкладкам', 'Открытые вкладки (Ctrl+Shift+A, @вкладки)', 'Search tabs (сочетание клавиш не указано)', 'Список всех вкладок (Ctrl+Shift+A)', 'Открытые, сохранённые и закрытые (Ctrl+K)'],
+    ['Вертикальные вкладки', 'Да', 'Да', 'Да', 'Не применимо'],
+    ['Разделённый экран', 'Да', 'Да', 'Да', 'Не применимо'],
+    ['Освободить память от неактивных вкладок', 'Экономия памяти (по умолчанию выключена)', 'Спящие вкладки (по умолчанию включены)', 'Выгрузить вкладку, вручную', 'Сохранить, затем закрыть все окна одним щелчком'],
+    ['Закрыть дубликаты вкладок', 'Не указано', 'Не указано', 'Закрыть дублирующиеся вкладки', '«Удалить дубликаты вкладок» во всех окнах'],
+    ['Открыть закрытое окно снова', 'Ctrl+Shift+T', 'Не указано', 'Ctrl+Shift+N', 'Недавно закрытые: 2 дня (Free), 30 (Pro)'],
+    ['Сохранять открытые вкладки по расписанию', 'Не указано', 'Не указано', 'Не указано', 'Автосохранение по расписанию или при превышении числа вкладок'],
+    ['Экспорт вкладок', 'Через закладки (HTML)', 'Через избранное (HTML)', 'Через закладки (HTML)', 'JSON, открытые и сохранённые вкладки вместе'],
+  ]}
+/>
+
+Коллекций в Edge, прежнего способа сохранять наборы страниц, больше нет: Microsoft убрала их в Edge 149. Посмотрите, [чем заменить Коллекции Edge](/blog/edge-collections-replacement).
+
+</Section>
+
+<Section id="turn-on" title="Какие встроенные настройки стоит включить?">
+
+<BrowserPanels section="turn-on">
+<BrowserPanel browser="chrome">
+
+1. **Экономия памяти** (Memory Saver): Настройки → Производительность (Settings → Performance, `chrome://settings/performance`). В новом профиле она выключена.
+2. **Вертикальные вкладки**, если вы держите много открытых: нажмите правой кнопкой мыши на панель вкладок и выберите **Показать вкладки вертикально** (Show Tabs Vertically) или Настройки → Внешний вид → Положение вкладки (Settings → Appearance → Tab position).
+3. **Поиск по вкладкам** (Tab Search): <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> или введите `@вкладки` в адресной строке (в английском интерфейсе Chrome это `@tabs`).
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Настройки Chrome, раздел Performance («Производительность») с переключателем Memory Saver («Экономия памяти»)" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">Memory Saver («Экономия памяти») в Chrome, выключенная в новом профиле Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. **Спящие вкладки** (Sleeping tabs) уже включены: задержку можно изменить в разделе Параметры → System and performance → Performance.
+2. В Edge 158 также есть **вертикальные вкладки** и **Search tabs** (обе упоминаются в текстах его интерфейса); в списке сочетаний клавиш Microsoft для Search tabs нет клавиши.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Параметры Edge, раздел Performance: включено Automatically put tabs to sleep, выбрано 15 минут" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Спящие вкладки Edge включены по умолчанию: неактивные вкладки засыпают через 15 минут.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. **Вертикальные вкладки**: нажмите правой кнопкой мыши на боковую панель и выберите **Включить вертикальные вкладки** (Turn on Vertical Tabs).
+2. **Закрыть дублирующиеся вкладки** (Close Duplicate Tabs) и **Выгрузить вкладку** (Unload Tab) есть в контекстном меню каждой вкладки.
+3. **Список всех вкладок** (List all tabs): <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox tab right-click menu with Close Duplicate Tabs and Unload Tab. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+Все клавиши собраны в нашем [справочнике сочетаний клавиш для вкладок](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="tabmerger" title="Недостающий слой в каждом браузере">
+
+В таблице у каждого браузера есть пустая строка: ни один не держит ваши вкладки в порядке **за пределами** собственного окна или между браузерами. [TabMerger](/features) держит, одинаково в Chrome, Edge и Firefox:
+
+1. **Сейчас открыто** показывает все открытые окна; **Объединить с текущими** сохраняет их все в группу с названием одним щелчком.
+2. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> ищет сразу по открытым, сохранённым и недавно закрытым вкладкам, с фильтрами `group:`, `window:`, `tag:` и `closed:`.
+3. **Автосохранение** по расписанию хранит свежую копию ваших вкладок; **Удалить дубликаты вкладок** убирает повторы из всех окон.
+4. В [Pro](/pricing) ваши группы синхронизируются между всеми вашими браузерами со сквозным шифрованием.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="Поиск TabMerger открыт и пуст, со списком фильтров group:, window:, tag: и closed:, светлая тема" darkAlt="Поиск TabMerger открыт и пуст, со списком фильтров group:, window:, tag: и closed:, тёмная тема" boxes={[{ id: 'search-input', label: 'Поиск' }]} source="TabMerger 3.16.1">Один поиск для всех вкладок, в каждом браузере, где работает TabMerger.</ThemedScreenshot>
+
+Сравнение с другими расширениями есть в обзоре [лучших расширений для управления вкладками](/blog/best-tab-manager-extensions).
+
+<InstallCta>Бесплатно для Chrome, Edge и Firefox. Для начала аккаунт не нужен.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Частые вопросы">
+
+<Faq items={post.faq} />
+
+</Section>

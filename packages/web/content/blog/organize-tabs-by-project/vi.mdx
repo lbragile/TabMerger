@@ -1,0 +1,160 @@
+export const post = {
+  slug: 'organize-tabs-by-project',
+  title: 'Sắp xếp tab theo dự án: mỗi dự án một nhóm',
+  navTitle: 'Sắp xếp tab theo dự án',
+  seoTitle: 'Cách sắp xếp tab trình duyệt theo dự án với TabMerger',
+  description:
+    'Cho mỗi dự án một nhóm TabMerger riêng, với các cửa sổ có tên cho từng phần việc, ghi chú để giữ bối cảnh và kho lưu trữ cho các dự án đã xong. Vì sao nhóm hoạt động như vậy, từng bước một.',
+  shareSummary: 'Mỗi dự án một nhóm, bên trong là các cửa sổ có tên, và kho lưu trữ cho việc đã xong.',
+  dek: 'Chuyển dự án không nên đồng nghĩa với lục tìm tab. Hãy cho mỗi dự án một chỗ riêng để mở, đóng và lưu trữ.',
+  published: '2026-12-15',
+  updated: '2026-12-15',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Một nhóm TabMerger chứa nhiều cửa sổ, mỗi cửa sổ có tên và ghi chú riêng.', source: 'TabMerger 3.16.1' },
+    { text: 'Các nhóm được gắn sao luôn nằm trên cùng thanh bên.', source: 'Mã nguồn TabMerger 3.16.1' },
+    { text: 'Nhóm đã lưu trữ chỉ đọc và quay lại bằng “Khôi phục”.', source: 'TabMerger 3.16.1' },
+    { text: 'Gói Miễn phí có 5 nhóm và 50 tab, tính cả nhóm đã lưu trữ; Pro không giới hạn.', source: 'Bảng giá TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Cách tốt nhất để sắp xếp tab theo dự án là gì?',
+      answer:
+        'Cho mỗi dự án một nhóm TabMerger và chia nhóm thành các cửa sổ có tên cho từng phần việc (ví dụ Thiết kế, Phát triển, Góp ý). Thêm ghi chú nhóm với bối cảnh, gắn sao cho các dự án bạn đang làm tuần này và lưu trữ dự án khi đã xong.',
+    },
+    {
+      question: 'Một nhóm có thể chứa nhiều cửa sổ không?',
+      answer: 'Có. Một nhóm TabMerger chứa bao nhiêu cửa sổ cũng được. Mỗi cửa sổ có thể có tên, ghi chú và dấu sao riêng, và mở ra thành một cửa sổ trình duyệt riêng.',
+    },
+    {
+      question: 'Lưu trữ một nhóm thì có tác dụng gì?',
+      answer:
+        'Nhóm được chuyển vào mục “Đã lưu trữ” trên thanh bên ở chế độ chỉ đọc, để không vướng víu nhưng cũng không mất đi. Nhấp vào một tab vẫn mở được tab đó, và “Khôi phục” đưa nhóm trở lại danh sách của bạn.',
+    },
+    {
+      question: 'Nhóm tab của Chrome có được giữ nguyên khi tôi lưu không?',
+      answer: 'Có. Các tab đã lưu giữ nguyên tên và màu của nhóm tab Chrome, nên một dự án bạn đã nhóm trên dải tab vẫn giữ cấu trúc đó trong TabMerger.',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp', alt: 'Nhóm Website redesign với ba cửa sổ có tên Design, Build và Feedback, giao diện sáng' },
+    { src: '/blog/organize-tabs-by-project/tm-project-group-dark.webp', alt: 'Nhóm Website redesign với ba cửa sổ có tên Design, Build và Feedback, giao diện tối' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-light.webp', alt: 'Menu chuột phải của một nhóm trên thanh bên với Archive group (Lưu trữ nhóm), giao diện sáng' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-dark.webp', alt: 'Menu chuột phải của một nhóm trên thanh bên với Archive group (Lưu trữ nhóm), giao diện tối' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-light.webp', alt: 'Một nhóm đã lưu trữ, chỉ đọc, có nút Restore (Khôi phục) và mục Archived (Đã lưu trữ) đang mở trên thanh bên, giao diện sáng' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-dark.webp', alt: 'Một nhóm đã lưu trữ, chỉ đọc, có nút Restore (Khôi phục) và mục Archived (Đã lưu trữ) đang mở trên thanh bên, giao diện tối' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-by-project/og.png', alt: 'Sắp xếp tab theo dự án với TabMerger: một nhóm với các cửa sổ Design, Build và Feedback' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'problem', label: 'Khi các dự án dùng chung một dải tab' },
+    { id: 'why', label: 'Vì sao nhóm hoạt động như vậy' },
+    { id: 'steps', label: 'Thiết lập một dự án' },
+    { id: 'archive', label: 'Lưu trữ việc đã xong' },
+    { id: 'benefit', label: 'Bạn được gì' },
+    { id: 'habits', label: 'Thói quen tốt' },
+    { id: 'plans', label: 'Miễn phí và Pro' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+}
+
+<QuickAnswer>
+
+Cho mỗi dự án một nhóm [TabMerger](/features) riêng. Bên trong, giữ một cửa sổ có tên cho từng phần việc (“Thiết kế”, “Phát triển”, “Góp ý”) và một ghi chú nhóm với bối cảnh. Gắn sao cho các dự án tuần này để chúng luôn ở trên cùng, và khi một dự án xong, **Lưu trữ nhóm** (Archive group) cất nó đi ở chế độ chỉ đọc mà không xóa tab nào.
+
+</QuickAnswer>
+
+<InstallCta>Mỗi dự án một chỗ riêng, chỉ một cú nhấp là mở. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+<Section id="problem" title="Khi ba dự án dùng chung một dải tab">
+
+Bạn đang thiết kế lại một trang web, viết một bản báo cáo và lên kế hoạch cho một chuyến đi. Đến thứ Tư, trình duyệt chứa cả ba: bản mockup cạnh trang tìm chuyến bay, một pull request nằm giữa hai nguồn của báo cáo. Chuyển dự án nghĩa là dò cả dải tab, còn đóng bất cứ thứ gì cũng thấy rủi ro, vì bạn không biết nó thuộc dự án nào.
+
+Nhóm tab có sẵn của trình duyệt giúp được trong một cửa sổ, nhưng một dự án hiếm khi vừa một cửa sổ, và khi cửa sổ đóng lại thì cũng chẳng ai biết những tab đó đã đi đâu.
+
+</Section>
+
+<Section id="why" title="Vì sao nhóm của TabMerger hoạt động như vậy">
+
+- **Một nhóm là một dự án, không phải một cửa sổ.** Mỗi nhóm chứa bao nhiêu cửa sổ tùy công việc cần, và mỗi cửa sổ mở thành một cửa sổ trình duyệt riêng. Dự án thực tế trông đúng như thế: tab thiết kế ở đây, tab phát triển ở kia.
+- **Tên và ghi chú giữ lại bối cảnh.** Cửa sổ có thể đổi tên và có ghi chú riêng, nhóm cũng vậy. Vài tháng sau, cái tên “Góp ý” cùng một ghi chú về những gì đã quyết định có ích hơn hẳn một hàng biểu tượng trang.
+- **Dấu sao sắp xếp thay bạn.** Nhóm có sao luôn nằm trên cùng thanh bên, còn cửa sổ có sao luôn đứng đầu trong nhóm của nó.
+- **Lưu trữ là cất đi, không phải xóa.** Nhóm đã lưu trữ rời khỏi danh sách của bạn để vào mục **Đã lưu trữ** (Archived) và trở thành chỉ đọc, nên không có gì bị xê dịch do vô tình. Các tab của nhóm vẫn mở được bằng một cú nhấp, và **Khôi phục** (Restore) đưa nhóm trở lại.
+- **Cấu trúc trong trình duyệt được giữ nguyên.** Các tab đã lưu giữ nguyên tên và màu của nhóm tab Chrome, nên một dự án bạn đã nhóm sẵn trên dải tab vẫn giữ nguyên hình dạng.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-project-group" alt="Nhóm Website redesign với ba cửa sổ có tên Design, Build và Feedback, giao diện sáng" darkAlt="Nhóm Website redesign với ba cửa sổ có tên Design, Build và Feedback, giao diện tối" boxes={[{ id: 'windows', label: 'Cửa sổ theo giai đoạn' }]} source="TabMerger 3.16.1">Một dự án, ba cửa sổ, mỗi cửa sổ mang tên phần việc của nó.</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="Thiết lập một dự án trong năm bước">
+
+1. Nhấn **Thêm Nhóm** (Add Group) trên thanh bên và đặt tên nhóm theo dự án. Nhấp vào chấm màu của nhóm để chọn màu.
+2. Mở các trang của dự án, rồi chọn **Hợp nhất với phiên hiện tại** (Merge with current) trong menu **⋯** của nhóm để lưu các cửa sổ đang mở vào nhóm.
+3. Đổi tên từng cửa sổ từ menu **⋯** của nó (**Đổi tên cửa sổ**, Rename window) theo phần việc mà cửa sổ chứa.
+4. Thêm ghi chú nhóm (**Thêm ghi chú**, Add note, trong menu **⋯**) với bối cảnh: hạn chót, ticket, thế nào thì gọi là “xong”.
+5. Gắn sao cho nhóm (ngôi sao cạnh tên nhóm) khi dự án còn đang chạy.
+
+Để chuyển tab giữa các dự án về sau, hãy kéo tab thả vào một nhóm trên thanh bên, hoặc dùng **Di chuyển vào nhóm** (Move to group) và **Sao chép vào nhóm** (Copy to group) trong menu chuột phải của tab. **Hợp nhất cửa sổ** (Unite windows) và **Tách cửa sổ** (Split windows) sắp xếp lại một nhóm chỉ trong một bước.
+
+</Section>
+
+<Section id="archive" title="Lưu trữ việc đã xong">
+
+Khi một dự án xong, nhấp chuột phải vào nhóm của nó trên thanh bên và chọn **Lưu trữ nhóm**. Nhóm chuyển vào mục **Đã lưu trữ** ở chế độ chỉ đọc: bạn vẫn mở được bất kỳ tab nào trong đó, và **Khôi phục** đưa cả nhóm trở lại danh sách của bạn.
+
+<Carousel label="Lưu trữ một dự án" steps={[{ title: 'Lưu trữ' }, { title: 'Đã lưu trữ' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archive-menu" alt="Menu chuột phải của một nhóm trên thanh bên với Archive group (Lưu trữ nhóm), giao diện sáng" darkAlt="Menu chuột phải của một nhóm trên thanh bên với Archive group (Lưu trữ nhóm), giao diện tối" boxes={[{ id: 'archive', label: 'Lưu trữ nhóm' }]} source="TabMerger 3.16.1">Nhấp chuột phải vào nhóm trên thanh bên.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archived" alt="Một nhóm đã lưu trữ, chỉ đọc, có nút Restore (Khôi phục) và mục Archived (Đã lưu trữ) đang mở trên thanh bên, giao diện sáng" darkAlt="Một nhóm đã lưu trữ, chỉ đọc, có nút Restore (Khôi phục) và mục Archived (Đã lưu trữ) đang mở trên thanh bên, giao diện tối" boxes={[{ id: 'banner', label: 'Chỉ đọc cho đến khi khôi phục' }]} source="TabMerger 3.16.1">Không vướng víu, mà vẫn chỉ cách một cú nhấp.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="benefit" title="Bạn được gì">
+
+Chuyển dự án trở thành mở một nhóm thay vì lục tìm trên dải tab. Bạn có thể đóng mọi cửa sổ của dự án đang tạm gác lại mà vẫn biết chính xác các tab của nó ở đâu, và thanh bên chỉ hiện những gì đang làm.
+
+</Section>
+
+<Section id="habits" title="Thói quen tốt">
+
+- **Mỗi dự án một nhóm, không phải mỗi chủ đề.** “Thiết kế lại website”, chứ không phải “Liên kết thiết kế”.
+- **Đặt tên cửa sổ theo giai đoạn hoặc vai trò**, không theo trang web: “Góp ý” dùng được lâu hơn “GitHub”.
+- **Chỉ gắn sao cho vài nhóm.** Dấu sao nghĩa là “tuần này”.
+- **Lưu trữ ngay ngày bàn giao.** Dự án đã lưu trữ vẫn chỉ cách một cú nhấp, nên chẳng có lý do gì để giữ nó trong danh sách.
+- **Để quy tắc URL tự xếp tab mới** cho các dự án bận rộn: xem [tự động sắp xếp tab bằng quy tắc URL](/blog/auto-sort-tabs-with-url-rules). Với các dự án cần nghiên cứu nhiều, [sắp xếp tab để nghiên cứu](/blog/organize-tabs-for-research) bổ sung ghi chú và lời nhắc.
+
+</Section>
+
+<Section id="plans" title="Miễn phí và Pro">
+
+<ComparisonTable
+  head={['', 'Miễn phí', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Nhóm', '5 (tính cả nhóm đã lưu trữ)', 'Không giới hạn'],
+    ['Tab', '50', 'Không giới hạn'],
+    ['Cửa sổ, tên, ghi chú, dấu sao, lưu trữ', 'Có', 'Có'],
+    ['Dự án của bạn trên các thiết bị khác', 'Không', 'Có, mã hóa đầu cuối'],
+  ]}
+/>
+
+Mọi công cụ sắp xếp trong bài này đều có ở gói Miễn phí; giới hạn chỉ là số nhóm và số tab. [Pro](/pricing) bỏ các giới hạn đó và đồng bộ dự án của bạn giữa các thiết bị.
+
+<InstallCta>Mỗi dự án một nhóm riêng, trong Chrome, Edge và Firefox. Bắt đầu miễn phí.</InstallCta>
+
+Để xem cả quy trình quanh các dự án, hãy đọc [quy trình làm việc với tab hằng ngày cùng TabMerger](/blog/tabmerger-daily-workflow).
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+</Section>

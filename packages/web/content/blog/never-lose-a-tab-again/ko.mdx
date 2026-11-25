@@ -1,0 +1,174 @@
+export const post = {
+  slug: 'never-lose-a-tab-again',
+  title: '다시는 탭을 잃지 마세요: 탭 자동 저장과 닫은 탭 복구',
+  navTitle: '다시는 탭을 잃지 마세요',
+  seoTitle: 'TabMerger로 열린 탭을 자동 저장하고 닫은 탭을 복구하는 방법',
+  description:
+    '열린 탭을 일정에 따라, 또는 탭 수가 정한 수를 넘을 때 자동으로 저장하고, 닫은 탭이나 창은 언제든 다시 열 수 있습니다. TabMerger의 자동 저장과 \'최근에 닫은 탭\'이 어떻게 동작하는지, 왜 그렇게 동작하는지 알아봅니다.',
+  shareSummary: '열린 탭은 일정에 따라 저장되고, 닫은 창은 검색 한 번이면 돌아옵니다.',
+  dek: '저장을 기억할 필요가 없어야 합니다. 한 번 설정하면 열린 탭마다 사본이 남습니다.',
+  published: '2026-12-13',
+  updated: '2026-12-13',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: '자동 저장은 15분마다부터 하루 한 번까지 실행되며, 열린 탭이 20~100 사이의 정한 수를 넘을 때도 실행됩니다.', source: 'TabMerger 3.16.1' },
+    { text: '이미 그룹에 저장된 탭은 건너뛰고, 비공개 창은 저장하지 않습니다.', source: 'TabMerger 3.16.1' },
+    { text: '무료 요금제는 최신 자동 저장 2개를, Pro는 전부를 보관합니다.', source: 'TabMerger 요금', href: '/pricing' },
+    { text: '\'최근에 닫은 탭\'은 무료 요금제에서 최근 2일, Pro에서 30일을 보관합니다.', source: 'TabMerger 요금', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '열린 탭을 자동으로 저장하려면 어떻게 하나요?',
+      answer:
+        'TabMerger에서 설정 → 데이터를 열고 \'열린 탭 자동 저장\'을 켭니다. 일정(15분마다부터 하루 한 번까지), 저장을 시작할 열린 탭 수, 또는 둘 다 고릅니다. 실행될 때마다 열린 탭이 새 그룹으로 저장됩니다.',
+    },
+    {
+      question: '자동 저장 때문에 TabMerger가 중복으로 가득 차지 않나요?',
+      answer:
+        '아니요. 주소가 이미 어느 그룹에든 저장된 탭은 건너뛰고, 여러 탭에서 열린 같은 페이지는 한 번만 저장합니다. 모두 이미 저장되어 있으면 그 회차에는 아무것도 저장하지 않습니다.',
+    },
+    {
+      question: '자동 저장하려면 TabMerger가 열려 있어야 하나요?',
+      answer: '아니요. 브라우저가 열려 있는 동안 확장 프로그램의 백그라운드에서 실행되고, 브라우저가 시작될 때 놓친 저장이 있는지 확인합니다.',
+    },
+    {
+      question: '닫은 창을 되살리려면 어떻게 하나요?',
+      answer:
+        'TabMerger에서 Ctrl+K를 누르고 closed:를 입력하면 최근에 닫은 탭과 창이 나열됩니다. 사이드바에서 \'최근에 닫은 탭\'을 열어도 됩니다. 닫은 창을 고르면 창 전체가 복원됩니다.',
+    },
+    {
+      question: '무료 요금제에는 무엇이 남고, Pro는 무엇을 더하나요?',
+      answer:
+        '무료 요금제는 최신 자동 저장 2개(계속 두려면 그룹으로 유지하세요)와 최근 2일 동안 닫은 탭을 보관합니다. Pro는 모든 자동 저장과 30일 동안 닫은 탭을 보관하고, 암호화된 자동 백업과 다른 기기에서 열려 있는 탭을 더합니다.',
+    },
+  ],
+  images: [
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-light.webp', alt: 'TabMerger의 \'Settings\'(설정), \'Data\'(데이터): \'Auto-save open tabs\'(열린 탭 자동 저장) 켜짐, 1시간마다 그리고 열린 탭이 50개를 넘을 때, \'Auto-save now\'(지금 자동 저장) 버튼 포함, 밝은 테마' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-dark.webp', alt: 'TabMerger의 \'Settings\'(설정), \'Data\'(데이터): \'Auto-save open tabs\'(열린 탭 자동 저장) 켜짐, 1시간마다 그리고 열린 탭이 50개를 넘을 때, \'Auto-save now\'(지금 자동 저장) 버튼 포함, 어두운 테마' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp', alt: '\'Auto-saved\'(자동 저장됨) 아래의 창 2개, 탭 7개짜리 그룹과 \'Keep as group\'(그룹으로 유지) 버튼, 밝은 테마' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-dark.webp', alt: '\'Auto-saved\'(자동 저장됨) 아래의 창 2개, 탭 7개짜리 그룹과 \'Keep as group\'(그룹으로 유지) 버튼, 어두운 테마' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-light.webp', alt: 'TabMerger에서 closed: 검색으로 오늘 닫은 탭 3개짜리 창이 표시된 모습, 밝은 테마' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-dark.webp', alt: 'TabMerger에서 closed: 검색으로 오늘 닫은 탭 3개짜리 창이 표시된 모습, 어두운 테마' },
+  ],
+  tags: ['tabmerger-guides', 'save-tabs', 'restore-closed-tabs', 'session-management'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp' },
+  ogImage: { src: '/blog/never-lose-a-tab-again/og.png', alt: '다시는 탭을 잃지 마세요: TabMerger의 자동 저장 그룹과 \'Keep as group\'(그룹으로 유지) 버튼' },
+  toc: [
+    { id: 'quick', label: '짧은 답변' },
+    { id: 'problem', label: '탭을 잃는 이유' },
+    { id: 'why', label: '이렇게 동작하는 이유' },
+    { id: 'steps', label: '켜는 방법' },
+    { id: 'closed', label: '최근에 닫은 탭' },
+    { id: 'benefit', label: '얻는 것' },
+    { id: 'habits', label: '좋은 습관' },
+    { id: 'plans', label: '무료와 Pro' },
+    { id: 'faq', label: '자주 묻는 질문' },
+  ],
+}
+
+<QuickAnswer>
+
+[TabMerger](/features)에서 **설정 → 데이터 → 열린 탭 자동 저장**(Settings → Data → Auto-save open tabs)을 켜고 일정, 탭 수, 또는 둘 다 고르세요. 그때부터 열린 탭이 새 그룹으로 자동 저장되며, 이미 저장된 것은 건너뜁니다. 실수로 무언가를 닫았나요? <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>를 누르고 `closed:`를 입력하면 최근에 닫은 탭과 창이 모두 보이고, 창 전체도 클릭 한 번으로 다시 열립니다.
+
+</QuickAnswer>
+
+<InstallCta>열린 탭마다 사본을, 일정에 따라 자동으로 저장합니다. Chrome, Edge, Firefox에서 무료.</InstallCta>
+
+<Section id="problem" title="탭은 실제로 이렇게 사라집니다">
+
+큰 충돌 한 번으로 잃는 경우는 드뭅니다. 대개는 사소한 일입니다. 엉뚱한 창을 닫는데, 하필 오늘 아침 자료 조사로 연 탭 서른 개가 있던 창입니다. 업데이트로 브라우저가 다시 시작되고 창 세 개 중 하나만 돌아옵니다. 금요일에 정리했는데 월요일에 닫았던 페이지가 필요해집니다. 그때쯤 그 탭은 방문 기록 어딘가, 수백 개의 다른 페이지 사이에 있습니다. 이름이라도 기억한다면 말이죠.
+
+직접 저장하면 해결됩니다. 기억나는 날에는요. 자동 저장은 나머지 날을 위한 것입니다.
+
+충돌이나 강제 재시작 후 각 브라우저의 기본 도구로 탭을 되찾는 방법은 [충돌 후 탭을 되찾는 방법](/blog/restore-tabs-after-crash)을 참고하세요. 이 가이드는 항상 사본이 있도록 하는 방법을 다룹니다.
+
+</Section>
+
+<Section id="why" title="자동 저장이 이렇게 동작하는 이유">
+
+TabMerger 자동 저장의 규칙은 모두 사본이 그냥 있는 데 그치지 않고 쓸모 있게 하려고 있습니다.
+
+- **새 그룹에 저장합니다.** 그룹 이름은 시간('자동 저장 11월 21일 오후 8:28')이고, 창 단위 그대로 탭 순서도 유지됩니다. 전에 저장한 것은 아무것도 바뀌지 않습니다. 새 자동 저장마다 직전과 다른 색이 붙어 쉽게 구분됩니다.
+- **탭이 쌓이는 방식이 두 가지라 트리거도 두 가지입니다.** **일정**(15분 또는 30분마다, 1시간마다, 2시간 또는 4시간마다, 하루 한 번)은 꾸준한 작업에 맞습니다. **탭 수**(열린 탭 20, 30, 50, 75, 100개)는 어떤 일정으로도 따라잡지 못하는 자료 조사 폭주에 맞습니다.
+- **폭주는 한 번만 저장됩니다.** 탭 수 트리거는 그 수를 넘을 때 실행되고, 다시 그 수 이하로 돌아오고 최소 10분이 지나야 다시 실행될 수 있습니다. 탭 열 개를 연달아 열어도 그룹이 열 개 생기지 않습니다.
+- **중복 없음.** 주소가 이미 그룹 중 하나에 있는 탭은 건너뛰고, 여러 탭에서 열린 같은 페이지는 한 번만 저장합니다. 모두 이미 저장되어 있으면 그 회차에는 아무것도 저장하지 않고 그렇게 알려 줍니다.
+- **비공개는 비공개로.** 비공개 창은 저장하지 않습니다. TabMerger 자체 페이지는 제외하고, 고정된 탭과 브라우저 페이지는 포함합니다.
+- **손댈 필요가 없습니다.** 자동 저장은 브라우저가 열려 있는 동안 확장 프로그램의 백그라운드에서 실행되고, 브라우저가 시작될 때 저장할 때가 되었는지 확인합니다. 선택 사항인 알림이 실행 후마다 알려 주고, 설정의 상태 줄에 마지막 결과가 표시됩니다.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="TabMerger의 자동 저장" steps={[{ title: '설정' }, { title: '자동 저장된 그룹' }]}>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-save-settings" alt="TabMerger의 'Settings'(설정), 'Data'(데이터): 'Auto-save open tabs'(열린 탭 자동 저장) 켜짐, 1시간마다 그리고 열린 탭이 50개를 넘을 때, 'Auto-save now'(지금 자동 저장) 버튼 포함, 밝은 테마" darkAlt="TabMerger의 'Settings'(설정), 'Data'(데이터): 'Auto-save open tabs'(열린 탭 자동 저장) 켜짐, 1시간마다 그리고 열린 탭이 50개를 넘을 때, 'Auto-save now'(지금 자동 저장) 버튼 포함, 어두운 테마" boxes={[{ id: 'schedule', label: '저장 주기' }, { id: 'threshold', label: '열린 탭 수 트리거' }, { id: 'run-now', label: '지금 바로 저장' }]} source="TabMerger 3.16.1">1시간마다, 그리고 열린 탭이 50개를 넘을 때마다.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-saved" alt="'Auto-saved'(자동 저장됨) 아래의 창 2개, 탭 7개짜리 그룹과 'Keep as group'(그룹으로 유지) 버튼, 밝은 테마" darkAlt="'Auto-saved'(자동 저장됨) 아래의 창 2개, 탭 7개짜리 그룹과 'Keep as group'(그룹으로 유지) 버튼, 어두운 테마" boxes={[{ id: 'keep', label: '그룹으로 유지' }]} source="TabMerger 3.16.1">결과: 열린 창 두 개가 그룹으로 저장되었습니다. 유지하면 계속 보관됩니다.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="steps" title="네 단계로 켜기">
+
+1. TabMerger를 열고 **설정**(Settings, 계정 메뉴) → **데이터**(Data)로 이동합니다.
+2. **열린 탭 자동 저장**(Auto-save open tabs)을 켭니다. (Pro에서는 이미 1시간마다로 켜져 있습니다.)
+3. **일정**(Schedule), **열린 탭이 다음 수를 넘으면**(When open tabs pass)의 수, 또는 둘 다 고릅니다. 저장할 때마다 알림을 받으려면 **알림 표시**(Show a notification)를 켭니다.
+4. **지금 자동 저장**(Auto-save now)을 한 번 눌러 결과를 확인합니다. 사이드바의 **자동 저장됨**(Auto-saved) 아래에 새 그룹이 생깁니다.
+
+계속 두고 싶은 자동 저장이 있나요? 열어서 **그룹으로 유지**(Keep as group)를 누르세요. 내 그룹으로 옮겨지고 자동으로 삭제되지 않습니다.
+
+</Section>
+
+<Section id="closed" title="최근에 닫은 탭: 안전망의 나머지 절반">
+
+자동 저장은 열린 것을, **최근에 닫은 탭**(Recently closed)은 방금 닫은 것을 지킵니다. 닫은 탭과 창은 모두 날짜별로 이 기기에만 보관되고, 비공개 창은 기록하지 않습니다.
+
+- 사이드바에서 **최근에 닫은 탭**을 열어 날짜별로 보거나, <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>를 누르고 `closed:`로 시작해 검색하세요.
+- 닫은 **창**은 항목 하나('창 · 탭 3개')로 표시됩니다. 고르면 창 전체가 돌아옵니다.
+- 결과를 <Kbd>Ctrl</Kbd>+클릭(Mac에서는 <Kbd>⌘</Kbd>+클릭)하거나 가운데 버튼으로 클릭하면 백그라운드에서 다시 엽니다.
+
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-closed-window" alt="TabMerger에서 closed: 검색으로 오늘 닫은 탭 3개짜리 창이 표시된 모습, 밝은 테마" darkAlt="TabMerger에서 closed: 검색으로 오늘 닫은 탭 3개짜리 창이 표시된 모습, 어두운 테마" boxes={[{ id: 'search-input', label: 'closed: 필터' }, { id: 'closed-window', label: '닫은 창 전체' }]} source="TabMerger 3.16.1">실수로 닫은 창도 검색 한 번이면 돌아옵니다.</ThemedScreenshot>
+
+더 많은 검색 요령은 [TabMerger로 모든 탭 검색하기](/blog/search-all-your-tabs-with-tabmerger)에 있습니다.
+
+</Section>
+
+<Section id="benefit" title="얻는 것">
+
+최악의 경우가 '그 탭들이 사라졌다'에서 '마지막 저장 이후에 연 것만 잃는다'로 줄어듭니다. 1시간마다 저장하면 재시작이 잘못되어도 잃는 것은 최대 1시간 분량의 새 탭뿐이고, 직접 닫은 창은 '최근에 닫은 탭'에 있습니다. 어느 쪽이든 방문 기록에서 오후를 보내는 대신 검색 한 번이면 됩니다.
+
+</Section>
+
+<Section id="habits" title="좋은 습관">
+
+- **일정을 작업 속도에 맞추세요.** 대부분의 날에는 1시간마다, 자료 조사가 많은 날에는 15분마다가 좋습니다.
+- **탭을 한꺼번에 여는 편이라면 탭 수도 설정하세요.** 50개로 시작하면 좋습니다.
+- **먼저 유지하고, 그다음 정리하세요.** 자동 저장에 남길 만한 것이 있으면 **그룹으로 유지**를 누르고 이름을 바꾼 뒤, 나머지는 삭제하세요.
+- **그래도 의도적으로 저장하세요.** 자동 저장은 안전망이지 계획이 아닙니다. 실제 프로젝트에는 이름 붙인 그룹을 두세요([매일의 탭 워크플로](/blog/tabmerger-daily-workflow) 참고).
+
+</Section>
+
+<Section id="plans" title="무료와 Pro">
+
+<ComparisonTable
+  head={['', '무료', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['열린 탭 자동 저장', '켜기 전까지 꺼짐, 최신 2개 보관', '기본으로 켜짐, 모두 보관'],
+    ['자동 저장과 요금제 한도', '그룹 5개, 탭 50개 한도에 포함', '한도 없음'],
+    ['최근에 닫은 탭', '최근 2일', '최근 30일'],
+    ['그룹의 암호화된 자동 백업', '아니요', '1시간마다부터 매주까지, 최신 10개 보관'],
+    ['다른 기기에서 열린 탭', '아니요', '설정 → 기기'],
+  ]}
+/>
+
+무료 요금제에서는 자동 저장이 2개가 되면 새 자동 저장이 가장 오래된 것을 대체합니다. **그룹으로 유지**를 누르면 그 하나는 순환에서 빠집니다. 탭 50개 한도에 가까우면 자동 저장은 들어가는 만큼만 저장하고 그렇게 알려 줍니다. 백업과 기기의 탭은 엔드투엔드로 암호화되어 계정에 저장되며, Pro가 없는 계정의 경우 서버가 저장을 거부합니다. 자세한 내용은 [요금 페이지](/pricing)에서 확인하세요.
+
+<InstallCta>한 번 설정하고 닫은 창 걱정은 그만하세요. Chrome, Edge, Firefox에서 무료.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="자주 묻는 질문">
+
+<Faq items={post.faq} />
+
+</Section>

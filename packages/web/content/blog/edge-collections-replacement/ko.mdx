@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'edge-collections-replacement',
+  title: 'Edge 컬렉션 종료: 이제 무엇을 써야 할까',
+  navTitle: 'Edge 컬렉션 대체 도구',
+  seoTitle: 'Edge 컬렉션이 사라졌나요? 최고의 대안과 옮기는 방법',
+  description:
+    'Microsoft는 버전 149부터 Edge에서 컬렉션(Collections)을 제거했습니다. 저장한 컬렉션이 어떻게 됐는지, 어떻게 꺼내는지, 그리고 Edge 컬렉션 대안인 TabMerger로 이름 있는 그룹으로 가져오는 방법을 알려 드립니다.',
+  shareSummary: 'Edge 149에서 컬렉션이 종료됐습니다. 페이지가 어디로 갔는지, 이제 무엇을 쓸지.',
+  dek: '저장한 페이지는 사라지지 않았습니다. 어디로 갔는지, 그리고 더 나은 보관 장소를 소개합니다.',
+  published: '2026-12-06',
+  updated: '2026-12-06',
+  testedOn: ['Edge 158.0.4370.33', 'Chrome 157.0.8103.80'],
+  keyFacts: [
+    {
+      text: '컬렉션은 2026년 6월 4일에 출시된 Edge 149부터 더 이상 사용할 수 없습니다.',
+      source: 'Microsoft 지원',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'Edge 145부터는 컬렉션에 페이지를 추가할 수 없었습니다.', source: 'Microsoft 지원' },
+    {
+      text: '‘즐겨찾기로 이동’은 페이지 주소만 옮기며 이미지나 메모는 옮기지 않습니다.',
+      source: 'Microsoft 지원',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'TabMerger는 ‘기타 즐겨찾기’ 안의 각 폴더를 이름 있는 그룹으로 바꿉니다.', source: 'TabMerger 3.16.1에서 테스트, 2026년 11월 21일' },
+  ],
+  faq: [
+    {
+      question: 'Microsoft가 Edge 컬렉션을 없앴나요?',
+      answer:
+        '네. Microsoft 지원 페이지에 따르면 컬렉션은 2026년 6월 4일에 출시된 Edge 149부터 더 이상 사용할 수 없으며, Edge 145부터는 새 페이지를 추가할 수 없었습니다.',
+    },
+    {
+      question: '제 컬렉션은 어디로 갔나요?',
+      answer:
+        'Microsoft는 ‘즐겨찾기로 이동’을 제공했습니다. 이 기능은 각 컬렉션을 즐겨찾기 폴더로 바꿉니다(페이지만). 개인 계정은 bing.com/saves에서도 저장된 컬렉션을 볼 수 있고, 회사 또는 학교 계정은 컬렉션을 내보낼 수 있었습니다.',
+    },
+    {
+      question: 'Edge 컬렉션을 대신할 최고의 도구는 무엇인가요?',
+      answer:
+        'TabMerger입니다. 이름과 색상이 있는 탭 그룹을 검색하고, 메모와 알림을 달고, Pro에서는 엔드투엔드 암호화로 동기화할 수 있습니다. Chrome과 Firefox에서도 작동합니다.',
+    },
+    {
+      question: '컬렉션을 TabMerger로 가져올 수 있나요?',
+      answer: '네. 컬렉션 폴더를 ‘기타 즐겨찾기’로 옮기고, 즐겨찾기를 HTML 파일로 내보낸 다음 설정 → 데이터에서 가져오세요. 그 폴더들이 각각 TabMerger 그룹이 됩니다.',
+    },
+  ],
+  images: [
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-light.webp', alt: 'favorites_edge.html 파일에 대해 Import 2 groups?(그룹 2개를 가져오시겠습니까?)라고 묻는 TabMerger 대화 상자, 라이트 테마' },
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-dark.webp', alt: 'favorites_edge.html 파일에 대해 Import 2 groups?(그룹 2개를 가져오시겠습니까?)라고 묻는 TabMerger 대화 상자, 다크 테마' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-light.webp', alt: '즐겨찾기 폴더에서 가져온 Trip to Lisbon과 Thesis reading 그룹이 있는 TabMerger 사이드바, 라이트 테마' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-dark.webp', alt: '즐겨찾기 폴더에서 가져온 Trip to Lisbon과 Thesis reading 그룹이 있는 TabMerger 사이드바, 다크 테마' },
+  ],
+  tags: ['edge', 'bookmarks', 'save-tabs', 'tab-manager'],
+  sources: [
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'EdgeCollectionsEnabled policy (obsolete)',
+      publisher: 'Microsoft Learn',
+      url: 'https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies/EdgeCollectionsEnabled',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/edge-collections-replacement/cover-edge-light.webp' },
+  ogImage: { src: '/blog/edge-collections-replacement/og.png', alt: 'Edge 컬렉션 종료: 이제 무엇을 써야 할까. 즐겨찾기 폴더를 그룹으로 가져오는 TabMerger 가이드' },
+  toc: [
+    { id: 'quick', label: '요약' },
+    { id: 'what-happened', label: '무슨 일이 있었나' },
+    { id: 'where', label: '페이지가 있는 곳' },
+    { id: 'move', label: 'TabMerger로 옮기기' },
+    { id: 'why', label: 'TabMerger를 쓰는 이유' },
+    { id: 'faq', label: '자주 묻는 질문' },
+  ],
+}
+
+<QuickAnswer>
+
+네, 종료됐습니다. Microsoft에 따르면 **컬렉션(Collections)은 Edge 149부터 더 이상 사용할 수 없습니다**(2026년 6월 4일 출시). 하지만 페이지가 삭제된 것은 아닙니다. **즐겨찾기로 이동**(Move to Favorites)이 각 컬렉션을 즐겨찾기 폴더로 바꿔 두었습니다. 새로운 보관 장소로는 [TabMerger](/features)가 가장 좋습니다. 즐겨찾기를 HTML로 내보내 파일을 가져오면 ‘기타 즐겨찾기’ 안의 모든 폴더가 검색 가능한 이름 있는 그룹이 되고, 메모, 알림, 암호화 동기화까지 Edge, Chrome, Firefox에서 쓸 수 있습니다.
+
+</QuickAnswer>
+
+<InstallCta>예전 컬렉션을 검색 가능한 이름 있는 그룹으로 되살리세요. Edge, Chrome, Firefox용 무료.</InstallCta>
+
+<Section id="what-happened" title="Microsoft가 정말 Edge 컬렉션을 없앴나요?">
+
+네, Microsoft의 자체 페이지에 따르면 단계적으로 없앴습니다.
+
+<ComparisonTable
+  head={['Edge 버전', '바뀐 점']}
+  rowHeaders
+  rows={[
+    ['145', '컬렉션에 페이지를 추가할 수 없게 됨. 기존 컬렉션은 계속 표시됨'],
+    ['149(2026년 6월 4일)', '컬렉션을 더 이상 사용할 수 없음'],
+    ['153', '컬렉션 관리 정책이 “because the Collections feature was removed”(컬렉션 기능이 제거되었으므로) 사용 중단됨'],
+  ]}
+/>
+
+Microsoft가 밝힌 이유를 그대로 옮기면 “retiring Collections in Edge, to better simplify our offerings”(제공 서비스를 더 단순하게 하기 위해 Edge의 컬렉션을 종료한다)입니다.
+
+</Section>
+
+<Section id="where" title="제 컬렉션은 어디로 갔나요?">
+
+종료 과정에서 Edge는 컬렉션 창에 두 가지 옵션을 보여 줬습니다.
+
+- **즐겨찾기로 이동**(Microsoft 권장): 각 컬렉션이 즐겨찾기 안의 폴더가 되었습니다. 저장된 웹 페이지만 옮겨졌고 이미지와 메모는 옮겨지지 않았습니다.
+- **데이터 내보내기**(Export your data): 회사 또는 학교 계정 전용입니다.
+
+개인 Microsoft 계정이라면 이전에 저장한 컬렉션을 `bing.com/saves`에서도 찾을 수 있습니다. 그러니 먼저 즐겨찾기(<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>)를 확인하세요. 컬렉션이 아마 폴더로 들어 있을 겁니다.
+
+</Section>
+
+<Section id="move" title="컬렉션을 TabMerger로 어떻게 옮기나요?">
+
+몇 분이면 예전 컬렉션이 하나하나 그룹이 됩니다.
+
+1. Edge에서 즐겨찾기를 엽니다(<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>). 예전 컬렉션이 **즐겨찾기 모음**(Favorites bar) 안에 있다면 그 폴더들을 **기타 즐겨찾기**(Other favorites)로 옮기세요. 내보내기는 즐겨찾기 모음 전체를 하나의 폴더로 기록하므로, 그 안에 남은 폴더들은 하나의 그룹으로 합쳐져 들어옵니다.
+2. **Export favorites**를 선택하고 HTML 파일을 저장합니다.
+3. TabMerger를 열고 → **설정 → 데이터** → **파일 가져오기**(Settings → Data → Import file)에서 그 파일을 선택합니다.
+4. 확인합니다. ‘기타 즐겨찾기’ 안의 각 폴더가 폴더 이름을 딴 그룹이 되고, 그 안의 하위 폴더는 같은 그룹에 합쳐집니다. 즐겨찾기 모음은 별도의 그룹 하나로 들어옵니다.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="내보낸 즐겨찾기 가져오기" steps={[{ title: '확인' }, { title: '내 그룹' }]}>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-import-confirm" alt="favorites_edge.html 파일에 대해 Import 2 groups?(그룹 2개를 가져오시겠습니까?)라고 묻는 TabMerger 대화 상자, 라이트 테마" darkAlt="favorites_edge.html 파일에 대해 Import 2 groups?(그룹 2개를 가져오시겠습니까?)라고 묻는 TabMerger 대화 상자, 다크 테마" boxes={[{ id: 'import-confirm', label: '가져오기' }]} source="TabMerger 3.16.1">TabMerger는 찾은 폴더 수를 세고 먼저 물어봅니다.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-imported-groups" alt="즐겨찾기 폴더에서 가져온 Trip to Lisbon과 Thesis reading 그룹이 있는 TabMerger 사이드바, 라이트 테마" darkAlt="즐겨찾기 폴더에서 가져온 Trip to Lisbon과 Thesis reading 그룹이 있는 TabMerger 사이드바, 다크 테마" boxes={[{ id: 'imported', label: '폴더 이름을 딴 그룹' }]} source="TabMerger 3.16.1">각 폴더가 이제 같은 이름과 같은 페이지를 가진 그룹입니다.</ThemedScreenshot>
+</Carousel>
+
+‘기타 즐겨찾기’의 다른 폴더도 함께 들어오니 필요 없는 그룹은 삭제하세요. 모든 가져오기 형식은 [TabMerger로 탭 가져오기](/blog/import-tabs-into-tabmerger)에서 다룹니다. 무료 버전은 그룹 5개와 탭 50개까지 담을 수 있고, 이 한도를 넘는 가져오기는 아무것도 추가되기 전에 중단됩니다. [Pro](/pricing)는 제한이 없습니다.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Edge Favorites page menu with Export favorites. */}
+
+</Section>
+
+<Section id="why" title="TabMerger가 컬렉션보다 나은 보관 장소인 이유는?">
+
+- **탭 묶음 전체를 한 번의 클릭으로**. **현재 상태와 합치기**(Merge with current)는 열려 있는 모든 창을 이름 있는 그룹에 저장합니다.
+- **어떤 탭에든 메모와 알림**. 컬렉션이 옮기지 못한 메모를 대신합니다. 탭을 마우스 오른쪽 버튼으로 클릭하고 **메모 추가**(Add note) 또는 **알림 설정…**(Remind me…)를 선택하세요.
+- **검색 한 번으로** 열린 탭, 저장된 탭, 최근에 닫은 탭을 모두 찾습니다: <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+- **여러 브라우저에서**. Edge, Chrome, Firefox에서 같은 그룹을 쓰고, Pro에서는 엔드투엔드 암호화로 동기화됩니다.
+- **데이터는 내 것**. 언제든 모든 것을 JSON으로 내보낼 수 있습니다. 한 회사가 기능을 유지하느냐에 좌우되지 않습니다.
+
+탭 관리자가 처음이신가요? [브라우저 세션 관리자가 하는 일](/blog/browser-session-manager)과 [최고의 탭 관리 확장 프로그램](/blog/best-tab-manager-extensions)에서 전체 그림을 볼 수 있습니다.
+
+<InstallCta>Edge, Chrome, Firefox용 무료. 시작할 때 계정이 필요 없습니다.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="자주 묻는 질문">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'Chrome, Edge ve Firefox’ta tek kısayol, başlangıçta geri yükleme ve kapatılan sekmeleri kurtarma.',
   dek: 'Açık her sekmeyi saklamanın beş yolu ve her birinin sessizce kaçırdığı tek şey.',
   published: '2026-11-19',
-  updated: '2026-11-19',
+  updated: '2026-11-24',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D yalnızca geçerli pencereyi kaydeder.', source: '19 Kasım 2026’da üçünde de test edildi' },
@@ -117,9 +117,11 @@ export const post = {
 
 <QuickAnswer>
 
-Geçerli penceredeki tüm açık sekmeleri kaydetmek için <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> tuşlarına basın (Mac’te <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>): sekmeler yeni bir yer işareti klasörüne eklenir. Bu yöntem Chrome, Edge ve Firefox’ta çalışır. Sekmelerin otomatik olarak yeniden açılması için Chrome’da **Kaldığım yerden devam et** (Continue where you left off), Edge’de **Open tabs from the previous session**, Firefox’ta ise **Önceki pencereleri ve sekmeleri aç** (Open previous windows and tabs) seçeneğini açın.
+Geçerli penceredeki tüm açık sekmeleri kaydetmek için <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> tuşlarına basın (Mac’te <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>): sekmeler yeni bir yer işareti klasörüne eklenir. Bu yöntem Chrome, Edge ve Firefox’ta çalışır. Sekmelerin otomatik olarak yeniden açılması için Chrome’da **Kaldığım yerden devam et** (Continue where you left off), Edge’de **Open tabs from the previous session**, Firefox’ta ise **Önceki pencereleri ve sekmeleri aç** (Open previous windows and tabs) seçeneğini açın. **Tüm pencereleri tek seferde** kaydetmek ve sekmeleri daha sonra aramak için [TabMerger](/features) kullanın: tek tıklama, açık tüm pencerelerinizi adlandırılmış bir gruba kaydeder.
 
 </QuickAnswer>
+
+<InstallCta>Açık tüm pencereleri tek tıklamayla kaydedin. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
 
 <BrowserSwitcher />
 
@@ -200,7 +202,7 @@ Firefox’ta: **Ayarlar → Giriş sayfası ve başlangıç → Başlangıç →
 
 <Section id="closed" title="3. Kapattığınız sekmeleri geri getirin">
 
-Kapattığınız son sekmeyi veya pencereyi yeniden açmak için <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) tuşlarına basın; daha geriye gitmek için yeniden basın. Daha eski sekmeler için <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> ile Geçmiş’i (History) açın.
+Kapattığınız son sekmeyi veya pencereyi yeniden açmak için <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) tuşlarına basın; daha geriye gitmek için yeniden basın. Daha eski sekmeler için <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> ile Geçmiş’i (History) açın. Tarayıcının tamamı çöktüyse veya kapandıysa [çökmeden sonra sekmeleri geri yükleme](/blog/restore-tabs-after-crash) rehberimizi izleyin.
 
 <BrowserPanels section="closed">
 <BrowserPanel browser="chrome">
@@ -232,7 +234,9 @@ Firefox, son kapatılan sekmeleri ve pencereleri **Geçmiş** menüsünde, **Son
 
 - **Chrome** bir grubu kaydedip yeniden açabilir, ancak uzantılar kapatılmış kayıtlı bir grubu göremez ([tabGroups API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
 - **Firefox** grupları cihazda kalır ve Firefox Sync ile taşınmaz.
-- **Edge**’de Edge 149’dan itibaren Koleksiyonlar yok.
+- **Edge**’de Edge 149’dan itibaren Koleksiyonlar yok ([yerine ne kullanılır](/blog/edge-collections-replacement)).
+
+Grupların nasıl kaydedileceği, yeniden açılacağı ve eşitleneceği adım adım [Chrome sekme grupları rehberimizde](/blog/chrome-tab-groups) anlatılıyor.
 
 {/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
 
@@ -260,14 +264,14 @@ Yerleşik yöntemlerin her biri aynı anda yalnızca bir pencereyi, bir yeniden 
   head={['Kısayol', 'Kaydettikleri']}
   keysColumn={0}
   rows={[
-    ['Ctrl+Shift+P', 'Penceredeki diğer tüm sekmeler'],
-    ['Ctrl+Shift+S', 'Geçerli sekme'],
-    ['Ctrl+Shift+K', 'Soldaki sekmeler'],
-    ['Ctrl+Shift+U', 'Sağdaki sekmeler'],
+    ['Alt+Shift+O', 'Penceredeki diğer tüm sekmeler'],
+    ['Alt+Shift+S', 'Geçerli sekme'],
+    ['Alt+Shift+Comma', 'Soldaki sekmeler'],
+    ['Alt+Shift+Period', 'Sağdaki sekmeler'],
   ]}
 />
 
-Mac’te <Kbd>⌘</Kbd> kullanın. Her kısayol nereye kaydedileceğini sorar; **Hızlı Kayıt (yeni grup)** hemen bir grup oluşturur. Firefox’ta <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> gizli pencere açar, bu yüzden `about:addons` → “Uzantı kısayollarını yönet” (Manage Extension Shortcuts) altında başka bir tuş seçin.
+Mac’te <Kbd>Alt</Kbd> yerine <Kbd>Control</Kbd> tuşuna basın. Her kısayol nereye kaydedileceğini sorar; **Hızlı Kayıt (yeni grup)** hemen bir grup oluşturur. Bu tuşlar yeni kurulumlarda gelir; daha önceki bir kurulum eski tuşlarını korur ve hepsini tarayıcınızın kısayollar sayfasında değiştirebilirsiniz. Nasıl yapılacağını [sekme klavye kısayolları rehberimiz](/blog/tab-keyboard-shortcuts) gösteriyor.
 
 ### Yanlışlıkla bir şey mi kapattınız?
 
@@ -308,7 +312,7 @@ Mac’te <Kbd>⌘</Kbd> kullanın. Her kısayol nereye kaydedileceğini sorar; *
   ]}
 />
 
-Hangisini seçerseniz seçin, başlangıç ayarını açın. Saklamaya değer tek bir pencereyi yer işaretlerine ekleyin. Birkaç pencereyle çalışıyorsanız ya da kapattığınız bir sekmeye günler sonra ihtiyaç duyuyorsanız bir uzantı kullanın. Daha fazlası [karşılaştırma sayfamızda](/compare).
+Hangisini seçerseniz seçin, başlangıç ayarını açın. Saklamaya değer tek bir pencereyi yer işaretlerine ekleyin. Birkaç pencere ya da günler önce kapattığınız bir sekme için TabMerger bunu tek tıklamayla yapar, üstelik [her şeyi bir dosyaya dışa aktarabilir](/blog/export-open-tabs). Daha fazlası [karşılaştırma sayfamızda](/compare) ve [en iyi sekme yöneticisi uzantılarının karşılaştırmasında](/blog/best-tab-manager-extensions).
 
 </Section>
 

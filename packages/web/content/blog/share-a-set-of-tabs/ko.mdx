@@ -1,0 +1,141 @@
+export const post = {
+  slug: 'share-a-set-of-tabs',
+  title: '여러 탭을 한 번에 다른 사람과 공유하는 방법',
+  navTitle: '여러 탭 한 번에 공유하기',
+  seoTitle: '여러 탭을 한 번에 공유하는 방법 (Chrome, Edge, Firefox)',
+  description:
+    '동료나 친구에게 탭 묶음 전체를 보내는 방법: 링크를 복사하거나, 북마크 파일을 공유하거나, 계정 없이 한 번의 클릭으로 열리는 엔드투엔드 암호화 TabMerger 공유 링크를 만드세요.',
+  shareSummary: '여러 탭을 한 번에 공유: 링크, 북마크 파일, 또는 클릭 한 번으로 열리는 암호화 링크.',
+  dek: '채팅에 링크 열두 개를 붙여 넣는 건 보내는 사람도 받는 사람도 번거롭습니다. 묶음 전체를 담은 링크 하나라면 다릅니다.',
+  published: '2026-12-10',
+  updated: '2026-12-10',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger 공유 링크는 읽기 전용 페이지를 엽니다. 보는 데 계정이 필요 없습니다.', source: 'TabMerger 공유 페이지' },
+    { text: '복호화 키는 링크의 #프래그먼트에 있고, 브라우저는 이 부분을 서버로 보내지 않습니다.', source: 'TabMerger 소스 코드', href: 'https://github.com/lbragile/TabMerger' },
+    { text: '공유 링크를 만들려면 Pro가 필요합니다.', source: 'TabMerger 요금제', href: '/pricing' },
+    { text: 'Firefox 159는 탭 그룹의 모든 링크를 복사할 수 있습니다.', source: 'Firefox 159 메뉴 문구' },
+  ],
+  faq: [
+    {
+      question: '여러 탭을 한 번에 공유하려면 어떻게 하나요?',
+      answer:
+        'TabMerger Pro에서 그룹을 선택하고 공유를 누르세요. 암호화된 링크 하나로 모든 탭이 읽기 전용 페이지에서 열립니다. 브라우저 기본 기능으로는 탭을 북마크한 뒤 내보낸 북마크 파일을 보내거나, Firefox에서 탭 그룹의 모든 링크를 복사할 수 있습니다.',
+    },
+    {
+      question: '받는 사람도 TabMerger가 있어야 하나요?',
+      answer: '아니요. 공유 링크는 어떤 브라우저에서나 열리고, 받는 사람은 탭 하나, 창 하나 또는 전부를 열 수 있습니다. TabMerger를 설치했다면 그 탭을 자신의 그룹으로 저장할 수도 있습니다.',
+    },
+    {
+      question: 'TabMerger가 제가 공유한 탭을 볼 수 있나요?',
+      answer: '아니요. 탭은 업로드 전에 사용자의 브라우저에서 암호화되며, 키는 링크의 #프래그먼트에만 있어 서버에 전달되지 않습니다.',
+    },
+    {
+      question: '공유는 무료인가요?',
+      answer: '공유 링크 만들기는 Pro 기능입니다. 링크 복사와 북마크 파일 또는 JSON 파일 공유는 무료입니다.',
+    },
+  ],
+  images: [
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp', alt: '그룹 “Work”와 “Reading list”를 선택한 TabMerger. 선택 표시줄에 Star(별표), Unstar(별표 해제), Share(공유), Delete(삭제)가 보임, 라이트 테마' },
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-dark.webp', alt: '그룹 “Work”와 “Reading list”를 선택한 TabMerger. 선택 표시줄에 Star(별표), Unstar(별표 해제), Share(공유), Delete(삭제)가 보임, 다크 테마' },
+    { src: '/blog/share-a-set-of-tabs/share-page-light.webp', alt: '읽기 전용인 TabMerger의 Shared Groups(공유 그룹) 페이지. 그룹 두 개와 Open window(창 열기), Open all tabs(모든 탭 열기) 버튼이 보임, 라이트 테마' },
+    { src: '/blog/share-a-set-of-tabs/share-page-dark.webp', alt: '읽기 전용인 TabMerger의 Shared Groups(공유 그룹) 페이지. 그룹 두 개와 Open window(창 열기), Open all tabs(모든 탭 열기) 버튼이 보임, 다크 테마' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'bookmarks', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Import Chrome bookmarks & settings (export section)', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/96816', checked: '2026-11-21' },
+    {
+      title: 'TabMerger source code (sharing)',
+      publisher: 'GitHub',
+      url: 'https://github.com/lbragile/TabMerger',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp' },
+  ogImage: { src: '/blog/share-a-set-of-tabs/og.png', alt: '여러 탭을 한 번에 다른 사람과 공유하는 방법: 공유할 그룹 두 개를 선택한 TabMerger 가이드' },
+  toc: [
+    { id: 'quick', label: '빠른 답변' },
+    { id: 'manual', label: '확장 프로그램 없이' },
+    { id: 'tabmerger', label: '암호화 링크 하나로' },
+    { id: 'what-they-see', label: '받는 사람이 보는 화면' },
+    { id: 'faq', label: '자주 묻는 질문' },
+  ],
+  browserSections: ['manual'],
+  browserFact: {
+    label: '링크 복사 또는 내보내기',
+    values: { chrome: '북마크 관리자 → 북마크 내보내기', edge: 'Favorites → Export favorites', firefox: '탭 그룹 → 그룹의 링크 복사' },
+  },
+}
+
+<QuickAnswer>
+
+클릭 한 번으로 끝내려면 [TabMerger](/features) 공유 링크를 쓰세요. 그룹을 선택하고 **공유**(Share)를 누른 뒤 링크를 붙여 넣으면 됩니다. 링크를 연 사람은 모든 탭을 읽기 전용 페이지에서 보고, 계정 없이 탭 하나, 창 하나 또는 전부를 열 수 있습니다. 게다가 탭은 **엔드투엔드 암호화**되므로 TabMerger조차 내용을 읽을 수 없습니다. 확장 프로그램 없이 하려면 탭을 북마크하고 내보낸 북마크 파일을 보내거나, Firefox에서 탭 그룹의 모든 링크를 복사하세요.
+
+</QuickAnswer>
+
+<InstallCta>탭 묶음 전체를 암호화 링크 하나로 공유하세요. 무료로 시작하고, 공유는 Pro 기능입니다.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="manual" title="확장 프로그램 없이 탭을 공유하려면?">
+
+<BrowserPanels section="manual">
+<BrowserPanel browser="chrome">
+
+1. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>를 눌러 창의 탭을 새 폴더에 북마크합니다.
+2. **⋮ → 북마크 및 목록 → 북마크 관리자**(Bookmark Manager)를 연 다음 **⋮(더보기) → 북마크 내보내기**(Export bookmarks)를 선택합니다.
+3. HTML 파일을 보냅니다. 받는 사람은 이 파일을 자신의 브라우저(또는 TabMerger)로 가져옵니다.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>를 눌러 창의 탭을 새 폴더에 즐겨찾기로 추가합니다.
+2. 즐겨찾기(<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>)를 열고 **Export favorites**를 선택합니다.
+3. HTML 파일을 보냅니다.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. 탭을 탭 그룹에 넣습니다(탭 하나를 다른 탭 위로 끌어다 놓기).
+2. 그룹 라벨을 마우스 오른쪽 버튼으로 클릭하고 **그룹의 링크 복사**(Copy links in group)를 선택합니다.
+3. 링크를 메시지나 문서에 붙여 넣습니다.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>북마크 파일에는 *모든* 북마크가 내보내지고, 붙여 넣은 링크는 받는 사람이 하나씩 열어야 하는 주소 더미로 도착합니다.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="링크 하나로 탭을 공유하려면?">
+
+1. TabMerger에서 탭을 그룹에 저장합니다(**현재 상태와 합치기**(Merge with current)로 열린 창을 모두 저장할 수 있습니다).
+2. 사이드바에서 공유할 그룹을 각각 **Ctrl+클릭**(Mac에서는 <Kbd>⌘</Kbd>+클릭)합니다.
+3. 선택 표시줄에서 **공유**를 누릅니다. 링크가 클립보드에 복사되니 원하는 곳에 붙여 넣으세요.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/tm-selection-share" alt="그룹 “Work”와 “Reading list”를 선택한 TabMerger. 선택 표시줄에 Star(별표), Unstar(별표 해제), Share(공유), Delete(삭제)가 보임, 라이트 테마" darkAlt="그룹 “Work”와 “Reading list”를 선택한 TabMerger. 선택 표시줄에 Star(별표), Unstar(별표 해제), Share(공유), Delete(삭제)가 보임, 다크 테마" boxes={[{ id: 'share', label: 'Share' }]} source="TabMerger 3.16.1">그룹 두 개를 선택한 상태. Share(공유)는 두 그룹을 담은 링크 하나를 만듭니다(여기서는 버튼이 꺼져 있는 Free 계정 화면).</ThemedScreenshot>
+
+비공개가 유지되는 방식: TabMerger는 브라우저에서 새 키를 생성해 그 키로 그룹을 암호화하고, 암호화된 사본만 업로드합니다. 키는 링크의 `#` 뒤에 들어가는데, 이 부분은 브라우저가 서버로 보내지 않는 주소 영역이므로 전체 링크를 가진 사람만 탭을 읽을 수 있습니다. 링크 만들기는 [Pro](/pricing) 기능입니다.
+
+</Section>
+
+<Section id="what-they-see" title="받는 사람에게는 무엇이 보이나요?">
+
+각 그룹과 창, 탭 수가 표시되는 읽기 전용 페이지입니다. 창 하나의 탭을 여는 **모든 탭 열기**(Open all tabs), 그룹 전체를 여는 **창 열기**(Open window) 버튼이 있고, 탭을 하나씩 열 수도 있습니다. 계정도 TabMerger도 필요 없습니다. TabMerger를 쓰는 사람이라면 탭을 연 뒤 **현재 상태와 합치기**로 자신의 그룹으로 저장할 수 있습니다.
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/share-page" width={1600} height={1115} alt="읽기 전용인 TabMerger의 Shared Groups(공유 그룹) 페이지. 그룹 두 개와 Open window(창 열기), Open all tabs(모든 탭 열기) 버튼이 보임, 라이트 테마" darkAlt="읽기 전용인 TabMerger의 Shared Groups(공유 그룹) 페이지. 그룹 두 개와 Open window(창 열기), Open all tabs(모든 탭 열기) 버튼이 보임, 다크 테마" source="tabmerger.com/share/demo">TabMerger의 공개 데모 링크로 연 공유 페이지.</ThemedScreenshot>
+
+파일이 더 편하다면 TabMerger의 [JSON 내보내기](/blog/export-open-tabs)(Export JSON)를 Free 요금제에서도 쓸 수 있고, 내 기기 사이에서 옮기는 방법은 [탭을 다른 컴퓨터로 옮기기](/blog/move-tabs-between-computers)에서 다룹니다.
+
+<InstallCta>Chrome, Edge, Firefox용 무료 확장 프로그램. 시작할 때 계정이 필요 없습니다.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="자주 묻는 질문">
+
+<Faq items={post.faq} />
+
+</Section>

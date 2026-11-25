@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'chrome-tab-groups',
+  title: 'קבוצות כרטיסיות ב-Chrome: איך שומרים, פותחים מחדש ומסנכרנים',
+  seoTitle: 'קבוצות כרטיסיות ב-Chrome: שמירה, פתיחה מחדש וסנכרון (והמגבלות)',
+  description:
+    'איך עובדות קבוצות כרטיסיות ב-Chrome: יצירה, כיווץ, סגירה ופתיחה מחדש של קבוצה שמורה, מה מסתנכרן למכשירים האחרים שלכם, ומה תוספים יכולים לראות ומה לא.',
+  shareSummary: 'יצירה, שמירה, פתיחה מחדש וסנכרון של קבוצות כרטיסיות ב-Chrome, ואיפה הן נופלות.',
+  dek: 'קבוצה שנסגרה לא נעלמה: היא נשמרה. הנה לאן היא הולכת, מה עובר איתכם למכשירים אחרים ומה לא.',
+  published: '2026-11-23',
+  updated: '2026-11-23',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'סגירת קבוצה שומרת אותה; פותחים אותה מחדש מסרגל הסימניות או מ-⋮ ← קבוצות של כרטיסיות.',
+      source: 'העזרה של Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'מחיקה או ביטול קיבוץ מסירים את הקבוצה מכל מכשיר מחובר.', source: 'העזרה של Chrome' },
+    {
+      text: 'chrome.tabGroups רואה רק קבוצות בחלונות פתוחים.',
+      source: 'התיעוד של chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'שתי ההגדרות של קבוצות כרטיסיות בסרגל הסימניות היו מופעלות ב-Chrome 157 שהותקן זה עתה.', source: 'chrome://settings/appearance, 20 בנובמבר 2026' },
+  ],
+  faq: [
+    {
+      question: 'איך שומרים קבוצת כרטיסיות ב-Chrome?',
+      answer:
+        'לוחצים לחיצה ימנית על שם הקבוצה ובוחרים באפשרות סגירת הקבוצה. Chrome שומר אותה, ופותחים אותה מחדש מסרגל הסימניות או מ-⋮ ← קבוצות של כרטיסיות.',
+    },
+    {
+      question: 'האם קבוצות כרטיסיות ב-Chrome מסתנכרנות בין מכשירים?',
+      answer:
+        'קבוצות שמורות עוברות עם חשבון Google שלכם: העזרה של Chrome מזהירה שמחיקה של קבוצה או ביטול הקיבוץ שלה מסירים אותה מכל מכשיר שמחובר לאותו חשבון.',
+    },
+    {
+      question: 'מה ההבדל בין סגירת הקבוצה למחיקת הקבוצה?',
+      answer: 'סגירת הקבוצה סוגרת את הכרטיסיות ושומרת את הקבוצה כדי לפתוח אותה שוב אחר כך. מחיקת הקבוצה מסירה אותה, גם במכשירים האחרים שלכם.',
+    },
+    {
+      question: 'האם תוסף לניהול כרטיסיות יכול לשמור את הקבוצות הסגורות שלי ב-Chrome?',
+      answer:
+        'לא כל עוד הן סגורות: ה-API של התוספים מתאר רק קבוצות בחלונות פתוחים. קודם פותחים את הקבוצה מחדש, ואז שומרים אותה עם התוסף.',
+    },
+  ],
+  images: [
+    { src: '/blog/chrome-tab-groups/chrome-tab-groups-setting.webp', alt: 'ההגדרות של Chrome, הקטע Appearance (מראה), כשהאפשרויות Show tab groups in bookmarks bar (הצגה של קבוצות כרטיסיות בסרגל הסימניות) ו-Automatically pin new tab groups created on any device to the bookmarks bar (הצמדה אוטומטית של קבוצות כרטיסיות חדשות לסרגל הסימניות) מופעלות שתיהן' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp', alt: 'הקטע Now Open (פתוח עכשיו) ב-TabMerger: שש כרטיסיות, שלוש מתויגות Sprint בכחול ושלוש מתויגות Thesis בירוק, ערכת נושא בהירה' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-dark.webp', alt: 'הקטע Now Open (פתוח עכשיו) ב-TabMerger: שש כרטיסיות, שלוש מתויגות Sprint בכחול ושלוש מתויגות Thesis בירוק, ערכת נושא כהה' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-light.webp', alt: 'הקבוצה Sprint + thesis ב-TabMerger עם אותן שש כרטיסיות והתגים Sprint ו-Thesis שלהן, ערכת נושא בהירה' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-dark.webp', alt: 'הקבוצה Sprint + thesis ב-TabMerger עם אותן שש כרטיסיות והתגים Sprint ו-Thesis שלהן, ערכת נושא כהה' },
+  ],
+  tags: ['chrome', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (tab groups with the keyboard)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp' },
+  ogImage: { src: '/blog/chrome-tab-groups/og.png', alt: 'כרטיס הכותרת Chrome tab groups: how to save, reopen and sync them: מדריך של TabMerger, עם כרטיסיות שמתויגות לפי קבוצת ה-Chrome שלהן' },
+  toc: [
+    { id: 'quick', label: 'תשובה קצרה' },
+    { id: 'basics', label: 'יצירה וכיווץ' },
+    { id: 'save', label: 'שמירה ופתיחה מחדש' },
+    { id: 'sync', label: 'האם הן מסתנכרנות?' },
+    { id: 'limits', label: 'המגבלות' },
+    { id: 'tabmerger', label: 'לשמור קבוצות לתמיד' },
+    { id: 'faq', label: 'שאלות נפוצות' },
+  ],
+}
+
+<QuickAnswer>
+
+כדי ליצור קבוצה, לוחצים לחיצה ימנית על כרטיסייה ובוחרים **הוספת כרטיסייה לקבוצה** (<bdi dir="ltr">Add tab to group</bdi>), ואז נותנים לה שם ובוחרים צבע. כדי לשמור קבוצה, לוחצים לחיצה ימנית על השם שלה ובוחרים **סגירת הקבוצה** (<bdi dir="ltr">Close group</bdi>): Chrome שומר אותה, ופותחים אותה מחדש מסרגל הסימניות או מ-**⋮ ← קבוצות של כרטיסיות** (<bdi dir="ltr">Tab groups</bdi>). קבוצות שמורות עוברות עם חשבון Google שלכם, כך שמחיקה של קבוצה מוחקת אותה בכל מקום. כדי לשמור על הקבוצות לתמיד, שומרים אותן ב-[TabMerger](/features): הוא שומר לכל כרטיסייה את השם והצבע של קבוצת ה-Chrome שלה, ומחזיר את הכרטיסיות לקבוצות כשפותחים אותן מחדש.
+
+</QuickAnswer>
+
+<InstallCta>שומרים על קבוצות הכרטיסיות של Chrome בטוחות, ניתנות לחיפוש ומסונכרנות. חינם ל-Chrome, ל-Edge ול-Firefox.</InstallCta>
+
+<Section id="basics" title="איך עובדות קבוצות כרטיסיות ב-Chrome?">
+
+קבוצת כרטיסיות היא רצף של כרטיסיות עם שם וצבע בתוך חלון אחד.
+
+1. לוחצים לחיצה ימנית על כרטיסייה ובוחרים **הוספת כרטיסייה לקבוצה** ← **קבוצה חדשה** (<bdi dir="ltr">New group</bdi>) או קבוצה קיימת.
+2. נותנים לקבוצה שם ובוחרים צבע. בהמשך, לחיצה ימנית על השם מאפשרת לשנות את השם או את הצבע, או להוסיף לקבוצה כרטיסייה חדשה.
+3. גוררים כרטיסייה אל הקבוצה כדי להוסיף אותה; כדי להוציא אותה, לוחצים לחיצה ימנית על הכרטיסייה ← **הסרה מהקבוצה** (<bdi dir="ltr">Remove from group</bdi>).
+4. לוחצים על שם הקבוצה כדי לכווץ אותה לתווית אחת, ושוב כדי להרחיב אותה.
+
+מהמקלדת: לוחצים על <Kbd>F6</Kbd> עד שהמיקוד עובר לכרטיסיות, עוברים לקבוצה עם <Kbd>Tab</Kbd>, ואז מקש התפריט פותח את תפריט הקבוצה. <Kbd>Space</Kbd> או <Kbd>Enter</Kbd> מכווצים אותה, ו-<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>←</Kbd>/<Kbd>→</Kbd></bdi> מזיז אותה.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with Close group and Delete group. */}
+
+</Section>
+
+<Section id="save" title="איך שומרים קבוצת כרטיסיות ומחזירים אותה?">
+
+**סגירת הקבוצה** היא כפתור השמירה של Chrome. הכרטיסיות נסגרות, הקבוצה לא: Chrome שומר אותה ומציג אותה בשני מקומות.
+
+- **סרגל הסימניות:** סמל רשת עם שם הקבוצה. לוחצים עליו כדי לפתוח אותה מחדש.
+- **התפריט ⋮ ← קבוצות של כרטיסיות:** הקבוצות ששמרתם.
+
+שתי הגדרות תחת **הגדרות ← מראה** (<bdi dir="ltr">Settings → Appearance</bdi>) קובעות את החלק של סרגל הסימניות. שתיהן היו מופעלות בפרופיל חדש של Chrome 157.
+
+<AnnotatedFigure src="/blog/chrome-tab-groups/chrome-tab-groups-setting.webp" alt="ההגדרות של Chrome, הקטע Appearance (מראה), כשהאפשרויות Show tab groups in bookmarks bar (הצגה של קבוצות כרטיסיות בסרגל הסימניות) ו-Automatically pin new tab groups created on any device to the bookmarks bar (הצמדה אוטומטית של קבוצות כרטיסיות חדשות לסרגל הסימניות) מופעלות שתיהן" width={1600} height={844} eager boxes={[{ id: 'tab-groups-setting', label: 'הצגה בסרגל הסימניות' }, { id: 'auto-pin', label: 'הצמדת קבוצות חדשות' }]} source="chrome://settings/appearance · Chrome 157.0.8103.80">שתי ההגדרות של קבוצות כרטיסיות בדף <bdi dir="ltr">Appearance</bdi> (מראה) של Chrome.</AnnotatedFigure>
+
+<Catch>קבוצה שמורה מחזיקה רק כתובות. היא לא גיבוי: מוחקים אותה פעם אחת, והיא נעלמת מכל המכשירים.</Catch>
+
+</Section>
+
+<Section id="sync" title="האם קבוצות כרטיסיות מסתנכרנות בין מכשירים?">
+
+כן, דרך חשבון Google שלכם. העזרה של Chrome מפורשת לגבי תופעת הלוואי: כשאתם **מוחקים** קבוצה, או מבטלים את הקיבוץ של הכרטיסיות שלה (**ביטול הקיבוץ**, <bdi dir="ltr">Ungroup</bdi>), הקבוצה מוסרת מהמכשיר שלכם *וגם* מכל מכשיר אחר שמחובר לאותו חשבון. ההגדרה **הצמדה אוטומטית של קבוצות כרטיסיות חדשות לסרגל הסימניות** (<bdi dir="ltr">Automatically pin new tab groups created on any device to the bookmarks bar</bdi>) מצמידה גם קבוצות שיצרתם במקום אחר.
+
+מה זה אומר בפועל:
+
+- קבוצות שיוצרים במחשב אחד יכולות להופיע במחשב אחר שמחובר לאותו חשבון; לזה בדיוק מתייחסת הגדרת ההצמדה.
+- סידור במחשב הנייד מוחק את אותן קבוצות גם במחשב השולחני.
+
+גם ל-Firefox 159 יש קבוצות כרטיסיות, עם **שמירה וסגירת הקבוצה** (<bdi dir="ltr">Save and close group</bdi>) ורשימת **קבוצות סגורות** (<bdi dir="ltr">Closed Groups</bdi>); השלבים וצילומי המסך במדריך הזה הם של Chrome. למשתמשי Firefox: [קבוצות כרטיסיות ב-Firefox](/blog/firefox-tab-groups).
+
+</Section>
+
+<Section id="limits" title="איפה קבוצות כרטיסיות לא מספיקות?">
+
+- **חלון אחד לכל קבוצה.** קבוצה חיה בחלון אחד. כדי לשמור "כל מה שפתוח אצלי" בשלושה חלונות צריך שלוש קבוצות או יותר.
+- **רק כתובות.** כמו סימנייה, קבוצה שמורה פותחת את הדף מההתחלה: מיקום הגלילה ומה שהוקלד בטפסים הולכים לאיבוד.
+- **מוסתרות מתוספים כשהן סגורות.** ה-API ‏`chrome.tabGroups` מתאר קבוצות שנמצאות בחלון פתוח: לכל קבוצה שהוא מחזיר יש `windowId`, סגירת קבוצה מפעילה את `onRemoved`, ואין קריאה שמציגה רשימה של קבוצות שמורות וסגורות. מנהל כרטיסיות לא יכול לגבות קבוצה שסגרתם עד שתפתחו אותה מחדש.
+- **מחיקות עוברות הלאה.** הסנכרון שהופך את הקבוצות לנוחות כל כך מפיץ גם טעות לכל מכשיר.
+
+המדריך שלנו [לשמירת כל הכרטיסיות הפתוחות](/blog/save-all-open-tabs) משווה בין קבוצות לסימניות, לשחזור בהפעלה ולמנהלי סשנים, וה[שגרה למצב של יותר מדי כרטיסיות](/blog/manage-too-many-tabs) מראה איפה קבוצות משתלבות ביום-יום.
+
+</Section>
+
+<Section id="tabmerger" title="לשמור את הקבוצות לתמיד עם TabMerger">
+
+[TabMerger](/features), התוסף החינמי שלנו ל-Chrome, ל-Edge ול-Firefox, קורא את קבוצות הכרטיסיות הפתוחות שלכם ב-Chrome. **פתוח עכשיו** מתייג כל כרטיסייה בשם ובצבע של הקבוצה שלה, וכששומרים חלון בקבוצה של TabMerger, התגים האלה נשמרים. הכרטיסיות ששמורות שם לא נפגעות כשקבוצת Chrome נמחקת במכשיר אחר.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="שמירת קבוצות כרטיסיות של Chrome ב-TabMerger" steps={[{ title: 'פתוח עכשיו' }, { title: 'הקבוצה השמורה' }]}>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-now-open-groups" alt="הקטע Now Open (פתוח עכשיו) ב-TabMerger: שש כרטיסיות, שלוש מתויגות Sprint בכחול ושלוש מתויגות Thesis בירוק, ערכת נושא בהירה" darkAlt="הקטע Now Open (פתוח עכשיו) ב-TabMerger: שש כרטיסיות, שלוש מתויגות Sprint בכחול ושלוש מתויגות Thesis בירוק, ערכת נושא כהה" boxes={[{ id: 'group-badge-1', label: 'הקבוצה Sprint' }, { id: 'group-badge-4', label: 'הקבוצה Thesis' }]} source="TabMerger 3.16.1">שתי קבוצות כרטיסיות של Chrome, <bdi dir="ltr">Sprint</bdi> ו-<bdi dir="ltr">Thesis</bdi>, כפי ש-<bdi dir="ltr">Now Open</bdi> (פתוח עכשיו) מציג אותן.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-saved-groups" alt="הקבוצה Sprint + thesis ב-TabMerger עם אותן שש כרטיסיות והתגים Sprint ו-Thesis שלהן, ערכת נושא בהירה" darkAlt="הקבוצה Sprint + thesis ב-TabMerger עם אותן שש כרטיסיות והתגים Sprint ו-Thesis שלהן, ערכת נושא כהה" boxes={[{ id: 'group-badge-1', label: 'הקבוצה Sprint' }, { id: 'group-badge-4', label: 'הקבוצה Thesis' }]} source="TabMerger 3.16.1">אחרי <bdi dir="ltr">Merge with current</bdi> (מיזוג עם הנוכחיים): הקבוצה השמורה שומרת לכל כרטיסייה את קבוצת ה-Chrome שלה.</ThemedScreenshot>
+</Carousel>
+
+כשפותחים מחדש את החלון השמור ב-Chrome או ב-Edge, הכרטיסיות שלו חוזרות לקבוצות כרטיסיות עם אותם שמות ואותם צבעים.
+
+<InstallCta>חינם ל-Chrome, ל-Edge ול-Firefox. אין צורך בחשבון כדי להתחיל.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="שאלות נפוצות">
+
+<Faq items={post.faq} />
+
+</Section>

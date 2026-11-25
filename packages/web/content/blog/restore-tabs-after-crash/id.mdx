@@ -1,0 +1,270 @@
+export const post = {
+  slug: 'restore-tabs-after-crash',
+  title: 'Cara mengembalikan tab setelah browser mogok, diperbarui, atau tidak sengaja ditutup',
+  navTitle: 'Kembalikan tab setelah browser mogok',
+  seoTitle: 'Cara Memulihkan Tab Setelah Browser Mogok di Chrome, Edge, dan Firefox',
+  description:
+    'Browser tertutup dan semua tab ikut hilang? Untuk memulihkan tab setelah browser mogok, ikuti langkah ini secara berurutan: buka ulang, riwayat, perangkat lain, lalu setelan yang mencegahnya terulang.',
+  shareSummary: 'Tab hilang karena browser mogok atau dimulai ulang? Langkah pemulihannya, berurutan.',
+  dek: 'Coba dulu perbaikan cepat, secara berurutan. Sebagian besar sesi yang hilang kembali dalam waktu kurang dari semenit.',
+  published: '2026-11-24',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Bantuan Chrome tentang browser mogok menyebutkan bahwa Ctrl+Shift+T membuka lagi tab yang tadi terbuka.',
+      source: 'Bantuan Chrome',
+      href: 'https://support.google.com/chrome/answer/142063',
+    },
+    { text: 'Menu Riwayat di Firefox memiliki “Pulihkan Sesi Sebelumnya”.', source: 'Firefox 159' },
+    {
+      text: 'Chrome hanya menampilkan tab dari perangkat lain jika sinkronisasi “Histori dan tab” aktif.',
+      source: 'Bantuan Chrome',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'Halaman History di Edge punya daftar “Recently closed” sendiri.', source: 'edge://history, Edge 157' },
+  ],
+  faq: [
+    {
+      question: 'Bagaimana cara mengembalikan tab setelah Chrome tertutup?',
+      answer:
+        'Buka lagi Chrome dan tekan Ctrl+Shift+T (⌘+Shift+T di Mac), berulang kali jika perlu. Jika tab belum kembali, buka histori dengan Ctrl+H dan lihat di bagian yang baru ditutup.',
+    },
+    {
+      question: 'Mengapa tab saya tidak dipulihkan?',
+      answer:
+        'Biasanya karena setelan saat memulai membuka halaman tab baru, tab berada di jendela pribadi, Anda menutup jendela satu per satu sebelum keluar, atau Anda membuka profil lain.',
+    },
+    {
+      question: 'Bisakah saya memulihkan tab dari kemarin?',
+      answer: 'Tidak sebagai sesi, tetapi setiap halaman yang Anda kunjungi ada di histori (Ctrl+H), kecuali Anda sudah menghapusnya. Cara yang andal adalah sesi yang disimpan atau simpan otomatis.',
+    },
+    {
+      question: 'Bagaimana agar ini tidak terulang?',
+      answer: 'Aktifkan setelan saat memulai dan simpan tab yang terbuka sebelum momen berisiko seperti pembaruan. Panduan kami untuk menyimpan semua tab yang terbuka membahas keduanya.',
+      link: { text: 'menyimpan semua tab yang terbuka', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Halaman History Edge dengan All, Recently closed, dan Tabs from other devices di bilah samping' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Setelan Chrome, On startup (Saat memulai), dengan Continue where you left off (Lanjutkan dari halaman terakhir yang dibuka) dipilih' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Pengaturan Edge, Start, home, and new tab page, dengan Open tabs from the previous session dipilih' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Pengaturan Firefox, Home and startup, dengan Open previous windows and tabs (Buka jendela dan tab sebelumnya) dicentang' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-light.webp', alt: 'Pengaturan TabMerger, Data: Auto-save open tabs (Simpan otomatis tab yang terbuka) aktif, dengan jadwal Every 30 minutes (Setiap 30 menit), tema terang' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-dark.webp', alt: 'Pengaturan TabMerger, Data: Auto-save open tabs (Simpan otomatis tab yang terbuka) aktif, dengan jadwal Every 30 minutes (Setiap 30 menit), tema gelap' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-light.webp', alt: 'TabMerger Recently closed (Baru ditutup), hari ini: tiga tab yang ditutup beserta waktu penutupan masing-masing, tema terang' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-dark.webp', alt: 'TabMerger Recently closed (Baru ditutup), hari ini: tiga tab yang ditutup beserta waktu penutupan masing-masing, tema gelap' },
+  ],
+  tags: ['restore-closed-tabs', 'session-management', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-20',
+      note: 'Nama menu Firefox dibaca langsung dari Firefox 159.0.1; halaman ini memblokir pemeriksaan otomatis kami.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/restore-tabs-after-crash/cover-edge-light.webp' },
+  ogImage: { src: '/blog/restore-tabs-after-crash/og.png', alt: 'Kartu judul “How to get your tabs back after a crash, an update or an accidental quit”: panduan TabMerger, dengan daftar tab yang baru ditutup' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'first', label: '1. Buka ulang, lalu Ctrl+Shift+T' },
+    { id: 'recover', label: '2. Riwayat di tiap browser' },
+    { id: 'devices', label: '3. Perangkat lain' },
+    { id: 'why', label: 'Mengapa tab tidak pulih' },
+    { id: 'prevent', label: 'Lain kali' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['first', 'recover', 'devices', 'prevent'],
+  browserFact: {
+    label: 'Riwayat',
+    values: { chrome: 'chrome://history', edge: 'edge://history', firefox: 'Ctrl+Shift+H (Pustaka)' },
+  },
+}
+
+<QuickAnswer>
+
+Buka lagi browser dan tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> di Mac) berulang kali sampai jendela Anda kembali. Jika tidak berhasil, buka riwayat (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) dan buka lagi dari daftar **baru ditutup**; di Firefox, gunakan **Riwayat → Pulihkan Sesi Sebelumnya** (“History → Restore Previous Session”). Masih ada yang hilang? Periksa **tab dari perangkat lain**, lalu cari halamannya sendiri di riwayat. Lain kali, biarkan [TabMerger](/features) menyimpan tab yang terbuka secara otomatis sesuai jadwal, sehingga browser mogok tidak pernah membuat Anda kehilangan lebih dari beberapa menit.
+
+</QuickAnswer>
+
+<InstallCta>Jangan pernah kehilangan jendela lagi: simpan otomatis tab yang terbuka sesuai jadwal. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="first" title="1. Buka lagi browser, lalu tekan Ctrl+Shift+T">
+
+Jangan buka tab baru dulu: mulailah dari jendela yang bersih, agar yang kembali memang isi daftar “terakhir ditutup” di browser.
+
+<BrowserPanels section="first">
+<BrowserPanel browser="chrome">
+
+1. Jalankan Chrome. Jika Chrome menawarkan untuk memulihkan halaman, terima.
+2. Tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> di Mac). Bantuan Chrome sendiri tentang browser mogok menyarankan langkah ini: pintasan ini membuka lagi tab yang tadinya terbuka.
+3. Tekan lagi untuk setiap jendela yang hilang. Chrome membuka lagi tab dan jendela sesuai urutan penutupannya.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Jalankan Edge. Jika Edge menawarkan untuk memulihkan halaman, terima.
+2. Tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> di Mac) untuk membuka lagi tab yang terakhir ditutup, dan tekan lagi untuk terus mundur.
+3. Satu jendela utuh hilang? Langsung ke langkah 2, riwayat.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Jalankan Firefox. Jika Firefox menawarkan untuk memulihkan halaman, terima.
+2. Tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> di Mac). Firefox 159 mengaitkannya dengan perintah yang memulihkan tab, jendela, atau sesi yang terakhir ditutup, jadi setelah dimulai ulang, pintasan ini bisa mengembalikan seluruh sesi sebelumnya.
+3. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> membuka lagi jendela yang ditutup; tekan sekali untuk setiap jendela.
+
+</BrowserPanel>
+</BrowserPanels>
+
+Daftar lengkap pintasan ada di [referensi pintasan keyboard untuk tab](/blog/tab-keyboard-shortcuts) kami.
+
+</Section>
+
+<Section id="recover" title="2. Buka lagi dari riwayat">
+
+Jika pintasan tidak mengembalikan apa pun, riwayat browser masih tahu apa yang tadi terbuka.
+
+<BrowserPanels section="recover">
+<BrowserPanel browser="chrome">
+
+1. Klik **⋮ → Histori** (“History”). Submenunya mencantumkan tab dan jendela yang baru ditutup.
+2. Klik sebuah jendela untuk membuka lagi semua tabnya.
+3. Tidak ada di sana? Tekan <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> dan cari halaman yang Anda ingat.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Tekan <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> untuk membuka **History**.
+2. Pilih **Recently closed** (baru ditutup) dan buka lagi jendela atau tab yang hilang.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Halaman History Edge dengan All, Recently closed, dan Tabs from other devices di bilah samping" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60">Halaman History di Edge, dengan Recently closed di bilah samping.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Buka menu **Riwayat** (“History”; tekan <Kbd>Alt</Kbd> untuk menampilkan bilah menu) atau **☰ → Riwayat**.
+2. Pilih **Pulihkan Sesi Sebelumnya** (“Restore Previous Session”) untuk mengembalikan semua jendela dari sesi terakhir.
+3. Atau pilih dari **Jendela yang Baru Saja Ditutup** dan **Tab yang Baru Saja Ditutup**.
+
+Jika yang mogok adalah Firefox sendiri, Firefox mungkin membuka halaman **Pulihkan Sesi** (“Restore Session”) bertuliskan “Maaf. Kami kesulitan mendapatkan kembali laman Anda.”. **Lihat Tab Sebelumnya** (“View Previous Tabs”) memungkinkan Anda menghapus centang tab yang mungkin menyebabkan mogok sebelum menekan **Pulihkan Sesi**.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with Restore Previous Session. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="devices" title="3. Periksa perangkat Anda yang lain">
+
+Jika Anda masuk dan menyinkronkan, tab yang hilang mungkin masih tercantum di perangkat lain.
+
+<BrowserPanels section="devices">
+<BrowserPanel browser="chrome">
+
+Chrome menampilkan tab dari perangkat lain di histori, tetapi hanya jika sinkronisasi **Histori dan tab** (“History and tabs”) aktif: buka **Setelan → Anda dan Google** (“Settings → You and Google”), pilih nama akun Anda, lalu aktifkan **Histori dan tab**.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Buka History (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) dan pilih **Tabs from other devices** (tab dari perangkat lain) di bilah samping.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Buka **Firefox View** dan lihat di bagian **Tab dari perangkat lain** (“Tabs from other devices”). Fitur ini memerlukan Firefox Sync dengan sinkronisasi tab terbuka yang aktif.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox View, Tabs from other devices. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="why" title="Mengapa tab saya tidak dipulihkan?">
+
+- **Setelan saat memulai membuka halaman tab baru.** Hanya opsi saat memulai “sesi sebelumnya” yang membuka lagi tab Anda setiap kali browser dimulai; bagian berikutnya menunjukkan letaknya di browser Anda.
+- **Tab berada di jendela pribadi.** Jendela Incognito dan InPrivate tidak pernah dipulihkan.
+- **Anda menutup jendela satu per satu.** Pemulihan saat memulai mengembalikan apa yang terbuka ketika browser *ditutup*. Jendela yang Anda tutup sebelumnya hanya ada di histori.
+- **Anda membuka profil lain.** Setiap profil punya sesinya sendiri; periksa ikon profil.
+
+</Section>
+
+<Section id="prevent" title="Pastikan ini tidak terjadi lagi">
+
+Aktifkan setelan saat memulai sekarang; satu perubahan ini sudah mencakup pembaruan dan mulai ulang.
+
+<BrowserPanels section="prevent">
+<BrowserPanel browser="chrome">
+
+**Setelan → Saat memulai → Lanjutkan dari halaman terakhir yang dibuka** (“Settings → On startup → Continue where you left off”). Atau tempel `chrome://settings/onStartup` ke bilah alamat.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Setelan Chrome, On startup (Saat memulai), dengan Continue where you left off (Lanjutkan dari halaman terakhir yang dibuka) dipilih" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">Setelan On startup (Saat memulai) di Chrome, diatur untuk membuka lagi sesi terakhir.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+**Pengaturan → Start, home, and new tab page → On startup → Open tabs from the previous session**. Atau tempel `edge://settings/startHomeNTP` ke bilah alamat.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Pengaturan Edge, Start, home, and new tab page, dengan Open tabs from the previous session dipilih" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">Pengaturan Start, home, and new tab page di Edge, diatur untuk membuka lagi sesi terakhir.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+**Pengaturan → Home and startup → Memulai → Buka jendela dan tab sebelumnya** (“Settings → Home and startup → Startup → Open previous windows and tabs”). Atau tempel `about:preferences#home` ke bilah alamat.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Pengaturan Firefox, Home and startup, dengan Open previous windows and tabs (Buka jendela dan tab sebelumnya) dicentang" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Pengaturan Home and startup di Firefox, dengan Buka jendela dan tab sebelumnya dicentang.</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+Pemulihan saat memulai tetap tidak bisa membantu untuk jendela yang tidak sengaja Anda tutup minggu lalu. Untuk itu Anda butuh salinan tersimpan: simpan jendela sebagai bookmark atau gunakan [pengelola sesi](/blog/browser-session-manager). Panduan kami untuk [menyimpan semua tab yang terbuka](/blog/save-all-open-tabs) membandingkan pilihannya.
+
+[TabMerger](/features), ekstensi gratis kami untuk Chrome, Edge, dan Firefox, bisa menyimpannya untuk Anda. **Pengaturan → Data → Simpan otomatis tab yang terbuka** menyimpan tab yang terbuka sebagai grup sesuai jadwal (mulai setiap 15 menit sampai harian). **Baru ditutup** menyimpan setiap tab dan jendela yang Anda tutup, dikelompokkan per hari: gratis 2 hari, Pro 30 hari. Cara kerja keduanya dan cara menyetelnya ada di [jangan pernah kehilangan tab lagi](/blog/never-lose-a-tab-again).
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Menyimpan sesuai jadwal dan menemukan tab yang ditutup" steps={[{ title: 'Simpan otomatis' }, { title: 'Baru ditutup' }]}>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-auto-save-schedule" alt="Pengaturan TabMerger, Data: Auto-save open tabs (Simpan otomatis tab yang terbuka) aktif, dengan jadwal Every 30 minutes (Setiap 30 menit), tema terang" darkAlt="Pengaturan TabMerger, Data: Auto-save open tabs (Simpan otomatis tab yang terbuka) aktif, dengan jadwal Every 30 minutes (Setiap 30 menit), tema gelap" boxes={[{ id: 'schedule', label: 'Jadwal' }]} source="TabMerger 3.16.1">Auto-save open tabs (Simpan otomatis tab yang terbuka) setiap 30 menit: salinan baru tab yang terbuka, apa pun yang terjadi pada browser.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-recently-closed" alt="TabMerger Recently closed (Baru ditutup), hari ini: tiga tab yang ditutup beserta waktu penutupan masing-masing, tema terang" darkAlt="TabMerger Recently closed (Baru ditutup), hari ini: tiga tab yang ditutup beserta waktu penutupan masing-masing, tema gelap" boxes={[{ id: 'today-row', label: 'Hari ini' }]} source="TabMerger 3.16.1">Recently closed (Baru ditutup): tab yang ditutup hari ini, beserta waktu penutupan masing-masing.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Gratis untuk Chrome, Edge, dan Firefox. Tidak perlu akun untuk mulai.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,175 @@
+export const post = {
+  slug: 'search-all-your-tabs-with-tabmerger',
+  title: 'ابحث في كل علامات التبويب باستخدام TabMerger: اختصار Ctrl+K وعوامل التصفية',
+  navTitle: 'ابحث في كل علامات التبويب',
+  seoTitle: 'البحث في علامات التبويب المفتوحة والمحفوظة والمغلقة معًا باستخدام TabMerger',
+  description:
+    'مربع بحث واحد لكل علامات التبويب لديك: المفتوحة، والمحفوظة في مجموعات، والمغلقة هذا الأسبوع. كيف يعمل البحث في علامات التبويب بالاختصار Ctrl+K في TabMerger، وكل عامل تصفية (group: وwindow: وtag: وclosed:)، ولماذا يطابق بهذه الطريقة.',
+  shareSummary: 'علامات التبويب المفتوحة والمحفوظة والمغلقة في مربع بحث واحد، مع عوامل تصفية تضيّق النتائج فورًا.',
+  dek: 'مفتوحة أو محفوظة أو أُغلقت قبل ساعة: اكتب بضعة أحرف وستجدها أمامك، مميّزة.',
+  published: '2026-12-14',
+  updated: '2026-12-14',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'يبحث Ctrl+K (أو ⌘+K على Mac) في علامات التبويب المفتوحة والمحفوظة والمغلقة مؤخرًا معًا.', source: 'TabMerger 3.16.1' },
+    { text: 'عوامل التصفية: group: وwindow: وtag: (تسمية مجموعة علامات التبويب في Chrome) وclosed:.', source: 'TabMerger 3.16.1' },
+    { text: 'المطابقة سلسلة أحرف متتالية تمامًا، وليست تقريبية أبدًا، لذا في كل نتيجة جزء مميّز.', source: 'الشيفرة المصدرية لـ TabMerger 3.16.1' },
+    { text: 'البحث وكل عوامل التصفية مجانية.', source: 'أسعار TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'كيف أبحث في كل علامات التبويب دفعة واحدة؟',
+      answer:
+        'افتح TabMerger واضغط Ctrl+K (أو ⌘+K على Mac)، ثم اكتب جزءًا من عنوان الصفحة أو رابطها. تشمل النتائج علامات التبويب المفتوحة، وكل مجموعة محفوظة، وتحتها علامات التبويب التي أغلقتها مؤخرًا.',
+    },
+    {
+      question: 'كيف أبحث في مجموعة واحدة فقط؟',
+      answer:
+        'اكتب group: واختر المجموعة من القائمة؛ فيملأ TabMerger العبارة group:"Name". ثم أضف كلماتك بعدها، مثل group:"Thesis sources" wiki.',
+    },
+    {
+      question: 'هل يمكنني البحث في علامات تبويب أغلقتها؟',
+      answer: 'نعم. ابدأ البحث بـ closed: لتعرض علامات التبويب والنوافذ المغلقة مؤخرًا فقط. اختر واحدة لإعادة فتحها؛ والنقر مع Ctrl أو النقر بالزر الأوسط يعيد فتحها في الخلفية.',
+    },
+    {
+      question: 'لماذا لا يجد البحث الصفحة عندما أخطئ في الكتابة؟',
+      answer:
+        'يطابق TabMerger الأحرف كما كتبتها تمامًا (دون تمييز بين الأحرف الكبيرة والصغيرة)، ولا يطابق أبدًا أحرفًا متفرقة في العنوان. وهكذا تبقى النتائج متوقعة: في كل نتيجة تطابق مميّز، وكل تمييز تطابق حقيقي.',
+    },
+    {
+      question: 'هل البحث مجاني؟',
+      answer: 'نعم، البحث وكل عوامل التصفية متاحة في الخطة المجانية (Free). ويحتفظ Pro بعلامات التبويب المغلقة للبحث فيها 30 يومًا بدلًا من يومين.',
+    },
+  ],
+  images: [
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-light.webp', alt: 'بحث TabMerger مفتوح بالاختصار Ctrl+K، ويعرض أمثلة بحث عن react وgroup: وwindow: وtag: وclosed:، المظهر الفاتح' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-dark.webp', alt: 'بحث TabMerger مفتوح بالاختصار Ctrl+K، ويعرض أمثلة بحث عن react وgroup: وwindow: وtag: وclosed:، المظهر الداكن' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-light.webp', alt: 'بحث في TabMerger عن docs: أربع نتائج من Now Open (المفتوحة الآن) وReading list، مع تمييز docs في كل رابط، المظهر الفاتح' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-dark.webp', alt: 'بحث في TabMerger عن docs: أربع نتائج من Now Open (المفتوحة الآن) وReading list، مع تمييز docs في كل رابط، المظهر الداكن' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-light.webp', alt: 'بحث TabMerger بعد كتابة window:، ويعرض النوافذ Window وPapers وTools للاختيار منها، المظهر الفاتح' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-dark.webp', alt: 'بحث TabMerger بعد كتابة window:، ويعرض النوافذ Window وPapers وTools للاختيار منها، المظهر الداكن' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp', alt: 'المجموعة Thesis sources أثناء البحث فيها عن wiki، مع تمييز التطابق الوحيد وتعتيم بقية علامات التبويب، المظهر الفاتح' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-dark.webp', alt: 'المجموعة Thesis sources أثناء البحث فيها عن wiki، مع تمييز التطابق الوحيد وتعتيم بقية علامات التبويب، المظهر الداكن' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'browser-tips'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp' },
+  ogImage: { src: '/blog/search-all-your-tabs-with-tabmerger/og.png', alt: 'ابحث في كل علامات التبويب باستخدام TabMerger: نتائج docs من علامات التبويب المفتوحة والمحفوظة' },
+  toc: [
+    { id: 'quick', label: 'إجابة سريعة' },
+    { id: 'problem', label: 'أين كانت علامة التبويب تلك؟' },
+    { id: 'why', label: 'لماذا يعمل البحث بهذه الطريقة' },
+    { id: 'steps', label: 'البحث خطوة بخطوة' },
+    { id: 'filters', label: 'كل عوامل التصفية' },
+    { id: 'panel', label: 'بعد البحث' },
+    { id: 'benefit', label: 'ما يوفّره عليك' },
+    { id: 'habits', label: 'عادات جيدة' },
+    { id: 'plans', label: 'Free أم Pro' },
+    { id: 'faq', label: 'الأسئلة الشائعة' },
+  ],
+}
+
+<QuickAnswer>
+
+افتح [TabMerger](/features) واضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>K</Kbd></bdi> على Mac). اكتب بضعة أحرف من عنوان أو رابط: تأتي النتائج من علامات التبويب المفتوحة، ومن كل مجموعة محفوظة، وتحتها من علامات التبويب التي أغلقتها مؤخرًا، وعلى كل نتيجة ما يبيّن مكانها. ضيّق البحث بـ <bdi dir="ltr">`group:`</bdi> أو <bdi dir="ltr">`window:`</bdi> أو <bdi dir="ltr">`tag:`</bdi> أو <bdi dir="ltr">`closed:`</bdi>، ثم اضغط <bdi dir="ltr"><Kbd>Enter</Kbd></bdi> للانتقال إلى علامة التبويب مباشرة.
+
+</QuickAnswer>
+
+<InstallCta>كل علامات التبويب لديك على بُعد بحث واحد. مجانًا لـ Chrome وEdge وFirefox.</InstallCta>
+
+<Section id="problem" title="«أين كانت علامة التبويب تلك؟»">
+
+تعرف أن الصفحة موجودة. كانت مفتوحة يوم الثلاثاء بجوار طلب الدمج (<bdi dir="ltr">pull request</bdi>). هل كانت في نافذة العمل أم في نافذة القراءة؟ هل حفظتها في مجموعة أم أغلقتها؟ البحث المدمج في علامات التبويب في المتصفح لا يرى إلا ما هو مفتوح فيه الآن؛ والسجل يرى كل ما زرته يومًا، دون أن يعرف ما احتفظت به عن قصد.
+
+ما تحتاجه مربع واحد يعرف كل شيء: ما هو مفتوح، وما حفظته، وما أغلقته هذا الأسبوع. هذا المربع هو <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> في TabMerger. (عن البحث المدمج في علامات التبويب في المتصفحات، راجع [كيف تجد علامة تبويب واحدة بين المئات](/blog/find-a-tab-among-hundreds).)
+
+</Section>
+
+<Section id="why" title="لماذا يعمل البحث في TabMerger بهذه الطريقة">
+
+- **كل شيء في قائمة واحدة.** علامات التبويب المفتوحة والمجموعات المحفوظة وعلامات التبويب المغلقة مؤخرًا تجيب عن السؤال نفسه («أين هي؟»)، لذا تظهر معًا. تحمل كل نتيجة شارة باسم مجموعتها، وتسمية مجموعة علامات التبويب في Chrome إن وُجدت.
+- **مطابقة دقيقة لا تقريبية.** النتيجة علامة تبويب يحتوي عنوانها أو رابطها على أحرفك متتالية، دون تمييز بين الأحرف الكبيرة والصغيرة. والأحرف المتفرقة في العنوان لا تُحتسب أبدًا. وهذا مقصود: في كل نتيجة جزء مميّز، وكل جزء مميّز هو التطابق الحقيقي، فيمكنك الوثوق بما تراه.
+- **أفضل تطابق أولًا.** يأتي التطابق التام قبل العنوان الذي يبدأ بنصك، ثم الكلمة التي تبدأ به، ثم التطابق في أي موضع. تعرض القائمة أفضل 12 نتيجة، فتكون علامة التبويب الصحيحة في الأعلى.
+- **اختر بدل أن تكتب الاسم.** كتابة <bdi dir="ltr">`group:`</bdi> أو <bdi dir="ltr">`window:`</bdi> أو <bdi dir="ltr">`tag:`</bdi> تفتح قائمة بمجموعاتك أو نوافذك أو تسمياتك لتختار منها. ويملأ TabMerger الاسم بين علامتي اقتباس، فتعمل الأسماء الطويلة التي فيها مسافات دون عناء.
+- **علامات التبويب المغلقة لا تزاحم.** تظهر حتى 3 علامات تبويب مغلقة مؤخرًا تحت النتائج المحفوظة؛ وابدأ بـ <bdi dir="ltr">`closed:`</bdi> لترى علامات التبويب المغلقة فقط.
+- **لوحة المفاتيح تكفي.** <bdi dir="ltr"><Kbd>↑</Kbd></bdi> <bdi dir="ltr"><Kbd>↓</Kbd></bdi> للتنقل، و<bdi dir="ltr"><Kbd>Enter</Kbd></bdi> للفتح، و<bdi dir="ltr"><Kbd>Esc</Kbd></bdi> أو <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> للإغلاق. والإغلاق يُبقي ما كتبته كما هو، فيمكنك العودة إليه.
+
+</Section>
+
+<Section id="steps" title="البحث خطوة بخطوة">
+
+1. افتح TabMerger واضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>K</Kbd></bdi> على Mac)، أو انقر مربع البحث في الأعلى.
+2. ما دمت لم تكتب شيئًا، يقترح المربع عمليات بحث لتجربتها. انقر واحدة لتبدأ منها.
+3. اكتب بضعة أحرف من العنوان أو الرابط، مثل <bdi dir="ltr">`docs`</bdi>. تظهر التطابقات مميّزة.
+4. اضغط <bdi dir="ltr"><Kbd>Enter</Kbd></bdi> على علامة تبويب: يفتح TabMerger مجموعتها وينقل التركيز إليها. وعلى علامة تبويب مغلقة، يعيد <bdi dir="ltr"><Kbd>Enter</Kbd></bdi> فتحها.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="البحث في TabMerger" steps={[{ title: 'Ctrl+K' }, { title: 'النتائج' }, { title: 'window:' }]}>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-examples" alt="بحث TabMerger مفتوح بالاختصار Ctrl+K، ويعرض أمثلة بحث عن react وgroup: وwindow: وtag: وclosed:، المظهر الفاتح" darkAlt="بحث TabMerger مفتوح بالاختصار Ctrl+K، ويعرض أمثلة بحث عن react وgroup: وwindow: وtag: وclosed:، المظهر الداكن" boxes={[{ id: 'search-input', label: 'مربع البحث' }, { id: 'examples', label: 'عمليات بحث مقترحة' }]} source="TabMerger 3.16.1">البحث الفارغ يقترح عليك من أين تبدأ.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-results" alt="بحث في TabMerger عن docs: أربع نتائج من Now Open (المفتوحة الآن) وReading list، مع تمييز docs في كل رابط، المظهر الفاتح" darkAlt="بحث في TabMerger عن docs: أربع نتائج من Now Open (المفتوحة الآن) وReading list، مع تمييز docs في كل رابط، المظهر الداكن" boxes={[{ id: 'search-input', label: 'docs' }]} source="TabMerger 3.16.1">علامات التبويب المفتوحة والمحفوظة في قائمة واحدة، وعلى كل منها اسم مجموعتها.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker" alt="بحث TabMerger بعد كتابة window:، ويعرض النوافذ Window وPapers وTools للاختيار منها، المظهر الفاتح" darkAlt="بحث TabMerger بعد كتابة window:، ويعرض النوافذ Window وPapers وTools للاختيار منها، المظهر الداكن" boxes={[{ id: 'search-input', label: 'عامل التصفية window:' }, { id: 'pick-window', label: 'نوافذك المسمّاة' }]} source="TabMerger 3.16.1">اكتب <bdi dir="ltr">window:</bdi> واختر؛ لا حاجة إلى كتابة الاسم.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="filters" title="كل عوامل التصفية مع أمثلة">
+
+<ComparisonTable
+  head={['عامل التصفية', 'ما يجده', 'مثال']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['(كلمات عادية)', 'علامات التبويب التي يحتوي عنوانها أو رابطها عليها، والمجموعات بالاسم', <bdi dir="ltr">pull request</bdi>],
+    [<bdi dir="ltr">group:</bdi>, 'علامات التبويب في مجموعة واحدة', <bdi dir="ltr">group:"Thesis sources" wiki</bdi>],
+    [<bdi dir="ltr">window:</bdi>, 'علامات التبويب في نافذة واحدة (سمِّها من قائمة ⋯ الخاصة بها)', <bdi dir="ltr">window:"Papers"</bdi>],
+    [<bdi dir="ltr">tag:</bdi>, 'علامات التبويب في مجموعة علامات تبويب في Chrome تحمل تلك التسمية', <bdi dir="ltr">tag:"Sprint"</bdi>],
+    [<bdi dir="ltr">closed:</bdi>, 'علامات التبويب والنوافذ المغلقة مؤخرًا فقط', <bdi dir="ltr">closed: seat</bdi>],
+  ]}
+/>
+
+تجتمع عوامل التصفية مع الكلمات ومع بعضها. ضع علامتي اقتباس إذا أضفت كلمات بعد عامل التصفية: فبدونهما يأخذ عامل التصفية بقية السطر، لذا يبحث <bdi dir="ltr">`group:Work pull`</bdi> عن مجموعة اسمها «Work pull». والاختيار من القائمة يضيف علامتي الاقتباس عنك.
+
+</Section>
+
+<Section id="panel" title="بعد البحث: أخفِ الباقي أو عتّمه">
+
+أغلق البحث بـ <bdi dir="ltr"><Kbd>Esc</Kbd></bdi> وسيبقى يعمل في العرض الرئيسي. يعرض الشريط الجانبي عدد التطابقات في كل مجموعة («تم العثور على 1»)، وداخل المجموعة تكون علامات التبويب غير المطابقة **مخفية** افتراضيًا. تفضّل ألا تفقد موضعك؟ في **الإعدادات ← عام** (<bdi dir="ltr">Settings → General</bdi>)، اضبط **علامات التبويب التي لا تطابق البحث** (<bdi dir="ltr">Tabs that do not match a search</bdi>) على **تعتيم** (<bdi dir="ltr">Dim</bdi>): تبقى كل علامة تبويب في مكانها، معتّمة، والتطابقات مميّزة. ويُنهي **مسح البحث** (<bdi dir="ltr">Clear search</bdi>) البحث.
+
+ما دامت هناك علامات تبويب مخفية، تتوقف إعادة الترتيب بالسحب مؤقتًا («امسح البحث لنقل العناصر»): فمع وجود صفوف خارج النظر، يصبح مكان سقوط علامة التبويب المُفلتة مجرد تخمين.
+
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-dim" alt="المجموعة Thesis sources أثناء البحث فيها عن wiki، مع تمييز التطابق الوحيد وتعتيم بقية علامات التبويب، المظهر الفاتح" darkAlt="المجموعة Thesis sources أثناء البحث فيها عن wiki، مع تمييز التطابق الوحيد وتعتيم بقية علامات التبويب، المظهر الداكن" boxes={[{ id: 'match', label: 'التطابق' }]} source="TabMerger 3.16.1">وضع التعتيم: يبرز التطابق، ويبقى كل ما عداه في مكانه.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="ما يوفّره عليك">
+
+يتحوّل تفحّص نوافذ مليئة بأيقونات بحجم 16 بكسل والتمرير في السجل إلى بضع ضغطات مفاتيح. ويعمل بالطريقة نفسها مهما كان عدد علامات التبويب التي تحتفظ بها: المجموعة التي حفظتها قبل أشهر قريبة قرب علامة التبويب التي فتحتها قبل دقيقة. وهذا ما يجعل إغلاق النوافذ آمنًا: كل ما حفظته على بُعد بحث واحد.
+
+</Section>
+
+<Section id="habits" title="عادات جيدة">
+
+- **ابحث في الرابط، لا في العنوان وحده.** يجد <bdi dir="ltr">`github.com/your-org`</bdi> أو <bdi dir="ltr">`localhost:3000`</bdi> الصفحات التي تتشابه عناوينها كلها.
+- **سمِّ النوافذ التي تبحث فيها كثيرًا.** «Papers» و«PRs» و«Docs»: ثم يوصلك <bdi dir="ltr">`window:`</bdi> إليها مباشرة.
+- **ابدأ بـ <bdi dir="ltr">`closed:`</bdi>** عندما تعرف أنك أغلقتها؛ فالقائمة أقصر ولا تضم إلا ما تحتاجه.
+- **اجمع بين البحث والمجموعات.** كلما كانت مجموعاتك أفضل (راجع [روتينًا يوميًا لعلامات التبويب](/blog/tabmerger-daily-workflow))، ضيّق عامل التصفية <bdi dir="ltr">`group:`</bdi> النتائج أكثر.
+
+</Section>
+
+<Section id="plans" title="Free أم Pro">
+
+البحث وكل عوامل التصفية وقوائم الاختيار وإخفاء أو تعتيم كلها متاحة في الخطة المجانية (<bdi dir="ltr">Free</bdi>)، دون حساب. الفرق الوحيد هو المدى الذي تعود إليه علامات التبويب المغلقة: تحتفظ Free بعلامات التبويب التي أغلقتها في آخر يومين، وPro بما أغلقته في آخر 30 يومًا. ومع المجموعات وعلامات التبويب غير المحدودة في Pro، هناك ببساطة المزيد لتجده. راجع [صفحة الأسعار](/pricing).
+
+<InstallCta>اعثر على أي علامة تبويب احتفظت بها بضغطة مفتاح. مجانًا لـ Chrome وEdge وFirefox.</InstallCta>
+
+لاستخدام لوحة المفاتيح بما يتجاوز البحث، راجع [اختصارات لوحة المفاتيح لعلامات التبويب](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="faq" title="الأسئلة الشائعة">
+
+<Faq items={post.faq} />
+
+</Section>

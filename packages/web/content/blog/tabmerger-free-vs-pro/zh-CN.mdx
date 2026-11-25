@@ -1,0 +1,149 @@
+export const post = {
+  slug: 'tabmerger-free-vs-pro',
+  title: 'TabMerger 免费版与 Pro 对比：每个方案到底包含什么',
+  navTitle: 'TabMerger 免费版与 Pro 对比',
+  seoTitle: 'TabMerger 免费版与 Pro 对比：限制、同步、价格，以及取消后会怎样',
+  description:
+    'TabMerger 免费版包含的全部功能、Pro 增加的全部功能、限制如何执行，以及 Pro 方案结束后你的标签页会怎样。没有隐藏条款。',
+  shareSummary: '免费版包含什么、Pro 增加什么、取消后会怎样。没有隐藏条款。',
+  dek: '免费版就是一个完整的标签页管理器。Pro 面向需要更多标签页、更多电脑，以及无需操心的备份的用户。',
+  published: '2026-12-20',
+  updated: '2026-12-20',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: '免费版：5 个分组、50 个标签页、3 条 URL 规则、3 个会话，无需账户。', source: 'TabMerger 价格', href: '/pricing' },
+    { text: 'Pro：每月 US$3.99 或每年 US$42.99，不设限制，并提供加密同步。', source: 'TabMerger 价格', href: '/pricing' },
+    { text: '所有使用我们服务器的功能都由服务器检查，而不只是由应用检查。', source: 'TabMerger 3.16.1 源代码' },
+    { text: 'Pro 结束后，不会删除任何内容。', source: 'TabMerger 3.16.1 源代码' },
+  ],
+  faq: [
+    {
+      question: 'TabMerger 是免费的吗？',
+      answer:
+        '是的。免费版无需账户，在其限制范围内（5 个分组、50 个标签页、3 条 URL 规则和 3 个会话）包含分组、会话、搜索、自动保存、“最近关闭”、URL 规则以及导入和导出。',
+    },
+    {
+      question: 'TabMerger Pro 增加了什么？',
+      answer:
+        '分组、标签页、规则和会话不再有限制；设备之间的端到端加密同步；自动加密备份；保留所有自动保存；“最近关闭”保留 30 天而不是 2 天；以及优先支持。',
+    },
+    {
+      question: 'TabMerger Pro 多少钱？',
+      answer: '每月 US$3.99，或每年 US$42.99（比按月付款便宜约 10%）。你可以随时取消，并在已付费的周期结束前继续使用 Pro。',
+    },
+    {
+      question: '取消 Pro 后，我的标签页会怎样？',
+      answer:
+        '不会删除任何内容。超出免费版限制的分组和标签页会以锁定状态保留在你的设备上，直到你再次升级或腾出空间。新的更改将不再同步；已经在你账户中的内容会继续保留。',
+    },
+  ],
+  images: [
+    { src: '/blog/tabmerger-free-vs-pro/tm-over-limit-light.webp', alt: '使用免费版的 TabMerger，保存了 7 个分组：最后两个已锁定，横幅提示升级到 Pro，浅色主题' },
+    { src: '/blog/tabmerger-free-vs-pro/tm-over-limit-dark.webp', alt: '使用免费版的 TabMerger，保存了 7 个分组：最后两个已锁定，横幅提示升级到 Pro，深色主题' },
+  ],
+  tags: ['tabmerger-guides', 'tab-manager', 'comparison', 'browser-productivity'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabmerger-free-vs-pro/tm-over-limit-light.webp' },
+  ogImage: { src: '/blog/tabmerger-free-vs-pro/og.png', alt: 'TabMerger 免费版与 Pro 对比：免费版中超出限制的两个分组被锁定' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'problem', label: '免费还是付费？' },
+    { id: 'compare', label: '并排对比' },
+    { id: 'why', label: '方案为何这样划分' },
+    { id: 'enforce', label: '限制如何检查' },
+    { id: 'cancel', label: 'Pro 结束后' },
+    { id: 'choose', label: '哪个方案适合你' },
+    { id: 'faq', label: '常见问题' },
+  ],
+}
+
+<QuickAnswer>
+
+**免费版**是一个无需账户的完整标签页管理器：5 个分组、50 个标签页、3 条 URL 规则和 3 个会话，外加搜索、自动保存（保留最新 2 个）、2 天的“最近关闭”以及导入和导出。**Pro**（每月 US$3.99 或每年 US$42.99）取消所有限制，并增加设备之间的端到端加密同步、自动加密备份、保留所有自动保存，以及 30 天的“最近关闭”。Pro 结束后，不会删除任何内容。
+
+</QuickAnswer>
+
+<InstallCta>免费开始，无需账户。支持 Chrome、Edge 和 Firefox。</InstallCta>
+
+<Section id="problem" title="免费还是付费：真正的问题">
+
+安装标签页管理器之前，大多数人都想知道两件事：“免费版真的够用吗？”以及“如果我付费后来又停了，我的标签页会丢吗？”这两个问题都值得直接回答，所以这里列出每个方案包含的全部内容、如何执行，以及在边界情况下会发生什么。
+
+</Section>
+
+<Section id="compare" title="免费版与 Pro 并排对比">
+
+<ComparisonTable
+  head={['', '免费版', 'Pro']}
+  rowHeaders
+  minWidth="34rem"
+  rows={[
+    ['价格', 'US$0，无需账户', '每月 US$3.99 或每年 US$42.99'],
+    ['分组', '最多 5 个', '无限制'],
+    ['标签页', '最多 50 个', '无限制'],
+    ['URL 规则', '最多 3 条', '无限制'],
+    ['会话', '最多 3 个，仅限此浏览器', '无限制，跨设备同步'],
+    ['自动保存已打开的标签页', '保留最新 2 个', '全部保留'],
+    ['最近关闭的标签页', '最近 2 天', '最近 30 天'],
+    ['搜索、备注、提醒、导入和导出', '是', '是'],
+    ['拖放、键盘快捷键', '是', '是'],
+    ['跨设备云同步（端到端加密）', '否，保存在此设备上', '是'],
+    ['自动加密备份', '否', '是'],
+    ['分享链接、设置 → 设备', '否', '是'],
+    ['支持', '是', '优先'],
+  ]}
+/>
+
+价格以[价格页面](/pricing)为准；年付方案比按月付款十二次便宜约 10%。
+
+</Section>
+
+<Section id="why" title="为什么方案这样划分">
+
+划分依据是成本。只在你浏览器中运行的功能，我们免费提供不需要任何成本，所以免费版包含整个标签页管理器：分组、搜索、自动保存、“最近关闭”、URL 规则、导入和导出，限制的大小足够一个人的日常工作。
+
+Pro 支付的是在我们服务器上运行的部分：同步和存储你加密后的分组、会话和备份，以及你的设备在“设置 → 设备”中共享的已打开标签页。对于标签页已经超出 5 个分组和 50 个标签页的用户，Pro 还会取消本地限制。
+
+</Section>
+
+<Section id="enforce" title="限制如何检查">
+
+- **在你的设备上**：分组、标签页、规则和会话的限制、自动保存的轮换以及“最近关闭”的保留时长，都由扩展程序执行。这些数据从不离开你的浏览器，所以没有需要服务器检查的内容。
+- **在我们的服务器上**：任何在我们这里存储数据的功能（同步、账户中的会话和备份、你设备上已打开的标签页、分享链接、设置加密），对于没有有效 Pro 方案的账户都会被数据库拒绝。隐藏按钮从来不是唯一的锁。
+
+当你接近免费版的限制时，TabMerger 会用横幅提示并推荐 Pro；它绝不会为了腾出空间而删除你的分组或标签页。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabmerger-free-vs-pro/tm-over-limit" alt="使用免费版的 TabMerger，保存了 7 个分组：最后两个已锁定，横幅提示升级到 Pro，浅色主题" darkAlt="使用免费版的 TabMerger，保存了 7 个分组：最后两个已锁定，横幅提示升级到 Pro，深色主题" boxes={[{ id: 'banner', label: '免费版提示' }, { id: 'locked', label: '超出限制' }]} source="TabMerger 3.16.1">免费版中的七个分组：前五个照常使用，最后两个仍然保留，但已锁定。</ThemedScreenshot>
+
+</Section>
+
+<Section id="cancel" title="Pro 方案结束后">
+
+在已付费的周期结束前，你会一直保有 Pro。之后：
+
+- **不会删除任何内容**。超出免费版限制的分组和标签页会带着锁形图标保留在你的设备上，直到你再次升级，或删除其他内容腾出空间。
+- **你的 URL 规则继续有效**，即使超过 3 条也是如此；只有在超过 3 条后添加新规则才需要 Pro。
+- **新的更改停止同步**。已经在你账户中的内容会继续保留；在控制面板中，你仍然可以打开或删除已保存的会话，以及下载或删除备份。
+- **所有本地功能继续可用**：搜索、自动保存（新的自动保存会轮换，保留最新 2 个）、“最近关闭”（恢复为 2 天）、导入和导出。
+
+</Section>
+
+<Section id="choose" title="哪个方案适合你">
+
+- 如果你只用一台电脑、手上有几个项目，**留在免费版**就好：它功能完整，默认保护隐私，而且无需账户。
+- 如果你在多台电脑上工作、要保存超过 5 个分组或 50 个标签页，或者想要无需操心的备份和一个月的已关闭标签页，**选择 Pro**。
+
+拿不定主意？先从免费版开始；以后升级会保留你已有的一切。关于让任一方案都好用的日常流程，请看[用 TabMerger 打造每日标签页工作流](/blog/tabmerger-daily-workflow)；关于同步如何保护你的数据，请看[在设备之间同步标签页](/blog/sync-tabs-between-devices-with-tabmerger)。
+
+<InstallCta>一台电脑用免费版，需要更多时用 Pro。支持 Chrome、Edge 和 Firefox。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

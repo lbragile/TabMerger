@@ -1,0 +1,117 @@
+export const post = {
+  slug: 'organize-tabs-for-research',
+  title: '리서치용 탭 정리 방법: 메모, 알림, 출처 관리',
+  navTitle: '리서치용 탭 정리하기',
+  seoTitle: '리서치와 자료 조사를 위한 브라우저 탭 정리 방법 (메모, 세션, 출처)',
+  description:
+    '리서치 탭을 다루는 방법: 프로젝트마다 TabMerger 그룹 하나, 중요한 출처마다 메모, 다시 볼 때를 위한 알림, 프로젝트 전체를 잠시 멈추는 세션, 그리고 글을 쓸 때 출처를 내보내는 기능까지.',
+  shareSummary: '프로젝트마다 그룹 하나, 출처에 메모, 알림, 그리고 글을 쓸 때 내보내기.',
+  dek: '출처 탭이 40개여도 각 탭에 왜 열어 두었는지 적혀 있다면, 그건 난장판이 아니라 자료실입니다.',
+  published: '2026-12-09',
+  updated: '2026-12-09',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '저장된 탭에는 무엇이든 메모와 알림을 붙일 수 있습니다.', source: 'TabMerger 3.16.1' },
+    { text: '알림: 30분 후, 1시간 후, 3시간 후, 내일, 또는 원하는 날짜와 시간.', source: 'TabMerger 3.16.1' },
+    { text: '세션은 모든 그룹을 저장해 한꺼번에 복원합니다. 무료에서는 3개까지 보관합니다.', source: 'TabMerger 요금제', href: '/pricing' },
+    { text: 'JSON 내보내기에는 모든 출처의 제목과 주소가 담깁니다.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: '브라우저에서 출처를 어떻게 관리하나요?',
+      answer:
+        '프로젝트마다 탭을 TabMerger 그룹으로 저장하고, 인용할 출처마다 메모를 붙이세요. 왜 중요한지, 어느 절에 쓸지, 어느 장에 쓸지 적어 두면 됩니다. Ctrl+K로 모든 그룹의 제목과 주소를 검색할 수 있습니다.',
+    },
+    {
+      question: '탭으로 다시 돌아오도록 알림을 설정할 수 있나요?',
+      answer: '네. TabMerger에서 저장된 탭을 마우스 오른쪽 버튼으로 클릭하고 \'알림 설정…\'을 선택하세요. 30분 후, 1시간 후, 3시간 후, 내일, 또는 원하는 날짜와 시간 중에서 고를 수 있고, 메모도 선택적으로 남길 수 있습니다.',
+    },
+    {
+      question: '리서치 탭은 북마크로 저장해야 하나요?',
+      answer: '진행 중인 작업이라면 저장된 그룹이 더 낫습니다. 메모와 함께 한 묶음으로 유지되고 클릭 한 번으로 다시 열립니다. 북마크는 몇 년 동안 두고 볼 몇 개의 페이지에만 쓰세요.',
+      link: { text: '북마크', href: '/blog/tabs-vs-bookmarks' },
+    },
+    {
+      question: '출처 목록을 밖으로 꺼내려면 어떻게 하나요?',
+      answer: '설정 → 데이터 → JSON 내보내기를 사용하면 모든 그룹의 제목과 주소가 파일 하나에 저장되고, 이를 참고 문헌 목록으로 바꿀 수 있습니다.',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp', alt: '탭 메뉴가 열린 TabMerger 그룹 Thesis sources: Move to group(그룹으로 이동), Add note(메모 추가), Remind me…(알림 설정…), Rename tab(탭 이름 바꾸기), Remove tab(탭 제거), 라이트 테마' },
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-dark.webp', alt: '탭 메뉴가 열린 TabMerger 그룹 Thesis sources: Move to group(그룹으로 이동), Add note(메모 추가), Remind me…(알림 설정…), Rename tab(탭 이름 바꾸기), Remove tab(탭 제거), 다크 테마' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-light.webp', alt: '탭 아래에 열린 TabMerger 알림 선택기: 30 min, 1 hour, 3 hours, Tomorrow(내일), 날짜와 시간 지정, 선택 메모, 라이트 테마' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-dark.webp', alt: '탭 아래에 열린 TabMerger 알림 선택기: 30 min, 1 hour, 3 hours, Tomorrow(내일), 날짜와 시간 지정, 선택 메모, 다크 테마' },
+  ],
+  tags: ['research', 'tab-management', 'save-tabs', 'session-management'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-for-research/og.png', alt: '리서치용 탭 정리 방법: 탭의 메모와 알림 옵션을 보여 주는 TabMerger 가이드' },
+  toc: [
+    { id: 'quick', label: '간단한 답' },
+    { id: 'project', label: '프로젝트마다 그룹 하나' },
+    { id: 'notes', label: '메모와 알림' },
+    { id: 'sessions', label: '프로젝트 전체 멈추기' },
+    { id: 'export', label: '출처 내보내기' },
+    { id: 'faq', label: '자주 묻는 질문' },
+  ],
+}
+
+<QuickAnswer>
+
+리서치 프로젝트마다 [TabMerger](/features) 그룹을 하나씩 만들고, 사용할 출처마다 왜 중요한지 적은 **메모**를 붙이세요. 다시 봐야 할 출처에는 **알림**을 설정하고, 프로젝트 전체를 멈췄다가 클릭 한 번으로 되살리려면 **세션**을 저장하세요. 참고 문헌을 정리할 때는 그룹을 파일로 **내보내면** 됩니다.
+
+</QuickAnswer>
+
+<InstallCta>출처 탭 40개를 메모가 달린, 검색 가능한 자료실로 바꾸세요. Chrome, Edge, Firefox용 무료.</InstallCta>
+
+<Section id="project" title="리서치 프로젝트의 탭은 어떻게 정리하나요?">
+
+1. **그룹 추가**(Add Group)를 클릭하고 프로젝트 이름을 붙이세요. 예를 들면 '논문 자료'(스크린샷에서는 'Thesis sources')입니다.
+2. 그룹의 **⋯** 메뉴를 열고 **현재 상태와 합치기**(Merge with current)를 선택하세요. 열려 있는 모든 탭이 그룹에 저장됩니다.
+3. 하루 작업이 끝나면 창을 닫으세요. 그룹에 모든 것이 남아 있고, 나중에 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>로 제목이나 주소만으로 어떤 출처든 찾을 수 있습니다.
+
+그룹 안에서는 갈래(논문, 데이터, 배경 자료)마다 창을 하나씩 두고 각각 이름을 붙이세요. 리서치 탭은 무엇을 남길 가치가 있는지 정하는 게 일의 절반입니다. [탭과 북마크 비교 가이드](/blog/tabs-vs-bookmarks)가 그 판단을 도와줍니다.
+
+</Section>
+
+<Section id="notes" title="출처에 메모를 달고 나중에 다시 돌아오려면?">
+
+저장된 탭을 마우스 오른쪽 버튼으로 클릭하세요.
+
+- **메모 추가**(Add note): 이 출처가 왜 중요한지 적습니다. 메모가 있는 탭에는 메모 아이콘이 표시됩니다.
+- **알림 설정…**(Remind me…): 30분 후, 1시간 후, 3시간 후, 내일, 또는 직접 고른 날짜와 시간에 알림을 받고, 메모도 선택적으로 남길 수 있습니다. 때가 되면 TabMerger가 브라우저 알림을 띄웁니다.
+- **탭 이름 바꾸기**(Rename tab): 알아보기 힘든 페이지 제목('[1706.03762]')을 나중에 검색할 만한 이름으로 바꿉니다.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="출처에 메모와 알림 달기" steps={[{ title: '탭 메뉴' }, { title: '알림' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-tab-menu" alt="탭 메뉴가 열린 TabMerger 그룹 Thesis sources: Move to group(그룹으로 이동), Add note(메모 추가), Remind me…(알림 설정…), Rename tab(탭 이름 바꾸기), Remove tab(탭 제거), 라이트 테마" darkAlt="탭 메뉴가 열린 TabMerger 그룹 Thesis sources: Move to group(그룹으로 이동), Add note(메모 추가), Remind me…(알림 설정…), Rename tab(탭 이름 바꾸기), Remove tab(탭 제거), 다크 테마" boxes={[{ id: 'add-note', label: '메모 추가' }, { id: 'remind-me', label: '알림 설정…' }]} source="TabMerger 3.16.1">출처를 마우스 오른쪽 버튼으로 클릭해 메모를 답니다. 첫 번째 탭에는 이미 메모가 있습니다.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-reminder" alt="탭 아래에 열린 TabMerger 알림 선택기: 30 min, 1 hour, 3 hours, Tomorrow(내일), 날짜와 시간 지정, 선택 메모, 라이트 테마" darkAlt="탭 아래에 열린 TabMerger 알림 선택기: 30 min, 1 hour, 3 hours, Tomorrow(내일), 날짜와 시간 지정, 선택 메모, 다크 테마" boxes={[{ id: 'remind-in', label: '알림 시간…' }]} source="TabMerger 3.16.1">언제 돌아올지 고르고, 미래의 나에게 메모를 남기세요.</ThemedScreenshot>
+</Carousel>
+
+읽기 목록 전체를 이렇게 관리하려면 [탭을 할 일 목록처럼 쓰는 방법](/blog/tabs-as-a-to-do-list)을 참고하세요.
+
+</Section>
+
+<Section id="sessions" title="프로젝트 전체를 멈췄다가 나중에 다시 이어 가려면?">
+
+**현재 세션 저장**(Save current session, 사이드바의 세션 섹션에 있음)은 저장된 모든 그룹을 이름 있는 스냅샷으로 남기고, **세션 복원**(Restore session)은 그 그룹들을 한꺼번에 되돌립니다. '선행 연구 검토 전'처럼 중요한 단계마다 사용하면 나중에 바로 그 상태로 돌아갈 수 있습니다. 무료에서는 브라우저에 세션 3개를 보관하고, [Pro](/pricing)에서는 세션을 무제한으로 보관하며 기기 간에 엔드투엔드 암호화로 동기화합니다. 세션에 대해 더 알아보려면 [세션 관리자가 하는 일](/blog/browser-session-manager)을 읽어 보세요.
+
+</Section>
+
+<Section id="export" title="글을 쓸 때 출처를 내보내려면?">
+
+**설정 → 데이터**(Settings → Data)를 열고 **JSON 내보내기**(Export JSON)를 누르세요. 파일에는 모든 그룹, 창, 탭이 제목과 주소와 함께 담겨 있어, 짧은 스크립트나 텍스트 편집기로 참고 문헌 목록을 만들 수 있습니다. 자세한 내용과 항목별 예시는 [열린 탭을 내보내는 방법](/blog/export-open-tabs)에 있습니다.
+
+<InstallCta>Chrome, Edge, Firefox용 무료. 계정 없이 바로 시작할 수 있습니다.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="자주 묻는 질문">
+
+<Faq items={post.faq} />
+
+</Section>

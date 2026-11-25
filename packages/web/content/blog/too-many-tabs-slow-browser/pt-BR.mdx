@@ -1,0 +1,170 @@
+export const post = {
+  slug: 'too-many-tabs-slow-browser',
+  title: 'Muitas abas abertas deixam o computador lento?',
+  navTitle: 'Muitas abas, computador lento',
+  seoTitle: 'Muitas abas deixando o navegador lento? Veja como resolver',
+  description:
+    'O navegador está lento por causa de muitas abas abertas? Cada aba usa memória. Ative o recurso do navegador que coloca abas em suspensão e salve e feche com o TabMerger as abas que você não está usando, sem perder nenhuma.',
+  shareSummary: 'Por que abas abertas deixam tudo lento e como liberar memória sem perdê-las.',
+  dek: 'A aba mais rápida é a que não está aberta. Salve, feche e recupere com um clique.',
+  published: '2026-12-04',
+  updated: '2026-12-04',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'A Economia de memória do Chrome libera a memória das abas inativas.',
+      source: 'Ajuda do Chrome',
+      href: 'https://support.google.com/chrome/answer/12929150',
+    },
+    { text: 'O Edge 158 coloca as abas inativas em suspensão, depois de 15 minutos por padrão.', source: 'edge://settings, 20 nov. 2026' },
+    { text: 'O Firefox 159 pode descarregar uma aba pelo menu de contexto.', source: 'Texto dos menus do Firefox 159' },
+    { text: 'O TabMerger salva todas as janelas abertas e depois fecha todas com um clique.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Ter muitas abas usa mais memória?',
+      answer:
+        'Sim. Cada página aberta mantém o conteúdo na memória, e páginas que executam scripts ou reproduzem mídia também usam o processador. Quanto depende dos sites, então só o número de abas não diz tudo.',
+    },
+    {
+      question: 'Fechar abas deixa o computador mais rápido?',
+      answer:
+        'Fechar abas libera a memória que elas usam. Salve antes com o TabMerger (Mesclar com as atuais, depois Fechar todas as janelas) e você não perde nada: reabra qualquer uma com um clique.',
+    },
+    {
+      question: 'A Economia de memória ou as abas em suspensão bastam?',
+      answer:
+        'Elas liberam a memória das abas ociosas e as mantêm na faixa de abas, o que ajuda o computador. Mas as abas continuam lá para você percorrer; salvar e fechar ajuda você também.',
+    },
+    {
+      question: 'Como vejo qual aba usa mais memória?',
+      answer: 'No Chrome, pressione Shift+Esc para abrir o Gerenciador de tarefas do Chrome e procure as abas que usam mais memória.',
+    },
+  ],
+  images: [
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-light.webp', alt: 'Menu “Now Open” (Abertas agora) do TabMerger com “Close all windows” (Fechar todas as janelas), “Close all browser windows in this group” (Fechar todas as janelas do navegador deste grupo), destacado, tema claro' },
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-dark.webp', alt: 'Menu “Now Open” (Abertas agora) do TabMerger com “Close all windows” (Fechar todas as janelas), “Close all browser windows in this group” (Fechar todas as janelas do navegador deste grupo), destacado, tema escuro' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Configurações do Chrome, “Performance” (Desempenho), com a chave “Memory Saver” (Economia de memória)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Configurações do Edge, “Performance”, com “Automatically put tabs to sleep” ativado e definido em 15 minutos' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/too-many-tabs-slow-browser/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/too-many-tabs-slow-browser/og.png', alt: 'Capa “Do too many tabs slow your computer down?”: um guia do TabMerger, com o menu “Close all windows” (Fechar todas as janelas)' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'why', label: 'Por que as abas deixam tudo lento' },
+    { id: 'tabmerger', label: 'Salvar e fechar de uma vez' },
+    { id: 'browser', label: 'Deixar o navegador suspender abas' },
+    { id: 'which', label: 'Encontrar a aba pesada' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'Configuração de memória',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Configurações → System and performance → Performance',
+      firefox: 'Clique com o botão direito em uma aba → Descarregar aba',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Sim: cada aba aberta usa memória, e muitas delas deixam o computador inteiro lento. O que mais ajuda é **fechar as abas que você não está usando, sem perdê-las**. No [TabMerger](/features), escolha **Mesclar com as atuais** para salvar todas as janelas abertas em um grupo e depois **Fechar todas as janelas**: a memória é liberada e cada aba fica a um clique. Para as abas que você mantém abertas, ative a **Economia de memória** (“Memory Saver”, Chrome) ou as **abas em suspensão** (Edge).
+
+</QuickAnswer>
+
+<InstallCta>Salve todas as janelas, feche todas e recupere a memória. Grátis para Chrome, Edge e Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="why" title="Por que abas abertas deixam o computador lento?">
+
+Cada aba aberta é uma página web ativa: texto, imagens e scripts ficam na memória, e páginas movimentadas (vídeo, feeds ao vivo, apps web) continuam usando o processador também. Quando o navegador e seus outros apps precisam de mais memória do que o computador tem, tudo fica mais lento. A própria ajuda do Chrome sobre travamentos cita a falta de memória como uma causa, e a primeira solução é fechar abas.
+
+Quanto uma aba custa depende totalmente do site, então não existe um número seguro. A regra prática: se você não olhou para ela hoje, ela não precisa estar aberta.
+
+</Section>
+
+<Section id="tabmerger" title="Como fechar abas sem perdê-las?">
+
+É aqui que o [TabMerger](/features) se destaca. Dois passos, todas as janelas de uma vez:
+
+1. Clique em **Adicionar grupo** e escolha **Mesclar com as atuais** no menu **⋯** do grupo: todas as janelas e abas abertas são salvas no grupo.
+2. Clique com o botão direito em **Abertas agora** na barra lateral e escolha **Fechar todas as janelas**. As janelas do navegador fecham; o grupo guarda todas as abas.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/too-many-tabs-slow-browser/tm-close-all-menu" alt="Menu “Now Open” (Abertas agora) do TabMerger com “Close all windows” (Fechar todas as janelas), “Close all browser windows in this group” (Fechar todas as janelas do navegador deste grupo), destacado, tema claro" darkAlt="Menu “Now Open” (Abertas agora) do TabMerger com “Close all windows” (Fechar todas as janelas), “Close all browser windows in this group” (Fechar todas as janelas do navegador deste grupo), destacado, tema escuro" boxes={[{ id: 'close-all', label: 'Fechar todas as janelas' }]} source="TabMerger 3.16.1">Depois de salvar, um único item do menu fecha todas as janelas abertas.</ThemedScreenshot>
+
+Quando precisar delas de novo, abra o grupo e reabra uma aba, uma janela ou tudo. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> encontra qualquer aba salva com um atalho, e o salvamento automático pode salvar por você em horários programados. Mais hábitos na nossa [rotina contra o excesso de abas](/blog/manage-too-many-tabs).
+
+</Section>
+
+<Section id="browser" title="Como fazer o navegador suspender abas ociosas?">
+
+Nas abas que você mantém abertas, o navegador pode liberar a memória enquanto elas ficam sem uso. Elas recarregam quando você clica nelas.
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+Ative a **Economia de memória** (“Memory Saver”): **Configurações → Desempenho** (“Settings → Performance”), ou cole `chrome://settings/performance` na barra de endereço. Escolha em quanto tempo as abas ficam inativas: Moderado (“Moderate”), Equilibrado (“Balanced”) ou Máxima (“Maximum”).
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Configurações do Chrome, “Performance” (Desempenho), com a chave “Memory Saver” (Economia de memória)" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">“Memory Saver” (Economia de memória) do Chrome, desativada em um perfil novo do Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Ative **Automatically put tabs to sleep** em **Configurações → System and performance → Performance** e escolha quanto tempo uma aba espera antes de entrar em suspensão.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Configurações do Edge, “Performance”, com “Automatically put tabs to sleep” ativado e definido em 15 minutos" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">As abas em suspensão do Edge, ativadas por padrão: abas inativas entram em suspensão depois de 15 minutos.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Clique com o botão direito em uma aba e escolha **Descarregar aba** (“Unload Tab”) para liberar a memória dela na hora; selecione várias abas antes para descarregá-las juntas.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>as abas em suspensão continuam lotando a faixa de abas. Elas ajudam o computador, não o seu foco.</Catch>
+
+</Section>
+
+<Section id="which" title="Como encontrar a aba que está deixando tudo lento?">
+
+No Chrome, pressione <Kbd>Shift</Kbd>+<Kbd>Esc</Kbd> para abrir o **Gerenciador de tarefas do Chrome** (“Chrome Task Manager”) e procure as abas que usam mais memória. Salve as pesadas em um grupo do TabMerger e feche-as.
+
+{/* Screenshot still to capture by hand (needs a visible browser): the Chrome Task Manager window sorted by memory. */}
+
+<InstallCta>Grátis para Chrome, Edge e Firefox. Não é preciso criar conta para começar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

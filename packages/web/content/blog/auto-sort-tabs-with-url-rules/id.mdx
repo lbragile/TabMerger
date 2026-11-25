@@ -1,0 +1,179 @@
+export const post = {
+  slug: 'auto-sort-tabs-with-url-rules',
+  title: 'Mengurutkan tab ke grup secara otomatis dengan aturan URL',
+  navTitle: 'Mengurutkan tab otomatis dengan aturan URL',
+  seoTitle: 'Cara Mengelompokkan Tab Browser Otomatis Berdasarkan URL',
+  description:
+    'Biarkan TabMerger merapikan tab untuk Anda: aturan URL menyalin setiap halaman yang cocok ke grup yang tepat saat Anda menjelajah. Cara kerja pola dan karakter pengganti *, urutan aturan, dan pola yang terbukti efektif.',
+  shareSummary: 'Satu pola, satu grup: TabMerger merapikan setiap tab yang cocok saat Anda menjelajah.',
+  dek: 'Tulis aturannya sekali. Setiap halaman cocok yang Anda buka setelah itu langsung masuk ke grup yang tepat.',
+  published: '2026-12-17',
+  updated: '2026-12-17',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Aturan terdiri dari pola dan grup; * cocok dengan rangkaian karakter apa pun.', source: 'TabMerger 3.16.1' },
+    { text: 'Pola dicocokkan dengan seluruh alamat tanpa http:// atau https://.', source: 'Kode sumber TabMerger 3.16.1' },
+    { text: 'Aturan diperiksa dari atas ke bawah; yang pertama cocok yang menang.', source: 'TabMerger 3.16.1' },
+    { text: 'Paket Gratis punya 3 aturan URL; Pro tanpa batas.', source: 'Harga TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Bisakah tab browser diurutkan ke grup secara otomatis?',
+      answer:
+        'Bisa, dengan aturan URL di TabMerger. Sebuah aturan memasangkan pola alamat, misalnya github.com/your-org/*, dengan sebuah grup. Setiap kali halaman yang cocok terbuka atau selesai dimuat, TabMerger menyimpan salinannya ke grup itu. Tabnya sendiri tetap terbuka.',
+    },
+    {
+      question: 'Bagaimana cara kerja pola aturan URL?',
+      answer:
+        'Pola harus cocok dengan seluruh alamat, tanpa bagian http:// atau https://. * mewakili rangkaian karakter apa pun, termasuk kosong, dan merupakan satu-satunya karakter pengganti. Jadi github.com/* cocok dengan setiap halaman GitHub, dan *wikipedia.org/* cocok dengan Wikipedia dalam bahasa apa pun.',
+    },
+    {
+      question: 'Bagaimana jika dua aturan cocok dengan halaman yang sama?',
+      answer: 'Aturan diperiksa dari atas daftar ke bawah, dan aturan pertama yang cocok yang menang. Gunakan panah di samping setiap aturan untuk menaruh aturan yang spesifik di atas aturan yang umum.',
+    },
+    {
+      question: 'Apakah aturan URL menutup tab?',
+      answer: 'Tidak. Aturan menyimpan salinan ke grup; tab tetap terbuka di tempatnya.',
+    },
+    {
+      question: 'Berapa banyak aturan URL yang bisa saya buat?',
+      answer: 'Paket Gratis punya 3. Pro tanpa batas. Aturan yang sudah ada tetap berjalan jika paket Anda berubah.',
+    },
+  ],
+  images: [
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-light.webp', alt: 'Dialog Add URL Rule (Tambah Aturan URL) di TabMerger dengan pola *wikivoyage.org/wiki/* dan grup Trip to Lisbon, tema terang' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-dark.webp', alt: 'Dialog Add URL Rule (Tambah Aturan URL) di TabMerger dengan pola *wikivoyage.org/wiki/* dan grup Trip to Lisbon, tema gelap' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-light.webp', alt: 'URL Rules (Aturan URL) di TabMerger dengan tiga aturan, masing-masing dengan panah untuk mengubah urutannya, dan 3/3 used (3/3 digunakan), tema terang' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-dark.webp', alt: 'URL Rules (Aturan URL) di TabMerger dengan tiga aturan, masing-masing dengan panah untuk mengubah urutannya, dan 3/3 used (3/3 digunakan), tema gelap' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp', alt: 'Grup Trip to Lisbon dengan halaman Sintra yang ditambahkan oleh aturan URL, tema terang' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-dark.webp', alt: 'Grup Trip to Lisbon dengan halaman Sintra yang ditambahkan oleh aturan URL, tema gelap' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'developers'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp' },
+  ogImage: { src: '/blog/auto-sort-tabs-with-url-rules/og.png', alt: 'Mengurutkan tab otomatis dengan aturan URL: tiga aturan TabMerger merapikan tab ke dalam grup' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'problem', label: 'Merapikan secara manual' },
+    { id: 'why', label: 'Mengapa aturan bekerja begini' },
+    { id: 'steps', label: 'Menambahkan aturan' },
+    { id: 'patterns', label: 'Menulis pola' },
+    { id: 'order', label: 'Urutan aturan' },
+    { id: 'benefit', label: 'Yang Anda dapatkan' },
+    { id: 'habits', label: 'Kebiasaan yang baik' },
+    { id: 'plans', label: 'Gratis vs Pro' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Di [TabMerger](/features), buka **Pengaturan → Umum → Aturan URL → Kelola** (Settings → General → URL rules → Manage) lalu tambahkan aturan: pola alamat seperti `github.com/your-org/*` dan grup tempatnya. Sejak itu, setiap halaman yang cocok disimpan ke grup tersebut saat Anda menjelajah, dan tabnya tetap terbuka. `*` cocok dengan apa saja; aturan pertama yang cocok yang menang.
+
+</QuickAnswer>
+
+<InstallCta>Tab yang masuk sendiri ke grup yang tepat. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+<Section id="problem" title="Merapikan tab secara manual tidak bertahan lama">
+
+Anda memulai minggu dengan rapi: pekerjaan di satu grup, rencana perjalanan di grup lain, bacaan di grup ketiga. Lalu hari berjalan. Rekan kerja mengirim tautan ke sebuah issue, Anda mencari dua jadwal kereta, sebuah pencarian memunculkan artikel. Semuanya seharusnya masuk ke suatu tempat, dan masing-masing butuh seret-lepas yang tidak akan Anda lakukan. Hari Jumat grupnya sudah usang dan Sedang Terbuka (Now Open) kembali menumpuk.
+
+Halaman yang paling sering Anda buka berasal dari beberapa situs yang sama. Itulah yang bisa dikenali oleh sebuah aturan.
+
+</Section>
+
+<Section id="why" title="Mengapa aturan URL bekerja seperti ini">
+
+- **Menyalin, bukan memindahkan.** Aturan menyimpan salinan halaman ke grup dan membiarkan tab tetap terbuka. Merapikan tidak pernah mengganggu bacaan Anda.
+- **Memantau saat Anda menjelajah.** Aturan diperiksa saat tab terbuka dengan sebuah alamat dan setiap kali halaman selesai dimuat, jadi tautan yang Anda ikuti di dalam tab juga ikut dirapikan. Salinannya masuk ke jendela pertama grup. Halaman yang dimuat lagi (dimuat ulang, dikunjungi lagi nanti) disimpan lagi; **Hapus tab duplikat** (Deduplicate tabs) di menu **⋯** grup membersihkan duplikatnya.
+- **Seluruh alamat, tanpa skema.** Pola dibandingkan dengan seluruh alamat setelah `http://` atau `https://`, jadi Anda tidak perlu mengetiknya, dan `localhost:3000/*` berfungsi persis seperti tertulis.
+- **Sengaja hanya satu karakter pengganti.** `*` berarti rangkaian karakter apa pun, termasuk kosong. Tidak ada karakter khusus lain yang perlu di-escape. Pola dicocokkan sebagai teks biasa, tidak pernah diubah menjadi ekspresi reguler, sehingga pola panjang pun diperiksa dengan cepat.
+- **Urutan yang menentukan.** Saat dua aturan cocok, yang lebih atas yang menang, jadi aturan spesifik bisa diletakkan di atas aturan umum.
+
+</Section>
+
+<Section id="steps" title="Menambahkan aturan">
+
+1. Buka TabMerger, lalu **Pengaturan** → **Umum** (Settings → General). Di samping **Aturan URL**, tekan **Kelola** (Manage).
+2. Tekan **Tambah aturan** (Add rule). Ketik polanya, pilih grup tujuan, lalu tekan **Tambah aturan** di dialog.
+3. Ulangi untuk setiap situs yang ingin dirapikan, lalu tekan **Simpan** (Save) untuk menyimpan daftarnya.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Aturan URL dari awal sampai akhir" steps={[{ title: 'Tambah' }, { title: 'Daftarnya' }, { title: 'Hasilnya' }]}>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-add-rule" alt="Dialog Add URL Rule (Tambah Aturan URL) di TabMerger dengan pola *wikivoyage.org/wiki/* dan grup Trip to Lisbon, tema terang" darkAlt="Dialog Add URL Rule (Tambah Aturan URL) di TabMerger dengan pola *wikivoyage.org/wiki/* dan grup Trip to Lisbon, tema gelap" boxes={[{ id: 'pattern', label: 'Pola alamat' }, { id: 'group', label: 'Grup tujuan' }]} source="TabMerger 3.16.1">Setiap artikel Wikivoyage masuk ke grup perjalanan.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rules-list" alt="URL Rules (Aturan URL) di TabMerger dengan tiga aturan, masing-masing dengan panah untuk mengubah urutannya, dan 3/3 used (3/3 digunakan), tema terang" darkAlt="URL Rules (Aturan URL) di TabMerger dengan tiga aturan, masing-masing dengan panah untuk mengubah urutannya, dan 3/3 used (3/3 digunakan), tema gelap" boxes={[{ id: 'order', label: 'Diperiksa dari atas ke bawah' }, { id: 'used', label: 'Hitungan paket Gratis' }]} source="TabMerger 3.16.1">Tiga aturan, tiga grup. Panahnya menentukan aturan mana yang dicoba lebih dulu.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rule-result" alt="Grup Trip to Lisbon dengan halaman Sintra yang ditambahkan oleh aturan URL, tema terang" darkAlt="Grup Trip to Lisbon dengan halaman Sintra yang ditambahkan oleh aturan URL, tema gelap" boxes={[{ id: 'new-tab', label: 'Dirapikan oleh aturan' }]} source="TabMerger 3.16.1">Membuka artikel Sintra otomatis menyimpannya ke Trip to Lisbon.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="patterns" title="Menulis pola yang cocok">
+
+<ComparisonTable
+  head={['Pola', 'Cocok dengan', 'Tidak cocok dengan']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['github.com/your-org/*', 'Setiap repo, issue, dan pull request milik your-org', 'github.com/other-org/…'],
+    ['*wikipedia.org/wiki/*', 'Artikel dalam semua bahasa (en., de., …)', 'beranda wikipedia.org'],
+    ['localhost:3000/*', 'Setiap halaman server pengembangan lokal Anda', 'localhost:8080/…'],
+    ['docs.example.com/*', 'Situs dokumentasi', 'www.docs.example.com/… (tambahkan *docs.example.com/*)'],
+    ['github.com', 'Hanya alamat github.com itu sendiri', 'github.com/apa-saja (tambahkan /*)'],
+  ]}
+/>
+
+Tips yang menghemat satu sesi debugging:
+
+- **Akhiri dengan `/*`** untuk mencakup seluruh situs. Tanpa `*`, pola hanya cocok dengan satu alamat persis.
+- **Awali dengan `*`** jika situs memakai subdomain atau `www.`: `*example.com/*`.
+- **Huruf harus cocok persis.** Browser menulis nama domain dengan huruf kecil, jadi tulis juga dengan huruf kecil.
+- **Query string ikut dihitung.** `*youtube.com/watch*` cocok dengan video, apa pun yang ada setelah `watch`.
+
+</Section>
+
+<Section id="order" title="Urutan aturan: yang spesifik lebih dulu">
+
+Aturan dicoba dari atas. Letakkan aturan yang sempit (`github.com/your-org/design-system/*` → “Design system”) di atas aturan yang luas (`github.com/your-org/*` → “Work”) dengan panah di samping setiap aturan. Aturan pertama yang cocok merapikan halaman, dan sisanya dilewati.
+
+</Section>
+
+<Section id="benefit" title="Yang Anda dapatkan">
+
+Grup Anda tetap terbaru tanpa Anda merapikan apa pun. Halaman yang Anda buka hari Selasa sudah ada di grup proyeknya pada hari Jumat, dan pencarian di grup itu akan menemukannya.
+
+</Section>
+
+<Section id="habits" title="Kebiasaan yang baik">
+
+- **Buat aturan untuk situs yang Anda buka setiap hari,** bukan setiap situs yang hanya dikunjungi sekali.
+- **Satu aturan per domain atau path proyek**, yang spesifik lebih dulu.
+- **Padukan aturan dengan satu grup per proyek:** lihat [mengatur tab per proyek](/blog/organize-tabs-by-project). Developer bisa menemukan lebih banyak pola di [manajemen tab untuk developer](/blog/tab-management-for-developers).
+- **Rapikan sesekali** dengan **Hapus tab duplikat** pada grup yang sering diisi aturan.
+
+</Section>
+
+<Section id="plans" title="Gratis vs Pro">
+
+<ComparisonTable
+  head={['', 'Gratis', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Aturan URL', '3', 'Tanpa batas'],
+    ['Pola, urutan, semua opsi di atas', 'Ya', 'Ya'],
+  ]}
+/>
+
+Aturan URL disimpan di browser tempat Anda membuatnya. Jika paket Pro berakhir, aturan yang sudah ada tetap merapikan tab; hanya menambahkan aturan keempat yang memerlukan [Pro](/pricing).
+
+<InstallCta>Tulis tiga aturan hari ini dan berhenti merapikan tab secara manual. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

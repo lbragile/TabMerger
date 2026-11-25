@@ -1,0 +1,173 @@
+export const post = {
+  slug: 'onetab-alternatives',
+  title: 'Альтернативы OneTab и как перенести списки, не потеряв ни одной вкладки',
+  navTitle: 'Альтернативы OneTab и как перейти',
+  seoTitle: 'Аналоги OneTab с синхронизацией и как экспортировать списки',
+  description:
+    'Ищете альтернативу OneTab? Что OneTab умеет сегодня (синхронизация у него теперь есть), какие аналоги умеют то, чего не умеет он, и как экспортировать списки и импортировать их в другое расширение.',
+  shareSummary: 'Альтернативы OneTab, его новая синхронизация и надёжный способ перенести списки.',
+  dek: 'Сначала экспорт, потом удаление: если удалить OneTab, его список пропадёт.',
+  published: '2026-11-27',
+  updated: '2026-11-27',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'У OneTab есть платная функция Backup & Sync со сквозным шифрованием.',
+      source: 'one-tab.com/sync',
+      href: 'https://www.one-tab.com/sync',
+    },
+    {
+      text: 'При удалении OneTab сохранённые вкладки стираются.',
+      source: 'one-tab.com',
+      href: 'https://www.one-tab.com/',
+    },
+    { text: 'Одна лицензия OneTab синхронизирует до 100 браузеров или профилей.', source: 'one-tab.com/sync' },
+    { text: 'TabMerger превращает каждый список OneTab в отдельную группу.', source: 'Проверено в TabMerger 3.16.1, 20 ноября 2026 г.' },
+  ],
+  faq: [
+    {
+      question: 'Есть ли альтернатива OneTab с синхронизацией?',
+      answer:
+        'Да. TabMerger Pro синхронизирует группы и сессии со сквозным шифрованием в Chrome, Edge и Firefox. Toby, Workona и Tab Session Manager тоже умеют синхронизировать, а в OneTab теперь есть платная функция Backup & Sync.',
+    },
+    {
+      question: 'Как экспортировать данные из OneTab?',
+      answer:
+        'Откройте OneTab, выберите «Импорт и экспорт» и скопируйте текст. Каждая строка содержит адрес и заголовок; списки разделены пустой строкой. Сохраните текст в файл .txt.',
+    },
+    {
+      question: 'Пропадут ли вкладки, если удалить OneTab?',
+      answer: 'Да. Сайт OneTab сам предупреждает, что при удалении сохранённые вкладки стираются. Сначала сделайте экспорт и сохраните файл.',
+    },
+    {
+      question: 'Можно ли импортировать OneTab в TabMerger?',
+      answer: 'Да. Настройки → Данные → Импорт файла, выберите экспортированный .txt и подтвердите. Каждый список OneTab станет группой TabMerger, заголовки сохранятся.',
+    },
+  ],
+  images: [
+    { src: '/blog/onetab-alternatives/tm-settings-import-light.webp', alt: 'Настройки TabMerger, раздел Data (Данные), кнопка Import file (Импорт файла) в блоке Import & export (Импорт и экспорт), светлая тема' },
+    { src: '/blog/onetab-alternatives/tm-settings-import-dark.webp', alt: 'Настройки TabMerger, раздел Data (Данные), кнопка Import file (Импорт файла) в блоке Import & export (Импорт и экспорт), тёмная тема' },
+    { src: '/blog/onetab-alternatives/tm-import-confirm-light.webp', alt: 'Диалог TabMerger с вопросом Import 2 groups? (Импортировать 2 группы?) для файла onetab.txt, светлая тема' },
+    { src: '/blog/onetab-alternatives/tm-import-confirm-dark.webp', alt: 'Диалог TabMerger с вопросом Import 2 groups? (Импортировать 2 группы?) для файла onetab.txt, тёмная тема' },
+    { src: '/blog/onetab-alternatives/tm-imported-groups-light.webp', alt: 'Боковая панель TabMerger с новыми группами Imported 1 и Imported 2, во второй четыре вкладки, светлая тема' },
+    { src: '/blog/onetab-alternatives/tm-imported-groups-dark.webp', alt: 'Боковая панель TabMerger с новыми группами Imported 1 и Imported 2, во второй четыре вкладки, тёмная тема' },
+  ],
+  tags: ['comparison', 'tab-manager', 'save-tabs', 'session-management'],
+  sources: [
+    { title: 'OneTab', publisher: 'one-tab.com', url: 'https://www.one-tab.com/', checked: '2026-11-20' },
+    { title: 'OneTab Backup & Sync', publisher: 'one-tab.com', url: 'https://www.one-tab.com/sync', checked: '2026-11-20' },
+    {
+      title: 'OneTab',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/onetab/chphlpgkkbolifaimnlloiipkdnihall',
+      checked: '2026-11-20',
+    },
+    { title: 'Session Buddy', publisher: 'sessionbuddy.com', url: 'https://sessionbuddy.com/', checked: '2026-11-20' },
+    {
+      title: 'Tab Session Manager',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/tab-session-manager/iaiomicjabeggjcfkbimgmglanimpnae',
+      checked: '2026-11-20',
+    },
+    { title: 'Toby pricing', publisher: 'gettoby.com', url: 'https://www.gettoby.com/pricing', checked: '2026-11-20' },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/onetab-alternatives/tm-imported-groups-light.webp' },
+  ogImage: { src: '/blog/onetab-alternatives/og.png', alt: 'Титульная карточка «OneTab alternatives, and how to move your lists without losing a tab»: руководство TabMerger с двумя импортированными списками OneTab' },
+  toc: [
+    { id: 'quick', label: 'Коротко' },
+    { id: 'today', label: 'Что OneTab умеет сегодня' },
+    { id: 'alternatives', label: 'Альтернативы' },
+    { id: 'export', label: 'Экспорт из OneTab' },
+    { id: 'import', label: 'Импорт в TabMerger' },
+    { id: 'faq', label: 'Частые вопросы' },
+  ],
+}
+
+<QuickAnswer>
+
+Сначала экспорт: в OneTab выберите **Импорт и экспорт** (Import & Export), скопируйте текст и сохраните его в файл `.txt`, потому что при удалении OneTab его список стирается. Затем импортируйте файл в **TabMerger**: он превращает каждый список в группу с названием и добавляет то, чего нет у простого списка: окна остаются раздельными, один поиск по открытым, сохранённым и недавно закрытым вкладкам, автосохранение и синхронизация со сквозным шифрованием в Chrome, Edge и Firefox. Другие варианты: **Tab Session Manager** для автоматически сохраняемых сессий, **Session Buddy** для локального восстановления после сбоя, **Toby** для визуальной доски.
+
+</QuickAnswer>
+
+<InstallCta>Перенесите списки OneTab в именованные группы с поиском. Бесплатно для Chrome, Edge и Firefox.</InstallCta>
+
+<Section id="today" title="Что OneTab умеет сегодня?">
+
+Многие статьи об OneTab устарели, поэтому вот что говорит его собственный сайт (проверено 20 ноября 2026 г.):
+
+- Одним щелчком вкладки превращаются в список, чтобы сэкономить память. Восстановить их можно по одной или все сразу.
+- Списки сохраняются после закрытия OneTab, перезапуска браузера или компьютера и сбоев браузера.
+- Работает в Chrome, Firefox, Edge и Safari, есть папки, заметки, импорт и экспорт.
+- **Теперь есть синхронизация.** Backup & Sync — платная годовая подписка: изменения появляются в других ваших браузерах, плюс автоматическая резервная копия в облаке со сквозным шифрованием. Одна лицензия покрывает до 100 браузеров или профилей, а если отказаться от подписки, вкладки останутся; перестанет работать только синхронизация.
+- **Удаление стирает вкладки.** Именно поэтому в советах OneTab по устранению неполадок сказано не переустанавливать его, чтобы исправить проблему.
+
+Так что одна только синхронизация их больше не различает. TabMerger добавляет структуру: группы, в которых окна остаются раздельными, один поиск по открытым, сохранённым и недавно закрытым вкладкам, автосохранение открытых вкладок и один и тот же инструмент в Chrome, Edge и Firefox.
+
+</Section>
+
+<Section id="alternatives" title="Какую альтернативу OneTab выбрать?">
+
+<ComparisonTable
+  head={['Если нужно', 'Смотрите', 'Почему']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['Группы с несколькими окнами, один поиск, зашифрованная синхронизация', 'TabMerger', 'Именованные группы, поиск по открытым, сохранённым и закрытым вкладкам, автосохранение; синхронизация в Pro, всегда со сквозным шифрованием'],
+    ['Бесплатная синхронизация', 'Tab Session Manager', 'Облачная синхронизация, автосохранение при закрытии и по расписанию; платного тарифа нет'],
+    ['Бесплатное восстановление после сбоя, без аккаунта', 'Session Buddy', 'История сессий на вашем устройстве; без синхронизации'],
+    ['Визуальная доска', 'Toby', 'Коллекции на странице новой вкладки; бесплатно до 60 сохранённых вкладок'],
+    ['Чтобы неиспользуемые вкладки закрывались сами', 'Tab Wrangler', 'Закрывает неиспользуемые вкладки и хранит их, чтобы открыть снова'],
+  ]}
+/>
+
+Каждый инструмент описан по его собственному сайту или странице в магазине. Десять инструментов рядом — в [сравнении лучших расширений для управления вкладками](/blog/best-tab-manager-extensions); что такое сессии и зачем они нужны — в статье [что делает менеджер сессий браузера](/blog/browser-session-manager). Цены — на нашей [странице сравнения](/compare).
+
+</Section>
+
+<Section id="export" title="Как экспортировать списки из OneTab?">
+
+1. Откройте OneTab (значком на панели инструментов или страницей OneTab, если она закреплена).
+2. Выберите **Импорт и экспорт** (Import & Export).
+3. Скопируйте текст из поля экспорта. Для этого в OneTab есть кнопка **Копировать в буфер обмена** (Copy to clipboard).
+4. Вставьте его в редактор простого текста (Notepad или TextEdit в режиме простого текста) и сохраните как `onetab.txt`.
+
+Формат простой: одна вкладка на строку в виде `address | title` и пустая строка между списками. Строка выглядит так: `https://nodejs.org/en/docs | Documentation | Node.js`.
+
+<Catch>В экспорт попадают адреса и заголовки. Названия списков, заметки и папки не переносятся, поэтому перед переездом запишите, какой список был каким.</Catch>
+
+{/* Screenshot still to capture by hand (needs OneTab installed): OneTab's Import & Export page. */}
+
+</Section>
+
+<Section id="import" title="Как импортировать экспорт OneTab в TabMerger?">
+
+[TabMerger](/features), наше бесплатное расширение для Chrome, Edge и Firefox, читает файл OneTab напрямую. Ничего не загружается на сервер: файл читается в вашем браузере.
+
+1. Откройте TabMerger, затем **Настройки → Данные** (Settings → Data).
+2. В блоке **Импорт и экспорт** (Import & export) нажмите **Импорт файла** (Import file) и выберите файл `.txt`.
+3. Подтвердите. Каждый список OneTab станет отдельной группой с названием «Imported 1», «Imported 2» и так далее, заголовки вкладок сохранятся.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Импорт экспорта OneTab" steps={[{ title: 'Импорт файла' }, { title: 'Подтверждение' }, { title: 'Ваши группы' }]}>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-settings-import" alt="Настройки TabMerger, раздел Data (Данные), кнопка Import file (Импорт файла) в блоке Import & export (Импорт и экспорт), светлая тема" darkAlt="Настройки TabMerger, раздел Data (Данные), кнопка Import file (Импорт файла) в блоке Import & export (Импорт и экспорт), тёмная тема" boxes={[{ id: 'import-file', label: 'Импорт файла' }]} source="TabMerger 3.16.1">Settings → Data (Настройки → Данные): Import file (Импорт файла) принимает файлы OneTab .txt, закладки .html и файлы TabMerger .json.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-import-confirm" alt="Диалог TabMerger с вопросом Import 2 groups? (Импортировать 2 группы?) для файла onetab.txt, светлая тема" darkAlt="Диалог TabMerger с вопросом Import 2 groups? (Импортировать 2 группы?) для файла onetab.txt, тёмная тема" boxes={[{ id: 'import-confirm', label: 'Импорт' }]} source="TabMerger 3.16.1">Два списка OneTab — две группы, добавленные рядом с теми, что у вас уже есть.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-imported-groups" alt="Боковая панель TabMerger с новыми группами Imported 1 и Imported 2, во второй четыре вкладки, светлая тема" darkAlt="Боковая панель TabMerger с новыми группами Imported 1 и Imported 2, во второй четыре вкладки, тёмная тема" boxes={[{ id: 'imported', label: 'Импортированные группы' }]} source="TabMerger 3.16.1">Импортированные списки в виде групп. Переименовать их можно в меню каждой группы.</ThemedScreenshot>
+</Carousel>
+
+Все форматы, которые импортирует TabMerger, описаны в статье [импорт вкладок в TabMerger](/blog/import-tabs-into-tabmerger). Несколько деталей, которые стоит знать:
+
+- Строки, которые не являются полным веб-адресом (или запустили бы скрипт), пропускаются, а после импорта TabMerger сообщает, сколько их было.
+- На тарифе Free импорт, после которого вы превысили бы 5 групп или 50 вкладок, останавливается до того, как что-либо будет добавлено. В Pro ограничений нет.
+- Не удаляйте OneTab, пока не проверите группы. После этого его можно удалить.
+
+<InstallCta>Бесплатно для Chrome, Edge и Firefox. Забирайте списки OneTab с собой.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Частые вопросы">
+
+<Faq items={post.faq} />
+
+</Section>

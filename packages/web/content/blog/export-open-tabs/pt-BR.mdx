@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'export-open-tabs',
+  title: 'Como exportar suas abas abertas',
+  navTitle: 'Exportar suas abas abertas',
+  seoTitle: 'Como exportar as abas abertas no Chrome, Edge e Firefox',
+  description:
+    'Exporte todas as abas abertas, com título e endereço, para um arquivo que fica com você: a exportação JSON do TabMerger em um clique (abas abertas e grupos salvos juntos) ou a exportação de favoritos do navegador, passo a passo.',
+  shareSummary: 'Exporte todas as abas abertas para um arquivo em um clique e importe-as de volta onde quiser.',
+  dek: 'Um arquivo seu vale mais que uma sessão que você torce para sobreviver. Um clique no TabMerger, alguns no navegador.',
+  published: '2026-12-02',
+  updated: '2026-12-02',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'O “Exportar JSON” do TabMerger salva suas abas abertas e todos os grupos salvos em um só arquivo.', source: 'Testado no TabMerger 3.16.1, 21 nov. 2026' },
+    { text: 'O TabMerger importa arquivos JSON, HTML de favoritos e arquivos de texto do OneTab.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'O Chrome exporta os favoritos pelo menu do gerenciador de favoritos.',
+      source: 'Ajuda do Chrome',
+      href: 'https://support.google.com/chrome/answer/96816',
+    },
+    { text: 'Ctrl+Shift+D adiciona aos favoritos todas as abas da janela, nos três navegadores.', source: 'Ajuda do Chrome e do Edge; atalhos do Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Como copio todos os URLs das abas?',
+      answer:
+        'A cópia completa mais rápida é Configurações → Dados → Exportar JSON no TabMerger: um arquivo com o título e o endereço de cada aba aberta e de cada grupo salvo. Sem extensão, adicione as abas da janela aos favoritos (Ctrl+Shift+D) e exporte seus favoritos em HTML.',
+    },
+    {
+      question: 'Posso exportar as abas de todas as janelas de uma vez?',
+      answer: 'Sim, com o TabMerger: “Abertas agora” abrange todas as janelas abertas, e a exportação JSON o inclui. O caminho pelos favoritos funciona uma janela por vez.',
+    },
+    {
+      question: 'Como importo o arquivo de novo?',
+      answer: 'No TabMerger, Configurações → Dados → Importar arquivo: ele lê arquivos JSON do TabMerger, HTML de favoritos e arquivos de texto do OneTab, e os adiciona como grupos.',
+    },
+    {
+      question: 'A exportação é privada?',
+      answer: 'Sim. O arquivo é criado no seu navegador e salvo no seu computador; nada é enviado. Guarde-o em um lugar seguro, já que ele lista as suas páginas.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: '“Settings” (Configurações) do TabMerger, aba “Data” (Dados), com os botões “Export JSON” (Exportar JSON) e “Import file” (Importar arquivo) em “Import & export” (Importar e exportar), tema claro' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: '“Settings” (Configurações) do TabMerger, aba “Data” (Dados), com os botões “Export JSON” (Exportar JSON) e “Import file” (Importar arquivo) em “Import & export” (Importar e exportar), tema escuro' },
+  ],
+  tags: ['save-tabs', 'bookmarks', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Import Chrome bookmarks & settings (export section)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/export-open-tabs/tm-settings-export-light.webp' },
+  ogImage: { src: '/blog/export-open-tabs/og.png', alt: 'Como exportar suas abas abertas: um guia do TabMerger, com o botão “Export JSON” (Exportar JSON)' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'tabmerger', label: 'Exportar em um clique' },
+    { id: 'inside', label: 'O que tem no arquivo' },
+    { id: 'builtin', label: 'O caminho pelos favoritos' },
+    { id: 'import', label: 'Trazer de volta' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Exportar favoritos',
+    values: { chrome: 'Gerenciador de favoritos → ⋮ → Exportar favoritos', edge: 'Favorites → Export favorites', firefox: 'Biblioteca → Exportar favoritos para HTML…' },
+  },
+}
+
+<QuickAnswer>
+
+Abra o [TabMerger](/features), vá em **Configurações → Dados** (Settings → Data) e clique em **Exportar JSON** (Export JSON). Um clique salva um arquivo com o título e o endereço de **todas as abas abertas em todas as janelas**, além de cada grupo que você salvou. Sem extensão, você pode adicionar as abas de uma janela aos favoritos com <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> e exportar seus favoritos como arquivo HTML, uma janela por vez.
+
+</QuickAnswer>
+
+<InstallCta>Exporte todas as abas abertas, de todas as janelas, em um clique. Grátis para Chrome, Edge e Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Como exporto todas as abas abertas em um clique?">
+
+1. Abra o TabMerger e clique no ícone da conta → **Configurações**.
+2. Abra a aba **Dados**.
+3. Em **Importar e exportar**, clique em **Exportar JSON**. O arquivo é baixado na hora, com um nome como `tabmerger-backup-2026-11-21.json`.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="“Settings” (Configurações) do TabMerger, aba “Data” (Dados), com os botões “Export JSON” (Exportar JSON) e “Import file” (Importar arquivo) em “Import & export” (Importar e exportar), tema claro" darkAlt="“Settings” (Configurações) do TabMerger, aba “Data” (Dados), com os botões “Export JSON” (Exportar JSON) e “Import file” (Importar arquivo) em “Import & export” (Importar e exportar), tema escuro" boxes={[{ id: 'export-json', label: 'Exportar JSON' }, { id: 'import-file', label: 'Importar arquivo' }]} source="TabMerger 3.16.1">Settings → Data (Configurações → Dados): um botão para sair, outro para voltar.</ThemedScreenshot>
+
+Está em todos os planos, incluindo o Free, e o arquivo é criado no seu navegador: nada é enviado.
+
+</Section>
+
+<Section id="inside" title="O que tem no arquivo exportado?">
+
+Uma lista JSON dos seus grupos. **Abertas agora** (Now Open), suas janelas e abas abertas no momento, vem primeiro, seguido de cada grupo salvo. De uma exportação real:
+
+<ComparisonTable
+  head={['Campo', 'Exemplo da exportação']}
+  rows={[
+    [<code>name</code>, '“Now Open”, “Work”, “Reading list”'],
+    [<code>windows[]</code>, 'Uma entrada por janela, cada uma com suas abas'],
+    [<code>tabs[].title</code>, '“Spaced repetition - Wikipedia”'],
+    [<code>tabs[].url</code>, <code>https://en.wikipedia.org/wiki/Spaced_repetition</code>],
+    [<code>color</code>, <code>rgba(59, 130, 246, 1)</code>],
+  ]}
+/>
+
+JSON é texto puro, então qualquer script ou editor de texto consegue ler: extraia os endereços, transforme-os em uma lista Markdown ou guarde o arquivo como backup.
+
+</Section>
+
+<Section id="builtin" title="Como exporto abas sem extensão?">
+
+Os navegadores não exportam as abas abertas diretamente, mas exportam favoritos. Então adicione as abas aos favoritos primeiro e depois exporte:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. Em cada janela, pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> no Mac) e salve as abas em uma pasta nova.
+2. Abra **⋮ → Favoritos e listas → Gerenciador de favoritos** (Bookmarks and lists → Bookmark Manager).
+3. Na parte de cima, abra **⋮ → Exportar favoritos** (Export bookmarks). O Chrome salva todos os favoritos em um arquivo HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Em cada janela, pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> para adicionar todas as abas aos favoritos, em uma pasta nova.
+2. Pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> para abrir os favoritos (Favorites).
+3. Escolha **Export favorites** no menu da página e salve o arquivo HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Em cada janela, pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> para adicionar todas as abas aos favoritos em uma pasta nova.
+2. Pressione <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> para abrir a Biblioteca (Library).
+3. Escolha **Exportar favoritos para HTML…** (Export Bookmarks to HTML…) e salve o arquivo.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>é uma janela por vez, exporta *todos* os seus favoritos em vez de só aquelas abas, e o arquivo não sabe quais abas estavam abertas juntas.</Catch>
+
+</Section>
+
+<Section id="import" title="Como trago as abas de volta?">
+
+No TabMerger, **Configurações → Dados → Importar arquivo** (Settings → Data → Import file) lê os três tipos de arquivo e os adiciona como grupos ao lado dos que você já tem:
+
+- **JSON do TabMerger**, do “Exportar JSON”, com seus grupos e janelas salvos como estavam. O “Abertas agora” do arquivo não é adicionado (eram as abas abertas do navegador que exportou), então salve as janelas abertas em um grupo antes de exportar se quiser tê-las de volta.
+- **HTML de favoritos**, de qualquer navegador: cada pasta de primeiro nível vira um grupo.
+- **Texto do OneTab**: cada lista do OneTab vira um grupo. Veja nosso [guia de alternativas ao OneTab](/blog/onetab-alternatives).
+
+Isso faz da exportação o jeito mais simples de [levar abas para outro computador](/blog/move-tabs-between-computers) sem conta. Quer que seja automático? O [Pro](/pricing) guarda os 10 backups automáticos mais recentes e sincroniza seus grupos entre dispositivos, com criptografia de ponta a ponta. Para salvar abas para depois sem arquivo nenhum, veja [como salvar todas as abas abertas](/blog/save-all-open-tabs); para enviar um conjunto a outra pessoa, veja [como compartilhar um conjunto de abas](/blog/share-a-set-of-tabs).
+
+<InstallCta>Grátis para Chrome, Edge e Firefox. Não precisa de conta para começar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,170 @@
+export const post = {
+  slug: 'too-many-tabs-slow-browser',
+  title: 'Mở quá nhiều tab có làm máy tính chậm không?',
+  navTitle: 'Quá nhiều tab, máy tính chậm',
+  seoTitle: 'Mở quá nhiều tab làm trình duyệt chậm? Cách khắc phục',
+  description:
+    'Trình duyệt chậm vì mở quá nhiều tab? Mỗi tab đều dùng bộ nhớ. Hãy bật tính năng cho tab ngủ của trình duyệt, rồi lưu và đóng những tab bạn không dùng bằng TabMerger mà không mất tab nào.',
+  shareSummary: 'Vì sao tab đang mở làm mọi thứ chậm đi, và cách giải phóng bộ nhớ mà không mất tab.',
+  dek: 'Tab nhanh nhất là tab không mở. Lưu lại, đóng đi và mở lại chỉ bằng một cú nhấp.',
+  published: '2026-12-04',
+  updated: '2026-12-04',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Trình tiết kiệm bộ nhớ của Chrome giải phóng bộ nhớ của các tab không hoạt động.',
+      source: 'Trợ giúp Chrome',
+      href: 'https://support.google.com/chrome/answer/12929150',
+    },
+    { text: 'Edge 158 cho các tab không hoạt động ngủ, theo mặc định là sau 15 phút.', source: 'edge://settings, 20/11/2026' },
+    { text: 'Firefox 159 có thể giải phóng một tab từ menu chuột phải.', source: 'Văn bản menu của Firefox 159' },
+    { text: 'TabMerger lưu mọi cửa sổ đang mở, rồi đóng tất cả chỉ bằng một cú nhấp.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Mở nhiều tab có tốn nhiều bộ nhớ hơn không?',
+      answer:
+        'Có. Mỗi trang đang mở giữ nội dung của nó trong bộ nhớ, và những trang chạy script hoặc phát nội dung đa phương tiện còn dùng cả bộ xử lý. Tốn bao nhiêu tùy vào trang web, nên chỉ đếm số tab thì chưa nói lên được gì.',
+    },
+    {
+      question: 'Đóng tab có làm máy tính chạy nhanh hơn không?',
+      answer:
+        'Đóng tab sẽ giải phóng bộ nhớ mà chúng dùng. Hãy lưu trước bằng TabMerger (Hợp nhất với phiên hiện tại, rồi Đóng tất cả cửa sổ) là bạn không mất gì: mở lại bất kỳ tab nào chỉ bằng một cú nhấp.',
+    },
+    {
+      question: 'Chỉ dùng Trình tiết kiệm bộ nhớ hoặc tab ngủ có đủ không?',
+      answer:
+        'Chúng giải phóng bộ nhớ của các tab nhàn rỗi nhưng vẫn giữ chúng trên dải tab, điều này giúp máy tính. Tuy vậy, các tab vẫn nằm đó để bạn phải dò qua; lưu và đóng chúng cũng giúp chính bạn.',
+    },
+    {
+      question: 'Làm sao để biết tab nào dùng nhiều bộ nhớ nhất?',
+      answer: 'Trong Chrome, nhấn Shift+Esc để mở Trình quản lý tác vụ Chrome và tìm những tab dùng nhiều bộ nhớ nhất.',
+    },
+  ],
+  images: [
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-light.webp', alt: 'Menu Now Open (Đang Mở) trong TabMerger, với mục Close all windows (Đóng tất cả cửa sổ), Close all browser windows in this group (Đóng tất cả cửa sổ trình duyệt trong nhóm này), được tô sáng, giao diện sáng' },
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-dark.webp', alt: 'Menu Now Open (Đang Mở) trong TabMerger, với mục Close all windows (Đóng tất cả cửa sổ), Close all browser windows in this group (Đóng tất cả cửa sổ trình duyệt trong nhóm này), được tô sáng, giao diện tối' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Cài đặt Chrome, mục Performance (Hiệu suất), với công tắc Memory Saver (Trình tiết kiệm bộ nhớ)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Cài đặt Edge, mục Performance, với Automatically put tabs to sleep đang bật và đặt ở 15 phút' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/too-many-tabs-slow-browser/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/too-many-tabs-slow-browser/og.png', alt: 'Ảnh tiêu đề “Do too many tabs slow your computer down?”: hướng dẫn của TabMerger, với menu Close all windows (Đóng tất cả cửa sổ)' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'why', label: 'Vì sao tab làm chậm máy' },
+    { id: 'tabmerger', label: 'Lưu và đóng một lần' },
+    { id: 'browser', label: 'Để trình duyệt cho tab ngủ' },
+    { id: 'which', label: 'Tìm tab nặng' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'Cài đặt bộ nhớ',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Cài đặt → System and performance → Performance',
+      firefox: 'Nhấp chuột phải vào tab → Giải phóng thẻ',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Có: mỗi tab đang mở đều dùng bộ nhớ, và khi có đủ nhiều tab thì cả máy tính chậm đi. Cách hiệu quả nhất là **đóng những tab bạn không dùng mà không làm mất chúng**. Trong [TabMerger](/features), chọn **Hợp nhất với phiên hiện tại** để lưu mọi cửa sổ đang mở vào một nhóm, rồi chọn **Đóng tất cả cửa sổ**: bộ nhớ được giải phóng và tab nào cũng chỉ cách bạn một cú nhấp. Với những tab bạn vẫn để mở, hãy bật **Trình tiết kiệm bộ nhớ** (Memory Saver, Chrome) hoặc **tab ngủ** (Edge).
+
+</QuickAnswer>
+
+<InstallCta>Lưu mọi cửa sổ, đóng tất cả, lấy lại bộ nhớ. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="why" title="Vì sao tab đang mở làm máy tính chậm đi?">
+
+Mỗi tab đang mở là một trang web đang chạy: văn bản, hình ảnh và script của nó nằm trong bộ nhớ, còn những trang hoạt động liên tục (video, nguồn cấp trực tiếp, ứng dụng web) vẫn dùng cả bộ xử lý. Khi trình duyệt và các ứng dụng khác cần nhiều bộ nhớ hơn máy tính có, mọi thứ đều chậm lại. Chính trang trợ giúp của Chrome về sự cố treo nêu tình trạng hết bộ nhớ là một nguyên nhân, và cách khắc phục đầu tiên là đóng tab.
+
+Một tab tốn bao nhiêu hoàn toàn tùy vào trang web, nên không có con số nào là an toàn. Quy tắc thực tế: nếu hôm nay bạn chưa xem tới nó, nó không cần phải mở.
+
+</Section>
+
+<Section id="tabmerger" title="Làm sao để đóng tab mà không mất chúng?">
+
+Đây là lúc [TabMerger](/features) tỏa sáng. Hai bước, mọi cửa sổ cùng lúc:
+
+1. Nhấp **Thêm Nhóm**, rồi chọn **Hợp nhất với phiên hiện tại** trong menu **⋯** của nhóm: mọi cửa sổ và tab đang mở được lưu vào nhóm.
+2. Nhấp chuột phải vào **Đang Mở** ở thanh bên và chọn **Đóng tất cả cửa sổ**. Các cửa sổ trình duyệt đóng lại; nhóm vẫn giữ mọi tab.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/too-many-tabs-slow-browser/tm-close-all-menu" alt="Menu Now Open (Đang Mở) trong TabMerger, với mục Close all windows (Đóng tất cả cửa sổ), Close all browser windows in this group (Đóng tất cả cửa sổ trình duyệt trong nhóm này), được tô sáng, giao diện sáng" darkAlt="Menu Now Open (Đang Mở) trong TabMerger, với mục Close all windows (Đóng tất cả cửa sổ), Close all browser windows in this group (Đóng tất cả cửa sổ trình duyệt trong nhóm này), được tô sáng, giao diện tối" boxes={[{ id: 'close-all', label: 'Đóng tất cả cửa sổ' }]} source="TabMerger 3.16.1">Sau khi lưu, chỉ một mục menu là đóng được mọi cửa sổ đang mở.</ThemedScreenshot>
+
+Khi cần lại, hãy mở nhóm và mở lại một tab, một cửa sổ hoặc tất cả. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> tìm bất kỳ tab đã lưu nào chỉ với một phím tắt, còn tính năng tự động lưu có thể lưu giúp bạn theo lịch. Thêm thói quen khác trong [quy trình xử lý quá nhiều tab](/blog/manage-too-many-tabs) của chúng tôi.
+
+</Section>
+
+<Section id="browser" title="Làm sao để trình duyệt cho các tab nhàn rỗi ngủ?">
+
+Với những tab bạn vẫn để mở, trình duyệt có thể giải phóng bộ nhớ của chúng khi chúng không được dùng. Chúng tải lại khi bạn nhấp vào.
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+Bật **Trình tiết kiệm bộ nhớ** (Memory Saver): **Cài đặt → Hiệu suất** (Settings → Performance), hoặc dán `chrome://settings/performance` vào thanh địa chỉ. Chọn mức độ nhanh để tab chuyển sang không hoạt động: Trung bình (Moderate), Cân bằng (Balanced) hoặc Tối đa (Maximum).
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Cài đặt Chrome, mục Performance (Hiệu suất), với công tắc Memory Saver (Trình tiết kiệm bộ nhớ)" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">Memory Saver (Trình tiết kiệm bộ nhớ) của Chrome, đang tắt trong một hồ sơ Chrome 157 mới.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Bật **Automatically put tabs to sleep** trong **Cài đặt → System and performance → Performance**, rồi chọn thời gian một tab chờ trước khi ngủ.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Cài đặt Edge, mục Performance, với Automatically put tabs to sleep đang bật và đặt ở 15 phút" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Tab ngủ của Edge, bật theo mặc định: các tab không hoạt động sẽ ngủ sau 15 phút.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Nhấp chuột phải vào một tab và chọn **Giải phóng thẻ** (Unload Tab) để giải phóng bộ nhớ của nó ngay; chọn trước nhiều tab để giải phóng chúng cùng lúc.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>tab ngủ vẫn chiếm chỗ trên dải tab. Chúng giúp máy tính, không giúp bạn tập trung.</Catch>
+
+</Section>
+
+<Section id="which" title="Làm sao để tìm tab đang làm mọi thứ chậm đi?">
+
+Trong Chrome, nhấn <Kbd>Shift</Kbd>+<Kbd>Esc</Kbd> để mở **Trình quản lý tác vụ Chrome** (Chrome Task Manager) và tìm những tab dùng nhiều bộ nhớ nhất. Lưu các tab nặng vào một nhóm TabMerger rồi đóng chúng.
+
+{/* Screenshot still to capture by hand (needs a visible browser): the Chrome Task Manager window sorted by memory. */}
+
+<InstallCta>Miễn phí cho Chrome, Edge và Firefox. Không cần tài khoản để bắt đầu.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+</Section>

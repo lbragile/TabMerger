@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'move-tabs-between-computers',
+  title: 'Come trasferire le schede su un altro computer',
+  navTitle: 'Trasferire le schede su un altro computer',
+  seoTitle: 'Come trasferire le schede su un altro computer (Chrome, Edge, Firefox)',
+  description:
+    'Trasferisci le schede aperte da un computer all’altro: la sincronizzazione del browser e le schede di altri dispositivi, le funzioni per inviare schede, un file da portare con te o la sincronizzazione crittografata end-to-end di TabMerger Pro tra Chrome, Edge e Firefox.',
+  shareSummary: 'Le tue schede da un computer all’altro: sync, invio della scheda, un file o sync crittografata.',
+  dek: 'Dal portatile al fisso, dall’ufficio a casa, dal vecchio PC al nuovo: quattro modi per portarti dietro le schede.',
+  published: '2026-12-03',
+  updated: '2026-12-03',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger Pro sincronizza gruppi e sessioni con crittografia end-to-end tra Chrome, Edge e Firefox.', source: 'Prezzi e funzionalità di TabMerger', href: '/pricing' },
+    { text: '«Esporta JSON» e «Importa file» di TabMerger trasferiscono tutto con il piano gratuito.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome mostra le schede degli altri dispositivi solo con la sincronizzazione di «Cronologia e schede» attiva.',
+      source: 'Guida di Chrome',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'Firefox può inviare una scheda a un altro dispositivo dal menu della scheda.', source: 'Testo dei menu di Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Come invio le schede al telefono o al portatile?',
+      answer:
+        'Nello stesso browser, accedi su entrambi i dispositivi e usa la sua sincronizzazione: Chrome ed Edge elencano le schede degli altri dispositivi nella cronologia, e Firefox può inviare una scheda dal menu contestuale. Tra browser diversi, TabMerger Pro sincronizza i tuoi gruppi salvati.',
+    },
+    {
+      question: 'Posso trasferire le schede da Chrome a Firefox?',
+      answer:
+        'La sincronizzazione del browser resta dentro quel browser. TabMerger funziona in Chrome, Edge e Firefox: esporta un file JSON e importalo dall’altra parte gratis, oppure lascia che la sincronizzazione di Pro li tenga allineati.',
+    },
+    {
+      question: 'Mi serve un account?',
+      answer: 'Non per un file: «Esporta JSON» e «Importa file» di TabMerger non richiedono un account. La sincronizzazione del browser e quella di TabMerger Pro sì.',
+    },
+    {
+      question: 'I dati delle schede sincronizzate sono privati?',
+      answer:
+        'TabMerger Pro crittografa gruppi e sessioni sul tuo dispositivo prima di sincronizzarli, quindi il server non può leggerli. La privacy della sincronizzazione del browser dipende dalle impostazioni del browser stesso.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: 'Impostazioni di TabMerger, «Data» (Dati), con i pulsanti «Export JSON» (Esporta JSON) e «Import file» (Importa file) sotto «Import & export» (Importa ed esporta), tema chiaro' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: 'Impostazioni di TabMerger, «Data» (Dati), con i pulsanti «Export JSON» (Esporta JSON) e «Import file» (Importa file) sotto «Import & export» (Importa ed esporta), tema scuro' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'session-management', 'cross-browser', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/move-tabs-between-computers/tm-merge-menu-light.webp' },
+  ogImage: { src: '/blog/move-tabs-between-computers/og.png', alt: 'Come trasferire le schede su un altro computer: una guida di TabMerger, con i pulsanti «Export JSON» e «Import file»' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'pick', label: 'Quale metodo usare' },
+    { id: 'tabmerger', label: 'Con TabMerger' },
+    { id: 'browser', label: 'Con la sincronizzazione del browser' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'Schede degli altri dispositivi',
+    values: { chrome: 'Cronologia → Schede di altri dispositivi', edge: 'History → Tabs from other devices', firefox: 'Firefox View → Schede da altri dispositivi' },
+  },
+}
+
+<QuickAnswer>
+
+Per un trasferimento una tantum, usa in [TabMerger](/features) **Impostazioni → Dati → Esporta JSON** (Settings → Data → Export JSON) sul vecchio computer e **Importa file** (Import file) sul nuovo: arrivano tutti i gruppi salvati (prima salva le finestre aperte in un gruppo), gratis, senza account, in Chrome, Edge o Firefox. Per tenere allineati due computer, **TabMerger Pro** sincronizza automaticamente gruppi e sessioni, con crittografia end-to-end. Resti su un solo browser? Accedi su entrambi e usa la sua sincronizzazione.
+
+</QuickAnswer>
+
+<InstallCta>Porta ogni scheda sul nuovo computer in due clic. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="pick" title="Quale metodo conviene usare?">
+
+<ComparisonTable
+  head={['Vuoi…', 'Il metodo migliore']}
+  rowHeaders
+  minWidth="34rem"
+  rows={[
+    ['Spostare tutto una volta su un nuovo computer', 'TabMerger: Esporta JSON → Importa file (gratis)'],
+    ['Tenere allineati due o più computer', 'Sincronizzazione di TabMerger Pro, crittografata end-to-end'],
+    ['Passare da un browser a un altro', 'TabMerger (file gratis, sincronizzazione con Pro)'],
+    ['Prendere una scheda dall’altro dispositivo, stesso browser', 'Sincronizzazione del browser o invio della scheda'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabmerger" title="Come trasferisco le schede con TabMerger?">
+
+**Una volta, con un file (gratis):**
+
+1. Sul vecchio computer, salva in un gruppo le finestre aperte da trasferire: nel menu **⋯** di un gruppo, scegli **Unisci con l'attuale** («Merge with current»). L’importazione aggiunge i gruppi salvati; «Aperte ora» («Now Open») del file resta fuori, perché erano le schede aperte del vecchio browser.
+2. Apri TabMerger → **Impostazioni → Dati** → **Esporta JSON**.
+3. Copia il file sul nuovo computer (una chiavetta USB, un’email a te stesso, un cloud).
+4. Sul nuovo computer, installa TabMerger, poi **Impostazioni → Dati** → **Importa file**. I tuoi gruppi compaiono accanto a quelli che hai già.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="Impostazioni di TabMerger, «Data» (Dati), con i pulsanti «Export JSON» (Esporta JSON) e «Import file» (Importa file) sotto «Import & export» (Importa ed esporta), tema chiaro" darkAlt="Impostazioni di TabMerger, «Data» (Dati), con i pulsanti «Export JSON» (Esporta JSON) e «Import file» (Importa file) sotto «Import & export» (Importa ed esporta), tema scuro" boxes={[{ id: 'export-json', label: 'Esporta JSON' }, { id: 'import-file', label: 'Importa file' }]} source="TabMerger 3.16.1">Esporta su un computer, importa sull’altro.</ThemedScreenshot>
+
+**Sempre, con la sincronizzazione ([Pro](/pricing)):** accedi a TabMerger su ogni computer e i tuoi gruppi e le tue sessioni ti seguono, in Chrome, Edge o Firefox. Tutto viene crittografato sul tuo dispositivo prima della sincronizzazione, quindi il server non può leggere le tue schede. Pro mostra anche le schede aperte sugli altri tuoi dispositivi e le ripristina qui, e conserva backup automatici. Come funziona, e cosa il nostro server può e non può vedere: [sincronizzare le schede tra dispositivi](/blog/sync-tabs-between-devices-with-tabmerger).
+
+Cosa contiene il file lo trovi in [come esportare le schede aperte](/blog/export-open-tabs).
+
+</Section>
+
+<Section id="browser" title="Come trasferisco le schede con la sincronizzazione del browser?">
+
+Funziona quando entrambi i computer usano lo stesso browser e hai effettuato l’accesso su tutti e due:
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+1. Accedi a Chrome su entrambi i computer.
+2. Attiva **Cronologia e schede** («History and tabs»): **Impostazioni → Tu e Google** («Settings → You and Google»), seleziona il nome del tuo account, poi attiva l’opzione.
+3. Sull’altro computer, apri la cronologia (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) e scegli **Schede di altri dispositivi** («Tabs from other devices»).
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Accedi a Edge su entrambi i computer e attiva la sincronizzazione.
+2. Sull’altro computer, apri la cronologia (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) e scegli **Tabs from other devices** (schede di altri dispositivi).
+3. Edge 158 ha anche **Send tab to your devices** (invia la scheda ai tuoi dispositivi) per una singola pagina.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Accedi a Firefox su entrambi i computer, con la sincronizzazione delle schede aperte attiva.
+2. Fai clic destro su una scheda e scegli **Invia a dispositivo** («Send to Device») per mandarla all’altro computer.
+3. Oppure apri lì **Firefox View** e guarda sotto **Schede da altri dispositivi** («Tabs from other devices»).
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>la sincronizzazione del browser funziona solo dentro lo stesso browser, mostra solo ciò che è aperto in questo momento sull’altro dispositivo e non conserva le schede che hai chiuso. Per tutte le tue schede, anche tra browser diversi, usa TabMerger.</Catch>
+
+Hai perso delle schede per un crash sul vecchio computer? Comincia da [come ripristinare le schede dopo un crash](/blog/restore-tabs-after-crash). Per il quadro generale, leggi [cosa fa un gestore di sessioni](/blog/browser-session-manager).
+
+<InstallCta>Gratis per Chrome, Edge e Firefox. Non serve un account per iniziare.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

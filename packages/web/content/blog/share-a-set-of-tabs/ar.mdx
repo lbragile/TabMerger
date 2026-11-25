@@ -1,0 +1,141 @@
+export const post = {
+  slug: 'share-a-set-of-tabs',
+  title: 'كيف تشارك عدة علامات تبويب دفعة واحدة مع شخص آخر',
+  navTitle: 'مشاركة عدة علامات تبويب دفعة واحدة',
+  seoTitle: 'كيفية مشاركة عدة علامات تبويب دفعة واحدة (Chrome وEdge وFirefox)',
+  description:
+    'أرسل إلى زميل أو صديق مجموعة كاملة من علامات التبويب: انسخ الروابط، أو شارك ملف إشارات مرجعية، أو أنشئ رابط مشاركة من TabMerger مشفّرًا تشفيرًا تامًا بين الطرفين يُفتح بنقرة واحدة دون حساب.',
+  shareSummary: 'شارك عدة علامات تبويب دفعة واحدة: روابط، أو ملف إشارات مرجعية، أو رابط مشفّر يُفتح بنقرة.',
+  dek: 'لصق اثني عشر رابطًا في محادثة أمر مرهق لكليكما. أما رابط واحد للمجموعة كلها فلا.',
+  published: '2026-12-10',
+  updated: '2026-12-10',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'يفتح رابط المشاركة من TabMerger صفحة للقراءة فقط، ولا حاجة إلى حساب لعرضها.', source: 'صفحة المشاركة في TabMerger' },
+    { text: 'يبقى مفتاح فك التشفير في جزء #fragment من الرابط، وهو جزء لا ترسله المتصفحات إلى الخادم أبدًا.', source: 'الشيفرة المصدرية لـ TabMerger', href: 'https://github.com/lbragile/TabMerger' },
+    { text: 'إنشاء روابط المشاركة يتطلب Pro.', source: 'أسعار TabMerger', href: '/pricing' },
+    { text: 'يستطيع Firefox 159 نسخ كل الروابط في مجموعة علامات تبويب.', source: 'نص قائمة Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'كيف أشارك عدة علامات تبويب دفعة واحدة؟',
+      answer:
+        'في TabMerger Pro، حدّد المجموعات واضغط مشاركة: رابط مشفّر واحد يفتحها كلها في صفحة للقراءة فقط. وبأدوات المتصفح نفسه، يمكنك حفظ علامات التبويب كإشارات مرجعية وإرسال ملف الإشارات المرجعية المُصدَّر، أو نسخ كل الروابط في مجموعة علامات تبويب في Firefox.',
+    },
+    {
+      question: 'هل يحتاج الطرف الآخر إلى TabMerger؟',
+      answer: 'لا. يُفتح رابط المشاركة في أي متصفح، ويمكنه فتح علامة تبويب واحدة أو نافذة واحدة أو كل شيء. وإذا كان TabMerger مثبّتًا لديه، يمكنه بعد ذلك حفظ علامات التبويب كمجموعة خاصة به.',
+    },
+    {
+      question: 'هل يستطيع TabMerger قراءة علامات التبويب التي أشاركها؟',
+      answer: 'لا. تُشفَّر علامات التبويب في متصفحك قبل الرفع، والمفتاح موجود فقط في جزء #fragment من الرابط، وهو جزء لا يصل إلى الخادم أبدًا.',
+    },
+    {
+      question: 'هل المشاركة مجانية؟',
+      answer: 'إنشاء روابط المشاركة جزء من Pro. أما نسخ الروابط ومشاركة ملف إشارات مرجعية أو ملف JSON فمجانيان.',
+    },
+  ],
+  images: [
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp', alt: 'TabMerger وفيه المجموعتان Work وReading list محددتان، وشريط التحديد يعرض Star (تمييز بنجمة) وUnstar (إلغاء التمييز بنجمة) وShare (مشاركة) وDelete (حذف)، المظهر الفاتح' },
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-dark.webp', alt: 'TabMerger وفيه المجموعتان Work وReading list محددتان، وشريط التحديد يعرض Star (تمييز بنجمة) وUnstar (إلغاء التمييز بنجمة) وShare (مشاركة) وDelete (حذف)، المظهر الداكن' },
+    { src: '/blog/share-a-set-of-tabs/share-page-light.webp', alt: 'صفحة Shared Groups (المجموعات المشتركة) في TabMerger، للقراءة فقط، وتعرض مجموعتين مع زرّي Open window (فتح النافذة) وOpen all tabs (فتح كل علامات التبويب)، المظهر الفاتح' },
+    { src: '/blog/share-a-set-of-tabs/share-page-dark.webp', alt: 'صفحة Shared Groups (المجموعات المشتركة) في TabMerger، للقراءة فقط، وتعرض مجموعتين مع زرّي Open window (فتح النافذة) وOpen all tabs (فتح كل علامات التبويب)، المظهر الداكن' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'bookmarks', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Import Chrome bookmarks & settings (export section)', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/96816', checked: '2026-11-21' },
+    {
+      title: 'TabMerger source code (sharing)',
+      publisher: 'GitHub',
+      url: 'https://github.com/lbragile/TabMerger',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp' },
+  ogImage: { src: '/blog/share-a-set-of-tabs/og.png', alt: 'كيف تشارك عدة علامات تبويب دفعة واحدة مع شخص آخر: دليل من TabMerger، مع مجموعتين محددتين للمشاركة' },
+  toc: [
+    { id: 'quick', label: 'إجابة سريعة' },
+    { id: 'manual', label: 'دون إضافة' },
+    { id: 'tabmerger', label: 'رابط مشفّر واحد' },
+    { id: 'what-they-see', label: 'ما يراه الطرف الآخر' },
+    { id: 'faq', label: 'الأسئلة الشائعة' },
+  ],
+  browserSections: ['manual'],
+  browserFact: {
+    label: 'نسخ الروابط أو تصديرها',
+    values: { chrome: 'مدير الإشارات ← تصدير الإشارات المرجعية', edge: 'Favorites → Export favorites', firefox: 'مجموعة علامات التبويب ← انسخ روابط في المجموعة' },
+  },
+}
+
+<QuickAnswer>
+
+الطريقة بنقرة واحدة هي رابط مشاركة من [TabMerger](/features): حدّد مجموعاتك، واضغط **مشاركة** (<bdi dir="ltr">Share</bdi>)، ثم الصق الرابط. من يفتحه يرى كل علامات التبويب في صفحة للقراءة فقط، ويمكنه فتح علامة تبويب واحدة أو نافذة أو كل شيء دون حساب، وعلامات التبويب **مشفّرة تشفيرًا تامًا بين الطرفين**، فلا يستطيع حتى TabMerger قراءتها. ودون إضافة، احفظ علامات التبويب كإشارات مرجعية وأرسل ملف الإشارات المرجعية المُصدَّر، أو انسخ في Firefox كل الروابط في مجموعة علامات تبويب.
+
+</QuickAnswer>
+
+<InstallCta>شارك مجموعة كاملة من علامات التبويب برابط مشفّر واحد. ابدأ مجانًا؛ والمشاركة جزء من Pro.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="manual" title="كيف أشارك علامات التبويب دون إضافة؟">
+
+<BrowserPanels section="manual">
+<BrowserPanel browser="chrome">
+
+1. اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> لحفظ علامات تبويب النافذة كإشارات مرجعية في مجلد جديد.
+2. افتح **⋮ ← الإشارات المرجعية والقوائم ← مدير الإشارات** (<bdi dir="ltr">Bookmark Manager</bdi>)، ثم **⋮ (المزيد) ← تصدير الإشارات المرجعية** (<bdi dir="ltr">Export bookmarks</bdi>).
+3. أرسل ملف HTML. يستورده الطرف الآخر إلى متصفحه (أو إلى TabMerger).
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> لإضافة علامات تبويب النافذة إلى المفضلة في مجلد جديد.
+2. افتح المفضلة (<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd></bdi>) واختر <bdi dir="ltr">**Export favorites**</bdi>.
+3. أرسل ملف HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. ضع علامات التبويب في مجموعة علامات تبويب (اسحب علامة تبويب إلى أخرى).
+2. انقر بزر الماوس الأيمن على تسمية المجموعة واختر **انسخ روابط في المجموعة** (<bdi dir="ltr">Copy links in group</bdi>).
+3. الصق الروابط في رسالة أو مستند.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>ملف الإشارات المرجعية يُصدِّر *كل* إشاراتك المرجعية، والروابط الملصقة تصل كجدار من العناوين على الطرف الآخر أن يفتحها واحدًا تلو الآخر.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="كيف أشارك علامات التبويب برابط واحد؟">
+
+1. في TabMerger، احفظ علامات التبويب في مجموعة (يحفظ **دمج مع الحالية** (<bdi dir="ltr">Merge with current</bdi>) كل النوافذ المفتوحة).
+2. في الشريط الجانبي، انقر مع **الضغط على <bdi dir="ltr">Ctrl</bdi>** (أو <bdi dir="ltr"><Kbd>⌘</Kbd></bdi> على Mac) على كل مجموعة تريد مشاركتها.
+3. اضغط **مشاركة** في شريط التحديد. يُنسخ الرابط إلى الحافظة؛ الصقه حيث تشاء.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/tm-selection-share" alt="TabMerger وفيه المجموعتان Work وReading list محددتان، وشريط التحديد يعرض Star (تمييز بنجمة) وUnstar (إلغاء التمييز بنجمة) وShare (مشاركة) وDelete (حذف)، المظهر الفاتح" darkAlt="TabMerger وفيه المجموعتان Work وReading list محددتان، وشريط التحديد يعرض Star (تمييز بنجمة) وUnstar (إلغاء التمييز بنجمة) وShare (مشاركة) وDelete (حذف)، المظهر الداكن" boxes={[{ id: 'share', label: 'Share' }]} source="TabMerger 3.16.1">مجموعتان محددتان؛ ينشئ <bdi dir="ltr">Share</bdi> (مشاركة) رابطًا واحدًا لكلتيهما (معروض هنا في حساب Free، حيث الزر معطّل).</ThemedScreenshot>
+
+كيف تبقى المشاركة خاصة: ينشئ TabMerger مفتاحًا جديدًا في متصفحك، ويشفّر به المجموعات، ولا يرفع إلا النسخة المشفّرة. يوضع المفتاح في الرابط بعد `#`، وهو جزء من العنوان لا ترسله المتصفحات إلى أي خادم أبدًا، فلا يستطيع قراءة علامات التبويب إلا من يملك الرابط كاملًا. إنشاء الروابط جزء من [Pro](/pricing).
+
+</Section>
+
+<Section id="what-they-see" title="ماذا يرى الطرف الآخر؟">
+
+صفحة للقراءة فقط تعرض كل مجموعة ونافذة وعدد علامات التبويب، مع أزرار **فتح كل علامات التبويب** (<bdi dir="ltr">Open all tabs</bdi>) لنافذة، و**فتح النافذة** (<bdi dir="ltr">Open window</bdi>) لمجموعة كاملة، أو فتح علامات تبويب منفردة. لا يحتاج إلى حساب ولا إلى TabMerger. وإن كان يستخدم TabMerger، يمكنه فتح علامات التبويب وحفظها كمجموعة خاصة به عبر **دمج مع الحالية**.
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/share-page" width={1600} height={1115} alt="صفحة Shared Groups (المجموعات المشتركة) في TabMerger، للقراءة فقط، وتعرض مجموعتين مع زرّي Open window (فتح النافذة) وOpen all tabs (فتح كل علامات التبويب)، المظهر الفاتح" darkAlt="صفحة Shared Groups (المجموعات المشتركة) في TabMerger، للقراءة فقط، وتعرض مجموعتين مع زرّي Open window (فتح النافذة) وOpen all tabs (فتح كل علامات التبويب)، المظهر الداكن" source="tabmerger.com/share/demo">صفحة المشاركة، من رابط العرض التوضيحي العام لـ TabMerger.</ThemedScreenshot>
+
+تفضّل ملفًا؟ ميزة [تصدير JSON](/blog/export-open-tabs) (<bdi dir="ltr">Export JSON</bdi>) في TabMerger تعمل في الخطة المجانية، ودليل [نقل علامات التبويب إلى كمبيوتر آخر](/blog/move-tabs-between-computers) يشرح النقل بين أجهزتك.
+
+<InstallCta>مجاني لـ Chrome وEdge وFirefox. لا حاجة إلى حساب للبدء.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="الأسئلة الشائعة">
+
+<Faq items={post.faq} />
+
+</Section>

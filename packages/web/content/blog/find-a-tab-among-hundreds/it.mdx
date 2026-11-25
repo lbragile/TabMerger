@@ -1,0 +1,187 @@
+export const post = {
+  slug: 'find-a-tab-among-hundreds',
+  title: 'Come trovare una scheda tra centinaia',
+  navTitle: 'Trovare una scheda tra centinaia',
+  seoTitle: 'Come cercare tra le schede aperte in Chrome, Edge e Firefox',
+  description:
+    'Cerca tra le schede aperte in pochi secondi: la ricerca di schede integrata in Chrome, Edge e Firefox, e il Ctrl+K di TabMerger, che trova insieme schede aperte, salvate e chiuse con filtri come group: e closed:.',
+  shareSummary: 'Cerca tra le schede aperte in Chrome, Edge e Firefox, e trova anche quelle salvate o chiuse.',
+  dek: 'Basta scorrere schede grandi come un’icona. Una scorciatoia, qualche lettera del titolo, ed eccola.',
+  published: '2026-11-29',
+  updated: '2026-11-29',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'In Chrome Ctrl+Shift+A apre la ricerca di schede.',
+      source: 'Guida di Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Firefox 159 associa Ctrl+Shift+A a un elenco di tutte le schede.', source: 'Scorciatoie da tastiera di Firefox 159' },
+    { text: 'Il Ctrl+K di TabMerger cerca insieme tra schede aperte, salvate e chiuse di recente.', source: 'TabMerger 3.16.1' },
+    { text: 'Filtri di TabMerger: group:, window:, tag: e closed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Come cerco tra le mie schede aperte?',
+      answer:
+        'In TabMerger premi Ctrl+K e scrivi: la ricerca copre insieme schede aperte, salvate e chiuse di recente. Di serie, Chrome ha la ricerca di schede (Ctrl+Shift+A o @tabs nella barra degli indirizzi) e Firefox elenca tutte le schede con Ctrl+Shift+A.',
+    },
+    {
+      question: 'C’è una scorciatoia per cercare tra le schede?',
+      answer: 'Ctrl+Shift+A in Chrome e Firefox (⌘+Shift+A in Chrome su Mac) e Ctrl+K dentro TabMerger. L’elenco delle scorciatoie di Microsoft per Edge non assegna alcun tasto alla ricerca di schede.',
+    },
+    {
+      question: 'Posso cercare le schede che ho già chiuso?',
+      answer: 'Sì, in TabMerger: inizia la ricerca con closed: per cercare solo tra le schede chiuse di recente. Il piano gratuito le conserva 2 giorni, Pro 30.',
+    },
+    {
+      question: 'Posso cercare le schede sugli altri miei dispositivi?',
+      answer:
+        'TabMerger Pro sincronizza i gruppi salvati tra i dispositivi con crittografia end-to-end, così lo stesso Ctrl+K li trova ovunque. La nostra guida per spostare le schede da un computer all’altro illustra le opzioni integrate.',
+      link: { text: 'spostare le schede da un computer all’altro', href: '/blog/move-tabs-between-computers' },
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'Ricerca di TabMerger aperta e vuota, con l’elenco dei filtri group:, window:, tag: e closed:, tema chiaro' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'Ricerca di TabMerger aperta e vuota, con l’elenco dei filtri group:, window:, tag: e closed:, tema scuro' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp', alt: 'Ricerca di TabMerger group:"Work" pull, che trova la scheda salvata Pull requests nel gruppo Work, tema chiaro' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-dark.webp', alt: 'Ricerca di TabMerger group:"Work" pull, che trova la scheda salvata Pull requests nel gruppo Work, tema scuro' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-light.webp', alt: 'Ricerca di TabMerger tag:Sprint, con le tre schede aperte del gruppo di schede di Chrome Sprint, tema chiaro' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-dark.webp', alt: 'Ricerca di TabMerger tag:Sprint, con le tre schede aperte del gruppo di schede di Chrome Sprint, tema scuro' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-21',
+      note: 'Le informazioni su Firefox sono state lette dalle definizioni dei tasti e dai testi dei menu di Firefox 159.0.1 stesso; questa pagina ha bloccato il nostro controllo automatico.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp' },
+  ogImage: { src: '/blog/find-a-tab-among-hundreds/og.png', alt: '«How to find one tab among hundreds»: una guida di TabMerger, con una ricerca di schede filtrata' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'tabmerger', label: 'Cerca ovunque con Ctrl+K' },
+    { id: 'filters', label: 'I filtri per restringere' },
+    { id: 'builtin', label: 'La ricerca integrata' },
+    { id: 'tips', label: 'Schede più facili da trovare' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Ricerca di schede integrata',
+    values: { chrome: 'Ctrl+Shift+A o @tabs', edge: 'Search tabs (nessuna scorciatoia indicata)', firefox: 'Ctrl+Shift+A' },
+  },
+}
+
+<QuickAnswer>
+
+Premi <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> su Mac) in [TabMerger](/features) e scrivi qualche lettera: trova la scheda sia che sia **aperta, salvata in un gruppo o chiusa di recente**, e filtri come `group:` e `closed:` riducono centinaia di schede a una sola. Di serie, la **ricerca di schede** («Tab Search») di Chrome (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) e l’**Elenco di tutte le schede** («List all tabs») di Firefox (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) cercano tra ciò che è aperto in questo momento.
+
+</QuickAnswer>
+
+<InstallCta>Trova qualsiasi scheda, aperta, salvata o chiusa, con un tasto. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Cerca ovunque con Ctrl+K">
+
+La ricerca di schede di un browser conosce solo ciò che è aperto in quel browser in questo momento. Ma la scheda che ti serve spesso è altrove: in una finestra salvata ieri, o in una chiusa un’ora fa. TabMerger cerca ovunque da un’unica casella:
+
+1. Apri TabMerger e premi <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+2. Scrivi una parte del titolo o dell’indirizzo. I risultati mostrano insieme schede aperte, salvate e chiuse di recente, ognuna con un’etichetta che dice dove si trova.
+3. Scegline una con le frecce e <Kbd>Enter</Kbd>.
+
+Tutti i filtri, l’ordine dei risultati e la vista che nasconde o attenua sono spiegati in [cerca tra tutte le tue schede con TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="Ricerca di TabMerger aperta e vuota, con l’elenco dei filtri group:, window:, tag: e closed:, tema chiaro" darkAlt="Ricerca di TabMerger aperta e vuota, con l’elenco dei filtri group:, window:, tag: e closed:, tema scuro" boxes={[{ id: 'search-input', label: 'Ricerca' }]} source="TabMerger 3.16.1">Ctrl+K apre la ricerca, con i filtri elencati prima ancora di scrivere.</ThemedScreenshot>
+
+</Section>
+
+<Section id="filters" title="Quali filtri restringono la ricerca?">
+
+Inizia la ricerca con un filtro per arrivare dritto al posto giusto:
+
+<ComparisonTable
+  head={['Filtro', 'Trova']}
+  rows={[
+    [<code>group:"Work"</code>, 'Schede in un gruppo il cui nome contiene «Work»'],
+    [<code>window:"Docs"</code>, 'Schede in una finestra il cui nome contiene «Docs»'],
+    [<code>tag:Sprint</code>, 'Schede in un gruppo di schede di Chrome la cui etichetta contiene «Sprint»'],
+    [<code>closed:</code>, 'Solo le schede chiuse di recente'],
+  ]}
+/>
+
+Combina un filtro con delle parole: `group:"Work" pull` trova la scheda della pull request nel tuo gruppo Work, anche tra centinaia. Metti il nome tra virgolette quando aggiungi parole dopo; un filtro senza virgolette prende tutto il resto della riga.
+
+<Carousel label="Ricerche filtrate" steps={[{ title: 'Filtro group:' }, { title: 'Filtro tag:' }]}>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-group-filter" alt="Ricerca di TabMerger group:&quot;Work&quot; pull, che trova la scheda salvata Pull requests nel gruppo Work, tema chiaro" darkAlt="Ricerca di TabMerger group:&quot;Work&quot; pull, che trova la scheda salvata Pull requests nel gruppo Work, tema scuro" boxes={[{ id: 'search-input', label: 'filtro per gruppo' }]} source="TabMerger 3.16.1">Un gruppo, una parola: la scheda salvata che cercavi.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-tag-filter" alt="Ricerca di TabMerger tag:Sprint, con le tre schede aperte del gruppo di schede di Chrome Sprint, tema chiaro" darkAlt="Ricerca di TabMerger tag:Sprint, con le tre schede aperte del gruppo di schede di Chrome Sprint, tema scuro" boxes={[{ id: 'search-input', label: 'tag:Sprint' }]} source="TabMerger 3.16.1">tag: trova le schede di un gruppo di schede di Chrome.</ThemedScreenshot>
+</Carousel>
+
+Le schede chiuse di recente vengono conservate 2 giorni con il piano gratuito e 30 con [Pro](/pricing), quindi `closed:` risale indietro di settimane quando serve.
+
+</Section>
+
+<Section id="builtin" title="Come cerco tra le schede aperte senza un’estensione?">
+
+Ogni browser sa cercare tra le schede aperte in questo momento:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+- Premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> su Mac) per aprire la **ricerca di schede** («Tab Search»), scrivi le parole chiave e scegli una scheda. Ogni riga ha anche un pulsante di chiusura.
+- Oppure scrivi `@tabs` nella barra degli indirizzi, premi <Kbd>Tab</Kbd> o <Kbd>Space</Kbd> e scrivi.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+I menu di Edge 158 includono **Search tabs** (cerca nelle schede), ma l’elenco delle scorciatoie da tastiera di Microsoft non gli assegna alcun tasto. Con molte schede, <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> saltano a una scheda in base alla posizione e <Kbd>Ctrl</Kbd>+<Kbd>9</Kbd> all’ultima.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- Premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> su Mac) per aprire l’**Elenco di tutte le schede** («List all tabs») e cercarvi.
+- La barra degli indirizzi ha anche una modalità di ricerca **Schede**, tra le sue scorciatoie di ricerca.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>queste ricerche vedono solo le schede aperte in quel browser, adesso. Una scheda chiusa o salvata altrove non compare.</Catch>
+
+Altri tasti sono nel nostro [riepilogo delle scorciatoie da tastiera per le schede](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="tips" title="Come rendo le schede più facili da trovare la prossima volta?">
+
+- **Raggruppa per attività.** I gruppi con un nome trasformano «una scheda su 200» in «il gruppo Work». La nostra [routine contro le troppe schede](/blog/manage-too-many-tabs) spiega come.
+- **Chiudi ciò che hai finito,** dopo averlo salvato. Meno schede aperte significa elenchi di risultati più corti.
+- **Rinomina le schede importanti.** TabMerger ti permette di dare un titolo personalizzato a una scheda salvata, così corrisponde alla parola che cercherai.
+
+<InstallCta>Gratis per Chrome, Edge e Firefox. Nessun account necessario per iniziare.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,170 @@
+export const post = {
+  slug: 'too-many-tabs-slow-browser',
+  title: 'Troppe schede aperte rallentano il computer?',
+  navTitle: 'Troppe schede, computer lento',
+  seoTitle: 'Troppe schede rallentano il browser? Come risolvere',
+  description:
+    'Il browser è lento per colpa delle troppe schede aperte? Ogni scheda usa memoria. Attiva la sospensione delle schede del browser, poi salva e chiudi con TabMerger quelle che non usi, senza perderne nemmeno una.',
+  shareSummary: 'Perché le schede aperte rallentano tutto e come liberare memoria senza perderle.',
+  dek: 'La scheda più veloce è quella che non è aperta. Salvala, chiudila e riaprila con un clic.',
+  published: '2026-12-04',
+  updated: '2026-12-04',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Il Risparmio memoria di Chrome libera la memoria delle schede inattive.',
+      source: 'Guida di Chrome',
+      href: 'https://support.google.com/chrome/answer/12929150',
+    },
+    { text: 'Edge 158 mette in sospensione le schede inattive, dopo 15 minuti per impostazione predefinita.', source: 'edge://settings, 20 nov 2026' },
+    { text: 'Firefox 159 può scaricare una scheda dalla memoria dal suo menu contestuale.', source: 'Testo dei menu di Firefox 159' },
+    { text: 'TabMerger salva tutte le finestre aperte e poi le chiude con un clic.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Avere molte schede aperte usa più memoria?',
+      answer:
+        'Sì. Ogni pagina aperta tiene in memoria il suo contenuto, e le pagine che eseguono script o riproducono contenuti multimediali usano anche il processore. Quanto dipende dai siti, quindi il numero di schede da solo non basta a dirlo.',
+    },
+    {
+      question: 'Chiudere le schede renderà più veloce il computer?',
+      answer:
+        'Chiudere le schede libera la memoria che usano. Salvale prima con TabMerger (Unisci con l\'attuale, poi Chiudi tutte le finestre) e non perdi niente: riapri qualsiasi scheda con un clic.',
+    },
+    {
+      question: 'Bastano il Risparmio memoria o le schede in sospensione?',
+      answer:
+        'Liberano la memoria delle schede inattive lasciandole nella barra delle schede, e questo aiuta il computer. Le schede però restano lì da scorrere; salvarle e chiuderle aiuta anche te.',
+    },
+    {
+      question: 'Come vedo quale scheda usa più memoria?',
+      answer: 'In Chrome, premi Shift+Esc per aprire il Task Manager di Chrome e cerca le schede che usano più memoria.',
+    },
+  ],
+  images: [
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-light.webp', alt: 'Menu «Now Open» (Aperte ora) di TabMerger con «Close all windows» (Chiudi tutte le finestre), «Close all browser windows in this group» (Chiudi tutte le finestre del browser di questo gruppo), evidenziato, tema chiaro' },
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-dark.webp', alt: 'Menu «Now Open» (Aperte ora) di TabMerger con «Close all windows» (Chiudi tutte le finestre), «Close all browser windows in this group» (Chiudi tutte le finestre del browser di questo gruppo), evidenziato, tema scuro' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Impostazioni di Chrome, «Performance» (Prestazioni), con l’interruttore «Memory Saver» (Risparmio memoria)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Impostazioni di Edge, «Performance», con «Automatically put tabs to sleep» attivo e impostato su 15 minuti' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/too-many-tabs-slow-browser/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/too-many-tabs-slow-browser/og.png', alt: 'Copertina «Do too many tabs slow your computer down?»: una guida di TabMerger, con il menu «Close all windows» (Chiudi tutte le finestre)' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'why', label: 'Perché le schede rallentano' },
+    { id: 'tabmerger', label: 'Salva e chiudi in un colpo' },
+    { id: 'browser', label: 'Lascia sospendere le schede al browser' },
+    { id: 'which', label: 'Trova la scheda pesante' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'Impostazione della memoria',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Impostazioni → System and performance → Performance',
+      firefox: 'Clic destro su una scheda → Scarica scheda dalla memoria',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Sì: ogni scheda aperta usa memoria, e quando sono abbastanza rallentano l’intero computer. Il guadagno più grande è **chiudere le schede che non usi, senza perderle**. In [TabMerger](/features), scegli **Unisci con l'attuale** per salvare tutte le finestre aperte in un gruppo, poi **Chiudi tutte le finestre**: la memoria si libera e ogni scheda resta a un clic di distanza. Per le schede che tieni aperte, attiva il **Risparmio memoria** («Memory Saver», Chrome) o le **schede in sospensione** (Edge).
+
+</QuickAnswer>
+
+<InstallCta>Salva tutte le finestre, chiudile tutte, riprenditi la memoria. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="why" title="Perché le schede aperte rallentano il computer?">
+
+Ogni scheda aperta è una pagina web viva: testo, immagini e script restano in memoria, e le pagine più attive (video, feed in diretta, app web) continuano anche a usare il processore. Quando il browser e le altre app chiedono più memoria di quella che il computer ha, tutto rallenta. La stessa guida di Chrome sugli arresti anomali indica la memoria esaurita tra le cause, e la sua prima soluzione è chiudere le schede.
+
+Quanto pesa una scheda dipende del tutto dal sito, quindi non esiste un numero sicuro. La regola pratica: se oggi non l’hai guardata, non dovrebbe essere aperta.
+
+</Section>
+
+<Section id="tabmerger" title="Come chiudo le schede senza perderle?">
+
+È qui che [TabMerger](/features) dà il meglio. Due passaggi, tutte le finestre insieme:
+
+1. Fai clic su **Aggiungi gruppo**, poi scegli **Unisci con l'attuale** nel suo menu **⋯**: tutte le finestre e le schede aperte vengono salvate nel gruppo.
+2. Fai clic con il tasto destro su **Aperte ora** nella barra laterale e scegli **Chiudi tutte le finestre**. Le finestre del browser si chiudono; il gruppo conserva tutte le schede.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/too-many-tabs-slow-browser/tm-close-all-menu" alt="Menu «Now Open» (Aperte ora) di TabMerger con «Close all windows» (Chiudi tutte le finestre), «Close all browser windows in this group» (Chiudi tutte le finestre del browser di questo gruppo), evidenziato, tema chiaro" darkAlt="Menu «Now Open» (Aperte ora) di TabMerger con «Close all windows» (Chiudi tutte le finestre), «Close all browser windows in this group» (Chiudi tutte le finestre del browser di questo gruppo), evidenziato, tema scuro" boxes={[{ id: 'close-all', label: 'Chiudi tutte le finestre' }]} source="TabMerger 3.16.1">Dopo il salvataggio, una sola voce di menu chiude tutte le finestre aperte.</ThemedScreenshot>
+
+Quando ti servono di nuovo, apri il gruppo e riapri una scheda, una finestra o tutto. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> trova qualsiasi scheda salvata con un tasto, e il salvataggio automatico può occuparsene a orari programmati. Altre abitudini nella nostra [routine contro le troppe schede](/blog/manage-too-many-tabs).
+
+</Section>
+
+<Section id="browser" title="Come faccio a sospendere le schede inattive nel browser?">
+
+Per le schede che tieni aperte, il browser può liberarne la memoria mentre restano inutilizzate. Si ricaricano quando ci fai clic.
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+Attiva il **Risparmio memoria** («Memory Saver»): **Impostazioni → Prestazioni** («Settings → Performance»), oppure incolla `chrome://settings/performance` nella barra degli indirizzi. Scegli quanto presto le schede diventano inattive: Moderato («Moderate»), Bilanciato («Balanced») o Massimo («Maximum»).
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Impostazioni di Chrome, «Performance» (Prestazioni), con l’interruttore «Memory Saver» (Risparmio memoria)" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">«Memory Saver» (Risparmio memoria) di Chrome, disattivato in un nuovo profilo di Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Attiva **Automatically put tabs to sleep** in **Impostazioni → System and performance → Performance** e scegli quanto deve aspettare una scheda prima di andare in sospensione.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Impostazioni di Edge, «Performance», con «Automatically put tabs to sleep» attivo e impostato su 15 minuti" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Le schede in sospensione di Edge, attive per impostazione predefinita: le schede inattive vanno in sospensione dopo 15 minuti.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Fai clic con il tasto destro su una scheda e scegli **Scarica scheda dalla memoria** («Unload Tab») per liberarne subito la memoria; seleziona prima più schede per scaricarle insieme.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>le schede in sospensione affollano comunque la barra delle schede. Aiutano il computer, non la tua concentrazione.</Catch>
+
+</Section>
+
+<Section id="which" title="Come trovo la scheda che rallenta tutto?">
+
+In Chrome, premi <Kbd>Shift</Kbd>+<Kbd>Esc</Kbd> per aprire il **Task Manager di Chrome** («Chrome Task Manager») e cerca le schede che usano più memoria. Salva quelle pesanti in un gruppo di TabMerger e chiudile.
+
+{/* Screenshot still to capture by hand (needs a visible browser): the Chrome Task Manager window sorted by memory. */}
+
+<InstallCta>Gratis per Chrome, Edge e Firefox. Non serve un account per iniziare.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

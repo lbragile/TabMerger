@@ -1,0 +1,184 @@
+export const post = {
+  slug: 'tabmerger-daily-workflow',
+  title: 'Une routine quotidienne pour vos onglets avec TabMerger',
+  navTitle: 'Une routine quotidienne pour vos onglets',
+  seoTitle: 'Organiser ses onglets au quotidien avec TabMerger : du matin au soir',
+  description:
+    'Une routine simple pour organiser les onglets de votre navigateur avec TabMerger : ouvrez les onglets du jour en un clic, rangez les nouveaux pour les retrouver facilement, et finissez la journée avec tout enregistré et plus rien d’ouvert.',
+  shareSummary: 'Ouvrez les onglets du jour en un clic, retrouvez-les vite et finissez la journée sans rien perdre.',
+  dek: 'Trois habitudes, quelques clics chacune : partir d’un ensemble enregistré, ranger les onglets au fil de l’eau et finir la journée avec tout enregistré.',
+  published: '2026-12-11',
+  updated: '2026-12-11',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Les groupes contiennent des fenêtres entières d’onglets et restent enregistrés après la fermeture des fenêtres.', source: 'TabMerger 3.16.1' },
+    { text: 'Une session restaure tous les groupes enregistrés d’un coup, chaque fenêtre telle qu’elle a été enregistrée.', source: 'Code source de TabMerger 3.16.1' },
+    { text: 'Ctrl+K recherche à la fois dans les onglets ouverts, enregistrés et fermés récemment.', source: 'TabMerger 3.16.1' },
+    { text: 'Gratuit : 5 groupes, 50 onglets, 3 sessions. Pro : aucune limite, plus la synchronisation.', source: 'Tarifs de TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Quelle est la meilleure routine quotidienne pour les onglets du navigateur ?',
+      answer:
+        'Commencez la journée à partir d’un ensemble d’onglets enregistré plutôt que des restes de la veille, rangez les nouveaux onglets dans des groupes au fil de l’eau, et finissez la journée en enregistrant ce qui est ouvert avant de le fermer. TabMerger fait chaque étape en quelques clics, et l’enregistrement automatique prend le relais les jours où vous oubliez.',
+    },
+    {
+      question: 'Faut-il un compte pour suivre cette routine ?',
+      answer: 'Non. Les groupes, les sessions, la recherche, l’enregistrement automatique et les onglets fermés récemment fonctionnent tous avec l’offre gratuite, sans compte. Un compte n’est nécessaire que pour les fonctions Pro, comme la synchronisation entre appareils.',
+    },
+    {
+      question: 'Est-ce que cela fonctionne dans Chrome, Edge et Firefox ?',
+      answer: 'Oui. TabMerger est gratuit pour Chrome, Edge et Firefox, et la routine est la même dans les trois.',
+    },
+    {
+      question: 'Quelle est la différence entre un groupe et une session ?',
+      answer:
+        'Un groupe est un ensemble d’onglets enregistré, sur une ou plusieurs fenêtres, que vous ouvrez, modifiez et complétez. Une session est un instantané nommé de tous vos groupes enregistrés à la fois, que vous restaurez ensemble.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp', alt: 'TabMerger avec quatre groupes enregistrés (Work, Reading list, Thesis sources, Trip to Lisbon) et une session enregistrée, « Monday plan », thème clair' },
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-dark.webp', alt: 'TabMerger avec quatre groupes enregistrés (Work, Reading list, Thesis sources, Trip to Lisbon) et une session enregistrée, « Monday plan », thème sombre' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-light.webp', alt: '« Now Open » (Ouverts maintenant) de TabMerger avec deux fenêtres de navigateur ouvertes et six onglets, thème clair' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-dark.webp', alt: '« Now Open » (Ouverts maintenant) de TabMerger avec deux fenêtres de navigateur ouvertes et six onglets, thème sombre' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp' },
+  ogImage: { src: '/blog/tabmerger-daily-workflow/og.png', alt: 'Une routine quotidienne pour vos onglets avec TabMerger, avec des groupes enregistrés et une session dans la barre latérale' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'problem', label: 'Pourquoi les onglets s’accumulent' },
+    { id: 'idea', label: 'La logique de TabMerger' },
+    { id: 'morning', label: 'Le matin' },
+    { id: 'day', label: 'Pendant la journée' },
+    { id: 'evening', label: 'Le soir' },
+    { id: 'net', label: 'Le filet de sécurité' },
+    { id: 'plans', label: 'Gratuit ou Pro' },
+    { id: 'series', label: 'Toute la série' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Gardez vos onglets dans des groupes [TabMerger](/features), pas dans des fenêtres ouvertes. **Le matin :** restaurez une session enregistrée, ou ouvrez seulement le groupe dont vous avez besoin. **Pendant la journée :** rangez les nouveaux onglets dans des groupes et retrouvez n’importe lequel avec <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>. **Le soir :** enregistrez ce qui est ouvert dans son groupe et fermez les fenêtres. L’enregistrement automatique et « Fermés récemment » rattrapent ce que vous oubliez. Quelques clics par jour, et chaque matin commence avec les onglets que vous vouliez garder.
+
+</QuickAnswer>
+
+<InstallCta>Commencez demain avec les bons onglets, pas avec la pile d’hier. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+<Section id="problem" title="Pourquoi les onglets s’accumulent-ils chaque jour ?">
+
+Imaginez un mardi ordinaire. Vous ouvrez la messagerie et l’agenda, puis une pull request, puis les trois pages de documentation dont elle a besoin. Une collègue vous envoie un lien à lire plus tard. À midi, il y a deux fenêtres ; le soir, quatre. Vous ne les fermez pas, parce que certains de ces onglets sont encore « en cours », et les retrouver voudrait dire fouiller dans l’historique.
+
+Le navigateur devient alors votre liste de tâches. Il n’a jamais été conçu pour ça : une barre d’onglets n’a ni noms, ni sections, ni moyen de ranger du travail sans le perdre. Chaque journée commence avec les restes de la veille, le navigateur ralentit, et le seul onglet dont vous avez besoin est une icône de 16 pixels quelque part dans la fenêtre trois.
+
+</Section>
+
+<Section id="idea" title="Comment TabMerger règle-t-il le problème ?">
+
+TabMerger sépare deux choses que le navigateur confond : ce qui est **ouvert** et ce que vous **gardez**.
+
+- **Ouverts maintenant** est une vue en direct de vos fenêtres et onglets ouverts. Il est toujours en tête de liste et ne peut pas être supprimé : il est donc toujours à un clic.
+- **Les groupes** sont ce que vous gardez. Chaque groupe contient une ou plusieurs fenêtres d’onglets, avec des noms, des notes et des couleurs, et reste enregistré après la fermeture des fenêtres.
+- **Sessions** : des instantanés nommés de tous vos groupes ensemble, pour les jours où vous voulez tout récupérer d’un coup.
+
+Comme garder un onglet ne suppose plus de le laisser ouvert, vous pouvez fermer vos fenêtres librement. C’est toute la routine.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Ce qui est gardé et ce qui est ouvert, côte à côte" steps={[{ title: 'Vos groupes' }, { title: 'Ouverts maintenant' }]}>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-workspace" alt="TabMerger avec quatre groupes enregistrés (Work, Reading list, Thesis sources, Trip to Lisbon) et une session enregistrée, « Monday plan », thème clair" darkAlt="TabMerger avec quatre groupes enregistrés (Work, Reading list, Thesis sources, Trip to Lisbon) et une session enregistrée, « Monday plan », thème sombre" boxes={[{ id: 'groups', label: 'Vos groupes enregistrés' }, { id: 'session', label: 'Une session enregistrée' }]} source="TabMerger 3.16.1">Quatre groupes pour quatre parties de la semaine, et une session qui les ramène tous.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-now-open" alt="« Now Open » (Ouverts maintenant) de TabMerger avec deux fenêtres de navigateur ouvertes et six onglets, thème clair" darkAlt="« Now Open » (Ouverts maintenant) de TabMerger avec deux fenêtres de navigateur ouvertes et six onglets, thème sombre" boxes={[{ id: 'now-open-summary', label: 'Ce qui est ouvert' }]} source="TabMerger 3.16.1">« Now Open » (Ouverts maintenant) : tout ce qui est ouvert en ce moment, fenêtre par fenêtre.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="morning" title="Le matin : partir d’un ensemble enregistré">
+
+Deux façons de commencer, selon la journée :
+
+1. **Tout d’un coup.** Ouvrez la section **Sessions** de la barre latérale et restaurez votre session. TabMerger demande d’abord confirmation, car la restauration ferme les fenêtres ouvertes et ouvre les fenêtres enregistrées à leur place, chacune telle qu’elle a été enregistrée.
+2. **Un seul projet.** Faites un clic droit sur un groupe dans la barre latérale et choisissez **Tout ouvrir dans une nouvelle fenêtre**. Rien d’autre n’est touché.
+
+La version pas à pas, avec les raisons de la confirmation, se trouve dans [commencer sa journée avec des onglets enregistrés](/blog/start-your-workday-with-saved-tabs).
+
+</Section>
+
+<Section id="day" title="Pendant la journée : ranger au fil de l’eau">
+
+- **Rangez un onglet** en le faisant glisser depuis Ouverts maintenant sur un groupe de la barre latérale : il y est enregistré et l’onglet ouvert se ferme (Annuler le fait revenir). Ou utilisez un raccourci clavier ([la liste complète](/blog/tab-keyboard-shortcuts)).
+- **Laissez des règles ranger à votre place.** Les règles d’URL copient automatiquement dans un groupe les nouveaux onglets correspondants ; voir [trier automatiquement ses onglets avec des règles d’URL](/blog/auto-sort-tabs-with-url-rules).
+- **Retrouvez n’importe quoi** avec <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> sur Mac) : onglets ouverts, enregistrés et fermés récemment dans une seule liste. Tous les filtres sont dans [rechercher dans tous ses onglets avec TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+- **Laissez-vous une note** sur un onglet, ou un rappel pour y revenir ; [organiser ses onglets pour la recherche](/blog/organize-tabs-for-research) montre les deux.
+- **Supprimez les doublons** avec **Dédupliquer les onglets** ; plus de détails dans [fermer les onglets en double](/blog/close-duplicate-tabs).
+
+</Section>
+
+<Section id="evening" title="Le soir : enregistrer, puis fermer">
+
+1. Ouvrez le groupe dans lequel vous avez travaillé, puis son menu **⋯**. **Fusionner avec l’actuel** y ajoute vos fenêtres ouvertes ; **Remplacer par l’actuel** remplace les fenêtres enregistrées par celles qui sont ouvertes.
+2. Fermez les fenêtres. Les onglets sont dans le groupe, où l’étape du matin les retrouvera demain.
+3. Satisfait de l’état de tous vos groupes ? **Enregistrer la session actuelle** (le bouton signet à côté de **Sessions**) les fige dans un instantané sous un nom comme « Monday plan ».
+
+L’habitude qui fait tout marcher : **enregistrer le groupe, fermer les fenêtres.** Moins vous emportez de fenêtres au lendemain, plus le navigateur est rapide et plus la recherche est courte.
+
+</Section>
+
+<Section id="net" title="Le filet de sécurité : pour les jours où vous oubliez">
+
+Personne n’enregistre tous les soirs. Deux fonctions comblent le manque :
+
+- **Enregistrer automatiquement les onglets ouverts** (Paramètres → Données) enregistre vos onglets ouverts dans un nouveau groupe selon un horaire, ou lorsque leur nombre dépasse le seuil que vous choisissez.
+- **Fermés récemment** conserve les onglets et fenêtres que vous fermez, jour par jour, et <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> avec `closed:` permet d’y chercher.
+
+Le fonctionnement des deux, et les raisons de leur comportement, sont expliqués dans [ne plus jamais perdre un onglet](/blog/never-lose-a-tab-again). Après un plantage du navigateur, voir [récupérer ses onglets après un plantage](/blog/restore-tabs-after-crash).
+
+</Section>
+
+<Section id="plans" title="Ce qui est gratuit, et ce que Pro ajoute">
+
+<ComparisonTable
+  head={['', 'Gratuit', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Groupes et onglets', '5 groupes, 50 onglets', 'Illimités'],
+    ['Sessions', '3, dans ce navigateur', 'Illimitées, synchronisées'],
+    ['Règles d’URL', '3', 'Illimitées'],
+    ['Enregistrement automatique', 'Les 2 plus récents conservés', 'Tous conservés'],
+    ['Fermés récemment', 'Vos 2 derniers jours', 'Vos 30 derniers jours'],
+    ['Recherche, notes, import et export', 'Oui', 'Oui'],
+    ['Synchronisation entre appareils, sauvegardes automatiques', 'Non', 'Oui'],
+  ]}
+/>
+
+L’offre gratuite fait tourner toute cette routine, sans compte ; Pro lève les limites et ajoute la synchronisation. Tous les détails sur la [page des tarifs](/pricing).
+
+<InstallCta>Une seule routine, dans chaque navigateur : Chrome, Edge et Firefox. Gratuit pour commencer, sans compte.</InstallCta>
+
+</Section>
+
+<Section id="series" title="Toute la série des guides TabMerger">
+
+Une fonction par guide, avec les raisons pour lesquelles elle fonctionne ainsi :
+
+1. [Commencer sa journée avec des onglets enregistrés](/blog/start-your-workday-with-saved-tabs) : sessions et groupes, restaurés chaque matin.
+2. [Ne plus jamais perdre un onglet](/blog/never-lose-a-tab-again) : enregistrement automatique et « Fermés récemment ».
+3. [Rechercher dans tous ses onglets](/blog/search-all-your-tabs-with-tabmerger) : <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> et ses filtres.
+4. [Organiser ses onglets par projet](/blog/organize-tabs-by-project) : groupes, fenêtres nommées et archive.
+5. [Des onglets comme liste de tâches](/blog/tabs-as-a-to-do-list) : notes, rappels et onglets oubliés.
+6. [Trier automatiquement ses onglets avec des règles d’URL](/blog/auto-sort-tabs-with-url-rules) : des onglets qui se rangent tout seuls.
+7. [Synchroniser ses onglets entre appareils](/blog/sync-tabs-between-devices-with-tabmerger) : chiffrés de bout en bout, et ce que notre serveur peut voir.
+8. [Importer des onglets dans TabMerger](/blog/import-tabs-into-tabmerger) : listes OneTab, favoris et sauvegardes.
+9. [TabMerger gratuit ou Pro](/blog/tabmerger-free-vs-pro) : ce que comprend exactement chaque offre.
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

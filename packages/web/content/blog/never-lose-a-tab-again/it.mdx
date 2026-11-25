@@ -1,0 +1,174 @@
+export const post = {
+  slug: 'never-lose-a-tab-again',
+  title: 'Non perdere mai più una scheda: salvataggio automatico e schede chiuse da recuperare',
+  navTitle: 'Non perdere mai più una scheda',
+  seoTitle: 'Salvare automaticamente le schede aperte e recuperare le schede chiuse con TabMerger',
+  description:
+    'Salva le schede aperte in automatico, a orari fissi o quando superano un certo numero, e recupera qualsiasi scheda o finestra chiusa. Come funzionano il salvataggio automatico e «Chiusi di recente» di TabMerger, e perché.',
+  shareSummary: 'Le tue schede aperte salvate a orari fissi, e ogni finestra chiusa a portata di ricerca.',
+  dek: 'Non dovresti doverti ricordare di salvare. Impostalo una volta, e ogni scheda aperta ha una copia.',
+  published: '2026-12-13',
+  updated: '2026-12-13',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Il salvataggio automatico va da ogni 15 minuti a una volta al giorno, o parte quando le schede aperte superano una soglia da 20 a 100.', source: 'TabMerger 3.16.1' },
+    { text: 'Le schede già salvate in un gruppo vengono saltate; le finestre private non vengono mai salvate.', source: 'TabMerger 3.16.1' },
+    { text: 'Il piano Free tiene i 2 salvataggi automatici più recenti; Pro li tiene tutti.', source: 'Prezzi di TabMerger', href: '/pricing' },
+    { text: '«Chiusi di recente» conserva gli ultimi 2 giorni con Free, 30 giorni con Pro.', source: 'Prezzi di TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Come salvo automaticamente le schede aperte?',
+      answer:
+        'In TabMerger, apri Impostazioni → Dati e attiva «Salva automaticamente le schede aperte». Scegli una pianificazione (da ogni 15 minuti a una volta al giorno), un numero di schede aperte che fa partire il salvataggio, o entrambi. Ogni esecuzione salva le schede aperte come nuovo gruppo.',
+    },
+    {
+      question: 'Il salvataggio automatico riempirà TabMerger di duplicati?',
+      answer:
+        'No. Le schede il cui indirizzo è già salvato in un gruppo vengono saltate, e una pagina aperta in più schede viene salvata una volta sola. Quando è già tutto salvato, l’esecuzione non salva nulla.',
+    },
+    {
+      question: 'Il salvataggio automatico richiede che TabMerger sia aperto?',
+      answer: 'No. Funziona in background nell’estensione finché il browser è aperto, e all’avvio del browser controlla se è saltato un salvataggio.',
+    },
+    {
+      question: 'Come recupero una finestra che ho chiuso?',
+      answer:
+        'Premi Ctrl+K in TabMerger e digita closed: per elencare le schede e le finestre chiuse di recente, oppure apri «Chiusi di recente» nella barra laterale. Scegliendo una finestra chiusa si ripristina l’intera finestra.',
+    },
+    {
+      question: 'Cosa tiene il piano Free, e cosa aggiunge Pro?',
+      answer:
+        'Free tiene i 2 salvataggi automatici più recenti (tienine uno come gruppo per conservarlo) e gli ultimi 2 giorni di schede chiuse. Pro tiene ogni salvataggio automatico e 30 giorni di schede chiuse, e aggiunge backup automatici crittografati e le schede aperte degli altri tuoi dispositivi.',
+    },
+  ],
+  images: [
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-light.webp', alt: 'TabMerger, «Settings» (Impostazioni), «Data» (Dati): «Auto-save open tabs» (Salva automaticamente le schede aperte) attivo, ogni ora e quando le schede aperte superano 50, con «Auto-save now» (Salva ora), tema chiaro' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-dark.webp', alt: 'TabMerger, «Settings» (Impostazioni), «Data» (Dati): «Auto-save open tabs» (Salva automaticamente le schede aperte) attivo, ogni ora e quando le schede aperte superano 50, con «Auto-save now» (Salva ora), tema scuro' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp', alt: 'Un gruppo in «Auto-saved» (Salvati in automatico) con due finestre e sette schede, e un pulsante «Keep as group» (Tieni come gruppo), tema chiaro' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-dark.webp', alt: 'Un gruppo in «Auto-saved» (Salvati in automatico) con due finestre e sette schede, e un pulsante «Keep as group» (Tieni come gruppo), tema scuro' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-light.webp', alt: 'Ricerca di TabMerger con closed: che mostra una finestra con 3 schede chiusa oggi, tema chiaro' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-dark.webp', alt: 'Ricerca di TabMerger con closed: che mostra una finestra con 3 schede chiusa oggi, tema scuro' },
+  ],
+  tags: ['tabmerger-guides', 'save-tabs', 'restore-closed-tabs', 'session-management'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp' },
+  ogImage: { src: '/blog/never-lose-a-tab-again/og.png', alt: 'Non perdere mai più una scheda: un gruppo salvato in automatico in TabMerger con un pulsante «Keep as group» (Tieni come gruppo)' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'problem', label: 'Come si perdono le schede' },
+    { id: 'why', label: 'Perché funziona così' },
+    { id: 'steps', label: 'Attivalo' },
+    { id: 'closed', label: 'Chiusi di recente' },
+    { id: 'benefit', label: 'Cosa ti risparmia' },
+    { id: 'habits', label: 'Buone abitudini' },
+    { id: 'plans', label: 'Free o Pro' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+}
+
+<QuickAnswer>
+
+Attiva **Impostazioni → Dati → Salva automaticamente le schede aperte** (Settings → Data → Auto-save open tabs) in [TabMerger](/features) e scegli una pianificazione, un numero di schede o entrambi. Da quel momento le schede aperte vengono salvate in automatico come nuovo gruppo, saltando ciò che è già salvato. Hai chiuso qualcosa per sbaglio? <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> e `closed:` trovano ogni scheda e finestra chiusa di recente, e riaprono un’intera finestra con un clic.
+
+</QuickAnswer>
+
+<InstallCta>Una copia di ogni scheda aperta, salvata per te a orari fissi. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="problem" title="Come si perdono davvero le schede">
+
+Raramente succede con un grande crash. Più spesso è una cosa piccola: chiudi la finestra sbagliata, proprio quella con le trenta schede della ricerca di stamattina. Un aggiornamento riavvia il browser e torna solo una finestra su tre. Il venerdì fai ordine e il lunedì ti serve la pagina che hai chiuso. A quel punto la scheda è da qualche parte nella cronologia, tra centinaia di altre pagine, sempre che tu ricordi come si chiamava.
+
+Salvare a mano risolve, nei giorni in cui te ne ricordi. Il salvataggio automatico è per gli altri giorni.
+
+Per recuperare le schede dopo un crash o un riavvio forzato con gli strumenti di ciascun browser, leggi [come recuperare le schede dopo un crash](/blog/restore-tabs-after-crash). Questa guida serve ad avere sempre una copia.
+
+</Section>
+
+<Section id="why" title="Perché il salvataggio automatico funziona così">
+
+Ogni regola del salvataggio automatico di TabMerger serve a rendere la copia utile, non solo presente:
+
+- **Salva in un nuovo gruppo**, con l’ora come nome («Salvato in automatico 21 nov, 20:28»), mantenendo le finestre intere e l’ordine delle schede. Niente di ciò che hai salvato prima viene modificato. Ogni nuovo salvataggio automatico ha un colore diverso dal precedente, così è facile distinguerli.
+- **Due attivatori, perché le schede si accumulano in due modi.** Una **pianificazione** (ogni 15 o 30 minuti, ogni ora, ogni 2 o 4 ore, o una volta al giorno) copre il lavoro costante. Un **numero di schede** (20, 30, 50, 75 o 100 schede aperte) copre la raffica di ricerche che supera qualsiasi pianificazione.
+- **Una raffica si salva una volta.** L’attivatore a numero scatta quando superi la soglia, poi aspetta che tu torni alla soglia o sotto, e almeno 10 minuti, prima di poter scattare di nuovo. Aprire dieci schede di fila non crea dieci gruppi.
+- **Niente duplicati.** Una scheda il cui indirizzo è già in uno dei tuoi gruppi viene saltata, e una pagina aperta in più schede viene salvata una volta. Se è già tutto salvato, l’esecuzione non salva nulla e te lo dice.
+- **Il privato resta privato.** Le finestre private non vengono mai salvate. Le pagine di TabMerger stesso restano fuori; le schede bloccate e le pagine del browser sono incluse.
+- **Non ha bisogno di te.** Il salvataggio automatico funziona in background nell’estensione finché il browser è aperto, e all’avvio del browser controlla se è il momento di salvare. Una notifica facoltativa ti avvisa dopo ogni esecuzione; la riga di stato nelle impostazioni mostra l’ultimo risultato.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Salvataggio automatico in TabMerger" steps={[{ title: 'Impostazioni' }, { title: 'Gruppo salvato in automatico' }]}>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-save-settings" alt="TabMerger, «Settings» (Impostazioni), «Data» (Dati): «Auto-save open tabs» (Salva automaticamente le schede aperte) attivo, ogni ora e quando le schede aperte superano 50, con «Auto-save now» (Salva ora), tema chiaro" darkAlt="TabMerger, «Settings» (Impostazioni), «Data» (Dati): «Auto-save open tabs» (Salva automaticamente le schede aperte) attivo, ogni ora e quando le schede aperte superano 50, con «Auto-save now» (Salva ora), tema scuro" boxes={[{ id: 'schedule', label: 'Ogni quanto salvare' }, { id: 'threshold', label: 'L’attivatore per le schede aperte' }, { id: 'run-now', label: 'Salva subito' }]} source="TabMerger 3.16.1">Ogni ora, e ogni volta che le schede aperte superano 50.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-saved" alt="Un gruppo in «Auto-saved» (Salvati in automatico) con due finestre e sette schede, e un pulsante «Keep as group» (Tieni come gruppo), tema chiaro" darkAlt="Un gruppo in «Auto-saved» (Salvati in automatico) con due finestre e sette schede, e un pulsante «Keep as group» (Tieni come gruppo), tema scuro" boxes={[{ id: 'keep', label: 'Tieni come gruppo' }]} source="TabMerger 3.16.1">Il risultato: entrambe le finestre aperte, salvate come gruppo. Tienilo per conservarlo per sempre.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="steps" title="Attivalo in quattro passaggi">
+
+1. Apri TabMerger, poi **Impostazioni** (Settings, nel menu dell’account) → **Dati** (Data).
+2. Attiva **Salva automaticamente le schede aperte** (Auto-save open tabs). (Con Pro è già attivo, ogni ora.)
+3. Scegli una **Pianificazione** (Schedule), un numero in **Quando le schede aperte superano** (When open tabs pass), o entrambi. Attiva **Mostra una notifica** (Show a notification) se vuoi un avviso dopo ogni salvataggio.
+4. Premi **Salva ora** (Auto-save now) una volta per vedere il risultato: un nuovo gruppo sotto **Salvati in automatico** (Auto-saved) nella barra laterale.
+
+Hai trovato un salvataggio automatico da tenere per sempre? Aprilo e premi **Tieni come gruppo** (Keep as group): passa tra i tuoi gruppi e non viene mai rimosso in automatico.
+
+</Section>
+
+<Section id="closed" title="Chiusi di recente: l’altra metà della rete">
+
+Il salvataggio automatico copre ciò che è aperto; **Chiusi di recente** (Recently closed) copre ciò che hai appena chiuso. Ogni scheda e finestra che chiudi viene conservata per giorno, solo su questo dispositivo, e le finestre private non vengono mai registrate.
+
+- Apri **Chiusi di recente** nella barra laterale per sfogliarle per giorno, oppure premi <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> e inizia con `closed:` per cercarle.
+- Una **finestra** chiusa compare come una sola voce («Finestra · 3 schede»): sceglila e torna l’intera finestra.
+- Fai <Kbd>Ctrl</Kbd>+clic (<Kbd>⌘</Kbd>+clic su Mac) o clic con il tasto centrale su un risultato per riaprirlo in background.
+
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-closed-window" alt="Ricerca di TabMerger con closed: che mostra una finestra con 3 schede chiusa oggi, tema chiaro" darkAlt="Ricerca di TabMerger con closed: che mostra una finestra con 3 schede chiusa oggi, tema scuro" boxes={[{ id: 'search-input', label: 'Il filtro closed:' }, { id: 'closed-window', label: 'Un’intera finestra chiusa' }]} source="TabMerger 3.16.1">Una finestra chiusa per sbaglio, a portata di ricerca.</ThemedScreenshot>
+
+Altri trucchi di ricerca in [cerca in tutte le tue schede con TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+
+</Section>
+
+<Section id="benefit" title="Cosa ti risparmia">
+
+Il caso peggiore passa da «quelle schede sono sparite» a «perdo ciò che ho aperto dall’ultimo salvataggio». Con una pianificazione oraria, un brutto riavvio ti costa al massimo un’ora di schede nuove; una finestra che hai chiuso tu è in «Chiusi di recente». Recuperare l’una o l’altra è una ricerca invece di un pomeriggio nella cronologia.
+
+</Section>
+
+<Section id="habits" title="Buone abitudini">
+
+- **Adatta la pianificazione al tuo ritmo.** Ogni ora va bene per la maggior parte delle giornate; ogni 15 minuti per le ricerche intense.
+- **Aggiungi un numero di schede se le apri a raffica.** 50 è un buon inizio.
+- **Prima tieni, poi fai pulizia.** Quando un salvataggio automatico contiene qualcosa che vale la pena tenere, premi **Tieni come gruppo** e rinominalo; elimina il resto.
+- **Continua a salvare di proposito.** Il salvataggio automatico è la rete, non il piano: tieni gruppi con un nome per i progetti veri (vedi [una routine quotidiana con le schede](/blog/tabmerger-daily-workflow)).
+
+</Section>
+
+<Section id="plans" title="Free o Pro">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Salva automaticamente le schede aperte', 'Disattivato finché non lo attivi; tenuti i 2 più recenti', 'Attivo per impostazione predefinita; tenuti tutti'],
+    ['Salvataggi automatici e limiti del piano', 'Contano nei 5 gruppi e 50 schede', 'Nessun limite'],
+    ['Chiusi di recente', 'Gli ultimi 2 giorni', 'Gli ultimi 30 giorni'],
+    ['Backup automatici crittografati dei tuoi gruppi', 'No', 'Da ogni ora a settimanali, tenuti i 10 più recenti'],
+    ['Schede aperte degli altri tuoi dispositivi', 'No', 'Impostazioni → Dispositivi'],
+  ]}
+/>
+
+Con Free, ogni nuovo salvataggio automatico sostituisce il più vecchio quando ce ne sono già 2; **Tieni come gruppo** ne toglie uno dalla rotazione. Vicino al limite di 50 schede, un salvataggio automatico salva le schede che ci stanno e lo segnala. I backup e le schede dei tuoi dispositivi sono archiviati nel tuo account, crittografati end-to-end, e il nostro server rifiuta di archiviarli per un account senza Pro. Dettagli nella [pagina dei prezzi](/pricing).
+
+<InstallCta>Impostalo una volta e smetti di preoccuparti delle finestre chiuse. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

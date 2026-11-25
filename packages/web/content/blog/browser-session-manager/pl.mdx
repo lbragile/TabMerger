@@ -1,0 +1,197 @@
+export const post = {
+  slug: 'browser-session-manager',
+  title: 'Czym jest menedżer sesji przeglądarki i czy go potrzebujesz?',
+  navTitle: 'Czym jest menedżer sesji?',
+  seoTitle: 'Rozszerzenia menedżera sesji: sesje a zakładki',
+  description:
+    'Czym jest sesja kart, co rozszerzenie do zapisywania sesji przeglądarki robi lepiej niż zakładki i historia, na co zwrócić uwagę przy wyborze i kiedy sama przeglądarka wystarczy.',
+  shareSummary: 'Sesje kart, menedżery sesji i zakładki: co zapisuje każde z nich i kiedy czego potrzebujesz.',
+  dek: 'Twoja przeglądarka już pamięta jedną sesję. Menedżer sesji pamięta ich tyle, ile chcesz, i to z nazwami.',
+  published: '2026-11-25',
+  updated: '2026-11-25',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Rozszerzenia mogą wyświetlić najwyżej 25 ostatnio zamkniętych kart i okien.',
+      source: 'Dokumentacja chrome.sessions',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+    },
+    { text: 'Session Buddy przechowuje dane na urządzeniu i nie ma synchronizacji.', source: 'Strona Session Buddy w sklepie, 20 lis 2026' },
+    { text: 'Tab Session Manager zapisuje automatycznie przy zamknięciu okna i w regularnych odstępach.', source: 'Jego strona w sklepie, 20 lis 2026' },
+    { text: 'Przywracanie przy uruchomieniu zachowuje tylko ostatnią sesję.', source: 'Ustawienia Chrome, Edge i Firefoksa' },
+  ],
+  faq: [
+    {
+      question: 'Czym jest sesja kart?',
+      answer:
+        'To okna i karty, które masz otwarte w danej chwili, w ich kolejności. Przeglądarka zapamiętuje bieżącą, żeby otworzyć ją ponownie po restarcie; menedżer sesji zapisuje ją pod nazwą.',
+    },
+    {
+      question: 'Czym różni się menedżer sesji od zakładek?',
+      answer:
+        'Zakładki zapisują pojedyncze strony w folderach. Menedżer sesji zapisuje całe okna, zachowuje ich układ i potrafi robić to automatycznie, a potem otwiera je ponownie jako okna.',
+    },
+    {
+      question: 'Czy potrzebuję rozszerzenia do zarządzania sesjami?',
+      answer:
+        'Nie, jeśli pracujesz w jednym oknie i masz włączone ustawienie uruchamiania. Tak, jeśli żonglujesz kilkoma projektami, tracisz karty przez awarie albo chcesz odzyskać wczorajsze okna.',
+    },
+    {
+      question: 'Czy menedżery sesji są prywatne?',
+      answer:
+        'To zależy, gdzie trzymają dane. Niektóre przechowują wszystko na Twoim urządzeniu; te z synchronizacją wysyłają dane na serwer, więc sprawdź, czy są szyfrowane end-to-end.',
+    },
+  ],
+  images: [
+    { src: '/blog/browser-session-manager/tm-save-session-light.webp', alt: 'Okno „Save Session” (Zapisz Sesję) w TabMergerze z nazwą „Friday wrap-up”, jasny motyw' },
+    { src: '/blog/browser-session-manager/tm-save-session-dark.webp', alt: 'Okno „Save Session” (Zapisz Sesję) w TabMergerze z nazwą „Friday wrap-up”, ciemny motyw' },
+    { src: '/blog/browser-session-manager/tm-session-view-light.webp', alt: 'Zapisana sesja „Friday wrap-up” z listą grup i przyciskiem „Restore session” (Przywróć sesję), jasny motyw' },
+    { src: '/blog/browser-session-manager/tm-session-view-dark.webp', alt: 'Zapisana sesja „Friday wrap-up” z listą grup i przyciskiem „Restore session” (Przywróć sesję), ciemny motyw' },
+  ],
+  tags: ['session-management', 'tab-manager', 'save-tabs', 'comparison'],
+  sources: [
+    {
+      title: 'chrome.sessions API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'sessions (WebExtensions API)',
+      publisher: 'MDN Web Docs',
+      url: 'https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Session Buddy',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/session-buddy-tab-bookmar/edacconmaakjimmfgnblocblbcdcpbko',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tab Session Manager',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/tab-session-manager/iaiomicjabeggjcfkbimgmglanimpnae',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tabs Outliner',
+      publisher: 'tabsoutliner.com',
+      url: 'https://tabsoutliner.com/',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/browser-session-manager/tm-session-view-light.webp' },
+  ogImage: { src: '/blog/browser-session-manager/og.png', alt: 'Czym jest menedżer sesji przeglądarki i czy go potrzebujesz? Poradnik TabMergera z zapisaną sesją i jej przyciskiem przywracania' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'session', label: 'Czym jest sesja kart?' },
+    { id: 'vs', label: 'Sesje a zakładki' },
+    { id: 'need', label: 'Czy go potrzebujesz?' },
+    { id: 'look-for', label: 'Na co zwrócić uwagę' },
+    { id: 'examples', label: 'Przykłady' },
+    { id: 'tabmerger', label: 'Sesje w TabMergerze' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+**Sesja** to zestaw okien i kart, które masz otwarte w danej chwili. Przeglądarka zapamiętuje bieżącą, żeby otworzyć ją ponownie po restarcie. **Menedżer sesji** to rozszerzenie, które zapisuje sesje pod nazwami, często automatycznie, i później otwiera je z powrotem jako okna. Zakładki zapisują strony; menedżer sesji zapisuje całe miejsce pracy. [TabMerger](/features) robi jedno i drugie: wszystkie otwarte okna zapisane jednym kliknięciem w nazwanych grupach, nazwane sesje do przywrócenia w całości, autozapis według harmonogramu i synchronizacja z szyfrowaniem end-to-end w planie Pro.
+
+</QuickAnswer>
+
+<InstallCta>Zapisuj każde okno jako nazwaną grupę, a całe sesje jednym kliknięciem. Za darmo dla Chrome, Edge i Firefoksa.</InstallCta>
+
+<Section id="session" title="Czym jest sesja kart?">
+
+Wszystko, co jest teraz otwarte: każde okno, jego karty w kolejności i to, która karta jest aktywna. Przeglądarki śledzą to cały czas, z dwóch powodów:
+
+- **Przywracanie przy uruchomieniu.** Gdy włączona jest opcja uruchamiania, która wznawia poprzednią sesję, przeglądarka po starcie otwiera ostatnią sesję. Gdzie ta opcja jest w każdej przeglądarce, opisujemy w poradniku [jak przywrócić karty po awarii](/blog/restore-tabs-after-crash#prevent).
+- **Ostatnio zamknięte.** <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> cofa się po kolei przez zamknięte karty i okna.
+
+Oba mechanizmy pamiętają tylko *najnowszy* stan. Okna z zeszłego wtorku to nie sesja, którą przeglądarka może Ci oddać; to już tylko wpisy w historii. Właśnie tę lukę wypełniają menedżery sesji. Jeśli już straciłeś karty, zacznij od poradnika [jak przywrócić karty po awarii](/blog/restore-tabs-after-crash).
+
+</Section>
+
+<Section id="vs" title="Menedżer sesji, zakładki czy historia?">
+
+<ComparisonTable
+  head={['', 'Zakładki', 'Historia', 'Menedżer sesji']}
+  rowHeaders
+  highlight={3}
+  minWidth="36rem"
+  rows={[
+    ['Zapisuje', 'Wybrane przez Ciebie strony', 'Każdą odwiedzoną stronę', 'Całe okna z ich kartami'],
+    ['Rozdziela okna', 'Jeden folder na zapis', 'Nie', 'Tak'],
+    ['Zapisuje automatycznie', 'Nie', 'Tak, strona po stronie', 'Zwykle, co jakiś czas lub przy zamknięciu'],
+    ['Otwiera ponownie', 'Jeden folder naraz', 'Jedną stronę naraz', 'Okna, jednym kliknięciem'],
+    ['Wbudowany', 'Tak', 'Tak', 'Nie, to rozszerzenie'],
+  ]}
+/>
+
+Zakładki wygrywają przy stronach, które zachowasz na lata. Menedżer sesji wygrywa przy pracy w toku: dwunastu kartach niedokończonego zadania, które chcesz odzyskać dokładnie jako okno, a nie odkładać po jednej. Więcej w tekście [karty a zakładki](/blog/tabs-vs-bookmarks).
+
+</Section>
+
+<Section id="need" title="Czy go potrzebujesz?">
+
+Raczej nie, jeśli pracujesz w jednym oknie, nie przekraczasz dwudziestu kilku kart i włączone ustawienie uruchamiania. Wystarczy Ci wtedy [sposób na zbyt wiele kart](/blog/manage-too-many-tabs) i od czasu do czasu folder zakładek.
+
+Raczej tak, jeśli brzmi znajomo choć jedno z tych zdań:
+
+- Przełączasz się między projektami i chcesz odzyskać okna każdego z nich w nienaruszonym stanie.
+- Awaria, aktualizacja albo wymuszony restart już kiedyś zabrały Ci karty.
+- Chcesz pod koniec dnia zamknąć wszystko, niczego nie tracąc.
+- Potrzebujesz kart sprzed kilku dni, a nie tylko z ostatniej sesji.
+
+</Section>
+
+<Section id="look-for" title="Co powinien umieć dobry menedżer sesji?">
+
+- **Zapisywać automatycznie**, a nie tylko wtedy, gdy o tym pamiętasz: co jakiś czas, przy zamknięciu okna albo jedno i drugie.
+- **Zachowywać układ**: okna, kolejność kart i najlepiej także grupy kart.
+- **Elastycznie przywracać**: całą sesję, jedno okno albo jedną kartę.
+- **Przeszukiwać** wszystkie zapisane sesje, żeby dało się znaleźć kartę z zeszłego tygodnia.
+- **Eksportować** do pliku, który odczytasz gdzie indziej, żebyś nigdy nie był uwiązany. (TabMerger eksportuje JSON jednym kliknięciem: [oto, co w nim jest](/blog/export-open-tabs).)
+- **Jasno mówić, gdzie leżą dane.** Tylko lokalnie to prywatność, ale dane giną razem z profilem; z synchronizacją są bezpieczniejsze przed utratą i powinny być szyfrowane end-to-end.
+
+Uwaga techniczna: API, które przeglądarki udostępniają rozszerzeniom dla zamkniętych kart, jest skromne. `chrome.sessions` zwraca najwyżej 25 ostatnio zamkniętych pozycji (`MAX_SESSION_RESULTS`). Menedżery sesji, które sięgają dalej, prowadzą własne zapisy.
+
+</Section>
+
+<Section id="examples" title="Jakie są menedżery sesji?">
+
+Kilka uznanych narzędzi, opisanych na podstawie ich własnych stron w sklepach i witryn (stan na 20 lis 2026):
+
+- **Session Buddy** (Chrome) zapisuje i przywraca sesje oraz prowadzi historię wcześniejszych sesji na wypadek awarii. Dane zostają na urządzeniu; według jego strony w sklepie nie ma synchronizacji. Za darmo.
+- **Tab Session Manager** (Chrome, Firefox, Edge) zapisuje sesje z nazwami i tagami, zapisuje automatycznie przy zamknięciu okna i w regularnych odstępach oraz oferuje synchronizację w chmurze. Za darmo.
+- **Tabs Outliner** (Chrome) trzyma otwarte i zapisane okna w jednym drzewie, z notatkami i odzyskiwaniem po awarii. Za darmo, z jednorazowo płatnym ulepszeniem Pro.
+
+Porównanie dziewięciu narzędzi pod kątem ceny, synchronizacji i szyfrowania znajdziesz w zestawieniu [najlepsze rozszerzenia do zarządzania kartami](/blog/best-tab-manager-extensions) albo na naszej [stronie porównania](/compare).
+
+</Section>
+
+<Section id="tabmerger" title="Jak działają sesje w TabMergerze">
+
+[TabMerger](/features), nasze darmowe rozszerzenie dla Chrome, Edge i Firefoksa, to menedżer kart z wbudowanymi sesjami. Twoje otwarte karty zapisują się w nazwanych **grupach**; **Zapisz bieżącą sesję** (Save current session) tworzy potem nazwaną migawkę tych zapisanych grup, którą możesz później przywrócić w całości. W darmowym planie w przeglądarce zostają 3 sesje; Pro przechowuje nieograniczoną liczbę sesji i synchronizuje je między urządzeniami z szyfrowaniem end-to-end.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Zapisywanie i przywracanie sesji" steps={[{ title: 'Zapisz sesję' }, { title: 'Widok sesji' }]}>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-save-session" alt="Okno „Save Session” (Zapisz Sesję) w TabMergerze z nazwą „Friday wrap-up”, jasny motyw" darkAlt="Okno „Save Session” (Zapisz Sesję) w TabMergerze z nazwą „Friday wrap-up”, ciemny motyw" boxes={[{ id: 'session-name', label: 'Nazwa sesji' }]} source="TabMerger 3.16.1">„Save current session” (Zapisz bieżącą sesję) prosi o nazwę.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-session-view" alt="Zapisana sesja „Friday wrap-up” z listą grup i przyciskiem „Restore session” (Przywróć sesję), jasny motyw" darkAlt="Zapisana sesja „Friday wrap-up” z listą grup i przyciskiem „Restore session” (Przywróć sesję), ciemny motyw" boxes={[{ id: 'restore-session', label: 'Przywróć sesję' }]} source="TabMerger 3.16.1">Zapisana sesja pokazuje swoje grupy; „Restore session” (Przywróć sesję) przywraca je wszystkie.</ThemedScreenshot>
+</Carousel>
+
+Od strony automatycznej **Ustawienia → Dane → Autozapis otwartych kart** (Settings → Data → Auto-save open tabs) zapisuje Twoje otwarte karty jako nową grupę według harmonogramu albo po przekroczeniu określonej liczby kart. Eksporty to zwykły JSON. Jak zrobić z sesji poranny rytuał, przeczytasz w poradniku [zacznij dzień pracy od zapisanych kart](/blog/start-your-workday-with-saved-tabs).
+
+<InstallCta>Za darmo dla Chrome, Edge i Firefoksa. Na start nie potrzebujesz konta.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,134 @@
+export const post = {
+  slug: 'firefox-tab-groups',
+  title: 'Firefox 标签页分组：如何保存、重新打开并长期保留',
+  navTitle: 'Firefox 标签页分组',
+  seoTitle: 'Firefox 标签页分组：保存、重新打开、同步（以及局限）',
+  description:
+    'Firefox 159 中标签页分组的用法：创建分组、设置颜色、折叠、保存并关闭分组以便日后重新打开，Firefox Sync 会同步哪些内容，以及如何用 TabMerger 在所有设备上妥善保留分组。',
+  shareSummary: '创建、保存、重新打开并保留 Firefox 标签页分组，以及 Firefox Sync 的同步范围。',
+  dek: 'Firefox 的分组现在可以保存并关闭了。下面介绍它们去了哪里，以及如何长期保留。',
+  published: '2026-12-07',
+  updated: '2026-12-07',
+  testedOn: ['Firefox 159.0.1'],
+  keyFacts: [
+    { text: '“保存群组并关闭”会保留分组，方便日后重新打开。', source: 'Firefox 159 菜单文字' },
+    { text: '关闭的分组列在“关闭的群组”和“近期标签页群组”下。', source: 'Firefox 159 菜单文字' },
+    { text: 'Firefox Sync 的设置中有“打开的标签页”，但没有单独针对标签页分组的选项。', source: 'Firefox 159 设置文字' },
+    { text: '分组的菜单可以一次复制其中的所有链接。', source: 'Firefox 159 菜单文字' },
+  ],
+  faq: [
+    {
+      question: '如何在 Firefox 中保存标签页分组？',
+      answer: '右键点击分组的标签，选择“保存群组并关闭”。之后可以从“关闭的群组”或“标签页群组”列表中重新打开。',
+    },
+    {
+      question: 'Firefox 标签页分组会同步吗？',
+      answer:
+        'Firefox 159 的同步设置列出了书签、历史记录、打开的标签页等项目，但没有单独针对标签页分组的选项。要在每台设备上都有相同的分组，TabMerger Pro 会以端到端加密的方式同步它们。',
+    },
+    {
+      question: '“保存群组并关闭”和“删除群组”有什么区别？',
+      answer: '“保存群组并关闭”会保留分组，方便日后重新打开。“删除群组”会删除它；“取消分组”会让标签页继续打开，但去掉分组。',
+    },
+    {
+      question: '能复制 Firefox 标签页分组里的所有链接吗？',
+      answer: '可以：Firefox 159 的分组菜单中有“复制群组中的链接”。TabMerger 还能把整个分组导出为 JSON 文件。',
+    },
+  ],
+  images: [
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp', alt: 'TabMerger 分组“Home renovation”，包含三个已保存的窗口和九个标签页，部分标签页带有其所属标签页分组 Kitchen 和 Quotes 的标记，浅色主题' },
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-dark.webp', alt: 'TabMerger 分组“Home renovation”，包含三个已保存的窗口和九个标签页，部分标签页带有其所属标签页分组 Kitchen 和 Quotes 的标记，深色主题' },
+  ],
+  tags: ['firefox', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Tab groups in Firefox',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/tab-groups',
+      checked: '2026-11-21',
+      note: 'Menu names and settings were read from Firefox 159.0.1’s own interface text; this page blocked our automated check.',
+    },
+    {
+      title: 'Firefox Sync: what it is and how it works',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/firefox-sync-what-it-is-and-how-it-works',
+      checked: '2026-11-21',
+      note: 'The list of synced data was read from Firefox 159.0.1’s settings text.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-23',
+  cover: { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp' },
+  ogImage: { src: '/blog/firefox-tab-groups/og.png', alt: '标题卡片“Firefox tab groups: how to save, reopen and keep them”：TabMerger 指南，配有一个保存了两个窗口的分组' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'basics', label: '创建分组' },
+    { id: 'save', label: '保存与重新打开' },
+    { id: 'sync', label: '会同步吗？' },
+    { id: 'tabmerger', label: '长期保留' },
+    { id: 'faq', label: '常见问题' },
+  ],
+}
+
+<QuickAnswer>
+
+在 Firefox 中把一个标签页拖到另一个标签页上，或右键点击标签页，即可创建分组。要留着以后用，右键点击分组的标签并选择 **保存群组并关闭**（Save and close group）；之后可从 **关闭的群组**（Closed Groups）或 **标签页群组**（Tab groups）列表中重新打开。Firefox Sync 的设置中没有单独针对标签页分组的选项，所以如果想在每台设备上都有相同的分组，并能与其他内容一起搜索，请把它们保存到 [TabMerger](/features)。
+
+</QuickAnswer>
+
+<InstallCta>让你的 Firefox 分组保存好、可搜索、能同步。Firefox、Chrome 和 Edge 均可免费使用。</InstallCta>
+
+<Section id="basics" title="Firefox 标签页分组如何使用？">
+
+以下依据 Firefox 159 自身的界面文字（Firefox 中文版称之为“标签页群组”）：
+
+1. **创建**：把一个标签页拖到另一个标签页上，或右键点击标签页，将其添加到新分组。Firefox 会要求填写 **名称**（Name）并选择颜色（蓝色、青色、灰色、绿色、橘色、粉色、紫色、红色或黄色）。
+2. **折叠**：点击分组的标签，可将其折叠成一个标签页的宽度。
+3. **管理**：右键点击标签，可以看到 **保存群组并关闭**、**取消分组**（Ungroup tabs）、**删除群组**（Delete group）、**移动群组到新窗口**（Move group to new window）、**复制群组中的链接**（Copy links in group）和 **共享群组**（Share group）。
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's tab group editor with Name, colours and Save and close group. */}
+
+</Section>
+
+<Section id="save" title="如何保存分组并找回它？">
+
+- **保存**：右键点击分组的标签 → **保存群组并关闭**。标签页会关闭，分组会被保留。
+- **重新打开**：右键点击某个标签页 → 添加到分组 → **关闭的群组**；或者打开 **标签页群组** 列表（Firefox 会在那里显示 **近期标签页群组**，即 Recent tab groups），选择分组，再点击 **重新打开标签页群组**（Reopen tab group）。
+- **删除**：**删除群组** 会将其永久删除。
+
+<Catch>已保存的分组只存在于这个 Firefox 配置文件中。它不是备份；从同步设置来看，它也不会跟着你到另一台设备上。</Catch>
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's Tab groups list with a closed group. */}
+
+</Section>
+
+<Section id="sync" title="Firefox 标签页分组会同步吗？">
+
+Firefox 159 的 **同步**（Sync）设置列出了会同步的内容：**书签、历史记录、打开的标签页、密码、邮政地址、付款方式、附加组件和设置**（Bookmarks, History, Open tabs, Passwords, Addresses, Payment methods, Add-ons and Settings）。“打开的标签页”的说明是“所有同步的设备上打开的标签页”。没有单独针对标签页分组的选项，所以别指望已保存的分组会出现在你的另一台电脑上。
+
+Chrome 中的同类功能请参阅 [Chrome 标签页分组指南](/blog/chrome-tab-groups)，Chrome 的分组会通过 Google 账号同步。
+
+</Section>
+
+<Section id="tabmerger" title="用 TabMerger 长期保留你的分组">
+
+[TabMerger](/features) 可在 Firefox、Chrome 和 Edge 中运行，能保留浏览器留不住的分组：
+
+1. 点击 **添加分组**，为它命名，然后在它的 **⋯** 菜单中选择 **与当前合并**：所有打开的窗口和标签页都会保存到其中。
+2. 关闭这些窗口。分组连同每个标签页都会保留下来，并可用 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> 搜索。
+3. 随时重新打开一个标签页、一个窗口或全部内容。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/firefox-tab-groups/tm-kept-groups" alt="TabMerger 分组“Home renovation”，包含三个已保存的窗口和九个标签页，部分标签页带有其所属标签页分组 Kitchen 和 Quotes 的标记，浅色主题" darkAlt="TabMerger 分组“Home renovation”，包含三个已保存的窗口和九个标签页，部分标签页带有其所属标签页分组 Kitchen 和 Quotes 的标记，深色主题" boxes={[{ id: 'summary', label: '已保存的窗口和标签页' }]} source="TabMerger 3.16.1">一个已保存的分组：三个窗口、九个标签页，随时可以重新打开。</ThemedScreenshot>
+
+使用 [Pro](/pricing)，你的分组会在所有设备上的 Firefox、Chrome 和 Edge 之间同步，并经过端到端加密，服务器无法读取。更多习惯请看[标签页太多时的整理方法](/blog/manage-too-many-tabs)。
+
+<InstallCta>Firefox、Chrome 和 Edge 均可免费使用。无需账号即可开始。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

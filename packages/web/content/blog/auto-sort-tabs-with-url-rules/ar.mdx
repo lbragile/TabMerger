@@ -1,0 +1,179 @@
+export const post = {
+  slug: 'auto-sort-tabs-with-url-rules',
+  title: 'فرز علامات التبويب في مجموعات تلقائيًا بقواعد URL',
+  navTitle: 'فرز علامات التبويب تلقائيًا بقواعد URL',
+  seoTitle: 'كيف تجمع علامات تبويب المتصفح في مجموعات تلقائيًا حسب URL',
+  description:
+    'دع TabMerger يرتّب علامات التبويب نيابةً عنك: قاعدة URL تنسخ كل صفحة مطابقة إلى المجموعة الصحيحة أثناء التصفح. كيف تعمل الأنماط وحرف البدل *، وترتيب القواعد، وأنماط تعمل جيدًا.',
+  shareSummary: 'نمط ومجموعة: يرتّب TabMerger كل علامة تبويب مطابقة في مكانها أثناء التصفح.',
+  dek: 'اكتب القاعدة مرة واحدة، وكل صفحة مطابقة تفتحها بعد ذلك تُحفظ في المجموعة الصحيحة.',
+  published: '2026-12-17',
+  updated: '2026-12-17',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'القاعدة نمط ومجموعة؛ والرمز * يطابق أي سلسلة من الأحرف.', source: 'TabMerger 3.16.1' },
+    { text: 'تُطابَق الأنماط مع العنوان كاملًا من دون http:// أو https://.', source: 'الشيفرة المصدرية لـ TabMerger 3.16.1' },
+    { text: 'تُفحص القواعد من الأعلى إلى الأسفل، وتُطبَّق أول قاعدة مطابقة.', source: 'TabMerger 3.16.1' },
+    { text: 'الخطة المجانية فيها 3 قواعد URL، وخطة Pro بلا حد.', source: 'أسعار TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'هل يمكن فرز علامات تبويب المتصفح في مجموعات تلقائيًا؟',
+      answer:
+        'نعم، بقواعد URL في TabMerger. تربط القاعدة نمط عنوان، مثل github.com/your-org/*، بمجموعة. وكلما فُتحت صفحة مطابقة أو انتهى تحميلها، يحفظ TabMerger نسخة منها في تلك المجموعة. وتبقى علامة التبويب نفسها مفتوحة.',
+    },
+    {
+      question: 'كيف تعمل أنماط قواعد URL؟',
+      answer:
+        'يجب أن يطابق النمط العنوان كاملًا، من دون الجزء http:// أو https://. يمثّل الرمز * أي سلسلة من الأحرف، حتى الفارغة، وهو حرف البدل الوحيد. لذا يطابق github.com/* كل صفحات GitHub، ويطابق *wikipedia.org/* موسوعة Wikipedia بأي لغة.',
+    },
+    {
+      question: 'ماذا لو طابقت قاعدتان الصفحة نفسها؟',
+      answer: 'تُفحص القواعد من أعلى القائمة إلى أسفلها، وتُطبَّق أول قاعدة مطابقة. استخدم الأسهم بجانب كل قاعدة لتضع القواعد المحددة فوق القواعد العامة.',
+    },
+    {
+      question: 'هل تغلق قاعدة URL علامة التبويب؟',
+      answer: 'لا. تحفظ القاعدة نسخة في المجموعة، وتبقى علامة التبويب مفتوحة في مكانها.',
+    },
+    {
+      question: 'كم قاعدة URL يمكنني إنشاؤها؟',
+      answer: 'الخطة المجانية فيها 3. وخطة Pro بلا حد. وتستمر قواعدك الحالية في العمل إذا تغيّرت خطتك.',
+    },
+  ],
+  images: [
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-light.webp', alt: 'مربع حوار Add URL Rule (إضافة قاعدة URL) في TabMerger مع النمط *wikivoyage.org/wiki/* والمجموعة Trip to Lisbon، المظهر الفاتح' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-dark.webp', alt: 'مربع حوار Add URL Rule (إضافة قاعدة URL) في TabMerger مع النمط *wikivoyage.org/wiki/* والمجموعة Trip to Lisbon، المظهر الداكن' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-light.webp', alt: 'URL Rules (قواعد URL) في TabMerger مع ثلاث قواعد، لكل منها أسهم لتغيير ترتيبها، و3/3 used (مستخدم 3/3)، المظهر الفاتح' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-dark.webp', alt: 'URL Rules (قواعد URL) في TabMerger مع ثلاث قواعد، لكل منها أسهم لتغيير ترتيبها، و3/3 used (مستخدم 3/3)، المظهر الداكن' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp', alt: 'مجموعة Trip to Lisbon وفيها صفحة Sintra التي أضافتها قاعدة URL، المظهر الفاتح' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-dark.webp', alt: 'مجموعة Trip to Lisbon وفيها صفحة Sintra التي أضافتها قاعدة URL، المظهر الداكن' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'developers'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp' },
+  ogImage: { src: '/blog/auto-sort-tabs-with-url-rules/og.png', alt: 'فرز علامات التبويب تلقائيًا بقواعد URL: ثلاث قواعد في TabMerger ترتّب علامات التبويب في مجموعات' },
+  toc: [
+    { id: 'quick', label: 'إجابة سريعة' },
+    { id: 'problem', label: 'الترتيب اليدوي' },
+    { id: 'why', label: 'لماذا تعمل القواعد هكذا' },
+    { id: 'steps', label: 'إضافة قاعدة' },
+    { id: 'patterns', label: 'كتابة الأنماط' },
+    { id: 'order', label: 'ترتيب القواعد' },
+    { id: 'benefit', label: 'ما الذي تكسبه' },
+    { id: 'habits', label: 'عادات جيدة' },
+    { id: 'plans', label: 'المجانية أم Pro' },
+    { id: 'faq', label: 'الأسئلة الشائعة' },
+  ],
+}
+
+<QuickAnswer>
+
+في [TabMerger](/features)، افتح **الإعدادات ← عام ← قواعد URL ← إدارة** (<bdi dir="ltr">Settings → General → URL rules → Manage</bdi>) وأضف قاعدة: نمط عنوان مثل <bdi dir="ltr">`github.com/your-org/*`</bdi> والمجموعة التي ينتمي إليها. ومن بعدها تُحفظ كل صفحة مطابقة في تلك المجموعة أثناء التصفح، وتبقى علامة التبويب مفتوحة. الرمز <bdi dir="ltr">`*`</bdi> يطابق أي شيء، وتُطبَّق أول قاعدة مطابقة.
+
+</QuickAnswer>
+
+<InstallCta>علامات تبويب ترتّب نفسها في المجموعة الصحيحة. مجانًا لـ Chrome وEdge وFirefox.</InstallCta>
+
+<Section id="problem" title="ترتيب علامات التبويب يدويًا لا يدوم">
+
+تبدأ الأسبوع منظّمًا: العمل في مجموعة، والرحلة في أخرى، والقراءة في ثالثة. ثم يمضي اليوم. يرسل لك زميل رابط مشكلة، وتبحث عن موعدَي قطار، ويقودك بحث إلى مقال. كل واحدة منها يجب أن تذهب إلى مكان ما، وكل واحدة تحتاج إلى سحب لن تقوم به. وبحلول الجمعة تكون المجموعات قديمة، ويعود قسم المفتوحة الآن (<bdi dir="ltr">Now Open</bdi>) كومةً من جديد.
+
+الصفحات التي تفتحها أكثر من غيرها تأتي من المواقع القليلة نفسها، وهذا بالضبط ما تستطيع القاعدة التعرّف عليه.
+
+</Section>
+
+<Section id="why" title="لماذا تعمل قواعد URL بهذه الطريقة">
+
+- **نسخ لا نقل.** تحفظ القاعدة نسخة من الصفحة في المجموعة وتترك علامة التبويب مفتوحة. فالترتيب لا يقطع عليك ما تقرؤه أبدًا.
+- **تراقب أثناء التصفح.** تُفحص القاعدة عندما تُفتح علامة تبويب بعنوان، وكلما انتهى تحميل صفحة، لذا يُرتَّب أيضًا الرابط الذي تتبعه داخل علامة تبويب. تذهب النسخة إلى أول نافذة في المجموعة. والصفحة التي تُحمَّل من جديد (بإعادة التحميل أو بزيارة لاحقة) تُحفظ من جديد، و**إزالة علامات التبويب المكررة** (<bdi dir="ltr">Deduplicate tabs</bdi>) في قائمة **⋯** الخاصة بالمجموعة يزيل التكرار.
+- **العنوان كاملًا، من دون البروتوكول.** يُقارَن النمط بالعنوان كله بعد <bdi dir="ltr">`http://`</bdi> أو <bdi dir="ltr">`https://`</bdi>، فلا تكتبهما أبدًا، ويعمل <bdi dir="ltr">`localhost:3000/*`</bdi> كما هو مكتوب.
+- **حرف بدل واحد عن قصد.** يعني الرمز <bdi dir="ltr">`*`</bdi> أي سلسلة من الأحرف، حتى الفارغة. ولا توجد أحرف خاصة أخرى تحتاج إلى تهريب. تُطابَق الأنماط كنص عادي ولا تتحول أبدًا إلى تعبير نمطي، لذا تُفحص حتى الأنماط الطويلة بسرعة.
+- **الترتيب هو الحَكَم.** عندما تطابق قاعدتان، تُطبَّق العليا، لذا يمكن أن تأتي القاعدة المحددة فوق القاعدة العامة.
+
+</Section>
+
+<Section id="steps" title="إضافة قاعدة">
+
+1. افتح TabMerger، ثم **الإعدادات** ← **عام** (<bdi dir="ltr">Settings → General</bdi>). بجانب **قواعد URL**، اضغط **إدارة** (<bdi dir="ltr">Manage</bdi>).
+2. اضغط **إضافة قاعدة** (<bdi dir="ltr">Add rule</bdi>). اكتب النمط، واختر المجموعة الهدف، ثم اضغط **إضافة قاعدة** في مربع الحوار.
+3. كرّر ذلك لكل موقع تريد ترتيبه، ثم اضغط **حفظ** (<bdi dir="ltr">Save</bdi>) لحفظ القائمة.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="قاعدة URL من البداية إلى النهاية" steps={[{ title: 'الإضافة' }, { title: 'القائمة' }, { title: 'النتيجة' }]}>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-add-rule" alt="مربع حوار Add URL Rule (إضافة قاعدة URL) في TabMerger مع النمط *wikivoyage.org/wiki/* والمجموعة Trip to Lisbon، المظهر الفاتح" darkAlt="مربع حوار Add URL Rule (إضافة قاعدة URL) في TabMerger مع النمط *wikivoyage.org/wiki/* والمجموعة Trip to Lisbon، المظهر الداكن" boxes={[{ id: 'pattern', label: 'نمط العنوان' }, { id: 'group', label: 'المجموعة الهدف' }]} source="TabMerger 3.16.1">كل مقال في Wikivoyage يذهب إلى مجموعة الرحلة.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rules-list" alt="URL Rules (قواعد URL) في TabMerger مع ثلاث قواعد، لكل منها أسهم لتغيير ترتيبها، و3/3 used (مستخدم 3/3)، المظهر الفاتح" darkAlt="URL Rules (قواعد URL) في TabMerger مع ثلاث قواعد، لكل منها أسهم لتغيير ترتيبها، و3/3 used (مستخدم 3/3)، المظهر الداكن" boxes={[{ id: 'order', label: 'تُفحص من الأعلى إلى الأسفل' }, { id: 'used', label: 'عدّاد الخطة المجانية' }]} source="TabMerger 3.16.1">ثلاث قواعد، ثلاث مجموعات. تحدد الأسهم أي قاعدة تُجرَّب أولًا.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rule-result" alt="مجموعة Trip to Lisbon وفيها صفحة Sintra التي أضافتها قاعدة URL، المظهر الفاتح" darkAlt="مجموعة Trip to Lisbon وفيها صفحة Sintra التي أضافتها قاعدة URL، المظهر الداكن" boxes={[{ id: 'new-tab', label: 'رتّبتها القاعدة' }]} source="TabMerger 3.16.1">فتحُ مقال Sintra حفظه وحده في <bdi dir="ltr">Trip to Lisbon</bdi>.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="patterns" title="كتابة أنماط تطابق">
+
+<ComparisonTable
+  head={['النمط', 'يطابق', 'لا يطابق']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    [<bdi dir="ltr">github.com/your-org/*</bdi>, <>كل مستودع ومشكلة وطلب دمج لدى <bdi dir="ltr">your-org</bdi></>, <bdi dir="ltr">github.com/other-org/…</bdi>],
+    [<bdi dir="ltr">*wikipedia.org/wiki/*</bdi>, <>المقالات بكل اللغات <bdi dir="ltr">(en., de., …)</bdi></>, <>الصفحة الرئيسية لموقع <bdi dir="ltr">wikipedia.org</bdi></>],
+    [<bdi dir="ltr">localhost:3000/*</bdi>, 'كل صفحة على خادم التطوير المحلي لديك', <bdi dir="ltr">localhost:8080/…</bdi>],
+    [<bdi dir="ltr">docs.example.com/*</bdi>, 'موقع التوثيق', <><bdi dir="ltr">www.docs.example.com/…</bdi> (أضف <bdi dir="ltr">*docs.example.com/*</bdi>)</>],
+    [<bdi dir="ltr">github.com</bdi>, <>العنوان <bdi dir="ltr">github.com</bdi> نفسه فقط</>, <><bdi dir="ltr">github.com/anything</bdi> (أضف <bdi dir="ltr">/*</bdi>)</>],
+  ]}
+/>
+
+نصائح توفّر عليك جلسة تصحيح أخطاء:
+
+- **اختم النمط بـ <bdi dir="ltr">`/*`</bdi>** لتغطي موقعًا كاملًا. من دون <bdi dir="ltr">`*`</bdi> يطابق النمط عنوانًا واحدًا بعينه.
+- **ابدأ بـ <bdi dir="ltr">`*`</bdi>** عندما يستخدم الموقع نطاقات فرعية أو <bdi dir="ltr">`www.`</bdi>: <bdi dir="ltr">`*example.com/*`</bdi>.
+- **يجب أن تتطابق الأحرف كما كُتبت.** تكتب المتصفحات أسماء النطاقات بأحرف صغيرة، فاكتبها كذلك.
+- **سلاسل الاستعلام تُحتسب.** يطابق <bdi dir="ltr">`*youtube.com/watch*`</bdi> مقاطع الفيديو أيًّا كان ما يأتي بعد <bdi dir="ltr">`watch`</bdi>.
+
+</Section>
+
+<Section id="order" title="ترتيب القواعد: المحددة أولًا">
+
+تُجرَّب القواعد من الأعلى. ضع القاعدة الضيقة (<bdi dir="ltr">`github.com/your-org/design-system/*` → “Design system”</bdi>) فوق القاعدة الواسعة (<bdi dir="ltr">`github.com/your-org/*` → “Work”</bdi>) باستخدام الأسهم بجانب كل قاعدة. أول قاعدة مطابقة ترتّب الصفحة، ويُتخطّى الباقي.
+
+</Section>
+
+<Section id="benefit" title="ما الذي تكسبه">
+
+تبقى مجموعاتك محدّثة من دون أي ترتيب من جهتك. الصفحة التي فتحتها يوم الثلاثاء تكون يوم الجمعة في مجموعة مشروعها، والبحث في تلك المجموعة يجدها.
+
+</Section>
+
+<Section id="habits" title="عادات جيدة">
+
+- **ضع قواعد للمواقع التي تفتحها يوميًا،** لا لكل موقع تزوره مرة واحدة.
+- **قاعدة واحدة لكل نطاق أو مسار مشروع**، والمحددة أولًا.
+- **اجمع بين القواعد ومجموعة لكل مشروع:** راجع [تنظيم علامات التبويب حسب المشروع](/blog/organize-tabs-by-project). وسيجد المطوّرون أنماطًا أكثر في [إدارة علامات التبويب للمطوّرين](/blog/tab-management-for-developers).
+- **رتّب بين حين وآخر** باستخدام **إزالة علامات التبويب المكررة** في المجموعات التي تملؤها القواعد كثيرًا.
+
+</Section>
+
+<Section id="plans" title="المجانية أم Pro">
+
+<ComparisonTable
+  head={['', 'المجانية', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['قواعد URL', '3', 'بلا حدود'],
+    ['الأنماط والترتيب وكل الخيارات أعلاه', 'نعم', 'نعم'],
+  ]}
+/>
+
+تُحفظ قواعد URL في المتصفح الذي أنشأتها فيه. إذا انتهت خطة Pro، تستمر قواعدك الحالية في ترتيب علامات التبويب، ولا تحتاج إلى [Pro](/pricing) إلا لإضافة قاعدة رابعة.
+
+<InstallCta>اكتب ثلاث قواعد اليوم وتوقّف عن ترتيب علامات التبويب يدويًا. مجانًا لـ Chrome وEdge وFirefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="الأسئلة الشائعة">
+
+<Faq items={post.faq} />
+
+</Section>

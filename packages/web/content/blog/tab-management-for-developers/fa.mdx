@@ -1,0 +1,145 @@
+export const post = {
+  slug: 'tab-management-for-developers',
+  title: 'مدیریت زبانه‌ها برای برنامه‌نویسان: هر پروژه، یک گروه',
+  navTitle: 'مدیریت زبانه‌ها برای برنامه‌نویسان',
+  seoTitle: 'مدیریت زبانه‌ها برای برنامه‌نویسان: پروژه‌ها، مستندات و قانون‌های URL',
+  description:
+    'مستندات، پول ریکوئست‌ها، localhost و داشبوردها: روشی برای مرتب کردن زبانه‌ها برای برنامه‌نویسان، با یک گروه TabMerger برای هر پروژه، قانون‌های URL که زبانه‌ها را خودکار دسته‌بندی می‌کنند و جست‌وجویی که هر صفحهٔ مستندات را با یک میان‌بر پیدا می‌کند.',
+  shareSummary: 'گروهی برای هر پروژه، قانون‌های URL که زبانه‌ها را دسته‌بندی می‌کنند، و مستندات با یک میان‌بر.',
+  dek: 'مرورگرتان نیمی از IDE شماست. همان ساختار را به آن بدهید: برای هر پروژه یک گروه، که خودش پر می‌شود.',
+  published: '2026-12-08',
+  updated: '2026-12-08',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'قانون‌های URL زبانه‌های جدیدِ منطبق را در یک گروه کپی می‌کنند و * نقش نویسهٔ عام را دارد.', source: 'TabMerger 3.16.1' },
+    { text: 'قانون‌ها نشانی را بدون http:// یا https:// مقایسه می‌کنند، پس localhost:3000/* کار می‌کند.', source: 'کد منبع TabMerger 3.16.1' },
+    { text: 'طرح رایگان ۳ قانون URL دارد؛ Pro محدودیتی ندارد.', source: 'قیمت‌های TabMerger', href: '/pricing' },
+    { text: 'Ctrl+K بر اساس group: و window: و tag: و closed: فیلتر می‌کند.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'برنامه‌نویسان زبانه‌های مرورگر را چطور مرتب کنند؟',
+      answer:
+        'برای هر پروژه یا تیکت یک گروه TabMerger، قانون‌های URL که زبانه‌های جدید را خودکار به گروه درست می‌فرستند، و جست‌وجو با Ctrl+K برای رفتن به هر صفحهٔ مستندات. وقتی سراغ کار دیگری می‌روید، زبانه‌های پروژه را ذخیره کنید و ببندید.',
+    },
+    {
+      question: 'آیا می‌شود زبانه‌ها را بر اساس URL خودکار در گروه‌ها دسته‌بندی کرد؟',
+      answer:
+        'بله، با قانون‌های URL در TabMerger: الگویی مثل github.com/your-org/* هر زبانهٔ جدیدِ منطبق را به یک گروه می‌فرستد. خود زبانه باز می‌ماند و یک نسخه از آن در گروه ذخیره می‌شود. طرح رایگان ۳ قانون دارد و Pro نامحدود.',
+    },
+    {
+      question: 'با localhost هم کار می‌کند؟',
+      answer: 'بله. قانون‌ها بخش http:// یا https:// را نادیده می‌گیرند، پس الگویی مثل localhost:3000/* با صفحه‌های سرور توسعهٔ شما منطبق می‌شود.',
+    },
+    {
+      question: 'زبانهٔ مستندات را چطور سریع پیدا کنم؟',
+      answer: 'در TabMerger کلید Ctrl+K را بزنید و بخشی از عنوان یا نشانی را تایپ کنید؛ برای جست‌وجو فقط در یک گروه، group:"Docs" را اضافه کنید.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp', alt: 'پنجرهٔ URL Rules (قانون‌های URL) در TabMerger با قانون github.com/lbragile/* که زبانه‌ها را به گروه Work می‌فرستد، پوستهٔ روشن' },
+    { src: '/blog/tab-management-for-developers/tm-url-rules-dark.webp', alt: 'پنجرهٔ URL Rules (قانون‌های URL) در TabMerger با قانون github.com/lbragile/* که زبانه‌ها را به گروه Work می‌فرستد، پوستهٔ تیره' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-light.webp', alt: 'گروه Work با زبانهٔ Issues که تازه باز شده و قانون URL آن را اضافه کرده است، پوستهٔ روشن' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-dark.webp', alt: 'گروه Work با زبانهٔ Issues که تازه باز شده و قانون URL آن را اضافه کرده است، پوستهٔ تیره' },
+  ],
+  tags: ['developers', 'tab-management', 'tab-manager', 'browser-productivity'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp' },
+  ogImage: { src: '/blog/tab-management-for-developers/og.png', alt: 'مدیریت زبانه‌ها برای برنامه‌نویسان: راهنمای TabMerger، با یک قانون URL که زبانه‌های GitHub را در یک گروه دسته‌بندی می‌کند' },
+  toc: [
+    { id: 'quick', label: 'پاسخ کوتاه' },
+    { id: 'setup', label: 'هر پروژه، یک گروه' },
+    { id: 'rules', label: 'دسته‌بندی خودکار زبانه‌ها' },
+    { id: 'find', label: 'پیدا کردن سریع مستندات' },
+    { id: 'switch', label: 'جابه‌جایی تمیز بین پروژه‌ها' },
+    { id: 'faq', label: 'پرسش‌های متداول' },
+  ],
+}
+
+<QuickAnswer>
+
+به هر پروژه گروه خودش را در [TabMerger](/features) بدهید و دسته‌بندی را به **قانون‌های URL** (<bdi dir="ltr">URL rules</bdi>) بسپارید: الگویی مثل `github.com/your-org/*` یا `localhost:3000/*` هر زبانهٔ جدیدِ منطبق را خودکار به گروه درست می‌فرستد. هر صفحهٔ مستندات را با <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> پیدا کنید، و وقتی سراغ کار دیگری می‌روید، پنجره‌های پروژه را ذخیره کنید و ببندید. چیزی گم نمی‌شود و لازم نیست دنبال چیزی بگردید.
+
+</QuickAnswer>
+
+<InstallCta>برای هر پروژه یک گروه، که قانون‌های URL برایتان پرش می‌کنند. رایگان برای Chrome و Edge و Firefox.</InstallCta>
+
+<Section id="setup" title="برنامه‌نویس زبانه‌هایش را چطور مرتب کند؟">
+
+همان‌طور که کد را مرتب می‌کنید: بر اساس پروژه. یک پروژهٔ معمولی چهار نوع زبانه دارد:
+
+<ComparisonTable
+  head={['نوع', 'نمونه‌ها', 'جایش کجاست']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['کار در جریان', 'پول ریکوئست‌ها، issueها، تیکت', 'گروه پروژه، در پنجرهٔ جداگانهٔ خودش'],
+    ['مستندات و مرجع', 'مستندات API و MDN و یک مشخصه', 'یک پنجرهٔ “Docs” در گروه پروژه'],
+    ['محیط محلی و staging', 'localhost و استقرارهای پیش‌نمایش', 'تا وقتی اجرا می‌شود باز؛ ذخیره با یک قانون URL'],
+    ['داشبوردها', 'CI، لاگ‌ها، پایش', 'یک پنجرهٔ سنجاق‌شده، یا گروه پروژه'],
+  ]}
+/>
+
+در TabMerger هر گروه می‌تواند چند پنجره داشته باشد، پس یک گروه پروژه می‌تواند “PRs” و “Docs” و “Local” را جدا نگه دارد. نام هر پنجره را از منوی **⋯** همان پنجره عوض کنید و به گروه یادداشتی با نام شاخه یا شمارهٔ تیکت اضافه کنید.
+
+</Section>
+
+<Section id="rules" title="چطور زبانه‌ها را خودکار در گروه درست دسته‌بندی کنم؟">
+
+**قانون‌های URL** در TabMerger زبانه‌هایتان را زیر نظر دارند. وقتی زبانه‌ای نشانی منطبق با یک قانون را باز می‌کند یا بارگذاری‌اش تمام می‌شود، نسخه‌ای از آن در گروهِ همان قانون ذخیره می‌شود؛ خود زبانه باز می‌ماند.
+
+1. **تنظیمات ← عمومی** (<bdi dir="ltr">Settings → General</bdi>) را باز کنید، **قانون‌های URL** را پیدا کنید و روی **مدیریت** (<bdi dir="ltr">Manage</bdi>) بزنید.
+2. روی **افزودن قانون** (<bdi dir="ltr">Add rule</bdi>) بزنید، یک الگو تایپ کنید و گروه را انتخاب کنید. `*` نویسهٔ عام است؛ نخستین قانونِ منطبق اعمال می‌شود.
+3. روی **ذخیره** (<bdi dir="ltr">Save</bdi>) بزنید.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="یک قانون URL در عمل" steps={[{ title: 'قانون' }, { title: 'نتیجه' }]}>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-url-rules" alt="پنجرهٔ URL Rules (قانون‌های URL) در TabMerger با قانون github.com/lbragile/* که زبانه‌ها را به گروه Work می‌فرستد، پوستهٔ روشن" darkAlt="پنجرهٔ URL Rules (قانون‌های URL) در TabMerger با قانون github.com/lbragile/* که زبانه‌ها را به گروه Work می‌فرستد، پوستهٔ تیره" boxes={[{ id: 'rule', label: 'الگو' }]} source="TabMerger 3.16.1">یک قانون: هر چه زیر <bdi dir="ltr">github.com/lbragile/</bdi> باشد به <bdi dir="ltr">Work</bdi> می‌رود.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-rule-result" alt="گروه Work با زبانهٔ Issues که تازه باز شده و قانون URL آن را اضافه کرده است، پوستهٔ روشن" darkAlt="گروه Work با زبانهٔ Issues که تازه باز شده و قانون URL آن را اضافه کرده است، پوستهٔ تیره" boxes={[{ id: 'new-tab', label: 'افزوده‌شده با قانون' }]} source="TabMerger 3.16.1">با باز کردن صفحهٔ <bdi dir="ltr">Issues</bdi> مخزن، خودش در <bdi dir="ltr">Work</bdi> دسته‌بندی شد.</ThemedScreenshot>
+</Carousel>
+
+الگوهایی که خوب جواب می‌دهند:
+
+- `github.com/your-org/*` برای همهٔ مخزن‌ها، PRها و issueهای یک پروژه
+- `localhost:3000/*` برای سرور توسعهٔ شما (قانون‌ها `http://` و `https://` را نادیده می‌گیرند)
+- `docs.your-framework.dev/*` برای مستنداتی که مدام دوباره بازشان می‌کنید
+
+طرح رایگان ۳ قانون دارد؛ [Pro](/pricing) محدودیتی ندارد. همهٔ گزینه‌های الگو و ترتیب قانون‌ها در راهنمای [مرتب کردن خودکار زبانه‌ها با قانون‌های URL](/blog/auto-sort-tabs-with-url-rules) آمده است.
+
+</Section>
+
+<Section id="find" title="چطور یک صفحهٔ مستندات را با یک میان‌بر پیدا کنم؟">
+
+در TabMerger کلید <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> را بزنید و چند حرف از عنوان یا نشانی را تایپ کنید. نتیجه‌ها زبانه‌های باز، ذخیره‌شده و تازه بسته‌شده را در بر می‌گیرند. با فیلترها محدودشان کنید: `group:"Docs" fetch` و `window:"Local"` یا `closed:` برای صفحه‌ای که یک ساعت پیش بستید. بیشتر در [چطور یک زبانه را میان صدها زبانه پیدا کنیم](/blog/find-a-tab-among-hundreds).
+
+منوی گروه‌ها همچنین **مرتب‌سازی بر اساس URL** (<bdi dir="ltr">Sort by URL</bdi>) را دارد که برای یک پنجرهٔ طولانی مستندات به کار می‌آید، و **حذف زبانه‌های تکراری** (<bdi dir="ltr">Deduplicate tabs</bdi>) را برای پنج نسخهٔ یک issue.
+
+</Section>
+
+<Section id="switch" title="چطور بدون از دست دادن رشتهٔ کار بین پروژه‌ها جابه‌جا شوم؟">
+
+1. در گروه پروژه، **ادغام با وضعیت فعلی** (<bdi dir="ltr">Merge with current</bdi>) را انتخاب کنید تا پنجره‌های باز آن ذخیره شوند. **جایگزینی با وضعیت فعلی** (<bdi dir="ltr">Replace with current</bdi>) در عوض نسخهٔ ذخیره‌شده را بازنویسی می‌کند.
+2. پنجره‌ها را ببندید.
+3. وقتی به آن برگشتید، گروه را دوباره باز کنید: هر PR، هر سند و هر داشبورد همان جایی است که رهایشان کرده بودید.
+
+<InstallCta>رایگان برای Chrome و Edge و Firefox. برای شروع به حساب کاربری نیازی نیست.</InstallCta>
+
+برای کار با صفحه‌کلید، [میان‌برهای صفحه‌کلید برای زبانه‌ها](/blog/tab-keyboard-shortcuts) را ببینید؛ برای روال کلی، [مدیریت زبانه‌های خیلی زیاد](/blog/manage-too-many-tabs).
+
+</Section>
+
+<Section id="faq" title="پرسش‌های متداول">
+
+<Faq items={post.faq} />
+
+</Section>

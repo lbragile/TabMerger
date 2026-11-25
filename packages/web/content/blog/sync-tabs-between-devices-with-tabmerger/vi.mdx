@@ -1,0 +1,190 @@
+export const post = {
+  slug: 'sync-tabs-between-devices-with-tabmerger',
+  title: 'Đồng bộ hóa tab giữa các thiết bị, mã hóa đầu cuối',
+  navTitle: 'Đồng bộ hóa tab giữa các thiết bị',
+  seoTitle: 'Đồng bộ tab giữa các máy tính với mã hóa đầu cuối',
+  description:
+    'Các nhóm TabMerger của bạn có mặt trên mọi máy tính, được mã hóa bằng cụm mật khẩu chỉ bạn biết. Cách thiết lập đồng bộ, những gì được đồng bộ, và chính xác máy chủ của chúng tôi thấy được gì, không thấy được gì.',
+  shareSummary: 'Nhóm của bạn trên mọi máy tính, ngay cả máy chủ của chúng tôi cũng không đọc được.',
+  dek: 'Cùng các nhóm ở nhà và ở chỗ làm, và không ai khác đọc được chúng. Kể cả chúng tôi.',
+  published: '2026-12-18',
+  updated: '2026-12-18',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Đồng bộ được mã hóa đầu cuối: AES-256-GCM, với khóa được bảo vệ bằng cụm mật khẩu của bạn.', source: 'Mã nguồn TabMerger 3.16.1' },
+    { text: 'Máy chủ của chúng tôi không bao giờ đọc được địa chỉ, tiêu đề, ghi chú của tab hay tên nhóm.', source: 'Mã nguồn TabMerger 3.16.1' },
+    { text: 'Mỗi thiết bị mới chỉ hỏi cụm mật khẩu một lần.', source: 'TabMerger 3.16.1' },
+    { text: 'Đồng bộ thuộc gói Pro: US$3.99 một tháng hoặc US$42.99 một năm.', source: 'Bảng giá TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Làm sao để đồng bộ tab giữa hai máy tính?',
+      answer:
+        'Đăng nhập TabMerger bằng tài khoản Pro trên cả hai máy. Máy đầu tiên yêu cầu bạn chọn một cụm mật khẩu mã hóa; máy thứ hai hỏi cụm mật khẩu đó một lần. Từ đó, các nhóm và phiên của bạn được đồng bộ giữa hai máy.',
+    },
+    {
+      question: 'TabMerger có xem được tab của tôi không?',
+      answer:
+        'Không. Địa chỉ, tiêu đề và ghi chú của tab, tên nhóm và tên phiên cùng các tab đang mở trên thiết bị của bạn đều được mã hóa trong trình duyệt trước khi tải lên, và khóa không bao giờ đến máy chủ của chúng tôi. Máy chủ chỉ thấy những gì cần để lưu các hàng dữ liệu: chẳng hạn màu của nhóm, nhóm có được gắn sao hay lưu trữ không, thay đổi lúc nào, và có bao nhiêu cửa sổ và tab.',
+    },
+    {
+      question: 'Nếu tôi quên cụm mật khẩu mã hóa thì sao?',
+      answer: 'Không ai khôi phục được, kể cả TabMerger, vì nó không bao giờ rời khỏi thiết bị của bạn. Các nhóm vẫn còn trên những thiết bị đã mở khóa, vì vậy hãy cất cụm mật khẩu ở nơi an toàn.',
+    },
+    {
+      question: 'Đồng bộ bao gồm những gì?',
+      answer:
+        'Các nhóm đã lưu (cửa sổ, tab, ghi chú, thời gian nhắc), các phiên đã lưu và bản sao lưu tự động, cùng các tab đang mở của từng thiết bị cho mục Cài đặt → Thiết bị. Cài đặt, quy tắc URL và các tab đã đóng gần đây vẫn ở trên từng thiết bị.',
+    },
+    {
+      question: 'Đồng bộ có miễn phí không?',
+      answer: 'Không, đồng bộ thuộc gói Pro. Gói Free giữ mọi thứ trên thiết bị của bạn; máy chủ của chúng tôi từ chối dữ liệu đồng bộ tải lên từ các tài khoản không có Pro.',
+    },
+  ],
+  images: [
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in-light.webp', alt: 'Hộp thoại Sign In (Đăng Nhập) của TabMerger với tùy chọn đăng nhập bằng Google hoặc email và mật khẩu, giao diện sáng' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in-dark.webp', alt: 'Hộp thoại Sign In (Đăng Nhập) của TabMerger với tùy chọn đăng nhập bằng Google hoặc email và mật khẩu, giao diện tối' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption-light.webp', alt: 'Hộp thoại Set up encryption (Thiết lập mã hóa) của TabMerger yêu cầu nhập cụm mật khẩu mới hai lần, giao diện sáng' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption-dark.webp', alt: 'Hộp thoại Set up encryption (Thiết lập mã hóa) của TabMerger yêu cầu nhập cụm mật khẩu mới hai lần, giao diện tối' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock-light.webp', alt: 'Hộp thoại Unlock encryption (Mở khóa mã hóa) của TabMerger trên trình duyệt thứ hai, hỏi cụm mật khẩu một lần, giao diện sáng' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock-dark.webp', alt: 'Hộp thoại Unlock encryption (Mở khóa mã hóa) của TabMerger trên trình duyệt thứ hai, hỏi cụm mật khẩu một lần, giao diện tối' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups-light.webp', alt: 'Trình duyệt thứ hai sau khi mở khóa, hiển thị các nhóm Work và Reading list từ trình duyệt đầu tiên, giao diện sáng' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups-dark.webp', alt: 'Trình duyệt thứ hai sau khi mở khóa, hiển thị các nhóm Work và Reading list từ trình duyệt đầu tiên, giao diện tối' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-light.webp', alt: 'TabMerger, Settings → Devices (Cài đặt → Thiết bị): thiết bị Home laptop với 4 tab đang mở và nút Restore 4 tabs (Khôi phục 4 thẻ), giao diện sáng' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-dark.webp', alt: 'TabMerger, Settings → Devices (Cài đặt → Thiết bị): thiết bị Home laptop với 4 tab đang mở và nút Restore 4 tabs (Khôi phục 4 thẻ), giao diện tối' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync-light.webp', alt: 'TabMerger, Settings → General (Cài đặt → Chung), với công tắc Cloud sync (Đồng bộ đám mây) đang bật, giao diện sáng' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync-dark.webp', alt: 'TabMerger, Settings → General (Cài đặt → Chung), với công tắc Cloud sync (Đồng bộ đám mây) đang bật, giao diện tối' },
+  ],
+  tags: ['tabmerger-guides', 'cross-browser', 'session-management', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-light.webp' },
+  ogImage: { src: '/blog/sync-tabs-between-devices-with-tabmerger/og.png', alt: 'Đồng bộ hóa tab giữa các thiết bị với TabMerger: cùng các nhóm trên trình duyệt thứ hai sau khi mở khóa' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'problem', label: 'Hai máy tính, hai bộ tab' },
+    { id: 'why', label: 'Vì sao đồng bộ hoạt động như vậy' },
+    { id: 'server', label: 'Máy chủ của chúng tôi thấy gì' },
+    { id: 'steps', label: 'Thiết lập' },
+    { id: 'devices', label: 'Tab trên các thiết bị khác' },
+    { id: 'benefit', label: 'Bạn được gì' },
+    { id: 'habits', label: 'Thói quen tốt' },
+    { id: 'plans', label: 'Free hay Pro' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+}
+
+<QuickAnswer>
+
+Đăng nhập [TabMerger](/features) bằng tài khoản Pro. Máy tính đầu tiên yêu cầu bạn chọn một cụm mật khẩu mã hóa; mọi máy tính khác hỏi cụm mật khẩu đó một lần. Sau đó, các nhóm, phiên và bản sao lưu của bạn được đồng bộ giữa các máy, được mã hóa ngay trong trình duyệt trước khi rời khỏi nó, nên máy chủ của chúng tôi chỉ lưu dữ liệu mà nó không đọc được. **Cài đặt → Thiết bị** (Settings → Devices) còn cho bạn thấy những gì đang mở trên các máy tính khác.
+
+</QuickAnswer>
+
+<InstallCta>Cùng các nhóm trên mọi máy tính, chỉ bạn đọc được. Bắt đầu miễn phí, đồng bộ với Pro.</InstallCta>
+
+<Section id="problem" title="Hai máy tính, hai bộ tab">
+
+Buổi tối, bạn tìm hiểu trước khi mua một món đồ trên laptop ở nhà. Sáng hôm sau ở chỗ làm, các tab lại nằm trên chiếc máy đang ở nhà. Bạn dựng lại chúng theo trí nhớ, hoặc gửi đường liên kết vào email của chính mình. Tính năng đồng bộ của trình duyệt có ích khi mọi máy tính dùng cùng trình duyệt và cùng tài khoản, nhưng máy ở chỗ làm có thể chạy Edge còn laptop chạy Chrome, hoặc tài khoản công việc có thể bị khóa bớt quyền.
+
+Đồng bộ của TabMerger hoạt động trên Chrome, Edge và Firefox với một tài khoản TabMerger, và mang theo các nhóm bạn đã sắp xếp, chứ không chỉ những gì tình cờ đang mở.
+
+</Section>
+
+<Section id="why" title="Vì sao đồng bộ của TabMerger hoạt động như vậy">
+
+- **Được mã hóa trước khi rời khỏi trình duyệt.** Nội dung nhóm và phiên được mã hóa bằng AES-256-GCM ngay trong trình duyệt của bạn. Khóa là ngẫu nhiên; trên máy chủ của chúng tôi, khóa chỉ được lưu ở dạng đã bọc (đã mã hóa) bằng một khóa sinh ra từ cụm mật khẩu của bạn (PBKDF2-SHA256, 600.000 vòng). Bản thân cụm mật khẩu không bao giờ được gửi đi đâu.
+- **Bắt buộc, không phải một tùy chọn.** Mọi tài khoản Pro đều đồng bộ ở dạng mã hóa. Không có chế độ văn bản thường nào để lỡ tay bật lên.
+- **Mỗi thiết bị nhập cụm mật khẩu một lần.** Thiết bị mới hỏi cụm mật khẩu một lần; sau đó nó vẫn mở khóa cho đến khi bạn đăng xuất, nên đồng bộ không làm phiền bạn.
+- **Lưu trên thiết bị trước.** Mọi thứ được ghi cục bộ trước khi tải lên. Khi ngoại tuyến, không có gì ngừng hoạt động; thay đổi sẽ được tải lên lần sau.
+- **Thay đổi mới nhất được giữ.** Khi cùng một nhóm bị sửa trên hai thiết bị, thay đổi gần đây nhất được giữ lại.
+- **Đồng bộ khi TabMerger đang mở:** khi bạn mở nó, cứ 30 giây một lần khi nó còn mở, và ngay khi có thay đổi từ thiết bị khác.
+
+</Section>
+
+<Section id="server" title="Máy chủ của chúng tôi thấy được gì, không thấy được gì">
+
+<ComparisonTable
+  head={['', 'Lưu ở dạng mã hóa (chúng tôi không đọc được)', 'Lưu ở dạng đọc được']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['Nhóm', 'Tên, ghi chú, mọi cửa sổ và tab (tiêu đề, địa chỉ, ghi chú tab, thời gian nhắc)', 'Màu, gắn sao, lưu trữ, lần thay đổi cuối, số cửa sổ và tab, thứ tự'],
+    ['Phiên và bản sao lưu', 'Tên, mô tả, màu, có phải bản sao lưu không, các nhóm bên trong', 'Thời điểm được lưu'],
+    ['Thiết bị', 'Các tab đang mở trên từng thiết bị', 'Tên thiết bị, lần hoạt động cuối'],
+    ['Tài khoản', '-', 'Địa chỉ email và gói'],
+  ]}
+/>
+
+Các cột đọc được là những gì máy chủ cần để giữ các hàng của bạn theo đúng thứ tự và hiển thị số lượng; không cột nào cho biết bạn lưu những trang nào. Liên kết chia sẻ dùng một khóa riêng chỉ nằm trong chính liên kết đó; xem [chia sẻ nhiều tab cùng lúc](/blog/share-a-set-of-tabs).
+
+</Section>
+
+<Section id="steps" title="Thiết lập">
+
+1. Trên máy tính đầu tiên, mở TabMerger, rồi mở menu tài khoản (góc trên bên phải) → **Đăng nhập** (Sign in). Dùng Google, email và mật khẩu, hoặc magic link.
+2. **Thiết lập mã hóa** (Set up encryption) hiện ra. Chọn một cụm mật khẩu (ít nhất 8 ký tự, không có dấu cách), nhập hai lần rồi xác nhận. Các nhóm của bạn bắt đầu đồng bộ.
+3. Trên máy tính thứ hai, cài TabMerger và đăng nhập bằng cùng tài khoản.
+4. **Mở khóa mã hóa** (Unlock encryption) hiện ra. Nhập cụm mật khẩu một lần. Các nhóm của bạn xuất hiện ngay sau đó.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Đồng bộ máy tính thứ hai" steps={[{ title: 'Đăng nhập' }, { title: 'Cụm mật khẩu' }, { title: 'Mở khóa' }, { title: 'Đã đồng bộ' }]}>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in" alt="Hộp thoại Sign In (Đăng Nhập) của TabMerger với tùy chọn đăng nhập bằng Google hoặc email và mật khẩu, giao diện sáng" darkAlt="Hộp thoại Sign In (Đăng Nhập) của TabMerger với tùy chọn đăng nhập bằng Google hoặc email và mật khẩu, giao diện tối" boxes={[{ id: 'email', label: 'Email tài khoản của bạn' }]} source="TabMerger 3.16.1">Đăng nhập từ menu tài khoản.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption" alt="Hộp thoại Set up encryption (Thiết lập mã hóa) của TabMerger yêu cầu nhập cụm mật khẩu mới hai lần, giao diện sáng" darkAlt="Hộp thoại Set up encryption (Thiết lập mã hóa) của TabMerger yêu cầu nhập cụm mật khẩu mới hai lần, giao diện tối" boxes={[{ id: 'passphrase', label: 'Chỉ bạn biết' }]} source="TabMerger 3.16.1">Thiết bị đầu tiên: chọn cụm mật khẩu bảo vệ khóa của bạn.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock" alt="Hộp thoại Unlock encryption (Mở khóa mã hóa) của TabMerger trên trình duyệt thứ hai, hỏi cụm mật khẩu một lần, giao diện sáng" darkAlt="Hộp thoại Unlock encryption (Mở khóa mã hóa) của TabMerger trên trình duyệt thứ hai, hỏi cụm mật khẩu một lần, giao diện tối" boxes={[{ id: 'unlock', label: 'Một lần cho mỗi thiết bị' }]} source="TabMerger 3.16.1">Mọi thiết bị khác: nhập cụm mật khẩu một lần.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups" alt="Trình duyệt thứ hai sau khi mở khóa, hiển thị các nhóm Work và Reading list từ trình duyệt đầu tiên, giao diện sáng" darkAlt="Trình duyệt thứ hai sau khi mở khóa, hiển thị các nhóm Work và Reading list từ trình duyệt đầu tiên, giao diện tối" boxes={[{ id: 'groups', label: 'Từ thiết bị kia' }]} source="TabMerger 3.16.1">Một trình duyệt mới tinh, vài giây sau: các nhóm của máy tính đầu tiên, được giải mã ngay trên máy.</ThemedScreenshot>
+</Carousel>
+
+Bạn có thể tạm dừng đồng bộ trên từng trình duyệt bằng công tắc **Đồng bộ đám mây** (Cloud sync) trong **Cài đặt → Chung** (Settings → General). Trên tabmerger.com, bảng điều khiển hiển thị các nhóm đã đồng bộ sau khi bạn nhập cùng cụm mật khẩu.
+
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync" alt="TabMerger, Settings → General (Cài đặt → Chung), với công tắc Cloud sync (Đồng bộ đám mây) đang bật, giao diện sáng" darkAlt="TabMerger, Settings → General (Cài đặt → Chung), với công tắc Cloud sync (Đồng bộ đám mây) đang bật, giao diện tối" boxes={[{ id: 'sync', label: 'Đồng bộ đám mây' }]} source="TabMerger 3.16.1">Bật sẵn cho mọi tài khoản Pro; tắt đi trên trình duyệt không cần đồng bộ.</ThemedScreenshot>
+
+</Section>
+
+<Section id="devices" title="Xem những gì đang mở trên các thiết bị khác">
+
+**Cài đặt → Thiết bị** liệt kê mọi trình duyệt trong tài khoản của bạn đã hoạt động trong 30 ngày qua, kèm các cửa sổ và tab đang mở trên đó. Mở rộng một trình duyệt để mở riêng một tab, hoặc dùng **Khôi phục** (Restore) để mở tất cả tại đây. Đặt tên cho thiết bị này để danh sách dễ đọc (“Laptop ở nhà”), hoặc xóa những thiết bị bạn không còn dùng.
+
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-devices" alt="TabMerger, Settings → Devices (Cài đặt → Thiết bị): thiết bị Home laptop với 4 tab đang mở và nút Restore 4 tabs (Khôi phục 4 thẻ), giao diện sáng" darkAlt="TabMerger, Settings → Devices (Cài đặt → Thiết bị): thiết bị Home laptop với 4 tab đang mở và nút Restore 4 tabs (Khôi phục 4 thẻ), giao diện tối" boxes={[{ id: 'other-device', label: 'Trình duyệt khác của bạn' }, { id: 'restore', label: 'Mở các tab đó tại đây' }]} source="TabMerger 3.16.1">Các tab đang mở trên laptop, xem từ máy tính ở chỗ làm. Được mã hóa trên đường truyền.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Bạn được gì">
+
+Rời một máy tính và làm tiếp trên máy khác với cùng các nhóm, phiên và ghi chú, dù máy đó chạy trình duyệt nào. Và vì nội dung được mã hóa bằng khóa chỉ bạn nắm giữ, một vụ rò rỉ cơ sở dữ liệu của chúng tôi chỉ lộ ra màu sắc và số lượng, chứ không phải các tab của bạn.
+
+</Section>
+
+<Section id="habits" title="Thói quen tốt">
+
+- **Lưu cụm mật khẩu trong trình quản lý mật khẩu.** Không ai có thể đặt lại nó giúp bạn.
+- **Đặt tên cho từng thiết bị** trong Cài đặt → Thiết bị.
+- **Mở TabMerger một lần khi ngồi vào máy** để nó lấy các thay đổi mới nhất.
+- **Những gì riêng của trình duyệt thì ở lại từng thiết bị:** quy tắc URL và cài đặt được lưu theo từng trình duyệt, có chủ đích. Để biết các cách khác mang tab theo, xem [chuyển tab sang máy tính khác](/blog/move-tabs-between-computers).
+
+</Section>
+
+<Section id="plans" title="Free hay Pro">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Đồng bộ nhóm, phiên và bản sao lưu', 'Không (ở lại trên thiết bị của bạn)', 'Có, mã hóa đầu cuối'],
+    ['Cài đặt → Thiết bị', 'Không', 'Có'],
+    ['Giá', 'US$0', 'US$3.99 một tháng hoặc US$42.99 một năm'],
+  ]}
+/>
+
+Đồng bộ được máy chủ kiểm soát, không chỉ ứng dụng: cơ sở dữ liệu từ chối dữ liệu đồng bộ tải lên từ bất kỳ tài khoản nào không có gói Pro đang hoạt động. Nếu gói kết thúc, không có gì bị xóa; chỉ là các thay đổi mới ngừng được đồng bộ. Chi tiết có ở [trang bảng giá](/pricing) và trong [TabMerger Free vs Pro](/blog/tabmerger-free-vs-pro).
+
+<InstallCta>Bắt đầu miễn phí ngay hôm nay, thêm đồng bộ mã hóa khi bạn cần máy tính thứ hai.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'chrome-tab-groups',
+  title: 'Grupy kart w Chrome: jak je zapisać, ponownie otworzyć i synchronizować',
+  seoTitle: 'Grupy kart w Chrome: zapisywanie, otwieranie i synchronizacja (oraz limity)',
+  description:
+    'Jak działają grupy kart w Chrome: tworzenie, zwijanie, zamykanie i ponowne otwieranie zapisanej grupy, co synchronizuje się z innymi urządzeniami i co rozszerzenia widzą, a czego nie.',
+  shareSummary: 'Twórz, zapisuj, otwieraj ponownie i synchronizuj grupy kart w Chrome. Zobacz też, gdzie zawodzą.',
+  dek: 'Zamknięta grupa nie znika: zostaje zapisana. Sprawdź, gdzie trafia, co przechodzi z Tobą na inne urządzenia, a co nie.',
+  published: '2026-11-23',
+  updated: '2026-11-23',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Zamknięcie grupy ją zapisuje; otworzysz ją ponownie z paska zakładek albo przez ⋮ → Grupy kart.',
+      source: 'Pomoc Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Usunięcie lub rozgrupowanie usuwa grupę na wszystkich zalogowanych urządzeniach.', source: 'Pomoc Chrome' },
+    {
+      text: 'chrome.tabGroups widzi tylko grupy w otwartych oknach.',
+      source: 'Dokumentacja chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'Oba ustawienia grup kart na pasku zakładek były włączone w świeżo zainstalowanym Chrome 157.', source: 'chrome://settings/appearance, 20 lis 2026' },
+  ],
+  faq: [
+    {
+      question: 'Jak zapisać grupę kart w Chrome?',
+      answer:
+        'Kliknij prawym przyciskiem nazwę grupy i wybierz „Zamknij grupę”. Chrome ją zachowa, a otworzysz ją ponownie z paska zakładek albo przez ⋮ → Grupy kart.',
+    },
+    {
+      question: 'Czy grupy kart w Chrome synchronizują się między urządzeniami?',
+      answer:
+        'Zapisane grupy podążają za Twoim kontem Google: pomoc Chrome ostrzega, że usunięcie grupy lub jej rozgrupowanie usuwa ją na każdym urządzeniu zalogowanym na to samo konto.',
+    },
+    {
+      question: 'Czym się różni „Zamknij grupę” od „Usuń grupę”?',
+      answer: '„Zamknij grupę” zamyka karty i zachowuje grupę, żeby można ją było później otworzyć. „Usuń grupę” ją usuwa, także na innych urządzeniach.',
+    },
+    {
+      question: 'Czy rozszerzenie do zarządzania kartami może zapisać moje zamknięte grupy z Chrome?',
+      answer:
+        'Nie, dopóki są zamknięte: API rozszerzeń opisuje tylko grupy w otwartych oknach. Najpierw ponownie otwórz grupę, a potem zapisz ją w rozszerzeniu.',
+    },
+  ],
+  images: [
+    { src: '/blog/chrome-tab-groups/chrome-tab-groups-setting.webp', alt: 'Ustawienia Chrome, „Appearance” (Wygląd), z włączonymi opcjami „Show tab groups in bookmarks bar” (Pokazuj grupy kart na pasku zakładek) i „Automatically pin new tab groups created on any device to the bookmarks bar” (Automatycznie przypinaj nowe grupy kart do paska zakładek)' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp', alt: 'TabMerger, „Now Open” (Teraz Otwarte): sześć kart, trzy oznaczone na niebiesko jako Sprint i trzy na zielono jako Thesis, jasny motyw' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-dark.webp', alt: 'TabMerger, „Now Open” (Teraz Otwarte): sześć kart, trzy oznaczone na niebiesko jako Sprint i trzy na zielono jako Thesis, ciemny motyw' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-light.webp', alt: 'Grupa TabMergera „Sprint + thesis” z tymi samymi sześcioma kartami i ich oznaczeniami Sprint i Thesis, jasny motyw' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-dark.webp', alt: 'Grupa TabMergera „Sprint + thesis” z tymi samymi sześcioma kartami i ich oznaczeniami Sprint i Thesis, ciemny motyw' },
+  ],
+  tags: ['chrome', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (tab groups with the keyboard)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp' },
+  ogImage: { src: '/blog/chrome-tab-groups/og.png', alt: 'Karta tytułowa „Chrome tab groups: how to save, reopen and sync them”: poradnik TabMergera z kartami oznaczonymi według ich grupy z Chrome' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'basics', label: 'Tworzenie i zwijanie' },
+    { id: 'save', label: 'Zapisywanie i otwieranie' },
+    { id: 'sync', label: 'Czy się synchronizują?' },
+    { id: 'limits', label: 'Ograniczenia' },
+    { id: 'tabmerger', label: 'Grupy na stałe' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Aby utworzyć grupę, kliknij kartę prawym przyciskiem i wybierz **Dodaj kartę do grupy** („Add tab to group”), a potem nadaj grupie nazwę i wybierz kolor. Aby zapisać grupę, kliknij prawym przyciskiem jej nazwę i wybierz **Zamknij grupę** („Close group”): Chrome ją zachowa, a otworzysz ją ponownie z paska zakładek albo przez **⋮ → Grupy kart** („Tab groups”). Zapisane grupy podążają za Twoim kontem Google, więc usunięcie jednej usuwa ją wszędzie. Żeby grupy były bezpieczne na stałe, zapisz je w [TabMergerze](/features): zachowuje on nazwę i kolor grupy z Chrome dla każdej karty i po ponownym otwarciu znowu układa karty w grupy.
+
+</QuickAnswer>
+
+<InstallCta>Trzymaj grupy kart z Chrome w bezpiecznym miejscu, z wyszukiwaniem i synchronizacją. Za darmo dla Chrome, Edge i Firefoksa.</InstallCta>
+
+<Section id="basics" title="Jak działają grupy kart w Chrome?">
+
+Grupa kart to nazwany, kolorowy ciąg kart w jednym oknie.
+
+1. Kliknij kartę prawym przyciskiem i wybierz **Dodaj kartę do grupy** → **Nowa grupa** („New group”) albo istniejącą grupę.
+2. Nadaj grupie nazwę i wybierz kolor. Później kliknij nazwę prawym przyciskiem, żeby zmienić nazwę lub kolor albo dodać do grupy nową kartę.
+3. Przeciągnij kartę do grupy, żeby ją dodać; kliknij kartę prawym przyciskiem → **Usuń z grupy** („Remove from group”), żeby ją wyjąć.
+4. Kliknij nazwę grupy, żeby zwinąć ją do jednej etykiety, i kliknij jeszcze raz, żeby ją rozwinąć.
+
+Z klawiatury: naciskaj <Kbd>F6</Kbd>, aż fokus znajdzie się na kartach, przejdź do grupy klawiszem <Kbd>Tab</Kbd>, a klawisz menu otworzy menu grupy. <Kbd>Space</Kbd> lub <Kbd>Enter</Kbd> zwija grupę, a <Kbd>Ctrl</Kbd>+<Kbd>←</Kbd>/<Kbd>→</Kbd> ją przesuwa.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with Close group and Delete group. */}
+
+</Section>
+
+<Section id="save" title="Jak zapisać grupę kart i ją odzyskać?">
+
+**Zamknij grupę** to w Chrome przycisk zapisu. Karty się zamykają, grupa nie: Chrome ją zachowuje i pokazuje w dwóch miejscach.
+
+- **Pasek zakładek:** ikona siatki z nazwą grupy. Kliknij ją, żeby otworzyć grupę ponownie.
+- **Menu ⋮ → Grupy kart:** Twoje zapisane grupy.
+
+Dwa ustawienia w **Ustawienia → Wygląd** („Settings → Appearance”) odpowiadają za część z paskiem zakładek. Oba były włączone w nowym profilu Chrome 157.
+
+<AnnotatedFigure src="/blog/chrome-tab-groups/chrome-tab-groups-setting.webp" alt="Ustawienia Chrome, „Appearance” (Wygląd), z włączonymi opcjami „Show tab groups in bookmarks bar” (Pokazuj grupy kart na pasku zakładek) i „Automatically pin new tab groups created on any device to the bookmarks bar” (Automatycznie przypinaj nowe grupy kart do paska zakładek)" width={1600} height={844} eager boxes={[{ id: 'tab-groups-setting', label: 'Pokazuj na pasku zakładek' }, { id: 'auto-pin', label: 'Przypinaj nowe grupy' }]} source="chrome://settings/appearance · Chrome 157.0.8103.80">Dwa ustawienia grup kart na stronie „Appearance” (Wygląd) w Chrome.</AnnotatedFigure>
+
+<Catch>zapisana grupa przechowuje tylko adresy. To nie jest kopia zapasowa: usuń ją raz, a zniknie ze wszystkich urządzeń.</Catch>
+
+</Section>
+
+<Section id="sync" title="Czy grupy kart synchronizują się między urządzeniami?">
+
+Tak, przez Twoje konto Google. Pomoc Chrome wprost opisuje efekt uboczny: gdy **usuniesz** grupę albo **rozgrupujesz** jej karty (**Rozgrupuj**, „Ungroup”), grupa zniknie z Twojego urządzenia *i* ze wszystkich innych urządzeń zalogowanych na to samo konto. Ustawienie **Automatycznie przypinaj nowe grupy kart do paska zakładek** („Automatically pin new tab groups created on any device to the bookmarks bar”) przypina też grupy utworzone gdzie indziej.
+
+W praktyce oznacza to, że:
+
+- Grupy utworzone na jednym komputerze mogą pojawić się na innym, zalogowanym na to samo konto; właśnie do tego odnosi się ustawienie przypinania.
+- Porządki na laptopie usuwają te same grupy na komputerze stacjonarnym.
+
+Firefox 159 też ma grupy kart, z opcją **Zachowaj i zamknij grupę** („Save and close group”) i listą **Zamknięte grupy** („Closed Groups”); kroki i zrzuty ekranu w tym poradniku dotyczą Chrome. Jeśli używasz Firefoksa, zajrzyj do poradnika [Grupy kart w Firefoksie](/blog/firefox-tab-groups).
+
+</Section>
+
+<Section id="limits" title="Gdzie grupy kart zawodzą?">
+
+- **Każda w jednym oknie.** Grupa żyje w jednym oknie. Zapisanie „wszystkiego, co mam otwarte” w trzech oknach to trzy grupy albo więcej.
+- **Tylko adresy.** Jak zakładka, zapisana grupa wczytuje stronę od nowa: pozycja przewinięcia i dane wpisane w formularze przepadają.
+- **Niewidoczne dla rozszerzeń, gdy są zamknięte.** API `chrome.tabGroups` opisuje grupy, które są w otwartym oknie: każda zwracana grupa ma `windowId`, zamknięcie grupy wywołuje `onRemoved` i nie ma wywołania, które wyświetla zapisane, zamknięte grupy. Menedżer kart nie zrobi kopii grupy, którą zamknięto, dopóki jej ponownie nie otworzysz.
+- **Usunięcia się rozchodzą.** Synchronizacja, dzięki której grupy są tak wygodne, roznosi też pomyłkę na każde urządzenie.
+
+Nasz poradnik o tym, jak [zapisać wszystkie otwarte karty](/blog/save-all-open-tabs), porównuje grupy z zakładkami, przywracaniem przy uruchomieniu i menedżerami sesji, a [sposób na zbyt wiele kart](/blog/manage-too-many-tabs) pokazuje, gdzie grupy przydają się na co dzień.
+
+</Section>
+
+<Section id="tabmerger" title="Zachowaj grupy na stałe dzięki TabMergerowi">
+
+[TabMerger](/features), nasze darmowe rozszerzenie dla Chrome, Edge i Firefoksa, odczytuje Twoje otwarte grupy kart z Chrome. **Teraz Otwarte** oznacza każdą kartę nazwą i kolorem jej grupy, a zapisanie okna w grupie TabMergera zachowuje te oznaczenia. Zapisane tam karty pozostają nietknięte, gdy grupa Chrome zostanie usunięta na innym urządzeniu.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Zapisywanie grup kart z Chrome w TabMergerze" steps={[{ title: 'Teraz Otwarte' }, { title: 'Zapisana grupa' }]}>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-now-open-groups" alt="TabMerger, „Now Open” (Teraz Otwarte): sześć kart, trzy oznaczone na niebiesko jako Sprint i trzy na zielono jako Thesis, jasny motyw" darkAlt="TabMerger, „Now Open” (Teraz Otwarte): sześć kart, trzy oznaczone na niebiesko jako Sprint i trzy na zielono jako Thesis, ciemny motyw" boxes={[{ id: 'group-badge-1', label: 'Grupa Sprint' }, { id: 'group-badge-4', label: 'Grupa Thesis' }]} source="TabMerger 3.16.1">Dwie grupy kart z Chrome, Sprint i Thesis, tak jak pokazuje je „Now Open” (Teraz Otwarte).</ThemedScreenshot>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-saved-groups" alt="Grupa TabMergera „Sprint + thesis” z tymi samymi sześcioma kartami i ich oznaczeniami Sprint i Thesis, jasny motyw" darkAlt="Grupa TabMergera „Sprint + thesis” z tymi samymi sześcioma kartami i ich oznaczeniami Sprint i Thesis, ciemny motyw" boxes={[{ id: 'group-badge-1', label: 'Grupa Sprint' }, { id: 'group-badge-4', label: 'Grupa Thesis' }]} source="TabMerger 3.16.1">Po „Merge with current” (Scal z bieżącą sesją): zapisana grupa zachowuje grupę Chrome każdej karty.</ThemedScreenshot>
+</Carousel>
+
+Otwórz zapisane okno ponownie w Chrome lub Edge, a jego karty wrócą do grup kart z tymi samymi nazwami i kolorami.
+
+<InstallCta>Za darmo dla Chrome, Edge i Firefoksa. Na start nie potrzebujesz konta.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

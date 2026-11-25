@@ -1,0 +1,179 @@
+export const post = {
+  slug: 'auto-sort-tabs-with-url-rules',
+  title: 'Automatyczne sortowanie kart do grup regułami URL',
+  navTitle: 'Automatyczne sortowanie kart regułami URL',
+  seoTitle: 'Automatyczne grupowanie kart przeglądarki według adresu URL',
+  description:
+    'Niech TabMerger porządkuje karty za Ciebie: reguła URL kopiuje każdą pasującą stronę do właściwej grupy, gdy przeglądasz. Jak działają wzorce i symbol wieloznaczny *, kolejność reguł i wzorce, które dobrze się sprawdzają.',
+  shareSummary: 'Wzorzec i grupa: TabMerger odkłada każdą pasującą kartę na miejsce, gdy przeglądasz.',
+  dek: 'Napisz regułę raz. Każda pasująca strona, którą potem otworzysz, trafi do właściwej grupy.',
+  published: '2026-12-17',
+  updated: '2026-12-17',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Reguła to wzorzec plus grupa; * pasuje do dowolnego ciągu znaków.', source: 'TabMerger 3.16.1' },
+    { text: 'Wzorce dotyczą całego adresu, bez http:// ani https://.', source: 'Kod źródłowy TabMerger 3.16.1' },
+    { text: 'Reguły są sprawdzane od góry do dołu; wygrywa pierwsza pasująca.', source: 'TabMerger 3.16.1' },
+    { text: 'Plan darmowy ma 3 reguły URL; Pro nie ma limitu.', source: 'Cennik TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Czy karty przeglądarki można automatycznie sortować do grup?',
+      answer:
+        'Tak, za pomocą reguł URL w TabMergerze. Reguła łączy wzorzec adresu, np. github.com/your-org/*, z grupą. Za każdym razem, gdy pasująca strona się otwiera albo kończy ładowanie, TabMerger zapisuje jej kopię w tej grupie. Sama karta pozostaje otwarta.',
+    },
+    {
+      question: 'Jak działają wzorce reguł URL?',
+      answer:
+        'Wzorzec musi pasować do całego adresu, bez części http:// lub https://. * oznacza dowolny ciąg znaków, także pusty, i jest jedynym symbolem wieloznacznym. Dlatego github.com/* pasuje do każdej strony GitHuba, a *wikipedia.org/* do Wikipedii w każdym języku.',
+    },
+    {
+      question: 'Co, jeśli dwie reguły pasują do tej samej strony?',
+      answer: 'Reguły są sprawdzane od góry listy w dół i wygrywa pierwsza pasująca. Strzałkami obok każdej reguły ustaw reguły szczegółowe nad ogólnymi.',
+    },
+    {
+      question: 'Czy reguła URL zamyka kartę?',
+      answer: 'Nie. Reguła zapisuje kopię w grupie; karta pozostaje otwarta tam, gdzie jest.',
+    },
+    {
+      question: 'Ile reguł URL mogę mieć?',
+      answer: 'Plan darmowy ma 3. Pro nie ma limitu. Reguły, które już masz, działają dalej, jeśli zmienisz plan.',
+    },
+  ],
+  images: [
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-light.webp', alt: 'Okno „Add URL Rule” (Dodaj Regułę URL) w TabMergerze ze wzorcem *wikivoyage.org/wiki/* i grupą „Trip to Lisbon”, motyw jasny' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-dark.webp', alt: 'Okno „Add URL Rule” (Dodaj Regułę URL) w TabMergerze ze wzorcem *wikivoyage.org/wiki/* i grupą „Trip to Lisbon”, motyw ciemny' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-light.webp', alt: '„URL Rules” (Reguły URL) w TabMergerze z trzema regułami, każda ze strzałkami do zmiany kolejności, i „3/3 used” (Użyto 3/3), motyw jasny' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-dark.webp', alt: '„URL Rules” (Reguły URL) w TabMergerze z trzema regułami, każda ze strzałkami do zmiany kolejności, i „3/3 used” (Użyto 3/3), motyw ciemny' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp', alt: 'Grupa „Trip to Lisbon” ze stroną „Sintra” dodaną przez regułę URL, motyw jasny' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-dark.webp', alt: 'Grupa „Trip to Lisbon” ze stroną „Sintra” dodaną przez regułę URL, motyw ciemny' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'developers'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp' },
+  ogImage: { src: '/blog/auto-sort-tabs-with-url-rules/og.png', alt: 'Automatyczne sortowanie kart regułami URL: trzy reguły TabMerger odkładają karty do grup' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'problem', label: 'Ręczne porządkowanie' },
+    { id: 'why', label: 'Dlaczego reguły tak działają' },
+    { id: 'steps', label: 'Dodawanie reguły' },
+    { id: 'patterns', label: 'Pisanie wzorców' },
+    { id: 'order', label: 'Kolejność reguł' },
+    { id: 'benefit', label: 'Co zyskujesz' },
+    { id: 'habits', label: 'Dobre nawyki' },
+    { id: 'plans', label: 'Darmowy czy Pro' },
+    { id: 'faq', label: 'Najczęstsze pytania' },
+  ],
+}
+
+<QuickAnswer>
+
+W [TabMergerze](/features) otwórz **Ustawienia → Ogólne → Reguły URL → Zarządzaj** (Settings → General → URL rules → Manage) i dodaj regułę: wzorzec adresu, np. `github.com/your-org/*`, oraz grupę, do której należy. Od tej chwili każda pasująca strona jest zapisywana w tej grupie, gdy przeglądasz, a karta pozostaje otwarta. `*` pasuje do wszystkiego; wygrywa pierwsza pasująca reguła.
+
+</QuickAnswer>
+
+<InstallCta>Karty, które same trafiają do właściwej grupy. Za darmo dla Chrome, Edge i Firefoksa.</InstallCta>
+
+<Section id="problem" title="Ręczne porządkowanie kart nie trwa długo">
+
+Zaczynasz tydzień z porządkiem: praca w jednej grupie, wyjazd w drugiej, lektury w trzeciej. Potem przychodzi codzienność. Kolega podsyła link do zgłoszenia, sprawdzasz dwa połączenia kolejowe, wyszukiwanie wyrzuca artykuł. Każda z tych kart powinna gdzieś trafić i każda wymaga przeciągnięcia, którego nie zrobisz. W piątek grupy są nieaktualne, a Teraz Otwarte (Now Open) znów jest stertą.
+
+Strony, które otwierasz najczęściej, pochodzą z tych samych kilku witryn. Właśnie to reguła potrafi rozpoznać.
+
+</Section>
+
+<Section id="why" title="Dlaczego reguły URL działają właśnie tak">
+
+- **Kopiuje, nie przenosi.** Reguła zapisuje kopię strony w grupie i zostawia kartę otwartą. Porządkowanie nigdy nie przerywa lektury.
+- **Działa, gdy przeglądasz.** Reguła jest sprawdzana, gdy karta otwiera się z adresem, i za każdym razem, gdy strona kończy ładowanie, więc trafia na miejsce także link otwarty wewnątrz karty. Kopia ląduje w pierwszym oknie grupy. Strona, która ładuje się ponownie (po odświeżeniu, przy późniejszej wizycie), jest zapisywana ponownie; **Usuń duplikaty kart** (Deduplicate tabs) w menu **⋯** grupy usuwa powtórzenia.
+- **Cały adres, bez schematu.** Wzorzec jest porównywany z całym adresem po `http://` lub `https://`, więc nigdy ich nie wpisujesz, a `localhost:3000/*` działa dokładnie tak, jak jest napisany.
+- **Celowo jeden symbol wieloznaczny.** `*` oznacza dowolny ciąg znaków, także pusty. Nie ma innych znaków specjalnych, które trzeba by poprzedzać znakiem ucieczki. Wzorce są porównywane jako zwykły tekst, nigdy nie są zamieniane w wyrażenie regularne, więc nawet długie wzorce sprawdzają się szybko.
+- **Decyduje kolejność.** Gdy pasują dwie reguły, wygrywa wyższa, więc reguła szczegółowa może stać nad ogólną.
+
+</Section>
+
+<Section id="steps" title="Dodawanie reguły">
+
+1. Otwórz TabMerger, a potem **Ustawienia** → **Ogólne** (Settings → General). Przy pozycji **Reguły URL** kliknij **Zarządzaj** (Manage).
+2. Kliknij **Dodaj regułę** (Add rule). Wpisz wzorzec, wybierz grupę docelową i kliknij **Dodaj regułę** w oknie.
+3. Powtórz dla każdej witryny, którą chcesz porządkować, a potem kliknij **Zapisz** (Save), żeby zachować listę.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Reguła URL od początku do końca" steps={[{ title: 'Dodawanie' }, { title: 'Lista' }, { title: 'Wynik' }]}>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-add-rule" alt="Okno „Add URL Rule” (Dodaj Regułę URL) w TabMergerze ze wzorcem *wikivoyage.org/wiki/* i grupą „Trip to Lisbon”, motyw jasny" darkAlt="Okno „Add URL Rule” (Dodaj Regułę URL) w TabMergerze ze wzorcem *wikivoyage.org/wiki/* i grupą „Trip to Lisbon”, motyw ciemny" boxes={[{ id: 'pattern', label: 'Wzorzec adresu' }, { id: 'group', label: 'Grupa docelowa' }]} source="TabMerger 3.16.1">Każdy artykuł z Wikivoyage trafia do wyjazdu.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rules-list" alt="„URL Rules” (Reguły URL) w TabMergerze z trzema regułami, każda ze strzałkami do zmiany kolejności, i „3/3 used” (Użyto 3/3), motyw jasny" darkAlt="„URL Rules” (Reguły URL) w TabMergerze z trzema regułami, każda ze strzałkami do zmiany kolejności, i „3/3 used” (Użyto 3/3), motyw ciemny" boxes={[{ id: 'order', label: 'Sprawdzane od góry do dołu' }, { id: 'used', label: 'Licznik planu darmowego' }]} source="TabMerger 3.16.1">Trzy reguły, trzy grupy. Strzałki ustalają, która reguła jest sprawdzana najpierw.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rule-result" alt="Grupa „Trip to Lisbon” ze stroną „Sintra” dodaną przez regułę URL, motyw jasny" darkAlt="Grupa „Trip to Lisbon” ze stroną „Sintra” dodaną przez regułę URL, motyw ciemny" boxes={[{ id: 'new-tab', label: 'Odłożona przez regułę' }]} source="TabMerger 3.16.1">Otwarcie artykułu „Sintra” samo zapisało go w „Trip to Lisbon”.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="patterns" title="Pisanie wzorców, które pasują">
+
+<ComparisonTable
+  head={['Wzorzec', 'Pasuje do', 'Nie pasuje do']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['github.com/your-org/*', 'Każdego repozytorium, zgłoszenia i pull requesta your-org', 'github.com/other-org/…'],
+    ['*wikipedia.org/wiki/*', 'Artykułów w każdym języku (en., de., …)', 'strony głównej wikipedia.org'],
+    ['localhost:3000/*', 'Każdej strony lokalnego serwera deweloperskiego', 'localhost:8080/…'],
+    ['docs.example.com/*', 'Witryny z dokumentacją', 'www.docs.example.com/… (dodaj *docs.example.com/*)'],
+    ['github.com', 'Tylko samego adresu github.com', 'github.com/cokolwiek (dodaj /*)'],
+  ]}
+/>
+
+Wskazówki, które oszczędzą Ci debugowania:
+
+- **Kończ na `/*`**, żeby objąć całą witrynę. Bez `*` wzorzec pasuje do jednego, dokładnego adresu.
+- **Zaczynaj od `*`**, gdy witryna używa subdomen lub `www.`: `*example.com/*`.
+- **Litery muszą się zgadzać dokładnie.** Przeglądarki zapisują nazwy domen małymi literami, więc pisz je tak samo.
+- **Parametry zapytania też się liczą.** `*youtube.com/watch*` pasuje do filmów niezależnie od tego, co następuje po `watch`.
+
+</Section>
+
+<Section id="order" title="Kolejność reguł: najpierw szczegółowe">
+
+Reguły są sprawdzane od góry. Strzałkami obok każdej reguły ustaw wąską regułę (`github.com/your-org/design-system/*` → „Design system”) nad szeroką (`github.com/your-org/*` → „Work”). Pierwsza pasująca reguła odkłada stronę, a pozostałe są pomijane.
+
+</Section>
+
+<Section id="benefit" title="Co zyskujesz">
+
+Twoje grupy są aktualne, choć niczego nie porządkujesz. Strona otwarta we wtorek jest w piątek już w grupie swojego projektu, a wyszukiwanie w tej grupie ją znajdzie.
+
+</Section>
+
+<Section id="habits" title="Dobre nawyki">
+
+- **Twórz reguły dla witryn, które otwierasz codziennie,** a nie dla każdej odwiedzonej raz.
+- **Jedna reguła na domenę lub ścieżkę projektu**, szczegółowe na początku.
+- **Łącz reguły z grupą dla każdego projektu:** zobacz [porządkowanie kart według projektów](/blog/organize-tabs-by-project). Programiści znajdą więcej wzorców w [zarządzaniu kartami dla programistów](/blog/tab-management-for-developers).
+- **Co jakiś czas zrób porządek** za pomocą **Usuń duplikaty kart** w grupach, które reguły często zapełniają.
+
+</Section>
+
+<Section id="plans" title="Darmowy czy Pro">
+
+<ComparisonTable
+  head={['', 'Darmowy', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Reguły URL', '3', 'Bez limitu'],
+    ['Wzorce, kolejność, wszystkie opcje opisane wyżej', 'Tak', 'Tak'],
+  ]}
+/>
+
+Reguły URL są zapisywane w przeglądarce, w której je utworzono. Jeśli plan Pro się skończy, reguły, które już masz, dalej porządkują karty; dopiero dodanie czwartej reguły wymaga [Pro](/pricing).
+
+<InstallCta>Napisz dziś trzy reguły i przestań ręcznie porządkować karty. Za darmo dla Chrome, Edge i Firefoksa.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Najczęstsze pytania">
+
+<Faq items={post.faq} />
+
+</Section>

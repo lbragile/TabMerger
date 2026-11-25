@@ -1,0 +1,184 @@
+export const post = {
+  slug: 'tabmerger-daily-workflow',
+  title: 'Rutinitas tab harian dengan TabMerger',
+  navTitle: 'Rutinitas tab harian',
+  seoTitle: 'Cara Mengelola Tab Browser Setiap Hari dengan TabMerger: Pagi sampai Malam',
+  description:
+    'Rutinitas sederhana untuk mengelola tab browser dengan TabMerger: buka tab hari ini dengan sekali klik, simpan tab baru di tempatnya agar selalu mudah ditemukan, dan akhiri hari dengan semua tersimpan dan tidak ada yang tertinggal terbuka.',
+  shareSummary: 'Buka tab hari ini sekali klik, semua mudah ditemukan, dan tutup hari tanpa kehilangan apa pun.',
+  dek: 'Tiga kebiasaan, masing-masing beberapa klik: mulai dari set tersimpan, simpan tab sambil jalan, dan tutup hari dengan semua tersimpan.',
+  published: '2026-12-11',
+  updated: '2026-12-11',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Grup menyimpan seluruh jendela berisi tab dan tetap tersimpan setelah jendelanya ditutup.', source: 'TabMerger 3.16.1' },
+    { text: 'Sesi memulihkan semua grup tersimpan sekaligus, setiap jendela seperti saat disimpan.', source: 'Kode sumber TabMerger 3.16.1' },
+    { text: 'Ctrl+K mencari tab yang terbuka, tersimpan, dan baru ditutup sekaligus.', source: 'TabMerger 3.16.1' },
+    { text: 'Gratis: 5 grup, 50 tab, 3 sesi. Pro: tanpa batas, plus sinkronisasi.', source: 'Harga TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Apa rutinitas harian terbaik untuk tab browser?',
+      answer:
+        'Mulai hari dari set tab tersimpan, bukan sisa kemarin, masukkan tab baru ke grup sambil jalan, dan akhiri hari dengan menyimpan yang terbuka lalu menutupnya. TabMerger mengerjakan setiap langkah dalam beberapa klik, dan simpan otomatis menangani hari-hari saat Anda lupa.',
+    },
+    {
+      question: 'Apakah saya perlu akun untuk rutinitas ini?',
+      answer: 'Tidak. Grup, sesi, pencarian, simpan otomatis, dan tab yang baru ditutup semuanya berfungsi di paket Gratis tanpa akun. Akun hanya diperlukan untuk fitur Pro seperti sinkronisasi antarperangkat.',
+    },
+    {
+      question: 'Apakah ini berfungsi di Chrome, Edge, dan Firefox?',
+      answer: 'Ya. TabMerger gratis untuk Chrome, Edge, dan Firefox, dan rutinitasnya sama di ketiganya.',
+    },
+    {
+      question: 'Apa bedanya grup dan sesi?',
+      answer:
+        'Grup adalah satu set tab tersimpan, dalam satu jendela atau lebih, yang Anda buka, edit, dan tambahi. Sesi adalah cuplikan bernama dari semua grup tersimpan sekaligus, yang Anda pulihkan bersama-sama.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp', alt: 'TabMerger dengan empat grup tersimpan (Work, Reading list, Thesis sources, Trip to Lisbon) dan satu sesi tersimpan, “Monday plan”, tema terang' },
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-dark.webp', alt: 'TabMerger dengan empat grup tersimpan (Work, Reading list, Thesis sources, Trip to Lisbon) dan satu sesi tersimpan, “Monday plan”, tema gelap' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-light.webp', alt: '“Now Open” (Sedang Terbuka) di TabMerger berisi dua jendela browser yang terbuka dengan enam tab, tema terang' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-dark.webp', alt: '“Now Open” (Sedang Terbuka) di TabMerger berisi dua jendela browser yang terbuka dengan enam tab, tema gelap' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp' },
+  ogImage: { src: '/blog/tabmerger-daily-workflow/og.png', alt: 'Rutinitas tab harian dengan TabMerger, dengan grup tersimpan dan satu sesi di bilah samping' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'problem', label: 'Mengapa tab menumpuk' },
+    { id: 'idea', label: 'Cara kerja TabMerger' },
+    { id: 'morning', label: 'Pagi' },
+    { id: 'day', label: 'Sepanjang hari' },
+    { id: 'evening', label: 'Malam' },
+    { id: 'net', label: 'Jaring pengaman' },
+    { id: 'plans', label: 'Gratis vs Pro' },
+    { id: 'series', label: 'Seri lengkap' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Simpan tab Anda di grup [TabMerger](/features), bukan di jendela yang terbuka. **Pagi:** pulihkan sesi tersimpan, atau buka hanya grup yang Anda perlukan. **Sepanjang hari:** masukkan tab baru ke grup dan temukan tab mana pun dengan <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>. **Malam:** simpan yang terbuka ke grupnya lalu tutup jendelanya. Simpan otomatis dan "Baru ditutup" menangkap apa pun yang Anda lupakan. Cukup beberapa klik sehari, dan setiap pagi Anda mulai dengan tab yang memang ingin Anda simpan.
+
+</QuickAnswer>
+
+<InstallCta>Mulai besok dengan tab yang tepat, bukan tumpukan kemarin. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+<Section id="problem" title="Mengapa tab menumpuk setiap hari?">
+
+Bayangkan hari Selasa biasa. Anda membuka email dan kalender, lalu sebuah pull request, lalu tiga halaman dokumentasi yang dibutuhkannya. Rekan kerja mengirim tautan yang ingin Anda baca nanti. Saat makan siang ada dua jendela; menjelang malam, empat. Anda tidak menutupnya, karena sebagian tab masih "dalam proses", dan menemukannya lagi berarti harus menggali riwayat.
+
+Maka browser pun menjadi daftar tugas. Padahal ia tidak pernah dibuat untuk itu: bilah tab tidak punya nama, tidak punya bagian, dan tidak bisa menyimpan pekerjaan tanpa kehilangannya. Setiap hari dimulai dengan sisa kemarin, browser makin lambat, dan satu tab yang Anda perlukan hanyalah ikon 16 piksel entah di mana di jendela ketiga.
+
+</Section>
+
+<Section id="idea" title="Bagaimana TabMerger mengatasinya?">
+
+TabMerger memisahkan dua hal yang dicampur aduk oleh browser: apa yang **terbuka** dan apa yang **disimpan**.
+
+- **Sedang Terbuka** adalah tampilan langsung jendela dan tab yang sedang terbuka. Ia selalu berada di urutan pertama dan tidak bisa dihapus, jadi selalu hanya sekali klik.
+- **Grup** adalah apa yang Anda simpan. Setiap grup berisi satu jendela tab atau lebih, dengan nama, catatan, dan warna, dan tetap tersimpan setelah jendelanya ditutup.
+- **Sesi** adalah cuplikan bernama dari semua grup Anda sekaligus, untuk hari-hari saat Anda ingin semuanya kembali sekaligus.
+
+Karena menyimpan tidak lagi bergantung pada membiarkan tab terbuka, Anda bisa menutup jendela dengan tenang. Itulah seluruh rutinitasnya.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Yang disimpan dan yang terbuka, berdampingan" steps={[{ title: 'Grup Anda' }, { title: 'Sedang Terbuka' }]}>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-workspace" alt="TabMerger dengan empat grup tersimpan (Work, Reading list, Thesis sources, Trip to Lisbon) dan satu sesi tersimpan, “Monday plan”, tema terang" darkAlt="TabMerger dengan empat grup tersimpan (Work, Reading list, Thesis sources, Trip to Lisbon) dan satu sesi tersimpan, “Monday plan”, tema gelap" boxes={[{ id: 'groups', label: 'Grup tersimpan Anda' }, { id: 'session', label: 'Sesi tersimpan' }]} source="TabMerger 3.16.1">Empat grup untuk empat bagian minggu ini, dan satu sesi yang mengembalikan semuanya.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-now-open" alt="“Now Open” (Sedang Terbuka) di TabMerger berisi dua jendela browser yang terbuka dengan enam tab, tema terang" darkAlt="“Now Open” (Sedang Terbuka) di TabMerger berisi dua jendela browser yang terbuka dengan enam tab, tema gelap" boxes={[{ id: 'now-open-summary', label: 'Yang sedang terbuka' }]} source="TabMerger 3.16.1">"Now Open" (Sedang Terbuka): apa pun yang sedang terbuka, jendela demi jendela.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="morning" title="Pagi: mulai dari set tersimpan">
+
+Dua cara memulai, tergantung harinya:
+
+1. **Semua sekaligus.** Buka bagian **Sesi** di bilah samping dan pulihkan sesi Anda. TabMerger bertanya dulu, karena pemulihan menutup jendela yang terbuka dan membuka jendela tersimpan sebagai gantinya, setiap jendela seperti saat disimpan.
+2. **Satu proyek saja.** Klik kanan sebuah grup di bilah samping lalu pilih **Buka semua di jendela baru**. Tidak ada yang lain yang tersentuh.
+
+Versi langkah demi langkah, beserta alasan di balik konfirmasinya, ada di [mulai hari kerja dengan tab tersimpan](/blog/start-your-workday-with-saved-tabs).
+
+</Section>
+
+<Section id="day" title="Sepanjang hari: simpan sambil jalan">
+
+- **Simpan sebuah tab** dengan menyeretnya dari Sedang Terbuka ke grup di bilah samping: tab tersimpan di sana dan tab yang terbuka ditutup (Batalkan mengembalikannya). Atau gunakan pintasan keyboard ([daftar lengkapnya](/blog/tab-keyboard-shortcuts)).
+- **Biarkan aturan yang menyimpan.** Aturan URL otomatis menyalin tab baru yang cocok ke sebuah grup; lihat [urutkan tab otomatis dengan aturan URL](/blog/auto-sort-tabs-with-url-rules).
+- **Temukan apa saja** dengan <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> di Mac): tab terbuka, tersimpan, dan baru ditutup dalam satu daftar. Semua filternya ada di [cari di semua tab dengan TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+- **Tinggalkan catatan** untuk diri sendiri di sebuah tab, atau pengingat untuk kembali ke sana; [mengatur tab untuk riset](/blog/organize-tabs-for-research) menunjukkan keduanya.
+- **Bersihkan salinan** dengan **Hapus tab duplikat**; selengkapnya di [menutup tab duplikat](/blog/close-duplicate-tabs).
+
+</Section>
+
+<Section id="evening" title="Malam: simpan, lalu tutup">
+
+1. Buka grup tempat Anda bekerja, lalu menu **⋯**-nya. **Gabungkan dengan sesi saat ini** menambahkan jendela yang terbuka ke grup itu; **Ganti dengan sesi saat ini** menukar jendela tersimpan dengan jendela yang terbuka.
+2. Tutup jendelanya. Tab-tabnya ada di grup, tempat langkah pagi besok akan menemukannya.
+3. Sudah puas dengan tampilan semua grup Anda? **Simpan sesi saat ini** (tombol bookmark di sebelah **Sesi**) mengabadikannya dengan nama seperti "Monday plan".
+
+Kebiasaan yang membuatnya berhasil: **simpan grupnya, tutup jendelanya.** Makin sedikit jendela yang Anda bawa ke esok hari, makin cepat browser dan makin singkat pencarian.
+
+</Section>
+
+<Section id="net" title="Jaring pengaman: untuk hari-hari saat Anda lupa">
+
+Tidak ada yang menyimpan setiap malam. Dua fitur menutup celah itu:
+
+- **Simpan otomatis tab yang terbuka** (Pengaturan → Data) menyimpan tab yang terbuka sebagai grup baru sesuai jadwal, atau saat jumlahnya melewati angka yang Anda pilih.
+- **Baru ditutup** menyimpan tab dan jendela yang Anda tutup, per hari, dan <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> dengan `closed:` mencarinya.
+
+Cara kerja keduanya, dan alasan perilakunya, ada di [jangan pernah kehilangan tab lagi](/blog/never-lose-a-tab-again). Untuk browser yang crash, lihat [mengembalikan tab setelah crash](/blog/restore-tabs-after-crash).
+
+</Section>
+
+<Section id="plans" title="Apa yang gratis, dan apa tambahan Pro">
+
+<ComparisonTable
+  head={['', 'Gratis', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Grup dan tab', '5 grup, 50 tab', 'Tanpa batas'],
+    ['Sesi', '3, di browser ini', 'Tanpa batas, tersinkron'],
+    ['Aturan URL', '3', 'Tanpa batas'],
+    ['Simpan otomatis', '2 terbaru disimpan', 'Semua disimpan'],
+    ['Baru ditutup', '2 hari terakhir Anda', '30 hari terakhir Anda'],
+    ['Pencarian, catatan, impor & ekspor', 'Ya', 'Ya'],
+    ['Sinkronisasi antarperangkat, cadangan otomatis', 'Tidak', 'Ya'],
+  ]}
+/>
+
+Paket Gratis menjalankan seluruh rutinitas ini, tanpa akun; Pro menghapus batasnya dan menambahkan sinkronisasi. Detailnya di [halaman harga](/pricing).
+
+<InstallCta>Satu rutinitas, di setiap browser: Chrome, Edge, dan Firefox. Gratis untuk memulai, tanpa akun.</InstallCta>
+
+</Section>
+
+<Section id="series" title="Seri lengkap panduan TabMerger">
+
+Satu fitur per panduan, beserta alasan cara kerjanya:
+
+1. [Mulai hari kerja dengan tab tersimpan](/blog/start-your-workday-with-saved-tabs): sesi dan grup, dipulihkan setiap pagi.
+2. [Jangan pernah kehilangan tab lagi](/blog/never-lose-a-tab-again): simpan otomatis dan "Baru ditutup".
+3. [Cari di semua tab Anda](/blog/search-all-your-tabs-with-tabmerger): <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> dan filternya.
+4. [Atur tab per proyek](/blog/organize-tabs-by-project): grup, jendela bernama, dan arsip.
+5. [Tab sebagai daftar tugas](/blog/tabs-as-a-to-do-list): catatan, pengingat, dan tab yang terlupakan.
+6. [Urutkan tab otomatis dengan aturan URL](/blog/auto-sort-tabs-with-url-rules): tab yang tersimpan sendiri.
+7. [Sinkronkan tab antarperangkat](/blog/sync-tabs-between-devices-with-tabmerger): terenkripsi end-to-end, dan apa yang bisa dilihat server kami.
+8. [Impor tab ke TabMerger](/blog/import-tabs-into-tabmerger): daftar OneTab, bookmark, dan cadangan.
+9. [TabMerger Gratis vs Pro](/blog/tabmerger-free-vs-pro): apa saja isi setiap paket.
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,183 @@
+export const post = {
+  slug: 'browser-tab-features-compared',
+  title: 'Chrome vs Edge vs Firefox: perbandingan fitur tab bawaan',
+  navTitle: 'Fitur tab: Chrome, Edge, Firefox',
+  seoTitle: 'Chrome vs Edge vs Firefox: Perbandingan Fitur Tab (2026)',
+  description:
+    'Grup tab, pencarian tab, tab vertikal, tampilan terpisah, tab tidur, dan menutup duplikat: fitur tab bawaan apa saja yang ada di Chrome 157, Edge 158, dan Firefox 159, serta cara TabMerger menambahkan lapisan yang sama ke ketiganya.',
+  shareSummary: 'Fitur tab bawaan Chrome, Edge, dan Firefox, berdampingan.',
+  dek: 'Setiap browser menyelesaikan sebagian masalah tab. Ini bagian yang mana, dan cara mendapatkan sisanya di ketiganya.',
+  published: '2026-12-05',
+  updated: '2026-12-05',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ketiganya punya grup tab, pencarian tab, tab vertikal, dan tampilan terpisah.', source: 'Halaman bantuan dan teks antarmukanya, 21 Nov 2026' },
+    { text: 'Hanya Firefox 159 yang punya “Tutup Tab Berganda” (Close Duplicate Tabs) bawaan.', source: 'Teks menu Firefox 159' },
+    {
+      text: 'Chrome menyinkronkan grup tab lewat Akun Google Anda.',
+      source: 'Bantuan Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'TabMerger menambahkan satu pencarian, simpan otomatis, dan sinkronisasi terenkripsi ke ketiganya.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Browser mana yang fitur tabnya paling bagus?',
+      answer:
+        'Masing-masing unggul di satu hal: Chrome di grup tab yang tersimpan dan tersinkron, Edge di tab tidur yang aktif secara default, Firefox di menutup duplikat. TabMerger memberi ketiganya grup, pencarian, simpan otomatis, dan sinkronisasi yang sama.',
+    },
+    {
+      question: 'Apakah Chrome, Edge, dan Firefox semuanya punya grup tab?',
+      answer: 'Ya. Ketiganya bisa mengelompokkan tab dengan nama dan warna; Chrome dan Firefox juga bisa menutup grup lalu membukanya lagi nanti.',
+    },
+    {
+      question: 'Bisakah saya memakai pengelola tab yang sama di Chrome, Edge, dan Firefox?',
+      answer: 'Bisa. TabMerger berjalan di ketiganya, dan Pro menyinkronkan grup Anda di antara ketiganya, terenkripsi end-to-end.',
+    },
+    {
+      question: 'Browser mana yang bisa menutup tab duplikat?',
+      answer: 'Firefox, dari menu klik kanan tab mana pun. Di Chrome dan Edge, “Hapus tab duplikat” di TabMerger melakukannya di semua jendela.',
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'Pencarian TabMerger terbuka dan kosong, menampilkan filter group:, window:, tag:, dan closed:, tema terang' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'Pencarian TabMerger terbuka dan kosong, menampilkan filter group:, window:, tag:, dan closed:, tema gelap' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Setelan Chrome, Performance (Performa), dengan tombol Memory Saver (Penghemat Memori)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Pengaturan Edge, Performance, dengan Automatically put tabs to sleep aktif dan disetel ke 15 menit' },
+  ],
+  tags: ['cross-browser', 'comparison', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    { title: 'Chrome keyboard shortcuts', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/157179', checked: '2026-11-21' },
+    { title: 'Personalize Chrome performance', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/12929150', checked: '2026-11-21' },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp' },
+  ogImage: { src: '/blog/browser-tab-features-compared/og.png', alt: 'Chrome vs Edge vs Firefox: perbandingan fitur tab bawaan. Panduan TabMerger, dengan filter pencarian TabMerger' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'matrix', label: 'Tabel fitur' },
+    { id: 'turn-on', label: 'Pengaturan yang layak diaktifkan' },
+    { id: 'tabmerger', label: 'Satu lapisan untuk ketiganya' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['turn-on'],
+  browserFact: {
+    label: 'Setelan memori',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Pengaturan → System and performance → Performance',
+      firefox: 'Klik kanan tab → Bongkar Tab',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Ketiga browser kini punya **grup tab, pencarian tab, tab vertikal, dan tampilan terpisah**. Chrome unggul dalam menyimpan dan menyinkronkan grup, Edge menidurkan tab yang menganggur secara default, dan Firefox satu-satunya yang menutup tab duplikat sendiri. Tidak satu pun yang mencari di tab tersimpan dan tertutup, menyimpan jendela secara otomatis, atau bekerja lintas browser, dan lapisan itulah yang ditambahkan [TabMerger](/features), sama persis, ke Chrome, Edge, dan Firefox.
+
+</QuickAnswer>
+
+<InstallCta>Grup, pencarian, dan sinkronisasi yang sama di Chrome, Edge, dan Firefox. Gratis.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="matrix" title="Fitur tab apa saja yang dimiliki tiap browser?">
+
+Dicek di Chrome 157, Edge 158, dan Firefox 159 berdasarkan halaman bantuan tiap browser dan teks antarmukanya sendiri, 21 Nov 2026. “Tidak tercantum” berarti kami tidak menemukan jejaknya di halaman bantuan maupun teks browser, bukan bukti fiturnya tidak ada.
+
+<ComparisonTable
+  head={['Fitur', 'Chrome 157', 'Edge 158', 'Firefox 159', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="52rem"
+  rows={[
+    ['Grup tab', 'Ya', 'Ya', 'Ya', 'Grup bernama dan berwarna di semua jendela'],
+    ['Menutup grup, membukanya lagi nanti', 'Ya (⋮ → Grup tab)', 'Close group (membuka lagi tidak tercantum)', 'Ya (Simpan dan tutup grup)', 'Setiap grup tetap tersimpan'],
+    ['Grup di perangkat lain', 'Ya, lewat Akun Google', 'Tidak tercantum', 'Tidak ada di pengaturan Sync', 'Pro, terenkripsi end-to-end'],
+    ['Mencari tab', 'Tab terbuka (Ctrl+Shift+A, @tab)', 'Search tabs (tanpa pintasan tercantum)', 'Daftar tab (Ctrl+Shift+A)', 'Terbuka, tersimpan, dan tertutup (Ctrl+K)'],
+    ['Tab vertikal', 'Ya', 'Ya', 'Ya', 'Tidak berlaku'],
+    ['Tampilan terpisah', 'Ya', 'Ya', 'Ya', 'Tidak berlaku'],
+    ['Mengosongkan memori dari tab yang menganggur', 'Penghemat Memori (nonaktif secara default)', 'Tab tidur (aktif secara default)', 'Bongkar Tab, secara manual', 'Simpan, lalu tutup semua jendela dengan satu klik'],
+    ['Menutup tab duplikat', 'Tidak tercantum', 'Tidak tercantum', 'Tutup Tab Berganda', '“Hapus tab duplikat” di semua jendela'],
+    ['Membuka lagi jendela yang tertutup', 'Ctrl+Shift+T', 'Tidak tercantum', 'Ctrl+Shift+N', 'Baru ditutup: 2 hari (Gratis), 30 (Pro)'],
+    ['Menyimpan tab terbuka sesuai jadwal', 'Tidak tercantum', 'Tidak tercantum', 'Tidak tercantum', 'Simpan otomatis sesuai jadwal atau jumlah tab'],
+    ['Mengekspor tab', 'Lewat bookmark (HTML)', 'Lewat favorit (HTML)', 'Lewat markah (HTML)', 'JSON, tab terbuka dan tersimpan sekaligus'],
+  ]}
+/>
+
+Koleksi di Edge, cara lamanya untuk menyimpan kumpulan halaman, sudah tidak ada: Microsoft menghentikannya di Edge 149. Lihat [pengganti Koleksi Edge](/blog/edge-collections-replacement).
+
+</Section>
+
+<Section id="turn-on" title="Pengaturan bawaan mana yang layak diaktifkan?">
+
+<BrowserPanels section="turn-on">
+<BrowserPanel browser="chrome">
+
+1. **Penghemat Memori** (Memory Saver): Setelan → Performa (Settings → Performance, `chrome://settings/performance`). Fitur ini nonaktif di profil baru.
+2. **Tab vertikal**, jika Anda membuka banyak tab: klik kanan kolom tab lalu pilih **Tampilkan Tab Secara Vertikal** (Show Tabs Vertically), atau Setelan → Tampilan → Posisi tab (Settings → Appearance → Tab position).
+3. **Penelusuran Tab** (Tab Search): <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>, atau ketik `@tab` di kolom URL (di Chrome berbahasa Inggris: `@tabs`).
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Setelan Chrome, Performance (Performa), dengan tombol Memory Saver (Penghemat Memori)" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">Memory Saver (Penghemat Memori) Chrome, nonaktif di profil Chrome 157 yang baru.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. **Tab tidur** (Sleeping tabs) sudah aktif: atur jedanya di Pengaturan → System and performance → Performance.
+2. Edge 158 juga punya **tab vertikal** dan **Search tabs** (keduanya ada di teks antarmukanya); daftar pintasan Microsoft tidak memberi Search tabs tombol apa pun.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Pengaturan Edge, Performance, dengan Automatically put tabs to sleep aktif dan disetel ke 15 menit" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Tab tidur di Edge, aktif secara default: tab yang tidak aktif tidur setelah 15 menit.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. **Tab vertikal**: klik kanan bilah sisi lalu pilih **Aktifkan Tab Vertikal** (Turn on Vertical Tabs).
+2. **Tutup Tab Berganda** (Close Duplicate Tabs) dan **Bongkar Tab** (Unload Tab) ada di menu klik kanan setiap tab.
+3. **Daftar tab** (List all tabs): <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox tab right-click menu with Close Duplicate Tabs and Unload Tab. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+Semua tombolnya ada di [referensi pintasan keyboard untuk tab](/blog/tab-keyboard-shortcuts) kami.
+
+</Section>
+
+<Section id="tabmerger" title="Dapatkan lapisan yang hilang di setiap browser">
+
+Tabel di atas punya satu baris kosong untuk setiap browser: tidak satu pun yang menjaga tab Anda tetap rapi **di luar** jendela browser itu sendiri, atau lintas browser. [TabMerger](/features) bisa, dengan cara yang sama di Chrome, Edge, dan Firefox:
+
+1. **Sedang Terbuka** menampilkan setiap jendela yang terbuka; **Gabungkan dengan sesi saat ini** menyimpan semuanya ke grup bernama dengan satu klik.
+2. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> mencari di tab yang terbuka, tersimpan, dan baru ditutup sekaligus, dengan filter `group:`, `window:`, `tag:`, dan `closed:`.
+3. **Simpan otomatis** menyimpan salinan terbaru tab Anda sesuai jadwal; **Hapus tab duplikat** membersihkan duplikat dari setiap jendela.
+4. Di [Pro](/pricing), grup Anda tersinkron di semua browser Anda, terenkripsi end-to-end.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="Pencarian TabMerger terbuka dan kosong, menampilkan filter group:, window:, tag:, dan closed:, tema terang" darkAlt="Pencarian TabMerger terbuka dan kosong, menampilkan filter group:, window:, tag:, dan closed:, tema gelap" boxes={[{ id: 'search-input', label: 'Pencarian' }]} source="TabMerger 3.16.1">Satu pencarian untuk setiap tab, di setiap browser tempat TabMerger berjalan.</ThemedScreenshot>
+
+Untuk perbandingan dengan ekstensi lain, lihat [ekstensi pengelola tab terbaik](/blog/best-tab-manager-extensions).
+
+<InstallCta>Gratis untuk Chrome, Edge, dan Firefox. Tidak perlu akun untuk mulai.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

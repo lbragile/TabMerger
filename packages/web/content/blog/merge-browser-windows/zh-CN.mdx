@@ -1,0 +1,162 @@
+export const post = {
+  slug: 'merge-browser-windows',
+  title: '如何把多个浏览器窗口合并成一个',
+  navTitle: '合并浏览器窗口',
+  seoTitle: '如何把 Chrome 多个窗口合并成一个（Edge、Firefox 也适用）',
+  description:
+    '开了五个窗口，标签页到处都是？了解如何在 Chrome、Edge 和 Firefox 中在窗口之间移动标签页，或者让 TabMerger 收拢所有打开的窗口，点三下就把它们作为一个窗口重新打开。',
+  shareSummary: '在 Chrome、Edge 和 Firefox 中把所有打开的浏览器窗口合并成一个。',
+  dek: '两个窗口时，一个个拖动标签页还行。五个窗口时，就交给 TabMerger 来收拢吧。',
+  published: '2026-11-30',
+  updated: '2026-11-30',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger 把所有打开的窗口保存到一个分组中，再将其作为一个窗口重新打开。', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome 用“将标签页移至另一个窗口”移动选中的标签页。',
+      source: 'Chrome 帮助',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Edge 158 的标签页菜单中有“Move tab to another window”。', source: 'Edge 158 菜单文字' },
+    { text: 'Firefox 159 的“移动标签页”菜单只提供开头、末尾或新窗口。', source: 'Firefox 159 菜单文字' },
+  ],
+  faq: [
+    {
+      question: '如何合并两个 Chrome 窗口？',
+      answer:
+        '在一个窗口中选中标签页（按住 Ctrl 点击或按住 Shift 点击），右键点击其中一个，选择“将标签页移至另一个窗口”，再选择另一个窗口。如果要一次合并很多窗口，TabMerger 点三下就能全部合并。',
+    },
+    {
+      question: '能一次合并所有窗口吗？',
+      answer:
+        '可以，用 TabMerger：添加一个分组，选择“与当前合并”把所有打开的窗口保存进去，然后右键点击该分组，选择“在新窗口中全部打开”。关掉旧窗口，就只剩一个了。',
+    },
+    {
+      question: '合并窗口会丢失标签页吗？',
+      answer: '用 TabMerger 不会：分组会保留每个标签页，所以你可以放心关掉旧窗口，随时重新打开整组标签页。',
+    },
+    {
+      question: 'Firefox 能用吗？',
+      answer: '能。TabMerger 在 Chrome、Edge 和 Firefox 中的用法完全相同。Firefox 自带的“移动标签页”菜单只能把标签页移到开头、末尾或新窗口。',
+    },
+  ],
+  images: [
+    { src: '/blog/merge-browser-windows/tm-three-windows-light.webp', alt: 'TabMerger 的“Now Open”（当前打开），列出三个浏览器窗口，每个窗口三个标签页，浅色主题' },
+    { src: '/blog/merge-browser-windows/tm-three-windows-dark.webp', alt: 'TabMerger 的“Now Open”（当前打开），列出三个浏览器窗口，每个窗口三个标签页，深色主题' },
+    { src: '/blog/merge-browser-windows/tm-open-all-menu-light.webp', alt: 'TabMerger 中“All in one”分组的菜单，“Open all in new window”（在新窗口中全部打开）处于高亮状态，浅色主题' },
+    { src: '/blog/merge-browser-windows/tm-open-all-menu-dark.webp', alt: 'TabMerger 中“All in one”分组的菜单，“Open all in new window”（在新窗口中全部打开）处于高亮状态，深色主题' },
+    { src: '/blog/merge-browser-windows/tm-one-window-light.webp', alt: 'TabMerger 的“Now Open”（当前打开），只显示一个浏览器窗口，其中包含全部九个标签页，浅色主题' },
+    { src: '/blog/merge-browser-windows/tm-one-window-dark.webp', alt: 'TabMerger 的“Now Open”（当前打开），只显示一个浏览器窗口，其中包含全部九个标签页，深色主题' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (mouse shortcuts)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/merge-browser-windows/tm-one-window-light.webp' },
+  ogImage: { src: '/blog/merge-browser-windows/og.png', alt: '如何把多个浏览器窗口合并成一个：TabMerger 指南，一个窗口中容纳九个标签页' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'tabmerger', label: '一次合并所有窗口' },
+    { id: 'builtin', label: '手动移动标签页' },
+    { id: 'after', label: '保持整洁' },
+    { id: 'faq', label: '常见问题' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: '移动选中的标签页',
+    values: {
+      chrome: '右键点击 → 将标签页移至另一个窗口',
+      edge: '右键点击 → Move tab to another window',
+      firefox: '右键点击 → 移动标签页 → 移动到新窗口',
+    },
+  },
+}
+
+<QuickAnswer>
+
+要一次合并**所有**窗口，请使用 [TabMerger](/features)：点击 **添加分组**，在该分组的 **⋯** 菜单中选择 **与当前合并**，把所有打开的窗口保存进去，然后右键点击该分组，选择 **在新窗口中全部打开**。关掉旧窗口，就只剩一个窗口了，而且每个标签页都已保存，想找回时随时可以。如果只想手动移动几个标签页，选中它们，右键点击，然后选择 **将标签页移至另一个窗口**（Move tabs to another window；Chrome、Edge）。
+
+</QuickAnswer>
+
+<InstallCta>点三下，把所有打开的窗口合并成一个。适用于 Chrome、Edge 和 Firefox，免费。</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="如何一次合并所有窗口？">
+
+浏览器每次只能移动一个窗口的标签页。TabMerger 在 **当前打开** 中能同时看到你的所有窗口，所以可以一次性把它们收拢：
+
+1. 点击 **添加分组** 并给它起个名字，比如“全部合一”（截图中为“All in one”）。
+2. 打开该分组的 **⋯** 菜单，选择 **与当前合并**：所有打开的窗口及其标签页都会保存到该分组中。
+3. 在侧边栏中右键点击该分组，选择 **在新窗口中全部打开**：一个包含所有标签页的新窗口随即打开。
+4. 关掉旧窗口。什么都不会丢：分组里仍然保存着它们。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="把三个窗口合并成一个" steps={[{ title: '三个窗口' }, { title: '全部打开' }, { title: '一个窗口' }]}>
+<ThemedScreenshot src="/blog/merge-browser-windows/tm-three-windows" alt="TabMerger 的“Now Open”（当前打开），列出三个浏览器窗口，每个窗口三个标签页，浅色主题" darkAlt="TabMerger 的“Now Open”（当前打开），列出三个浏览器窗口，每个窗口三个标签页，深色主题" boxes={[{ id: 'summary', label: '三个窗口' }]} source="TabMerger 3.16.1">合并前：三个窗口，九个标签页。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/merge-browser-windows/tm-open-all-menu" alt="TabMerger 中“All in one”分组的菜单，“Open all in new window”（在新窗口中全部打开）处于高亮状态，浅色主题" darkAlt="TabMerger 中“All in one”分组的菜单，“Open all in new window”（在新窗口中全部打开）处于高亮状态，深色主题" boxes={[{ id: 'open-all', label: '在新窗口中全部打开' }]} source="TabMerger 3.16.1">执行“Merge with current”（与当前合并）后，分组的右键菜单可以在一个窗口中打开全部内容。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/merge-browser-windows/tm-one-window" alt="TabMerger 的“Now Open”（当前打开），只显示一个浏览器窗口，其中包含全部九个标签页，浅色主题" darkAlt="TabMerger 的“Now Open”（当前打开），只显示一个浏览器窗口，其中包含全部九个标签页，深色主题" boxes={[{ id: 'summary', label: '一个窗口' }]} source="TabMerger 3.16.1">关掉旧窗口后：一个窗口，全部九个标签页。</ThemedScreenshot>
+</Carousel>
+
+想让保存的副本也整整齐齐？分组的 **⋯** 菜单中还有 **合并窗口**，可以把它保存的窗口合并成一个（用 **拆分窗口** 撤销）。
+
+</Section>
+
+<Section id="builtin" title="如何手动在窗口之间移动标签页？">
+
+适合两个窗口、少量标签页的情况：
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. 选中标签页：按住 <Kbd>Ctrl</Kbd> 逐个点击，或者点击第一个，再按住 <Kbd>Shift</Kbd> 点击最后一个。
+2. 右键点击某个选中的标签页，选择 **将标签页移至另一个窗口**（Move tabs to another window），然后选择目标窗口。
+3. 也可以把标签页拖到另一个窗口的标签栏中。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. 按住 <Kbd>Ctrl</Kbd> 点击或按住 <Kbd>Shift</Kbd> 点击，选中标签页。
+2. 右键点击某个选中的标签页，选择 **Move tab to another window**（选中多个时为 **Move tabs…**），然后选择目标窗口。
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+右键点击一个标签页（或多个选中的标签页），打开 **移动标签页**（Move Tab）：Firefox 159 提供 **移动到开头**、**移动到末尾** 和 **移动到新窗口**，但没有移到另一个已打开窗口的选项。要在 Firefox 中把多个窗口合并成一个，请按照上面的 TabMerger 步骤操作。
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>每次移动只能处理一个窗口。有五个窗口时，要右键点击很多次，还得自己关掉清空的窗口。</Catch>
+
+</Section>
+
+<Section id="after" title="如何保持只有一个窗口？">
+
+- **关闭前先保存**。“与当前合并”只需一秒，之后关掉任何窗口都不用犹豫。
+- **一个项目一个分组**。如果合并后的窗口还是太长，就把它重新拆分成有名字的分组；我们的[标签页太多时的整理方法](/blog/manage-too-many-tabs)介绍了具体做法。
+- **清理重复项**。合并后的窗口经常有同一个页面打开两次；在 TabMerger 中[关闭重复标签页](/blog/close-duplicate-tabs)只需多点一下。
+- **全部留着**。想把整组标签页先放一放、以后再继续，请看[如何保存所有打开的标签页](/blog/save-all-open-tabs)。
+
+<InstallCta>适用于 Chrome、Edge 和 Firefox，免费。无需账户即可开始。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

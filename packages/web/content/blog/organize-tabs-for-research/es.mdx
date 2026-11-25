@@ -1,0 +1,117 @@
+export const post = {
+  slug: 'organize-tabs-for-research',
+  title: 'Cómo organizar pestañas para investigar: notas, recordatorios y fuentes',
+  navTitle: 'Organizar pestañas para investigar',
+  seoTitle: 'Cómo organizar las pestañas del navegador para investigar (notas, sesiones, fuentes)',
+  description:
+    'Un método para tus pestañas de investigación: un grupo de TabMerger por proyecto, una nota en cada fuente importante, recordatorios para volver, sesiones para pausar un proyecto entero y una exportación de tus fuentes cuando llegue la hora de redactar.',
+  shareSummary: 'Un grupo por proyecto, notas en las fuentes, recordatorios y una exportación para redactar.',
+  dek: 'Cuarenta pestañas de fuentes son una biblioteca, no un desorden, si cada una dice por qué está ahí.',
+  published: '2026-12-09',
+  updated: '2026-12-09',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Cualquier pestaña guardada puede llevar una nota y un recordatorio.', source: 'TabMerger 3.16.1' },
+    { text: 'Recordatorios: 30 min, 1 hora, 3 horas, mañana o una fecha y hora.', source: 'TabMerger 3.16.1' },
+    { text: 'Una sesión guarda todos tus grupos para restaurarlos juntos; el plan gratuito guarda 3.', source: 'Precios de TabMerger', href: '/pricing' },
+    { text: 'Exportar JSON incluye el título y la dirección de cada fuente.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: '¿Cómo llevo el control de mis fuentes en el navegador?',
+      answer:
+        'Guarda las pestañas de cada proyecto como un grupo de TabMerger y añade una nota a cada fuente que vayas a citar: por qué importa, en qué sección, en qué capítulo. Ctrl+K busca títulos y direcciones en todos tus grupos.',
+    },
+    {
+      question: '¿Puedo poner un recordatorio para volver a una pestaña?',
+      answer: 'Sí. Haz clic derecho en una pestaña guardada en TabMerger y elige «Recordarme…»: 30 minutos, 1 hora, 3 horas, mañana o una fecha y hora, con una nota opcional.',
+    },
+    {
+      question: '¿Las pestañas de investigación deberían ser marcadores?',
+      answer: 'Para el trabajo en curso es mejor un grupo guardado: mantiene el conjunto unido con sus notas y se vuelve a abrir con un clic. Guarda como marcadores solo las pocas que querrás durante años.',
+      link: { text: 'Guarda como marcadores', href: '/blog/tabs-vs-bookmarks' },
+    },
+    {
+      question: '¿Cómo saco una lista de mis fuentes?',
+      answer: 'Ajustes → Datos → Exportar JSON guarda los títulos y las direcciones de todos los grupos en un archivo que puedes convertir en una lista de referencias.',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp', alt: 'Grupo «Thesis sources» de TabMerger con el menú de una pestaña abierto: Move to group (Mover al grupo), Add note (Agregar nota), Remind me… (Recordarme…), Rename tab (Renombrar pestaña), Remove tab (Quitar pestaña), tema claro' },
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-dark.webp', alt: 'Grupo «Thesis sources» de TabMerger con el menú de una pestaña abierto: Move to group (Mover al grupo), Add note (Agregar nota), Remind me… (Recordarme…), Rename tab (Renombrar pestaña), Remove tab (Quitar pestaña), tema oscuro' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-light.webp', alt: 'Selector de recordatorio de TabMerger bajo una pestaña: 30 min, 1 hour, 3 hours, Tomorrow (Mañana), una fecha y hora, y una nota opcional, tema claro' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-dark.webp', alt: 'Selector de recordatorio de TabMerger bajo una pestaña: 30 min, 1 hour, 3 hours, Tomorrow (Mañana), una fecha y hora, y una nota opcional, tema oscuro' },
+  ],
+  tags: ['research', 'tab-management', 'save-tabs', 'session-management'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-for-research/og.png', alt: 'Cómo organizar pestañas para investigar: una guía de TabMerger, con las opciones de nota y recordatorio de una pestaña' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'project', label: 'Un grupo por proyecto' },
+    { id: 'notes', label: 'Notas y recordatorios' },
+    { id: 'sessions', label: 'Pausar un proyecto entero' },
+    { id: 'export', label: 'Exportar tus fuentes' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Dale a cada proyecto de investigación su propio grupo de [TabMerger](/features) y añade una **nota** a cada fuente que vayas a usar, explicando por qué importa. Pon un **recordatorio** en las que tengas que revisar, guarda una **sesión** para pausar el proyecto entero y recuperarlo con un clic, y **exporta** el grupo a un archivo cuando redactes tus referencias.
+
+</QuickAnswer>
+
+<InstallCta>Convierte cuarenta pestañas de fuentes en una biblioteca anotada y fácil de buscar. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+<Section id="project" title="¿Cómo organizo las pestañas de un proyecto de investigación?">
+
+1. Haz clic en **Agregar grupo** (Add Group) y ponle el nombre del proyecto, por ejemplo «Fuentes de la tesis» (en las capturas, «Thesis sources»).
+2. Abre el menú **⋯** del grupo y elige **Combinar con lo actual** (Merge with current): todas las pestañas que tienes abiertas se guardan en él.
+3. Cierra las ventanas cuando termines por hoy. El grupo lo conserva todo, y <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> encuentra después cualquier fuente por título o dirección.
+
+Dentro del grupo, usa una ventana por línea de trabajo (artículos, datos, contexto) y ponle nombre a cada una. Con las pestañas de investigación, la mitad del trabajo es decidir qué merece la pena guardar; nuestra [guía de pestañas frente a marcadores](/blog/tabs-vs-bookmarks) te ayuda a decidirlo.
+
+</Section>
+
+<Section id="notes" title="¿Cómo anoto fuentes y vuelvo a ellas más tarde?">
+
+Haz clic derecho en cualquier pestaña guardada:
+
+- **Agregar nota** (Add note): por qué importa esta fuente. Un icono de nota marca las pestañas que tienen una.
+- **Recordarme…** (Remind me…): 30 minutos, 1 hora, 3 horas, mañana o la fecha y hora que elijas, con una nota opcional. TabMerger muestra una notificación del navegador cuando llega el momento.
+- **Renombrar pestaña** (Rename tab): cambia un título de página críptico («[1706.03762]») por algo que vayas a buscar.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Notas y recordatorios en una fuente" steps={[{ title: 'Menú de la pestaña' }, { title: 'Recordatorio' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-tab-menu" alt="Grupo «Thesis sources» de TabMerger con el menú de una pestaña abierto: Move to group (Mover al grupo), Add note (Agregar nota), Remind me… (Recordarme…), Rename tab (Renombrar pestaña), Remove tab (Quitar pestaña), tema claro" darkAlt="Grupo «Thesis sources» de TabMerger con el menú de una pestaña abierto: Move to group (Mover al grupo), Add note (Agregar nota), Remind me… (Recordarme…), Rename tab (Renombrar pestaña), Remove tab (Quitar pestaña), tema oscuro" boxes={[{ id: 'add-note', label: 'Agregar nota' }, { id: 'remind-me', label: 'Recordarme…' }]} source="TabMerger 3.16.1">Haz clic derecho en una fuente para anotarla; la primera pestaña ya tiene una nota.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-reminder" alt="Selector de recordatorio de TabMerger bajo una pestaña: 30 min, 1 hour, 3 hours, Tomorrow (Mañana), una fecha y hora, y una nota opcional, tema claro" darkAlt="Selector de recordatorio de TabMerger bajo una pestaña: 30 min, 1 hour, 3 hours, Tomorrow (Mañana), una fecha y hora, y una nota opcional, tema oscuro" boxes={[{ id: 'remind-in', label: 'Recordarme en…' }]} source="TabMerger 3.16.1">Elige cuándo volver y deja una nota para tu yo del futuro.</ThemedScreenshot>
+</Carousel>
+
+Para llevar así toda una lista de lecturas, consulta [cómo usar las pestañas como lista de tareas](/blog/tabs-as-a-to-do-list).
+
+</Section>
+
+<Section id="sessions" title="¿Cómo pauso un proyecto entero y lo retomo más tarde?">
+
+**Guardar sesión actual** (Save current session, en la sección Sesiones de la barra lateral) toma una instantánea con nombre de todos tus grupos guardados; **Restaurar sesión** (Restore session) los recupera todos juntos. Úsalo en los hitos, como «Antes del estado del arte», para poder volver más tarde a ese conjunto exacto. El plan gratuito guarda 3 sesiones en el navegador; [Pro](/pricing) guarda sesiones ilimitadas y las sincroniza entre tus dispositivos, con cifrado de extremo a extremo. Más sobre sesiones en [qué hace un gestor de sesiones](/blog/browser-session-manager).
+
+</Section>
+
+<Section id="export" title="¿Cómo exporto mis fuentes cuando voy a redactar?">
+
+Abre **Ajustes → Datos** (Settings → Data) y pulsa **Exportar JSON** (Export JSON). El archivo incluye cada grupo, ventana y pestaña con su título y dirección, listo para convertirlo en una lista de referencias con un pequeño script o un editor de texto. Tienes los detalles y un ejemplo campo por campo en [cómo exportar tus pestañas abiertas](/blog/export-open-tabs).
+
+<InstallCta>Gratis para Chrome, Edge y Firefox. No necesitas cuenta para empezar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

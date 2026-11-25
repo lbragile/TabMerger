@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'move-tabs-between-computers',
+  title: 'איך להעביר את הכרטיסיות למחשב אחר',
+  navTitle: 'העברת כרטיסיות למחשב אחר',
+  seoTitle: 'איך להעביר כרטיסיות למחשב אחר (Chrome, Edge, Firefox)',
+  description:
+    'העברת כרטיסיות פתוחות ממחשב אחד לאחר: סנכרון הדפדפן וכרטיסיות ממכשירים אחרים, שליחת כרטיסייה, קובץ שלוקחים איתכם, או הסנכרון המוצפן מקצה לקצה של TabMerger Pro ב-Chrome, ב-Edge וב-Firefox.',
+  shareSummary: 'הכרטיסיות שלכם ממחשב למחשב: סנכרון, שליחת כרטיסייה, קובץ או סנכרון מוצפן.',
+  dek: 'מהנייד לנייח, מהעבודה הביתה, מהמחשב הישן לחדש: ארבע דרכים לקחת את הכרטיסיות איתכם.',
+  published: '2026-12-03',
+  updated: '2026-12-03',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger Pro מסנכרן קבוצות וסשנים בהצפנה מקצה לקצה בין Chrome, Edge ו-Firefox.', source: 'המחירים והתכונות של TabMerger', href: '/pricing' },
+    { text: '“ייצוא JSON” ו“ייבוא קובץ” של TabMerger מעבירים הכול כבר בתוכנית החינמית.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome מציג כרטיסיות ממכשירים אחרים רק כשהסנכרון של “היסטוריה וכרטיסיות” מופעל.',
+      source: 'העזרה של Chrome',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'Firefox יכול לשלוח כרטיסייה למכשיר אחר מהתפריט של הכרטיסייה.', source: 'נוסח התפריט ב-Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'איך שולחים כרטיסיות לטלפון או למחשב הנייד?',
+      answer:
+        'באותו דפדפן, מתחברים בשני המכשירים ומשתמשים בסנכרון שלו: Chrome ו-Edge מציגים בהיסטוריה כרטיסיות ממכשירים אחרים, ו-Firefox יכול לשלוח כרטיסייה מתפריט הלחיצה הימנית. בין דפדפנים שונים, TabMerger Pro מסנכרן את הקבוצות השמורות שלכם.',
+    },
+    {
+      question: 'אפשר להעביר כרטיסיות מ-Chrome ל-Firefox?',
+      answer:
+        'סנכרון הדפדפן נשאר בתוך דפדפן אחד. TabMerger עובד ב-Chrome, ב-Edge וב-Firefox: מייצאים קובץ JSON ומייבאים אותו בצד השני בחינם, או נותנים לסנכרון של Pro לשמור על שניהם מעודכנים.',
+    },
+    {
+      question: 'צריך חשבון?',
+      answer: 'לא בשביל קובץ: “ייצוא JSON” ו“ייבוא קובץ” של TabMerger לא דורשים חשבון. סנכרון הדפדפן והסנכרון של TabMerger Pro כן.',
+    },
+    {
+      question: 'האם נתוני הכרטיסיות המסונכרנים פרטיים?',
+      answer:
+        'TabMerger Pro מצפין קבוצות וסשנים במכשיר שלכם לפני הסנכרון, כך שהשרת לא יכול לקרוא אותם. הפרטיות של סנכרון הדפדפן תלויה בהגדרות של הדפדפן עצמו.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: 'ההגדרות של TabMerger בלשונית Data (נתונים), עם הכפתורים Export JSON (ייצוא JSON) ו-Import file (ייבוא קובץ) תחת Import & export (ייבוא וייצוא), ערכת נושא בהירה' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: 'ההגדרות של TabMerger בלשונית Data (נתונים), עם הכפתורים Export JSON (ייצוא JSON) ו-Import file (ייבוא קובץ) תחת Import & export (ייבוא וייצוא), ערכת נושא כהה' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'session-management', 'cross-browser', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/move-tabs-between-computers/tm-merge-menu-light.webp' },
+  ogImage: { src: '/blog/move-tabs-between-computers/og.png', alt: 'איך להעביר את הכרטיסיות למחשב אחר: מדריך של TabMerger, עם הכפתורים Export JSON ו-Import file' },
+  toc: [
+    { id: 'quick', label: 'תשובה קצרה' },
+    { id: 'pick', label: 'באיזו דרך להשתמש' },
+    { id: 'tabmerger', label: 'עם TabMerger' },
+    { id: 'browser', label: 'עם סנכרון הדפדפן' },
+    { id: 'faq', label: 'שאלות נפוצות' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'כרטיסיות ממכשירים אחרים',
+    values: { chrome: 'היסטוריה ← כרטיסיות ממכשירים אחרים', edge: 'History → Tabs from other devices', firefox: 'Firefox View ← לשוניות ממכשירים אחרים' },
+  },
+}
+
+<QuickAnswer>
+
+להעברה חד-פעמית, משתמשים ב-[TabMerger](/features) ב**הגדרות ← נתונים ← ייצוא JSON** (<bdi dir="ltr">Settings → Data → Export JSON</bdi>) במחשב הישן וב**ייבוא קובץ** (<bdi dir="ltr">Import file</bdi>) במחשב החדש: כל קבוצה שמורה עוברת (קודם שומרים את החלונות הפתוחים בקבוצה), בחינם, בלי חשבון, ב-Chrome, ב-Edge או ב-Firefox. כדי ששני מחשבים יישארו מעודכנים, **TabMerger Pro** מסנכרן את הקבוצות והסשנים שלכם אוטומטית, בהצפנה מקצה לקצה. נשארים בדפדפן אחד? מתחברים אליו בשני המחשבים ומשתמשים בסנכרון שלו.
+
+</QuickAnswer>
+
+<InstallCta>לוקחים כל כרטיסייה למחשב החדש בשתי לחיצות. חינם ל-Chrome, ל-Edge ול-Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="pick" title="באיזו דרך כדאי להשתמש?">
+
+<ComparisonTable
+  head={['אתם רוצים…', 'הדרך הכי טובה']}
+  rowHeaders
+  minWidth="34rem"
+  rows={[
+    ['להעביר הכול פעם אחת למחשב חדש', 'TabMerger: ייצוא JSON ← ייבוא קובץ (בחינם)'],
+    ['לשמור שני מחשבים או יותר מעודכנים', 'סנכרון של TabMerger Pro, מוצפן מקצה לקצה'],
+    ['לעבור בין דפדפנים שונים', 'TabMerger (קובץ בחינם, סנכרון ב-Pro)'],
+    ['לקחת כרטיסייה אחת מהמכשיר השני, באותו דפדפן', 'סנכרון הדפדפן או שליחת כרטיסייה'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabmerger" title="איך מעבירים כרטיסיות עם TabMerger?">
+
+**פעם אחת, עם קובץ (בחינם):**
+
+1. במחשב הישן, שומרים בקבוצה את החלונות הפתוחים שרוצים להעביר: בתפריט **⋯** של קבוצה בוחרים **מיזוג עם הנוכחיים** (<bdi dir="ltr">Merge with current</bdi>). הייבוא מוסיף קבוצות שמורות; “פתוח עכשיו” (<bdi dir="ltr">Now Open</bdi>) שבקובץ לא מיובא, כי אלה היו הכרטיסיות הפתוחות בדפדפן הישן.
+2. פותחים את TabMerger ← **הגדרות ← נתונים** ← **ייצוא JSON**.
+3. מעתיקים את הקובץ למחשב החדש (בדיסק און קי USB, במייל לעצמכם, בכונן ענן).
+4. במחשב החדש מתקינים את TabMerger, ואז **הגדרות ← נתונים** ← **ייבוא קובץ**. הקבוצות שלכם מופיעות לצד אלה שכבר יש לכם.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="ההגדרות של TabMerger בלשונית Data (נתונים), עם הכפתורים Export JSON (ייצוא JSON) ו-Import file (ייבוא קובץ) תחת Import & export (ייבוא וייצוא), ערכת נושא בהירה" darkAlt="ההגדרות של TabMerger בלשונית Data (נתונים), עם הכפתורים Export JSON (ייצוא JSON) ו-Import file (ייבוא קובץ) תחת Import & export (ייבוא וייצוא), ערכת נושא כהה" boxes={[{ id: 'export-json', label: 'ייצוא JSON' }, { id: 'import-file', label: 'ייבוא קובץ' }]} source="TabMerger 3.16.1">מייצאים במחשב אחד, מייבאים בשני.</ThemedScreenshot>
+
+**תמיד, עם סנכרון ([Pro](/pricing)):** מתחברים ל-TabMerger בכל מחשב, והקבוצות והסשנים שלכם הולכים איתכם, ב-Chrome, ב-Edge או ב-Firefox. הכול מוצפן במכשיר שלכם לפני הסנכרון, כך שהשרת לא יכול לקרוא את הכרטיסיות שלכם. Pro גם מציג את הכרטיסיות שפתוחות במכשירים האחרים שלכם ומשחזר אותן כאן, ושומר גיבויים אוטומטיים. איך זה עובד, ומה השרת שלנו יכול ולא יכול לראות: [סנכרון כרטיסיות בין מכשירים](/blog/sync-tabs-between-devices-with-tabmerger).
+
+מה הקובץ מכיל, במדריך [איך לייצא את הכרטיסיות הפתוחות](/blog/export-open-tabs).
+
+</Section>
+
+<Section id="browser" title="איך מעבירים כרטיסיות עם הסנכרון של הדפדפן עצמו?">
+
+זה עובד כששני המחשבים משתמשים באותו דפדפן ואתם מחוברים אליו בשניהם:
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+1. מתחברים ל-Chrome בשני המחשבים.
+2. מפעילים את **היסטוריה וכרטיסיות** (<bdi dir="ltr">History and tabs</bdi>): **הגדרות ← ההגדרות שלך ב-Google** (<bdi dir="ltr">Settings → You and Google</bdi>), בוחרים את שם החשבון ומפעילים את האפשרות.
+3. במחשב השני פותחים את ההיסטוריה (<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi>) ובוחרים **כרטיסיות ממכשירים אחרים** (<bdi dir="ltr">Tabs from other devices</bdi>).
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. מתחברים ל-Edge בשני המחשבים ומפעילים סנכרון.
+2. במחשב השני פותחים את ההיסטוריה (<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi>) ובוחרים <bdi dir="ltr">**Tabs from other devices**</bdi> (כרטיסיות ממכשירים אחרים).
+3. ב-Edge 158 יש גם <bdi dir="ltr">**Send tab to your devices**</bdi> (שליחת הכרטיסייה למכשירים שלכם) לדף בודד.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. מתחברים ל-Firefox בשני המחשבים, עם סנכרון של הכרטיסיות הפתוחות.
+2. לוחצים לחיצה ימנית על כרטיסייה ובוחרים **שליחה למכשיר** (<bdi dir="ltr">Send to Device</bdi>) כדי לשלוח אותה למחשב השני.
+3. או פותחים שם את **Firefox View** ומחפשים תחת **לשוניות ממכשירים אחרים** (<bdi dir="ltr">Tabs from other devices</bdi>).
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>סנכרון הדפדפן עובד רק בתוך דפדפן אחד, מציג רק מה שפתוח עכשיו במכשיר השני, ולא שומר כרטיסיות שסגרתם. לכל הכרטיסיות שלכם, גם בין דפדפנים, השתמשו ב-TabMerger.</Catch>
+
+איבדתם כרטיסיות אחרי קריסה במחשב הישן? התחילו ב[איך לשחזר כרטיסיות אחרי קריסה](/blog/restore-tabs-after-crash). לתמונה הרחבה, ראו [מה מנהל סשנים עושה](/blog/browser-session-manager).
+
+<InstallCta>חינם ל-Chrome, ל-Edge ול-Firefox. אין צורך בחשבון כדי להתחיל.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="שאלות נפוצות">
+
+<Faq items={post.faq} />
+
+</Section>

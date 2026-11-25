@@ -1,0 +1,179 @@
+export const post = {
+  slug: 'auto-sort-tabs-with-url-rules',
+  title: 'Ordinare le schede in gruppi in automatico con le regole URL',
+  navTitle: 'Ordinare le schede in automatico con le regole URL',
+  seoTitle: 'Raggruppare automaticamente le schede del browser per URL',
+  description:
+    'Lascia che sia TabMerger a sistemare le tue schede: una regola URL copia ogni pagina corrispondente nel gruppo giusto mentre navighi. Come funzionano i pattern e il carattere jolly *, l’ordine delle regole e i pattern che funzionano bene.',
+  shareSummary: 'Un pattern e un gruppo: TabMerger archivia ogni scheda corrispondente mentre navighi.',
+  dek: 'Scrivi la regola una volta sola. Da lì in poi, ogni pagina corrispondente che apri finisce nel gruppo giusto.',
+  published: '2026-12-17',
+  updated: '2026-12-17',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Una regola è un pattern più un gruppo; * corrisponde a qualsiasi sequenza di caratteri.', source: 'TabMerger 3.16.1' },
+    { text: 'I pattern si confrontano con l’intero indirizzo, senza http:// o https://.', source: 'Codice sorgente di TabMerger 3.16.1' },
+    { text: 'Le regole si controllano dall’alto in basso; vince la prima che corrisponde.', source: 'TabMerger 3.16.1' },
+    { text: 'Il piano Free include 3 regole URL; Pro non ha limiti.', source: 'Prezzi di TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Si possono ordinare automaticamente le schede del browser in gruppi?',
+      answer:
+        'Sì, con le regole URL di TabMerger. Una regola abbina un pattern di indirizzo, come github.com/your-org/*, a un gruppo. Ogni volta che una pagina corrispondente si apre o finisce di caricarsi, TabMerger ne salva una copia in quel gruppo. La scheda resta aperta.',
+    },
+    {
+      question: 'Come funzionano i pattern delle regole URL?',
+      answer:
+        'Un pattern deve corrispondere all’intero indirizzo, senza la parte http:// o https://. * sta per qualsiasi sequenza di caratteri, anche nessuno, ed è l’unico carattere jolly. Quindi github.com/* corrisponde a ogni pagina di GitHub, e *wikipedia.org/* a Wikipedia in qualsiasi lingua.',
+    },
+    {
+      question: 'E se due regole corrispondono alla stessa pagina?',
+      answer: 'Le regole si controllano dalla cima dell’elenco verso il basso, e vince la prima che corrisponde. Usa le frecce accanto a ogni regola per mettere le regole specifiche sopra quelle generali.',
+    },
+    {
+      question: 'Una regola URL chiude la scheda?',
+      answer: 'No. La regola salva una copia nel gruppo; la scheda resta aperta dov’è.',
+    },
+    {
+      question: 'Quante regole URL posso avere?',
+      answer: 'Il piano Free ne include 3. Pro non ha limiti. Le regole che hai già continuano a funzionare se cambi piano.',
+    },
+  ],
+  images: [
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-light.webp', alt: 'Finestra di dialogo «Add URL Rule» (Aggiungi regola URL) di TabMerger con il pattern *wikivoyage.org/wiki/* e il gruppo «Trip to Lisbon», tema chiaro' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-dark.webp', alt: 'Finestra di dialogo «Add URL Rule» (Aggiungi regola URL) di TabMerger con il pattern *wikivoyage.org/wiki/* e il gruppo «Trip to Lisbon», tema scuro' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-light.webp', alt: '«URL Rules» (Regole URL) di TabMerger con tre regole, ognuna con le frecce per cambiarne l’ordine, e «3/3 used» (3/3 usate), tema chiaro' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-dark.webp', alt: '«URL Rules» (Regole URL) di TabMerger con tre regole, ognuna con le frecce per cambiarne l’ordine, e «3/3 used» (3/3 usate), tema scuro' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp', alt: 'Il gruppo «Trip to Lisbon» con la pagina di Sintra aggiunta da una regola URL, tema chiaro' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-dark.webp', alt: 'Il gruppo «Trip to Lisbon» con la pagina di Sintra aggiunta da una regola URL, tema scuro' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'developers'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp' },
+  ogImage: { src: '/blog/auto-sort-tabs-with-url-rules/og.png', alt: 'Ordinare le schede in automatico con le regole URL: tre regole di TabMerger che archiviano le schede nei gruppi' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'problem', label: 'Archiviare a mano' },
+    { id: 'why', label: 'Perché funzionano così' },
+    { id: 'steps', label: 'Aggiungere una regola' },
+    { id: 'patterns', label: 'Scrivere i pattern' },
+    { id: 'order', label: 'Ordine delle regole' },
+    { id: 'benefit', label: 'Cosa ci guadagni' },
+    { id: 'habits', label: 'Buone abitudini' },
+    { id: 'plans', label: 'Free o Pro' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+}
+
+<QuickAnswer>
+
+In [TabMerger](/features), apri **Impostazioni → Generale → Regole URL → Gestisci** (Settings → General → URL rules → Manage) e aggiungi una regola: un pattern di indirizzo come `github.com/your-org/*` e il gruppo a cui appartiene. Da quel momento, ogni pagina corrispondente viene salvata in quel gruppo mentre navighi, e la scheda resta aperta. `*` corrisponde a qualsiasi cosa; vince la prima regola che corrisponde.
+
+</QuickAnswer>
+
+<InstallCta>Schede che si archiviano da sole nel gruppo giusto. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="problem" title="Archiviare le schede a mano non dura">
+
+Inizi la settimana in ordine: il lavoro in un gruppo, il viaggio in un altro, le letture in un terzo. Poi arriva la giornata vera. Un collega ti manda il link a una issue, cerchi due orari del treno, una ricerca ti porta a un articolo. Ognuna andrebbe messa da qualche parte, e ognuna è un trascinamento che non farai. Il venerdì i gruppi sono superati e Aperte ora (Now Open) è di nuovo un mucchio.
+
+Le pagine che apri più spesso vengono dagli stessi pochi siti. È proprio quello che una regola sa riconoscere.
+
+</Section>
+
+<Section id="why" title="Perché le regole URL funzionano così">
+
+- **Copiare, non spostare.** Una regola salva una copia della pagina nel gruppo e lascia la scheda aperta. Archiviare non interrompe mai quello che stai leggendo.
+- **Controlla mentre navighi.** Una regola viene verificata quando una scheda si apre con un indirizzo e ogni volta che una pagina finisce di caricarsi, quindi viene archiviato anche un link che segui dentro una scheda. La copia va nella prima finestra del gruppo. Una pagina che si ricarica (un aggiornamento, una visita successiva) viene salvata di nuovo; **Rimuovi schede duplicate** (Deduplicate tabs) nel menu **⋯** del gruppo elimina le ripetizioni.
+- **L’intero indirizzo, senza schema.** Un pattern viene confrontato con tutto l’indirizzo dopo `http://` o `https://`, quindi non li scrivi mai, e `localhost:3000/*` funziona così com’è.
+- **Un solo carattere jolly, di proposito.** `*` indica qualsiasi sequenza di caratteri, anche nessuno. Non ci sono altri caratteri speciali da preservare con l’escape. I pattern si confrontano come testo semplice, mai trasformati in un’espressione regolare, quindi anche quelli lunghi si controllano in fretta.
+- **Decide l’ordine.** Quando corrispondono due regole vince quella più in alto, quindi una regola specifica può stare sopra una generale.
+
+</Section>
+
+<Section id="steps" title="Aggiungere una regola">
+
+1. Apri TabMerger, poi **Impostazioni** → **Generale** (Settings → General). Accanto a **Regole URL**, premi **Gestisci** (Manage).
+2. Premi **Aggiungi regola** (Add rule). Digita il pattern, scegli il gruppo di destinazione e premi **Aggiungi regola** nella finestra di dialogo.
+3. Ripeti per ogni sito da archiviare, poi premi **Salva** (Save) per conservare l’elenco.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Una regola URL dall’inizio alla fine" steps={[{ title: 'Aggiunta' }, { title: 'L’elenco' }, { title: 'Il risultato' }]}>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-add-rule" alt="Finestra di dialogo «Add URL Rule» (Aggiungi regola URL) di TabMerger con il pattern *wikivoyage.org/wiki/* e il gruppo «Trip to Lisbon», tema chiaro" darkAlt="Finestra di dialogo «Add URL Rule» (Aggiungi regola URL) di TabMerger con il pattern *wikivoyage.org/wiki/* e il gruppo «Trip to Lisbon», tema scuro" boxes={[{ id: 'pattern', label: 'Il pattern di indirizzo' }, { id: 'group', label: 'Il gruppo di destinazione' }]} source="TabMerger 3.16.1">Ogni articolo di Wikivoyage finisce nel viaggio.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rules-list" alt="«URL Rules» (Regole URL) di TabMerger con tre regole, ognuna con le frecce per cambiarne l’ordine, e «3/3 used» (3/3 usate), tema chiaro" darkAlt="«URL Rules» (Regole URL) di TabMerger con tre regole, ognuna con le frecce per cambiarne l’ordine, e «3/3 used» (3/3 usate), tema scuro" boxes={[{ id: 'order', label: 'Controllate dall’alto in basso' }, { id: 'used', label: 'Contatore del piano Free' }]} source="TabMerger 3.16.1">Tre regole, tre gruppi. Le frecce decidono quale regola si prova per prima.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rule-result" alt="Il gruppo «Trip to Lisbon» con la pagina di Sintra aggiunta da una regola URL, tema chiaro" darkAlt="Il gruppo «Trip to Lisbon» con la pagina di Sintra aggiunta da una regola URL, tema scuro" boxes={[{ id: 'new-tab', label: 'Archiviata dalla regola' }]} source="TabMerger 3.16.1">Aprendo l’articolo su Sintra, è stato salvato da solo in «Trip to Lisbon».</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="patterns" title="Scrivere pattern che corrispondono">
+
+<ComparisonTable
+  head={['Pattern', 'Corrisponde a', 'Non corrisponde a']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['github.com/your-org/*', 'Ogni repo, issue e pull request di your-org', 'github.com/other-org/…'],
+    ['*wikipedia.org/wiki/*', 'Articoli in ogni lingua (en., de., …)', 'la home page di wikipedia.org'],
+    ['localhost:3000/*', 'Ogni pagina del tuo server di sviluppo locale', 'localhost:8080/…'],
+    ['docs.example.com/*', 'Il sito della documentazione', 'www.docs.example.com/… (aggiungi *docs.example.com/*)'],
+    ['github.com', 'Solo l’indirizzo github.com in sé', 'github.com/qualsiasi-cosa (aggiungi /*)'],
+  ]}
+/>
+
+Consigli che ti risparmiano una sessione di debug:
+
+- **Termina con `/*`** per coprire un intero sito. Senza `*`, un pattern corrisponde a un solo indirizzo esatto.
+- **Inizia con `*`** quando un sito usa sottodomini o `www.`: `*example.com/*`.
+- **Le lettere devono corrispondere così come sono.** I browser scrivono i nomi di dominio in minuscolo, quindi scrivili così anche tu.
+- **Le query string contano.** `*youtube.com/watch*` corrisponde ai video, qualunque cosa segua `watch`.
+
+</Section>
+
+<Section id="order" title="Ordine delle regole: prima quelle specifiche">
+
+Le regole si provano dall’alto. Metti la regola ristretta (`github.com/your-org/design-system/*` → «Design system») sopra quella ampia (`github.com/your-org/*` → «Work») con le frecce accanto a ogni regola. La prima regola che corrisponde archivia la pagina, e le altre vengono saltate.
+
+</Section>
+
+<Section id="benefit" title="Cosa ci guadagni">
+
+I tuoi gruppi restano aggiornati senza che tu debba archiviare niente. Una pagina aperta martedì è già nel gruppo del suo progetto venerdì, e una ricerca in quel gruppo la trova.
+
+</Section>
+
+<Section id="habits" title="Buone abitudini">
+
+- **Crea regole per i siti che apri ogni giorno,** non per ogni sito che visiti una volta.
+- **Una regola per dominio o percorso di progetto**, prima quelle specifiche.
+- **Abbina le regole a un gruppo per progetto:** vedi [organizzare le schede per progetto](/blog/organize-tabs-by-project). Chi sviluppa troverà altri pattern in [gestione delle schede per sviluppatori](/blog/tab-management-for-developers).
+- **Fai ordine ogni tanto** con **Rimuovi schede duplicate** nei gruppi che le regole riempiono spesso.
+
+</Section>
+
+<Section id="plans" title="Free o Pro">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Regole URL', '3', 'Illimitate'],
+    ['Pattern, ordine, tutte le opzioni sopra', 'Sì', 'Sì'],
+  ]}
+/>
+
+Le regole URL si salvano nel browser in cui le hai create. Se un piano Pro scade, le regole che hai già continuano ad archiviare le schede; serve [Pro](/pricing) solo per aggiungere una quarta regola.
+
+<InstallCta>Scrivi tre regole oggi e smetti di archiviare le schede a mano. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

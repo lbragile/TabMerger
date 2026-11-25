@@ -1,0 +1,190 @@
+export const post = {
+  slug: 'sync-tabs-between-devices-with-tabmerger',
+  title: 'Sekmeleri cihazlar arasında senkronize etme, uçtan uca şifreli',
+  navTitle: 'Sekmeleri cihazlar arasında senkronize etme',
+  seoTitle: 'Sekmeleri Bilgisayarlar Arasında Uçtan Uca Şifreli Senkronize Etme',
+  description:
+    'TabMerger gruplarınız her bilgisayarda, yalnızca sizin bildiğiniz bir parolayla şifrelenmiş olarak. Senkronizasyonu nasıl kuracağınız, neleri kapsadığı ve sunucumuzun tam olarak neyi görüp neyi göremediği.',
+  shareSummary: 'Gruplarınız her bilgisayarda, sunucumuz bile okuyamaz.',
+  dek: 'Evde ve işte aynı gruplar, üstelik başka kimse okuyamaz. Biz bile.',
+  published: '2026-12-18',
+  updated: '2026-12-18',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Senkronizasyon uçtan uca şifrelidir: AES-256-GCM, anahtarı parolanız korur.', source: 'TabMerger 3.16.1 kaynak kodu' },
+    { text: 'Sekme adresleri, başlıkları, notları ve grup adları sunucumuz tarafından asla okunamaz.', source: 'TabMerger 3.16.1 kaynak kodu' },
+    { text: 'Her yeni cihaz parolayı bir kez sorar.', source: 'TabMerger 3.16.1' },
+    { text: 'Senkronizasyon Pro’ya dahildir: ayda US$3.99 veya yılda US$42.99.', source: 'TabMerger fiyatları', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'İki bilgisayar arasında sekmeleri nasıl senkronize ederim?',
+      answer:
+        'İki bilgisayarda da Pro hesabıyla TabMerger’da oturum açın. İlki sizden bir şifreleme parolası seçmenizi ister; ikincisi bu parolayı bir kez sorar. Bundan sonra gruplarınız ve oturumlarınız ikisi arasında senkronize edilir.',
+    },
+    {
+      question: 'TabMerger sekmelerimi görebilir mi?',
+      answer:
+        'Hayır. Sekme adresleri, başlıkları ve notları, grup ve oturum adları ve cihazlarınızda açık olan sekmeler yüklenmeden önce tarayıcınızda şifrelenir ve anahtar sunucumuza asla ulaşmaz. Sunucu yalnızca satırları saklamak için gerekenleri görür: örneğin bir grubun rengi, yıldızlı ya da arşivlenmiş olup olmadığı, ne zaman değiştiği ve kaç pencere ve sekme içerdiği.',
+    },
+    {
+      question: 'Şifreleme parolamı unutursam ne olur?',
+      answer: 'TabMerger dahil kimse onu kurtaramaz, çünkü parola cihazlarınızdan hiç çıkmaz. Gruplarınız kilidi zaten açılmış cihazlarda kalır; bu yüzden parolayı güvenli bir yerde saklayın.',
+    },
+    {
+      question: 'Senkronizasyon neleri kapsar?',
+      answer:
+        'Kaydedilmiş gruplar (pencereler, sekmeler, notlar, hatırlatıcı saatleri), kaydedilmiş oturumlar ve otomatik yedekler; ayrıca Ayarlar → Cihazlar için her cihazın açık sekmeleri. Ayarlar, URL kuralları ve son kapatılan sekmeler her cihazda kalır.',
+    },
+    {
+      question: 'Senkronizasyon ücretsiz mi?',
+      answer: 'Hayır, senkronizasyon Pro’ya dahildir. Free planında her şey cihazınızda kalır; sunucumuz Pro’su olmayan hesaplardan gelen senkronizasyon yüklemelerini reddeder.',
+    },
+  ],
+  images: [
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in-light.webp', alt: 'Google ile ya da e-posta ve şifreyle giriş seçenekleri sunan TabMerger Sign In (Oturum Aç) penceresi, açık tema' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in-dark.webp', alt: 'Google ile ya da e-posta ve şifreyle giriş seçenekleri sunan TabMerger Sign In (Oturum Aç) penceresi, koyu tema' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption-light.webp', alt: 'Yeni bir parolayı iki kez soran TabMerger Set up encryption (Şifrelemeyi kur) penceresi, açık tema' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption-dark.webp', alt: 'Yeni bir parolayı iki kez soran TabMerger Set up encryption (Şifrelemeyi kur) penceresi, koyu tema' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock-light.webp', alt: 'İkinci bir tarayıcıda parolayı bir kez soran TabMerger Unlock encryption (Şifrelemenin kilidini aç) penceresi, açık tema' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock-dark.webp', alt: 'İkinci bir tarayıcıda parolayı bir kez soran TabMerger Unlock encryption (Şifrelemenin kilidini aç) penceresi, koyu tema' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups-light.webp', alt: 'Kilit açıldıktan sonra ilk tarayıcıdan gelen Work ve Reading list gruplarını gösteren ikinci tarayıcı, açık tema' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups-dark.webp', alt: 'Kilit açıldıktan sonra ilk tarayıcıdan gelen Work ve Reading list gruplarını gösteren ikinci tarayıcı, koyu tema' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-light.webp', alt: 'TabMerger, Settings → Devices (Ayarlar → Cihazlar): 4 açık sekmesiyle Home laptop cihazı ve Restore 4 tabs (4 sekmeyi geri yükle) düğmesi, açık tema' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-dark.webp', alt: 'TabMerger, Settings → Devices (Ayarlar → Cihazlar): 4 açık sekmesiyle Home laptop cihazı ve Restore 4 tabs (4 sekmeyi geri yükle) düğmesi, koyu tema' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync-light.webp', alt: 'TabMerger, Settings → General (Ayarlar → Genel), Cloud sync (Bulut eşitleme) anahtarı açık, açık tema' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync-dark.webp', alt: 'TabMerger, Settings → General (Ayarlar → Genel), Cloud sync (Bulut eşitleme) anahtarı açık, koyu tema' },
+  ],
+  tags: ['tabmerger-guides', 'cross-browser', 'session-management', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-light.webp' },
+  ogImage: { src: '/blog/sync-tabs-between-devices-with-tabmerger/og.png', alt: 'TabMerger ile sekmeleri cihazlar arasında senkronize etme: kilit açıldıktan sonra ikinci bir tarayıcıda aynı gruplar' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'problem', label: 'İki bilgisayar, iki ayrı sekme kümesi' },
+    { id: 'why', label: 'Senkronizasyon neden böyle çalışır' },
+    { id: 'server', label: 'Sunucumuz neyi görür' },
+    { id: 'steps', label: 'Kurulum' },
+    { id: 'devices', label: 'Diğer cihazlarınızın sekmeleri' },
+    { id: 'benefit', label: 'Ne kazanırsınız' },
+    { id: 'habits', label: 'İyi alışkanlıklar' },
+    { id: 'plans', label: 'Free mi Pro mu' },
+    { id: 'faq', label: 'SSS' },
+  ],
+}
+
+<QuickAnswer>
+
+Pro hesabıyla [TabMerger](/features)’da oturum açın. İlk bilgisayar sizden bir şifreleme parolası seçmenizi ister; diğer her bilgisayar bu parolayı bir kez sorar. Ardından gruplarınız, oturumlarınız ve yedekleriniz aralarında senkronize edilir; tarayıcınızdan çıkmadan önce orada şifrelenir, yani sunucumuz yalnızca okuyamadığı verileri saklar. **Ayarlar → Cihazlar** (Settings → Devices) diğer bilgisayarlarınızda neyin açık olduğunu bile gösterir.
+
+</QuickAnswer>
+
+<InstallCta>Her bilgisayarda aynı gruplar, yalnızca sizin okuyabileceğiniz şekilde. Ücretsiz başlayın, senkronizasyon Pro ile.</InstallCta>
+
+<Section id="problem" title="İki bilgisayar, iki ayrı sekme kümesi">
+
+Akşam evdeki dizüstü bilgisayarda bir alışveriş için araştırma yapıyorsunuz. Ertesi sabah işteyken sekmeler evde kalan bir bilgisayarda. Onları hafızanızdan yeniden açıyor ya da bağlantıları kendinize e-postayla gönderiyorsunuz. Tarayıcı senkronizasyonu her bilgisayarda aynı tarayıcı ve hesap kullanıldığında işe yarar; ama iş bilgisayarınızda Edge, dizüstünüzde Chrome olabilir ya da iş hesabınız kısıtlı olabilir.
+
+TabMerger senkronizasyonu tek bir TabMerger hesabıyla Chrome, Edge ve Firefox arasında çalışır ve o an ne açıksa onu değil, düzenlediğiniz grupları taşır.
+
+</Section>
+
+<Section id="why" title="TabMerger senkronizasyonu neden böyle çalışır">
+
+- **Tarayıcınızdan çıkmadan şifrelenir.** Grupların ve oturumların içeriği tarayıcınızda AES-256-GCM ile şifrelenir. Anahtar rastgeledir; sunucumuzda yalnızca parolanızdan türetilen bir anahtarla sarmalanmış (şifrelenmiş) olarak saklanır (PBKDF2-SHA256, 600.000 tur). Parolanın kendisi hiçbir yere gönderilmez.
+- **Zorunlu, bir ayar değil.** Her Pro hesabı şifreli senkronize eder. Yanlışlıkla açılabilecek düz metin modu yoktur.
+- **Cihaz başına bir parola adımı.** Yeni bir cihaz parolayı bir kez sorar; ardından siz oturumu kapatana kadar kilidi açık kalır, yani senkronizasyon sizi rahatsız etmez.
+- **Önce cihaza kaydedilir.** Her şey yüklenmeden önce yerel olarak yazılır. Çevrimdışıyken hiçbir şey durmaz; değişiklikler bir sonraki sefer yüklenir.
+- **En son değişiklik kazanır.** Aynı grup iki cihazda değiştirildiyse en yeni değişiklik korunur.
+- **TabMerger açıkken senkronize eder:** açtığınızda, açık kaldığı sürece her 30 saniyede bir ve başka bir cihazdan değişiklik gelir gelmez.
+
+</Section>
+
+<Section id="server" title="Sunucumuz neyi görebilir, neyi göremez">
+
+<ComparisonTable
+  head={['', 'Şifreli saklanan (bizim için okunamaz)', 'Okunabilir saklanan']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['Gruplar', 'Ad, not, her pencere ve sekme (başlıklar, adresler, sekme notları, hatırlatıcı saatleri)', 'Renk, yıldız, arşiv, son değişiklik, pencere ve sekme sayıları, sıra'],
+    ['Oturumlar ve yedekler', 'Ad, açıklama, renk, yedek olup olmadığı, içindeki gruplar', 'Ne zaman kaydedildikleri'],
+    ['Cihazlar', 'Her cihazda açık olan sekmeler', 'Cihaz adı, son etkin olma zamanı'],
+    ['Hesap', '-', 'E-posta adresi ve plan'],
+  ]}
+/>
+
+Okunabilir sütunlar, sunucunun satırlarınızı sıralı tutmak ve sayıları göstermek için ihtiyaç duyduklarıdır; hiçbiri hangi sayfaları sakladığınızı söylemez. Paylaşılan bağlantılar yalnızca bağlantının kendisinde duran ayrı bir anahtar kullanır; bkz. [birden fazla sekmeyi paylaşma](/blog/share-a-set-of-tabs).
+
+</Section>
+
+<Section id="steps" title="Kurulum">
+
+1. İlk bilgisayarda TabMerger’ı açın, ardından hesap menüsü (sağ üst) → **Oturum aç** (Sign in). Google, e-posta ve şifre ya da sihirli bağlantı kullanın.
+2. **Şifrelemeyi kur** (Set up encryption) penceresi açılır. Bir parola seçin (en az 8 karakter, boşluksuz), iki kez yazın ve onaylayın. Gruplarınız senkronize edilmeye başlar.
+3. İkinci bilgisayarda TabMerger’ı yükleyin ve aynı hesapla oturum açın.
+4. **Şifrelemenin kilidini aç** (Unlock encryption) penceresi açılır. Parolayı bir kez girin. Gruplarınız birkaç saniye içinde görünür.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="İkinci bir bilgisayarı senkronize etme" steps={[{ title: 'Oturum aç' }, { title: 'Parola' }, { title: 'Kilidi aç' }, { title: 'Senkronize' }]}>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in" alt="Google ile ya da e-posta ve şifreyle giriş seçenekleri sunan TabMerger Sign In (Oturum Aç) penceresi, açık tema" darkAlt="Google ile ya da e-posta ve şifreyle giriş seçenekleri sunan TabMerger Sign In (Oturum Aç) penceresi, koyu tema" boxes={[{ id: 'email', label: 'Hesabınızın e-postası' }]} source="TabMerger 3.16.1">Hesap menüsünden oturum açın.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption" alt="Yeni bir parolayı iki kez soran TabMerger Set up encryption (Şifrelemeyi kur) penceresi, açık tema" darkAlt="Yeni bir parolayı iki kez soran TabMerger Set up encryption (Şifrelemeyi kur) penceresi, koyu tema" boxes={[{ id: 'passphrase', label: 'Yalnızca siz bilirsiniz' }]} source="TabMerger 3.16.1">İlk cihaz: anahtarınızı koruyan parolayı seçin.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock" alt="İkinci bir tarayıcıda parolayı bir kez soran TabMerger Unlock encryption (Şifrelemenin kilidini aç) penceresi, açık tema" darkAlt="İkinci bir tarayıcıda parolayı bir kez soran TabMerger Unlock encryption (Şifrelemenin kilidini aç) penceresi, koyu tema" boxes={[{ id: 'unlock', label: 'Cihaz başına bir kez' }]} source="TabMerger 3.16.1">Diğer her cihaz: parolayı bir kez girin.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups" alt="Kilit açıldıktan sonra ilk tarayıcıdan gelen Work ve Reading list gruplarını gösteren ikinci tarayıcı, açık tema" darkAlt="Kilit açıldıktan sonra ilk tarayıcıdan gelen Work ve Reading list gruplarını gösteren ikinci tarayıcı, koyu tema" boxes={[{ id: 'groups', label: 'Diğer cihazdan' }]} source="TabMerger 3.16.1">Yeni bir tarayıcı, saniyeler sonra: ilk bilgisayarın grupları, yerel olarak şifresi çözülmüş.</ThemedScreenshot>
+</Carousel>
+
+Senkronizasyon her tarayıcıda **Ayarlar → Genel** (Settings → General) altındaki **Bulut eşitleme** (Cloud sync) anahtarıyla duraklatılabilir. tabmerger.com’da pano, aynı parolayı girdiğinizde senkronize edilmiş gruplarınızı gösterir.
+
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync" alt="TabMerger, Settings → General (Ayarlar → Genel), Cloud sync (Bulut eşitleme) anahtarı açık, açık tema" darkAlt="TabMerger, Settings → General (Ayarlar → Genel), Cloud sync (Bulut eşitleme) anahtarı açık, koyu tema" boxes={[{ id: 'sync', label: 'Bulut eşitleme' }]} source="TabMerger 3.16.1">Her Pro hesabında açıktır; senkronize olmaması gereken bir tarayıcıda kapatın.</ThemedScreenshot>
+
+</Section>
+
+<Section id="devices" title="Diğer cihazlarınızda neyin açık olduğunu görün">
+
+**Ayarlar → Cihazlar**, hesabınızda son 30 gün içinde etkin olan her tarayıcıyı, açık pencere ve sekmeleriyle birlikte listeler. Tek bir sekmeyi açmak için birini genişletin ya da **Geri yükle** (Restore) ile hepsini burada açın. Listenin kolay okunması için bu cihaza bir ad verin (“Ev dizüstüsü”) ya da artık kullanmadığınız cihazları kaldırın.
+
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-devices" alt="TabMerger, Settings → Devices (Ayarlar → Cihazlar): 4 açık sekmesiyle Home laptop cihazı ve Restore 4 tabs (4 sekmeyi geri yükle) düğmesi, açık tema" darkAlt="TabMerger, Settings → Devices (Ayarlar → Cihazlar): 4 açık sekmesiyle Home laptop cihazı ve Restore 4 tabs (4 sekmeyi geri yükle) düğmesi, koyu tema" boxes={[{ id: 'other-device', label: 'Diğer tarayıcınız' }, { id: 'restore', label: 'Sekmelerini burada açın' }]} source="TabMerger 3.16.1">Dizüstünün açık sekmeleri, iş bilgisayarından. Yol boyunca şifreli.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Ne kazanırsınız">
+
+Bir bilgisayardan kalkıp başka birinde, hangi tarayıcıyı kullanırsa kullansın, aynı gruplar, oturumlar ve notlarla devam edin. İçerikler yalnızca sizde olan bir anahtarla şifrelendiği için veritabanımızda bir ihlal olsa bile sekmeleriniz değil, renkler ve sayılar görünür.
+
+</Section>
+
+<Section id="habits" title="İyi alışkanlıklar">
+
+- **Parolayı parola yöneticinizde saklayın.** Kimse onu sizin için sıfırlayamaz.
+- **Her cihaza bir ad verin:** Ayarlar → Cihazlar.
+- **Bilgisayarın başına oturduğunuzda TabMerger’ı bir kez açın**, böylece en son değişiklikleri çeker.
+- **Tarayıcıya özgü şeyler her cihazda kalır:** URL kuralları ve ayarlar bilerek tarayıcı başına kaydedilir. Sekmeleri taşımanın diğer yolları için [sekmeleri başka bir bilgisayara taşıma](/blog/move-tabs-between-computers) yazısına bakın.
+
+</Section>
+
+<Section id="plans" title="Free mi Pro mu">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Grup, oturum ve yedek senkronizasyonu', 'Hayır (cihazınızda kalır)', 'Evet, uçtan uca şifreli'],
+    ['Ayarlar → Cihazlar', 'Hayır', 'Evet'],
+    ['Fiyat', 'US$0', 'Ayda US$3.99 veya yılda US$42.99'],
+  ]}
+/>
+
+Senkronizasyonu yalnızca uygulama değil, sunucu da denetler: veritabanı, etkin bir Pro planı olmayan her hesaptan gelen senkronizasyon yüklemelerini reddeder. Bir plan sona ererse hiçbir şey silinmez; yeni değişiklikler yalnızca senkronize edilmez. Ayrıntılar [fiyatlandırma sayfasında](/pricing) ve [TabMerger Free vs Pro](/blog/tabmerger-free-vs-pro) yazısında.
+
+<InstallCta>Bugün ücretsiz başlayın, ikinci bir bilgisayara ihtiyaç duyduğunuzda şifreli senkronizasyonu ekleyin.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

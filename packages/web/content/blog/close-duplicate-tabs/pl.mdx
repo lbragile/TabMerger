@@ -1,0 +1,161 @@
+export const post = {
+  slug: 'close-duplicate-tabs',
+  title: 'Jak zamknąć zduplikowane karty jednym kliknięciem',
+  navTitle: 'Zamykanie zduplikowanych kart',
+  seoTitle: 'Jak zamknąć zduplikowane karty w Chrome, Edge i Firefox',
+  description:
+    'Ta sama strona otwarta trzy razy? Zamknij zduplikowane karty we wszystkich oknach jednym kliknięciem w TabMerger albo użyj wbudowanej w Firefoksa opcji „Zamknij podwójne karty”. Co oferują Chrome i Edge i co dokładnie liczy się jako duplikat.',
+  shareSummary: 'Zamknij zduplikowane karty we wszystkich oknach jednym kliknięciem w Chrome, Edge i Firefox.',
+  dek: 'Duplikaty mnożą się po cichu. Usuń je ze wszystkich okien naraz i zachowaj pierwszą kopię każdej strony.',
+  published: '2026-12-01',
+  updated: '2026-12-01',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '„Usuń duplikaty kart” w TabMerger zamyka powtórzenia we wszystkich otwartych oknach i zostawia pierwszą kartę.', source: 'Przetestowano w TabMerger 3.16.1, 21 lis 2026' },
+    { text: 'Najpierw pyta i podaje, ile kart usunie.', source: 'TabMerger 3.16.1' },
+    { text: 'Menu karty w Firefoksie 159 ma opcję „Zamknij podwójne karty”.', source: 'Tekst menu Firefoksa 159' },
+    { text: '„Duplicate tab” w Edge tworzy kopię; niczego nie usuwa.', source: 'Tekst menu Edge 158' },
+  ],
+  faq: [
+    {
+      question: 'Czy Chrome potrafi usuwać zduplikowane karty?',
+      answer:
+        'Strony pomocy Chrome nie opisują takiej funkcji. TabMerger ją dodaje: otwórz menu ⋯ sekcji „Teraz Otwarte” i wybierz „Usuń duplikaty kart”, aby zamknąć każde powtórzenie we wszystkich oknach.',
+    },
+    {
+      question: 'Która karta zostaje?',
+      answer: 'W TabMerger pierwsza kopia w kolejności czytania: najpierw najwcześniejsze okno, potem od lewej do prawej. Każda późniejsza kopia tego samego adresu jest usuwana.',
+    },
+    {
+      question: 'Czy strony z różnymi #kotwicami to duplikaty?',
+      answer: 'Nie. TabMerger porównuje pełne adresy bez rozróżniania wielkości liter, więc page#top i page#faq albo ta sama strona z innymi ?parametrami zostają osobnymi kartami.',
+    },
+    {
+      question: 'Czy mogę też usunąć duplikaty z zapisanych grup?',
+      answer: 'Tak: ta sama opcja „Usuń duplikaty kart” jest w menu ⋯ każdej grupy i działa na zapisane w niej karty.',
+    },
+  ],
+  images: [
+    { src: '/blog/close-duplicate-tabs/tm-before-light.webp', alt: 'TabMerger, „Now Open” (Teraz Otwarte), z dwoma oknami i ośmioma kartami, z których trzy się powtarzają, jasny motyw' },
+    { src: '/blog/close-duplicate-tabs/tm-before-dark.webp', alt: 'TabMerger, „Now Open” (Teraz Otwarte), z dwoma oknami i ośmioma kartami, z których trzy się powtarzają, ciemny motyw' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp', alt: 'Okno dialogowe TabMerger „Remove duplicates” (Usuń duplikaty) z informacją, że zostaną usunięte 3 zduplikowane karty, i przyciskiem „Remove 3 duplicates” (Usuń 3 duplikaty), jasny motyw' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-dark.webp', alt: 'Okno dialogowe TabMerger „Remove duplicates” (Usuń duplikaty) z informacją, że zostaną usunięte 3 zduplikowane karty, i przyciskiem „Remove 3 duplicates” (Usuń 3 duplikaty), ciemny motyw' },
+    { src: '/blog/close-duplicate-tabs/tm-after-light.webp', alt: 'TabMerger, „Now Open” (Teraz Otwarte) po usunięciu duplikatów: dwa okna, pięć kart, każda strona raz, jasny motyw' },
+    { src: '/blog/close-duplicate-tabs/tm-after-dark.webp', alt: 'TabMerger, „Now Open” (Teraz Otwarte) po usunięciu duplikatów: dwa okna, pięć kart, każda strona raz, ciemny motyw' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp' },
+  ogImage: { src: '/blog/close-duplicate-tabs/og.png', alt: 'Jak zamknąć zduplikowane karty jednym kliknięciem: poradnik TabMerger z oknem dialogowym „Remove 3 duplicates” (Usuń 3 duplikaty)' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'tabmerger', label: 'Jedno kliknięcie, wszystkie okna' },
+    { id: 'what-counts', label: 'Co jest duplikatem' },
+    { id: 'builtin', label: 'Wbudowane opcje' },
+    { id: 'prevent', label: 'Mniej duplikatów' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Wbudowane zamykanie duplikatów',
+    values: { chrome: 'Brak w stronach pomocy', edge: 'Brak (Duplicate tab tworzy kopię)', firefox: 'Prawy przycisk myszy → Zamknij podwójne karty' },
+  },
+}
+
+<QuickAnswer>
+
+W [TabMerger](/features) otwórz menu **⋯** sekcji **Teraz Otwarte** i wybierz **Usuń duplikaty kart**. Rozszerzenie znajduje każdą stronę otwartą więcej niż raz, **we wszystkich Twoich oknach**, pokazuje, ile kart zamknie, i zostawia pierwszą kopię każdej z nich. Firefox ma w menu karty wbudowaną opcję **Zamknij podwójne karty** („Close Duplicate Tabs”); strony pomocy Chrome nie opisują żadnego narzędzia do usuwania duplikatów.
+
+</QuickAnswer>
+
+<InstallCta>Usuń zduplikowane karty ze wszystkich okien jednym kliknięciem. Za darmo dla Chrome, Edge i Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Jak zamknąć wszystkie duplikaty naraz?">
+
+1. Otwórz TabMerger. **Teraz Otwarte** pokazuje wszystkie otwarte okna i karty.
+2. Otwórz menu **⋯** tej sekcji i wybierz **Usuń duplikaty kart**.
+3. Sprawdź liczbę i kliknij przycisk usuwania, tutaj **Usuń 3 duplikaty**. Nadmiarowe karty przeglądarki się zamykają; pierwsza kopia każdej strony zostaje dokładnie tam, gdzie była.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Usuwanie duplikatów spośród otwartych kart" steps={[{ title: 'Przed' }, { title: 'Potwierdzenie' }, { title: 'Po' }]}>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-before" alt="TabMerger, „Now Open” (Teraz Otwarte), z dwoma oknami i ośmioma kartami, z których trzy się powtarzają, jasny motyw" darkAlt="TabMerger, „Now Open” (Teraz Otwarte), z dwoma oknami i ośmioma kartami, z których trzy się powtarzają, ciemny motyw" boxes={[{ id: 'summary', label: '8 kart' }]} source="TabMerger 3.16.1">Przed: dwa okna, osiem kart, z których trzy się powtarzają.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-confirm" alt="Okno dialogowe TabMerger „Remove duplicates” (Usuń duplikaty) z informacją, że zostaną usunięte 3 zduplikowane karty, i przyciskiem „Remove 3 duplicates” (Usuń 3 duplikaty), jasny motyw" darkAlt="Okno dialogowe TabMerger „Remove duplicates” (Usuń duplikaty) z informacją, że zostaną usunięte 3 zduplikowane karty, i przyciskiem „Remove 3 duplicates” (Usuń 3 duplikaty), ciemny motyw" boxes={[{ id: 'confirm', label: 'Usuń' }]} source="TabMerger 3.16.1">TabMerger podaje, ile kart zamknie, zanim to zrobi.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-after" alt="TabMerger, „Now Open” (Teraz Otwarte) po usunięciu duplikatów: dwa okna, pięć kart, każda strona raz, jasny motyw" darkAlt="TabMerger, „Now Open” (Teraz Otwarte) po usunięciu duplikatów: dwa okna, pięć kart, każda strona raz, ciemny motyw" boxes={[{ id: 'summary', label: '5 kart' }]} source="TabMerger 3.16.1">Po: pięć kart, każda strona raz. Karty przeglądarki naprawdę zostały zamknięte.</ThemedScreenshot>
+</Carousel>
+
+Ta sama opcja działa w każdej zapisanej grupie, więc nawet grupa badawcza rozrastająca się od tygodni pozostaje uporządkowana.
+
+</Section>
+
+<Section id="what-counts" title="Co liczy się jako duplikat?">
+
+TabMerger porównuje **pełny adres** w standardowej postaci, bez rozróżniania wielkości liter:
+
+<ComparisonTable
+  head={['Te dwie karty', 'Duplikaty?']}
+  rows={[
+    [<code>example.com/page</code>, 'Ta sama strona dwa razy: tak, jedna jest zamykana'],
+    [<code>example.com/Page</code>, 'Różnią się tylko wielkością liter: tak'],
+    [<code>example.com/page#faq</code>, 'Inna kotwica: nie, obie zostają'],
+    [<code>example.com/page?ref=mail</code>, 'Inne parametry: nie, obie zostają'],
+  ]}
+/>
+
+To celowe: dwie karty z różnymi fragmentami długiego dokumentu albo dwa wyszukiwania to dla Ciebie różne karty, więc zostają. Znikają tylko prawdziwe powtórzenia.
+
+</Section>
+
+<Section id="builtin" title="Czy przeglądarka sama zamknie duplikaty?">
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+Strony pomocy Chrome nie opisują żadnego narzędzia do usuwania zduplikowanych kart. Najbliżej jest **Wyszukiwanie kart** („Tab Search”, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>): wpisz nazwę witryny, wypatrz powtórzenia na liście i zamykaj je pojedynczo przyciskiem zamykania w każdym wierszu.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Menu karty w Edge ma opcję **Duplicate tab**, która otwiera kolejną kopię, czyli odwrotność tego, czego chcesz. Powtórzenia trzeba znaleźć ręcznie i zamykać po kolei, przechodząc wzdłuż paska kart.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Kliknij prawym przyciskiem myszy dowolną kartę i wybierz **Zamknij podwójne karty** („Close Duplicate Tabs”), aby zamknąć powtórzenia, albo **Zamknij duplikaty tej karty** („Close Duplicates of This Tab”), jeśli chodzi o jedną stronę.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="prevent" title="Jak w ogóle mieć mniej duplikatów?">
+
+- **Szukaj, zanim otworzysz.** <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> w TabMerger pokazuje, czy strona jest już otwarta albo zapisana. Więcej w poradniku [jak znaleźć kartę wśród setek](/blog/find-a-tab-among-hundreds).
+- **Łącz okna z rozwagą.** To przy łączeniu okien spotykają się powtórzenia; usuń duplikaty zaraz po [scaleniu okien](/blog/merge-browser-windows).
+- **Zapisz, potem zamknij.** Mniej otwartych kart to mniej kopii. Nasza [rutyna na zbyt wiele kart](/blog/manage-too-many-tabs) zamienia to w nawyk.
+
+<InstallCta>Za darmo dla Chrome, Edge i Firefox. Na początek konto nie jest potrzebne.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,175 @@
+export const post = {
+  slug: 'search-all-your-tabs-with-tabmerger',
+  title: 'Pesquise todas as suas abas com o TabMerger: Ctrl+K e seus filtros',
+  navTitle: 'Pesquisar todas as suas abas',
+  seoTitle: 'Pesquisar abas abertas, salvas e fechadas de uma vez com o TabMerger',
+  description:
+    'Uma só caixa de pesquisa para todas as suas abas: abertas, salvas em grupos ou fechadas nesta semana. Como funciona a pesquisa com Ctrl+K do TabMerger, cada filtro (group:, window:, tag:, closed:) e por que ela encontra o que encontra.',
+  shareSummary: 'Abas abertas, salvas e fechadas em uma só pesquisa, com filtros que refinam tudo num instante.',
+  dek: 'Aberta, salva ou fechada há uma hora: digite algumas letras e lá está ela, destacada.',
+  published: '2026-12-14',
+  updated: '2026-12-14',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Ctrl+K (⌘+K no Mac) pesquisa juntas as abas abertas, salvas e fechadas recentemente.', source: 'TabMerger 3.16.1' },
+    { text: 'Filtros: group:, window:, tag: (rótulo de grupo de abas do Chrome) e closed:.', source: 'TabMerger 3.16.1' },
+    { text: 'As correspondências são sequências exatas de letras, nunca aproximadas, então todo resultado tem um destaque.', source: 'Código-fonte do TabMerger 3.16.1' },
+    { text: 'A pesquisa e todos os filtros são gratuitos.', source: 'Preços do TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Como pesquiso todas as minhas abas de uma vez?',
+      answer:
+        'Abra o TabMerger, pressione Ctrl+K (⌘+K no Mac) e digite parte do título ou do endereço de uma página. Os resultados incluem suas abas abertas, todos os grupos salvos e, abaixo deles, as abas que você fechou recentemente.',
+    },
+    {
+      question: 'Como pesquiso em um só grupo?',
+      answer:
+        'Digite group: e escolha o grupo na lista; o TabMerger preenche group:"Name". Depois acrescente suas palavras, por exemplo group:"Thesis sources" wiki.',
+    },
+    {
+      question: 'Posso pesquisar abas que já fechei?',
+      answer: 'Sim. Comece a pesquisa com closed: para listar só as abas e janelas fechadas recentemente. Escolha uma para reabri-la; Ctrl+clique ou clique do meio a reabre em segundo plano.',
+    },
+    {
+      question: 'Por que a pesquisa não encontra uma página quando erro uma letra?',
+      answer:
+        'O TabMerger procura as letras exatamente como foram digitadas (sem diferenciar maiúsculas e minúsculas), nunca letras espalhadas por um título. Isso deixa os resultados previsíveis: todo resultado tem uma correspondência destacada, e todo destaque é uma correspondência real.',
+    },
+    {
+      question: 'A pesquisa é gratuita?',
+      answer: 'Sim, a pesquisa e todos os filtros estão no plano Free. O Pro guarda 30 dias de abas fechadas para pesquisar, em vez de 2.',
+    },
+  ],
+  images: [
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-light.webp', alt: 'Pesquisa do TabMerger aberta com Ctrl+K, com pesquisas de exemplo para react, group:, window:, tag: e closed:, tema claro' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-dark.webp', alt: 'Pesquisa do TabMerger aberta com Ctrl+K, com pesquisas de exemplo para react, group:, window:, tag: e closed:, tema escuro' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-light.webp', alt: 'Pesquisa por docs no TabMerger: quatro resultados de Now Open (Abertas agora) e Reading list, com docs destacado em cada endereço, tema claro' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-dark.webp', alt: 'Pesquisa por docs no TabMerger: quatro resultados de Now Open (Abertas agora) e Reading list, com docs destacado em cada endereço, tema escuro' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-light.webp', alt: 'Pesquisa do TabMerger com window: digitado, listando as janelas Window, Papers e Tools para escolher, tema claro' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-dark.webp', alt: 'Pesquisa do TabMerger com window: digitado, listando as janelas Window, Papers e Tools para escolher, tema escuro' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp', alt: 'O grupo Thesis sources durante uma pesquisa por wiki, com a única correspondência destacada e as outras abas esmaecidas, tema claro' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-dark.webp', alt: 'O grupo Thesis sources durante uma pesquisa por wiki, com a única correspondência destacada e as outras abas esmaecidas, tema escuro' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'browser-tips'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp' },
+  ogImage: { src: '/blog/search-all-your-tabs-with-tabmerger/og.png', alt: 'Pesquise todas as suas abas com o TabMerger: resultados para docs de abas abertas e salvas' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'problem', label: 'Onde estava aquela aba?' },
+    { id: 'why', label: 'Por que a pesquisa funciona assim' },
+    { id: 'steps', label: 'Pesquisa passo a passo' },
+    { id: 'filters', label: 'Todos os filtros' },
+    { id: 'panel', label: 'Depois da pesquisa' },
+    { id: 'benefit', label: 'O que você economiza' },
+    { id: 'habits', label: 'Bons hábitos' },
+    { id: 'plans', label: 'Free ou Pro' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Abra o [TabMerger](/features) e pressione <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> no Mac). Digite algumas letras de um título ou endereço: os resultados vêm das suas abas abertas, de todos os grupos salvos e, abaixo deles, das abas que você fechou recentemente, cada um indicando onde está. Refine com `group:`, `window:`, `tag:` ou `closed:` e pressione <Kbd>Enter</Kbd> para ir direto à aba.
+
+</QuickAnswer>
+
+<InstallCta>Todas as suas abas, a uma pesquisa de distância. Grátis para Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="problem" title="“Onde estava aquela aba?”">
+
+Você sabe que a página existe. Ela estava aberta na terça, ao lado do pull request. Estava na janela de trabalho ou na de leitura? Você a salvou em um grupo ou a fechou? A pesquisa de abas do próprio navegador só vê o que está aberto nele agora; o histórico vê tudo o que você já visitou, sem saber o que você guardou de propósito.
+
+O que você quer é uma só caixa que saiba de tudo: o que está aberto, o que você salvou e o que fechou nesta semana. Essa caixa é o <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> do TabMerger. (Para a pesquisa de abas integrada aos navegadores, veja [como encontrar uma aba entre centenas](/blog/find-a-tab-among-hundreds).)
+
+</Section>
+
+<Section id="why" title="Por que a pesquisa do TabMerger funciona assim">
+
+- **Tudo em uma lista.** Abas abertas, grupos salvos e abas fechadas recentemente respondem à mesma pergunta (“onde está?”), então aparecem juntas. Cada resultado traz um selo com seu grupo e, quando houver, o rótulo do seu grupo de abas do Chrome.
+- **Exata, não aproximada.** Um resultado é uma aba cujo título ou endereço contém suas letras em sequência, sem diferenciar maiúsculas e minúsculas. Letras espalhadas por um título nunca contam. É de propósito: todo resultado tem um destaque, e todo destaque é a correspondência real, então você pode confiar no que vê.
+- **A melhor correspondência primeiro.** Uma correspondência exata fica acima de um título que começa com o seu texto, depois de uma palavra que começa com ele e, por fim, de uma correspondência em qualquer lugar. A lista mostra os 12 melhores, então a aba certa fica no topo.
+- **Escolha em vez de soletrar.** Digitar `group:`, `window:` ou `tag:` abre uma lista dos seus grupos, janelas ou rótulos para escolher. O TabMerger preenche o nome entre aspas, então nomes longos com espaços funcionam sem esforço.
+- **Abas fechadas não atrapalham.** Até 3 abas fechadas recentemente aparecem abaixo dos resultados salvos; comece com `closed:` para ver só as abas fechadas.
+- **O teclado basta.** <Kbd>↑</Kbd> <Kbd>↓</Kbd> para navegar, <Kbd>Enter</Kbd> para abrir, <Kbd>Esc</Kbd> ou <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> para fechar. Fechar mantém o que você digitou, para você voltar a ele depois.
+
+</Section>
+
+<Section id="steps" title="Pesquisa passo a passo">
+
+1. Abra o TabMerger e pressione <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> no Mac) ou clique na caixa de pesquisa no topo.
+2. Sem nada digitado, a caixa sugere pesquisas para experimentar. Clique em uma para começar por ela.
+3. Digite algumas letras do título ou do endereço, como `docs`. As correspondências ficam destacadas.
+4. Pressione <Kbd>Enter</Kbd> em uma aba: o TabMerger abre o grupo dela e coloca o foco nessa aba. Em uma aba fechada, <Kbd>Enter</Kbd> a reabre.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Pesquisando no TabMerger" steps={[{ title: 'Ctrl+K' }, { title: 'Resultados' }, { title: 'window:' }]}>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-examples" alt="Pesquisa do TabMerger aberta com Ctrl+K, com pesquisas de exemplo para react, group:, window:, tag: e closed:, tema claro" darkAlt="Pesquisa do TabMerger aberta com Ctrl+K, com pesquisas de exemplo para react, group:, window:, tag: e closed:, tema escuro" boxes={[{ id: 'search-input', label: 'A caixa de pesquisa' }, { id: 'examples', label: 'Pesquisas sugeridas' }]} source="TabMerger 3.16.1">Uma pesquisa vazia sugere por onde começar.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-results" alt="Pesquisa por docs no TabMerger: quatro resultados de Now Open (Abertas agora) e Reading list, com docs destacado em cada endereço, tema claro" darkAlt="Pesquisa por docs no TabMerger: quatro resultados de Now Open (Abertas agora) e Reading list, com docs destacado em cada endereço, tema escuro" boxes={[{ id: 'search-input', label: 'docs' }]} source="TabMerger 3.16.1">Abas abertas e salvas em uma só lista, cada uma marcada com seu grupo.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker" alt="Pesquisa do TabMerger com window: digitado, listando as janelas Window, Papers e Tools para escolher, tema claro" darkAlt="Pesquisa do TabMerger com window: digitado, listando as janelas Window, Papers e Tools para escolher, tema escuro" boxes={[{ id: 'search-input', label: 'O filtro window:' }, { id: 'pick-window', label: 'Suas janelas com nome' }]} source="TabMerger 3.16.1">Digite window: e escolha; não precisa soletrar o nome.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="filters" title="Todos os filtros, com exemplos">
+
+<ComparisonTable
+  head={['Filtro', 'Encontra', 'Exemplo']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['(palavras simples)', 'Abas cujo título ou endereço as contém, e grupos pelo nome', 'pull request'],
+    ['group:', 'Abas de um grupo', 'group:"Thesis sources" wiki'],
+    ['window:', 'Abas de uma janela (dê um nome a ela pelo menu ⋯)', 'window:"Papers"'],
+    ['tag:', 'Abas de um grupo de abas do Chrome com esse rótulo', 'tag:"Sprint"'],
+    ['closed:', 'Só abas e janelas fechadas recentemente', 'closed: seat'],
+  ]}
+/>
+
+Os filtros se combinam com palavras e entre si. Use aspas quando acrescentar palavras depois de um filtro: sem elas, o filtro pega o resto da linha, então `group:Work pull` procura um grupo chamado “Work pull”. Escolher na lista já coloca as aspas para você.
+
+</Section>
+
+<Section id="panel" title="Depois da pesquisa: ocultar ou esmaecer o resto">
+
+Feche a pesquisa com <Kbd>Esc</Kbd> e ela continua valendo na visualização principal. A barra lateral mostra quantas correspondências cada grupo tem (“1 encontrado(s)”) e, dentro de um grupo, as abas que não correspondem ficam **ocultas** por padrão. Prefere não perder a referência? Em **Configurações → Geral** (Settings → General), defina **Abas que não correspondem à busca** (Tabs that do not match a search) como **Esmaecer** (Dim): cada aba fica no lugar, esmaecida, com as correspondências destacadas. **Limpar busca** (Clear search) encerra a pesquisa.
+
+Enquanto houver abas ocultas, reordenar arrastando fica pausado (“Limpe a busca para mover itens”): com linhas fora de vista, o lugar onde uma aba solta deveria cair seria um chute.
+
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-dim" alt="O grupo Thesis sources durante uma pesquisa por wiki, com a única correspondência destacada e as outras abas esmaecidas, tema claro" darkAlt="O grupo Thesis sources durante uma pesquisa por wiki, com a única correspondência destacada e as outras abas esmaecidas, tema escuro" boxes={[{ id: 'match', label: 'A correspondência' }]} source="TabMerger 3.16.1">Modo esmaecido: a correspondência se destaca, e todo o resto fica onde estava.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="O que você economiza">
+
+Varrer janelas cheias de ícones de 16 pixels e rolar o histórico vira questão de poucas teclas. Funciona do mesmo jeito, não importa quantas abas você guarde: um grupo salvo há meses está tão perto quanto a aba aberta há um minuto. É isso que torna seguro fechar janelas: tudo o que você salvou está a uma pesquisa de distância.
+
+</Section>
+
+<Section id="habits" title="Bons hábitos">
+
+- **Pesquise o endereço, não só o título.** `github.com/your-org` ou `localhost:3000` encontra páginas cujos títulos são todos parecidos.
+- **Dê nome às janelas em que você pesquisa com frequência.** “Papers”, “PRs”, “Docs”: assim `window:` leva você até lá.
+- **Comece com `closed:`** quando souber que fechou a aba; a lista é mais curta e só tem o que você precisa.
+- **Combine a pesquisa com grupos.** Quanto melhores os seus grupos (veja [um fluxo diário com abas](/blog/tabmerger-daily-workflow)), mais um filtro `group:` restringe os resultados.
+
+</Section>
+
+<Section id="plans" title="Free ou Pro">
+
+A pesquisa, todos os filtros, as listas de escolha e Ocultar ou Esmaecer estão no plano Free, sem conta. A única diferença é até quando vão as abas fechadas: o Free guarda as abas fechadas dos últimos 2 dias, o Pro as dos últimos 30 dias. E com os grupos e abas ilimitados do Pro, simplesmente há mais para encontrar. Veja a [página de preços](/pricing).
+
+<InstallCta>Encontre com uma tecla qualquer aba que você guardou. Grátis para Chrome, Edge e Firefox.</InstallCta>
+
+Para usar o teclado além da pesquisa, veja [os atalhos de teclado para abas](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

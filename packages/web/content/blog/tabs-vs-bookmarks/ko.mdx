@@ -1,0 +1,162 @@
+export const post = {
+  slug: 'tabs-vs-bookmarks',
+  title: '탭 vs 북마크: 열어 둘 것과 저장할 것',
+  navTitle: '탭 vs 북마크',
+  seoTitle: '탭 vs 북마크: 탭을 열어 둘 때와 저장할 때',
+  description:
+    '북마크할까, 탭을 그냥 열어 둘까? 읽을거리, 프로젝트 작업, 참고 페이지별로 바로 판단할 수 있는 표와 그 중간 해법을 소개합니다. 검색할 수 있고 클릭 한 번으로 다시 여는 저장된 탭 그룹입니다.',
+  shareSummary: '북마크할까, 열어 둘까? 판단표 하나와 그 중간 해법인 저장된 그룹.',
+  dek: '열린 탭은 오늘을 위한 것. 북마크는 몇 년을 위한 것. 그 사이의 모든 것은 저장된 그룹에 둡니다.',
+  published: '2026-11-28',
+  updated: '2026-11-28',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D는 세 브라우저 모두에서 창의 모든 탭을 북마크합니다.', source: 'Chrome 및 Edge 도움말, Firefox 159 단축키' },
+    { text: 'TabMerger 그룹은 창 전체를 메모와 함께 보관하고 클릭 한 번으로 다시 엽니다.', source: 'TabMerger 3.16.1' },
+    { text: 'TabMerger의 Ctrl+K는 열린 탭, 저장된 탭, 최근에 닫은 탭을 한 번에 검색합니다.', source: 'TabMerger 3.16.1' },
+    { text: '무료는 그룹 5개, 탭 50개까지, Pro는 무제한이며 동기화됩니다.', source: 'TabMerger 요금제', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '북마크해야 할까요, 탭을 열어 둬야 할까요?',
+      answer:
+        '오늘 필요한 것만 열어 두세요. 진행 중인 작업은 TabMerger 그룹으로 저장해 창 그대로 다시 열고, 몇 달이나 몇 년 동안 필요할 페이지는 북마크하세요.',
+    },
+    {
+      question: '열린 탭이 브라우저를 느리게 하나요?',
+      answer: '열린 페이지는 각각 메모리를 사용합니다. 쓰지 않는 탭을 저장하고 닫는 것이 가장 간단한 해결책입니다. 탭이 너무 많아 브라우저가 느릴 때 가이드를 참고하세요.',
+      link: { text: '탭이 너무 많아 브라우저가 느릴 때 가이드', href: '/blog/too-many-tabs-slow-browser' },
+    },
+    {
+      question: '북마크와 저장된 탭 그룹은 무엇이 다른가요?',
+      answer:
+        '북마크는 폴더 안의 페이지 하나입니다. TabMerger 그룹은 탭이 담긴 창 전체를 이름, 색상, 메모와 함께 보관하고 한 번에 모두 다시 엽니다.',
+    },
+    {
+      question: '북마크를 탭 그룹으로 바꿀 수 있나요?',
+      answer: '네. 북마크를 HTML 파일로 내보낸 다음 TabMerger의 설정 → 데이터에서 가져오세요. 최상위 폴더 하나가 그룹 하나가 됩니다.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-light.webp', alt: '저장된 탭 4개와 그룹 메모가 있는 TabMerger 그룹 Read this week(이번 주에 읽기), 라이트 테마' },
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-dark.webp', alt: '저장된 탭 4개와 그룹 메모가 있는 TabMerger 그룹 Read this week(이번 주에 읽기), 다크 테마' },
+  ],
+  tags: ['tab-management', 'bookmarks', 'save-tabs', 'tab-manager', 'browser-productivity'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-vs-bookmarks/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/tabs-vs-bookmarks/og.png', alt: '탭 vs 북마크: 이번 주에 읽을 탭을 저장한 그룹이 담긴 TabMerger 가이드' },
+  toc: [
+    { id: 'quick', label: '간단한 답' },
+    { id: 'decide', label: '판단표' },
+    { id: 'tabs', label: '탭을 열어 둘 때' },
+    { id: 'bookmarks', label: '북마크할 때' },
+    { id: 'middle', label: '중간 해법' },
+    { id: 'tabmerger', label: 'TabMerger에서 하기' },
+    { id: 'faq', label: '자주 묻는 질문' },
+  ],
+}
+
+<QuickAnswer>
+
+**오늘** 쓸 탭만 열어 두세요. **몇 달이나 몇 년** 뒤에도 필요하다면 북마크하세요. 그 사이의 모든 것(다음 주에 이어 할 프로젝트, 읽을 목록, 진행 중인 조사)은 [TabMerger](/features)에 탭을 **그룹**으로 저장하세요. 창 전체가 보관되고, <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>로 검색할 수 있으며, 클릭 한 번으로 화면에 돌아옵니다.
+
+</QuickAnswer>
+
+<InstallCta>오늘의 탭을 클릭 한 번으로 그룹으로 저장하세요. Chrome, Edge, Firefox에서 무료입니다.</InstallCta>
+
+<Section id="decide" title="북마크할까, 탭을 열어 둘까?">
+
+질문은 하나면 됩니다. **이걸 언제 다시 쓰게 될까?**
+
+<ComparisonTable
+  head={['필요한 시점…', '가장 좋은 곳', '이유']}
+  rowHeaders
+  highlight={1}
+  minWidth="34rem"
+  rows={[
+    ['앞으로 몇 시간 안에', '열린 탭', '지금 쓰고 있으니까'],
+    ['이번 주 중에, 다른 탭과 함께', 'TabMerger 그룹', '세트 전체가 클릭 한 번으로 창이 되어 돌아옴'],
+    ['시간 날 때 읽기', '메모를 단 TabMerger 그룹', '검색할 수 있는 ‘나중에 읽기’ 목록 하나'],
+    ['멈췄다 다시 이어 가는 프로젝트', 'TabMerger 그룹', '창을 나눠 두고, 저장한 그대로 다시 엶'],
+    ['몇 달, 몇 년 동안 참고할 자료', '북마크', '브라우저가 동기화하고 폴더로 정리'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabs" title="탭은 언제 열어 둬야 할까?">
+
+열린 탭은 책상과 같습니다. 지금 하고 있는 일이죠. 바로 손이 닿고, 위치와 스크롤 위치, 입력한 내용까지 그대로 유지됩니다. 그게 곧 비용이기도 합니다. 열린 페이지는 각각 메모리를 쓰고, 수십 개를 넘으면 제목이 아이콘으로 쪼그라들어 원하는 탭을 찾기 어려워집니다.
+
+오늘 안에 다시 볼 탭이라면 열어 두세요. 나머지는 어수선함일 뿐입니다. [탭이 너무 많을 때의 정리 루틴](/blog/manage-too-many-tabs)에서 몇 분 만에 치우는 방법을 보여 드립니다.
+
+</Section>
+
+<Section id="bookmarks" title="북마크가 정답일 때는?">
+
+북마크는 서류 캐비닛입니다. 페이지 하나를 원하는 만큼 오래 폴더에 보관하고, 로그인되어 있으면 브라우저가 동기화해 줍니다.
+
+- <Kbd>Ctrl</Kbd>+<Kbd>D</Kbd>(Mac에서는 <Kbd>⌘</Kbd>+<Kbd>D</Kbd>)는 현재 탭을 북마크합니다.
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>는 창의 모든 탭을 새 폴더에 북마크합니다. Chrome, Edge, Firefox 모두 됩니다.
+
+<Catch>북마크는 한 번에 창 하나만 저장하고, 주소만 남기며, 어떤 페이지들이 함께였는지 알려 주지 않습니다. 참고 자료실로는 훌륭하지만 진행 중인 작업에는 불편합니다.</Catch>
+
+</Section>
+
+<Section id="middle" title="그 사이에 있는 것들은?">
+
+대부분의 탭은 ‘오늘’도 ‘영원히’도 아닙니다. 다음 주 프로젝트, 읽으려고 둔 글, 하다 만 비교 같은 것들이죠. 바로 이 중간 지대를 위해 탭 관리자가 있고, 그래서 [열린 탭을 모두 저장](/blog/save-all-open-tabs)해 그룹으로 만드는 편이 그냥 열어 두는 것보다도, 폴더 단위로 북마크하는 것보다도 낫습니다.
+
+- **낱장 페이지가 아니라 창 전체.** 세트가 원래 있던 창 그대로 함께 남습니다.
+- **이름, 색상, 메모를 붙일 수 있어서** ‘화요일에 하던 조사’도 금방 찾습니다.
+- 열린 탭, 최근에 닫은 탭과 함께 **검색할 수 있습니다**.
+- **클릭 한 번으로 모두 다시 열고**, 끝나면 다시 닫으면 됩니다.
+
+조사 중인가요? [조사를 위한 탭 정리](/blog/organize-tabs-for-research)에서는 여기에 메모와 알림을 더합니다.
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger에서 하기">
+
+[TabMerger](/features)는 이 중간 해법을 클릭 두 번짜리 습관으로 만들어 줍니다.
+
+1. **그룹 추가**를 클릭하고 이름을 붙이세요. 예를 들어 ‘이번 주에 읽기’(스크린샷에서는 ‘Read this week’).
+2. 그룹의 **⋯** 메뉴를 열고 **현재 상태와 합치기**를 선택하세요. 열린 창이 모두 그룹에 저장됩니다.
+3. 그룹의 **⋯** 메뉴에서 메모를 추가한 뒤 창을 닫으세요. 책상은 깨끗해지고 잃어버린 것은 없습니다.
+4. 때가 되면 그룹을 열고 탭을 다시 여세요. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>로 어떤 탭이든 키 한 번에 찾을 수 있습니다.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-vs-bookmarks/tm-read-later-group" alt="저장된 탭 4개와 그룹 메모가 있는 TabMerger 그룹 Read this week(이번 주에 읽기), 라이트 테마" darkAlt="저장된 탭 4개와 그룹 메모가 있는 TabMerger 그룹 Read this week(이번 주에 읽기), 다크 테마" boxes={[{ id: 'group-note', label: '그룹 메모' }, { id: 'group-row', label: '그룹' }]} source="TabMerger 3.16.1">그룹으로 만든 읽을거리 목록. 미래의 나에게 남기는 메모까지.</ThemedScreenshot>
+
+이미 몇 년 치 북마크가 있나요? HTML로 내보낸 다음 **설정 → 데이터**에서 파일을 가져오면 최상위 폴더 하나가 TabMerger 그룹 하나가 됩니다. 무료는 그룹 5개와 탭 50개까지이고, [Pro](/pricing)는 제한을 없애고 그룹을 컴퓨터 간에 종단 간 암호화로 동기화합니다.
+
+<InstallCta>Chrome, Edge, Firefox에서 무료로 쓸 수 있습니다. 시작할 때 계정이 필요 없습니다.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="자주 묻는 질문">
+
+<Faq items={post.faq} />
+
+</Section>

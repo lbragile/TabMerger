@@ -1,0 +1,161 @@
+export const post = {
+  slug: 'close-duplicate-tabs',
+  title: 'چطور زبانه‌های تکراری را با یک کلیک ببندیم',
+  navTitle: 'بستن زبانه‌های تکراری',
+  seoTitle: 'بستن زبانه‌های تکراری در Chrome و Edge و Firefox',
+  description:
+    'یک صفحه سه بار باز است؟ با TabMerger زبانه‌های تکراری را در همهٔ پنجره‌ها با یک کلیک ببندید، یا از گزینهٔ داخلی Firefox یعنی «بستن زبانه‌های تکراری» استفاده کنید. Chrome و Edge چه امکانی دارند و دقیقاً چه چیزی تکراری حساب می‌شود.',
+  shareSummary: 'زبانه‌های تکراری همهٔ پنجره‌ها را با یک کلیک ببندید؛ در Chrome و Edge و Firefox.',
+  dek: 'زبانه‌های تکراری بی‌صدا جمع می‌شوند. آن‌ها را یک‌جا از همهٔ پنجره‌ها پاک کنید و نسخهٔ اول هر صفحه را نگه دارید.',
+  published: '2026-12-01',
+  updated: '2026-12-01',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'گزینهٔ «حذف زبانه‌های تکراری» در TabMerger تکراری‌ها را در همهٔ پنجره‌های باز می‌بندد و اولی را نگه می‌دارد.', source: 'آزموده در TabMerger 3.16.1، ۲۱ نوامبر ۲۰۲۶' },
+    { text: 'اول می‌پرسد و می‌گوید چند زبانه را حذف می‌کند.', source: 'TabMerger 3.16.1' },
+    { text: 'منوی زبانه در Firefox 159 گزینهٔ «بستن زبانه‌های تکراری» را دارد.', source: 'متن منوی Firefox 159' },
+    { text: 'گزینهٔ Duplicate tab در Edge یک نسخهٔ دیگر می‌سازد و چیزی را حذف نمی‌کند.', source: 'متن منوی Edge 158' },
+  ],
+  faq: [
+    {
+      question: 'آیا Chrome ابزاری برای حذف زبانه‌های تکراری دارد؟',
+      answer:
+        'صفحه‌های راهنمای Chrome چنین ابزاری را شرح نمی‌دهند. TabMerger آن را اضافه می‌کند: منوی ⋯ بخش «هم‌اکنون باز» را باز کنید و «حذف زبانه‌های تکراری» را بزنید تا همهٔ تکراری‌ها در همهٔ پنجره‌ها بسته شوند.',
+    },
+    {
+      question: 'کدام زبانه باقی می‌ماند؟',
+      answer: 'در TabMerger، نخستین نسخه به ترتیب خواندن: اول قدیمی‌ترین پنجره، بعد از چپ به راست. هر نسخهٔ بعدی از همان نشانی حذف می‌شود.',
+    },
+    {
+      question: 'آیا صفحه‌هایی با #لنگرهای متفاوت تکراری حساب می‌شوند؟',
+      answer: 'نه. TabMerger نشانی‌های کامل را بدون توجه به حروف بزرگ و کوچک مقایسه می‌کند؛ پس page#top و page#faq، یا همان صفحه با ?پارامترهای متفاوت، زبانه‌های جدا باقی می‌مانند.',
+    },
+    {
+      question: 'آیا می‌توانم تکراری‌ها را از گروه‌های ذخیره‌شده هم پاک کنم؟',
+      answer: 'بله: همان گزینهٔ «حذف زبانه‌های تکراری» در منوی ⋯ هر گروه هست و روی زبانه‌های ذخیره‌شده در آن کار می‌کند.',
+    },
+  ],
+  images: [
+    { src: '/blog/close-duplicate-tabs/tm-before-light.webp', alt: 'بخش Now Open (هم‌اکنون باز) در TabMerger با دو پنجره و ۸ زبانه که ۳ تای آن‌ها تکراری است، پوستهٔ روشن' },
+    { src: '/blog/close-duplicate-tabs/tm-before-dark.webp', alt: 'بخش Now Open (هم‌اکنون باز) در TabMerger با دو پنجره و ۸ زبانه که ۳ تای آن‌ها تکراری است، پوستهٔ تیره' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp', alt: 'پنجرهٔ گفت‌وگوی Remove duplicates (حذف موارد تکراری) در TabMerger که می‌گوید ۳ زبانهٔ تکراری حذف می‌شوند، با دکمهٔ Remove 3 duplicates (حذف 3 مورد تکراری)، پوستهٔ روشن' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-dark.webp', alt: 'پنجرهٔ گفت‌وگوی Remove duplicates (حذف موارد تکراری) در TabMerger که می‌گوید ۳ زبانهٔ تکراری حذف می‌شوند، با دکمهٔ Remove 3 duplicates (حذف 3 مورد تکراری)، پوستهٔ تیره' },
+    { src: '/blog/close-duplicate-tabs/tm-after-light.webp', alt: 'بخش Now Open (هم‌اکنون باز) در TabMerger پس از حذف تکراری‌ها: دو پنجره، ۵ زبانه، هر صفحه یک بار، پوستهٔ روشن' },
+    { src: '/blog/close-duplicate-tabs/tm-after-dark.webp', alt: 'بخش Now Open (هم‌اکنون باز) در TabMerger پس از حذف تکراری‌ها: دو پنجره، ۵ زبانه، هر صفحه یک بار، پوستهٔ تیره' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp' },
+  ogImage: { src: '/blog/close-duplicate-tabs/og.png', alt: 'چطور زبانه‌های تکراری را با یک کلیک ببندیم: راهنمای TabMerger، با پنجرهٔ گفت‌وگوی Remove 3 duplicates (حذف 3 مورد تکراری)' },
+  toc: [
+    { id: 'quick', label: 'پاسخ کوتاه' },
+    { id: 'tabmerger', label: 'یک کلیک، همهٔ پنجره‌ها' },
+    { id: 'what-counts', label: 'چه چیزی تکراری است' },
+    { id: 'builtin', label: 'گزینه‌های داخلی' },
+    { id: 'prevent', label: 'تکراری کمتر' },
+    { id: 'faq', label: 'پرسش‌های متداول' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'بستن داخلی تکراری‌ها',
+    values: { chrome: 'در صفحه‌های راهنما نیست', edge: 'ندارد (Duplicate tab نسخه می‌سازد)', firefox: 'راست‌کلیک روی زبانه ← بستن زبانه‌های تکراری' },
+  },
+}
+
+<QuickAnswer>
+
+در [TabMerger](/features) منوی **⋯** بخش **هم‌اکنون باز** را باز کنید و **حذف زبانه‌های تکراری** را بزنید. این افزونه هر صفحه‌ای را که بیش از یک بار باز است، **در همهٔ پنجره‌هایتان**، پیدا می‌کند، نشان می‌دهد چند زبانه را می‌بندد و نسخهٔ اول هر صفحه را نگه می‌دارد. Firefox در منوی زبانه گزینهٔ داخلی **بستن زبانه‌های تکراری** (<bdi dir="ltr">Close Duplicate Tabs</bdi>) را دارد؛ صفحه‌های راهنمای Chrome هیچ ابزاری برای حذف تکراری‌ها شرح نمی‌دهند.
+
+</QuickAnswer>
+
+<InstallCta>زبانه‌های تکراری را با یک کلیک از همهٔ پنجره‌ها پاک کنید. رایگان برای Chrome و Edge و Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="چطور همهٔ تکراری‌ها را یک‌جا ببندم؟">
+
+1. TabMerger را باز کنید. **هم‌اکنون باز** همهٔ پنجره‌ها و زبانه‌های باز را فهرست می‌کند.
+2. منوی **⋯** همین بخش را باز کنید و **حذف زبانه‌های تکراری** را بزنید.
+3. تعداد را بررسی کنید و دکمهٔ حذف را بزنید؛ اینجا **حذف 3 مورد تکراری**. زبانه‌های اضافی مرورگر بسته می‌شوند و نسخهٔ اول هر صفحه دقیقاً همان‌جا که بود می‌ماند.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="حذف تکراری‌ها از زبانه‌های باز" steps={[{ title: 'پیش' }, { title: 'تأیید' }, { title: 'پس' }]}>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-before" alt="بخش Now Open (هم‌اکنون باز) در TabMerger با دو پنجره و ۸ زبانه که ۳ تای آن‌ها تکراری است، پوستهٔ روشن" darkAlt="بخش Now Open (هم‌اکنون باز) در TabMerger با دو پنجره و ۸ زبانه که ۳ تای آن‌ها تکراری است، پوستهٔ تیره" boxes={[{ id: 'summary', label: '۸ زبانه' }]} source="TabMerger 3.16.1">پیش: دو پنجره، ۸ زبانه که ۳ تای آن‌ها تکراری است.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-confirm" alt="پنجرهٔ گفت‌وگوی Remove duplicates (حذف موارد تکراری) در TabMerger که می‌گوید ۳ زبانهٔ تکراری حذف می‌شوند، با دکمهٔ Remove 3 duplicates (حذف 3 مورد تکراری)، پوستهٔ روشن" darkAlt="پنجرهٔ گفت‌وگوی Remove duplicates (حذف موارد تکراری) در TabMerger که می‌گوید ۳ زبانهٔ تکراری حذف می‌شوند، با دکمهٔ Remove 3 duplicates (حذف 3 مورد تکراری)، پوستهٔ تیره" boxes={[{ id: 'confirm', label: 'حذف' }]} source="TabMerger 3.16.1">TabMerger پیش از بستن می‌گوید چند زبانه را می‌بندد.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-after" alt="بخش Now Open (هم‌اکنون باز) در TabMerger پس از حذف تکراری‌ها: دو پنجره، ۵ زبانه، هر صفحه یک بار، پوستهٔ روشن" darkAlt="بخش Now Open (هم‌اکنون باز) در TabMerger پس از حذف تکراری‌ها: دو پنجره، ۵ زبانه، هر صفحه یک بار، پوستهٔ تیره" boxes={[{ id: 'summary', label: '۵ زبانه' }]} source="TabMerger 3.16.1">پس: ۵ زبانه، هر صفحه یک بار. زبانه‌های مرورگر واقعاً بسته شدند.</ThemedScreenshot>
+</Carousel>
+
+همین گزینه روی هر گروه ذخیره‌شده‌ای کار می‌کند؛ پس گروه پژوهشی که هفته‌هاست بزرگ می‌شود هم مرتب می‌ماند.
+
+</Section>
+
+<Section id="what-counts" title="چه چیزی تکراری حساب می‌شود؟">
+
+TabMerger **نشانی کامل** را در شکل استانداردش و بدون توجه به حروف بزرگ و کوچک مقایسه می‌کند:
+
+<ComparisonTable
+  head={['این دو زبانه', 'تکراری؟']}
+  rows={[
+    [<code>example.com/page</code>, 'یک صفحه دو بار: بله، یکی بسته می‌شود'],
+    [<code>example.com/Page</code>, 'فقط حروف بزرگ و کوچک فرق دارد: بله'],
+    [<code>example.com/page#faq</code>, 'لنگر متفاوت: نه، هر دو می‌مانند'],
+    [<code>example.com/page?ref=mail</code>, 'پارامترهای متفاوت: نه، هر دو می‌مانند'],
+  ]}
+/>
+
+این عمدی است: دو زبانه روی بخش‌های مختلف یک سند طولانی، یا دو جستجو، برای شما زبانه‌های متفاوتی هستند، پس می‌مانند. فقط تکرارهای واقعی حذف می‌شوند.
+
+</Section>
+
+<Section id="builtin" title="آیا خود مرورگر می‌تواند تکراری‌ها را ببندد؟">
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+صفحه‌های راهنمای Chrome هیچ ابزاری برای حذف زبانه‌های تکراری شرح نمی‌دهند. نزدیک‌ترین گزینه **جستجوی زبانه** (<bdi dir="ltr">Tab Search</bdi>، <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi>) است: نام یک سایت را بنویسید، تکراری‌ها را در فهرست پیدا کنید و یکی‌یکی با دکمهٔ بستن هر ردیف ببندید.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+منوی زبانه در Edge گزینهٔ <bdi dir="ltr">**Duplicate tab**</bdi> را دارد که یک نسخهٔ دیگر باز می‌کند؛ درست برعکس چیزی که می‌خواهید. تکراری‌ها را باید دستی پیدا کنید و در طول نوار زبانه‌ها یکی‌یکی ببندید.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+روی هر زبانه‌ای راست‌کلیک کنید و برای بستن تکراری‌ها **بستن زبانه‌های تکراری** (<bdi dir="ltr">Close Duplicate Tabs</bdi>) را بزنید، یا برای فقط یک صفحه **بستن نسخه‌های تکراری این زبانه** (<bdi dir="ltr">Close Duplicates of This Tab</bdi>) را.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="prevent" title="چطور از اول تکراری کمتری داشته باشیم؟">
+
+- **پیش از باز کردن جستجو کنید.** <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> در TabMerger نشان می‌دهد صفحه از قبل باز است یا ذخیره شده. بیشتر در [پیدا کردن یک زبانه میان صدها زبانه](/blog/find-a-tab-among-hundreds).
+- **پنجره‌ها را با دقت ادغام کنید.** تکراری‌ها هنگام یکی کردن پنجره‌ها به هم می‌رسند؛ درست پس از [ادغام پنجره‌ها](/blog/merge-browser-windows) تکراری‌ها را حذف کنید.
+- **ذخیره کنید، بعد ببندید.** زبانه‌های باز کمتر یعنی نسخه‌های کمتر. [روال ما برای زبانه‌های بیش از حد](/blog/manage-too-many-tabs) این را به عادت تبدیل می‌کند.
+
+<InstallCta>رایگان برای Chrome و Edge و Firefox. برای شروع حساب کاربری لازم نیست.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="پرسش‌های متداول">
+
+<Faq items={post.faq} />
+
+</Section>

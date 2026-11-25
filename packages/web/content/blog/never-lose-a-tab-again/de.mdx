@@ -1,0 +1,174 @@
+export const post = {
+  slug: 'never-lose-a-tab-again',
+  title: 'Nie wieder einen Tab verlieren: offene Tabs automatisch speichern, geschlossene wiederherstellen',
+  navTitle: 'Nie wieder einen Tab verlieren',
+  seoTitle: 'Offene Tabs automatisch speichern und geschlossene Tabs wiederherstellen mit TabMerger',
+  description:
+    'Speichere deine offenen Tabs automatisch, nach Zeitplan oder ab einer bestimmten Anzahl, und stelle geschlossene Tabs und Fenster wieder her. So funktionieren das automatische Speichern und „Zuletzt geschlossen“ in TabMerger, und warum.',
+  shareSummary: 'Offene Tabs nach Zeitplan gespeichert, jedes geschlossene Fenster nur eine Suche entfernt.',
+  dek: 'Ans Speichern solltest du nicht denken müssen. Einmal einrichten, und von jedem offenen Tab gibt es eine Kopie.',
+  published: '2026-12-13',
+  updated: '2026-12-13',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Das automatische Speichern läuft alle 15 Minuten bis täglich oder sobald mehr als 20 bis 100 Tabs offen sind.', source: 'TabMerger 3.16.1' },
+    { text: 'Tabs, die schon in einer Gruppe gespeichert sind, werden übersprungen; private Fenster werden nie gespeichert.', source: 'TabMerger 3.16.1' },
+    { text: 'Kostenlos behält TabMerger die 2 neuesten automatischen Speicherungen, mit Pro alle.', source: 'TabMerger-Preise', href: '/pricing' },
+    { text: '„Zuletzt geschlossen“ behält kostenlos deine letzten 2 Tage, mit Pro 30 Tage.', source: 'TabMerger-Preise', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Wie speichere ich meine offenen Tabs automatisch?',
+      answer:
+        'Öffne in TabMerger Einstellungen → Daten und schalte „Offene Tabs automatisch speichern“ ein. Wähle einen Zeitplan (alle 15 Minuten bis täglich), eine Anzahl offener Tabs, die das Speichern auslöst, oder beides. Jeder Durchlauf speichert deine offenen Tabs als neue Gruppe.',
+    },
+    {
+      question: 'Füllt das automatische Speichern TabMerger mit Duplikaten?',
+      answer:
+        'Nein. Tabs, deren Adresse schon in einer Gruppe gespeichert ist, werden übersprungen, und eine Seite, die in mehreren Tabs offen ist, wird nur einmal gespeichert. Ist schon alles gespeichert, speichert der Durchlauf nichts.',
+    },
+    {
+      question: 'Muss TabMerger für das automatische Speichern geöffnet sein?',
+      answer: 'Nein. Es läuft im Hintergrund der Erweiterung, solange dein Browser geöffnet ist, und prüft beim Start des Browsers, ob eine Speicherung verpasst wurde.',
+    },
+    {
+      question: 'Wie hole ich ein geschlossenes Fenster zurück?',
+      answer:
+        'Drücke in TabMerger Ctrl+K und tippe closed:, um zuletzt geschlossene Tabs und Fenster aufzulisten, oder öffne „Zuletzt geschlossen“ in der Seitenleiste. Wählst du ein geschlossenes Fenster, kommt das ganze Fenster zurück.',
+    },
+    {
+      question: 'Was behält der kostenlose Plan, und was bringt Pro dazu?',
+      answer:
+        'Kostenlos behält TabMerger die 2 neuesten automatischen Speicherungen (behalte eine als Gruppe, um sie aufzuheben) und die geschlossenen Tabs deiner letzten 2 Tage. Pro behält jede automatische Speicherung und 30 Tage geschlossener Tabs, dazu kommen verschlüsselte automatische Backups und die offenen Tabs deiner anderen Geräte.',
+    },
+  ],
+  images: [
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-light.webp', alt: 'TabMerger „Settings“ (Einstellungen), „Data“ (Daten): „Auto-save open tabs“ (Offene Tabs automatisch speichern) an, stündlich und sobald mehr als 50 Tabs offen sind, mit „Auto-save now“ (Jetzt automatisch speichern), helles Design' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-dark.webp', alt: 'TabMerger „Settings“ (Einstellungen), „Data“ (Daten): „Auto-save open tabs“ (Offene Tabs automatisch speichern) an, stündlich und sobald mehr als 50 Tabs offen sind, mit „Auto-save now“ (Jetzt automatisch speichern), dunkles Design' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp', alt: 'Eine Gruppe unter „Auto-saved“ (Automatisch gespeichert) mit zwei Fenstern und sieben Tabs und der Schaltfläche „Keep as group“ (Als Gruppe behalten), helles Design' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-dark.webp', alt: 'Eine Gruppe unter „Auto-saved“ (Automatisch gespeichert) mit zwei Fenstern und sieben Tabs und der Schaltfläche „Keep as group“ (Als Gruppe behalten), dunkles Design' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-light.webp', alt: 'TabMerger-Suche nach closed: zeigt ein heute geschlossenes Fenster mit 3 Tabs, helles Design' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-dark.webp', alt: 'TabMerger-Suche nach closed: zeigt ein heute geschlossenes Fenster mit 3 Tabs, dunkles Design' },
+  ],
+  tags: ['tabmerger-guides', 'save-tabs', 'restore-closed-tabs', 'session-management'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp' },
+  ogImage: { src: '/blog/never-lose-a-tab-again/og.png', alt: 'Nie wieder einen Tab verlieren: eine automatisch gespeicherte Gruppe in TabMerger mit der Schaltfläche „Keep as group“ (Als Gruppe behalten)' },
+  toc: [
+    { id: 'quick', label: 'Kurze Antwort' },
+    { id: 'problem', label: 'Wie Tabs verloren gehen' },
+    { id: 'why', label: 'Warum es so funktioniert' },
+    { id: 'steps', label: 'Einschalten' },
+    { id: 'closed', label: 'Zuletzt geschlossen' },
+    { id: 'benefit', label: 'Was es dir erspart' },
+    { id: 'habits', label: 'Gute Gewohnheiten' },
+    { id: 'plans', label: 'Kostenlos oder Pro' },
+    { id: 'faq', label: 'Häufige Fragen' },
+  ],
+}
+
+<QuickAnswer>
+
+Schalte in [TabMerger](/features) **Einstellungen → Daten → Offene Tabs automatisch speichern** (Settings → Data → Auto-save open tabs) ein und wähle einen Zeitplan, eine Tab-Anzahl oder beides. Ab dann werden deine offenen Tabs automatisch als neue Gruppe gespeichert, ohne das, was schon gespeichert ist. Versehentlich etwas geschlossen? <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> und `closed:` finden jeden Tab und jedes Fenster, das du kürzlich geschlossen hast, und öffnen ein ganzes Fenster mit einem Klick wieder.
+
+</QuickAnswer>
+
+<InstallCta>Eine Kopie jedes offenen Tabs, für dich nach Zeitplan gespeichert. Kostenlos für Chrome, Edge und Firefox.</InstallCta>
+
+<Section id="problem" title="Wie Tabs wirklich verloren gehen">
+
+Selten durch einen großen Absturz. Meist ist es etwas Kleines: Du schließt das falsche Fenster, ausgerechnet das mit den dreißig Tabs von der Recherche heute Morgen. Ein Update startet den Browser neu, und nur eins von drei Fenstern kommt zurück. Du räumst am Freitag auf und brauchst am Montag die Seite, die du geschlossen hast. Bis dahin steckt der Tab irgendwo im Verlauf, zwischen Hunderten anderer Seiten, falls du dich noch erinnerst, wie er hieß.
+
+Von Hand speichern hilft, an den Tagen, an denen du daran denkst. Das automatische Speichern ist für die anderen Tage da.
+
+Wie du Tabs nach einem Absturz oder erzwungenen Neustart mit den Bordmitteln jedes Browsers zurückholst, steht in [So holst du deine Tabs nach einem Absturz zurück](/blog/restore-tabs-after-crash). In diesem Ratgeber geht es darum, dass du immer eine Kopie hast.
+
+</Section>
+
+<Section id="why" title="Warum das automatische Speichern so funktioniert">
+
+Jede Regel beim automatischen Speichern in TabMerger soll dafür sorgen, dass die Kopie nützlich ist, nicht nur vorhanden:
+
+- **Es speichert in eine neue Gruppe**, benannt nach der Uhrzeit („Automatisch gespeichert 21. Nov., 20:28“), mit ganzen Fenstern und in der Reihenfolge der Tabs. Nichts, was du vorher gespeichert hast, wird verändert. Jede neue automatische Speicherung bekommt eine andere Farbe als die letzte, so kannst du sie leicht auseinanderhalten.
+- **Zwei Auslöser, weil sich Tabs auf zwei Arten anhäufen.** Ein **Zeitplan** (alle 15 oder 30 Minuten, stündlich, alle 2 oder 4 Stunden oder täglich) deckt die gleichmäßige Arbeit ab. Eine **Tab-Anzahl** (20, 30, 50, 75 oder 100 offene Tabs) deckt den Recherche-Schub ab, der jedem Zeitplan davonläuft.
+- **Ein Schub wird einmal gespeichert.** Der Anzahl-Auslöser greift, wenn du die Grenze überschreitest, und wartet dann, bis du wieder bei oder unter ihr bist, mindestens aber 10 Minuten, bevor er erneut greifen kann. Zehn Tabs hintereinander zu öffnen ergibt keine zehn Gruppen.
+- **Keine Duplikate.** Ein Tab, dessen Adresse schon in einer deiner Gruppen steht, wird übersprungen, und eine Seite, die in mehreren Tabs offen ist, wird einmal gespeichert. Ist schon alles gespeichert, speichert der Durchlauf nichts und sagt dir das.
+- **Privat bleibt privat.** Private Fenster werden nie gespeichert. Die eigenen Seiten von TabMerger bleiben außen vor; angeheftete Tabs und Browserseiten werden mitgespeichert.
+- **Es braucht dich nicht.** Das automatische Speichern läuft im Hintergrund der Erweiterung, solange der Browser geöffnet ist, und prüft beim Start des Browsers, ob eine Speicherung fällig ist. Eine optionale Benachrichtigung meldet sich nach jedem Durchlauf; die Statuszeile in den Einstellungen zeigt das letzte Ergebnis.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Automatisches Speichern in TabMerger" steps={[{ title: 'Einstellungen' }, { title: 'Automatisch gespeicherte Gruppe' }]}>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-save-settings" alt="TabMerger „Settings“ (Einstellungen), „Data“ (Daten): „Auto-save open tabs“ (Offene Tabs automatisch speichern) an, stündlich und sobald mehr als 50 Tabs offen sind, mit „Auto-save now“ (Jetzt automatisch speichern), helles Design" darkAlt="TabMerger „Settings“ (Einstellungen), „Data“ (Daten): „Auto-save open tabs“ (Offene Tabs automatisch speichern) an, stündlich und sobald mehr als 50 Tabs offen sind, mit „Auto-save now“ (Jetzt automatisch speichern), dunkles Design" boxes={[{ id: 'schedule', label: 'Wie oft gespeichert wird' }, { id: 'threshold', label: 'Der Auslöser für offene Tabs' }, { id: 'run-now', label: 'Jetzt speichern' }]} source="TabMerger 3.16.1">Stündlich und immer, wenn mehr als 50 Tabs offen sind.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-saved" alt="Eine Gruppe unter „Auto-saved“ (Automatisch gespeichert) mit zwei Fenstern und sieben Tabs und der Schaltfläche „Keep as group“ (Als Gruppe behalten), helles Design" darkAlt="Eine Gruppe unter „Auto-saved“ (Automatisch gespeichert) mit zwei Fenstern und sieben Tabs und der Schaltfläche „Keep as group“ (Als Gruppe behalten), dunkles Design" boxes={[{ id: 'keep', label: 'Als Gruppe behalten' }]} source="TabMerger 3.16.1">Das Ergebnis: beide offenen Fenster, als Gruppe gespeichert. Behalte sie, um sie dauerhaft aufzuheben.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="steps" title="In vier Schritten einschalten">
+
+1. Öffne TabMerger, dann **Einstellungen** (Settings, im Kontomenü) → **Daten** (Data).
+2. Schalte **Offene Tabs automatisch speichern** (Auto-save open tabs) ein. (Mit Pro ist es schon an, stündlich.)
+3. Wähle einen **Zeitplan** (Schedule), eine Anzahl unter **Wenn offene Tabs mehr sind als** (When open tabs pass) oder beides. Schalte **Benachrichtigung anzeigen** (Show a notification) ein, wenn du nach jeder Speicherung Bescheid bekommen möchtest.
+4. Klicke einmal auf **Jetzt automatisch speichern** (Auto-save now), um das Ergebnis zu sehen: eine neue Gruppe unter **Automatisch gespeichert** (Auto-saved) in der Seitenleiste.
+
+Eine automatische Speicherung, die du dauerhaft behalten willst? Öffne sie und klicke auf **Als Gruppe behalten** (Keep as group): Sie wandert zu deinen Gruppen und wird nie automatisch entfernt.
+
+</Section>
+
+<Section id="closed" title="Zuletzt geschlossen: die andere Hälfte des Netzes">
+
+Das automatische Speichern deckt ab, was offen ist; **Zuletzt geschlossen** (Recently closed) deckt ab, was du gerade geschlossen hast. Jeder Tab und jedes Fenster, das du schließt, wird nach Tagen geordnet aufbewahrt, nur auf diesem Gerät, und private Fenster werden nie erfasst.
+
+- Öffne **Zuletzt geschlossen** in der Seitenleiste, um nach Tagen zu blättern, oder drücke <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> und beginne mit `closed:`, um darin zu suchen.
+- Ein geschlossenes **Fenster** steht als ein Eintrag in der Liste („Fenster · 3 Tabs“): Wähle es aus, und das ganze Fenster kommt zurück.
+- Klicke mit gedrückter <Kbd>Ctrl</Kbd>-Taste (<Kbd>⌘</Kbd> auf dem Mac) oder mit der mittleren Maustaste auf ein Ergebnis, um es im Hintergrund wieder zu öffnen.
+
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-closed-window" alt="TabMerger-Suche nach closed: zeigt ein heute geschlossenes Fenster mit 3 Tabs, helles Design" darkAlt="TabMerger-Suche nach closed: zeigt ein heute geschlossenes Fenster mit 3 Tabs, dunkles Design" boxes={[{ id: 'search-input', label: 'Der Filter closed:' }, { id: 'closed-window', label: 'Ein ganzes geschlossenes Fenster' }]} source="TabMerger 3.16.1">Ein versehentlich geschlossenes Fenster, nur eine Suche entfernt.</ThemedScreenshot>
+
+Mehr Suchtricks findest du in [Alle Tabs mit TabMerger durchsuchen](/blog/search-all-your-tabs-with-tabmerger).
+
+</Section>
+
+<Section id="benefit" title="Was es dir erspart">
+
+Der schlimmste Fall schrumpft von „Die Tabs sind weg“ auf „Mir fehlt, was ich seit der letzten Speicherung geöffnet habe“. Mit einem stündlichen Zeitplan kostet dich ein missglückter Neustart höchstens eine Stunde neuer Tabs; ein Fenster, das du selbst geschlossen hast, steht unter „Zuletzt geschlossen“. Beides zurückzuholen ist eine Suche statt eines Nachmittags im Verlauf.
+
+</Section>
+
+<Section id="habits" title="Gute Gewohnheiten">
+
+- **Passe den Zeitplan deinem Tempo an.** Stündlich passt für die meisten Tage, alle 15 Minuten für intensive Recherche.
+- **Nimm eine Tab-Anzahl dazu, wenn du Tabs schubweise öffnest.** 50 ist ein guter Anfang.
+- **Erst behalten, dann aufräumen.** Steckt in einer automatischen Speicherung etwas, das sich lohnt, klicke auf **Als Gruppe behalten** und benenne die Gruppe um; den Rest löschst du.
+- **Speichere trotzdem bewusst.** Das automatische Speichern ist das Netz, nicht der Plan: Für echte Projekte behältst du benannte Gruppen (siehe [ein täglicher Tab-Workflow](/blog/tabmerger-daily-workflow)).
+
+</Section>
+
+<Section id="plans" title="Kostenlos oder Pro">
+
+<ComparisonTable
+  head={['', 'Kostenlos', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Offene Tabs automatisch speichern', 'Aus, bis du es einschaltest; die 2 neuesten bleiben', 'Standardmäßig an; alle bleiben'],
+    ['Automatische Speicherungen und Plan-Limits', 'Zählen zu den 5 Gruppen und 50 Tabs', 'Keine Limits'],
+    ['Zuletzt geschlossen', 'Deine letzten 2 Tage', 'Deine letzten 30 Tage'],
+    ['Automatische verschlüsselte Backups deiner Gruppen', 'Nein', 'Stündlich bis wöchentlich, die 10 neuesten bleiben'],
+    ['Offene Tabs deiner anderen Geräte', 'Nein', 'Einstellungen → Geräte'],
+  ]}
+/>
+
+Im kostenlosen Plan ersetzt jede neue automatische Speicherung die älteste, sobald es 2 gibt; **Als Gruppe behalten** nimmt eine aus der Rotation heraus. Nahe am Limit von 50 Tabs speichert eine automatische Speicherung die Tabs, die noch passen, und sagt das auch. Backups und die Tabs deiner Geräte werden in deinem Konto gespeichert, Ende-zu-Ende-verschlüsselt, und unser Server lehnt es ab, sie für ein Konto ohne Pro zu speichern. Details auf der [Preisseite](/pricing).
+
+<InstallCta>Einmal einrichten und keine Sorgen mehr um geschlossene Fenster. Kostenlos für Chrome, Edge und Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Häufige Fragen">
+
+<Faq items={post.faq} />
+
+</Section>

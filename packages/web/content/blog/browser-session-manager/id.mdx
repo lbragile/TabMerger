@@ -1,0 +1,197 @@
+export const post = {
+  slug: 'browser-session-manager',
+  title: 'Apa itu pengelola sesi browser, dan apakah Anda membutuhkannya?',
+  navTitle: 'Apa itu pengelola sesi?',
+  seoTitle: 'Ekstensi session manager: sesi vs bookmark',
+  description:
+    'Apa itu sesi tab, apa yang bisa dilakukan ekstensi untuk menyimpan sesi browser yang tidak bisa dilakukan bookmark dan riwayat, apa yang perlu dicari, dan kapan browser saja sudah cukup.',
+  shareSummary: 'Sesi tab, pengelola sesi, dan bookmark: apa yang disimpan masing-masing, dan kapan butuh yang mana.',
+  dek: 'Browser Anda sudah menyimpan satu sesi. Pengelola sesi menyimpan sebanyak yang Anda mau, lengkap dengan nama.',
+  published: '2026-11-25',
+  updated: '2026-11-25',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Ekstensi hanya bisa menampilkan paling banyak 25 tab dan jendela yang baru ditutup.',
+      source: 'Dokumentasi chrome.sessions',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+    },
+    { text: 'Session Buddy menyimpan data di perangkat dan tidak punya sinkronisasi.', source: 'Halaman toko Session Buddy, 20 Nov 2026' },
+    { text: 'Tab Session Manager menyimpan otomatis saat jendela ditutup dan berdasarkan timer.', source: 'Halaman tokonya, 20 Nov 2026' },
+    { text: 'Pemulihan saat browser dibuka hanya menyimpan sesi terakhir.', source: 'Pengaturan Chrome, Edge, dan Firefox' },
+  ],
+  faq: [
+    {
+      question: 'Apa itu sesi tab?',
+      answer:
+        'Jendela dan tab yang Anda buka pada satu waktu, sesuai urutannya. Browser menyimpan sesi yang sedang berjalan agar bisa membukanya lagi setelah dimulai ulang; pengelola sesi menyimpannya dengan sebuah nama.',
+    },
+    {
+      question: 'Apa bedanya pengelola sesi dengan bookmark?',
+      answer:
+        'Bookmark menyimpan halaman satu per satu di dalam folder. Pengelola sesi menyimpan seluruh jendela, mempertahankan strukturnya, bisa melakukannya secara otomatis, lalu membukanya kembali sebagai jendela.',
+    },
+    {
+      question: 'Apakah saya butuh ekstensi pengelola sesi?',
+      answer:
+        'Tidak, jika Anda bekerja di satu jendela dan pengaturan saat browser dibuka sudah aktif. Ya, jika Anda mengerjakan beberapa proyek sekaligus, kehilangan tab karena crash, atau ingin jendela kemarin kembali.',
+    },
+    {
+      question: 'Apakah pengelola sesi menjaga privasi?',
+      answer:
+        'Tergantung di mana datanya disimpan. Sebagian menyimpan semuanya di perangkat Anda; yang menyinkronkan mengirim data ke server, jadi periksa apakah datanya dienkripsi end-to-end.',
+    },
+  ],
+  images: [
+    { src: '/blog/browser-session-manager/tm-save-session-light.webp', alt: 'Dialog Save Session (Simpan Sesi) di TabMerger dengan nama Friday wrap-up, tema terang' },
+    { src: '/blog/browser-session-manager/tm-save-session-dark.webp', alt: 'Dialog Save Session (Simpan Sesi) di TabMerger dengan nama Friday wrap-up, tema gelap' },
+    { src: '/blog/browser-session-manager/tm-session-view-light.webp', alt: 'Sesi tersimpan Friday wrap-up yang menampilkan grup-grupnya, dengan tombol Restore session (Pulihkan sesi), tema terang' },
+    { src: '/blog/browser-session-manager/tm-session-view-dark.webp', alt: 'Sesi tersimpan Friday wrap-up yang menampilkan grup-grupnya, dengan tombol Restore session (Pulihkan sesi), tema gelap' },
+  ],
+  tags: ['session-management', 'tab-manager', 'save-tabs', 'comparison'],
+  sources: [
+    {
+      title: 'chrome.sessions API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'sessions (WebExtensions API)',
+      publisher: 'MDN Web Docs',
+      url: 'https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Session Buddy',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/session-buddy-tab-bookmar/edacconmaakjimmfgnblocblbcdcpbko',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tab Session Manager',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/tab-session-manager/iaiomicjabeggjcfkbimgmglanimpnae',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tabs Outliner',
+      publisher: 'tabsoutliner.com',
+      url: 'https://tabsoutliner.com/',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/browser-session-manager/tm-session-view-light.webp' },
+  ogImage: { src: '/blog/browser-session-manager/og.png', alt: 'Apa itu pengelola sesi browser, dan apakah Anda membutuhkannya? Panduan TabMerger, dengan sesi tersimpan dan tombol untuk memulihkannya' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'session', label: 'Apa itu sesi tab?' },
+    { id: 'vs', label: 'Sesi vs bookmark' },
+    { id: 'need', label: 'Apakah Anda butuh?' },
+    { id: 'look-for', label: 'Yang perlu dicari' },
+    { id: 'examples', label: 'Contoh' },
+    { id: 'tabmerger', label: 'Sesi di TabMerger' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+**Sesi** adalah kumpulan jendela dan tab yang Anda buka pada satu waktu. Browser Anda menyimpan sesi yang sedang berjalan agar bisa membukanya lagi setelah dimulai ulang. **Pengelola sesi** (session manager) adalah ekstensi yang menyimpan sesi dengan nama, sering kali secara otomatis, lalu membukanya kembali sebagai jendela. Bookmark menyimpan halaman; pengelola sesi menyimpan seluruh ruang kerja. [TabMerger](/features) mengerjakan keduanya sekaligus: semua jendela yang terbuka tersimpan ke grup bernama dengan sekali klik, sesi bernama yang bisa dipulihkan bersama-sama, simpan otomatis terjadwal, dan sinkronisasi terenkripsi end-to-end di Pro.
+
+</QuickAnswer>
+
+<InstallCta>Simpan setiap jendela sebagai grup bernama, dan seluruh sesi dengan sekali klik. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+<Section id="session" title="Apa itu sesi tab?">
+
+Semua yang sedang terbuka saat ini: setiap jendela, tab-tabnya sesuai urutan, dan tab mana yang aktif. Browser terus melacaknya, untuk dua keperluan:
+
+- **Pemulihan saat browser dibuka.** Jika opsi saat browser dibuka yang memulihkan sesi sebelumnya aktif, browser membuka lagi sesi terakhir ketika dijalankan. Letak opsi itu di setiap browser dijelaskan di [cara memulihkan tab setelah crash](/blog/restore-tabs-after-crash#prevent).
+- **Yang baru ditutup.** <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> membuka kembali tab dan jendela yang Anda tutup, satu per satu ke belakang.
+
+Keduanya hanya menyimpan keadaan *terbaru*. Jendela-jendela Selasa lalu bukan sesi yang bisa dikembalikan browser; semuanya hanya baris-baris di riwayat. Celah inilah yang diisi pengelola sesi. Jika Anda sudah kehilangan tab, mulailah dari [cara memulihkan tab setelah crash](/blog/restore-tabs-after-crash).
+
+</Section>
+
+<Section id="vs" title="Pengelola sesi vs bookmark vs riwayat">
+
+<ComparisonTable
+  head={['', 'Bookmark', 'Riwayat', 'Pengelola sesi']}
+  rowHeaders
+  highlight={3}
+  minWidth="36rem"
+  rows={[
+    ['Menyimpan', 'Halaman yang Anda pilih', 'Setiap halaman yang Anda kunjungi', 'Seluruh jendela beserta tabnya'],
+    ['Memisahkan jendela', 'Satu folder per penyimpanan', 'Tidak', 'Ya'],
+    ['Menyimpan otomatis', 'Tidak', 'Ya, halaman per halaman', 'Biasanya, berdasarkan timer atau saat ditutup'],
+    ['Membuka kembali', 'Satu folder sekaligus', 'Satu halaman sekaligus', 'Jendela, dengan sekali klik'],
+    ['Bawaan browser', 'Ya', 'Ya', 'Tidak, berupa ekstensi'],
+  ]}
+/>
+
+Bookmark unggul untuk halaman yang akan Anda simpan bertahun-tahun. Pengelola sesi unggul untuk pekerjaan yang sedang berjalan: dua belas tab dari tugas yang baru setengah selesai, yang ingin Anda kembalikan persis sebagai jendela, bukan disimpan satu per satu. Selengkapnya di [tab vs bookmark](/blog/tabs-vs-bookmarks).
+
+</Section>
+
+<Section id="need" title="Apakah Anda butuh?">
+
+Mungkin tidak, jika Anda bekerja di satu jendela, membuka kurang dari dua puluhan tab, dan pengaturan saat browser dibuka sudah aktif. [Rutinitas untuk tab yang terlalu banyak](/blog/manage-too-many-tabs) dan sesekali folder bookmark sudah cukup.
+
+Mungkin ya, jika salah satu hal ini terasa akrab:
+
+- Anda berpindah-pindah proyek dan ingin jendela tiap proyek kembali utuh.
+- Crash, pembaruan, atau mulai ulang paksa pernah membuat Anda kehilangan tab.
+- Anda ingin menutup semuanya di akhir hari tanpa kehilangan apa pun.
+- Anda butuh tab dari beberapa hari lalu, bukan hanya dari sesi terakhir.
+
+</Section>
+
+<Section id="look-for" title="Apa yang harus bisa dilakukan pengelola sesi yang baik?">
+
+- **Menyimpan otomatis**, bukan hanya saat Anda ingat: berdasarkan timer, saat jendela ditutup, atau keduanya.
+- **Mempertahankan struktur**: jendela, urutan tab, dan idealnya grup tab.
+- **Memulihkan dengan fleksibel**: seluruh sesi, satu jendela, atau satu tab.
+- **Mencari** di semua sesi tersimpan, sehingga tab dari minggu lalu bisa ditemukan.
+- **Mengekspor** ke file yang bisa dibaca di tempat lain, agar Anda tidak pernah terkunci. (TabMerger mengekspor JSON dengan sekali klik: [ini isinya](/blog/export-open-tabs).)
+- **Jelas soal tempat data disimpan.** Hanya lokal itu privat, tetapi ikut hilang bersama profil; yang tersinkron lebih aman dari kehilangan data, dan seharusnya dienkripsi end-to-end.
+
+Satu catatan teknis: API yang disediakan browser bagi ekstensi untuk tab yang sudah ditutup itu kecil. `chrome.sessions` mengembalikan paling banyak 25 entri yang baru ditutup (`MAX_SESSION_RESULTS`). Pengelola sesi yang menjangkau lebih jauh menyimpan catatannya sendiri.
+
+</Section>
+
+<Section id="examples" title="Pengelola sesi apa saja yang ada?">
+
+Beberapa yang sudah mapan, dijelaskan berdasarkan halaman toko dan situs mereka sendiri (dicek 20 Nov 2026):
+
+- **Session Buddy** (Chrome) menyimpan dan memulihkan sesi, serta menyimpan riwayat sesi sebelumnya untuk pemulihan setelah crash. Data tetap di perangkat; halaman tokonya menyebutkan tidak ada sinkronisasi. Gratis.
+- **Tab Session Manager** (Chrome, Firefox, Edge) menyimpan sesi dengan nama dan tag, menyimpan otomatis saat jendela ditutup dan berdasarkan timer, serta menawarkan sinkronisasi cloud. Gratis.
+- **Tabs Outliner** (Chrome) menampung jendela yang terbuka dan tersimpan dalam satu pohon, dengan catatan dan pemulihan setelah crash. Gratis, dengan upgrade Pro sekali bayar.
+
+Untuk perbandingan berdampingan sembilan alat dari sisi harga, sinkronisasi, dan enkripsi, lihat [perbandingan ekstensi pengelola tab terbaik](/blog/best-tab-manager-extensions) atau [halaman perbandingan](/compare) kami.
+
+</Section>
+
+<Section id="tabmerger" title="Cara kerja sesi di TabMerger">
+
+[TabMerger](/features), ekstensi gratis kami untuk Chrome, Edge, dan Firefox, adalah pengelola tab dengan fitur sesi bawaan. Tab yang terbuka disimpan ke dalam **grup** bernama; lalu **Simpan sesi saat ini** (Save current session) mengambil snapshot bernama dari grup-grup tersimpan itu, yang nantinya bisa Anda pulihkan bersama-sama. Paket Gratis menyimpan 3 sesi di browser; Pro menyimpan sesi tanpa batas dan menyinkronkannya antarperangkat, terenkripsi end-to-end.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Menyimpan dan memulihkan sesi" steps={[{ title: 'Simpan sesi' }, { title: 'Tampilan sesi' }]}>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-save-session" alt="Dialog Save Session (Simpan Sesi) di TabMerger dengan nama Friday wrap-up, tema terang" darkAlt="Dialog Save Session (Simpan Sesi) di TabMerger dengan nama Friday wrap-up, tema gelap" boxes={[{ id: 'session-name', label: 'Nama sesi' }]} source="TabMerger 3.16.1">Save current session (Simpan sesi saat ini) meminta sebuah nama.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-session-view" alt="Sesi tersimpan Friday wrap-up yang menampilkan grup-grupnya, dengan tombol Restore session (Pulihkan sesi), tema terang" darkAlt="Sesi tersimpan Friday wrap-up yang menampilkan grup-grupnya, dengan tombol Restore session (Pulihkan sesi), tema gelap" boxes={[{ id: 'restore-session', label: 'Pulihkan sesi' }]} source="TabMerger 3.16.1">Sesi tersimpan menampilkan grup-grupnya; Restore session (Pulihkan sesi) mengembalikan semuanya.</ThemedScreenshot>
+</Carousel>
+
+Untuk sisi otomatisnya, **Pengaturan → Data → Simpan otomatis tab yang terbuka** (Settings → Data → Auto-save open tabs) menyimpan tab yang terbuka sebagai grup baru sesuai jadwal atau begitu jumlah tab melewati batas tertentu. Hasil ekspor berupa JSON biasa. Untuk menjadikan sesi sebagai rutinitas pagi, lihat [mulai hari kerja dengan tab tersimpan](/blog/start-your-workday-with-saved-tabs).
+
+<InstallCta>Gratis untuk Chrome, Edge, dan Firefox. Tidak perlu akun untuk mulai.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

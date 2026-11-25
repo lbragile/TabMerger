@@ -1,0 +1,276 @@
+export const post = {
+  slug: 'tab-keyboard-shortcuts',
+  title: 'Pintasan keyboard untuk tab di Chrome, Edge, dan Firefox',
+  seoTitle: 'Pintasan Tab Chrome (plus Edge, Firefox): Referensi Lengkap',
+  description:
+    'Semua pintasan tab yang layak dipelajari di Chrome, Edge, dan Firefox: berpindah tab, membuka lagi tab dan jendela yang tertutup, mencari tab, dan mem-bookmark semuanya, di Windows dan Mac.',
+  shareSummary: 'Pindah, buka lagi, cari, dan simpan tab dari keyboard di Chrome, Edge, dan Firefox.',
+  dek: 'Satu tabel untuk ketiga browser, perbedaannya di Mac, dan cara mengatur pintasan ekstensi yang benar-benar terpasang.',
+  published: '2026-11-22',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+T membuka lagi tab terakhir yang ditutup di ketiganya.', source: 'Bantuan Chrome dan Edge; tombol Firefox 159' },
+    { text: 'Firefox membuka lagi jendela yang tertutup dengan Ctrl+Shift+N.', source: 'Tombol Firefox 159' },
+    {
+      text: 'Ctrl+9 di Chrome melompat ke tab terakhir, bukan tab kesembilan.',
+      source: 'Bantuan Chrome',
+      href: 'https://support.google.com/chrome/answer/157179',
+    },
+    { text: 'Edge memakai sendiri Ctrl+Shift+K, U, dan P, jadi ekstensi tidak bisa memakainya.', source: 'Dukungan Microsoft; Edge 158' },
+  ],
+  faq: [
+    {
+      question: 'Bagaimana cara berpindah tab dengan keyboard?',
+      answer:
+        'Ctrl+Tab pindah ke tab berikutnya dan Ctrl+Shift+Tab ke tab sebelumnya di Chrome, Edge, dan Firefox. Ctrl+1 sampai Ctrl+8 melompat ke tab berdasarkan posisinya; Ctrl+9 ke tab terakhir.',
+    },
+    {
+      question: 'Bagaimana cara membuka lagi tab yang tertutup?',
+      answer:
+        'Tekan Ctrl+Shift+T (⌘+Shift+T di Mac). Tekan lagi untuk terus mundur. Di Chrome, ini juga mengembalikan jendela yang tertutup; di Firefox, Ctrl+Shift+N membuka lagi jendela yang tertutup.',
+    },
+    {
+      question: 'Bisakah saya mencari di antara tab yang terbuka?',
+      answer: 'Bisa. Ctrl+Shift+A membuka Penelusuran Tab di Chrome dan menampilkan daftar semua tab di Firefox. Di Chrome, Anda juga bisa mengetik @tab di kolom URL (di Chrome berbahasa Inggris: @tabs).',
+    },
+    {
+      question: 'Mengapa pintasan sebuah ekstensi tidak berfungsi?',
+      answer:
+        'Browser membiarkan pintasan yang disarankan tidak terpasang jika bentrok dengan pintasannya sendiri. Periksa chrome://extensions/shortcuts atau edge://extensions/shortcuts dan pilih tombol lain.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp', alt: 'Halaman pintasan keyboard ekstensi di Edge untuk TabMerger: keempat perintah simpan sudah terpasang, ke Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma, dan Alt+Shift+Period' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp', alt: 'Pencarian TabMerger terbuka dengan kueri docs, menampilkan tab terbuka dan tersimpan yang cocok, tema terang' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-dark.webp', alt: 'Pencarian TabMerger terbuka dengan kueri docs, menampilkan tab terbuka dan tersimpan yang cocok, tema gelap' },
+  ],
+  tags: ['browser-tips', 'cross-browser', 'chrome', 'edge', 'firefox', 'tab-management'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-20',
+      note: 'Data Firefox dibaca dari definisi tombol di dalam Firefox 159.0.1 sendiri; halaman ini memblokir pemeriksaan otomatis kami.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp' },
+  ogImage: { src: '/blog/tab-keyboard-shortcuts/og.png', alt: 'Pintasan keyboard untuk tab di Chrome, Edge, dan Firefox: panduan TabMerger, dengan pencarian TabMerger terbuka' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'table', label: 'Pintasan per browser' },
+    { id: 'reopen', label: 'Membuka lagi tab yang tertutup' },
+    { id: 'extensions', label: 'Pintasan ekstensi' },
+    { id: 'tabmerger', label: 'Tombol TabMerger' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['table', 'reopen', 'extensions'],
+  browserFact: {
+    label: 'Pintasan ekstensi',
+    values: { chrome: 'chrome://extensions/shortcuts', edge: 'edge://extensions/shortcuts', firefox: 'about:addons' },
+  },
+}
+
+<QuickAnswer>
+
+<Kbd>Ctrl</Kbd>+<Kbd>Tab</Kbd> dan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Tab</Kbd> pindah ke tab berikutnya dan sebelumnya, <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> melompat ke tab berdasarkan posisinya, <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> menutupnya, dan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> mengembalikannya. Semuanya bekerja sama di Chrome, Edge, dan Firefox di Windows dan Linux; di Mac, pakai <Kbd>⌘</Kbd> sebagai ganti <Kbd>Ctrl</Kbd>. Tambahkan [TabMerger](/features), dan dua tombol lagi mengerjakan bagian terberatnya: menyimpan tab langsung dari keyboard, dan <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> untuk menemukan tab apa pun, yang terbuka, tersimpan, atau sudah ditutup.
+
+</QuickAnswer>
+
+<InstallCta>Simpan tab tanpa melepas tangan dari keyboard. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="table" title="Pintasan tab apa saja yang dimiliki browser Anda?">
+
+Windows dan Linux dulu, lalu apa yang berbeda di Mac. Setiap baris diambil dari halaman bantuan browser itu sendiri, atau untuk Firefox, dari definisi tombol di dalam Firefox 159.0.1 sendiri.
+
+<BrowserPanels section="table">
+<BrowserPanel browser="chrome">
+
+<ComparisonTable
+  head={['Tindakan', 'Pintasan']}
+  rowHeaders
+  rows={[
+    ['Tab baru', 'Ctrl+T'],
+    ['Tutup tab', 'Ctrl+W'],
+    ['Buka lagi tab dan jendela yang tertutup', 'Ctrl+Shift+T'],
+    ['Tab berikutnya', 'Ctrl+Tab atau Ctrl+PgDn'],
+    ['Tab sebelumnya', 'Ctrl+Shift+Tab atau Ctrl+PgUp'],
+    ['Tab 1 sampai 8', 'Ctrl+1 … Ctrl+8'],
+    ['Tab terakhir', 'Ctrl+9'],
+    ['Cari tab yang terbuka', 'Ctrl+Shift+A'],
+    ['Bookmark semua tab', 'Ctrl+Shift+D'],
+    ['Histori', 'Ctrl+H'],
+    ['Tutup jendela', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+Anda juga bisa mencari tab yang terbuka dari kolom URL: ketik `@tab` (di Chrome berbahasa Inggris: `@tabs`) lalu tekan <Kbd>Tab</Kbd>. Untuk mencari tab yang tersimpan dan sudah ditutup juga, lihat [cara menemukan satu tab di antara ratusan](/blog/find-a-tab-among-hundreds).
+
+**Di Mac**, pakai <Kbd>⌘</Kbd> di tempat tabel menulis <Kbd>Ctrl</Kbd>, dengan pengecualian dari halaman bantuan Chrome berikut: tab berikutnya dan sebelumnya adalah <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>→</Kbd> dan <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>←</Kbd>, histori adalah <Kbd>⌘</Kbd>+<Kbd>Y</Kbd>, dan pengelola bookmark adalah <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>B</Kbd>.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+<ComparisonTable
+  head={['Tindakan', 'Pintasan']}
+  rowHeaders
+  rows={[
+    ['Tab baru', 'Ctrl+T'],
+    ['Tutup tab', 'Ctrl+W'],
+    ['Buka lagi tab terakhir yang ditutup', 'Ctrl+Shift+T'],
+    ['Tab berikutnya', 'Ctrl+Tab atau Ctrl+PgDn'],
+    ['Tab sebelumnya', 'Ctrl+Shift+Tab atau Ctrl+PgUp'],
+    ['Tab 1 sampai 8', 'Ctrl+1 … Ctrl+8'],
+    ['Tab terakhir', 'Ctrl+9'],
+    ['Simpan semua tab ke Favorit Edge', 'Ctrl+Shift+D'],
+    ['Histori', 'Ctrl+H'],
+    ['Tutup jendela', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+Daftar pintasan Edge tidak punya tombol untuk mencari tab yang terbuka atau membuka lagi jendela yang tertutup.
+
+**Di Mac**, pakai <Kbd>⌘</Kbd> di tempat tabel menulis <Kbd>Ctrl</Kbd>; histori adalah <Kbd>⌘</Kbd>+<Kbd>Y</Kbd>. Microsoft mencantumkan <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↓</Kbd> dan <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↑</Kbd> untuk tab berikutnya dan sebelumnya.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+<ComparisonTable
+  head={['Tindakan', 'Pintasan']}
+  rowHeaders
+  rows={[
+    ['Tab baru', 'Ctrl+T'],
+    ['Tutup tab', 'Ctrl+W'],
+    ['Buka lagi tab yang tertutup', 'Ctrl+Shift+T'],
+    ['Buka lagi jendela yang tertutup', 'Ctrl+Shift+N'],
+    ['Tab berikutnya', 'Ctrl+Tab atau Ctrl+PgDn'],
+    ['Tab sebelumnya', 'Ctrl+Shift+Tab atau Ctrl+PgUp'],
+    ['Tab 1 sampai 8', 'Ctrl+1 … Ctrl+8'],
+    ['Tab terakhir', 'Ctrl+9'],
+    ['Daftar tab', 'Ctrl+Shift+A'],
+    ['Bookmark semua tab', 'Ctrl+Shift+D'],
+    ['Riwayat di bilah sisi', 'Ctrl+H'],
+    ['Riwayat di Pustaka', 'Ctrl+Shift+H'],
+    ['Tutup jendela', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+**Di Mac**, Firefox mendefinisikan pintasan ini dengan tombol pengubah utama sistem, jadi tekan <Kbd>⌘</Kbd> di tempat tabel menulis <Kbd>Ctrl</Kbd>.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="reopen" title="Bagaimana cara membuka lagi tab yang tidak sengaja ditutup?">
+
+Tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> di Mac). Setiap tekanan mundur satu langkah lagi. Apa saja yang kembali tergantung browsernya:
+
+<BrowserPanels section="reopen">
+<BrowserPanel browser="chrome">
+
+Chrome membuka lagi tab *dan* jendela sesuai urutan penutupannya, jadi terus tekan sampai jendela yang hilang kembali.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Dokumentasi Edge menyebut <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> untuk membuka lagi tab terakhir yang ditutup. Untuk jendela yang tertutup, buka histori (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) dan lihat di bawah **Recently closed** (baru saja ditutup).
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox menyimpan daftar terpisah: <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> untuk tab dan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> untuk jendela. Di Firefox 159, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> terhubung ke perintah yang memulihkan tab, jendela, atau sesi terakhir yang ditutup, jadi tombol ini juga bisa mengembalikan sesi sebelumnya.
+
+</BrowserPanel>
+</BrowserPanels>
+
+Daftarnya hanya mundur sampai batas tertentu. Untuk satu sesi utuh yang hilang, lihat [cara memulihkan tab setelah crash](/blog/restore-tabs-after-crash). Agar tidak kehilangan tab sejak awal, [simpan semua tab yang terbuka](/blog/save-all-open-tabs) sebelum menutup sesuatu yang besar.
+
+</Section>
+
+<Section id="extensions" title="Bagaimana cara mengatur pintasan untuk ekstensi?">
+
+Ekstensi bisa menyarankan pintasan, tetapi keputusan akhir ada di browser: tombol yang disarankan dan bentrok dengan pintasan browser itu sendiri dibiarkan **Not set** (belum diatur), tanpa peringatan. Buka halaman pintasan browser Anda, klik ikon pensil di samping sebuah perintah, lalu tekan tombol yang Anda inginkan.
+
+<BrowserPanels section="extensions">
+<BrowserPanel browser="chrome">
+
+Tempel `chrome://extensions/shortcuts` ke kolom URL. Setiap perintah juga punya menu cakupan: **In Chrome** (hanya di Chrome), atau **Global** (di mana saja) agar tetap berfungsi saat Chrome tidak sedang aktif.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Tempel `edge://extensions/shortcuts` ke kolom URL.
+
+Edge memakai sendiri <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd> (duplikat tab), <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>U</Kbd> (Read Aloud, membaca dengan suara keras), dan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> (cetak dengan dialog sistem), jadi perintah ekstensi yang menyarankan salah satunya akan berstatus **Not set** sejak awal di Edge 158. Edge 158 juga menolak beberapa tombol <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd> yang tidak disebut dalam daftar Microsoft, seperti <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> dan <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Z</Kbd>. Perintah simpan TabMerger menghindari semuanya, jadi instalasi baru sudah punya keempatnya terpasang:
+
+<AnnotatedFigure src="/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp" alt="Halaman pintasan keyboard ekstensi di Edge untuk TabMerger: keempat perintah simpan sudah terpasang, ke Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma, dan Alt+Shift+Period" width={852} height={460} boxes={[{ id: 'save-shortcuts' }]} source="edge://extensions/shortcuts · Edge 158.0.4370.33">Instalasi baru TabMerger di Edge 158: keempat perintah simpan sudah punya tombolnya, tidak ada yang perlu diperbaiki.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Buka `about:addons`, klik menu roda gigi, lalu pilih **Kelola Pintasan Ekstensi** (Manage Extension Shortcuts). Perlu diingat, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> membuka jendela pribadi di Firefox, jadi pilih tombol lain untuk apa pun yang menyarankannya.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>halaman pintasan tidak memberi peringatan. Jika sebuah pintasan “tidak melakukan apa-apa”, periksa di sana dulu.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="Tombol TabMerger">
+
+[TabMerger](/features), ekstensi gratis kami untuk Chrome, Edge, dan Firefox, menyimpan tab langsung dari keyboard tanpa perlu membukanya. TabMerger menyarankan satu tombol untuk masing-masing dari empat perintah simpannya, dipilih agar tidak bentrok dengan pintasan bawaan Chrome, Edge, dan Firefox, dan Anda bisa mengubah semuanya di halaman pintasan browser Anda (di atas):
+
+<ComparisonTable
+  head={['Tombol yang disarankan', 'Menyimpan']}
+  keysColumn={0}
+  rows={[
+    ['Alt+Shift+S', 'Tab saat ini'],
+    ['Alt+Shift+O', 'Semua tab lain di jendela'],
+    ['Alt+Shift+Comma', 'Tab di sebelah kiri'],
+    ['Alt+Shift+Period', 'Tab di sebelah kanan'],
+  ]}
+/>
+
+Di Mac, tombol ini memakai <Kbd>Control</Kbd>+<Kbd>Shift</Kbd> sebagai ganti <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>: <Kbd>Control</Kbd>+<Kbd>Shift</Kbd>+<Kbd>S</Kbd> menyimpan tab saat ini. Inilah tombol yang didapat instalasi baru. Pembaruan tidak mengubah pintasan, jadi jika Anda menginstal TabMerger sebelum tombol ini hadir, tombol lamanya tetap dipakai, termasuk yang **Not set**: atur di halaman pintasan.
+
+Di dalam popup, <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd>) mencari tab yang terbuka, tersimpan, dan baru ditutup dalam satu daftar.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tab-keyboard-shortcuts/tm-search" alt="Pencarian TabMerger terbuka dengan kueri docs, menampilkan tab terbuka dan tersimpan yang cocok, tema terang" darkAlt="Pencarian TabMerger terbuka dengan kueri docs, menampilkan tab terbuka dan tersimpan yang cocok, tema gelap" boxes={[{ id: 'search-input', label: 'Pencarian' }]} source="TabMerger 3.16.1">Ctrl+K, lalu ketik: hasilnya datang dari tab yang terbuka maupun yang tersimpan.</ThemedScreenshot>
+
+<InstallCta>Gratis untuk Chrome, Edge, dan Firefox. Tidak perlu akun untuk mulai.</InstallCta>
+
+Kebiasaan lain yang menjaga jumlah tab tetap sedikit ada di [panduan mengelola terlalu banyak tab](/blog/manage-too-many-tabs) kami, dan apa yang ditawarkan tiap browser selain pintasan ada di [perbandingan fitur tab Chrome, Edge, dan Firefox](/blog/browser-tab-features-compared).
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,166 @@
+export const post = {
+  slug: 'start-your-workday-with-saved-tabs',
+  title: '保存したタブで仕事の一日を始める',
+  navTitle: '保存したタブで仕事の一日を始める',
+  seoTitle: '毎朝同じタブを開く方法：TabMerger のセッション',
+  description:
+    '毎朝、仕事用のタブをワンクリックで開きましょう。グループを TabMerger のセッションとして保存し、毎日復元するか、1 つのグループだけを開きます。復元の前に確認が出る理由と、無料プランと Pro の違いも解説します。',
+  shareSummary: '朝のタブをワンクリックで。セッションを一度保存すれば、毎日復元できます。',
+  dek: '設定は一度だけ。メール、カレンダー、ボード、ドキュメントが毎朝それぞれのウィンドウに戻ってきます。',
+  published: '2026-12-12',
+  updated: '2026-12-12',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'セッションは、保存したすべてのグループを名前付きで記録したスナップショットです。', source: 'TabMerger 3.16.1 のソースコード' },
+    { text: '復元すると、開いているウィンドウを（確認のうえ）閉じ、保存した各ウィンドウを開き直します。', source: 'TabMerger 3.16.1' },
+    { text: '復元で閉じたウィンドウは「最近閉じたタブ」に残ります。', source: 'TabMerger 3.16.1 のソースコード' },
+    { text: '無料：このブラウザに 3 セッション。Pro：無制限で、デバイス間で同期。', source: 'TabMerger の料金', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '毎朝同じタブを開くにはどうすればいいですか？',
+      answer:
+        '毎日使うタブを TabMerger のグループにまとめ、セッションを保存します（サイドバーの「セッション」の横にあるブックマークボタン）。毎朝そのセッションを復元すると、TabMerger が保存した各ウィンドウをタブの順番どおりに開き直します。',
+    },
+    {
+      question: 'セッションを復元すると、なぜウィンドウが閉じるのですか？',
+      answer:
+        'セッションは、いま開いているものを保存した内容に置き換えるためのものです。昨日のタブの上に重ねるのではなく、すっきりした状態から始められます。TabMerger は何かを閉じる前に必ず確認し、閉じたウィンドウは「最近閉じたタブ」に入るので、また開けます。',
+    },
+    {
+      question: '何も閉じずに 1 つのグループだけを開けますか？',
+      answer: 'はい。サイドバーでグループを右クリックし、「すべて新しいウィンドウで開く」を選びます。ほかのウィンドウはそのままです。',
+    },
+    {
+      question: 'セッションは開いているタブを保存しますか？',
+      answer:
+        'いいえ、保存するのは保存済みのグループです。開いているタブも含めたいときは、まずグループの ⋯ メニューの「現在の内容と統合」でグループに追加してから、セッションを保存します。',
+    },
+    {
+      question: '無料でいくつのセッションを保存できますか？',
+      answer: '無料プランではブラウザに 3 つのセッションを保存できます。Pro は無制限で、セッションをエンドツーエンドで暗号化してデバイス間で同期します。',
+    },
+  ],
+  images: [
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-save-session-light.webp', alt: 'TabMerger の「Save Session」（セッションを保存）ダイアログ。名前は「Workday」、説明と紫の色付き。ライトテーマ' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-save-session-dark.webp', alt: 'TabMerger の「Save Session」（セッションを保存）ダイアログ。名前は「Workday」、説明とシアンの色付き。ダークテーマ' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-session-view-light.webp', alt: '3 つのグループ、4 つのウィンドウ、9 つのタブを含む「Workday」セッションと「Restore session」（セッションを復元）ボタン。ライトテーマ' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-session-view-dark.webp', alt: '3 つのグループ、4 つのウィンドウ、9 つのタブを含む「Workday」セッションと「Restore session」（セッションを復元）ボタン。ダークテーマ' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-restore-confirm-light.webp', alt: 'TabMerger が「Restore this session?」（このセッションを復元しますか？）と確認し、「Cancel」（キャンセル）と「Close all windows」（すべてのウィンドウを閉じる）のボタンを表示。ライトテーマ' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-restore-confirm-dark.webp', alt: 'TabMerger が「Restore this session?」（このセッションを復元しますか？）と確認し、「Cancel」（キャンセル）と「Close all windows」（すべてのウィンドウを閉じる）のボタンを表示。ダークテーマ' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-open-group-light.webp', alt: 'サイドバーの「Work」グループの右クリックメニューと「Open all in new window」（すべて新しいウィンドウで開く）。ライトテーマ' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-open-group-dark.webp', alt: 'サイドバーの「Work」グループの右クリックメニューと「Open all in new window」（すべて新しいウィンドウで開く）。ダークテーマ' },
+  ],
+  tags: ['tabmerger-guides', 'session-management', 'save-tabs', 'browser-productivity'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/start-your-workday-with-saved-tabs/tm-restore-confirm-light.webp' },
+  ogImage: { src: '/blog/start-your-workday-with-saved-tabs/og.png', alt: '保存したタブで仕事の一日を始める：TabMerger の「Workday」セッションと「Restore session」（セッションを復元）ボタン' },
+  toc: [
+    { id: 'quick', label: 'すぐわかる答え' },
+    { id: 'problem', label: '毎朝の組み立て直し' },
+    { id: 'why', label: 'セッションがこう動く理由' },
+    { id: 'steps', label: '設定する' },
+    { id: 'one-group', label: '1 つのグループだけを開く' },
+    { id: 'benefit', label: '得られるもの' },
+    { id: 'habits', label: 'おすすめの習慣' },
+    { id: 'plans', label: '無料と Pro' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+}
+
+<QuickAnswer>
+
+毎日使うタブを [TabMerger](/features) のグループにまとめたら、**現在のセッションを保存**（Save current session）を押します。サイドバーの **セッション**（Sessions）の横にあるブックマークボタンです。名前は「仕事」などにしておきましょう。毎朝これを復元すると、TabMerger はまず確認し、開いているウィンドウを閉じて、保存した各ウィンドウをタブの順番どおりに開き直します。1 つのプロジェクトだけで足りるなら、そのグループを右クリックして **すべて新しいウィンドウで開く**（Open all in new window）を選びます。
+
+</QuickAnswer>
+
+<InstallCta>朝の作業環境がワンクリックでそろいます。Chrome、Edge、Firefox 向けに無料。</InstallCta>
+
+<Section id="problem" title="毎朝の組み立て直し">
+
+たいていの朝は同じように始まります。メール、カレンダー、チームのボード、レビュー中のプルリクエスト、書きかけのドキュメント。それらをブックマークから、履歴から、記憶を頼りに 1 つずつ開いていきます。ブラウザが昨日のウィンドウを復元した日には、40 個のタブから始めて 35 個を閉じることになります。
+
+どちらにしても、一日の最初の数分は、すでに持っていた作業環境を組み立て直すことに消えていきます。しかもブラウザ自身の復元は、たまたま開いていたものを戻すだけで、取り組むつもりだったものを戻してくれるわけではありません。
+
+</Section>
+
+<Section id="why" title="TabMerger のセッションがこの仕組みになっている理由">
+
+セッションの設計は、どれもこの問題の一部に応えています。
+
+- **セッションが保存するのはグループで、開いているもの全部ではありません**。グループは、残すと決めたタブを名前を付けて整理したものです。セッションはそのすべてを 1 つの名前でスナップショットにするので、復元すれば昨日の散らかった状態ではなく、自分の計画が戻ってきます（リアルタイムの「現在開いているタブ」ビュー、英語版では Now Open と、ガイドツアーの練習用グループは意図的に含めていません）。
+- **復元は置き換えで、必ず先に確認します**。すっきり始めるため、復元は保存したウィンドウを開く前に、開いているウィンドウを閉じます。影響の大きい操作なので、セッション画面からでもサイドバーからでも必ず確認が出ます（**すべてのウィンドウを閉じる** か **キャンセル**。英語版では Close all windows / Cancel）。
+- **閉じたものは捨てられません**。復元で閉じたウィンドウは **最近閉じたタブ**（Recently closed、既定でオン）に入るので、まだ必要だったタブもワンクリックで戻せます。
+- **ウィンドウはウィンドウとして戻ります**。保存したウィンドウは別々に開き、タブは保存した順に並びます。プライベートウィンドウから保存したウィンドウは、拡張機能がプライベートウィンドウで許可されていればプライベートウィンドウとして開き直します。許可されていなければ通常のウィンドウで開き、TabMerger がその理由を伝えます。
+- **まずブラウザに保存されます**。セッションは何よりも先にブラウザに書き込まれるので、オフラインでも保存できます。Pro ではその後、エンドツーエンドで暗号化してアップロードされ、ほかのデバイスに届きます。
+
+</Section>
+
+<Section id="steps" title="設定する：一度保存して、毎日復元する">
+
+1. その日のタブをグループにまとめます。グループの **⋯** メニューを開き、**現在の内容と統合**（Merge with current）を選ぶと、開いているウィンドウをそのグループに追加できます。
+2. サイドバーで **セッション** の横にあるブックマークボタン（**現在のセッションを保存**）を押します。名前、必要なら説明、色を指定して、**保存**（Save）を押します。
+3. 翌朝 TabMerger を開き、**セッション** の下にあるセッションをクリックして **セッションを復元**（Restore session）を押します。行にある復元ボタンでもかまいません。
+4. **すべてのウィンドウを閉じる** で確定します。保存したウィンドウが 1 つずつ、タブの順番どおりに開きます。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="セッションの保存と復元" steps={[{ title: '保存' }, { title: 'セッション' }, { title: '確認' }]}>
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-save-session" alt="TabMerger の「Save Session」（セッションを保存）ダイアログ。名前は「Workday」、説明と紫の色付き。ライトテーマ" darkAlt="TabMerger の「Save Session」（セッションを保存）ダイアログ。名前は「Workday」、説明とシアンの色付き。ダークテーマ" boxes={[{ id: 'session-name', label: 'セッション名' }, { id: 'description', label: '説明（任意）' }]} source="TabMerger 3.16.1">戻ってくる作業の流れに合わせて名前を付けます。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-session-view" alt="3 つのグループ、4 つのウィンドウ、9 つのタブを含む「Workday」セッションと「Restore session」（セッションを復元）ボタン。ライトテーマ" darkAlt="3 つのグループ、4 つのウィンドウ、9 つのタブを含む「Workday」セッションと「Restore session」（セッションを復元）ボタン。ダークテーマ" boxes={[{ id: 'restore-session', label: 'セッションを復元' }]} source="TabMerger 3.16.1">セッションには、開き直すグループ、ウィンドウ、タブがすべて表示されます。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-restore-confirm" alt="TabMerger が「Restore this session?」（このセッションを復元しますか？）と確認し、「Cancel」（キャンセル）と「Close all windows」（すべてのウィンドウを閉じる）のボタンを表示。ライトテーマ" darkAlt="TabMerger が「Restore this session?」（このセッションを復元しますか？）と確認し、「Cancel」（キャンセル）と「Close all windows」（すべてのウィンドウを閉じる）のボタンを表示。ダークテーマ" boxes={[{ id: 'close-all', label: 'すべてのウィンドウを閉じる' }]} source="TabMerger 3.16.1">開いているものを閉じるので、復元は必ず先に確認します。</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="one-group" title="代わりに 1 つのグループだけを開く">
+
+プロジェクト 1 つで足りる朝もあります。サイドバーでそのグループを右クリックし、**すべて新しいウィンドウで開く** を選びます。グループ内のすべてのウェブページが 1 つの新しいウィンドウにまとめて開き、ほかは何も閉じません。保存したウィンドウを 1 つだけ開くには、そのウィンドウの **⋯** メニューで **ブラウザで開く**（Open in browser）を使います。タブを 1 つ開くなら、クリックするだけです。
+
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-open-group" alt="サイドバーの「Work」グループの右クリックメニューと「Open all in new window」（すべて新しいウィンドウで開く）。ライトテーマ" darkAlt="サイドバーの「Work」グループの右クリックメニューと「Open all in new window」（すべて新しいウィンドウで開く）。ダークテーマ" boxes={[{ id: 'open-all', label: 'すべて新しいウィンドウで開く' }]} source="TabMerger 3.16.1">1 つのグループを 1 つのウィンドウに。ほかはそのままです。</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="得られるもの">
+
+組み立て直しが、1 回のクリックと 1 回の確認になります。昨日から生き残ったタブではなく、使うつもりだったタブを、自分で並べたウィンドウで開いて始められます。しかも復元は保存したものしか開かないので、散らかった状態は戻ってきません。
+
+</Section>
+
+<Section id="habits" title="おすすめの習慣">
+
+- **作業の流れごとにセッションを 1 つ**：「仕事」「執筆」「月曜の計画」など。少なくてわかりやすいセッションのほうが、長い一覧より使いやすくなります。
+- **環境が変わったらセッションを作り直す**。セッションはスナップショットなので、あとでグループを編集してもセッションは変わりません。新しく保存して、古いものは削除しましょう。
+- **一日の終わりはウィンドウではなくグループで締める**。今日増えたタブをそれぞれのグループに追加してから（[毎日のタブのワークフロー](/blog/tabmerger-daily-workflow)を参照）、ウィンドウを閉じます。
+- **一日まるごとの切り替えにはセッション、1 つのプロジェクトにはグループを**。復元は「一日を始める」ため、**すべて新しいウィンドウで開く** は「いま開いているものの横にこのプロジェクトを開く」ためのものです。
+
+</Section>
+
+<Section id="plans" title="無料と Pro">
+
+<ComparisonTable
+  head={['', '無料', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['セッション', '3 つまで、このブラウザ内', '無制限'],
+    ['復元と「すべて新しいウィンドウで開く」', 'はい', 'はい'],
+    ['ほかのデバイスでのセッション', 'いいえ', 'あり、エンドツーエンド暗号化'],
+    ['セッションに入れられるグループとタブ', '5 グループ、50 タブ', '無制限'],
+  ]}
+/>
+
+無料プランのセッションがブラウザの外に出ることはありません。アカウントに Pro がなければ、セッションのアップロードはサーバーで拒否されます。同期はメニューの上だけでなく、実際に Pro の機能です。[料金ページ](/pricing)をご覧ください。
+
+<InstallCta>朝の環境を一度保存すれば、毎日復元できます。Chrome、Edge、Firefox 向けに無料。</InstallCta>
+
+ほかの日課については[TabMerger で毎日のタブを回す方法](/blog/tabmerger-daily-workflow)を、セッションそのものについては[ブラウザのセッションマネージャーとは](/blog/browser-session-manager)をご覧ください。
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

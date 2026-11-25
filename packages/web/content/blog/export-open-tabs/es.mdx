@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'export-open-tabs',
+  title: 'Cómo exportar tus pestañas abiertas',
+  navTitle: 'Exportar las pestañas abiertas',
+  seoTitle: 'Cómo exportar las pestañas abiertas en Chrome, Edge y Firefox',
+  description:
+    'Exporta todas las pestañas abiertas, con su título y dirección, a un archivo que conservas: con la exportación JSON de TabMerger en un clic (pestañas abiertas y grupos guardados juntos) o con la exportación de marcadores del navegador, paso a paso.',
+  shareSummary: 'Exporta todas tus pestañas abiertas a un archivo en un clic e impórtalas donde quieras.',
+  dek: 'Un archivo tuyo vale más que una sesión que esperas que sobreviva. Un clic en TabMerger, unos cuantos en el navegador.',
+  published: '2026-12-02',
+  updated: '2026-12-02',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '«Exportar JSON» de TabMerger guarda tus pestañas abiertas y todos tus grupos guardados en un solo archivo.', source: 'Probado en TabMerger 3.16.1, 21 nov. 2026' },
+    { text: 'TabMerger importa archivos JSON, HTML de marcadores y archivos de texto de OneTab.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome exporta los marcadores desde el menú del administrador de marcadores.',
+      source: 'Ayuda de Chrome',
+      href: 'https://support.google.com/chrome/answer/96816',
+    },
+    { text: 'Ctrl+Shift+D guarda como marcadores todas las pestañas de la ventana, en los tres navegadores.', source: 'Ayuda de Chrome y Edge; atajos de Firefox 159' },
+  ],
+  faq: [
+    {
+      question: '¿Cómo copio todas las URL de las pestañas?',
+      answer:
+        'La copia completa más rápida es Ajustes → Datos → Exportar JSON en TabMerger: un archivo con el título y la dirección de cada pestaña abierta y de cada grupo guardado. Sin extensiones, guarda las pestañas de la ventana como marcadores (Ctrl+Shift+D) y exporta tus marcadores en HTML.',
+    },
+    {
+      question: '¿Puedo exportar las pestañas de todas las ventanas a la vez?',
+      answer: 'Sí, con TabMerger: «Abiertas ahora» abarca todas las ventanas abiertas, y la exportación JSON lo incluye. Con los marcadores hay que ir ventana por ventana.',
+    },
+    {
+      question: '¿Cómo vuelvo a importar el archivo?',
+      answer: 'En TabMerger, Ajustes → Datos → Importar archivo: lee archivos JSON de TabMerger, HTML de marcadores y archivos de texto de OneTab, y los añade como grupos.',
+    },
+    {
+      question: '¿La exportación es privada?',
+      answer: 'Sí. El archivo se crea en tu navegador y se guarda en tu ordenador; no se sube nada. Guárdalo en un lugar seguro, porque contiene la lista de tus páginas.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: '«Settings» (Ajustes) de TabMerger, pestaña «Data» (Datos), con los botones «Export JSON» (Exportar JSON) e «Import file» (Importar archivo) bajo «Import & export» (Importar y exportar), tema claro' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: '«Settings» (Ajustes) de TabMerger, pestaña «Data» (Datos), con los botones «Export JSON» (Exportar JSON) e «Import file» (Importar archivo) bajo «Import & export» (Importar y exportar), tema oscuro' },
+  ],
+  tags: ['save-tabs', 'bookmarks', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Import Chrome bookmarks & settings (export section)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/export-open-tabs/tm-settings-export-light.webp' },
+  ogImage: { src: '/blog/export-open-tabs/og.png', alt: 'Cómo exportar tus pestañas abiertas: una guía de TabMerger, con el botón «Export JSON» (Exportar JSON)' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'tabmerger', label: 'Exportar en un clic' },
+    { id: 'inside', label: 'Qué contiene el archivo' },
+    { id: 'builtin', label: 'La vía de los marcadores' },
+    { id: 'import', label: 'Recuperarlas' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Exportar marcadores',
+    values: { chrome: 'Administrador de marcadores → ⋮ → Exportar marcadores', edge: 'Favorites → Export favorites', firefox: 'Catálogo → Exportar marcadores…' },
+  },
+}
+
+<QuickAnswer>
+
+Abre [TabMerger](/features), ve a **Ajustes → Datos** (Settings → Data) y pulsa **Exportar JSON** (Export JSON). Un clic guarda un archivo con el título y la dirección de **todas las pestañas abiertas en todas las ventanas**, además de cada grupo que hayas guardado. Sin extensiones, puedes guardar como marcadores las pestañas de una ventana con <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> y exportar tus marcadores como archivo HTML, ventana por ventana.
+
+</QuickAnswer>
+
+<InstallCta>Exporta todas las pestañas abiertas, de todas las ventanas, en un clic. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="¿Cómo exporto todas mis pestañas abiertas en un clic?">
+
+1. Abre TabMerger y haz clic en el icono de la cuenta → **Ajustes**.
+2. Abre la pestaña **Datos**.
+3. En **Importar y exportar**, pulsa **Exportar JSON**. El archivo se descarga al instante, con un nombre como `tabmerger-backup-2026-11-21.json`.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="«Settings» (Ajustes) de TabMerger, pestaña «Data» (Datos), con los botones «Export JSON» (Exportar JSON) e «Import file» (Importar archivo) bajo «Import & export» (Importar y exportar), tema claro" darkAlt="«Settings» (Ajustes) de TabMerger, pestaña «Data» (Datos), con los botones «Export JSON» (Exportar JSON) e «Import file» (Importar archivo) bajo «Import & export» (Importar y exportar), tema oscuro" boxes={[{ id: 'export-json', label: 'Exportar JSON' }, { id: 'import-file', label: 'Importar archivo' }]} source="TabMerger 3.16.1">Settings → Data (Ajustes → Datos): un botón para sacar y otro para volver a meter.</ThemedScreenshot>
+
+Está en todos los planes, incluido el gratuito, y el archivo se crea en tu navegador: no se sube nada.
+
+</Section>
+
+<Section id="inside" title="¿Qué contiene el archivo exportado?">
+
+Una lista JSON de tus grupos. Primero va **Abiertas ahora** (Now Open), tus ventanas y pestañas abiertas ahora mismo, y después cada grupo guardado. De una exportación real:
+
+<ComparisonTable
+  head={['Campo', 'Ejemplo de la exportación']}
+  rows={[
+    [<code>name</code>, '«Now Open», «Work», «Reading list»'],
+    [<code>windows[]</code>, 'Una entrada por ventana, cada una con sus pestañas'],
+    [<code>tabs[].title</code>, '«Spaced repetition - Wikipedia»'],
+    [<code>tabs[].url</code>, <code>https://en.wikipedia.org/wiki/Spaced_repetition</code>],
+    [<code>color</code>, <code>rgba(59, 130, 246, 1)</code>],
+  ]}
+/>
+
+JSON es texto plano, así que cualquier script o editor de texto puede leerlo: extrae las direcciones, conviértelas en una lista de Markdown o guarda el archivo como copia de seguridad.
+
+</Section>
+
+<Section id="builtin" title="¿Cómo exporto pestañas sin una extensión?">
+
+Los navegadores no exportan directamente las pestañas abiertas, pero sí los marcadores. Así que primero guarda las pestañas como marcadores y luego exporta:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. En cada ventana, pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> en Mac) y guarda las pestañas en una carpeta nueva.
+2. Abre **⋮ → Marcadores y listas → Administrador de marcadores** (Bookmarks and lists → Bookmark Manager).
+3. Arriba, abre **⋮ → Exportar marcadores** (Export bookmarks). Chrome guarda todos los marcadores en un archivo HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. En cada ventana, pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> para añadir todas las pestañas a favoritos, en una carpeta nueva.
+2. Pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> para abrir los favoritos (Favorites).
+3. Elige **Export favorites** en el menú de la página y guarda el archivo HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. En cada ventana, pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> para guardar todas las pestañas como marcadores en una carpeta nueva.
+2. Pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> para abrir el Catálogo (Library).
+3. Elige **Exportar marcadores…** (Export Bookmarks to HTML…) y guarda el archivo.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>va ventana por ventana, exporta *todos* tus marcadores en lugar de solo esas pestañas, y el archivo no sabe qué pestañas estaban abiertas juntas.</Catch>
+
+</Section>
+
+<Section id="import" title="¿Cómo recupero las pestañas?">
+
+En TabMerger, **Ajustes → Datos → Importar archivo** (Settings → Data → Import file) lee los tres tipos de archivo y los añade como grupos junto a los que ya tienes:
+
+- **JSON de TabMerger**, de «Exportar JSON», con tus grupos y ventanas guardados tal como estaban. «Abiertas ahora» del archivo no se añade (eran las pestañas abiertas del navegador que exportó), así que guarda las ventanas abiertas en un grupo antes de exportar si quieres recuperarlas.
+- **HTML de marcadores**, de cualquier navegador: cada carpeta de primer nivel se convierte en un grupo.
+- **Texto de OneTab**: cada lista de OneTab se convierte en un grupo. Consulta nuestra [guía de alternativas a OneTab](/blog/onetab-alternatives).
+
+Por eso exportar es la forma más sencilla de [pasar pestañas a otro ordenador](/blog/move-tabs-between-computers) sin una cuenta. ¿Lo quieres automático? [Pro](/pricing) conserva las 10 copias de seguridad automáticas más recientes y sincroniza tus grupos entre dispositivos, con cifrado de extremo a extremo. Para guardar pestañas para más tarde sin ningún archivo, consulta [cómo guardar todas las pestañas abiertas](/blog/save-all-open-tabs); para enviar un conjunto a otra persona, consulta [cómo compartir un conjunto de pestañas](/blog/share-a-set-of-tabs).
+
+<InstallCta>Gratis para Chrome, Edge y Firefox. No necesitas cuenta para empezar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

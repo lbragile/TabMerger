@@ -1,0 +1,161 @@
+export const post = {
+  slug: 'close-duplicate-tabs',
+  title: 'Yinelenen sekmeler tek tıkla nasıl kapatılır?',
+  navTitle: 'Yinelenen sekmeleri kapatma',
+  seoTitle: 'Chrome, Edge ve Firefox’ta yinelenen sekmeler nasıl kapatılır?',
+  description:
+    'Aynı sayfa üç kez mi açık? TabMerger ile tüm pencerelerdeki yinelenen sekmeleri tek tıkla kapatın ya da Firefox’un yerleşik “Yinelenen sekmeleri kapat” özelliğini kullanın. Chrome ve Edge neler sunuyor, tam olarak ne yinelenen sayılıyor?',
+  shareSummary: 'Chrome, Edge ve Firefox’ta tüm pencerelerdeki yinelenen sekmeleri tek tıkla kapatın.',
+  dek: 'Yinelenen sekmeler sessizce birikir. Hepsini tüm pencerelerden tek seferde temizleyin, her sayfanın ilk kopyası kalsın.',
+  published: '2026-12-01',
+  updated: '2026-12-01',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger’ın “Yinelenen sekmeleri kaldır” komutu, tüm açık pencerelerdeki tekrarları kapatır ve ilkini tutar.', source: 'TabMerger 3.16.1’de test edildi, 21 Kas 2026' },
+    { text: 'Önce sorar ve kaç sekme kaldıracağını söyler.', source: 'TabMerger 3.16.1' },
+    { text: 'Firefox 159’un sekme menüsünde “Yinelenen sekmeleri kapat” var.', source: 'Firefox 159 menü metni' },
+    { text: 'Edge’deki “Duplicate tab” bir kopya oluşturur; kopya kaldırmaz.', source: 'Edge 158 menü metni' },
+  ],
+  faq: [
+    {
+      question: 'Chrome’da yinelenen sekmeleri kaldırma özelliği var mı?',
+      answer:
+        'Chrome’un yardım sayfaları böyle bir özellik anlatmıyor. TabMerger bunu ekliyor: “Şu An Açık” bölümünün ⋯ menüsünü açın ve tüm pencerelerdeki tekrarları kapatmak için “Yinelenen sekmeleri kaldır” seçeneğini seçin.',
+    },
+    {
+      question: 'Hangi sekme kalır?',
+      answer: 'TabMerger’da okuma sırasındaki ilk kopya: önce en eski pencere, sonra soldan sağa. Aynı adresin sonraki tüm kopyaları kaldırılır.',
+    },
+    {
+      question: 'Farklı #çapalara sahip sayfalar yinelenen sayılır mı?',
+      answer: 'Hayır. TabMerger tam adresleri büyük/küçük harf farkını yok sayarak karşılaştırır; bu yüzden page#top ile page#faq ya da farklı ?parametrelerle açılmış aynı sayfa ayrı sekmeler olarak kalır.',
+    },
+    {
+      question: 'Kayıtlı gruplardaki tekrarları da temizleyebilir miyim?',
+      answer: 'Evet: aynı “Yinelenen sekmeleri kaldır” seçeneği, orada kayıtlı sekmeler için her grubun ⋯ menüsünde de var.',
+    },
+  ],
+  images: [
+    { src: '/blog/close-duplicate-tabs/tm-before-light.webp', alt: 'TabMerger Now Open (Şu An Açık): iki pencere ve sekiz sekme, üçü tekrar, açık tema' },
+    { src: '/blog/close-duplicate-tabs/tm-before-dark.webp', alt: 'TabMerger Now Open (Şu An Açık): iki pencere ve sekiz sekme, üçü tekrar, koyu tema' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp', alt: 'TabMerger Remove duplicates (Yinelenenleri kaldır) iletişim kutusu: 3 yinelenen sekmenin kaldırılacağını söylüyor, Remove 3 duplicates (3 yineleneni kaldır) düğmesiyle, açık tema' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-dark.webp', alt: 'TabMerger Remove duplicates (Yinelenenleri kaldır) iletişim kutusu: 3 yinelenen sekmenin kaldırılacağını söylüyor, Remove 3 duplicates (3 yineleneni kaldır) düğmesiyle, koyu tema' },
+    { src: '/blog/close-duplicate-tabs/tm-after-light.webp', alt: 'Tekrarlar kaldırıldıktan sonra TabMerger Now Open (Şu An Açık): iki pencere, beş sekme, her sayfa bir kez, açık tema' },
+    { src: '/blog/close-duplicate-tabs/tm-after-dark.webp', alt: 'Tekrarlar kaldırıldıktan sonra TabMerger Now Open (Şu An Açık): iki pencere, beş sekme, her sayfa bir kez, koyu tema' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp' },
+  ogImage: { src: '/blog/close-duplicate-tabs/og.png', alt: 'Yinelenen sekmeler tek tıkla nasıl kapatılır: Remove 3 duplicates (3 yineleneni kaldır) iletişim kutusuyla bir TabMerger rehberi' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'tabmerger', label: 'Tek tık, tüm pencereler' },
+    { id: 'what-counts', label: 'Ne yinelenen sayılır' },
+    { id: 'builtin', label: 'Yerleşik seçenekler' },
+    { id: 'prevent', label: 'Daha az tekrar' },
+    { id: 'faq', label: 'SSS' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Yerleşik tekrar kapatma',
+    values: { chrome: 'Yardım sayfalarında yok', edge: 'Yok (Duplicate tab kopya oluşturur)', firefox: 'Sağ tık → Yinelenen sekmeleri kapat' },
+  },
+}
+
+<QuickAnswer>
+
+[TabMerger](/features)’da **Şu An Açık** bölümünün **⋯** menüsünü açın ve **Yinelenen sekmeleri kaldır** seçeneğini seçin. Birden fazla kez açık olan her sayfayı **tüm pencerelerinizde** bulur, kaç sekme kapatacağını gösterir ve her birinin ilk kopyasını tutar. Firefox’un sekme menüsünde yerleşik bir **Yinelenen sekmeleri kapat** (Close Duplicate Tabs) seçeneği var; Chrome’un yardım sayfaları ise tekrarları kaldıran bir araç anlatmıyor.
+
+</QuickAnswer>
+
+<InstallCta>Tüm pencerelerdeki yinelenen sekmeleri tek tıkla temizleyin. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Tüm tekrarları tek seferde nasıl kapatırım?">
+
+1. TabMerger’ı açın. **Şu An Açık**, açık olan tüm pencereleri ve sekmeleri listeler.
+2. Bu bölümün **⋯** menüsünü açın ve **Yinelenen sekmeleri kaldır** seçeneğini seçin.
+3. Sayıyı kontrol edin ve kaldırma düğmesine basın; burada **3 yineleneni kaldır**. Fazla tarayıcı sekmeleri kapanır; her sayfanın ilk kopyası tam olarak bulunduğu yerde kalır.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Açık sekmelerdeki tekrarları kaldırma" steps={[{ title: 'Önce' }, { title: 'Onay' }, { title: 'Sonra' }]}>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-before" alt="TabMerger Now Open (Şu An Açık): iki pencere ve sekiz sekme, üçü tekrar, açık tema" darkAlt="TabMerger Now Open (Şu An Açık): iki pencere ve sekiz sekme, üçü tekrar, koyu tema" boxes={[{ id: 'summary', label: '8 sekme' }]} source="TabMerger 3.16.1">Önce: iki pencere, sekiz sekme, üçü tekrar.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-confirm" alt="TabMerger Remove duplicates (Yinelenenleri kaldır) iletişim kutusu: 3 yinelenen sekmenin kaldırılacağını söylüyor, Remove 3 duplicates (3 yineleneni kaldır) düğmesiyle, açık tema" darkAlt="TabMerger Remove duplicates (Yinelenenleri kaldır) iletişim kutusu: 3 yinelenen sekmenin kaldırılacağını söylüyor, Remove 3 duplicates (3 yineleneni kaldır) düğmesiyle, koyu tema" boxes={[{ id: 'confirm', label: 'Kaldır' }]} source="TabMerger 3.16.1">TabMerger kapatmadan önce kaç sekme kapatacağını söyler.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-after" alt="Tekrarlar kaldırıldıktan sonra TabMerger Now Open (Şu An Açık): iki pencere, beş sekme, her sayfa bir kez, açık tema" darkAlt="Tekrarlar kaldırıldıktan sonra TabMerger Now Open (Şu An Açık): iki pencere, beş sekme, her sayfa bir kez, koyu tema" boxes={[{ id: 'summary', label: '5 sekme' }]} source="TabMerger 3.16.1">Sonra: beş sekme, her sayfa bir kez. Tarayıcı sekmeleri gerçekten kapandı.</ThemedScreenshot>
+</Carousel>
+
+Aynı seçenek kayıtlı her grupta da çalışır; böylece haftalardır büyüyen bir araştırma grubu da düzenli kalır.
+
+</Section>
+
+<Section id="what-counts" title="Ne yinelenen sayılır?">
+
+TabMerger **tam adresi** standart biçimiyle, büyük/küçük harf farkını yok sayarak karşılaştırır:
+
+<ComparisonTable
+  head={['Bu iki sekme', 'Yinelenen mi?']}
+  rows={[
+    [<code>example.com/page</code>, 'Aynı sayfa iki kez: evet, biri kapatılır'],
+    [<code>example.com/Page</code>, 'Yalnızca harf büyüklüğü farklı: evet'],
+    [<code>example.com/page#faq</code>, 'Farklı çapa: hayır, ikisi de kalır'],
+    [<code>example.com/page?ref=mail</code>, 'Farklı parametreler: hayır, ikisi de kalır'],
+  ]}
+/>
+
+Bu bilinçli bir tercih: Uzun bir belgenin farklı bölümlerini gösteren iki sekme ya da iki arama sizin için farklı sekmelerdir, bu yüzden kalırlar. Yalnızca gerçek tekrarlar gider.
+
+</Section>
+
+<Section id="builtin" title="Tarayıcı tekrarları kendisi kapatabilir mi?">
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+Chrome’un yardım sayfaları yinelenen sekmeleri kaldıran bir araç anlatmıyor. En yakın seçenek **Sekme Arama** (Tab Search, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>): bir site adı yazın, listedeki tekrarları bulun ve her satırdaki kapatma düğmesiyle tek tek kapatın.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge’in sekme menüsünde **Duplicate tab** var; bu da bir kopya daha açar, yani istediğinizin tam tersini yapar. Tekrarları elle bulup sekme şeridi boyunca ilerlerken tek tek kapatmanız gerekir.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Herhangi bir sekmeye sağ tıklayın ve tekrarları kapatmak için **Yinelenen sekmeleri kapat** (Close Duplicate Tabs) seçeneğini, yalnızca tek bir sayfa için de **Bu sekmenin kopyalarını kapat** (Close Duplicates of This Tab) seçeneğini seçin.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="prevent" title="Baştan daha az tekrar nasıl olur?">
+
+- **Açmadan önce arayın.** TabMerger’da <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>, sayfanın zaten açık mı yoksa kayıtlı mı olduğunu gösterir. Daha fazlası için [yüzlerce sekme arasında bir sekmeyi bulma](/blog/find-a-tab-among-hundreds) yazımıza bakın.
+- **Pencereleri dikkatli birleştirin.** Tekrarlar en çok pencereler birleşince bir araya gelir; [pencereleri birleştirdikten](/blog/merge-browser-windows) hemen sonra tekrarları kaldırın.
+- **Kaydedin, sonra kapatın.** Daha az açık sekme, daha az kopya demek. [Çok fazla sekme için rutinimiz](/blog/manage-too-many-tabs) bunu alışkanlığa dönüştürür.
+
+<InstallCta>Chrome, Edge ve Firefox için ücretsiz. Başlamak için hesap gerekmez.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

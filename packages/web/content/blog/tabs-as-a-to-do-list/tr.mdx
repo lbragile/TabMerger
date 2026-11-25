@@ -1,0 +1,150 @@
+export const post = {
+  slug: 'tabs-as-a-to-do-list',
+  title: 'Sekmelerinizi açık bırakmadan yapılacaklar listesi olarak kullanın',
+  navTitle: 'Yapılacaklar listesi olarak sekmeler',
+  seoTitle: 'Tarayıcı sekmelerini notlar ve hatırlatıcılarla yapılacaklar listesine çevirin',
+  description:
+    '“Bunu okumam lazım” sekmelerini TabMerger’da gerçek bir yapılacaklar listesi olarak tutun: her sekmede bir not, zamanı gelince açılan bir hatırlatıcı, net bir başlık ve fazla bekleyen sekmeleri tek tıkla temizleme.',
+  shareSummary: 'Notlar, hatırlatıcılar ve eski sekme temizliği: sekmeler kapalıyken duran bir yapılacaklar listesi.',
+  dek: 'Açık her sekme, geri dönme sözüdür. Nedenini yazın, bir zaman belirleyin ve kapatın.',
+  published: '2026-12-16',
+  updated: '2026-12-16',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Hatırlatıcılar: 30 dakika, 1 saat, 3 saat, 24 saat sonra ya da belirli bir tarih ve saatte.', source: 'TabMerger 3.16.1' },
+    { text: 'Hatırlatıcı bir tarayıcı bildirimi gösterir; bildirime tıklamak sekmeyi açar.', source: 'TabMerger 3.16.1, kaynak kodu' },
+    { text: '7, 14, 30 veya 60 günden (siz seçersiniz) daha önce kaydedilen sekmeler eski olarak işaretlenir.', source: 'TabMerger 3.16.1' },
+    { text: 'Notlar, hatırlatıcılar ve yeniden adlandırma Ücretsiz planda var.', source: 'TabMerger fiyatları', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Sekmeleri nasıl yapılacaklar listesine çeviririm?',
+      answer:
+        'Sekmeleri “Bu hafta” gibi bir TabMerger grubuna kaydedin, her birine ne yapılacağını yazan bir not ekleyin, zamanı önemli olanlara hatırlatıcı kurun ve iş bitince sekmeyi kaldırın. Sonra sekmeleri kapatın: liste TabMerger’da kalır.',
+    },
+    {
+      question: 'Bir sekmeye geri dönmek için hatırlatıcı alabilir miyim?',
+      answer:
+        'Evet. Kayıtlı bir sekmeye sağ tıklayıp “Bana hatırlat…” seçeneğini seçin: 30 dk, 1 saat, 3 saat, Yarın (24 saat sonra) ya da bir tarih ve saat; isterseniz bir not da ekleyin. O saatte bir tarayıcı bildirimi çıkar ve bildirime tıklamak sekmeyi açar.',
+    },
+    {
+      question: 'Eski sekmeler nedir?',
+      answer:
+        'Eşiğinizden daha önce kaydettiğiniz sekmeler (siz Ayarlar → Genel bölümünden değiştirmedikçe 30 gün). Bunlarda küçük bir nokta görünür ve grubun başlığı hepsini birden kaldırmayı önerir.',
+    },
+    {
+      question: 'Hatırlatıcılar diğer cihazlarımda çalışır mı?',
+      answer: 'Hatırlatıcı, onu kurduğunuz tarayıcıda size haber verir. Pro ile sekme ve hatırlatma saati, grupla birlikte diğer cihazlarınıza eşitlenir.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp', alt: 'Bir sekmede not, hatırlatıcılı ve yeniden adlandırılmış bir sekme ve iki eski sekme bulunan “This week” grubu, açık tema' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-dark.webp', alt: 'Bir sekmede not, hatırlatıcılı ve yeniden adlandırılmış bir sekme ve iki eski sekme bulunan “This week” grubu, koyu tema' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-light.webp', alt: 'TabMerger hatırlatıcı seçenekleri: 30 min, 1 hour, 3 hours, Tomorrow (Yarın), bir tarih ve saat ve bir not, açık tema' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-dark.webp', alt: 'TabMerger hatırlatıcı seçenekleri: 30 min, 1 hour, 3 hours, Tomorrow (Yarın), bir tarih ve saat ve bir not, koyu tema' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'research'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp' },
+  ogImage: { src: '/blog/tabs-as-a-to-do-list/og.png', alt: 'Sekmelerinizi yapılacaklar listesi olarak kullanın: notlu, hatırlatıcılı ve eski sekmeli bir TabMerger grubu' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'problem', label: 'Söz olarak sekmeler' },
+    { id: 'why', label: 'Neden böyle çalışıyor' },
+    { id: 'steps', label: 'Listeyi oluşturun' },
+    { id: 'remind', label: 'Hatırlatıcı kurun' },
+    { id: 'benefit', label: 'Ne kazanırsınız' },
+    { id: 'habits', label: 'İyi alışkanlıklar' },
+    { id: 'plans', label: 'Ücretsiz mi, Pro mu' },
+    { id: 'faq', label: 'SSS' },
+  ],
+}
+
+<QuickAnswer>
+
+“Sonra bakarım” sekmelerinizi “Bu hafta” gibi bir [TabMerger](/features) grubuna kaydedin. Bir sekmeye sağ tıklayınca **Not ekle** (Add note) ile ne yapacağınızı, **Bana hatırlat…** (Remind me…) ile ne zaman yapacağınızı, **Sekmeyi yeniden adlandır** (Rename tab) ile de bir görev gibi okunan bir başlığı belirlersiniz. İş bitince sekmeyi kaldırın. Fazla bekleyen sekmelere bir nokta eklenir ve grup başlığındaki tek bir düğme onları temizler. Sonra sekmeleri kapatın: liste sekme çubuğunuzda değil, TabMerger’da yaşar.
+
+</QuickAnswer>
+
+<InstallCta>Sekmelerden oluşan bir yapılacaklar listesi, sekmeler kapalıyken. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+<Section id="problem" title="Açık her sekme bir sözdür">
+
+Perşembeden önce okunacak bir makale. Sabah toplantısından önce bakılacak bir kayıt. Tarihler kesinleşince kontrol edilecek bir tren tarifesi. Her biri açık kalır, çünkü kapatmak unutmak gibi gelir. Bir hafta sonra kırk tane olur, yarısının neden orada olduğunu kimse hatırlamaz ve önemli olan, diğerlerinin arkasında kalır.
+
+Bir sekme, onu neden açtığınızı ya da ne zamana kadar bitmesi gerektiğini söyleyemez. Bir yapılacaklar listesi söyler.
+
+</Section>
+
+<Section id="why" title="TabMerger’ın yapılacaklar araçları neden böyle çalışır">
+
+- **Not, sekmenin üzerinde durur.** Not, sekmenin kendisine bağlıdır; bu yüzden neden de bağlantıyla birlikte gider: oturumlara, yedeklere ve dışa aktarımlara, Pro ile de diğer cihazlarınıza.
+- **Görev gibi okunan bir başlık.** **Sekmeyi yeniden adlandır** sekmeye kendi başlığınızı verir ve “yeniden adlandırıldı” olarak işaretler; **Özgün başlığa sıfırla** (Reset to original title) bunu geri alır. “Yeni kayıtları ayıkla” bir görevdir; “Issues · lbragile/TabMerger” ise bir sayfa adı.
+- **Kaçırılmayan hatırlatıcılar.** Seçtiğiniz saatte tarayıcı, sekmenin başlığını ve notunuzu içeren bir bildirim gösterir. Siz ilgilenene kadar ekranda kalır ve tıklayınca sekme açılır. Tarayıcı yeniden başladıktan sonra hatırlatıcılar yeniden kurulur; yani yeniden başlatma onları kaybettirmez.
+- **Eski, bir süre önce kaydettiğiniz anlamına gelir.** Eşiğinizden (7, 14, 30 veya 60 gün; değiştirmezseniz 30) daha önce kaydedilmiş bir sekmeye grubunun renginde bir nokta eklenir ve grup başlığında **N eski sekmeyi kaldır** (Remove N stale tabs) görünür. “Bir gün” diye bekleyen eski sekmeler tek tıkla temizlenir.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-todo-group" alt="Bir sekmede not, hatırlatıcılı ve yeniden adlandırılmış bir sekme ve iki eski sekme bulunan “This week” grubu, açık tema" darkAlt="Bir sekmede not, hatırlatıcılı ve yeniden adlandırılmış bir sekme ve iki eski sekme bulunan “This week” grubu, koyu tema" boxes={[{ id: 'note', label: 'Sekmede bir not' }, { id: 'reminder', label: 'Hatırlatıcı kurulu' }, { id: 'stale', label: 'Eski sekmeleri temizle' }]} source="TabMerger 3.16.1">Bu haftanın listesi: neden, ne zaman ve ne çok uzun süredir bekliyor.</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="Listeyi oluşturun">
+
+1. Kenar çubuğundaki **Grup Ekle** (Add Group) ile zaman aralığına göre adlandırılmış bir grup oluşturun, örneğin “Bu hafta” (ekran görüntülerinde “This week”).
+2. **Şu An Açık** (Now Open) bölümünden sekmeleri bu gruba sürükleyin. Açık sekme kapanır ve bir kopyası kaydedilir (Geri al onu geri getirir).
+3. Her sekmeye sağ tıklayın: ne yapılacağı için **Not ekle**, görev gibi bir başlık için **Sekmeyi yeniden adlandır**.
+4. Üzerinde çalıştığınız pencereyi veya grubu yıldızlayın; böylece en üstte kalır.
+5. Bir görev bitince sekmeye sağ tıklayın ve **Sekmeyi kaldır** (Remove tab) seçeneğini seçin.
+
+</Section>
+
+<Section id="remind" title="Hatırlatıcı kurun">
+
+Sekmeye sağ tıklayın ve **Bana hatırlat…** seçeneğini seçin. **30 dk**, **1 saat**, **3 saat** veya **Yarın** (24 saat sonra) seçin ya da bir tarih ve saat belirleyin; isterseniz bir not ekleyin. Sekmedeki saat simgesi bir hatırlatıcı kurulu olduğunu gösterir; **Hatırlatıcıyı düzenle** (Edit reminder) veya **Hatırlatıcıyı temizle** (Clear reminder) için yeniden sağ tıklayın.
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-reminder" alt="TabMerger hatırlatıcı seçenekleri: 30 min, 1 hour, 3 hours, Tomorrow (Yarın), bir tarih ve saat ve bir not, açık tema" darkAlt="TabMerger hatırlatıcı seçenekleri: 30 min, 1 hour, 3 hours, Tomorrow (Yarın), bir tarih ve saat ve bir not, koyu tema" boxes={[{ id: 'remind-in', label: 'Bana şu süre sonra hatırlat…' }]} source="TabMerger 3.16.1">Hızlı bir süre ya da kesin bir saat, üstüne gelecekteki size bir not.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Ne kazanırsınız">
+
+Sekme çubuğunuzda yalnızca şu an yaptığınız iş durur. Geri kalan her şeyin yanında yazılı bir nedeni ve gerektiğinde size geri döneceği bir zamanı vardır. Hiçbir şey hatırlamanıza bağlı değildir ve hiçbir şey “ne olur ne olmaz” diye açık kalmaz.
+
+</Section>
+
+<Section id="habits" title="İyi alışkanlıklar">
+
+- **Notu bir eylem olarak yazın:** “İlginç” değil, “Perşembeye özetle”.
+- **Yalnızca son tarihi olanlara hatırlatıcı kurun.** Geri kalanı listede bekler.
+- **Eski sekmeleri her hafta temizleyin.** 30 gün beklediyse nadiren acildir.
+- **Her ufuk için bir liste:** “Bugün”, “Bu hafta”, “Bir gün”. Sekmeleri **Gruba taşı** (Move to group) ile aralarında taşıyın.
+- Kaynak ağırlıklı işler için [araştırma için sekmeleri düzenleme](/blog/organize-tabs-for-research) yazımıza, günün tamamı için [TabMerger ile günlük sekme düzeni](/blog/tabmerger-daily-workflow) yazımıza bakın.
+
+</Section>
+
+<Section id="plans" title="Ücretsiz mi, Pro mu">
+
+<ComparisonTable
+  head={['', 'Ücretsiz', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Notlar, hatırlatıcılar, yeniden adlandırılmış ve eski sekmeler', 'Evet', 'Evet'],
+    ['Listelerinizdeki sekmeler', 'Toplam 50', 'Sınırsız'],
+    ['Diğer cihazlarınızdaki listeler', 'Hayır', 'Evet, notlar ve hatırlatma saatleri dahil'],
+  ]}
+/>
+
+Her yapılacaklar aracı Ücretsiz planda var. [Pro](/pricing) daha fazla yer ve eşitleme ekler. Hatırlatıcı, onu kurduğunuz tarayıcıda size haber verir.
+
+<InstallCta>Sekmeleri kapatın, sözleri tutun. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

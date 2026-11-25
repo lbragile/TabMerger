@@ -1,0 +1,170 @@
+export const post = {
+  slug: 'too-many-tabs-slow-browser',
+  title: 'Trop d’onglets ouverts ralentissent-ils votre ordinateur ?',
+  navTitle: 'Trop d’onglets, ordinateur lent',
+  seoTitle: 'Trop d’onglets ralentissent votre navigateur ? Comment y remédier',
+  description:
+    'Votre navigateur rame à cause de trop d’onglets ouverts ? Chaque onglet utilise de la mémoire. Activez la mise en veille des onglets du navigateur, puis enregistrez et fermez avec TabMerger ceux que vous n’utilisez pas, sans en perdre un seul.',
+  shareSummary: 'Pourquoi les onglets ouverts ralentissent tout, et comment libérer de la mémoire sans les perdre.',
+  dek: 'L’onglet le plus rapide est celui qui n’est pas ouvert. Enregistrez-le, fermez-le et retrouvez-le en un clic.',
+  published: '2026-12-04',
+  updated: '2026-12-04',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'L’économiseur de mémoire de Chrome libère la mémoire des onglets inactifs.',
+      source: 'Aide Chrome',
+      href: 'https://support.google.com/chrome/answer/12929150',
+    },
+    { text: 'Edge 158 met en veille les onglets inactifs, après 15 minutes par défaut.', source: 'edge://settings, 20 nov. 2026' },
+    { text: 'Firefox 159 peut décharger un onglet depuis son menu contextuel.', source: 'Texte des menus de Firefox 159' },
+    { text: 'TabMerger enregistre toutes les fenêtres ouvertes, puis les ferme en un clic.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Avoir beaucoup d’onglets utilise-t-il plus de mémoire ?',
+      answer:
+        'Oui. Chaque page ouverte garde son contenu en mémoire, et les pages qui exécutent des scripts ou lisent des médias sollicitent aussi le processeur. Tout dépend des sites : le nombre d’onglets ne suffit pas à le savoir.',
+    },
+    {
+      question: 'Fermer des onglets rendra-t-il mon ordinateur plus rapide ?',
+      answer:
+        'Fermer des onglets libère la mémoire qu’ils utilisent. Enregistrez-les d’abord avec TabMerger (Fusionner avec l’actuel, puis Fermer toutes les fenêtres) et vous ne perdez rien : rouvrez n’importe lequel en un clic.',
+    },
+    {
+      question: 'L’économiseur de mémoire ou les onglets en veille suffisent-ils ?',
+      answer:
+        'Ils libèrent la mémoire des onglets inactifs tout en les gardant dans la barre d’onglets, ce qui aide l’ordinateur. Mais les onglets sont toujours là et il faut les parcourir ; les enregistrer et les fermer vous aide aussi.',
+    },
+    {
+      question: 'Comment voir quel onglet utilise le plus de mémoire ?',
+      answer: 'Dans Chrome, appuyez sur Shift+Esc pour ouvrir le gestionnaire de tâches Chrome et repérez les onglets qui utilisent le plus de mémoire.',
+    },
+  ],
+  images: [
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-light.webp', alt: 'Menu « Now Open » (Ouverts maintenant) de TabMerger, avec « Close all windows » (Fermer toutes les fenêtres), « Close all browser windows in this group » (Fermer toutes les fenêtres du navigateur de ce groupe), en surbrillance, thème clair' },
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-dark.webp', alt: 'Menu « Now Open » (Ouverts maintenant) de TabMerger, avec « Close all windows » (Fermer toutes les fenêtres), « Close all browser windows in this group » (Fermer toutes les fenêtres du navigateur de ce groupe), en surbrillance, thème sombre' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Paramètres de Chrome, « Performance » (Performances), avec l’interrupteur « Memory Saver » (économiseur de mémoire)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Paramètres d’Edge, « Performance », avec « Automatically put tabs to sleep » activé et réglé sur 15 minutes' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/too-many-tabs-slow-browser/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/too-many-tabs-slow-browser/og.png', alt: 'Visuel « Do too many tabs slow your computer down? » : un guide TabMerger, avec le menu « Close all windows » (Fermer toutes les fenêtres)' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'why', label: 'Pourquoi les onglets ralentissent' },
+    { id: 'tabmerger', label: 'Enregistrer et fermer d’un coup' },
+    { id: 'browser', label: 'Laisser le navigateur mettre en veille' },
+    { id: 'which', label: 'Trouver l’onglet gourmand' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'Réglage de la mémoire',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Paramètres → System and performance → Performance',
+      firefox: 'Clic droit sur un onglet → Décharger l’onglet',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Oui : chaque onglet ouvert utilise de la mémoire, et quand il y en a assez, tout l’ordinateur ralentit. Le plus efficace est de **fermer les onglets que vous n’utilisez pas, sans les perdre**. Dans [TabMerger](/features), choisissez **Fusionner avec l’actuel** pour enregistrer toutes les fenêtres ouvertes dans un groupe, puis **Fermer toutes les fenêtres** : la mémoire est libérée et chaque onglet reste à un clic. Pour les onglets que vous gardez ouverts, activez l’**économiseur de mémoire** (« Memory Saver », Chrome) ou les **onglets en veille** (Edge).
+
+</QuickAnswer>
+
+<InstallCta>Enregistrez toutes les fenêtres, fermez-les et récupérez la mémoire. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="why" title="Pourquoi les onglets ouverts ralentissent-ils l’ordinateur ?">
+
+Chaque onglet ouvert est une page web vivante : son texte, ses images et ses scripts restent en mémoire, et les pages très actives (vidéo, flux en direct, applications web) sollicitent aussi le processeur en continu. Quand le navigateur et vos autres applications demandent plus de mémoire que l’ordinateur n’en a, tout ralentit. L’aide de Chrome sur les plantages cite elle-même le manque de mémoire comme cause de plantage, et sa première solution est de fermer des onglets.
+
+Ce que coûte un onglet dépend entièrement du site : il n’existe donc pas de nombre sans risque. La règle pratique : si vous ne l’avez pas regardé aujourd’hui, il n’a pas à être ouvert.
+
+</Section>
+
+<Section id="tabmerger" title="Comment fermer des onglets sans les perdre ?">
+
+C’est là que [TabMerger](/features) excelle. Deux étapes, toutes les fenêtres d’un coup :
+
+1. Cliquez sur **Ajouter un groupe**, puis choisissez **Fusionner avec l’actuel** dans son menu **⋯** : toutes les fenêtres et tous les onglets ouverts sont enregistrés dans le groupe.
+2. Faites un clic droit sur **Ouverts maintenant** dans la barre latérale et choisissez **Fermer toutes les fenêtres**. Les fenêtres du navigateur se ferment ; le groupe garde tous les onglets.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/too-many-tabs-slow-browser/tm-close-all-menu" alt="Menu « Now Open » (Ouverts maintenant) de TabMerger, avec « Close all windows » (Fermer toutes les fenêtres), « Close all browser windows in this group » (Fermer toutes les fenêtres du navigateur de ce groupe), en surbrillance, thème clair" darkAlt="Menu « Now Open » (Ouverts maintenant) de TabMerger, avec « Close all windows » (Fermer toutes les fenêtres), « Close all browser windows in this group » (Fermer toutes les fenêtres du navigateur de ce groupe), en surbrillance, thème sombre" boxes={[{ id: 'close-all', label: 'Fermer toutes les fenêtres' }]} source="TabMerger 3.16.1">Après l’enregistrement, un seul élément du menu ferme toutes les fenêtres ouvertes.</ThemedScreenshot>
+
+Quand vous en avez de nouveau besoin, ouvrez le groupe et rouvrez un onglet, une fenêtre ou le tout. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> retrouve n’importe quel onglet enregistré en une frappe, et l’enregistrement automatique peut s’en charger selon un planning. D’autres habitudes dans notre [routine contre l’excès d’onglets](/blog/manage-too-many-tabs).
+
+</Section>
+
+<Section id="browser" title="Comment faire mettre en veille les onglets inactifs par le navigateur ?">
+
+Pour les onglets que vous gardez ouverts, le navigateur peut libérer leur mémoire tant que vous ne les utilisez pas. Ils se rechargent quand vous cliquez dessus.
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+Activez l’**économiseur de mémoire** (« Memory Saver ») : **Paramètres → Performances** (« Settings → Performance »), ou collez `chrome://settings/performance` dans la barre d’adresse. Choisissez au bout de combien de temps les onglets deviennent inactifs : Modéré (« Moderate »), Équilibré (« Balanced ») ou Maximal (« Maximum »).
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Paramètres de Chrome, « Performance » (Performances), avec l’interrupteur « Memory Saver » (économiseur de mémoire)" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">« Memory Saver » (économiseur de mémoire) de Chrome, désactivé dans un nouveau profil Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Activez **Automatically put tabs to sleep** dans **Paramètres → System and performance → Performance**, et choisissez combien de temps un onglet attend avant de se mettre en veille.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Paramètres d’Edge, « Performance », avec « Automatically put tabs to sleep » activé et réglé sur 15 minutes" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Les onglets en veille d’Edge, activés par défaut : les onglets inactifs se mettent en veille au bout de 15 minutes.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Faites un clic droit sur un onglet et choisissez **Décharger l’onglet** (« Unload Tab ») pour libérer sa mémoire tout de suite ; sélectionnez d’abord plusieurs onglets pour les décharger ensemble.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>les onglets en veille encombrent toujours la barre d’onglets. Ils aident l’ordinateur, pas votre concentration.</Catch>
+
+</Section>
+
+<Section id="which" title="Comment trouver l’onglet qui ralentit tout ?">
+
+Dans Chrome, appuyez sur <Kbd>Shift</Kbd>+<Kbd>Esc</Kbd> pour ouvrir le **gestionnaire de tâches Chrome** (« Chrome Task Manager ») et repérez les onglets qui utilisent le plus de mémoire. Enregistrez les plus gourmands dans un groupe TabMerger et fermez-les.
+
+{/* Screenshot still to capture by hand (needs a visible browser): the Chrome Task Manager window sorted by memory. */}
+
+<InstallCta>Gratuit pour Chrome, Edge et Firefox. Aucun compte nécessaire pour commencer.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

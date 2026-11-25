@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'move-tabs-between-computers',
+  title: 'Como passar suas abas para outro computador',
+  navTitle: 'Passar abas para outro computador',
+  seoTitle: 'Como transferir abas para outro computador (Chrome, Edge, Firefox)',
+  description:
+    'Passe suas abas abertas de um computador para outro: a sincronização do navegador e as abas de outros dispositivos, os recursos de enviar aba, um arquivo que você leva junto ou a sincronização com criptografia de ponta a ponta do TabMerger Pro no Chrome, Edge e Firefox.',
+  shareSummary: 'Suas abas de um computador para o outro: sync, enviar aba, um arquivo ou sync criptografada.',
+  dek: 'Do notebook para o desktop, do trabalho para casa, do PC antigo para o novo: quatro jeitos de levar suas abas junto.',
+  published: '2026-12-03',
+  updated: '2026-12-03',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'O TabMerger Pro sincroniza grupos e sessões com criptografia de ponta a ponta no Chrome, Edge e Firefox.', source: 'Preços e recursos do TabMerger', href: '/pricing' },
+    { text: '“Exportar JSON” e “Importar arquivo” do TabMerger levam tudo no plano gratuito.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'O Chrome só lista as guias de outros dispositivos com a sincronização de “Histórico e guias” ativada.',
+      source: 'Ajuda do Chrome',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'O Firefox pode enviar uma aba para outro dispositivo pelo menu da aba.', source: 'Texto do menu do Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Como envio abas para o meu celular ou notebook?',
+      answer:
+        'No mesmo navegador, faça login nos dois dispositivos e use a sincronização dele: o Chrome e o Edge listam as abas de outros dispositivos no histórico, e o Firefox pode enviar uma aba pelo menu do botão direito. Entre navegadores diferentes, o TabMerger Pro sincroniza seus grupos salvos.',
+    },
+    {
+      question: 'Posso passar abas do Chrome para o Firefox?',
+      answer:
+        'A sincronização do navegador fica dentro de um navegador só. O TabMerger funciona no Chrome, Edge e Firefox: exporte um arquivo JSON e importe do outro lado de graça, ou deixe a sincronização do Pro manter os dois em dia.',
+    },
+    {
+      question: 'Preciso de uma conta?',
+      answer: 'Para um arquivo, não: “Exportar JSON” e “Importar arquivo” do TabMerger não precisam de conta. A sincronização do navegador e a do TabMerger Pro precisam.',
+    },
+    {
+      question: 'Os dados das abas sincronizadas são privados?',
+      answer:
+        'O TabMerger Pro criptografa grupos e sessões no seu dispositivo antes de sincronizá-los, então o servidor não consegue lê-los. A privacidade da sincronização do navegador depende das configurações do próprio navegador.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: 'Configurações do TabMerger, “Data” (Dados), com os botões “Export JSON” (Exportar JSON) e “Import file” (Importar arquivo) em “Import & export” (Importar e exportar), tema claro' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: 'Configurações do TabMerger, “Data” (Dados), com os botões “Export JSON” (Exportar JSON) e “Import file” (Importar arquivo) em “Import & export” (Importar e exportar), tema escuro' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'session-management', 'cross-browser', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/move-tabs-between-computers/tm-merge-menu-light.webp' },
+  ogImage: { src: '/blog/move-tabs-between-computers/og.png', alt: 'Como passar suas abas para outro computador: um guia do TabMerger, com os botões “Export JSON” e “Import file”' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'pick', label: 'Qual jeito usar' },
+    { id: 'tabmerger', label: 'Com o TabMerger' },
+    { id: 'browser', label: 'Com a sincronização do navegador' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'Abas de outros dispositivos',
+    values: { chrome: 'Histórico → Guias de outros dispositivos', edge: 'History → Tabs from other devices', firefox: 'Firefox View → Abas de outros dispositivos' },
+  },
+}
+
+<QuickAnswer>
+
+Para uma mudança única, use no [TabMerger](/features) **Configurações → Dados → Exportar JSON** (Settings → Data → Export JSON) no computador antigo e **Importar arquivo** (Import file) no novo: todos os grupos salvos vão junto (salve antes suas janelas abertas em um grupo), de graça, sem conta, no Chrome, Edge ou Firefox. Para manter dois computadores em dia, o **TabMerger Pro** sincroniza seus grupos e sessões automaticamente, com criptografia de ponta a ponta. Vai ficar em um navegador só? Faça login nos dois e use a sincronização dele.
+
+</QuickAnswer>
+
+<InstallCta>Leve todas as abas para o computador novo em dois cliques. Grátis para Chrome, Edge e Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="pick" title="Qual jeito você deve usar?">
+
+<ComparisonTable
+  head={['Você quer…', 'Melhor jeito']}
+  rowHeaders
+  minWidth="34rem"
+  rows={[
+    ['Levar tudo de uma vez para um computador novo', 'TabMerger: Exportar JSON → Importar arquivo (gratuito)'],
+    ['Manter dois ou mais computadores em dia', 'Sincronização do TabMerger Pro, com criptografia de ponta a ponta'],
+    ['Passar de um navegador para outro', 'TabMerger (arquivo no gratuito, sincronização no Pro)'],
+    ['Pegar uma aba do outro dispositivo, no mesmo navegador', 'Sincronização do navegador ou enviar aba'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabmerger" title="Como passo abas com o TabMerger?">
+
+**Uma vez, com um arquivo (gratuito):**
+
+1. No computador antigo, salve em um grupo as janelas abertas que você quer levar: no menu **⋯** de um grupo, escolha **Mesclar com as atuais** (“Merge with current”). A importação adiciona grupos salvos; “Abertas agora” (“Now Open”) do arquivo fica de fora, porque eram as abas abertas do navegador antigo.
+2. Abra o TabMerger → **Configurações → Dados** → **Exportar JSON**.
+3. Copie o arquivo para o computador novo (um pendrive USB, um e-mail para você mesmo, um armazenamento na nuvem).
+4. No computador novo, instale o TabMerger e vá em **Configurações → Dados** → **Importar arquivo**. Seus grupos aparecem ao lado dos que você já tem.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="Configurações do TabMerger, “Data” (Dados), com os botões “Export JSON” (Exportar JSON) e “Import file” (Importar arquivo) em “Import & export” (Importar e exportar), tema claro" darkAlt="Configurações do TabMerger, “Data” (Dados), com os botões “Export JSON” (Exportar JSON) e “Import file” (Importar arquivo) em “Import & export” (Importar e exportar), tema escuro" boxes={[{ id: 'export-json', label: 'Exportar JSON' }, { id: 'import-file', label: 'Importar arquivo' }]} source="TabMerger 3.16.1">Exporte em um computador, importe no outro.</ThemedScreenshot>
+
+**Sempre, com sincronização ([Pro](/pricing)):** faça login no TabMerger em cada computador e seus grupos e sessões vão com você, no Chrome, Edge ou Firefox. Tudo é criptografado no seu dispositivo antes de ser sincronizado, então o servidor não consegue ler suas abas. O Pro também mostra as abas abertas nos seus outros dispositivos e as restaura aqui, além de manter backups automáticos. Como funciona, e o que nosso servidor pode e não pode ver: [sincronizar abas entre dispositivos](/blog/sync-tabs-between-devices-with-tabmerger).
+
+O que o arquivo contém está em [como exportar suas abas abertas](/blog/export-open-tabs).
+
+</Section>
+
+<Section id="browser" title="Como passo abas com a sincronização do próprio navegador?">
+
+Funciona quando os dois computadores usam o mesmo navegador e você faz login nele em ambos:
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+1. Faça login no Chrome nos dois computadores. (O Chrome chama as abas de “guias”.)
+2. Ative **Histórico e guias** (“History and tabs”): **Configurações → Você e o Google** (“Settings → You and Google”), selecione o nome da sua conta e ative a opção.
+3. No outro computador, abra o histórico (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) e escolha **Guias de outros dispositivos** (“Tabs from other devices”).
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Faça login no Edge nos dois computadores e ative a sincronização.
+2. No outro computador, abra o histórico (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) e escolha **Tabs from other devices** (abas de outros dispositivos).
+3. O Edge 158 também tem **Send tab to your devices** (enviar aba para seus dispositivos) para uma única página.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Faça login no Firefox nos dois computadores, com a sincronização de abas abertas ativada.
+2. Clique com o botão direito em uma aba e escolha **Enviar para dispositivo** (“Send to Device”) para mandá-la ao outro computador.
+3. Ou abra o **Firefox View** lá e procure em **Abas de outros dispositivos** (“Tabs from other devices”).
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>a sincronização do navegador só funciona dentro de um mesmo navegador, só mostra o que está aberto agora no outro dispositivo e não guarda as abas que você fechou. Para todas as suas abas, entre navegadores diferentes, use o TabMerger.</Catch>
+
+Perdeu abas numa falha no computador antigo? Comece por [como restaurar abas depois de uma falha](/blog/restore-tabs-after-crash). Para o quadro geral, veja [o que faz um gerenciador de sessões](/blog/browser-session-manager).
+
+<InstallCta>Grátis para Chrome, Edge e Firefox. Não precisa de conta para começar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

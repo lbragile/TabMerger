@@ -1,0 +1,179 @@
+export const post = {
+  slug: 'auto-sort-tabs-with-url-rules',
+  title: 'Tabs mit URL-Regeln automatisch in Gruppen sortieren',
+  navTitle: 'Tabs mit URL-Regeln automatisch sortieren',
+  seoTitle: 'Browser-Tabs automatisch nach URL in Gruppen sortieren',
+  description:
+    'Lass TabMerger deine Tabs automatisch gruppieren: Eine URL-Regel kopiert jede passende Seite beim Surfen in die richtige Gruppe. So funktionieren Muster und der Platzhalter *, die Reihenfolge der Regeln und bewährte Muster.',
+  shareSummary: 'Ein Muster, eine Gruppe: TabMerger sortiert jeden passenden Tab beim Surfen für dich ein.',
+  dek: 'Einmal die Regel anlegen, und jede passende Seite, die du danach öffnest, landet in der richtigen Gruppe.',
+  published: '2026-12-17',
+  updated: '2026-12-17',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Eine Regel besteht aus einem Muster und einer Gruppe; * steht für beliebig viele Zeichen.', source: 'TabMerger 3.16.1' },
+    { text: 'Muster gelten für die ganze Adresse ohne http:// oder https://.', source: 'Quellcode von TabMerger 3.16.1' },
+    { text: 'Regeln werden von oben nach unten geprüft; die erste passende gewinnt.', source: 'TabMerger 3.16.1' },
+    { text: 'Kostenlos gibt es 3 URL-Regeln, mit Pro unbegrenzt viele.', source: 'TabMerger-Preise', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Lassen sich Browser-Tabs automatisch in Gruppen sortieren?',
+      answer:
+        'Ja, mit den URL-Regeln von TabMerger. Eine Regel verbindet ein Adressmuster wie github.com/your-org/* mit einer Gruppe. Sobald eine passende Seite geöffnet wird oder fertig geladen ist, speichert TabMerger eine Kopie davon in dieser Gruppe. Der Tab selbst bleibt offen.',
+    },
+    {
+      question: 'Wie funktionieren die Muster von URL-Regeln?',
+      answer:
+        'Ein Muster muss zur ganzen Adresse passen, ohne den Teil http:// oder https://. * steht für beliebig viele Zeichen, auch für keins, und ist der einzige Platzhalter. github.com/* passt also auf jede GitHub-Seite und *wikipedia.org/* auf Wikipedia in jeder Sprache.',
+    },
+    {
+      question: 'Was passiert, wenn zwei Regeln auf dieselbe Seite passen?',
+      answer: 'Die Regeln werden von oben nach unten geprüft, und die erste passende gewinnt. Mit den Pfeilen neben jeder Regel stellst du spezielle Regeln über allgemeine.',
+    },
+    {
+      question: 'Schließt eine URL-Regel den Tab?',
+      answer: 'Nein. Die Regel speichert eine Kopie in der Gruppe; der Tab bleibt offen, wo er ist.',
+    },
+    {
+      question: 'Wie viele URL-Regeln kann ich anlegen?',
+      answer: 'Kostenlos sind es 3, mit Pro gibt es kein Limit. Bestehende Regeln funktionieren weiter, wenn sich dein Plan ändert.',
+    },
+  ],
+  images: [
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-light.webp', alt: 'TabMerger-Dialog „Add URL Rule“ (URL-Regel hinzufügen) mit dem Muster *wikivoyage.org/wiki/* und der Gruppe „Trip to Lisbon“, helles Design' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-dark.webp', alt: 'TabMerger-Dialog „Add URL Rule“ (URL-Regel hinzufügen) mit dem Muster *wikivoyage.org/wiki/* und der Gruppe „Trip to Lisbon“, dunkles Design' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-light.webp', alt: 'TabMerger „URL Rules“ (URL-Regeln) mit drei Regeln, jede mit Pfeilen zum Umsortieren, und „3/3 used“ (3/3 genutzt), helles Design' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-dark.webp', alt: 'TabMerger „URL Rules“ (URL-Regeln) mit drei Regeln, jede mit Pfeilen zum Umsortieren, und „3/3 used“ (3/3 genutzt), dunkles Design' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp', alt: 'Die Gruppe „Trip to Lisbon“ mit der Sintra-Seite, die eine URL-Regel hinzugefügt hat, helles Design' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-dark.webp', alt: 'Die Gruppe „Trip to Lisbon“ mit der Sintra-Seite, die eine URL-Regel hinzugefügt hat, dunkles Design' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'developers'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp' },
+  ogImage: { src: '/blog/auto-sort-tabs-with-url-rules/og.png', alt: 'Tabs mit URL-Regeln automatisch sortieren: drei TabMerger-Regeln sortieren Tabs in Gruppen ein' },
+  toc: [
+    { id: 'quick', label: 'Kurze Antwort' },
+    { id: 'problem', label: 'Von Hand einsortieren' },
+    { id: 'why', label: 'Warum Regeln so funktionieren' },
+    { id: 'steps', label: 'Eine Regel anlegen' },
+    { id: 'patterns', label: 'Muster schreiben' },
+    { id: 'order', label: 'Reihenfolge der Regeln' },
+    { id: 'benefit', label: 'Was du davon hast' },
+    { id: 'habits', label: 'Gute Gewohnheiten' },
+    { id: 'plans', label: 'Kostenlos vs. Pro' },
+    { id: 'faq', label: 'Häufige Fragen' },
+  ],
+}
+
+<QuickAnswer>
+
+Öffne in [TabMerger](/features) **Einstellungen → Allgemein → URL-Regeln → Verwalten** (Settings → General → URL rules → Manage) und leg eine Regel an: ein Adressmuster wie `github.com/your-org/*` und die Gruppe, in die es gehört. Ab dann wird jede passende Seite beim Surfen in dieser Gruppe gespeichert, und der Tab bleibt offen. `*` passt auf alles; die erste passende Regel gewinnt.
+
+</QuickAnswer>
+
+<InstallCta>Tabs, die sich selbst in die richtige Gruppe einsortieren. Kostenlos für Chrome, Edge und Firefox.</InstallCta>
+
+<Section id="problem" title="Tabs von Hand einsortieren hält nicht lange">
+
+Die Woche beginnt aufgeräumt: die Arbeit in einer Gruppe, die Reise in einer zweiten, Lesestoff in einer dritten. Dann kommt der Alltag. Eine Kollegin schickt einen Link zu einem Issue, du suchst zwei Zugverbindungen heraus, eine Suche fördert einen Artikel zutage. Alles gehört irgendwohin, und jedes Mal wäre es ein Ziehen mit der Maus, das du dir sparst. Am Freitag sind die Gruppen veraltet, und Jetzt geöffnet (Now Open) ist wieder ein einziger Stapel.
+
+Die Seiten, die du am häufigsten öffnest, stammen von denselben paar Websites. Genau das kann eine Regel erkennen.
+
+</Section>
+
+<Section id="why" title="Warum URL-Regeln so funktionieren, wie sie funktionieren">
+
+- **Kopieren statt verschieben.** Eine Regel speichert eine Kopie der Seite in der Gruppe und lässt den Tab offen. Das Einsortieren unterbricht nie, was du gerade liest.
+- **Arbeitet beim Surfen mit.** Eine Regel wird geprüft, wenn ein Tab mit einer Adresse geöffnet wird und immer dann, wenn eine Seite fertig geladen ist. So wird auch ein Link einsortiert, dem du innerhalb eines Tabs folgst. Die Kopie landet im ersten Fenster der Gruppe. Eine Seite, die erneut lädt (nach einem Neuladen oder einem späteren Besuch), wird erneut gespeichert; **Doppelte Tabs entfernen** (Deduplicate tabs) im **⋯**-Menü der Gruppe räumt Wiederholungen auf.
+- **Die ganze Adresse, ohne Schema.** Ein Muster wird mit der gesamten Adresse nach `http://` oder `https://` verglichen. Das tippst du also nie mit, und `localhost:3000/*` funktioniert genau so, wie es dasteht.
+- **Bewusst nur ein Platzhalter.** `*` steht für beliebig viele Zeichen, auch für keins. Andere Sonderzeichen, die man maskieren müsste, gibt es nicht. Muster werden als reiner Text verglichen und nie in einen regulären Ausdruck umgewandelt, daher werden auch lange Muster schnell geprüft.
+- **Die Reihenfolge entscheidet.** Wenn zwei Regeln passen, gewinnt die obere. So kann eine spezielle Regel über einer allgemeinen stehen.
+
+</Section>
+
+<Section id="steps" title="Eine Regel anlegen">
+
+1. Öffne TabMerger und dann **Einstellungen** → **Allgemein** (Settings → General). Klick neben **URL-Regeln** auf **Verwalten** (Manage).
+2. Klick auf **Regel hinzufügen** (Add rule). Gib das Muster ein, wähl die Zielgruppe und klick im Dialog auf **Regel hinzufügen**.
+3. Wiederhole das für jede Website, die einsortiert werden soll, und klick dann auf **Speichern** (Save), um die Liste zu behalten.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Eine URL-Regel von Anfang bis Ende" steps={[{ title: 'Anlegen' }, { title: 'Die Liste' }, { title: 'Das Ergebnis' }]}>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-add-rule" alt="TabMerger-Dialog „Add URL Rule“ (URL-Regel hinzufügen) mit dem Muster *wikivoyage.org/wiki/* und der Gruppe „Trip to Lisbon“, helles Design" darkAlt="TabMerger-Dialog „Add URL Rule“ (URL-Regel hinzufügen) mit dem Muster *wikivoyage.org/wiki/* und der Gruppe „Trip to Lisbon“, dunkles Design" boxes={[{ id: 'pattern', label: 'Das Adressmuster' }, { id: 'group', label: 'Die Zielgruppe' }]} source="TabMerger 3.16.1">Jeder Wikivoyage-Artikel kommt zur Reise.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rules-list" alt="TabMerger „URL Rules“ (URL-Regeln) mit drei Regeln, jede mit Pfeilen zum Umsortieren, und „3/3 used“ (3/3 genutzt), helles Design" darkAlt="TabMerger „URL Rules“ (URL-Regeln) mit drei Regeln, jede mit Pfeilen zum Umsortieren, und „3/3 used“ (3/3 genutzt), dunkles Design" boxes={[{ id: 'order', label: 'Von oben nach unten geprüft' }, { id: 'used', label: 'Zähler im kostenlosen Plan' }]} source="TabMerger 3.16.1">Drei Regeln, drei Gruppen. Die Pfeile legen fest, welche Regel zuerst geprüft wird.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rule-result" alt="Die Gruppe „Trip to Lisbon“ mit der Sintra-Seite, die eine URL-Regel hinzugefügt hat, helles Design" darkAlt="Die Gruppe „Trip to Lisbon“ mit der Sintra-Seite, die eine URL-Regel hinzugefügt hat, dunkles Design" boxes={[{ id: 'new-tab', label: 'Von der Regel einsortiert' }]} source="TabMerger 3.16.1">Der Sintra-Artikel wurde beim Öffnen von selbst in „Trip to Lisbon“ gespeichert.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="patterns" title="Muster, die passen">
+
+<ComparisonTable
+  head={['Muster', 'Passt auf', 'Passt nicht auf']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['github.com/your-org/*', 'Jedes Repo, jedes Issue und jeden Pull Request von your-org', 'github.com/other-org/…'],
+    ['*wikipedia.org/wiki/*', 'Artikel in jeder Sprache (en., de., …)', 'die Startseite von wikipedia.org'],
+    ['localhost:3000/*', 'Jede Seite deines lokalen Dev-Servers', 'localhost:8080/…'],
+    ['docs.example.com/*', 'Die Doku-Website', 'www.docs.example.com/… (dafür *docs.example.com/*)'],
+    ['github.com', 'Nur die Adresse github.com selbst', 'github.com/irgendwas (dafür /* anhängen)'],
+  ]}
+/>
+
+Tipps, die dir eine Fehlersuche ersparen:
+
+- **Mit `/*` enden**, um eine ganze Website abzudecken. Ohne `*` passt ein Muster auf genau eine Adresse.
+- **Mit `*` beginnen**, wenn eine Website Subdomains oder `www.` nutzt: `*example.com/*`.
+- **Buchstaben müssen genau passen.** Browser schreiben Domainnamen klein, also schreib sie ebenfalls klein.
+- **Query-Strings zählen mit.** `*youtube.com/watch*` passt auf Videos, egal was nach `watch` folgt.
+
+</Section>
+
+<Section id="order" title="Reihenfolge der Regeln: Spezielles zuerst">
+
+Regeln werden von oben geprüft. Stell die enge Regel (`github.com/your-org/design-system/*` → „Design system“) mit den Pfeilen neben jeder Regel über die breite (`github.com/your-org/*` → „Work“). Die erste passende Regel sortiert die Seite ein, die übrigen werden übersprungen.
+
+</Section>
+
+<Section id="benefit" title="Was du davon hast">
+
+Deine Gruppen bleiben aktuell, ohne dass du selbst einsortieren musst. Eine Seite, die du am Dienstag geöffnet hast, liegt am Freitag schon in der Gruppe ihres Projekts, und eine Suche in dieser Gruppe findet sie.
+
+</Section>
+
+<Section id="habits" title="Gute Gewohnheiten">
+
+- **Regeln für die Websites, die du täglich öffnest,** nicht für jede, die du einmal besuchst.
+- **Eine Regel pro Projekt-Domain oder -Pfad**, spezielle Regeln zuerst.
+- **Kombiniere Regeln mit einer Gruppe pro Projekt:** siehe [Tabs nach Projekt organisieren](/blog/organize-tabs-by-project). Entwickler finden weitere Muster unter [Tab-Management für Entwickler](/blog/tab-management-for-developers).
+- **Räum ab und zu auf**, mit **Doppelte Tabs entfernen** in Gruppen, die Regeln oft befüllen.
+
+</Section>
+
+<Section id="plans" title="Kostenlos vs. Pro">
+
+<ComparisonTable
+  head={['', 'Kostenlos', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['URL-Regeln', '3', 'Unbegrenzt'],
+    ['Muster, Reihenfolge, alle Optionen oben', 'Ja', 'Ja'],
+  ]}
+/>
+
+URL-Regeln werden in dem Browser gespeichert, in dem du sie angelegt hast. Endet ein Pro-Plan, sortieren deine bestehenden Regeln weiter Tabs ein; nur für eine vierte Regel brauchst du [Pro](/pricing).
+
+<InstallCta>Leg heute drei Regeln an und hör auf, Tabs von Hand einzusortieren. Kostenlos für Chrome, Edge und Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Häufige Fragen">
+
+<Faq items={post.faq} />
+
+</Section>

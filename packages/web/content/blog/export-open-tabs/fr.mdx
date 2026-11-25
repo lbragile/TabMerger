@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'export-open-tabs',
+  title: 'Comment exporter vos onglets ouverts',
+  navTitle: 'Exporter vos onglets ouverts',
+  seoTitle: 'Exporter les onglets ouverts dans Chrome, Edge et Firefox',
+  description:
+    'Exportez tous vos onglets ouverts, titre et adresse, dans un fichier que vous gardez : l’export JSON de TabMerger en un clic (onglets ouverts et groupes enregistrés ensemble), ou l’export des favoris du navigateur, étape par étape.',
+  shareSummary: 'Exportez tous vos onglets ouverts dans un fichier en un clic, et réimportez-les n’importe où.',
+  dek: 'Un fichier à vous vaut mieux qu’une session dont on espère qu’elle tiendra. Un clic dans TabMerger, quelques-uns dans le navigateur.',
+  published: '2026-12-02',
+  updated: '2026-12-02',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '« Exporter en JSON » de TabMerger enregistre vos onglets ouverts et chaque groupe enregistré dans un seul fichier.', source: 'Testé dans TabMerger 3.16.1, 21 nov. 2026' },
+    { text: 'TabMerger importe les fichiers JSON, les favoris au format HTML et les fichiers texte de OneTab.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome exporte les favoris depuis le menu du gestionnaire de favoris.',
+      source: 'Aide Chrome',
+      href: 'https://support.google.com/chrome/answer/96816',
+    },
+    { text: 'Ctrl+Shift+D ajoute aux favoris tous les onglets de la fenêtre, dans les trois navigateurs.', source: 'Aide de Chrome et d’Edge ; raccourcis de Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Comment copier toutes les URL des onglets ?',
+      answer:
+        'La copie complète la plus rapide, c’est Paramètres → Données → Exporter en JSON dans TabMerger : un fichier avec le titre et l’adresse de chaque onglet ouvert et de chaque groupe enregistré. Sans extension, ajoutez les onglets de la fenêtre aux favoris (Ctrl+Shift+D) et exportez vos favoris au format HTML.',
+    },
+    {
+      question: 'Puis-je exporter les onglets de toutes les fenêtres à la fois ?',
+      answer: 'Oui, avec TabMerger : « Ouverts maintenant » couvre toutes les fenêtres ouvertes, et l’export JSON l’inclut. La méthode des favoris se fait fenêtre par fenêtre.',
+    },
+    {
+      question: 'Comment réimporter le fichier ?',
+      answer: 'Dans TabMerger, Paramètres → Données → Importer un fichier : il lit les fichiers JSON de TabMerger, les favoris au format HTML et les fichiers texte de OneTab, et les ajoute comme groupes.',
+    },
+    {
+      question: 'L’export est-il privé ?',
+      answer: 'Oui. Le fichier est créé dans votre navigateur et enregistré sur votre ordinateur ; rien n’est envoyé en ligne. Gardez-le en lieu sûr, car il liste vos pages.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: '« Settings » (Paramètres) de TabMerger, onglet « Data » (Données), avec les boutons « Export JSON » (Exporter en JSON) et « Import file » (Importer un fichier) sous « Import & export » (Import et export), thème clair' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: '« Settings » (Paramètres) de TabMerger, onglet « Data » (Données), avec les boutons « Export JSON » (Exporter en JSON) et « Import file » (Importer un fichier) sous « Import & export » (Import et export), thème sombre' },
+  ],
+  tags: ['save-tabs', 'bookmarks', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Import Chrome bookmarks & settings (export section)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/export-open-tabs/tm-settings-export-light.webp' },
+  ogImage: { src: '/blog/export-open-tabs/og.png', alt: 'Comment exporter vos onglets ouverts : un guide TabMerger, avec le bouton « Export JSON » (Exporter en JSON)' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'tabmerger', label: 'Exporter en un clic' },
+    { id: 'inside', label: 'Le contenu du fichier' },
+    { id: 'builtin', label: 'La méthode des favoris' },
+    { id: 'import', label: 'Les récupérer' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Exporter les favoris',
+    values: { chrome: 'Gestionnaire de favoris → ⋮ → Exporter les favoris', edge: 'Favorites → Export favorites', firefox: 'Bibliothèque → Exporter des marque-pages au format HTML…' },
+  },
+}
+
+<QuickAnswer>
+
+Ouvrez [TabMerger](/features), allez dans **Paramètres → Données** (Settings → Data) et cliquez sur **Exporter en JSON** (Export JSON). Un clic enregistre un fichier avec le titre et l’adresse de **chaque onglet ouvert dans chaque fenêtre**, plus chaque groupe que vous avez enregistré. Sans extension, vous pouvez ajouter les onglets d’une fenêtre aux favoris avec <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> et exporter vos favoris dans un fichier HTML, une fenêtre à la fois.
+
+</QuickAnswer>
+
+<InstallCta>Exportez chaque onglet ouvert, de chaque fenêtre, en un clic. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Comment exporter tous mes onglets ouverts en un clic ?">
+
+1. Ouvrez TabMerger et cliquez sur l’icône du compte → **Paramètres**.
+2. Ouvrez l’onglet **Données**.
+3. Sous **Import et export**, cliquez sur **Exporter en JSON**. Le fichier se télécharge aussitôt, avec un nom du type `tabmerger-backup-2026-11-21.json`.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="« Settings » (Paramètres) de TabMerger, onglet « Data » (Données), avec les boutons « Export JSON » (Exporter en JSON) et « Import file » (Importer un fichier) sous « Import & export » (Import et export), thème clair" darkAlt="« Settings » (Paramètres) de TabMerger, onglet « Data » (Données), avec les boutons « Export JSON » (Exporter en JSON) et « Import file » (Importer un fichier) sous « Import & export » (Import et export), thème sombre" boxes={[{ id: 'export-json', label: 'Exporter en JSON' }, { id: 'import-file', label: 'Importer un fichier' }]} source="TabMerger 3.16.1">Settings → Data (Paramètres → Données) : un bouton pour sortir, un bouton pour revenir.</ThemedScreenshot>
+
+C’est disponible dans toutes les offres, y compris la gratuite, et le fichier est créé dans votre navigateur : rien n’est envoyé en ligne.
+
+</Section>
+
+<Section id="inside" title="Que contient le fichier exporté ?">
+
+Une liste JSON de vos groupes. **Ouverts maintenant** (Now Open), c’est-à-dire vos fenêtres et onglets actuellement ouverts, vient en premier, suivi de chaque groupe enregistré. Extrait d’un vrai export :
+
+<ComparisonTable
+  head={['Champ', 'Exemple tiré de l’export']}
+  rows={[
+    [<code>name</code>, '« Now Open », « Work », « Reading list »'],
+    [<code>windows[]</code>, 'Une entrée par fenêtre, chacune avec ses onglets'],
+    [<code>tabs[].title</code>, '« Spaced repetition - Wikipedia »'],
+    [<code>tabs[].url</code>, <code>https://en.wikipedia.org/wiki/Spaced_repetition</code>],
+    [<code>color</code>, <code>rgba(59, 130, 246, 1)</code>],
+  ]}
+/>
+
+Le JSON est du texte brut, donc n’importe quel script ou éditeur de texte peut le lire : extraire les adresses, les transformer en liste Markdown, ou garder le fichier comme sauvegarde.
+
+</Section>
+
+<Section id="builtin" title="Comment exporter des onglets sans extension ?">
+
+Les navigateurs n’exportent pas directement les onglets ouverts, mais ils exportent les favoris. Ajoutez donc d’abord les onglets aux favoris, puis exportez :
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. Dans chaque fenêtre, appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> sur Mac) et enregistrez les onglets dans un nouveau dossier.
+2. Ouvrez **⋮ → Favoris et listes → Gestionnaire de favoris** (Bookmarks and lists → Bookmark Manager).
+3. En haut, ouvrez **⋮ → Exporter les favoris** (Export bookmarks). Chrome enregistre tous les favoris dans un fichier HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Dans chaque fenêtre, appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> pour ajouter tous les onglets aux favoris, dans un nouveau dossier.
+2. Appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> pour ouvrir les favoris (Favorites).
+3. Choisissez **Export favorites** dans le menu de la page et enregistrez le fichier HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Dans chaque fenêtre, appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> pour marquer tous les onglets dans un nouveau dossier.
+2. Appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> pour ouvrir la Bibliothèque (Library).
+3. Choisissez **Exporter des marque-pages au format HTML…** (Export Bookmarks to HTML…) et enregistrez le fichier.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>c’est une fenêtre à la fois, cela exporte *tous* vos favoris et pas seulement ces onglets, et le fichier ne sait pas quels onglets étaient ouverts ensemble.</Catch>
+
+</Section>
+
+<Section id="import" title="Comment récupérer les onglets ?">
+
+Dans TabMerger, **Paramètres → Données → Importer un fichier** (Settings → Data → Import file) lit les trois types de fichiers et les ajoute comme groupes à côté de ceux que vous avez déjà :
+
+- **JSON de TabMerger**, issu de « Exporter en JSON », avec vos groupes et fenêtres enregistrés tels qu’ils étaient. « Ouverts maintenant » du fichier n’est pas ajouté (c’étaient les onglets ouverts du navigateur qui a exporté) ; enregistrez donc vos fenêtres ouvertes dans un groupe avant l’export si vous voulez les retrouver.
+- **Favoris HTML**, de n’importe quel navigateur : chaque dossier de premier niveau devient un groupe.
+- **Texte OneTab** : chaque liste OneTab devient un groupe. Voir notre [guide des alternatives à OneTab](/blog/onetab-alternatives).
+
+C’est donc le moyen le plus simple de [transférer des onglets vers un autre ordinateur](/blog/move-tabs-between-computers) sans compte. Vous préférez l’automatique ? [Pro](/pricing) conserve les 10 sauvegardes automatiques les plus récentes et synchronise vos groupes entre vos appareils, avec un chiffrement de bout en bout. Pour garder des onglets pour plus tard sans aucun fichier, voir [comment enregistrer tous les onglets ouverts](/blog/save-all-open-tabs) ; pour envoyer une sélection à quelqu’un, voir [comment partager un ensemble d’onglets](/blog/share-a-set-of-tabs).
+
+<InstallCta>Gratuit pour Chrome, Edge et Firefox. Aucun compte nécessaire pour commencer.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,276 @@
+export const post = {
+  slug: 'tab-keyboard-shortcuts',
+  title: 'Chrome、Edge 和 Firefox 的标签页键盘快捷键',
+  seoTitle: 'Chrome 标签页快捷键（含 Edge、Firefox）：完整参考',
+  description:
+    'Chrome、Edge 和 Firefox 中值得掌握的所有标签页快捷键：切换标签页、重新打开关闭的标签页和窗口、搜索标签页、把所有标签页加入书签，Windows 和 Mac 都适用。',
+  shareSummary: '在 Chrome、Edge 和 Firefox 中用键盘切换、恢复、搜索和保存标签页。',
+  dek: '一张表涵盖三款浏览器，外加 Mac 上的差异，以及如何设置真正生效的扩展快捷键。',
+  published: '2026-11-22',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '三款浏览器中，Ctrl+Shift+T 都会重新打开最后关闭的标签页。', source: 'Chrome 和 Edge 帮助；Firefox 159 按键定义' },
+    { text: 'Firefox 用 Ctrl+Shift+N 重新打开关闭的窗口。', source: 'Firefox 159 按键定义' },
+    {
+      text: 'Chrome 的 Ctrl+9 跳到最后一个标签页，而不是第九个。',
+      source: 'Chrome 帮助',
+      href: 'https://support.google.com/chrome/answer/157179',
+    },
+    { text: 'Edge 自己占用了 Ctrl+Shift+K、U 和 P，扩展无法使用它们。', source: 'Microsoft 支持；Edge 158' },
+  ],
+  faq: [
+    {
+      question: '如何用键盘切换标签页？',
+      answer:
+        '在 Chrome、Edge 和 Firefox 中，Ctrl+Tab 切换到下一个标签页，Ctrl+Shift+Tab 切换到上一个。Ctrl+1 到 Ctrl+8 按位置跳到某个标签页；Ctrl+9 跳到最后一个标签页。',
+    },
+    {
+      question: '如何重新打开关闭的标签页？',
+      answer:
+        '按 Ctrl+Shift+T（Mac 上为 ⌘+Shift+T）。再按一次可以继续往前找回。在 Chrome 中它也能找回关闭的窗口；在 Firefox 中，Ctrl+Shift+N 可重新打开关闭的窗口。',
+    },
+    {
+      question: '可以搜索已打开的标签页吗？',
+      answer: '可以。在 Chrome 中，Ctrl+Shift+A 会打开标签页搜索；在 Firefox 中，它会列出所有标签页。在 Chrome 中，也可以在地址栏输入 @tabs。',
+    },
+    {
+      question: '为什么扩展的快捷键不起作用？',
+      answer:
+        '当建议的快捷键与浏览器自己的快捷键冲突时，浏览器会让它保持未设置。请检查 chrome://extensions/shortcuts 或 edge://extensions/shortcuts，并另选一个按键。',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp', alt: 'Edge 扩展键盘快捷键页面中的 TabMerger：四个保存命令全部已设置，分别为 Alt+Shift+S、Alt+Shift+O、Alt+Shift+Comma 和 Alt+Shift+Period' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp', alt: 'TabMerger 搜索已打开，查询为 docs，列出匹配的已打开和已保存标签页，浅色主题' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-dark.webp', alt: 'TabMerger 搜索已打开，查询为 docs，列出匹配的已打开和已保存标签页，深色主题' },
+  ],
+  tags: ['browser-tips', 'cross-browser', 'chrome', 'edge', 'firefox', 'tab-management'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-20',
+      note: 'Firefox 的条目读取自 Firefox 159.0.1 本身的按键定义；此页面阻止了我们的自动检查。',
+    },
+  ],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp' },
+  ogImage: { src: '/blog/tab-keyboard-shortcuts/og.png', alt: 'Chrome、Edge 和 Firefox 的标签页键盘快捷键：TabMerger 指南，打开了 TabMerger 搜索' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'table', label: '各浏览器的快捷键' },
+    { id: 'reopen', label: '重新打开关闭的标签页' },
+    { id: 'extensions', label: '扩展快捷键' },
+    { id: 'tabmerger', label: 'TabMerger 的按键' },
+    { id: 'faq', label: '常见问题' },
+  ],
+  browserSections: ['table', 'reopen', 'extensions'],
+  browserFact: {
+    label: '扩展快捷键',
+    values: { chrome: 'chrome://extensions/shortcuts', edge: 'edge://extensions/shortcuts', firefox: 'about:addons' },
+  },
+}
+
+<QuickAnswer>
+
+<Kbd>Ctrl</Kbd>+<Kbd>Tab</Kbd> 和 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Tab</Kbd> 切换到下一个和上一个标签页，<Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> 按位置跳到某个标签页，<Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> 关闭它，<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> 把它找回来。在 Windows 和 Linux 上，这些在 Chrome、Edge 和 Firefox 中都一样；在 Mac 上，用 <Kbd>⌘</Kbd> 代替 <Kbd>Ctrl</Kbd>。加上 [TabMerger](/features)，再用两个按键就能完成最费力的部分：直接用键盘保存标签页，以及用 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> 找到任何标签页，无论是打开的、保存的还是关闭的。
+
+</QuickAnswer>
+
+<InstallCta>双手不离键盘就能保存标签页。Chrome、Edge 和 Firefox 均可免费使用。</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="table" title="你的浏览器有哪些标签页快捷键？">
+
+先是 Windows 和 Linux，然后是 Mac 上的不同之处。每一项都来自浏览器自己的帮助页面；Firefox 的则来自 Firefox 159.0.1 本身的按键定义。
+
+<BrowserPanels section="table">
+<BrowserPanel browser="chrome">
+
+<ComparisonTable
+  head={['操作', '快捷键']}
+  rowHeaders
+  rows={[
+    ['新建标签页', 'Ctrl+T'],
+    ['关闭标签页', 'Ctrl+W'],
+    ['重新打开关闭的标签页和窗口', 'Ctrl+Shift+T'],
+    ['下一个标签页', 'Ctrl+Tab 或 Ctrl+PgDn'],
+    ['上一个标签页', 'Ctrl+Shift+Tab 或 Ctrl+PgUp'],
+    ['第 1 到第 8 个标签页', 'Ctrl+1 … Ctrl+8'],
+    ['最后一个标签页', 'Ctrl+9'],
+    ['搜索已打开的标签页', 'Ctrl+Shift+A'],
+    ['为所有标签页添加书签', 'Ctrl+Shift+D'],
+    ['历史记录', 'Ctrl+H'],
+    ['关闭窗口', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+也可以从地址栏搜索已打开的标签页：输入 `@tabs` 并按 <Kbd>Tab</Kbd>。如果还想搜索已保存和已关闭的标签页，请看[如何在数百个标签页中找到一个](/blog/find-a-tab-among-hundreds)。
+
+**在 Mac 上**，表中写 <Kbd>Ctrl</Kbd> 的地方改用 <Kbd>⌘</Kbd>，但 Chrome 帮助中列出了这些例外：下一个和上一个标签页是 <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>→</Kbd> 和 <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>←</Kbd>，历史记录是 <Kbd>⌘</Kbd>+<Kbd>Y</Kbd>，书签管理器是 <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>B</Kbd>。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+<ComparisonTable
+  head={['操作', '快捷键']}
+  rowHeaders
+  rows={[
+    ['新建标签页', 'Ctrl+T'],
+    ['关闭标签页', 'Ctrl+W'],
+    ['重新打开最后关闭的标签页', 'Ctrl+Shift+T'],
+    ['下一个标签页', 'Ctrl+Tab 或 Ctrl+PgDn'],
+    ['上一个标签页', 'Ctrl+Shift+Tab 或 Ctrl+PgUp'],
+    ['第 1 到第 8 个标签页', 'Ctrl+1 … Ctrl+8'],
+    ['最后一个标签页', 'Ctrl+9'],
+    ['将所有标签页添加到收藏夹', 'Ctrl+Shift+D'],
+    ['历史记录', 'Ctrl+H'],
+    ['关闭窗口', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+Edge 的快捷键列表中没有用于搜索已打开标签页或重新打开关闭窗口的按键。
+
+**在 Mac 上**，表中写 <Kbd>Ctrl</Kbd> 的地方改用 <Kbd>⌘</Kbd>；历史记录是 <Kbd>⌘</Kbd>+<Kbd>Y</Kbd>。对于下一个和上一个标签页，Microsoft 列出的是 <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↓</Kbd> 和 <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↑</Kbd>。
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+<ComparisonTable
+  head={['操作', '快捷键']}
+  rowHeaders
+  rows={[
+    ['新建标签页', 'Ctrl+T'],
+    ['关闭标签页', 'Ctrl+W'],
+    ['重新打开关闭的标签页', 'Ctrl+Shift+T'],
+    ['重新打开关闭的窗口', 'Ctrl+Shift+N'],
+    ['下一个标签页', 'Ctrl+Tab 或 Ctrl+PgDn'],
+    ['上一个标签页', 'Ctrl+Shift+Tab 或 Ctrl+PgUp'],
+    ['第 1 到第 8 个标签页', 'Ctrl+1 … Ctrl+8'],
+    ['最后一个标签页', 'Ctrl+9'],
+    ['列出所有标签页', 'Ctrl+Shift+A'],
+    ['为所有标签页添加书签', 'Ctrl+Shift+D'],
+    ['历史记录侧栏', 'Ctrl+H'],
+    ['历史记录（我的足迹）', 'Ctrl+Shift+H'],
+    ['关闭窗口', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+**在 Mac 上**，Firefox 用系统的主修饰键定义这些快捷键，所以表中写 <Kbd>Ctrl</Kbd> 的地方请按 <Kbd>⌘</Kbd>。
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="reopen" title="误关了标签页，怎么重新打开？">
+
+按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>（Mac 上为 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>）。每按一次就再往前找回一步。能找回什么取决于浏览器：
+
+<BrowserPanels section="reopen">
+<BrowserPanel browser="chrome">
+
+Chrome 会按关闭的顺序重新打开标签页*和*窗口，所以一直按，直到丢失的窗口回来。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge 的文档说明 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> 用于重新打开最后关闭的标签页。要找回关闭的窗口，请打开历史记录（<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>），在 **Recently closed**（最近关闭）下查找。
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox 分开记录：<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> 用于标签页，<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> 用于窗口。在 Firefox 159 中，<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> 绑定的命令会恢复最后关闭的标签页、窗口或会话，因此它也能找回上一次会话。
+
+</BrowserPanel>
+</BrowserPanels>
+
+这个列表能追溯的范围有限。如果整个会话都丢了，请看[如何在崩溃后恢复标签页](/blog/restore-tabs-after-crash)。想从一开始就不丢失，在关闭大批内容之前先[保存所有打开的标签页](/blog/save-all-open-tabs)。
+
+</Section>
+
+<Section id="extensions" title="如何为扩展设置快捷键？">
+
+扩展可以建议快捷键，但最终由浏览器决定：与浏览器自身快捷键冲突的建议按键会保持为 **Not set**（未设置），而且不会有任何提示。打开浏览器的快捷键页面，点击命令旁边的铅笔图标，然后按下你想要的按键。
+
+<BrowserPanels section="extensions">
+<BrowserPanel browser="chrome">
+
+把 `chrome://extensions/shortcuts` 粘贴到地址栏。每个命令还有一个范围菜单：选择 **In Chrome**（仅在 Chrome 中），或选择 **Global**（全局），让它在 Chrome 不在前台时也能使用。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+把 `edge://extensions/shortcuts` 粘贴到地址栏。
+
+Edge 把 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd>（复制标签页）、<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>U</Kbd>（Read Aloud，大声朗读）和 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd>（使用系统对话框打印）留给自己，所以建议其中任何一个的扩展命令在 Edge 158 中一开始就是 **Not set**。Edge 158 还会拒绝一些 Microsoft 列表中没有提到的 <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd> 按键，例如 <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> 和 <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Z</Kbd>。TabMerger 的保存命令避开了所有这些按键，因此新安装时四个命令都已设置：
+
+<AnnotatedFigure src="/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp" alt="Edge 扩展键盘快捷键页面中的 TabMerger：四个保存命令全部已设置，分别为 Alt+Shift+S、Alt+Shift+O、Alt+Shift+Comma 和 Alt+Shift+Period" width={852} height={460} boxes={[{ id: 'save-shortcuts' }]} source="edge://extensions/shortcuts · Edge 158.0.4370.33">在 Edge 158 中新安装的 TabMerger：四个保存命令都有各自的按键，无需修改。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+打开 `about:addons`，点击齿轮菜单，选择 **管理扩展快捷键**（Manage Extension Shortcuts）。注意，在 Firefox 中 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> 会打开隐私窗口，所以凡是建议这个按键的，都请另选一个。
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>快捷键页面不会提醒你。如果某个快捷键“没反应”，先去那里检查。</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger 的按键">
+
+[TabMerger](/features) 是我们为 Chrome、Edge 和 Firefox 打造的免费扩展，无需打开它就能直接用键盘保存标签页。它为四个保存命令各建议了一个按键，选择时避开了 Chrome、Edge 和 Firefox 自己使用的快捷键；你可以在浏览器的快捷键页面（见上文）中更改其中任何一个：
+
+<ComparisonTable
+  head={['建议按键', '保存内容']}
+  keysColumn={0}
+  rows={[
+    ['Alt+Shift+S', '当前标签页'],
+    ['Alt+Shift+O', '窗口中的其他所有标签页'],
+    ['Alt+Shift+Comma', '左侧的标签页'],
+    ['Alt+Shift+Period', '右侧的标签页'],
+  ]}
+/>
+
+在 Mac 上，它们用 <Kbd>Control</Kbd>+<Kbd>Shift</Kbd> 代替 <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>：<Kbd>Control</Kbd>+<Kbd>Shift</Kbd>+<Kbd>S</Kbd> 保存当前标签页。这些是新安装时的按键。更新不会改变快捷键，所以如果你在这些按键推出之前就安装了 TabMerger，它会保留原来的按键，包括处于 **Not set** 的那些：请在快捷键页面中设置它们。
+
+在弹出窗口中，<Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>（<Kbd>⌘</Kbd>+<Kbd>K</Kbd>）可在一个列表中搜索已打开、已保存和最近关闭的标签页。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tab-keyboard-shortcuts/tm-search" alt="TabMerger 搜索已打开，查询为 docs，列出匹配的已打开和已保存标签页，浅色主题" darkAlt="TabMerger 搜索已打开，查询为 docs，列出匹配的已打开和已保存标签页，深色主题" boxes={[{ id: 'search-input', label: '搜索' }]} source="TabMerger 3.16.1">按 Ctrl+K 后输入：结果同时来自已打开和已保存的标签页。</ThemedScreenshot>
+
+<InstallCta>Chrome、Edge 和 Firefox 均可免费使用。无需账户即可开始。</InstallCta>
+
+更多减少标签页数量的习惯，请看我们的[标签页过多管理指南](/blog/manage-too-many-tabs)；各浏览器在快捷键之外还提供什么，请看 [Chrome、Edge 和 Firefox 标签页功能对比](/blog/browser-tab-features-compared)。
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

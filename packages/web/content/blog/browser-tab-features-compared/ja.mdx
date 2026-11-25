@@ -1,0 +1,183 @@
+export const post = {
+  slug: 'browser-tab-features-compared',
+  title: 'Chrome・Edge・Firefox のタブ機能を比較：標準機能の違い',
+  navTitle: 'タブ機能の比較：Chrome、Edge、Firefox',
+  seoTitle: 'Chrome・Edge・Firefox タブ機能の比較（2026年版）',
+  description:
+    'タブグループ、タブ検索、垂直タブ、分割表示、スリープタブ、重複タブを閉じる機能。Chrome 157、Edge 158、Firefox 159 に標準で備わっているタブ機能と、TabMerger が 3 つのブラウザに同じ機能を追加する方法をまとめました。',
+  shareSummary: 'Chrome、Edge、Firefox に標準で備わるタブ機能を並べて比較。',
+  dek: 'どのブラウザも、タブの悩みの一部だけを解決しています。どの部分なのか、そして残りを 3 つすべてで手に入れる方法を紹介します。',
+  published: '2026-12-05',
+  updated: '2026-12-05',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '3 つとも、タブグループ、タブ検索、垂直タブ、分割表示を備えています。', source: '各ブラウザのヘルプページと UI テキスト、2026年11月21日' },
+    { text: '「重複タブを閉じる」（Close Duplicate Tabs）を標準で備えているのは Firefox 159 だけです。', source: 'Firefox 159 のメニューテキスト' },
+    {
+      text: 'Chrome は Google アカウントでタブグループを同期します。',
+      source: 'Chrome ヘルプ',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'TabMerger は 3 つすべてに、共通の検索、自動保存、暗号化された同期を追加します。', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'タブ機能がいちばん充実しているブラウザは？',
+      answer:
+        'それぞれ得意分野があります。Chrome は保存・同期できるタブグループ、Edge は初期設定でオンになっているスリープタブ、Firefox は重複タブを閉じる機能です。TabMerger なら 3 つすべてで同じグループ、検索、自動保存、同期が使えます。',
+    },
+    {
+      question: 'Chrome、Edge、Firefox のすべてにタブグループはありますか？',
+      answer: 'はい。3 つとも名前と色を付けてタブをグループにまとめられます。Chrome と Firefox は、グループを閉じてあとで開き直すこともできます。',
+    },
+    {
+      question: 'Chrome、Edge、Firefox で同じタブマネージャーを使えますか？',
+      answer: 'はい。TabMerger は 3 つすべてで動作し、Pro ならグループをブラウザ間でエンドツーエンド暗号化して同期します。',
+    },
+    {
+      question: '重複タブを閉じられるブラウザは？',
+      answer: 'Firefox です。どのタブの右クリックメニューからでも閉じられます。Chrome と Edge では、TabMerger の「重複タブを削除」がすべてのウィンドウを対象に重複を閉じます。',
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: '空の状態で開いた TabMerger の検索。フィルタ group:、window:、tag:、closed: が一覧表示されている。ライトテーマ' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: '空の状態で開いた TabMerger の検索。フィルタ group:、window:、tag:、closed: が一覧表示されている。ダークテーマ' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Chrome の設定の「Performance」（パフォーマンス）。「Memory Saver」（メモリセーバー）のスイッチがある' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Edge の設定の「Performance」。「Automatically put tabs to sleep」がオンで、15分に設定されている' },
+  ],
+  tags: ['cross-browser', 'comparison', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    { title: 'Chrome keyboard shortcuts', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/157179', checked: '2026-11-21' },
+    { title: 'Personalize Chrome performance', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/12929150', checked: '2026-11-21' },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp' },
+  ogImage: { src: '/blog/browser-tab-features-compared/og.png', alt: 'Chrome・Edge・Firefox のタブ機能を比較：標準機能の違い。TabMerger のガイド。TabMerger の検索フィルタ付き' },
+  toc: [
+    { id: 'quick', label: '結論' },
+    { id: 'matrix', label: '機能比較表' },
+    { id: 'turn-on', label: 'オンにしたい設定' },
+    { id: 'tabmerger', label: '3 つに共通のレイヤー' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+  browserSections: ['turn-on'],
+  browserFact: {
+    label: 'メモリの設定',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: '設定 → System and performance → Performance',
+      firefox: 'タブを右クリック → タブを解放',
+    },
+  },
+}
+
+<QuickAnswer>
+
+いまでは 3 つのブラウザすべてに **タブグループ、タブ検索、垂直タブ、分割表示** があります。グループの保存と同期では Chrome がリードし、Edge は使っていないタブを初期設定でスリープさせ、重複タブを自分で閉じられるのは Firefox だけです。ただし、保存したタブや閉じたタブまで検索できるもの、ウィンドウを自動保存するもの、ブラウザをまたいで使えるものはありません。この部分を Chrome、Edge、Firefox にまったく同じ形で追加するのが [TabMerger](/features) です。
+
+</QuickAnswer>
+
+<InstallCta>Chrome、Edge、Firefox で同じグループ、検索、同期を。無料です。</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="matrix" title="各ブラウザにはどんなタブ機能がある？">
+
+2026年11月21日に、Chrome 157、Edge 158、Firefox 159 で、各ブラウザのヘルプページとブラウザ自身の UI テキストをもとに確認しました。「記載なし」は、ヘルプページにもブラウザのテキストにも手がかりが見つからなかったという意味で、機能がないことの証明ではありません。
+
+<ComparisonTable
+  head={['機能', 'Chrome 157', 'Edge 158', 'Firefox 159', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="52rem"
+  rows={[
+    ['タブグループ', 'はい', 'はい', 'はい', 'すべてのウィンドウで使える、名前と色付きのグループ'],
+    ['グループを閉じて、あとで開き直す', 'はい（⋮ → タブグループ）', 'Close group（開き直しは記載なし）', 'はい（グループを保存して閉じる）', 'すべてのグループが保存されたまま'],
+    ['ほかのデバイスのグループ', 'はい、Google アカウント経由', '記載なし', 'Sync の設定になし', 'Pro、エンドツーエンド暗号化'],
+    ['タブの検索', '開いているタブ（Ctrl+Shift+A、@タブ）', 'Search tabs（ショートカットの記載なし）', 'タブを一覧表示（Ctrl+Shift+A）', '開いている、保存した、閉じたタブ（Ctrl+K）'],
+    ['垂直タブ', 'はい', 'はい', 'はい', '該当なし'],
+    ['分割表示', 'はい', 'はい', 'はい', '該当なし'],
+    ['使っていないタブのメモリを解放', 'メモリセーバー（初期設定はオフ）', 'スリープタブ（初期設定はオン）', 'タブを解放（手動）', '保存してから、ワンクリックで全ウィンドウを閉じる'],
+    ['重複タブを閉じる', '記載なし', '記載なし', '重複タブを閉じる', 'すべてのウィンドウで「重複タブを削除」'],
+    ['閉じたウィンドウを開き直す', 'Ctrl+Shift+T', '記載なし', 'Ctrl+Shift+N', '最近閉じたタブ：2日間（無料）、30日間（Pro）'],
+    ['開いているタブをスケジュールで保存', '記載なし', '記載なし', '記載なし', 'スケジュールまたはタブ数で自動保存'],
+    ['タブのエクスポート', 'ブックマーク経由（HTML）', 'お気に入り経由（HTML）', 'ブックマーク経由（HTML）', 'JSON、開いているタブと保存したタブをまとめて'],
+  ]}
+/>
+
+ページのまとまりを保存する Edge の旧機能、コレクションはなくなりました。Microsoft は Edge 149 で提供を終了しています。[Edge のコレクションの代わりに使えるもの](/blog/edge-collections-replacement)をご覧ください。
+
+</Section>
+
+<Section id="turn-on" title="オンにする価値がある標準設定は？">
+
+<BrowserPanels section="turn-on">
+<BrowserPanel browser="chrome">
+
+1. **メモリセーバー**（Memory Saver）：設定 → パフォーマンス（Settings → Performance、`chrome://settings/performance`）。新しいプロファイルではオフになっています。
+2. タブをたくさん開いているなら **垂直タブ**：タブバーを右クリックして **タブを縦方向に表示**（Show Tabs Vertically）を選ぶか、設定 → デザイン → タブの位置（Settings → Appearance → Tab position）で切り替えます。
+3. **タブ検索**（Tab Search）：<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> を押すか、アドレスバーに `@タブ`（英語版 Chrome では `@tabs`）と入力します。
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Chrome の設定の「Performance」（パフォーマンス）。「Memory Saver」（メモリセーバー）のスイッチがある" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">Chrome の「Memory Saver」（メモリセーバー）。新しい Chrome 157 プロファイルではオフでした。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. **スリープタブ**（Sleeping tabs）は最初からオンです。待ち時間は 設定 → System and performance → Performance で調整します。
+2. Edge 158 には **垂直タブ** と **Search tabs** もあります（どちらも UI テキストにあります）。ただし Microsoft のショートカット一覧では、Search tabs にキーが割り当てられていません。
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Edge の設定の「Performance」。「Automatically put tabs to sleep」がオンで、15分に設定されている" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Edge のスリープタブは初期設定でオン。使っていないタブは15分後にスリープします。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. **垂直タブ**：サイドバーを右クリックして **垂直タブをオンにする**（Turn on Vertical Tabs）を選びます。
+2. **重複タブを閉じる**（Close Duplicate Tabs）と **タブを解放**（Unload Tab）は、どのタブの右クリックメニューにもあります。
+3. **タブを一覧表示**（List all tabs）：<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>。
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox tab right-click menu with Close Duplicate Tabs and Unload Tab. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+キーの一覧は[タブのキーボードショートカット早見表](/blog/tab-keyboard-shortcuts)にまとめています。
+
+</Section>
+
+<Section id="tabmerger" title="足りないレイヤーをすべてのブラウザに">
+
+比較表では、どのブラウザにも空いている行があります。ブラウザ自身のウィンドウを **超えて** タブを整理しておく機能も、ブラウザをまたぐ機能もありません。[TabMerger](/features) なら、Chrome、Edge、Firefox で同じようにそれができます。
+
+1. **現在開いているタブ** には開いているウィンドウがすべて表示されます。**現在の内容と統合** で、それらをワンクリックで名前付きのグループに保存できます。
+2. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> で、開いているタブ、保存したタブ、最近閉じたタブをまとめて検索できます。`group:`、`window:`、`tag:`、`closed:` のフィルタも使えます。
+3. **自動保存** はスケジュールに沿ってタブの最新のコピーを残します。**重複タブを削除** はすべてのウィンドウから重複を取り除きます。
+4. [Pro](/pricing) なら、グループはすべてのブラウザ間でエンドツーエンド暗号化して同期されます。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="空の状態で開いた TabMerger の検索。フィルタ group:、window:、tag:、closed: が一覧表示されている。ライトテーマ" darkAlt="空の状態で開いた TabMerger の検索。フィルタ group:、window:、tag:、closed: が一覧表示されている。ダークテーマ" boxes={[{ id: 'search-input', label: '検索' }]} source="TabMerger 3.16.1">TabMerger が動くどのブラウザでも、すべてのタブをひとつの検索で。</ThemedScreenshot>
+
+ほかの拡張機能との比較は、[おすすめのタブ管理拡張機能](/blog/best-tab-manager-extensions)をご覧ください。
+
+<InstallCta>Chrome、Edge、Firefox で無料。アカウントなしで始められます。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

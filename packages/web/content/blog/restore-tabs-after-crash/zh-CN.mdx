@@ -1,0 +1,270 @@
+export const post = {
+  slug: 'restore-tabs-after-crash',
+  title: '浏览器崩溃、更新或误关后，如何找回标签页',
+  navTitle: '崩溃后找回标签页',
+  seoTitle: '浏览器崩溃后恢复标签页的方法（Chrome、Edge、Firefox）',
+  description:
+    '浏览器关闭，标签页也跟着没了？按顺序试试这些步骤，就能在崩溃后恢复标签页：重新打开、查看历史记录、查看其他设备，最后打开能防止再次发生的设置。',
+  shareSummary: '标签页因崩溃或重启丢失了？按顺序列出每款浏览器的恢复步骤。',
+  dek: '先按顺序试试最快的办法。大多数丢失的会话不到一分钟就能找回。',
+  published: '2026-11-24',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Chrome 关于崩溃的帮助说明指出，按 Ctrl+Shift+T 可重新打开之前打开的标签页。',
+      source: 'Chrome 帮助',
+      href: 'https://support.google.com/chrome/answer/142063',
+    },
+    { text: 'Firefox 的“历史”菜单中有“恢复先前的浏览状态”。', source: 'Firefox 159' },
+    {
+      text: '只有开启“历史记录和标签页”同步，Chrome 才会显示其他设备上的标签页。',
+      source: 'Chrome 帮助',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'Edge 的历史记录页面有自己的“Recently closed”列表。', source: 'edge://history, Edge 157' },
+  ],
+  faq: [
+    {
+      question: 'Chrome 关闭后，怎样找回标签页？',
+      answer:
+        '重新打开 Chrome，按 Ctrl+Shift+T（Mac 上为 ⌘+Shift+T），必要时多按几次。如果还是没回来，按 Ctrl+H 打开历史记录，在最近关闭的项目中查找。',
+    },
+    {
+      question: '为什么我的标签页没有恢复？',
+      answer:
+        '通常是因为启动设置会打开新标签页、这些标签页在无痕或隐私窗口中、退出前你逐个关闭了窗口，或者你打开的是另一个个人资料。',
+    },
+    {
+      question: '能恢复昨天的标签页吗？',
+      answer: '无法作为一个会话恢复，但只要没有清除历史记录，访问过的每个网页都在历史记录（Ctrl+H）里。可靠的办法是保存会话或使用自动保存。',
+    },
+    {
+      question: '怎样避免再次发生？',
+      answer: '打开启动设置，并在更新等有风险的时刻之前保存打开的标签页。我们的保存所有打开的标签页指南对两者都有介绍。',
+      link: { text: '保存所有打开的标签页', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Edge 历史记录页面，侧边栏中有 All、Recently closed 和 Tabs from other devices' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Chrome 设置中的 On startup（启动时），已选中 Continue where you left off（继续浏览上次打开的网页）' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Edge 设置中的 Start, home, and new tab page，已选中 Open tabs from the previous session' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Firefox 设置中的 Home and startup（主页与启动），已勾选 Open previous windows and tabs（打开先前的窗口和标签页）' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-light.webp', alt: 'TabMerger 设置中的 Data（数据）：Auto-save open tabs（自动保存已打开的标签页）已开启，计划设为 Every 30 minutes（每 30 分钟），浅色主题' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-dark.webp', alt: 'TabMerger 设置中的 Data（数据）：Auto-save open tabs（自动保存已打开的标签页）已开启，计划设为 Every 30 minutes（每 30 分钟），深色主题' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-light.webp', alt: 'TabMerger 的 Recently closed（最近关闭）今天的列表，显示三个已关闭的标签页及各自的关闭时间，浅色主题' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-dark.webp', alt: 'TabMerger 的 Recently closed（最近关闭）今天的列表，显示三个已关闭的标签页及各自的关闭时间，深色主题' },
+  ],
+  tags: ['restore-closed-tabs', 'session-management', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-20',
+      note: 'Firefox 的菜单名称直接读取自 Firefox 159.0.1；该页面拦截了我们的自动检查。',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/restore-tabs-after-crash/cover-edge-light.webp' },
+  ogImage: { src: '/blog/restore-tabs-after-crash/og.png', alt: '标题卡片“How to get your tabs back after a crash, an update or an accidental quit”：一篇 TabMerger 指南，附有最近关闭的标签页列表' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'first', label: '1. 重新打开，再按 Ctrl+Shift+T' },
+    { id: 'recover', label: '2. 各浏览器的历史记录' },
+    { id: 'devices', label: '3. 其他设备' },
+    { id: 'why', label: '标签页为何没有恢复' },
+    { id: 'prevent', label: '防患于未然' },
+    { id: 'faq', label: '常见问题' },
+  ],
+  browserSections: ['first', 'recover', 'devices', 'prevent'],
+  browserFact: {
+    label: '历史记录',
+    values: { chrome: 'chrome://history', edge: 'edge://history', firefox: 'Ctrl+Shift+H（我的足迹）' },
+  },
+}
+
+<QuickAnswer>
+
+重新打开浏览器，反复按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>（Mac 上为 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>），直到窗口都回来。如果不行，打开历史记录（<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>），从**最近关闭**的项目中重新打开；在 Firefox 中使用**历史 → 恢复先前的浏览状态**（History → Restore Previous Session）。还缺什么？查看**其他设备上的标签页**，再到历史记录里搜索那些网页本身。下次让 [TabMerger](/features) 按计划自动保存打开的标签页，这样即使浏览器崩溃，你最多也只损失几分钟。
+
+</QuickAnswer>
+
+<InstallCta>再也不丢窗口：按计划自动保存打开的标签页。Chrome、Edge 和 Firefox 均可免费使用。</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="first" title="1. 重新打开浏览器，然后按 Ctrl+Shift+T">
+
+先别打开新标签页：从一个干净的窗口开始，这样找回的正是浏览器“最近关闭”列表中的内容。
+
+<BrowserPanels section="first">
+<BrowserPanel browser="chrome">
+
+1. 启动 Chrome。如果它提示恢复网页，选择接受。
+2. 按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>（Mac 上为 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>）。Chrome 自己的崩溃帮助说明也推荐这一步：它会重新打开之前打开的标签页。
+3. 每丢失一个窗口就再按一次。Chrome 会按关闭的顺序重新打开标签页和窗口。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. 启动 Edge。如果它提示恢复网页，选择接受。
+2. 按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>（Mac 上为 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>）重新打开最近关闭的标签页，再按一次就继续往前找。
+3. 整个窗口都不见了？直接跳到第 2 步，查看历史记录。
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. 启动 Firefox。如果它提示恢复网页，选择接受。
+2. 按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>（Mac 上为 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>）。Firefox 159 把这个快捷键绑定到一个“恢复最近关闭的标签页、窗口或会话”的命令上，所以重启之后，它可以找回整个上一次会话。
+3. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> 可重新打开已关闭的窗口；每个窗口按一次。
+
+</BrowserPanel>
+</BrowserPanels>
+
+完整的快捷键列表见我们的[标签页键盘快捷键参考](/blog/tab-keyboard-shortcuts)。
+
+</Section>
+
+<Section id="recover" title="2. 从历史记录中重新打开">
+
+如果快捷键什么也没找回来，浏览器的历史记录仍然记得之前打开了什么。
+
+<BrowserPanels section="recover">
+<BrowserPanel browser="chrome">
+
+1. 点击 **⋮ → 历史记录**（History）。子菜单中列出了最近关闭的标签页和窗口。
+2. 点击某个窗口，即可重新打开它的所有标签页。
+3. 那里没有？按 <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>，搜索你记得的网页。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. 按 <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> 打开**历史记录**。
+2. 选择 **Recently closed**（最近关闭），重新打开丢失的窗口或标签页。
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Edge 历史记录页面，侧边栏中有 All、Recently closed 和 Tabs from other devices" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60">Edge 的历史记录页面，侧边栏中有 Recently closed。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. 打开**历史**（History）菜单（按 <Kbd>Alt</Kbd> 键可显示菜单栏），或者打开 **☰ → 历史**。
+2. 选择**恢复先前的浏览状态**（Restore Previous Session），找回上次的所有窗口。
+3. 也可以从**最近关闭的窗口**和**最近关闭的标签页**中挑选。
+
+如果是 Firefox 本身崩溃了，它可能会打开一个**恢复浏览状态**（Restore Session）页面（“很抱歉，我们在恢复您的页面时遇到了问题。”）。点击**查看先前的标签页**（View Previous Tabs），就可以在按下**恢复浏览状态**之前，取消勾选可能导致崩溃的标签页。
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with Restore Previous Session. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="devices" title="3. 到其他设备上找找">
+
+如果你登录了账号并开启了同步，丢失的标签页可能仍会显示在另一台设备上。
+
+<BrowserPanels section="devices">
+<BrowserPanel browser="chrome">
+
+Chrome 会在历史记录中显示其他设备上的标签页，但前提是开启了**历史记录和标签页**（History and tabs）同步：进入**设置 → 您与 Google**（Settings → You and Google），选择你的账号名称，然后开启**历史记录和标签页**。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+打开历史记录（<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>），在侧边栏中选择 **Tabs from other devices**（其他设备上的标签页）。
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+打开 **Firefox View**，在**其他设备**（Tabs from other devices）下查看。这需要使用 Firefox Sync，并开启打开的标签页的同步。
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox View, Tabs from other devices. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="why" title="为什么我的标签页没有恢复？">
+
+- **启动设置会打开新标签页。** 只有“上次会话”这一启动选项会在每次启动时重新打开标签页；下一节会告诉你它在浏览器中的位置。
+- **标签页在隐私窗口中。** Incognito 和 InPrivate 窗口永远不会被恢复。
+- **你逐个关闭了窗口。** 启动时恢复的是浏览器*退出*时打开的内容。更早关闭的窗口只存在于历史记录中。
+- **你打开的是另一个个人资料。** 每个个人资料都有自己的会话；看看个人资料图标。
+
+</Section>
+
+<Section id="prevent" title="确保下次不再发生">
+
+现在就打开启动设置；这一项改动就能应对更新和重启。
+
+<BrowserPanels section="prevent">
+<BrowserPanel browser="chrome">
+
+**设置 → 启动时 → 继续浏览上次打开的网页**（Settings → On startup → Continue where you left off）。也可以把 `chrome://settings/onStartup` 粘贴到地址栏。
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Chrome 设置中的 On startup（启动时），已选中 Continue where you left off（继续浏览上次打开的网页）" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">Chrome 的“启动时”设置，已设为重新打开上次的会话。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+**设置 →“Start, home, and new tab page”→“On startup”→“Open tabs from the previous session”**。也可以把 `edge://settings/startHomeNTP` 粘贴到地址栏。
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Edge 设置中的 Start, home, and new tab page，已选中 Open tabs from the previous session" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">Edge 的 Start, home, and new tab page 设置，已设为重新打开上次的会话。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+**设置 → 主页与启动 → 启动 → 打开先前的窗口和标签页**（Settings → Home and startup → Startup → Open previous windows and tabs）。也可以把 `about:preferences#home` 粘贴到地址栏。
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Firefox 设置中的 Home and startup（主页与启动），已勾选 Open previous windows and tabs（打开先前的窗口和标签页）" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Firefox 的“主页与启动”设置，已勾选“打开先前的窗口和标签页”。</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+对于上周不小心关掉的窗口，启动时恢复也无能为力。这种情况需要一份保存好的副本：把窗口加入书签，或者使用[会话管理器](/blog/browser-session-manager)。我们的[保存所有打开的标签页](/blog/save-all-open-tabs)指南比较了各种方法。
+
+[TabMerger](/features) 是我们为 Chrome、Edge 和 Firefox 推出的免费扩展程序，可以替你完成保存。**设置 → 数据 → 自动保存已打开的标签页**会按计划把打开的标签页保存为一个分组（从每 15 分钟一次到每天一次）。**最近关闭**会按天保留你关闭的每个标签页和窗口：免费版保留 2 天，Pro 保留 30 天。两者如何运作、如何调整，详见[再也不丢标签页](/blog/never-lose-a-tab-again)。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="按计划保存并找回已关闭的标签页" steps={[{ title: '自动保存' }, { title: '最近关闭' }]}>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-auto-save-schedule" alt="TabMerger 设置中的 Data（数据）：Auto-save open tabs（自动保存已打开的标签页）已开启，计划设为 Every 30 minutes（每 30 分钟），浅色主题" darkAlt="TabMerger 设置中的 Data（数据）：Auto-save open tabs（自动保存已打开的标签页）已开启，计划设为 Every 30 minutes（每 30 分钟），深色主题" boxes={[{ id: 'schedule', label: '计划' }]} source="TabMerger 3.16.1">每 30 分钟一次的 Auto-save open tabs（自动保存已打开的标签页）：无论浏览器出什么状况，都有一份最新的打开标签页副本。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-recently-closed" alt="TabMerger 的 Recently closed（最近关闭）今天的列表，显示三个已关闭的标签页及各自的关闭时间，浅色主题" darkAlt="TabMerger 的 Recently closed（最近关闭）今天的列表，显示三个已关闭的标签页及各自的关闭时间，深色主题" boxes={[{ id: 'today-row', label: '今天' }]} source="TabMerger 3.16.1">Recently closed（最近关闭）：今天关闭的标签页，以及每个标签页的关闭时间。</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Chrome、Edge 和 Firefox 均可免费使用。无需账号即可开始。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

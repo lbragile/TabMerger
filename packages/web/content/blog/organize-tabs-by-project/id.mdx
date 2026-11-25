@@ -1,0 +1,160 @@
+export const post = {
+  slug: 'organize-tabs-by-project',
+  title: 'Mengatur tab per proyek: satu grup untuk satu proyek',
+  navTitle: 'Mengatur tab per proyek',
+  seoTitle: 'Cara Mengatur Tab Browser per Proyek dengan TabMerger',
+  description:
+    'Beri setiap proyek grup TabMerger sendiri, dengan jendela bernama untuk tiap bagian pekerjaan, catatan untuk konteks, dan arsip untuk proyek yang sudah selesai. Kenapa grup bekerja seperti ini, langkah demi langkah.',
+  shareSummary: 'Satu grup per proyek, jendela bernama di dalamnya, dan arsip untuk pekerjaan yang selesai.',
+  dek: 'Berpindah proyek seharusnya tidak berarti berburu tab. Beri setiap proyek tempat sendiri yang bisa Anda buka, tutup, dan arsipkan.',
+  published: '2026-12-15',
+  updated: '2026-12-15',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Satu grup TabMerger berisi beberapa jendela, masing-masing dengan nama dan catatannya sendiri.', source: 'TabMerger 3.16.1' },
+    { text: 'Grup berbintang tetap berada di bagian atas bilah sisi.', source: 'Kode sumber TabMerger 3.16.1' },
+    { text: 'Grup yang diarsipkan bersifat hanya baca dan kembali lewat “Pulihkan”.', source: 'TabMerger 3.16.1' },
+    { text: 'Paket Gratis berisi 5 grup dan 50 tab, termasuk grup yang diarsipkan; Pro tanpa batas.', source: 'Harga TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Apa cara terbaik untuk mengatur tab per proyek?',
+      answer:
+        'Beri setiap proyek satu grup TabMerger, lalu bagi menjadi jendela bernama untuk bagian-bagian pekerjaannya (misalnya Desain, Pengembangan, Masukan). Tambahkan catatan grup berisi konteks, beri bintang pada proyek yang sedang Anda kerjakan minggu ini, dan arsipkan proyek setelah selesai.',
+    },
+    {
+      question: 'Bisakah satu grup berisi lebih dari satu jendela?',
+      answer: 'Bisa. Grup TabMerger dapat berisi berapa pun jendela. Setiap jendela bisa punya nama, catatan, dan bintangnya sendiri, dan terbuka sebagai jendela browser tersendiri.',
+    },
+    {
+      question: 'Apa yang terjadi saat grup diarsipkan?',
+      answer:
+        'Grup dipindahkan ke bagian “Diarsipkan” di bilah sisi dalam mode hanya baca, jadi tidak mengganggu tetapi juga tidak hilang. Mengeklik tab tetap membukanya, dan “Pulihkan” mengembalikan grup ke daftar Anda.',
+    },
+    {
+      question: 'Apakah grup tab Chrome tetap utuh saat disimpan?',
+      answer: 'Ya. Tab yang disimpan mempertahankan nama dan warna grup tab Chrome-nya, jadi proyek yang Anda kelompokkan di strip tab tetap memiliki struktur yang sama di TabMerger.',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp', alt: 'Grup Website redesign dengan tiga jendela bernama, Design, Build, dan Feedback, tema terang' },
+    { src: '/blog/organize-tabs-by-project/tm-project-group-dark.webp', alt: 'Grup Website redesign dengan tiga jendela bernama, Design, Build, dan Feedback, tema gelap' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-light.webp', alt: 'Menu klik kanan sebuah grup di bilah sisi dengan Archive group (Arsipkan grup), tema terang' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-dark.webp', alt: 'Menu klik kanan sebuah grup di bilah sisi dengan Archive group (Arsipkan grup), tema gelap' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-light.webp', alt: 'Grup yang diarsipkan, hanya baca, dengan tombol Restore (Pulihkan) dan bagian Archived (Diarsipkan) terbuka di bilah sisi, tema terang' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-dark.webp', alt: 'Grup yang diarsipkan, hanya baca, dengan tombol Restore (Pulihkan) dan bagian Archived (Diarsipkan) terbuka di bilah sisi, tema gelap' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-by-project/og.png', alt: 'Mengatur tab per proyek dengan TabMerger: satu grup dengan jendela Design, Build, dan Feedback' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'problem', label: 'Saat proyek berbagi satu strip tab' },
+    { id: 'why', label: 'Kenapa grup bekerja seperti ini' },
+    { id: 'steps', label: 'Siapkan proyek' },
+    { id: 'archive', label: 'Arsipkan pekerjaan yang selesai' },
+    { id: 'benefit', label: 'Yang Anda dapatkan' },
+    { id: 'habits', label: 'Kebiasaan yang baik' },
+    { id: 'plans', label: 'Gratis vs Pro' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Beri setiap proyek grup [TabMerger](/features) sendiri. Di dalamnya, simpan satu jendela bernama untuk tiap bagian pekerjaan (“Desain”, “Pengembangan”, “Masukan”) dan catatan grup berisi konteks. Beri bintang pada proyek minggu ini agar tetap di atas, dan saat satu proyek selesai, **Arsipkan grup** (Archive group) menyimpannya dalam mode hanya baca tanpa menghapus satu tab pun.
+
+</QuickAnswer>
+
+<InstallCta>Tempat untuk setiap proyek, sekali klik untuk membukanya. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+<Section id="problem" title="Saat tiga proyek berbagi satu strip tab">
+
+Anda sedang mendesain ulang situs web, menulis laporan, dan merencanakan perjalanan. Hari Rabu, browser sudah memuat ketiganya: mockup di samping pencarian penerbangan, pull request di antara dua sumber laporan. Berpindah proyek berarti memindai seluruh strip tab, dan menutup apa pun terasa berisiko karena Anda tidak tahu tab itu milik proyek yang mana.
+
+Grup tab bawaan browser membantu di dalam satu jendela, tetapi proyek jarang muat di satu jendela, dan begitu jendela ditutup, tidak ada lagi yang tahu ke mana tab-tab itu pergi.
+
+</Section>
+
+<Section id="why" title="Kenapa grup TabMerger bekerja seperti ini">
+
+- **Grup adalah proyek, bukan jendela.** Setiap grup berisi jendela sebanyak yang dibutuhkan pekerjaan, dan setiap jendela terbuka sebagai jendela browser tersendiri. Begitulah wujud proyek yang sebenarnya: tab desain di sini, tab pengembangan di sana.
+- **Nama dan catatan membawa konteks.** Jendela bisa diganti namanya dan punya catatan sendiri, begitu juga grupnya. Berbulan-bulan kemudian, “Masukan” dan catatan tentang apa yang sudah diputuskan jauh lebih berguna daripada sederet favicon.
+- **Bintang yang mengurutkan, bukan Anda.** Grup berbintang tetap di bagian atas bilah sisi; jendela berbintang tetap paling depan di dalam grupnya.
+- **Mengarsipkan berarti menyimpan, bukan menghapus.** Grup yang diarsipkan keluar dari daftar Anda ke bagian **Diarsipkan** (Archived) dan menjadi hanya baca, jadi tidak ada yang bergeser tanpa sengaja. Tab-tabnya tetap terbuka dengan sekali klik, dan **Pulihkan** (Restore) mengembalikannya.
+- **Struktur browser Anda tetap terjaga.** Tab yang disimpan mempertahankan nama dan warna grup tab Chrome-nya, jadi proyek yang sudah Anda kelompokkan di strip tab tetap berbentuk sama.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-project-group" alt="Grup Website redesign dengan tiga jendela bernama, Design, Build, dan Feedback, tema terang" darkAlt="Grup Website redesign dengan tiga jendela bernama, Design, Build, dan Feedback, tema gelap" boxes={[{ id: 'windows', label: 'Jendela per tahap' }]} source="TabMerger 3.16.1">Satu proyek, tiga jendela, masing-masing dinamai sesuai bagian pekerjaannya.</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="Siapkan proyek dalam lima langkah">
+
+1. Tekan **Tambah Grup** (Add Group) di bilah sisi dan beri nama sesuai proyeknya. Klik titik warnanya untuk memilih warna.
+2. Buka halaman-halaman proyek, lalu pilih **Gabungkan dengan sesi saat ini** (Merge with current) di menu **⋯** grup untuk menyimpan jendela yang terbuka ke dalamnya.
+3. Ganti nama setiap jendela lewat menu **⋯**-nya (**Ganti nama jendela**, Rename window) sesuai bagian pekerjaan yang ada di dalamnya.
+4. Tambahkan catatan grup (**Tambah catatan**, Add note, di menu **⋯**) berisi konteks: tenggat, tiket, dan apa arti “selesai”.
+5. Beri bintang pada grup (bintang di samping namanya) selama proyek itu masih aktif.
+
+Untuk memindahkan tab antarproyek nanti, seret tab ke sebuah grup di bilah sisi, atau gunakan **Pindahkan ke grup** (Move to group) dan **Salin ke grup** (Copy to group) di menu klik kanan tab. **Satukan jendela** (Unite windows) dan **Pisahkan jendela** (Split windows) mengubah susunan grup dalam satu langkah.
+
+</Section>
+
+<Section id="archive" title="Arsipkan pekerjaan yang selesai">
+
+Saat proyek selesai, klik kanan grupnya di bilah sisi lalu pilih **Arsipkan grup**. Grup pindah ke bagian **Diarsipkan** dalam mode hanya baca: Anda tetap bisa membuka tab mana pun, dan **Pulihkan** mengembalikan seluruh grup ke daftar Anda.
+
+<Carousel label="Mengarsipkan proyek" steps={[{ title: 'Arsipkan' }, { title: 'Diarsipkan' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archive-menu" alt="Menu klik kanan sebuah grup di bilah sisi dengan Archive group (Arsipkan grup), tema terang" darkAlt="Menu klik kanan sebuah grup di bilah sisi dengan Archive group (Arsipkan grup), tema gelap" boxes={[{ id: 'archive', label: 'Arsipkan grup' }]} source="TabMerger 3.16.1">Klik kanan grup di bilah sisi.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archived" alt="Grup yang diarsipkan, hanya baca, dengan tombol Restore (Pulihkan) dan bagian Archived (Diarsipkan) terbuka di bilah sisi, tema terang" darkAlt="Grup yang diarsipkan, hanya baca, dengan tombol Restore (Pulihkan) dan bagian Archived (Diarsipkan) terbuka di bilah sisi, tema gelap" boxes={[{ id: 'banner', label: 'Hanya baca sampai dipulihkan' }]} source="TabMerger 3.16.1">Tidak menghalangi, tetapi tetap sekali klik untuk dibuka.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="benefit" title="Yang Anda dapatkan">
+
+Berpindah proyek berarti membuka grup, bukan mencari di strip tab. Anda bisa menutup semua jendela proyek yang sedang tidak dikerjakan dengan tahu persis di mana tab-tabnya berada, dan bilah sisi hanya menampilkan yang sedang berjalan.
+
+</Section>
+
+<Section id="habits" title="Kebiasaan yang baik">
+
+- **Satu grup per proyek, bukan per topik.** “Desain ulang situs”, bukan “Tautan desain”.
+- **Namai jendela sesuai tahap atau peran**, bukan sesuai situs: “Masukan” bertahan lebih lama daripada “GitHub”.
+- **Beri bintang paling banyak segelintir saja.** Bintang berarti “minggu ini”.
+- **Arsipkan pada hari proyek rampung.** Proyek yang diarsipkan tetap sekali klik jauhnya, jadi tidak ada alasan menyimpannya di daftar Anda.
+- **Biarkan aturan URL menempatkan tab baru** untuk proyek yang sibuk: lihat [mengurutkan tab otomatis dengan aturan URL](/blog/auto-sort-tabs-with-url-rules). Untuk proyek yang banyak risetnya, [mengatur tab untuk riset](/blog/organize-tabs-for-research) menambahkan catatan dan pengingat.
+
+</Section>
+
+<Section id="plans" title="Gratis vs Pro">
+
+<ComparisonTable
+  head={['', 'Gratis', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Grup', '5 (grup arsip ikut dihitung)', 'Tanpa batas'],
+    ['Tab', '50', 'Tanpa batas'],
+    ['Jendela, nama, catatan, bintang, arsip', 'Ya', 'Ya'],
+    ['Proyek Anda di perangkat lain', 'Tidak', 'Ya, terenkripsi end-to-end'],
+  ]}
+/>
+
+Semua alat pengaturan di panduan ini ada di paket Gratis; batasnya hanya jumlah grup dan tab. [Pro](/pricing) menghapus batas itu dan menyinkronkan proyek Anda antarperangkat.
+
+<InstallCta>Setiap proyek dalam grupnya sendiri, di Chrome, Edge, dan Firefox. Mulai gratis.</InstallCta>
+
+Untuk rutinitas lengkap seputar proyek, lihat [alur kerja tab harian dengan TabMerger](/blog/tabmerger-daily-workflow).
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

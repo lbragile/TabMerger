@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'edge-collections-replacement',
+  title: 'Collections در Edge حذف شد: به جای آن از چه استفاده کنیم؟',
+  navTitle: 'جایگزین Edge Collections',
+  seoTitle: 'Edge Collections حذف شد؟ بهترین جایگزین (و روش انتقال)',
+  description:
+    'Microsoft قابلیت Collections را از نسخهٔ 149 به بعد از Edge حذف کرد. ببینید چه بر سر مجموعه‌های شما آمد، چطور آن‌ها را بیرون بیاورید و چطور آن‌ها را به‌صورت گروه‌های نام‌دار به TabMerger، جایگزین Edge Collections، منتقل کنید.',
+  shareSummary: 'Edge 149 قابلیت Collections را کنار گذاشت. صفحه‌های شما کجا رفتند و حالا از چه استفاده کنید.',
+  dek: 'صفحه‌هایی که ذخیره کرده بودید از بین نرفته‌اند. ببینید کجا رفته‌اند، و جای بهتری برایشان پیدا کنید.',
+  published: '2026-12-06',
+  updated: '2026-12-06',
+  testedOn: ['Edge 158.0.4370.33', 'Chrome 157.0.8103.80'],
+  keyFacts: [
+    {
+      text: 'Collections از Edge 149، منتشرشده در ۴ ژوئن ۲۰۲۶، دیگر در دسترس نیست.',
+      source: 'پشتیبانی Microsoft',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'از Edge 145 دیگر نمی‌شد صفحه‌ای به Collections اضافه کرد.', source: 'پشتیبانی Microsoft' },
+    {
+      text: 'Move to Favorites نشانی صفحه‌ها را نگه می‌دارد، نه تصاویر یا یادداشت‌ها را.',
+      source: 'پشتیبانی Microsoft',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'TabMerger هر پوشه در Other favorites را به یک گروه نام‌دار تبدیل می‌کند.', source: 'آزموده در TabMerger 3.16.1، ۲۱ نوامبر ۲۰۲۶' },
+  ],
+  faq: [
+    {
+      question: 'آیا Microsoft قابلیت Collections را از Edge حذف کرده است؟',
+      answer:
+        'بله. صفحهٔ پشتیبانی Microsoft می‌گوید Collections از Edge 149، منتشرشده در ۴ ژوئن ۲۰۲۶، دیگر در دسترس نیست؛ از Edge 145 هم دیگر نمی‌شد صفحهٔ تازه‌ای اضافه کرد.',
+    },
+    {
+      question: 'مجموعه‌های من کجا رفتند؟',
+      answer:
+        'Microsoft گزینهٔ Move to Favorites را ارائه کرد که هر مجموعه را به یک پوشه در Favorites تبدیل می‌کند (فقط صفحه‌ها). حساب‌های شخصی مجموعه‌های ذخیره‌شده را در bing.com/saves هم می‌بینند؛ حساب‌های کاری یا آموزشی می‌توانستند آن‌ها را برون‌بری کنند.',
+    },
+    {
+      question: 'بهترین جایگزین Edge Collections چیست؟',
+      answer:
+        'TabMerger: گروه‌های نام‌دار و رنگی از زبانه‌ها که می‌توانید در آن‌ها جست‌وجو کنید، یادداشت و یادآوری به آن‌ها اضافه کنید و با Pro به‌صورت رمزگذاری سرتاسری همگام‌سازی‌شان کنید. در Chrome و Firefox هم کار می‌کند.',
+    },
+    {
+      question: 'آیا می‌توانم مجموعه‌هایم را به TabMerger درون‌ریزی کنم؟',
+      answer: 'بله. پوشه‌های مجموعه‌ها را به Other favorites ببرید، Favorites را به‌صورت فایل HTML برون‌بری کنید و آن را در تنظیمات ← داده‌ها درون‌ریزی کنید: هر کدام از آن پوشه‌ها یک گروه در TabMerger می‌شود.',
+    },
+  ],
+  images: [
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-light.webp', alt: 'پنجرهٔ گفت‌وگوی TabMerger که برای فایل favorites_edge.html می‌پرسد Import 2 groups? (2 گروه درون‌ریزی شوند؟)، پوستهٔ روشن' },
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-dark.webp', alt: 'پنجرهٔ گفت‌وگوی TabMerger که برای فایل favorites_edge.html می‌پرسد Import 2 groups? (2 گروه درون‌ریزی شوند؟)، پوستهٔ تیره' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-light.webp', alt: 'نوار کناری TabMerger با گروه‌های Trip to Lisbon و Thesis reading که از پوشه‌های Favorites درون‌ریزی شده‌اند، پوستهٔ روشن' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-dark.webp', alt: 'نوار کناری TabMerger با گروه‌های Trip to Lisbon و Thesis reading که از پوشه‌های Favorites درون‌ریزی شده‌اند، پوستهٔ تیره' },
+  ],
+  tags: ['edge', 'bookmarks', 'save-tabs', 'tab-manager'],
+  sources: [
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'EdgeCollectionsEnabled policy (obsolete)',
+      publisher: 'Microsoft Learn',
+      url: 'https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies/EdgeCollectionsEnabled',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/edge-collections-replacement/cover-edge-light.webp' },
+  ogImage: { src: '/blog/edge-collections-replacement/og.png', alt: 'Collections در Edge حذف شد: به جای آن از چه استفاده کنیم؟ راهنمای TabMerger با پوشه‌های Favorites که به‌صورت گروه درون‌ریزی شده‌اند' },
+  toc: [
+    { id: 'quick', label: 'پاسخ کوتاه' },
+    { id: 'what-happened', label: 'چه اتفاقی افتاد' },
+    { id: 'where', label: 'صفحه‌های شما کجا هستند' },
+    { id: 'move', label: 'انتقال به TabMerger' },
+    { id: 'why', label: 'چرا TabMerger' },
+    { id: 'faq', label: 'پرسش‌های رایج' },
+  ],
+}
+
+<QuickAnswer>
+
+بله، حذف شده است: به گفتهٔ Microsoft، **قابلیت <bdi dir="ltr">Collections</bdi> از Edge 149 به بعد دیگر در دسترس نیست** (منتشرشده در ۴ ژوئن ۲۰۲۶). اما صفحه‌های شما پاک نشده‌اند: گزینهٔ <bdi dir="ltr">**Move to Favorites**</bdi> (انتقال صفحه‌ها به <bdi dir="ltr">Favorites</bdi>) هر مجموعه را به یک پوشه در <bdi dir="ltr">Favorites</bdi> تبدیل کرد. بهترین خانهٔ تازه برای آن‌ها [TabMerger](/features) است: <bdi dir="ltr">Favorites</bdi> را به‌صورت HTML برون‌بری کنید، فایل را درون‌ریزی کنید، و هر پوشه در <bdi dir="ltr">Other favorites</bdi> به یک گروه نام‌دار و قابل جست‌وجو تبدیل می‌شود، با یادداشت، یادآوری و همگام‌سازی رمزگذاری‌شده، در Edge و Chrome و Firefox.
+
+</QuickAnswer>
+
+<InstallCta>مجموعه‌های قدیمی‌تان را به‌صورت گروه‌های نام‌دار و قابل جست‌وجو برگردانید. رایگان برای Edge و Chrome و Firefox.</InstallCta>
+
+<Section id="what-happened" title="آیا Microsoft واقعاً Collections را از Edge حذف کرده است؟">
+
+بله، مرحله به مرحله، طبق صفحه‌های خود Microsoft:
+
+<ComparisonTable
+  head={['نسخهٔ Edge', 'چه چیزی تغییر کرد']}
+  rowHeaders
+  rows={[
+    ['145', 'دیگر نمی‌شد صفحه‌ای به مجموعه‌ها اضافه کرد؛ مجموعه‌های موجود همچنان دیده می‌شدند'],
+    ['149 (۴ ژوئن ۲۰۲۶)', 'قابلیت مجموعه‌ها دیگر در دسترس نیست'],
+    ['153', 'خط‌مشی مدیریتی مجموعه‌ها منسوخ شد، «چون قابلیت مجموعه‌ها حذف شده بود»'],
+  ]}
+/>
+
+دلیل Microsoft، به بیان خودش: <bdi dir="ltr">“retiring Collections in Edge, to better simplify our offerings”</bdi> (کنار گذاشتن Collections در Edge برای ساده‌تر کردن محصولاتش).
+
+</Section>
+
+<Section id="where" title="مجموعه‌های من کجا رفتند؟">
+
+در دورهٔ کنار گذاشتن این قابلیت، Edge در پنل <bdi dir="ltr">Collections</bdi> دو گزینه نشان می‌داد:
+
+- <bdi dir="ltr">**Move to Favorites**</bdi> (گزینهٔ پیشنهادی Microsoft): هر مجموعه به یک پوشه در <bdi dir="ltr">Favorites</bdi> تبدیل شد. فقط صفحه‌های وب ذخیره‌شده منتقل شدند؛ تصاویر و یادداشت‌ها نه.
+- <bdi dir="ltr">**Export your data**</bdi> (برون‌بری داده‌ها): فقط برای حساب‌های کاری یا آموزشی.
+
+حساب‌های شخصی Microsoft مجموعه‌های ذخیره‌شدهٔ قبلی را در <bdi dir="ltr">`bing.com/saves`</bdi> هم پیدا می‌کنند. پس اول <bdi dir="ltr">Favorites</bdi> را بررسی کنید (<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd></bdi>): مجموعه‌های شما به احتمال زیاد به‌شکل پوشه آنجا هستند.
+
+</Section>
+
+<Section id="move" title="چطور مجموعه‌هایم را به TabMerger منتقل کنم؟">
+
+چند دقیقه کافی است تا هر مجموعهٔ قبلی به یک گروه تبدیل شود:
+
+1. در Edge، <bdi dir="ltr">Favorites</bdi> را باز کنید (<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd></bdi>). اگر مجموعه‌های قبلی‌تان داخل <bdi dir="ltr">**Favorites bar**</bdi> هستند، آن پوشه‌ها را به <bdi dir="ltr">**Other favorites**</bdi> ببرید. برون‌بری کل <bdi dir="ltr">Favorites bar</bdi> را یک پوشه می‌نویسد، پس پوشه‌هایی که داخلش بمانند در یک گروه ادغام‌شده می‌رسند.
+2. <bdi dir="ltr">**Export favorites**</bdi> را انتخاب کنید و فایل HTML را ذخیره کنید.
+3. TabMerger را باز کنید ← **تنظیمات ← داده‌ها** ← **درون‌ریزی فایل** (<bdi dir="ltr">Settings → Data → Import file</bdi>) و همان فایل را انتخاب کنید.
+4. تأیید کنید. هر پوشه در <bdi dir="ltr">Other favorites</bdi> به گروهی با نام همان پوشه تبدیل می‌شود و پوشه‌های داخلش در همان گروه جمع می‌شوند. <bdi dir="ltr">Favorites bar</bdi> هم به‌صورت یک گروه جداگانه می‌آید.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="درون‌ریزی Favorites برون‌بری‌شده" steps={[{ title: 'تأیید' }, { title: 'گروه‌های شما' }]}>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-import-confirm" alt="پنجرهٔ گفت‌وگوی TabMerger که برای فایل favorites_edge.html می‌پرسد Import 2 groups? (2 گروه درون‌ریزی شوند؟)، پوستهٔ روشن" darkAlt="پنجرهٔ گفت‌وگوی TabMerger که برای فایل favorites_edge.html می‌پرسد Import 2 groups? (2 گروه درون‌ریزی شوند؟)، پوستهٔ تیره" boxes={[{ id: 'import-confirm', label: 'درون‌ریزی' }]} source="TabMerger 3.16.1">TabMerger پوشه‌هایی را که پیدا کرده می‌شمارد و اول از شما می‌پرسد.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-imported-groups" alt="نوار کناری TabMerger با گروه‌های Trip to Lisbon و Thesis reading که از پوشه‌های Favorites درون‌ریزی شده‌اند، پوستهٔ روشن" darkAlt="نوار کناری TabMerger با گروه‌های Trip to Lisbon و Thesis reading که از پوشه‌های Favorites درون‌ریزی شده‌اند، پوستهٔ تیره" boxes={[{ id: 'imported', label: 'گروه‌هایی به نام پوشه‌ها' }]} source="TabMerger 3.16.1">حالا هر پوشه گروهی با همان نام و همان صفحه‌هاست.</ThemedScreenshot>
+</Carousel>
+
+پوشه‌های دیگرتان در <bdi dir="ltr">Other favorites</bdi> هم می‌آیند؛ گروه‌هایی را که لازم ندارید حذف کنید. همهٔ قالب‌های درون‌ریزی در [درون‌ریزی زبانه‌ها به TabMerger](/blog/import-tabs-into-tabmerger) توضیح داده شده‌اند. نسخهٔ رایگان ۵ گروه و ۵۰ زبانه جا دارد و درون‌ریزی‌ای که از این حد بگذرد، پیش از افزودن هر چیزی متوقف می‌شود؛ [Pro](/pricing) محدودیتی ندارد.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Edge Favorites page menu with Export favorites. */}
+
+</Section>
+
+<Section id="why" title="چرا TabMerger خانهٔ بهتری از Collections است؟">
+
+- **مجموعه‌ای کامل از زبانه‌ها، با یک کلیک.** **ادغام با وضعیت فعلی** (<bdi dir="ltr">Merge with current</bdi>) همهٔ پنجره‌های باز را در یک گروه نام‌دار ذخیره می‌کند.
+- **یادداشت و یادآوری روی هر زبانه،** به جای یادداشت‌هایی که Collections نتوانست منتقل کند: روی زبانه راست‌کلیک کنید و **افزودن یادداشت** (<bdi dir="ltr">Add note</bdi>) یا **یادآوری کن…** (<bdi dir="ltr">Remind me…</bdi>) را انتخاب کنید.
+- **یک جست‌وجو** برای زبانه‌های باز، ذخیره‌شده و اخیراً بسته‌شده: <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi>.
+- **میان مرورگرها.** همان گروه‌ها در Edge و Chrome و Firefox، با همگام‌سازی رمزگذاری‌شدهٔ سرتاسری در Pro.
+- **مال خودتان.** هر وقت خواستید همه چیز را به JSON برون‌بری کنید؛ هیچ چیز به این وابسته نیست که یک شرکت قابلیتی را زنده نگه دارد.
+
+تازه با مدیران زبانه آشنا شده‌اید؟ [مدیر نشست مرورگر چه می‌کند](/blog/browser-session-manager) و [بهترین افزونه‌های مدیریت زبانه](/blog/best-tab-manager-extensions) تصویر کاملی می‌دهند.
+
+<InstallCta>رایگان برای Edge و Chrome و Firefox. برای شروع به حساب کاربری نیازی نیست.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="پرسش‌های رایج">
+
+<Faq items={post.faq} />
+
+</Section>

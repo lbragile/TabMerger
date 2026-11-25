@@ -1,0 +1,150 @@
+export const post = {
+  slug: 'tabs-as-a-to-do-list',
+  title: 'Utilisez vos onglets comme liste de tâches, sans les laisser ouverts',
+  navTitle: 'Des onglets comme liste de tâches',
+  seoTitle: 'Transformer ses onglets en liste de tâches avec notes et rappels',
+  description:
+    'Gardez les onglets « à lire » comme une vraie liste de tâches dans TabMerger : une note sur chaque onglet, un rappel qui s’affiche le moment venu, un titre clair et un clic pour balayer les onglets qui traînent depuis trop longtemps.',
+  shareSummary: 'Notes, rappels et tri des onglets périmés : une liste de tâches faite d’onglets, onglets fermés.',
+  dek: 'Chaque onglet ouvert est une promesse d’y revenir. Notez pourquoi, fixez une heure, puis fermez-le.',
+  published: '2026-12-16',
+  updated: '2026-12-16',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Rappels : dans 30 minutes, 1 heure, 3 heures, 24 heures, ou à une date et une heure.', source: 'TabMerger 3.16.1' },
+    { text: 'Un rappel affiche une notification du navigateur ; un clic dessus ouvre l’onglet.', source: 'TabMerger 3.16.1, code source' },
+    { text: 'Les onglets enregistrés il y a plus de 7, 14, 30 ou 60 jours (au choix) sont marqués comme périmés.', source: 'TabMerger 3.16.1' },
+    { text: 'Les notes, les rappels et le renommage sont tous inclus dans l’offre gratuite.', source: 'Tarifs de TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Comment transformer mes onglets en liste de tâches ?',
+      answer:
+        'Enregistrez les onglets dans un groupe TabMerger comme « Cette semaine », ajoutez à chacun une note qui dit quoi faire, placez des rappels sur ceux qui ont une échéance, et supprimez un onglet une fois la tâche faite. Fermez ensuite les onglets : la liste reste dans TabMerger.',
+    },
+    {
+      question: 'Puis-je recevoir un rappel pour revenir à un onglet ?',
+      answer:
+        'Oui. Faites un clic droit sur un onglet enregistré et choisissez Me le rappeler… : 30 min, 1 heure, 3 heures, Demain (dans 24 heures) ou une date et une heure, avec une note facultative. Une notification du navigateur apparaît à ce moment-là, et un clic dessus ouvre l’onglet.',
+    },
+    {
+      question: 'Qu’est-ce qu’un onglet périmé ?',
+      answer:
+        'Un onglet enregistré il y a plus longtemps que votre seuil (30 jours, sauf si vous le changez dans Paramètres → Général). Il porte un petit point, et l’en-tête du groupe propose de supprimer tous ces onglets d’un coup.',
+    },
+    {
+      question: 'Les rappels fonctionnent-ils sur mes autres appareils ?',
+      answer: 'Un rappel vous prévient dans le navigateur où vous l’avez créé. Avec Pro, l’onglet et l’heure de son rappel se synchronisent sur vos autres appareils avec le groupe.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp', alt: 'Un groupe « This week » avec une note sur un onglet, un onglet renommé avec un rappel et deux onglets périmés, thème clair' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-dark.webp', alt: 'Un groupe « This week » avec une note sur un onglet, un onglet renommé avec un rappel et deux onglets périmés, thème sombre' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-light.webp', alt: 'Options de rappel de TabMerger : 30 min, 1 hour, 3 hours, Tomorrow (Demain), une date et une heure, et une note, thème clair' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-dark.webp', alt: 'Options de rappel de TabMerger : 30 min, 1 hour, 3 hours, Tomorrow (Demain), une date et une heure, et une note, thème sombre' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'research'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp' },
+  ogImage: { src: '/blog/tabs-as-a-to-do-list/og.png', alt: 'Utilisez vos onglets comme liste de tâches : un groupe TabMerger avec des notes, un rappel et des onglets périmés' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'problem', label: 'Des onglets comme promesses' },
+    { id: 'why', label: 'Pourquoi ça marche ainsi' },
+    { id: 'steps', label: 'Créer la liste' },
+    { id: 'remind', label: 'Programmer un rappel' },
+    { id: 'benefit', label: 'Ce que vous y gagnez' },
+    { id: 'habits', label: 'Bonnes habitudes' },
+    { id: 'plans', label: 'Gratuit ou Pro' },
+    { id: 'faq', label: 'Questions fréquentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Enregistrez vos onglets « pour plus tard » dans un groupe [TabMerger](/features) comme « Cette semaine ». Un clic droit sur un onglet propose **Ajouter une note** (Add note) pour dire quoi en faire, **Me le rappeler…** (Remind me…) pour choisir quand, et **Renommer l’onglet** (Rename tab) pour un titre qui se lit comme une tâche. Supprimez l’onglet une fois la tâche faite. Les onglets qui traînent reçoivent un point, et un bouton dans l’en-tête du groupe les efface. Fermez ensuite les onglets : la liste vit dans TabMerger, pas dans votre barre d’onglets.
+
+</QuickAnswer>
+
+<InstallCta>Une liste de tâches faite d’onglets, onglets fermés. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+<Section id="problem" title="Chaque onglet ouvert est une promesse">
+
+Un article à lire avant jeudi. Un ticket à trier avant le point du matin. Un horaire de train à vérifier une fois les dates fixées. Chacun reste ouvert parce que le fermer donne l’impression de l’oublier. Une semaine plus tard, ils sont quarante, plus personne ne sait pourquoi la moitié est là, et celui qui comptait est caché derrière les autres.
+
+Un onglet ne peut pas vous dire pourquoi vous l’avez ouvert ni pour quand c’est. Une liste de tâches, si.
+
+</Section>
+
+<Section id="why" title="Pourquoi les outils de tâches de TabMerger fonctionnent ainsi">
+
+- **La note vit sur l’onglet.** Une note est attachée à l’onglet lui-même : la raison voyage avec le lien, dans les sessions, les sauvegardes et les exports, et sur vos autres appareils avec Pro.
+- **Un titre qui se lit comme une tâche.** **Renommer l’onglet** donne à un onglet votre propre titre, marqué « renommé », et **Rétablir le titre d’origine** (Reset to original title) l’annule. « Trier les nouveaux tickets » est une tâche ; « Issues · lbragile/TabMerger » est un nom de page.
+- **Des rappels impossibles à manquer.** À l’heure choisie, le navigateur affiche une notification avec le titre de l’onglet et votre note. Elle reste à l’écran jusqu’à ce que vous vous en occupiez, et un clic dessus ouvre l’onglet. Les rappels sont reprogrammés après un redémarrage du navigateur : un redémarrage ne les perd pas.
+- **Périmé veut dire enregistré il y a un moment.** Un onglet enregistré il y a plus longtemps que votre seuil (7, 14, 30 ou 60 jours ; 30 sauf si vous le changez) reçoit un point de la couleur de son groupe, et l’en-tête du groupe affiche **Supprimer N onglets périmés** (Remove N stale tabs). Les vieux onglets « un jour peut-être » partent en un clic.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-todo-group" alt="Un groupe « This week » avec une note sur un onglet, un onglet renommé avec un rappel et deux onglets périmés, thème clair" darkAlt="Un groupe « This week » avec une note sur un onglet, un onglet renommé avec un rappel et deux onglets périmés, thème sombre" boxes={[{ id: 'note', label: 'Une note sur l’onglet' }, { id: 'reminder', label: 'Un rappel est programmé' }, { id: 'stale', label: 'Effacer les onglets périmés' }]} source="TabMerger 3.16.1">La liste de la semaine : pourquoi, quand, et ce qui attend depuis trop longtemps.</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="Créer la liste">
+
+1. Créez avec **Ajouter un groupe** (Add Group), dans la barre latérale, un groupe nommé d’après la période, comme « Cette semaine » (« This week » sur les captures).
+2. Faites-y glisser des onglets depuis **Ouverts maintenant** (Now Open). L’onglet ouvert se ferme et une copie est enregistrée (Annuler le fait revenir).
+3. Faites un clic droit sur chaque onglet : **Ajouter une note** pour ce qu’il faut faire, **Renommer l’onglet** pour un titre en forme de tâche.
+4. Mettez une étoile à la fenêtre ou au groupe que vous traitez, pour qu’il reste en haut.
+5. Quand une tâche est faite, faites un clic droit sur l’onglet et choisissez **Supprimer l’onglet** (Remove tab).
+
+</Section>
+
+<Section id="remind" title="Programmer un rappel">
+
+Faites un clic droit sur l’onglet et choisissez **Me le rappeler…**. Choisissez **30 min**, **1 heure**, **3 heures** ou **Demain** (dans 24 heures), ou indiquez une date et une heure ; ajoutez une note si vous voulez. Une horloge sur l’onglet indique qu’un rappel est programmé ; un nouveau clic droit permet de **Modifier le rappel** (Edit reminder) ou d’**Effacer le rappel** (Clear reminder).
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-reminder" alt="Options de rappel de TabMerger : 30 min, 1 hour, 3 hours, Tomorrow (Demain), une date et une heure, et une note, thème clair" darkAlt="Options de rappel de TabMerger : 30 min, 1 hour, 3 hours, Tomorrow (Demain), une date et une heure, et une note, thème sombre" boxes={[{ id: 'remind-in', label: 'Me rappeler dans…' }]} source="TabMerger 3.16.1">Un délai rapide ou une heure précise, plus une note pour vous-même, plus tard.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Ce que vous y gagnez">
+
+Votre barre d’onglets ne contient que ce que vous faites en ce moment. Tout le reste a une raison notée à côté et, quand c’est utile, une heure à laquelle il vous reviendra. Rien ne dépend de votre mémoire, et rien ne reste ouvert « au cas où ».
+
+</Section>
+
+<Section id="habits" title="Bonnes habitudes">
+
+- **Écrivez la note comme une action :** « Résumer pour jeudi », pas « intéressant ».
+- **Ne programmez de rappel que pour ce qui a une échéance.** Le reste attend dans la liste.
+- **Videz les onglets périmés chaque semaine.** Ce qui a attendu 30 jours est rarement urgent.
+- **Une liste par horizon :** « Aujourd’hui », « Cette semaine », « Un jour ». Déplacez les onglets de l’une à l’autre avec **Déplacer vers un groupe** (Move to group).
+- Pour un travail riche en sources, voyez [organiser ses onglets pour la recherche](/blog/organize-tabs-for-research) ; pour la journée entière, [une routine quotidienne avec TabMerger](/blog/tabmerger-daily-workflow).
+
+</Section>
+
+<Section id="plans" title="Gratuit ou Pro">
+
+<ComparisonTable
+  head={['', 'Gratuit', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Notes, rappels, onglets renommés, onglets périmés', 'Oui', 'Oui'],
+    ['Onglets dans vos listes', '50 au total', 'Illimité'],
+    ['Listes sur vos autres appareils', 'Non', 'Oui, notes et heures de rappel comprises'],
+  ]}
+/>
+
+Tous les outils de tâches sont dans l’offre gratuite. [Pro](/pricing) ajoute de la place et la synchronisation. Un rappel vous prévient dans le navigateur où vous l’avez créé.
+
+<InstallCta>Fermez les onglets, tenez vos promesses. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Questions fréquentes">
+
+<Faq items={post.faq} />
+
+</Section>

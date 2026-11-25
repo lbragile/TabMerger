@@ -1,0 +1,270 @@
+export const post = {
+  slug: 'restore-tabs-after-crash',
+  title: 'Jak odzyskać karty po awarii, aktualizacji lub przypadkowym zamknięciu przeglądarki',
+  navTitle: 'Odzyskaj karty po awarii',
+  seoTitle: 'Jak przywrócić karty po awarii w Chrome, Edge i Firefoksie',
+  description:
+    'Przeglądarka się zamknęła i zabrała ze sobą karty? Aby przywrócić karty po awarii, wykonaj te kroki po kolei: ponowne otwarcie, historia, inne urządzenia, a na koniec ustawienia, dzięki którym to się nie powtórzy.',
+  shareSummary: 'Karty zniknęły po awarii lub restarcie? Kroki, które je przywrócą, po kolei.',
+  dek: 'Zacznij od szybkich sposobów, po kolei. Większość utraconych sesji wraca w niecałą minutę.',
+  published: '2026-11-24',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Według pomocy Chrome dotyczącej awarii Ctrl+Shift+T ponownie otwiera karty, które miałeś otwarte.',
+      source: 'Pomoc Chrome',
+      href: 'https://support.google.com/chrome/answer/142063',
+    },
+    { text: 'Menu Historia w Firefoksie zawiera „Przywróć poprzednią sesję”.', source: 'Firefox 159' },
+    {
+      text: 'Chrome pokazuje karty z innych urządzeń tylko przy włączonej synchronizacji „Historia i karty”.',
+      source: 'Pomoc Chrome',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'Strona Historia w Edge ma własną listę „Recently closed”.', source: 'edge://history, Edge 157' },
+  ],
+  faq: [
+    {
+      question: 'Jak odzyskać karty po zamknięciu Chrome?',
+      answer:
+        'Otwórz Chrome ponownie i naciśnij Ctrl+Shift+T (⌘+Shift+T na Macu), w razie potrzeby kilka razy. Jeśli karty nie wrócą, otwórz historię skrótem Ctrl+H i poszukaj wśród ostatnio zamkniętych.',
+    },
+    {
+      question: 'Dlaczego moje karty nie zostały przywrócone?',
+      answer:
+        'Zwykle dlatego, że ustawienie uruchamiania otwiera stronę nowej karty, karty były w oknie prywatnym, przed wyjściem zamykałeś okna po kolei albo otworzyłeś inny profil.',
+    },
+    {
+      question: 'Czy mogę przywrócić wczorajsze karty?',
+      answer: 'Nie jako sesję, ale każda odwiedzona strona jest w historii (Ctrl+H), chyba że ją wyczyściłeś. Pewnym sposobem jest zapisana sesja albo automatyczny zapis.',
+    },
+    {
+      question: 'Jak sprawić, żeby to się nie powtórzyło?',
+      answer: 'Włącz ustawienie uruchamiania i zapisuj otwarte karty przed ryzykownymi momentami, takimi jak aktualizacje. Nasz poradnik o zapisywaniu wszystkich otwartych kart omawia jedno i drugie.',
+      link: { text: 'zapisywaniu wszystkich otwartych kart', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Historia w Edge z pozycjami „All”, „Recently closed” i „Tabs from other devices” na pasku bocznym' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Ustawienia Chrome, „On startup” (Po uruchomieniu), z zaznaczoną opcją „Continue where you left off” (Kontynuuj od tego samego miejsca)' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Ustawienia Edge, „Start, home, and new tab page”, z zaznaczoną opcją „Open tabs from the previous session”' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Ustawienia Firefoksa, „Home and startup” (Strona startowa i uruchamianie), z zaznaczoną opcją „Open previous windows and tabs” (Otwieraj poprzednie okna i karty)' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-light.webp', alt: 'Ustawienia TabMerger, „Data” (Dane): „Auto-save open tabs” (Autozapis otwartych kart) włączony, harmonogram ustawiony na „Every 30 minutes” (Co 30 minut), jasny motyw' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-dark.webp', alt: 'Ustawienia TabMerger, „Data” (Dane): „Auto-save open tabs” (Autozapis otwartych kart) włączony, harmonogram ustawiony na „Every 30 minutes” (Co 30 minut), ciemny motyw' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-light.webp', alt: 'TabMerger, „Recently closed” (Ostatnio zamknięte), dzisiaj: trzy zamknięte karty z godziną zamknięcia każdej z nich, jasny motyw' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-dark.webp', alt: 'TabMerger, „Recently closed” (Ostatnio zamknięte), dzisiaj: trzy zamknięte karty z godziną zamknięcia każdej z nich, ciemny motyw' },
+  ],
+  tags: ['restore-closed-tabs', 'session-management', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-20',
+      note: 'Nazwy menu Firefoksa odczytaliśmy bezpośrednio w Firefoksie 159.0.1; ta strona zablokowała nasze automatyczne sprawdzenie.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/restore-tabs-after-crash/cover-edge-light.webp' },
+  ogImage: { src: '/blog/restore-tabs-after-crash/og.png', alt: 'Karta tytułowa „How to get your tabs back after a crash, an update or an accidental quit”: poradnik TabMerger z listą ostatnio zamkniętych kart' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'first', label: '1. Otwórz ponownie, potem Ctrl+Shift+T' },
+    { id: 'recover', label: '2. Historia w każdej przeglądarce' },
+    { id: 'devices', label: '3. Inne urządzenia' },
+    { id: 'why', label: 'Dlaczego karty nie wróciły' },
+    { id: 'prevent', label: 'Na następny raz' },
+    { id: 'faq', label: 'Najczęstsze pytania' },
+  ],
+  browserSections: ['first', 'recover', 'devices', 'prevent'],
+  browserFact: {
+    label: 'Historia',
+    values: { chrome: 'chrome://history', edge: 'edge://history', firefox: 'Ctrl+Shift+H (Biblioteka)' },
+  },
+}
+
+<QuickAnswer>
+
+Otwórz przeglądarkę ponownie i naciskaj <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> na Macu), raz za razem, aż okna wrócą. Jeśli to nie pomoże, otwórz historię (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) i przywróć je z listy **ostatnio zamkniętych**; w Firefoksie użyj **Historia → Przywróć poprzednią sesję** („History → Restore Previous Session”). Nadal czegoś brakuje? Sprawdź **karty z innych urządzeń**, a potem wyszukaj same strony w historii. Następnym razem pozwól, by [TabMerger](/features) automatycznie zapisywał otwarte karty według harmonogramu, a awaria nigdy nie będzie cię kosztować więcej niż kilka minut.
+
+</QuickAnswer>
+
+<InstallCta>Nigdy więcej nie trać okna: zapisuj otwarte karty automatycznie według harmonogramu. Za darmo dla Chrome, Edge i Firefoksa.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="first" title="1. Otwórz przeglądarkę ponownie i naciśnij Ctrl+Shift+T">
+
+Nie otwieraj najpierw nowych kart: zacznij od pustego okna, żeby odzyskać dokładnie to, co jest na liście ostatnio zamkniętych w przeglądarce.
+
+<BrowserPanels section="first">
+<BrowserPanel browser="chrome">
+
+1. Uruchom Chrome. Jeśli zaproponuje przywrócenie stron, zgódź się.
+2. Naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> na Macu). Wskazuje na to sama pomoc Chrome dotycząca awarii: skrót ponownie otwiera karty, które były wcześniej otwarte.
+3. Naciśnij go ponownie dla każdego utraconego okna. Chrome przywraca karty i okna w kolejności, w jakiej zostały zamknięte.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Uruchom Edge. Jeśli zaproponuje przywrócenie stron, zgódź się.
+2. Naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> na Macu), aby ponownie otworzyć ostatnio zamkniętą kartę, i naciskaj dalej, aby cofać się wstecz.
+3. Brakuje całego okna? Przejdź od razu do kroku 2, czyli historii.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Uruchom Firefoksa. Jeśli zaproponuje przywrócenie stron, zgódź się.
+2. Naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> na Macu). Firefox 159 przypisuje go do polecenia, które przywraca ostatnio zamkniętą kartę, okno lub sesję, więc po ponownym uruchomieniu może przywrócić całą poprzednią sesję.
+3. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> przywraca zamknięte okno; naciśnij go raz dla każdego okna.
+
+</BrowserPanel>
+</BrowserPanels>
+
+Pełną listę skrótów znajdziesz w naszym [przeglądzie skrótów klawiszowych do kart](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="recover" title="2. Przywróć z historii">
+
+Jeśli skrót nic nie przywraca, historia przeglądarki wciąż pamięta, co było otwarte.
+
+<BrowserPanels section="recover">
+<BrowserPanel browser="chrome">
+
+1. Kliknij **⋮ → Historia** („History”). Podmenu pokazuje ostatnio zamknięte karty i okna.
+2. Kliknij okno, aby ponownie otworzyć wszystkie jego karty.
+3. Nic tam nie ma? Naciśnij <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> i wyszukaj stronę, którą pamiętasz.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Naciśnij <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>, aby otworzyć **Historię**.
+2. Wybierz **Recently closed** (ostatnio zamknięte) i przywróć utracone okno lub karty.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Historia w Edge z pozycjami „All”, „Recently closed” i „Tabs from other devices” na pasku bocznym" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60">Strona Historia w Edge z pozycją „Recently closed” na pasku bocznym.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Otwórz menu **Historia** („History”; naciśnij <Kbd>Alt</Kbd>, aby wyświetlić pasek menu) albo **☰ → Historia**.
+2. Wybierz **Przywróć poprzednią sesję** („Restore Previous Session”), aby przywrócić wszystkie okna z ostatniego razu.
+3. Albo wybierz z **Ostatnio zamknięte okna** i **Ostatnio zamknięte karty**.
+
+Jeśli awarię miał sam Firefox, może otworzyć stronę **Przywracanie sesji** („Restore Session”) z komunikatem „Wystąpił problem z przywróceniem stron”. **Pokaż karty** („View Previous Tabs”) pozwala odznaczyć kartę, która może powodować awarię, zanim klikniesz **Przywróć sesję**.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with Restore Previous Session. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="devices" title="3. Sprawdź na innych urządzeniach">
+
+Jeśli byłeś zalogowany i synchronizacja działała, utracone karty mogą wciąż być widoczne na innym urządzeniu.
+
+<BrowserPanels section="devices">
+<BrowserPanel browser="chrome">
+
+Chrome pokazuje karty z innych urządzeń w historii, ale tylko przy włączonej synchronizacji **Historia i karty** („History and tabs”): **Ustawienia → Ty i Google** („Settings → You and Google”), wybierz nazwę swojego konta, a potem włącz **Historia i karty**.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Otwórz historię (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) i wybierz na pasku bocznym **Tabs from other devices** (karty z innych urządzeń).
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Otwórz **Firefox View** i zajrzyj do **Karty z innych urządzeń** („Tabs from other devices”). Potrzebujesz Firefox Sync z włączoną synchronizacją otwartych kart.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox View, Tabs from other devices. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="why" title="Dlaczego moje karty nie zostały przywrócone?">
+
+- **Ustawienie uruchamiania otwiera stronę nowej karty.** Tylko opcja uruchamiania „poprzednia sesja” przywraca karty przy każdym starcie; w następnej sekcji pokazujemy, gdzie ją znaleźć w twojej przeglądarce.
+- **Były w oknie prywatnym.** Okna Incognito i InPrivate nigdy nie są przywracane.
+- **Zamykałeś okna po kolei.** Przy uruchomieniu wraca to, co było otwarte w chwili *zamknięcia* przeglądarki. Okna zamknięte wcześniej są tylko w historii.
+- **Otworzyłeś inny profil.** Każdy profil ma własną sesję; sprawdź ikonę profilu.
+
+</Section>
+
+<Section id="prevent" title="Zadbaj, żeby to się nie powtórzyło">
+
+Włącz ustawienie uruchamiania już teraz; ta jedna zmiana chroni przy aktualizacjach i restartach.
+
+<BrowserPanels section="prevent">
+<BrowserPanel browser="chrome">
+
+**Ustawienia → Po uruchomieniu → Kontynuuj od tego samego miejsca** („Settings → On startup → Continue where you left off”). Możesz też wkleić `chrome://settings/onStartup` w pasek adresu.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Ustawienia Chrome, „On startup” (Po uruchomieniu), z zaznaczoną opcją „Continue where you left off” (Kontynuuj od tego samego miejsca)" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">Ustawienie Po uruchomieniu w Chrome, ustawione na przywracanie ostatniej sesji.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+**Ustawienia → Start, home, and new tab page → On startup → Open tabs from the previous session**. Możesz też wkleić `edge://settings/startHomeNTP` w pasek adresu.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Ustawienia Edge, „Start, home, and new tab page”, z zaznaczoną opcją „Open tabs from the previous session”" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">Strona „Start, home, and new tab page” w Edge, ustawiona na przywracanie ostatniej sesji.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+**Ustawienia → Strona startowa i uruchamianie → Uruchamianie → Otwieraj poprzednie okna i karty** („Settings → Home and startup → Startup → Open previous windows and tabs”). Możesz też wkleić `about:preferences#home` w pasek adresu.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Ustawienia Firefoksa, „Home and startup” (Strona startowa i uruchamianie), z zaznaczoną opcją „Open previous windows and tabs” (Otwieraj poprzednie okna i karty)" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Ustawienia Firefoksa w sekcji Strona startowa i uruchamianie, z zaznaczoną opcją „Otwieraj poprzednie okna i karty”.</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+Przywracanie przy uruchomieniu nie pomoże w przypadku okna, które przypadkiem zamknąłeś w zeszłym tygodniu. Do tego potrzebna jest zapisana kopia: dodaj okna do zakładek albo użyj [menedżera sesji](/blog/browser-session-manager). Nasz poradnik o [zapisywaniu wszystkich otwartych kart](/blog/save-all-open-tabs) porównuje dostępne sposoby.
+
+[TabMerger](/features), nasze bezpłatne rozszerzenie do Chrome, Edge i Firefoksa, może zapisywać za ciebie. **Ustawienia → Dane → Autozapis otwartych kart** zapisuje otwarte karty jako grupę według harmonogramu (od co 15 minut do raz dziennie). **Ostatnio zamknięte** przechowuje każdą zamkniętą kartę i każde okno, pogrupowane według dni: 2 dni w wersji bezpłatnej, 30 w Pro. Jak działają obie funkcje i jak je dostosować, opisujemy w poradniku [nigdy więcej nie trać karty](/blog/never-lose-a-tab-again).
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Zapisywanie według harmonogramu i szukanie zamkniętych kart" steps={[{ title: 'Autozapis' }, { title: 'Ostatnio zamknięte' }]}>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-auto-save-schedule" alt="Ustawienia TabMerger, „Data” (Dane): „Auto-save open tabs” (Autozapis otwartych kart) włączony, harmonogram ustawiony na „Every 30 minutes” (Co 30 minut), jasny motyw" darkAlt="Ustawienia TabMerger, „Data” (Dane): „Auto-save open tabs” (Autozapis otwartych kart) włączony, harmonogram ustawiony na „Every 30 minutes” (Co 30 minut), ciemny motyw" boxes={[{ id: 'schedule', label: 'Harmonogram' }]} source="TabMerger 3.16.1">„Auto-save open tabs” (Autozapis otwartych kart) co 30 minut: świeża kopia otwartych kart, cokolwiek stanie się z przeglądarką.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-recently-closed" alt="TabMerger, „Recently closed” (Ostatnio zamknięte), dzisiaj: trzy zamknięte karty z godziną zamknięcia każdej z nich, jasny motyw" darkAlt="TabMerger, „Recently closed” (Ostatnio zamknięte), dzisiaj: trzy zamknięte karty z godziną zamknięcia każdej z nich, ciemny motyw" boxes={[{ id: 'today-row', label: 'Dzisiaj' }]} source="TabMerger 3.16.1">„Recently closed” (Ostatnio zamknięte): karty zamknięte dzisiaj, każda z godziną zamknięcia.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Za darmo dla Chrome, Edge i Firefoksa. Na start nie potrzebujesz konta.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Najczęstsze pytania">
+
+<Faq items={post.faq} />
+
+</Section>

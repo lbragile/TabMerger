@@ -1,0 +1,174 @@
+export const post = {
+  slug: 'never-lose-a-tab-again',
+  title: 'Ne plus jamais perdre un onglet : enregistrement automatique et onglets fermés récupérés',
+  navTitle: 'Ne plus jamais perdre un onglet',
+  seoTitle: 'Enregistrer automatiquement vos onglets et récupérer les onglets fermés avec TabMerger',
+  description:
+    'Enregistrez vos onglets ouverts automatiquement, selon un horaire ou au-delà d’un certain nombre, et récupérez n’importe quel onglet ou fenêtre fermé. Comment fonctionnent l’enregistrement automatique et « Fermés récemment » dans TabMerger, et pourquoi.',
+  shareSummary: 'Vos onglets ouverts enregistrés selon un horaire, et chaque fenêtre fermée à une recherche près.',
+  dek: 'Vous ne devriez pas avoir à penser à enregistrer. Réglez-le une fois, et chaque onglet ouvert a sa copie.',
+  published: '2026-12-13',
+  updated: '2026-12-13',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'L’enregistrement automatique tourne de toutes les 15 minutes à une fois par jour, ou quand les onglets ouverts dépassent un seuil de 20 à 100.', source: 'TabMerger 3.16.1' },
+    { text: 'Les onglets déjà enregistrés dans un groupe sont ignorés ; les fenêtres privées ne sont jamais enregistrées.', source: 'TabMerger 3.16.1' },
+    { text: 'Gratuit garde les 2 enregistrements automatiques les plus récents ; Pro les garde tous.', source: 'Tarifs de TabMerger', href: '/pricing' },
+    { text: '« Fermés récemment » garde vos 2 derniers jours en Gratuit, 30 jours en Pro.', source: 'Tarifs de TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Comment enregistrer automatiquement mes onglets ouverts ?',
+      answer:
+        'Dans TabMerger, ouvrez Paramètres → Données et activez « Enregistrer automatiquement les onglets ouverts ». Choisissez un horaire (de toutes les 15 minutes à une fois par jour), un nombre d’onglets ouverts qui déclenche l’enregistrement, ou les deux. Chaque passage enregistre vos onglets ouverts dans un nouveau groupe.',
+    },
+    {
+      question: 'L’enregistrement automatique va-t-il remplir TabMerger de doublons ?',
+      answer:
+        'Non. Les onglets dont l’adresse est déjà enregistrée dans un groupe sont ignorés, et une page ouverte dans plusieurs onglets n’est enregistrée qu’une fois. Quand tout est déjà enregistré, le passage n’enregistre rien.',
+    },
+    {
+      question: 'L’enregistrement automatique a-t-il besoin que TabMerger soit ouvert ?',
+      answer: 'Non. Il tourne en arrière-plan dans l’extension tant que votre navigateur est ouvert, et vérifie au démarrage du navigateur si un enregistrement a été manqué.',
+    },
+    {
+      question: 'Comment récupérer une fenêtre que j’ai fermée ?',
+      answer:
+        'Appuyez sur Ctrl+K dans TabMerger et tapez closed: pour lister les onglets et fenêtres fermés récemment, ou ouvrez « Fermés récemment » dans la barre latérale. Choisir une fenêtre fermée la restaure en entier.',
+    },
+    {
+      question: 'Que garde Gratuit, et qu’apporte Pro ?',
+      answer:
+        'Gratuit garde les 2 enregistrements automatiques les plus récents (gardez-en un comme groupe pour le conserver) et vos 2 derniers jours d’onglets fermés. Pro garde tous les enregistrements automatiques et 30 jours d’onglets fermés, et ajoute des sauvegardes automatiques chiffrées ainsi que les onglets ouverts de vos autres appareils.',
+    },
+  ],
+  images: [
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-light.webp', alt: 'TabMerger, « Settings » (Paramètres), « Data » (Données) : « Auto-save open tabs » (Enregistrer automatiquement les onglets ouverts) activé, toutes les heures et au-delà de 50 onglets ouverts, avec « Auto-save now » (Enregistrer maintenant), thème clair' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-dark.webp', alt: 'TabMerger, « Settings » (Paramètres), « Data » (Données) : « Auto-save open tabs » (Enregistrer automatiquement les onglets ouverts) activé, toutes les heures et au-delà de 50 onglets ouverts, avec « Auto-save now » (Enregistrer maintenant), thème sombre' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp', alt: 'Un groupe dans « Auto-saved » (Enregistrés auto) avec deux fenêtres et sept onglets, et un bouton « Keep as group » (Garder comme groupe), thème clair' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-dark.webp', alt: 'Un groupe dans « Auto-saved » (Enregistrés auto) avec deux fenêtres et sept onglets, et un bouton « Keep as group » (Garder comme groupe), thème sombre' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-light.webp', alt: 'Recherche TabMerger avec closed: affichant une fenêtre de 3 onglets fermée aujourd’hui, thème clair' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-dark.webp', alt: 'Recherche TabMerger avec closed: affichant une fenêtre de 3 onglets fermée aujourd’hui, thème sombre' },
+  ],
+  tags: ['tabmerger-guides', 'save-tabs', 'restore-closed-tabs', 'session-management'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp' },
+  ogImage: { src: '/blog/never-lose-a-tab-again/og.png', alt: 'Ne plus jamais perdre un onglet : un groupe enregistré automatiquement dans TabMerger avec un bouton « Keep as group » (Garder comme groupe)' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'problem', label: 'Comment on perd des onglets' },
+    { id: 'why', label: 'Pourquoi ça marche ainsi' },
+    { id: 'steps', label: 'L’activer' },
+    { id: 'closed', label: 'Fermés récemment' },
+    { id: 'benefit', label: 'Ce que ça vous évite' },
+    { id: 'habits', label: 'Bonnes habitudes' },
+    { id: 'plans', label: 'Gratuit ou Pro' },
+    { id: 'faq', label: 'Questions fréquentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Activez **Paramètres → Données → Enregistrer automatiquement les onglets ouverts** (Settings → Data → Auto-save open tabs) dans [TabMerger](/features) et choisissez un horaire, un nombre d’onglets, ou les deux. Dès lors, vos onglets ouverts sont enregistrés automatiquement dans un nouveau groupe, sans ce qui est déjà enregistré. Vous avez fermé quelque chose par erreur ? <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> puis `closed:` retrouvent chaque onglet et chaque fenêtre fermés récemment, et rouvrent une fenêtre entière en un clic.
+
+</QuickAnswer>
+
+<InstallCta>Une copie de chaque onglet ouvert, enregistrée pour vous selon un horaire. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+<Section id="problem" title="Comment on perd vraiment des onglets">
+
+C’est rarement un grand plantage. Le plus souvent, c’est un petit rien : vous fermez la mauvaise fenêtre, celle avec les trente onglets de vos recherches de ce matin. Une mise à jour redémarre le navigateur et une seule de vos trois fenêtres revient. Vous faites du rangement le vendredi et le lundi, il vous faut la page que vous avez fermée. D’ici là, l’onglet est quelque part dans l’historique, parmi des centaines d’autres pages, si vous vous souvenez encore de son nom.
+
+Enregistrer à la main règle le problème, les jours où vous y pensez. L’enregistrement automatique, c’est pour les autres jours.
+
+Pour récupérer des onglets après un plantage ou un redémarrage forcé avec les outils propres à chaque navigateur, voyez [comment récupérer vos onglets après un plantage](/blog/restore-tabs-after-crash). Ce guide sert à ce que vous ayez toujours une copie.
+
+</Section>
+
+<Section id="why" title="Pourquoi l’enregistrement automatique fonctionne ainsi">
+
+Chaque règle de l’enregistrement automatique de TabMerger est là pour que la copie soit utile, pas seulement présente :
+
+- **Il enregistre dans un nouveau groupe**, nommé d’après l’heure (« Enregistré auto 21 nov., 20:28 »), avec les fenêtres entières et l’ordre des onglets. Rien de ce que vous aviez enregistré n’est modifié. Chaque nouvel enregistrement automatique reçoit une couleur différente du précédent, pour les distinguer facilement.
+- **Deux déclencheurs, parce que les onglets s’accumulent de deux façons.** Un **horaire** (toutes les 15 ou 30 minutes, toutes les heures, toutes les 2 ou 4 heures, ou une fois par jour) couvre le travail régulier. Un **nombre d’onglets** (20, 30, 50, 75 ou 100 onglets ouverts) couvre la rafale de recherches qui dépasse n’importe quel horaire.
+- **Une rafale n’enregistre qu’une fois.** Le déclencheur par nombre se lance quand vous dépassez le seuil, puis attend que vous soyez revenu au seuil ou en dessous, et au moins 10 minutes, avant de pouvoir se relancer. Ouvrir dix onglets à la suite ne crée pas dix groupes.
+- **Pas de doublons.** Un onglet dont l’adresse figure déjà dans l’un de vos groupes est ignoré, et une page ouverte dans plusieurs onglets est enregistrée une fois. Si tout est déjà enregistré, le passage n’enregistre rien et vous le signale.
+- **Le privé reste privé.** Les fenêtres privées ne sont jamais enregistrées. Les pages de TabMerger lui-même sont laissées de côté ; les onglets épinglés et les pages du navigateur sont inclus.
+- **Il se passe de vous.** L’enregistrement automatique tourne en arrière-plan dans l’extension tant que le navigateur est ouvert, et vérifie au démarrage du navigateur si un enregistrement est dû. Une notification facultative vous prévient après chaque passage ; la ligne d’état dans les paramètres affiche le dernier résultat.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Enregistrement automatique dans TabMerger" steps={[{ title: 'Paramètres' }, { title: 'Groupe enregistré automatiquement' }]}>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-save-settings" alt="TabMerger, « Settings » (Paramètres), « Data » (Données) : « Auto-save open tabs » (Enregistrer automatiquement les onglets ouverts) activé, toutes les heures et au-delà de 50 onglets ouverts, avec « Auto-save now » (Enregistrer maintenant), thème clair" darkAlt="TabMerger, « Settings » (Paramètres), « Data » (Données) : « Auto-save open tabs » (Enregistrer automatiquement les onglets ouverts) activé, toutes les heures et au-delà de 50 onglets ouverts, avec « Auto-save now » (Enregistrer maintenant), thème sombre" boxes={[{ id: 'schedule', label: 'La fréquence d’enregistrement' }, { id: 'threshold', label: 'Le déclencheur par onglets ouverts' }, { id: 'run-now', label: 'Enregistrer tout de suite' }]} source="TabMerger 3.16.1">Toutes les heures, et dès que les onglets ouverts dépassent 50.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-saved" alt="Un groupe dans « Auto-saved » (Enregistrés auto) avec deux fenêtres et sept onglets, et un bouton « Keep as group » (Garder comme groupe), thème clair" darkAlt="Un groupe dans « Auto-saved » (Enregistrés auto) avec deux fenêtres et sept onglets, et un bouton « Keep as group » (Garder comme groupe), thème sombre" boxes={[{ id: 'keep', label: 'Garder comme groupe' }]} source="TabMerger 3.16.1">Le résultat : les deux fenêtres ouvertes, enregistrées dans un groupe. Gardez-le pour le conserver pour de bon.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="steps" title="L’activer en quatre étapes">
+
+1. Ouvrez TabMerger, puis **Paramètres** (Settings, dans le menu du compte) → **Données** (Data).
+2. Activez **Enregistrer automatiquement les onglets ouverts** (Auto-save open tabs). (En Pro, c’est déjà activé, toutes les heures.)
+3. Choisissez un **Horaire** (Schedule), un nombre dans **Quand les onglets ouverts dépassent** (When open tabs pass), ou les deux. Activez **Afficher une notification** (Show a notification) si vous voulez être prévenu après chaque enregistrement.
+4. Appuyez une fois sur **Enregistrer maintenant** (Auto-save now) pour voir le résultat : un nouveau groupe sous **Enregistrés auto** (Auto-saved) dans la barre latérale.
+
+Un enregistrement automatique à garder pour de bon ? Ouvrez-le et appuyez sur **Garder comme groupe** (Keep as group) : il rejoint vos groupes et n’est jamais supprimé automatiquement.
+
+</Section>
+
+<Section id="closed" title="Fermés récemment : l’autre moitié du filet">
+
+L’enregistrement automatique couvre ce qui est ouvert ; **Fermés récemment** (Recently closed) couvre ce que vous venez de fermer. Chaque onglet et chaque fenêtre que vous fermez est conservé par jour, sur cet appareil uniquement, et les fenêtres privées ne sont jamais enregistrées.
+
+- Ouvrez **Fermés récemment** dans la barre latérale pour parcourir par jour, ou appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> et commencez par `closed:` pour y chercher.
+- Une **fenêtre** fermée apparaît comme une seule entrée (« Fenêtre · 3 onglets ») : choisissez-la et toute la fenêtre revient.
+- Faites <Kbd>Ctrl</Kbd>+clic (<Kbd>⌘</Kbd>+clic sur Mac) ou un clic du milieu sur un résultat pour le rouvrir en arrière-plan.
+
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-closed-window" alt="Recherche TabMerger avec closed: affichant une fenêtre de 3 onglets fermée aujourd’hui, thème clair" darkAlt="Recherche TabMerger avec closed: affichant une fenêtre de 3 onglets fermée aujourd’hui, thème sombre" boxes={[{ id: 'search-input', label: 'Le filtre closed:' }, { id: 'closed-window', label: 'Une fenêtre fermée entière' }]} source="TabMerger 3.16.1">Une fenêtre fermée par erreur, à une recherche près.</ThemedScreenshot>
+
+D’autres astuces de recherche dans [chercher dans tous vos onglets avec TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+
+</Section>
+
+<Section id="benefit" title="Ce que ça vous évite">
+
+Le pire scénario passe de « ces onglets sont perdus » à « je perds ce que j’ai ouvert depuis le dernier enregistrement ». Avec un horaire toutes les heures, un mauvais redémarrage vous coûte au plus une heure de nouveaux onglets ; une fenêtre que vous avez fermée vous-même est dans « Fermés récemment ». Récupérer l’un ou l’autre, c’est une recherche au lieu d’un après-midi dans l’historique.
+
+</Section>
+
+<Section id="habits" title="Bonnes habitudes">
+
+- **Adaptez l’horaire à votre rythme.** Toutes les heures convient à la plupart des journées ; toutes les 15 minutes, aux recherches intenses.
+- **Ajoutez un nombre d’onglets si vous les ouvrez par rafales.** 50 est un bon départ.
+- **Gardez, puis faites le ménage.** Quand un enregistrement automatique contient quelque chose qui mérite d’être gardé, appuyez sur **Garder comme groupe** et renommez-le ; supprimez le reste.
+- **Continuez à enregistrer exprès.** L’enregistrement automatique est le filet, pas le plan : gardez des groupes nommés pour vos vrais projets (voir [une routine quotidienne avec vos onglets](/blog/tabmerger-daily-workflow)).
+
+</Section>
+
+<Section id="plans" title="Gratuit ou Pro">
+
+<ComparisonTable
+  head={['', 'Gratuit', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Enregistrer automatiquement les onglets ouverts', 'Désactivé jusqu’à ce que vous l’activiez ; les 2 plus récents gardés', 'Activé par défaut ; tous gardés'],
+    ['Enregistrements automatiques et limites du forfait', 'Comptent dans les 5 groupes et 50 onglets', 'Aucune limite'],
+    ['Fermés récemment', 'Vos 2 derniers jours', 'Vos 30 derniers jours'],
+    ['Sauvegardes automatiques chiffrées de vos groupes', 'Non', 'De toutes les heures à hebdomadaire, les 10 plus récentes gardées'],
+    ['Onglets ouverts de vos autres appareils', 'Non', 'Paramètres → Appareils'],
+  ]}
+/>
+
+En Gratuit, chaque nouvel enregistrement automatique remplace le plus ancien dès qu’il y en a 2 ; **Garder comme groupe** en retire un de la rotation. Près de la limite de 50 onglets, un enregistrement automatique enregistre les onglets qui tiennent et le signale. Les sauvegardes et les onglets de vos appareils sont stockés dans votre compte, chiffrés de bout en bout, et notre serveur refuse de les stocker pour un compte sans Pro. Détails sur la [page des tarifs](/pricing).
+
+<InstallCta>Réglez-le une fois, et ne vous inquiétez plus des fenêtres fermées. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Questions fréquentes">
+
+<Faq items={post.faq} />
+
+</Section>

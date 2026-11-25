@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'chrome-tab-groups',
+  title: 'Nhóm tab trong Chrome: cách lưu, mở lại và đồng bộ',
+  seoTitle: 'Nhóm tab Chrome: Lưu, Mở lại và Đồng bộ (cùng các giới hạn)',
+  description:
+    'Cách nhóm tab trong Chrome hoạt động: tạo, thu gọn, đóng và mở lại một nhóm đã lưu, những gì được đồng bộ sang các thiết bị khác của bạn, và những gì tiện ích có thể hoặc không thể thấy.',
+  shareSummary: 'Tạo, lưu, mở lại và đồng bộ nhóm tab Chrome, cùng những điểm còn hạn chế.',
+  dek: 'Một nhóm đã đóng không mất đi: nhóm đó được lưu lại. Đây là nơi nhóm được lưu, những gì theo bạn sang thiết bị khác và những gì không.',
+  published: '2026-11-23',
+  updated: '2026-11-23',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Đóng một nhóm là lưu nhóm đó; mở lại từ thanh dấu trang hoặc ⋮ → Nhóm thẻ.',
+      source: 'Trợ giúp Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Xoá hoặc huỷ nhóm sẽ gỡ nhóm khỏi mọi thiết bị đang đăng nhập.', source: 'Trợ giúp Chrome' },
+    {
+      text: 'chrome.tabGroups chỉ thấy các nhóm trong cửa sổ đang mở.',
+      source: 'Tài liệu chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'Cả hai cài đặt nhóm thẻ trên thanh dấu trang đều đang bật trong một bản Chrome 157 mới cài.', source: 'chrome://settings/appearance, 20/11/2026' },
+  ],
+  faq: [
+    {
+      question: 'Làm sao để lưu một nhóm tab trong Chrome?',
+      answer:
+        'Nhấp chuột phải vào tên nhóm rồi chọn Đóng nhóm. Chrome sẽ giữ lại nhóm, và bạn mở lại nhóm từ thanh dấu trang hoặc từ ⋮ → Nhóm thẻ.',
+    },
+    {
+      question: 'Nhóm tab Chrome có đồng bộ giữa các thiết bị không?',
+      answer:
+        'Nhóm đã lưu đi theo Tài khoản Google của bạn: trợ giúp của Chrome cảnh báo rằng xoá hoặc huỷ một nhóm sẽ gỡ nhóm đó khỏi mọi thiết bị đăng nhập cùng tài khoản.',
+    },
+    {
+      question: 'Đóng nhóm và Xoá nhóm khác nhau thế nào?',
+      answer: 'Đóng nhóm đóng các tab và giữ lại nhóm để bạn mở lại sau. Xoá nhóm xoá hẳn nhóm, kể cả trên các thiết bị khác của bạn.',
+    },
+    {
+      question: 'Tiện ích quản lý tab có lưu được các nhóm Chrome tôi đã đóng không?',
+      answer:
+        'Không, khi nhóm vẫn đang đóng: API tiện ích chỉ mô tả các nhóm trong cửa sổ đang mở. Hãy mở lại nhóm trước, rồi lưu bằng tiện ích.',
+    },
+  ],
+  images: [
+    { src: '/blog/chrome-tab-groups/chrome-tab-groups-setting.webp', alt: 'Cài đặt Chrome, Appearance (Giao diện), với Show tab groups in bookmarks bar (Hiển thị nhóm thẻ trong thanh dấu trang) và Automatically pin new tab groups created on any device to the bookmarks bar (Tự động ghim các nhóm thẻ mới vào thanh dấu trang) đều đang bật' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp', alt: 'TabMerger Now Open (Đang Mở): sáu tab, ba tab gắn nhãn Sprint màu xanh dương và ba tab gắn nhãn Thesis màu xanh lá, giao diện sáng' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-dark.webp', alt: 'TabMerger Now Open (Đang Mở): sáu tab, ba tab gắn nhãn Sprint màu xanh dương và ba tab gắn nhãn Thesis màu xanh lá, giao diện tối' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-light.webp', alt: 'Nhóm TabMerger Sprint + thesis chứa đúng sáu tab đó cùng nhãn Sprint và Thesis, giao diện sáng' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-dark.webp', alt: 'Nhóm TabMerger Sprint + thesis chứa đúng sáu tab đó cùng nhãn Sprint và Thesis, giao diện tối' },
+  ],
+  tags: ['chrome', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (tab groups with the keyboard)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp' },
+  ogImage: { src: '/blog/chrome-tab-groups/og.png', alt: 'Thẻ tiêu đề Chrome tab groups: how to save, reopen and sync them: một hướng dẫn của TabMerger, với các tab gắn nhãn theo nhóm Chrome' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'basics', label: 'Tạo và thu gọn' },
+    { id: 'save', label: 'Lưu và mở lại' },
+    { id: 'sync', label: 'Có đồng bộ không?' },
+    { id: 'limits', label: 'Các giới hạn' },
+    { id: 'tabmerger', label: 'Giữ nhóm lâu dài' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+}
+
+<QuickAnswer>
+
+Nhấp chuột phải vào một tab và chọn **Thêm thẻ vào nhóm** (“Add tab to group”) để tạo nhóm, sau đó đặt tên và chọn màu. Để lưu một nhóm, nhấp chuột phải vào tên nhóm và chọn **Đóng nhóm** (“Close group”): Chrome sẽ giữ lại nhóm, và bạn mở lại nhóm từ thanh dấu trang hoặc từ **⋮ → Nhóm thẻ** (“Tab groups”). Nhóm đã lưu đi theo Tài khoản Google của bạn, nên xoá một nhóm là xoá ở mọi nơi. Để giữ các nhóm an toàn lâu dài, hãy lưu chúng trong [TabMerger](/features): tiện ích này giữ tên và màu nhóm Chrome của từng tab, rồi xếp các tab trở lại vào nhóm khi bạn mở lại.
+
+</QuickAnswer>
+
+<InstallCta>Giữ nhóm tab Chrome của bạn an toàn, dễ tìm và được đồng bộ. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+<Section id="basics" title="Nhóm tab trong Chrome hoạt động thế nào?">
+
+Nhóm tab (Chrome gọi là “nhóm thẻ”) là một dãy tab có tên và màu trong cùng một cửa sổ.
+
+1. Nhấp chuột phải vào một tab và chọn **Thêm thẻ vào nhóm** → **Nhóm mới** (“New group”) hoặc một nhóm có sẵn.
+2. Đặt tên cho nhóm và chọn màu. Sau này, nhấp chuột phải vào tên nhóm để đổi tên, đổi màu hoặc thêm tab mới vào nhóm.
+3. Kéo một tab vào nhóm để thêm tab đó; nhấp chuột phải vào tab → **Xoá khỏi nhóm** (“Remove from group”) để đưa tab ra.
+4. Nhấp vào tên nhóm để thu gọn nhóm thành một nhãn duy nhất, nhấp lần nữa để mở rộng.
+
+Bằng bàn phím: nhấn <Kbd>F6</Kbd> cho đến khi các tab được chọn tiêu điểm, nhấn <Kbd>Tab</Kbd> để đến nhóm, rồi phím Menu sẽ mở trình đơn của nhóm. <Kbd>Space</Kbd> hoặc <Kbd>Enter</Kbd> thu gọn nhóm, còn <Kbd>Ctrl</Kbd>+<Kbd>←</Kbd>/<Kbd>→</Kbd> di chuyển nhóm.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with Close group and Delete group. */}
+
+</Section>
+
+<Section id="save" title="Làm sao để lưu một nhóm tab và lấy lại?">
+
+**Đóng nhóm** chính là nút lưu của Chrome. Các tab đóng lại, còn nhóm thì không: Chrome giữ nhóm lại và liệt kê nhóm ở hai nơi.
+
+- **Thanh dấu trang:** một biểu tượng lưới kèm tên nhóm. Nhấp vào để mở lại.
+- **Trình đơn ⋮ → Nhóm thẻ:** các nhóm bạn đã lưu.
+
+Hai cài đặt trong **Cài đặt → Giao diện** (“Settings → Appearance”) điều khiển phần thanh dấu trang. Cả hai đều đang bật trong một hồ sơ Chrome 157 mới.
+
+<AnnotatedFigure src="/blog/chrome-tab-groups/chrome-tab-groups-setting.webp" alt="Cài đặt Chrome, Appearance (Giao diện), với Show tab groups in bookmarks bar (Hiển thị nhóm thẻ trong thanh dấu trang) và Automatically pin new tab groups created on any device to the bookmarks bar (Tự động ghim các nhóm thẻ mới vào thanh dấu trang) đều đang bật" width={1600} height={844} eager boxes={[{ id: 'tab-groups-setting', label: 'Hiển thị trên thanh dấu trang' }, { id: 'auto-pin', label: 'Ghim nhóm mới' }]} source="chrome://settings/appearance · Chrome 157.0.8103.80">Hai cài đặt nhóm thẻ trên trang Appearance (Giao diện) của Chrome.</AnnotatedFigure>
+
+<Catch>nhóm đã lưu chỉ chứa địa chỉ. Đó không phải bản sao lưu: xoá một lần là nhóm biến mất khỏi mọi thiết bị.</Catch>
+
+</Section>
+
+<Section id="sync" title="Nhóm tab có đồng bộ giữa các thiết bị không?">
+
+Có, thông qua Tài khoản Google của bạn. Trợ giúp của Chrome nói rõ tác dụng phụ: khi bạn **xoá** một nhóm, hoặc huỷ nhóm các tab trong đó (**Huỷ nhóm**, “Ungroup”), nhóm sẽ bị gỡ khỏi thiết bị của bạn *và* mọi thiết bị khác đăng nhập cùng tài khoản. Cài đặt **Tự động ghim các nhóm thẻ mới vào thanh dấu trang** (“Automatically pin new tab groups created on any device to the bookmarks bar”) cũng ghim các nhóm bạn tạo ở nơi khác.
+
+Trên thực tế, điều đó có nghĩa là:
+
+- Nhóm bạn tạo trên một máy tính có thể xuất hiện trên một máy khác đăng nhập cùng tài khoản; đó chính là điều cài đặt ghim nói đến.
+- Dọn dẹp trên máy tính xách tay sẽ xoá cùng những nhóm đó trên máy tính để bàn.
+
+Firefox 159 cũng có nhóm tab, với **Lưu và đóng nhóm** (“Save and close group”) và danh sách **Nhóm đã đóng** (“Closed Groups”); các bước và ảnh chụp màn hình trong hướng dẫn này là của Chrome. Nếu dùng Firefox, hãy xem [nhóm tab trong Firefox](/blog/firefox-tab-groups).
+
+</Section>
+
+<Section id="limits" title="Nhóm tab còn hạn chế ở đâu?">
+
+- **Mỗi nhóm một cửa sổ.** Một nhóm chỉ nằm trong một cửa sổ. Lưu “mọi thứ tôi đang mở” trên ba cửa sổ nghĩa là ba nhóm trở lên.
+- **Chỉ có địa chỉ.** Giống dấu trang, một nhóm đã lưu sẽ mở lại trang từ đầu: vị trí cuộn và nội dung đã nhập vào biểu mẫu đều mất.
+- **Tiện ích không thấy khi nhóm đã đóng.** API `chrome.tabGroups` mô tả các nhóm đang nằm trong một cửa sổ mở: mọi nhóm API trả về đều có `windowId`, đóng một nhóm sẽ kích hoạt `onRemoved`, và không có lệnh gọi nào liệt kê các nhóm đã lưu và đã đóng. Trình quản lý tab không thể sao lưu nhóm bạn đã đóng cho đến khi bạn mở lại nhóm đó.
+- **Thao tác xoá lan đi.** Tính năng đồng bộ giúp nhóm tiện lợi cũng lan một lỗi sang mọi thiết bị.
+
+Hướng dẫn [lưu tất cả các tab đang mở](/blog/save-all-open-tabs) của chúng tôi so sánh nhóm với dấu trang, khôi phục khi khởi động và trình quản lý phiên, còn [thói quen xử lý quá nhiều tab](/blog/manage-too-many-tabs) cho thấy nhóm phù hợp ở đâu trong công việc hằng ngày.
+
+</Section>
+
+<Section id="tabmerger" title="Giữ nhóm của bạn lâu dài với TabMerger">
+
+[TabMerger](/features), tiện ích miễn phí của chúng tôi cho Chrome, Edge và Firefox, đọc các nhóm tab Chrome đang mở của bạn. **Đang Mở** gắn nhãn mỗi tab bằng tên và màu nhóm của tab đó, và khi lưu một cửa sổ vào một nhóm TabMerger, các nhãn này được giữ nguyên. Đã lưu ở đó, các tab không bị ảnh hưởng khi một nhóm Chrome bị xoá trên thiết bị khác.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Lưu nhóm tab Chrome trong TabMerger" steps={[{ title: 'Đang Mở' }, { title: 'Nhóm đã lưu' }]}>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-now-open-groups" alt="TabMerger Now Open (Đang Mở): sáu tab, ba tab gắn nhãn Sprint màu xanh dương và ba tab gắn nhãn Thesis màu xanh lá, giao diện sáng" darkAlt="TabMerger Now Open (Đang Mở): sáu tab, ba tab gắn nhãn Sprint màu xanh dương và ba tab gắn nhãn Thesis màu xanh lá, giao diện tối" boxes={[{ id: 'group-badge-1', label: 'Nhóm Sprint' }, { id: 'group-badge-4', label: 'Nhóm Thesis' }]} source="TabMerger 3.16.1">Hai nhóm tab Chrome, Sprint và Thesis, như Now Open (Đang Mở) hiển thị.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-saved-groups" alt="Nhóm TabMerger Sprint + thesis chứa đúng sáu tab đó cùng nhãn Sprint và Thesis, giao diện sáng" darkAlt="Nhóm TabMerger Sprint + thesis chứa đúng sáu tab đó cùng nhãn Sprint và Thesis, giao diện tối" boxes={[{ id: 'group-badge-1', label: 'Nhóm Sprint' }, { id: 'group-badge-4', label: 'Nhóm Thesis' }]} source="TabMerger 3.16.1">Sau Merge with current (Hợp nhất với phiên hiện tại): nhóm đã lưu giữ nguyên nhóm Chrome của từng tab.</ThemedScreenshot>
+</Carousel>
+
+Mở lại cửa sổ đã lưu trong Chrome hoặc Edge, các tab sẽ trở về nhóm tab với cùng tên và màu.
+
+<InstallCta>Miễn phí cho Chrome, Edge và Firefox. Không cần tài khoản để bắt đầu.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,134 @@
+export const post = {
+  slug: 'firefox-tab-groups',
+  title: 'Grup tab Firefox: cara menyimpan, membuka lagi, dan menjaganya tetap aman',
+  navTitle: 'Grup tab Firefox',
+  seoTitle: 'Grup Tab Firefox: Simpan, Buka Lagi, Sinkronkan, dan Batasannya',
+  description:
+    'Cara kerja grup tab di Firefox 159: membuat grup, memberi warna, menciutkan, menyimpan dan menutup grup lalu membukanya lagi nanti, apa saja yang dicakup Firefox Sync, dan cara menjaga grup tetap aman di semua perangkat dengan TabMerger.',
+  shareSummary: 'Buat, simpan, buka lagi, dan jaga grup tab Firefox, serta apa saja yang dicakup Firefox Sync.',
+  dek: 'Grup di Firefox kini bisa disimpan dan ditutup. Ini tempat grup itu disimpan, dan cara menjaganya untuk selamanya.',
+  published: '2026-12-07',
+  updated: '2026-12-07',
+  testedOn: ['Firefox 159.0.1'],
+  keyFacts: [
+    { text: '“Simpan dan tutup grup” menyimpan grup agar bisa dibuka lagi nanti.', source: 'Teks menu Firefox 159' },
+    { text: 'Grup yang ditutup tercantum di “Grup Tertutup” dan “Grup tab terbaru”.', source: 'Teks menu Firefox 159' },
+    { text: 'Pengaturan Firefox Sync mencantumkan “Tab terbuka”, tanpa entri terpisah untuk grup tab.', source: 'Teks pengaturan Firefox 159' },
+    { text: 'Menu grup bisa menyalin semua tautannya sekaligus.', source: 'Teks menu Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Bagaimana cara menyimpan grup tab di Firefox?',
+      answer: 'Klik kanan label grup dan pilih “Simpan dan tutup grup”. Buka lagi nanti dari “Grup Tertutup” atau daftar “Tab groups”.',
+    },
+    {
+      question: 'Apakah grup tab Firefox tersinkron?',
+      answer:
+        'Pengaturan sinkronisasi Firefox 159 mencantumkan Markah, Riwayat, Tab terbuka, dan lainnya, tanpa entri terpisah untuk grup tab. Agar grup yang sama ada di setiap perangkat, TabMerger Pro menyinkronkannya dengan enkripsi end-to-end.',
+    },
+    {
+      question: 'Apa bedanya “Simpan dan tutup grup” dan “Hapus grup”?',
+      answer: '“Simpan dan tutup grup” menyimpan grup agar bisa dibuka lagi nanti. “Hapus grup” menghapusnya; “Pisahkan tab grup” membiarkan tab tetap terbuka tetapi melepas grupnya.',
+    },
+    {
+      question: 'Bisakah saya menyalin semua tautan dalam grup tab Firefox?',
+      answer: 'Bisa: menu grup di Firefox 159 punya “Copy links in group”. TabMerger juga bisa mengekspor seluruh grup ke file JSON.',
+    },
+  ],
+  images: [
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp', alt: 'Grup TabMerger Home renovation berisi tiga jendela tersimpan dengan sembilan tab, sebagian ditandai dengan grup tabnya, Kitchen dan Quotes, tema terang' },
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-dark.webp', alt: 'Grup TabMerger Home renovation berisi tiga jendela tersimpan dengan sembilan tab, sebagian ditandai dengan grup tabnya, Kitchen dan Quotes, tema gelap' },
+  ],
+  tags: ['firefox', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Tab groups in Firefox',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/tab-groups',
+      checked: '2026-11-21',
+      note: 'Menu names and settings were read from Firefox 159.0.1’s own interface text; this page blocked our automated check.',
+    },
+    {
+      title: 'Firefox Sync: what it is and how it works',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/firefox-sync-what-it-is-and-how-it-works',
+      checked: '2026-11-21',
+      note: 'The list of synced data was read from Firefox 159.0.1’s settings text.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-23',
+  cover: { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp' },
+  ogImage: { src: '/blog/firefox-tab-groups/og.png', alt: 'Kartu judul “Firefox tab groups: how to save, reopen and keep them”: panduan TabMerger, dengan grup tersimpan berisi dua jendela' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'basics', label: 'Membuat grup' },
+    { id: 'save', label: 'Simpan dan buka lagi' },
+    { id: 'sync', label: 'Apakah tersinkron?' },
+    { id: 'tabmerger', label: 'Simpan untuk selamanya' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Seret satu tab ke tab lain, atau klik kanan sebuah tab, untuk memulai grup di Firefox. Untuk menyimpannya untuk nanti, klik kanan label grup dan pilih **Simpan dan tutup grup** (“Save and close group”); buka lagi dari **Grup Tertutup** (“Closed Groups”) atau daftar **Tab groups** (daftar grup tab). Pengaturan Firefox Sync tidak punya entri terpisah untuk grup tab, jadi agar grup yang sama ada di setiap perangkat dan bisa dicari bersama semua hal lain, simpan di [TabMerger](/features).
+
+</QuickAnswer>
+
+<InstallCta>Simpan grup Firefox Anda, bisa dicari dan tersinkron. Gratis untuk Firefox, Chrome, dan Edge.</InstallCta>
+
+<Section id="basics" title="Bagaimana cara kerja grup tab Firefox?">
+
+Menurut antarmuka Firefox 159 sendiri:
+
+1. **Buat:** seret satu tab ke tab lain, atau klik kanan sebuah tab dan tambahkan ke grup baru. Firefox meminta **Nama** (“Name”) dan warna (biru, sian, kelabu, hijau, jingga, merah jambu, ungu, merah, atau kuning).
+2. **Ciutkan:** klik label grup untuk melipatnya selebar satu tab.
+3. **Kelola:** klik kanan label untuk **Simpan dan tutup grup**, **Pisahkan tab grup** (“Ungroup tabs”), **Hapus grup** (“Delete group”), **Pindahkan grup ke jendela baru** (“Move group to new window”), **Copy links in group** (salin tautan dalam grup) dan **Share group** (bagikan grup). Dua opsi terakhir ini, juga daftar Tab groups, tampil dalam bahasa Inggris di Firefox berbahasa Indonesia.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's tab group editor with Name, colours and Save and close group. */}
+
+</Section>
+
+<Section id="save" title="Bagaimana cara menyimpan grup dan mendapatkannya kembali?">
+
+- **Simpan:** klik kanan label grup → **Simpan dan tutup grup**. Tab-tabnya tertutup; grupnya tetap disimpan.
+- **Buka lagi:** klik kanan sebuah tab → tambahkan ke grup → **Grup Tertutup**, atau buka daftar **Tab groups** (Firefox menampilkan **Grup tab terbaru** di sana, “Recent tab groups”), pilih grupnya, lalu **Buka kembali grup tab** (“Reopen tab group”).
+- **Hapus:** **Hapus grup** menghapusnya untuk selamanya.
+
+<Catch>grup yang tersimpan hanya ada di profil Firefox ini. Grup itu bukan cadangan dan, sejauh yang ditunjukkan pengaturan sinkronisasi, tidak ikut pindah ke perangkat lain.</Catch>
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's Tab groups list with a closed group. */}
+
+</Section>
+
+<Section id="sync" title="Apakah grup tab Firefox tersinkron?">
+
+Pengaturan **Sinkronisasi** (“Sync”) di Firefox 159 mencantumkan apa saja yang disinkronkan: **Markah, Riwayat, Tab terbuka, Sandi, Alamat, Metode pembayaran, Pengaya, dan Pengaturan** (“Bookmarks, History, Open tabs, Passwords, Addresses, Payment methods, Add-ons and Settings”). “Tab terbuka” dijelaskan sebagai “Daftar tab terbuka di semua peranti yang disinkronkan”. Tidak ada entri terpisah untuk grup tab, jadi jangan berharap grup yang tersimpan muncul di komputer Anda yang lain.
+
+Untuk hal yang sama di Chrome, lihat [panduan grup tab Chrome](/blog/chrome-tab-groups), yang memang tersinkron lewat Akun Google.
+
+</Section>
+
+<Section id="tabmerger" title="Simpan grup Anda untuk selamanya dengan TabMerger">
+
+[TabMerger](/features) berjalan di Firefox, Chrome, dan Edge, dan menyimpan grup yang tidak bisa disimpan browser:
+
+1. Klik **Tambah Grup**, beri nama, lalu pilih **Gabungkan dengan sesi saat ini** di menu **⋯** grup tersebut: semua jendela dan tab yang terbuka tersimpan di dalamnya.
+2. Tutup jendela-jendelanya. Grupnya tetap ada, lengkap dengan setiap tab, dan bisa dicari dengan <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+3. Buka lagi satu tab, satu jendela, atau semuanya, kapan saja.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/firefox-tab-groups/tm-kept-groups" alt="Grup TabMerger Home renovation berisi tiga jendela tersimpan dengan sembilan tab, sebagian ditandai dengan grup tabnya, Kitchen dan Quotes, tema terang" darkAlt="Grup TabMerger Home renovation berisi tiga jendela tersimpan dengan sembilan tab, sebagian ditandai dengan grup tabnya, Kitchen dan Quotes, tema gelap" boxes={[{ id: 'summary', label: 'Jendela dan tab tersimpan' }]} source="TabMerger 3.16.1">Grup tersimpan: tiga jendela, sembilan tab, siap dibuka lagi.</ThemedScreenshot>
+
+Dengan [Pro](/pricing), grup Anda tersinkron antara Firefox, Chrome, dan Edge di semua perangkat Anda, dengan enkripsi end-to-end, sehingga server tidak bisa membacanya. Kebiasaan lainnya ada di [rutinitas untuk tab yang terlalu banyak](/blog/manage-too-many-tabs).
+
+<InstallCta>Gratis untuk Firefox, Chrome, dan Edge. Tidak perlu akun untuk mulai.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

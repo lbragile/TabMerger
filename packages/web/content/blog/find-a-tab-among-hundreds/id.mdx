@@ -1,0 +1,187 @@
+export const post = {
+  slug: 'find-a-tab-among-hundreds',
+  title: 'Cara menemukan satu tab di antara ratusan tab',
+  navTitle: 'Menemukan satu tab di antara ratusan',
+  seoTitle: 'Cara Mencari Tab yang Terbuka di Chrome, Edge, dan Firefox',
+  description:
+    'Cari tab yang terbuka dalam hitungan detik: pencarian tab bawaan di Chrome, Edge, dan Firefox, serta Ctrl+K di TabMerger yang menemukan tab terbuka, tersimpan, dan tertutup sekaligus dengan filter seperti group: dan closed:.',
+  shareSummary: 'Cari tab terbuka di Chrome, Edge, dan Firefox, juga tab yang tersimpan atau ditutup.',
+  dek: 'Berhenti memindai tab seukuran ikon. Satu pintasan, beberapa huruf dari judulnya, dan Anda langsung sampai.',
+  published: '2026-11-29',
+  updated: '2026-11-29',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Ctrl+Shift+A membuka Penelusuran Tab di Chrome.',
+      source: 'Bantuan Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Firefox 159 memasangkan Ctrl+Shift+A ke daftar semua tab.', source: 'Pintasan keyboard Firefox 159' },
+    { text: 'Ctrl+K di TabMerger mencari tab yang terbuka, tersimpan, dan baru ditutup sekaligus.', source: 'TabMerger 3.16.1' },
+    { text: 'Filter TabMerger: group:, window:, tag:, dan closed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Bagaimana cara mencari tab yang sedang terbuka?',
+      answer:
+        'Di TabMerger, tekan Ctrl+K lalu ketik: pencariannya mencakup tab yang terbuka, tersimpan, dan baru ditutup sekaligus. Bawaan browser, Chrome punya Penelusuran Tab (Ctrl+Shift+A atau @tab di kolom URL), dan Firefox menampilkan daftar semua tab dengan Ctrl+Shift+A.',
+    },
+    {
+      question: 'Apakah ada pintasan untuk mencari tab?',
+      answer: 'Ctrl+Shift+A di Chrome dan Firefox (⌘+Shift+A di Chrome pada Mac), dan Ctrl+K di dalam TabMerger. Daftar pintasan Microsoft untuk Edge tidak memberi tombol untuk pencarian tab.',
+    },
+    {
+      question: 'Bisakah saya mencari tab yang sudah ditutup?',
+      answer: 'Bisa, di TabMerger: awali pencarian dengan closed: untuk mencari hanya di antara tab yang baru ditutup. Versi gratis menyimpannya 2 hari, Pro 30 hari.',
+    },
+    {
+      question: 'Bisakah saya mencari tab di perangkat saya yang lain?',
+      answer:
+        'TabMerger Pro menyinkronkan grup tersimpan Anda antarperangkat dengan enkripsi end-to-end, jadi Ctrl+K yang sama menemukannya di mana saja. Panduan kami tentang memindahkan tab antarkomputer menjelaskan opsi bawaannya.',
+      link: { text: 'memindahkan tab antarkomputer', href: '/blog/move-tabs-between-computers' },
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'Pencarian TabMerger terbuka dan kosong, menampilkan filter group:, window:, tag:, dan closed:, tema terang' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'Pencarian TabMerger terbuka dan kosong, menampilkan filter group:, window:, tag:, dan closed:, tema gelap' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp', alt: 'Pencarian TabMerger untuk group:"Work" pull, menemukan tab tersimpan Pull requests di grup Work, tema terang' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-dark.webp', alt: 'Pencarian TabMerger untuk group:"Work" pull, menemukan tab tersimpan Pull requests di grup Work, tema gelap' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-light.webp', alt: 'Pencarian TabMerger untuk tag:Sprint, menampilkan tiga tab terbuka di grup tab Chrome Sprint, tema terang' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-dark.webp', alt: 'Pencarian TabMerger untuk tag:Sprint, menampilkan tiga tab terbuka di grup tab Chrome Sprint, tema gelap' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-21',
+      note: 'Informasi Firefox dibaca langsung dari definisi tombol dan teks menu Firefox 159.0.1; halaman ini memblokir pemeriksaan otomatis kami.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp' },
+  ogImage: { src: '/blog/find-a-tab-among-hundreds/og.png', alt: '“How to find one tab among hundreds”: panduan TabMerger, dengan pencarian tab yang difilter' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'tabmerger', label: 'Cari semuanya dengan Ctrl+K' },
+    { id: 'filters', label: 'Filter untuk mempersempit' },
+    { id: 'builtin', label: 'Pencarian tab bawaan' },
+    { id: 'tips', label: 'Agar tab mudah ditemukan' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Pencarian tab bawaan',
+    values: { chrome: 'Ctrl+Shift+A atau @tab', edge: 'Search tabs (tanpa pintasan tercantum)', firefox: 'Ctrl+Shift+A' },
+  },
+}
+
+<QuickAnswer>
+
+Tekan <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> di Mac) di [TabMerger](/features) lalu ketik beberapa huruf: tab ditemukan entah itu **terbuka, tersimpan di grup, atau baru ditutup**, dan filter seperti `group:` dan `closed:` menyaring ratusan tab menjadi satu. Bawaan browser, **Penelusuran Tab** (Tab Search) di Chrome (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) dan **Daftar tab** (List all tabs) di Firefox (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) mencari di antara tab yang sedang terbuka.
+
+</QuickAnswer>
+
+<InstallCta>Temukan tab apa pun, terbuka, tersimpan, atau ditutup, dengan satu tombol. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Cari semuanya dengan Ctrl+K">
+
+Pencarian tab di browser hanya tahu tab yang sedang terbuka di browser itu. Padahal tab yang Anda perlukan sering ada di tempat lain: di jendela yang Anda simpan kemarin, atau di jendela yang Anda tutup sejam lalu. TabMerger mencari semuanya dari satu kotak:
+
+1. Buka TabMerger dan tekan <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+2. Ketik sebagian judul atau alamat. Hasilnya menampilkan tab yang terbuka, tersimpan, dan baru ditutup sekaligus, masing-masing diberi tanda lokasinya.
+3. Pilih salah satu dengan tombol panah dan <Kbd>Enter</Kbd>.
+
+Semua filter, urutan hasil, dan tampilan sembunyikan-atau-redupkan dibahas di [cari semua tab Anda dengan TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="Pencarian TabMerger terbuka dan kosong, menampilkan filter group:, window:, tag:, dan closed:, tema terang" darkAlt="Pencarian TabMerger terbuka dan kosong, menampilkan filter group:, window:, tag:, dan closed:, tema gelap" boxes={[{ id: 'search-input', label: 'Pencarian' }]} source="TabMerger 3.16.1">Ctrl+K membuka pencarian, dengan daftar filter sebelum Anda mengetik.</ThemedScreenshot>
+
+</Section>
+
+<Section id="filters" title="Filter apa saja yang mempersempit pencarian?">
+
+Awali pencarian dengan filter untuk langsung menuju tempat yang tepat:
+
+<ComparisonTable
+  head={['Filter', 'Menemukan']}
+  rows={[
+    [<code>group:"Work"</code>, 'Tab di grup yang namanya mengandung “Work”'],
+    [<code>window:"Docs"</code>, 'Tab di jendela yang namanya mengandung “Docs”'],
+    [<code>tag:Sprint</code>, 'Tab di grup tab Chrome yang labelnya mengandung “Sprint”'],
+    [<code>closed:</code>, 'Hanya tab yang baru Anda tutup'],
+  ]}
+/>
+
+Gabungkan filter dengan kata: `group:"Work" pull` menemukan tab pull request di grup Work Anda, bahkan di antara ratusan tab. Beri tanda kutip pada nama jika Anda menambahkan kata setelahnya; filter tanpa tanda kutip mengambil sisa baris.
+
+<Carousel label="Pencarian dengan filter" steps={[{ title: 'Filter group:' }, { title: 'Filter tag:' }]}>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-group-filter" alt="Pencarian TabMerger untuk group:&quot;Work&quot; pull, menemukan tab tersimpan Pull requests di grup Work, tema terang" darkAlt="Pencarian TabMerger untuk group:&quot;Work&quot; pull, menemukan tab tersimpan Pull requests di grup Work, tema gelap" boxes={[{ id: 'search-input', label: 'filter grup' }]} source="TabMerger 3.16.1">Satu grup, satu kata: tab tersimpan yang Anda cari.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-tag-filter" alt="Pencarian TabMerger untuk tag:Sprint, menampilkan tiga tab terbuka di grup tab Chrome Sprint, tema terang" darkAlt="Pencarian TabMerger untuk tag:Sprint, menampilkan tiga tab terbuka di grup tab Chrome Sprint, tema gelap" boxes={[{ id: 'search-input', label: 'tag:Sprint' }]} source="TabMerger 3.16.1">tag: menemukan tab dari grup tab Chrome.</ThemedScreenshot>
+</Carousel>
+
+Tab yang baru ditutup disimpan 2 hari di versi gratis dan 30 hari di [Pro](/pricing), jadi `closed:` bisa menjangkau beberapa minggu ke belakang saat Anda membutuhkannya.
+
+</Section>
+
+<Section id="builtin" title="Bagaimana cara mencari tab yang terbuka tanpa ekstensi?">
+
+Setiap browser bisa mencari tab yang sedang terbuka:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+- Tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> di Mac) untuk membuka **Penelusuran Tab** (Tab Search), ketik kata kunci, lalu pilih tab. Setiap baris juga punya tombol tutup.
+- Atau ketik `@tab` di kolom URL (di Chrome berbahasa Inggris: `@tabs`), tekan <Kbd>Tab</Kbd> atau <Kbd>Space</Kbd>, lalu ketik.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Menu Edge 158 memuat **Search tabs** (cari tab), tetapi daftar pintasan keyboard Microsoft tidak memberinya tombol. Saat tab sangat banyak, <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> melompat ke tab menurut posisinya dan <Kbd>Ctrl</Kbd>+<Kbd>9</Kbd> ke tab terakhir.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- Tekan <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> di Mac) untuk membuka **Daftar tab** (List all tabs) dan mencarinya.
+- Bilah alamat juga punya mode pencarian **Tab**, di antara pintasan pencariannya.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>fitur ini hanya melihat tab yang terbuka di browser itu, saat ini. Tab yang sudah Anda tutup atau simpan di tempat lain tidak akan muncul.</Catch>
+
+Tombol lainnya ada di [referensi pintasan keyboard untuk tab](/blog/tab-keyboard-shortcuts) kami.
+
+</Section>
+
+<Section id="tips" title="Bagaimana agar tab lebih mudah ditemukan lain kali?">
+
+- **Kelompokkan per tugas.** Grup yang diberi nama mengubah “satu dari 200 tab” menjadi “grup Work”. [Rutinitas untuk tab yang terlalu banyak](/blog/manage-too-many-tabs) kami menunjukkan caranya.
+- **Tutup yang sudah selesai,** setelah disimpan. Makin sedikit tab terbuka, makin pendek daftar hasilnya.
+- **Ganti nama tab yang penting.** TabMerger memungkinkan Anda memberi judul sendiri pada tab tersimpan, agar cocok dengan kata yang akan Anda cari.
+
+<InstallCta>Gratis untuk Chrome, Edge, dan Firefox. Tidak perlu akun untuk mulai.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

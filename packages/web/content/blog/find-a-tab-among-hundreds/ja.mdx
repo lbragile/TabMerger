@@ -1,0 +1,187 @@
+export const post = {
+  slug: 'find-a-tab-among-hundreds',
+  title: '何百ものタブから目的のタブを見つける方法',
+  navTitle: '何百ものタブから 1 つを見つける',
+  seoTitle: 'Chrome・Edge・Firefox で開いているタブを検索する方法',
+  description:
+    '開いているタブを数秒で検索：Chrome・Edge・Firefox に組み込まれたタブ検索と、開いているタブ・保存したタブ・閉じたタブを group: や closed: などのフィルタでまとめて探せる TabMerger の Ctrl+K を紹介します。',
+  shareSummary: 'Chrome・Edge・Firefox で開いているタブを検索。保存したタブや閉じたタブも見つかります。',
+  dek: 'アイコンほどの幅のタブを目で追うのはもう終わり。ショートカット 1 つとタイトルの数文字で、目的のタブにたどり着けます。',
+  published: '2026-11-29',
+  updated: '2026-11-29',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Chrome では Ctrl+Shift+A でタブ検索が開きます。',
+      source: 'Chrome ヘルプ',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Firefox 159 は Ctrl+Shift+A に全タブの一覧を割り当てています。', source: 'Firefox 159 のキー設定' },
+    { text: 'TabMerger の Ctrl+K は、開いているタブ、保存したタブ、最近閉じたタブをまとめて検索します。', source: 'TabMerger 3.16.1' },
+    { text: 'TabMerger のフィルタ：group:、window:、tag:、closed:。', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: '開いているタブを検索するには？',
+      answer:
+        'TabMerger で Ctrl+K を押して入力すれば、開いているタブ、保存したタブ、最近閉じたタブをまとめて検索できます。ブラウザの標準機能では、Chrome にタブ検索（Ctrl+Shift+A、またはアドレスバーに @タブ）があり、Firefox は Ctrl+Shift+A ですべてのタブを一覧表示します。',
+    },
+    {
+      question: 'タブ検索のショートカットはありますか？',
+      answer: 'Chrome と Firefox では Ctrl+Shift+A（Mac の Chrome では ⌘+Shift+A）、TabMerger の中では Ctrl+K です。Microsoft の Edge ショートカット一覧には、タブ検索のキーは載っていません。',
+    },
+    {
+      question: '閉じたタブも検索できますか？',
+      answer: 'はい、TabMerger なら検索の先頭に closed: を付けると、最近閉じたタブだけを検索できます。無料プランでは 2 日分、Pro では 30 日分が残ります。',
+    },
+    {
+      question: 'ほかのデバイスのタブも検索できますか？',
+      answer:
+        'TabMerger Pro は保存したグループをエンドツーエンド暗号化でデバイス間に同期するので、同じ Ctrl+K でどこでも見つかります。ブラウザ標準の方法は、パソコン間でタブを移すガイドで紹介しています。',
+      link: { text: 'パソコン間でタブを移すガイド', href: '/blog/move-tabs-between-computers' },
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: '空の状態で開いた TabMerger の検索。フィルタ group:、window:、tag:、closed: が一覧表示されている。ライトテーマ' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: '空の状態で開いた TabMerger の検索。フィルタ group:、window:、tag:、closed: が一覧表示されている。ダークテーマ' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp', alt: 'TabMerger で group:"Work" pull を検索し、Work グループに保存したタブ Pull requests が見つかった画面。ライトテーマ' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-dark.webp', alt: 'TabMerger で group:"Work" pull を検索し、Work グループに保存したタブ Pull requests が見つかった画面。ダークテーマ' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-light.webp', alt: 'TabMerger で tag:Sprint を検索し、Chrome のタブグループ Sprint に入っている開いたタブ 3 つが一覧表示された画面。ライトテーマ' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-dark.webp', alt: 'TabMerger で tag:Sprint を検索し、Chrome のタブグループ Sprint に入っている開いたタブ 3 つが一覧表示された画面。ダークテーマ' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-21',
+      note: 'Firefox の情報は Firefox 159.0.1 自体のキー定義とメニューの文言から確認しました。このページは自動チェックをブロックしました。',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp' },
+  ogImage: { src: '/blog/find-a-tab-among-hundreds/og.png', alt: '「How to find one tab among hundreds」。フィルタで絞り込んだタブ検索を添えた TabMerger のガイド' },
+  toc: [
+    { id: 'quick', label: '結論' },
+    { id: 'tabmerger', label: 'Ctrl+K ですべてを検索' },
+    { id: 'filters', label: '絞り込みに使えるフィルタ' },
+    { id: 'builtin', label: 'ブラウザ標準のタブ検索' },
+    { id: 'tips', label: 'タブを見つけやすくするコツ' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: '標準のタブ検索',
+    values: { chrome: 'Ctrl+Shift+A または @タブ', edge: 'Search tabs（ショートカットの記載なし）', firefox: 'Ctrl+Shift+A' },
+  },
+}
+
+<QuickAnswer>
+
+[TabMerger](/features) で <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>（Mac では <Kbd>⌘</Kbd>+<Kbd>K</Kbd>）を押して数文字入力すれば、タブが**開いていても、グループに保存してあっても、最近閉じたものでも**見つかります。`group:` や `closed:` などのフィルタを使えば、何百ものタブを 1 つまで絞り込めます。ブラウザ標準では、Chrome の**タブ検索**（Tab Search、<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>）と Firefox の**タブを一覧表示**（List all tabs、<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>）が、いま開いているタブを検索します。
+
+</QuickAnswer>
+
+<InstallCta>開いているタブも、保存したタブも、閉じたタブも、キー操作ひとつで見つかります。Chrome・Edge・Firefox 向けに無料。</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Ctrl+K ですべてを検索">
+
+ブラウザのタブ検索が知っているのは、そのブラウザでいま開いているタブだけです。ところが探しているタブは、昨日保存したウィンドウや 1 時間前に閉じたウィンドウなど、別の場所にあることがよくあります。TabMerger なら、それらすべてを 1 つの検索ボックスから探せます。
+
+1. TabMerger を開いて <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> を押します。
+2. タイトルやアドレスの一部を入力します。開いているタブ、保存したタブ、最近閉じたタブがまとめて表示され、それぞれにどこにあるかを示すラベルが付きます。
+3. 矢印キーで選んで <Kbd>Enter</Kbd> を押します。
+
+フィルタの全種類、結果の並び順、一致しないタブを隠すか薄く表示するかの設定は、[TabMerger ですべてのタブを検索する](/blog/search-all-your-tabs-with-tabmerger)で詳しく説明しています。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="空の状態で開いた TabMerger の検索。フィルタ group:、window:、tag:、closed: が一覧表示されている。ライトテーマ" darkAlt="空の状態で開いた TabMerger の検索。フィルタ group:、window:、tag:、closed: が一覧表示されている。ダークテーマ" boxes={[{ id: 'search-input', label: '検索' }]} source="TabMerger 3.16.1">Ctrl+K で検索が開き、入力する前からフィルタが一覧表示されます。</ThemedScreenshot>
+
+</Section>
+
+<Section id="filters" title="どのフィルタで絞り込めますか？">
+
+検索の先頭にフィルタを付けると、目的の場所へ直行できます。
+
+<ComparisonTable
+  head={['フィルタ', '見つかるもの']}
+  rows={[
+    [<code>group:"Work"</code>, '名前に「Work」を含むグループのタブ'],
+    [<code>window:"Docs"</code>, '名前に「Docs」を含むウィンドウのタブ'],
+    [<code>tag:Sprint</code>, 'ラベルに「Sprint」を含む Chrome タブグループのタブ'],
+    [<code>closed:</code>, '最近閉じたタブだけ'],
+  ]}
+/>
+
+フィルタと単語は組み合わせられます。`group:"Work" pull` なら、タブが何百あっても Work グループのプルリクエストのタブが見つかります。名前のあとに単語を続けるときは、名前を引用符で囲みましょう。引用符のないフィルタは、行の残りすべてを名前として扱います。
+
+<Carousel label="フィルタを使った検索" steps={[{ title: 'group: フィルタ' }, { title: 'tag: フィルタ' }]}>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-group-filter" alt="TabMerger で group:&quot;Work&quot; pull を検索し、Work グループに保存したタブ Pull requests が見つかった画面。ライトテーマ" darkAlt="TabMerger で group:&quot;Work&quot; pull を検索し、Work グループに保存したタブ Pull requests が見つかった画面。ダークテーマ" boxes={[{ id: 'search-input', label: 'グループのフィルタ' }]} source="TabMerger 3.16.1">グループ 1 つと単語 1 つで、探していた保存済みのタブが見つかります。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-tag-filter" alt="TabMerger で tag:Sprint を検索し、Chrome のタブグループ Sprint に入っている開いたタブ 3 つが一覧表示された画面。ライトテーマ" darkAlt="TabMerger で tag:Sprint を検索し、Chrome のタブグループ Sprint に入っている開いたタブ 3 つが一覧表示された画面。ダークテーマ" boxes={[{ id: 'search-input', label: 'tag:Sprint' }]} source="TabMerger 3.16.1">tag: は Chrome のタブグループのタブを見つけます。</ThemedScreenshot>
+</Carousel>
+
+最近閉じたタブは無料プランで 2 日分、[Pro](/pricing) で 30 日分残るので、必要なら `closed:` で何週間も前までさかのぼれます。
+
+</Section>
+
+<Section id="builtin" title="拡張機能なしで開いているタブを検索するには？">
+
+どのブラウザも、いま開いているタブを検索できます。
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>（Mac では <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>）を押して**タブ検索**（Tab Search）を開き、キーワードを入力してタブを選びます。各行には閉じるボタンもあります。
+- または、アドレスバーに `@タブ`（英語版 Chrome では `@tabs`）と入力し、<Kbd>Tab</Kbd> か <Kbd>Space</Kbd> を押してから入力します。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge 158 のメニューには **Search tabs**（タブの検索）がありますが、Microsoft のキーボード ショートカット一覧にはこのキーが載っていません。タブが多いときは、<Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> で位置を指定してタブに移動し、<Kbd>Ctrl</Kbd>+<Kbd>9</Kbd> で最後のタブに移動できます。
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>（Mac では <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>）を押すと**タブを一覧表示**（List all tabs）が開き、その中を検索できます。
+- アドレスバーの検索ショートカットにも、**タブ**の検索モードがあります。
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>これらが探せるのは、そのブラウザでいま開いているタブだけです。閉じたタブや別の場所に保存したタブは表示されません。</Catch>
+
+ほかのキーは[タブのキーボード ショートカット一覧](/blog/tab-keyboard-shortcuts)にまとめています。
+
+</Section>
+
+<Section id="tips" title="次からタブを見つけやすくするには？">
+
+- **作業ごとにまとめる**。 名前付きのグループにすれば、「200 個のうちの 1 つのタブ」が「Work グループ」になります。やり方は[タブが多すぎるときの整理手順](/blog/manage-too-many-tabs)で紹介しています。
+- **終わったものは閉じる**。 ただし先に保存してから。開いているタブが減れば、検索結果の一覧も短くなります。
+- **大事なタブの名前を変える**。 TabMerger では保存したタブに独自のタイトルを付けられるので、あとで検索する言葉に合わせておけます。
+
+<InstallCta>Chrome・Edge・Firefox 向けに無料。アカウントなしで始められます。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

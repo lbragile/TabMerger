@@ -1,0 +1,270 @@
+export const post = {
+  slug: 'restore-tabs-after-crash',
+  title: 'Çökme, güncelleme veya yanlışlıkla kapatma sonrasında sekmelerinizi nasıl geri alırsınız',
+  navTitle: 'Çökmeden sonra sekmeleri geri alın',
+  seoTitle: 'Chrome, Edge ve Firefox’ta çökmeden sonra sekmeleri geri yükleme',
+  description:
+    'Tarayıcı kapandı ve sekmeleriniz de gitti mi? Çökmeden sonra sekmeleri geri yüklemek için bu adımları sırayla izleyin: yeniden açın, Geçmiş’e bakın, diğer cihazları kontrol edin, sonra bunun bir daha olmasını önleyen ayarları yapın.',
+  shareSummary: 'Çökme veya yeniden başlatma sekmelerinizi mi götürdü? Tarayıcıya göre kurtarma adımları, sırasıyla.',
+  dek: 'Önce hızlı çözümleri sırayla deneyin. Kaybolan oturumların çoğu bir dakikadan kısa sürede geri gelir.',
+  published: '2026-11-24',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Chrome’un çökme yardım sayfasına göre Ctrl+Shift+T açık olan sekmelerinizi yeniden açar.',
+      source: 'Chrome Yardım',
+      href: 'https://support.google.com/chrome/answer/142063',
+    },
+    { text: 'Firefox’un Geçmiş menüsünde “Önceki oturumu geri yükle” bulunur.', source: 'Firefox 159' },
+    {
+      text: 'Chrome, diğer cihazlardaki sekmeleri yalnızca “Geçmiş ve sekmeler” senkronizasyonu açıkken gösterir.',
+      source: 'Chrome Yardım',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'Edge’in Geçmiş sayfasının kendi “Recently closed” listesi vardır.', source: 'edge://history, Edge 157' },
+  ],
+  faq: [
+    {
+      question: 'Chrome kapandıktan sonra sekmelerimi nasıl geri alırım?',
+      answer:
+        'Chrome’u yeniden açın ve Ctrl+Shift+T (Mac’te ⌘+Shift+T) tuşlarına, gerekirse birkaç kez basın. Sekmeler yine gelmezse Ctrl+H ile Geçmiş’i açın ve son kapatılanlara bakın.',
+    },
+    {
+      question: 'Sekmelerim neden geri yüklenmedi?',
+      answer:
+        'Genellikle şu nedenlerden biri yüzünden: başlangıç ayarı yeni sekme sayfasını açıyordur, sekmeler gizli bir penceredeydi, çıkmadan önce pencereleri tek tek kapattınız ya da farklı bir profil açtınız.',
+    },
+    {
+      question: 'Dünkü sekmeleri geri yükleyebilir miyim?',
+      answer: 'Oturum olarak hayır, ama temizlemediyseniz ziyaret ettiğiniz her sayfa Geçmiş’te (Ctrl+H) durur. Güvenilir yol, kaydedilmiş bir oturum veya otomatik kaydetmedir.',
+    },
+    {
+      question: 'Bunun bir daha olmasını nasıl önlerim?',
+      answer: 'Başlangıç ayarını açın ve güncellemeler gibi riskli anlardan önce açık sekmelerinizi kaydedin. Tüm açık sekmeleri kaydetme rehberimiz ikisini de anlatıyor.',
+      link: { text: 'Tüm açık sekmeleri kaydetme', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Edge Geçmiş sayfası, kenar çubuğunda All, Recently closed ve Tabs from other devices' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Chrome ayarları, On startup (Başlangıçta) bölümünde Continue where you left off (Kaldığım yerden devam et) seçili' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Edge ayarları, Start, home, and new tab page bölümünde Open tabs from the previous session seçili' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Firefox ayarları, Home and startup (Giriş sayfası ve başlangıç) bölümünde Open previous windows and tabs (Önceki pencereleri ve sekmeleri aç) işaretli' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-light.webp', alt: 'TabMerger Ayarlar, Data (Veri): Auto-save open tabs (Açık sekmeleri otomatik kaydet) açık, zamanlama Every 30 minutes (30 dakikada bir) olarak ayarlı, açık tema' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-dark.webp', alt: 'TabMerger Ayarlar, Data (Veri): Auto-save open tabs (Açık sekmeleri otomatik kaydet) açık, zamanlama Every 30 minutes (30 dakikada bir) olarak ayarlı, koyu tema' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-light.webp', alt: 'TabMerger Recently closed (Son kapatılanlar), bugün: kapatılan üç sekme ve her birinin kapatıldığı saat, açık tema' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-dark.webp', alt: 'TabMerger Recently closed (Son kapatılanlar), bugün: kapatılan üç sekme ve her birinin kapatıldığı saat, koyu tema' },
+  ],
+  tags: ['restore-closed-tabs', 'session-management', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-20',
+      note: 'Firefox menü adları doğrudan Firefox 159.0.1’den alındı; bu sayfa otomatik kontrolümüzü engelledi.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/restore-tabs-after-crash/cover-edge-light.webp' },
+  ogImage: { src: '/blog/restore-tabs-after-crash/og.png', alt: '“How to get your tabs back after a crash, an update or an accidental quit” başlık kartı: son kapatılan sekmelerin listesiyle bir TabMerger rehberi' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'first', label: '1. Yeniden açın, sonra Ctrl+Shift+T' },
+    { id: 'recover', label: '2. Tarayıcıya göre Geçmiş' },
+    { id: 'devices', label: '3. Diğer cihazlar' },
+    { id: 'why', label: 'Sekmeler neden gelmedi' },
+    { id: 'prevent', label: 'Bir dahaki sefere' },
+    { id: 'faq', label: 'SSS' },
+  ],
+  browserSections: ['first', 'recover', 'devices', 'prevent'],
+  browserFact: {
+    label: 'Geçmiş',
+    values: { chrome: 'chrome://history', edge: 'edge://history', firefox: 'Ctrl+Shift+H (Arşiv)' },
+  },
+}
+
+<QuickAnswer>
+
+Tarayıcıyı yeniden açın ve pencereleriniz geri gelene kadar <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (Mac’te <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) tuşlarına tekrar tekrar basın. Bu işe yaramazsa Geçmiş’i (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) açın ve **son kapatılanlar** arasından yeniden açın; Firefox’ta **Geçmiş → Önceki oturumu geri yükle** (History → Restore Previous Session) seçeneğini kullanın. Hâlâ eksik mi var? **Diğer cihazlardaki sekmelere** bakın, sonra sayfaların kendisini Geçmiş’te arayın. Bir dahaki sefere açık sekmelerinizi [TabMerger](/features) belirli aralıklarla otomatik kaydetsin; böylece bir çökme size hiçbir zaman birkaç dakikadan fazlasına mal olmaz.
+
+</QuickAnswer>
+
+<InstallCta>Bir daha hiçbir pencereyi kaybetmeyin: açık sekmelerinizi belirli aralıklarla otomatik kaydedin. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="first" title="1. Tarayıcıyı yeniden açın, sonra Ctrl+Shift+T tuşlarına basın">
+
+Önce yeni sekme açmayın: temiz bir pencereyle başlayın ki tarayıcının “son kapatılanlar” listesindekini geri alın.
+
+<BrowserPanels section="first">
+<BrowserPanel browser="chrome">
+
+1. Chrome’u başlatın. Sayfalarınızı geri yüklemeyi önerirse kabul edin.
+2. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (Mac’te <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) tuşlarına basın. Chrome’un kendi çökme yardımı da bunu gösteriyor: kısayol önceden açık olan sekmeleri yeniden açar.
+3. Kaybettiğiniz her pencere için tekrar basın. Chrome sekmeleri ve pencereleri kapatıldıkları sırayla yeniden açar.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Edge’i başlatın. Sayfalarınızı geri yüklemeyi önerirse kabul edin.
+2. Son kapatılan sekmeyi yeniden açmak için <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (Mac’te <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) tuşlarına basın; daha geriye gitmek için yeniden basın.
+3. Koca bir pencere mi eksik? Doğrudan 2. adıma, Geçmiş’e geçin.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Firefox’u başlatın. Sayfalarınızı geri yüklemeyi önerirse kabul edin.
+2. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (Mac’te <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) tuşlarına basın. Firefox 159 bu kısayolu son kapatılan sekmeyi, pencereyi veya oturumu geri yükleyen bir komuta bağlar; yani yeniden başlatmanın ardından önceki oturumun tamamını geri getirebilir.
+3. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> kapatılan bir pencereyi yeniden açar; her pencere için bir kez basın.
+
+</BrowserPanel>
+</BrowserPanels>
+
+Kısayolların tam listesi [sekme klavye kısayolları rehberimizde](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="recover" title="2. Geçmiş’ten yeniden açın">
+
+Kısayol hiçbir şey getirmediyse tarayıcının geçmişi neyin açık olduğunu hâlâ biliyor.
+
+<BrowserPanels section="recover">
+<BrowserPanel browser="chrome">
+
+1. **⋮ → Geçmiş** (History) seçeneğine tıklayın. Alt menü son kapatılan sekmeleri ve pencereleri listeler.
+2. Tüm sekmelerini yeniden açmak için bir pencereye tıklayın.
+3. Orada yok mu? <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> tuşlarına basın ve hatırladığınız bir sayfayı arayın.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. **Geçmiş**’i açmak için <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> tuşlarına basın.
+2. **Recently closed** (son kapatılanlar) seçeneğini seçin ve kaybettiğiniz pencereyi veya sekmeleri yeniden açın.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Edge Geçmiş sayfası, kenar çubuğunda All, Recently closed ve Tabs from other devices" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60">Edge’in Geçmiş sayfası, kenar çubuğunda Recently closed ile.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. **Geçmiş** (History) menüsünü açın (menü çubuğunu göstermek için <Kbd>Alt</Kbd> tuşuna basın) ya da **☰ → Geçmiş** yolunu izleyin.
+2. Son seferdeki tüm pencereleri geri getirmek için **Önceki oturumu geri yükle** (Restore Previous Session) seçeneğini seçin.
+3. Ya da **Son kapatılan pencereler** ve **Son kapatılan sekmeler** arasından seçin.
+
+Çöken Firefox’un kendisiyse bir **Oturumu Geri Getir** (Restore Session) sayfası açabilir (“Özür dileriz. Sayfalarınızı geri getirmeyi başaramadık.”). **Önceki sekmeleri göster** (View Previous Tabs) ile **Oturumu geri getir** düğmesine basmadan önce çökmeye neden olabilecek bir sekmenin işaretini kaldırabilirsiniz.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with Restore Previous Session. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="devices" title="3. Diğer cihazlarınıza bakın">
+
+Oturum açmış ve senkronizasyon yapıyorsanız kaybolan sekmeler başka bir cihazda hâlâ listeleniyor olabilir.
+
+<BrowserPanels section="devices">
+<BrowserPanel browser="chrome">
+
+Chrome diğer cihazlardaki sekmeleri Geçmiş’te gösterir, ama yalnızca **Geçmiş ve sekmeler** (History and tabs) senkronizasyonu açıkken: **Ayarlar → Siz ve Google** (Settings → You and Google) yolunu izleyin, hesap adınızı seçin ve **Geçmiş ve sekmeler** seçeneğini açın.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Geçmiş’i (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) açın ve kenar çubuğunda **Tabs from other devices** (diğer cihazlardaki sekmeler) seçeneğini seçin.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+**Firefox View**’u açın ve **Diğer cihazlardaki sekmeler** (Tabs from other devices) bölümüne bakın. Bunun için açık sekmelerin senkronizasyonu açık şekilde Firefox Sync gerekir.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox View, Tabs from other devices. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="why" title="Sekmelerim neden geri yüklenmedi?">
+
+- **Başlangıç ayarı yeni sekme sayfasını açıyor.** Her açılışta sekmelerinizi yalnızca “önceki oturum” başlangıç seçeneği geri açar; bir sonraki bölüm bu seçeneğin tarayıcınızda nerede olduğunu gösteriyor.
+- **Sekmeler gizli bir penceredeydi.** Incognito ve InPrivate pencereleri hiçbir zaman geri yüklenmez.
+- **Pencereleri tek tek kapattınız.** Başlangıçta geri yükleme, tarayıcıdan *çıkıldığı* anda açık olanı geri getirir. Daha önce kapattığınız pencereler yalnızca Geçmiş’te bulunur.
+- **Farklı bir profil açtınız.** Her profilin kendi oturumu vardır; profil simgesini kontrol edin.
+
+</Section>
+
+<Section id="prevent" title="Bir dahaki sefere olmamasını sağlayın">
+
+Başlangıç ayarını şimdi açın; güncellemeleri ve yeniden başlatmaları kapsayan tek değişiklik bu.
+
+<BrowserPanels section="prevent">
+<BrowserPanel browser="chrome">
+
+**Ayarlar → Başlangıçta → Kaldığım yerden devam et** (Settings → On startup → Continue where you left off). Ya da adres çubuğuna `chrome://settings/onStartup` yapıştırın.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Chrome ayarları, On startup (Başlangıçta) bölümünde Continue where you left off (Kaldığım yerden devam et) seçili" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">Chrome’un On startup (Başlangıçta) ayarı, son oturumu yeniden açacak şekilde ayarlanmış.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+**Ayarlar → Start, home, and new tab page → On startup → Open tabs from the previous session**. Ya da adres çubuğuna `edge://settings/startHomeNTP` yapıştırın.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Edge ayarları, Start, home, and new tab page bölümünde Open tabs from the previous session seçili" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">Edge’in Start, home, and new tab page ayarları, son oturumu yeniden açacak şekilde ayarlanmış.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+**Ayarlar → Giriş sayfası ve başlangıç → Başlangıç → Önceki pencereleri ve sekmeleri aç** (Settings → Home and startup → Startup → Open previous windows and tabs). Ya da adres çubuğuna `about:preferences#home` yapıştırın.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Firefox ayarları, Home and startup (Giriş sayfası ve başlangıç) bölümünde Open previous windows and tabs (Önceki pencereleri ve sekmeleri aç) işaretli" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Firefox’un Giriş sayfası ve başlangıç ayarları, Önceki pencereleri ve sekmeleri aç işaretliyken.</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+Başlangıçta geri yükleme, geçen hafta yanlışlıkla kapattığınız bir pencereye yine de yardım edemez. Bunun için kaydedilmiş bir kopyaya ihtiyacınız var: pencereleri yer işaretlerine ekleyin ya da bir [oturum yöneticisi](/blog/browser-session-manager) kullanın. [Tüm açık sekmeleri kaydetme](/blog/save-all-open-tabs) rehberimiz seçenekleri karşılaştırıyor.
+
+Chrome, Edge ve Firefox için ücretsiz eklentimiz [TabMerger](/features), kaydetme işini sizin yerinize yapabilir. **Ayarlar → Veri → Açık sekmeleri otomatik kaydet**, açık sekmelerinizi belirli aralıklarla bir grup olarak kaydeder (15 dakikada birden günlüğe kadar). **Son kapatılanlar**, kapattığınız her sekmeyi ve pencereyi güne göre saklar: ücretsiz sürümde 2 gün, Pro’da 30 gün. İkisinin nasıl çalıştığını ve nasıl ayarlanacağını [bir daha asla sekme kaybetmeyin](/blog/never-lose-a-tab-again) yazımızda anlatıyoruz.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Aralıklarla kaydetme ve kapatılan sekmeleri bulma" steps={[{ title: 'Otomatik kaydetme' }, { title: 'Son kapatılanlar' }]}>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-auto-save-schedule" alt="TabMerger Ayarlar, Data (Veri): Auto-save open tabs (Açık sekmeleri otomatik kaydet) açık, zamanlama Every 30 minutes (30 dakikada bir) olarak ayarlı, açık tema" darkAlt="TabMerger Ayarlar, Data (Veri): Auto-save open tabs (Açık sekmeleri otomatik kaydet) açık, zamanlama Every 30 minutes (30 dakikada bir) olarak ayarlı, koyu tema" boxes={[{ id: 'schedule', label: 'Zamanlama' }]} source="TabMerger 3.16.1">Auto-save open tabs (Açık sekmeleri otomatik kaydet) 30 dakikada bir: tarayıcıya ne olursa olsun, açık sekmelerinizin taze bir kopyası.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-recently-closed" alt="TabMerger Recently closed (Son kapatılanlar), bugün: kapatılan üç sekme ve her birinin kapatıldığı saat, açık tema" darkAlt="TabMerger Recently closed (Son kapatılanlar), bugün: kapatılan üç sekme ve her birinin kapatıldığı saat, koyu tema" boxes={[{ id: 'today-row', label: 'Bugün' }]} source="TabMerger 3.16.1">Recently closed (Son kapatılanlar): bugün kapatılan sekmeler, her birinin kapatıldığı saatle.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Chrome, Edge ve Firefox için ücretsiz. Başlamak için hesap gerekmez.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'edge-collections-replacement',
+  title: 'Edge-Sammlungen sind weg: Das ist die beste Alternative',
+  navTitle: 'Alternative zu Edge-Sammlungen',
+  seoTitle: 'Edge Collections (Sammlungen) entfernt? Die beste Alternative und der Umzug',
+  description:
+    'Microsoft hat die Sammlungen (Collections) ab Version 149 aus Edge entfernt. Was mit deinen Sammlungen passiert ist, wie du sie herausholst und wie TabMerger daraus benannte Gruppen macht: die Alternative zu Edge Collections.',
+  shareSummary: 'Edge 149 hat die Sammlungen abgeschafft. Wo deine Seiten jetzt sind und was du stattdessen nimmst.',
+  dek: 'Deine gespeicherten Seiten sind nicht verloren. Hier erfährst du, wo sie sind, und findest ein besseres Zuhause für sie.',
+  published: '2026-12-06',
+  updated: '2026-12-06',
+  testedOn: ['Edge 158.0.4370.33', 'Chrome 157.0.8103.80'],
+  keyFacts: [
+    {
+      text: 'Sammlungen sind ab Edge 149, veröffentlicht am 4. Juni 2026, nicht mehr verfügbar.',
+      source: 'Microsoft Support',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'Ab Edge 145 konntest du Sammlungen keine Seiten mehr hinzufügen.', source: 'Microsoft Support' },
+    {
+      text: '„Zu Favoriten verschieben“ übernimmt die Adressen der Seiten, aber keine Bilder oder Notizen.',
+      source: 'Microsoft Support',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'TabMerger macht aus jedem Ordner unter „Andere Favoriten“ eine benannte Gruppe.', source: 'Getestet in TabMerger 3.16.1, 21. Nov. 2026' },
+  ],
+  faq: [
+    {
+      question: 'Hat Microsoft die Sammlungen in Edge entfernt?',
+      answer:
+        'Ja. Laut der Support-Seite von Microsoft sind Sammlungen ab Edge 149, veröffentlicht am 4. Juni 2026, nicht mehr verfügbar; schon ab Edge 145 ließen sich keine neuen Seiten mehr hinzufügen.',
+    },
+    {
+      question: 'Wo sind meine Sammlungen hin?',
+      answer:
+        'Microsoft bot „Zu Favoriten verschieben“ an: Damit wird jede Sammlung zu einem Favoritenordner (nur die Seiten). Mit einem privaten Konto findest du gespeicherte Sammlungen außerdem unter bing.com/saves; Geschäfts- oder Schulkonten konnten sie exportieren.',
+    },
+    {
+      question: 'Was ist die beste Alternative zu Edge-Sammlungen?',
+      answer:
+        'TabMerger: benannte, farbig markierte Tab-Gruppen, die du durchsuchen, mit Notizen und Erinnerungen versehen und mit Pro Ende-zu-Ende-verschlüsselt synchronisieren kannst. Es funktioniert auch in Chrome und Firefox.',
+    },
+    {
+      question: 'Kann ich meine Sammlungen in TabMerger importieren?',
+      answer: 'Ja. Verschiebe die Ordner der Sammlungen nach „Andere Favoriten“, exportiere deine Favoriten als HTML-Datei und importiere sie unter Einstellungen → Daten: Aus jedem dieser Ordner wird eine TabMerger-Gruppe.',
+    },
+  ],
+  images: [
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-light.webp', alt: 'TabMerger-Dialog „Import 2 groups?“ (2 Gruppen importieren?) für die Datei favorites_edge.html, helles Design' },
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-dark.webp', alt: 'TabMerger-Dialog „Import 2 groups?“ (2 Gruppen importieren?) für die Datei favorites_edge.html, dunkles Design' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-light.webp', alt: 'TabMerger-Seitenleiste mit den Gruppen Trip to Lisbon und Thesis reading, importiert aus Favoritenordnern, helles Design' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-dark.webp', alt: 'TabMerger-Seitenleiste mit den Gruppen Trip to Lisbon und Thesis reading, importiert aus Favoritenordnern, dunkles Design' },
+  ],
+  tags: ['edge', 'bookmarks', 'save-tabs', 'tab-manager'],
+  sources: [
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'EdgeCollectionsEnabled policy (obsolete)',
+      publisher: 'Microsoft Learn',
+      url: 'https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies/EdgeCollectionsEnabled',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/edge-collections-replacement/cover-edge-light.webp' },
+  ogImage: { src: '/blog/edge-collections-replacement/og.png', alt: 'Edge-Sammlungen sind weg: Das ist die beste Alternative. Eine TabMerger-Anleitung, in der Favoritenordner als Gruppen importiert werden' },
+  toc: [
+    { id: 'quick', label: 'Kurze Antwort' },
+    { id: 'what-happened', label: 'Was passiert ist' },
+    { id: 'where', label: 'Wo deine Seiten sind' },
+    { id: 'move', label: 'Umzug zu TabMerger' },
+    { id: 'why', label: 'Warum TabMerger' },
+    { id: 'faq', label: 'Häufige Fragen' },
+  ],
+}
+
+<QuickAnswer>
+
+Ja, sie sind weg: Laut Microsoft sind **Sammlungen (Collections) ab Edge 149 nicht mehr verfügbar** (veröffentlicht am 4. Juni 2026). Gelöscht wurden deine Seiten aber nicht: **Zu Favoriten verschieben** (Move to Favorites) hat jede Sammlung in einen Favoritenordner verwandelt. Das beste neue Zuhause ist [TabMerger](/features): Exportiere deine Favoriten als HTML, importiere die Datei, und jeder Ordner unter „Andere Favoriten“ wird zu einer benannten, durchsuchbaren Gruppe, mit Notizen, Erinnerungen und verschlüsselter Synchronisierung, in Edge, Chrome und Firefox.
+
+</QuickAnswer>
+
+<InstallCta>Hol deine alten Sammlungen als benannte, durchsuchbare Gruppen zurück. Kostenlos für Edge, Chrome und Firefox.</InstallCta>
+
+<Section id="what-happened" title="Hat Microsoft die Sammlungen in Edge wirklich entfernt?">
+
+Ja, und zwar schrittweise, wie Microsofts eigene Seiten zeigen:
+
+<ComparisonTable
+  head={['Edge-Version', 'Was sich geändert hat']}
+  rowHeaders
+  rows={[
+    ['145', 'Sammlungen ließen sich keine Seiten mehr hinzufügen; vorhandene blieben sichtbar'],
+    ['149 (4. Juni 2026)', 'Sammlungen sind nicht mehr verfügbar'],
+    ['153', 'Die Admin-Richtlinie für Sammlungen wurde hinfällig, „because the Collections feature was removed“ (weil die Sammlungen-Funktion entfernt wurde)'],
+  ]}
+/>
+
+Microsofts Begründung, in eigenen Worten: Man stelle die Sammlungen in Edge ein, „to better simplify our offerings“ (um das eigene Angebot zu vereinfachen).
+
+</Section>
+
+<Section id="where" title="Wo sind meine Sammlungen hin?">
+
+Während der Abschaltung zeigte Edge im Bereich „Sammlungen“ zwei Optionen:
+
+- **Zu Favoriten verschieben** (von Microsoft empfohlen): Jede Sammlung wurde zu einem Ordner in deinen Favoriten. Verschoben wurden nur gespeicherte Webseiten, Bilder und Notizen nicht.
+- **Exportieren Ihrer Daten** (Export your data): nur für Geschäfts- oder Schulkonten.
+
+Mit einem privaten Microsoft-Konto findest du früher gespeicherte Sammlungen außerdem unter `bing.com/saves`. Sieh also zuerst in deinen Favoriten nach (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>): Deine Sammlungen liegen dort sehr wahrscheinlich als Ordner.
+
+</Section>
+
+<Section id="move" title="Wie bringe ich meine Sammlungen in TabMerger?">
+
+Ein paar Minuten, und aus jeder früheren Sammlung wird eine Gruppe:
+
+1. Öffne in Edge die Favoriten (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>). Liegen deine früheren Sammlungen in der **Favoritenleiste** (Favorites bar), verschiebe diese Ordner nach **Andere Favoriten** (Other favorites). Der Export schreibt die ganze Favoritenleiste als einen einzigen Ordner, darin liegende Ordner kämen also zu einer Gruppe zusammengefasst an.
+2. Wähle **Export favorites** und speichere die HTML-Datei.
+3. Öffne TabMerger → **Einstellungen → Daten** → **Datei importieren** (Settings → Data → Import file) und wähle die Datei aus.
+4. Bestätige. Jeder Ordner unter „Andere Favoriten“ wird zu einer Gruppe mit dem Namen des Ordners, Unterordner werden in diese Gruppe übernommen. Die Favoritenleiste kommt als eigene Gruppe dazu.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Exportierte Favoriten importieren" steps={[{ title: 'Bestätigen' }, { title: 'Deine Gruppen' }]}>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-import-confirm" alt="TabMerger-Dialog „Import 2 groups?“ (2 Gruppen importieren?) für die Datei favorites_edge.html, helles Design" darkAlt="TabMerger-Dialog „Import 2 groups?“ (2 Gruppen importieren?) für die Datei favorites_edge.html, dunkles Design" boxes={[{ id: 'import-confirm', label: 'Importieren' }]} source="TabMerger 3.16.1">TabMerger zählt die gefundenen Ordner und fragt vorher nach.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-imported-groups" alt="TabMerger-Seitenleiste mit den Gruppen Trip to Lisbon und Thesis reading, importiert aus Favoritenordnern, helles Design" darkAlt="TabMerger-Seitenleiste mit den Gruppen Trip to Lisbon und Thesis reading, importiert aus Favoritenordnern, dunkles Design" boxes={[{ id: 'imported', label: 'Gruppen nach Ordnernamen' }]} source="TabMerger 3.16.1">Jeder Ordner ist jetzt eine Gruppe mit demselben Namen und denselben Seiten.</ThemedScreenshot>
+</Carousel>
+
+Deine anderen Ordner unter „Andere Favoriten“ kommen ebenfalls mit; lösche einfach die Gruppen, die du nicht brauchst. Alle Importformate erklärt [Tabs in TabMerger importieren](/blog/import-tabs-into-tabmerger). Die kostenlose Version fasst 5 Gruppen und 50 Tabs, und ein Import, der darüber hinausginge, wird gestoppt, bevor irgendetwas hinzugefügt wird; [Pro](/pricing) hat kein Limit.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Edge Favorites page menu with Export favorites. */}
+
+</Section>
+
+<Section id="why" title="Warum ist TabMerger ein besseres Zuhause, als es die Sammlungen waren?">
+
+- **Ganze Tab-Sets mit einem Klick.** **Mit aktueller zusammenführen** (Merge with current) speichert alle offenen Fenster in einer benannten Gruppe.
+- **Notizen und Erinnerungen an jedem Tab,** als Ersatz für die Notizen, die die Sammlungen nicht mitnehmen konnten: Klick mit der rechten Maustaste auf einen Tab und wähle **Notiz hinzufügen** (Add note) oder **Erinnere mich …** (Remind me…).
+- **Eine Suche** für offene, gespeicherte und kürzlich geschlossene Tabs: <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+- **Browserübergreifend.** Dieselben Gruppen in Edge, Chrome und Firefox, mit Pro Ende-zu-Ende-verschlüsselt synchronisiert.
+- **Deine Daten bleiben deine.** Exportiere jederzeit alles als JSON; nichts hängt davon ab, dass ein Unternehmen eine Funktion am Leben hält.
+
+Neu bei Tab-Managern? [Was ein Sitzungsmanager für den Browser macht](/blog/browser-session-manager) und [die besten Tab-Manager-Erweiterungen](/blog/best-tab-manager-extensions) geben einen Überblick.
+
+<InstallCta>Kostenlos für Edge, Chrome und Firefox. Zum Start ist kein Konto nötig.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Häufige Fragen">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'Chrome, Edge और Firefox में एक शॉर्टकट, स्टार्टअप पर रीस्टोर और बंद टैब वापस पाने के तरीके।',
   dek: 'खुले हुए हर टैब को सहेजकर रखने के पाँच तरीके, और वह एक बात जो हर तरीका चुपचाप छोड़ देता है।',
   published: '2026-11-19',
-  updated: '2026-11-19',
+  updated: '2026-11-24',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D सिर्फ़ मौजूदा विंडो को सेव करता है।', source: '19 नवंबर 2026 को तीनों में टेस्ट किया गया' },
@@ -117,9 +117,11 @@ export const post = {
 
 <QuickAnswer>
 
-मौजूदा विंडो के सभी खुले टैब सेव करने के लिए <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> दबाएँ (Mac पर <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>): सारे टैब एक नए बुकमार्क फ़ोल्डर में सेव हो जाते हैं। यह Chrome, Edge और Firefox में काम करता है। टैब को अपने-आप फिर से खुलवाने के लिए **वहीं से जारी रखें जहां मैंने छोड़ा था** (“Continue where you left off”, Chrome), **Open tabs from the previous session** (Edge) या **Open previous windows and tabs** (Firefox) चालू करें।
+मौजूदा विंडो के सभी खुले टैब सेव करने के लिए <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> दबाएँ (Mac पर <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>): सारे टैब एक नए बुकमार्क फ़ोल्डर में सेव हो जाते हैं। यह Chrome, Edge और Firefox में काम करता है। टैब को अपने-आप फिर से खुलवाने के लिए **वहीं से जारी रखें जहां मैंने छोड़ा था** (“Continue where you left off”, Chrome), **Open tabs from the previous session** (Edge) या **Open previous windows and tabs** (Firefox) चालू करें। **सारी विंडो एक साथ** सेव करने और बाद में टैब खोजने के लिए [TabMerger](/features) इस्तेमाल करें: एक क्लिक में आपकी सभी खुली विंडो एक नाम वाले ग्रुप में सेव हो जाती हैं।
 
 </QuickAnswer>
+
+<InstallCta>हर खुली विंडो एक क्लिक में सेव करें। Chrome, Edge और Firefox के लिए मुफ़्त।</InstallCta>
 
 <BrowserSwitcher />
 
@@ -200,7 +202,7 @@ Firefox में: **सेटिंग → Home and startup → आरंभन
 
 <Section id="closed" title="3. बंद किए गए टैब वापस पाएँ">
 
-आख़िरी बार बंद किया गया टैब या विंडो फिर से खोलने के लिए <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) दबाएँ; और पीछे जाने के लिए फिर से दबाएँ। इससे पुरानी चीज़ों के लिए <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> से हिस्ट्री खोलें।
+आख़िरी बार बंद किया गया टैब या विंडो फिर से खोलने के लिए <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) दबाएँ; और पीछे जाने के लिए फिर से दबाएँ। इससे पुरानी चीज़ों के लिए <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> से हिस्ट्री खोलें। अगर पूरा ब्राउज़र क्रैश हो गया या बंद हो गया, तो [क्रैश के बाद टैब वापस लाने का तरीका](/blog/restore-tabs-after-crash) देखें।
 
 <BrowserPanels section="closed">
 <BrowserPanel browser="chrome">
@@ -232,7 +234,9 @@ Firefox हाल में बंद किए गए टैब और वि�
 
 - **Chrome** किसी ग्रुप को सेव करके फिर से खोल सकता है, लेकिन एक्सटेंशन बंद किया गया सेव ग्रुप नहीं देख सकते ([tabGroups API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups))।
 - **Firefox** के ग्रुप डिवाइस पर ही रहते हैं और Firefox Sync के साथ दूसरे डिवाइस पर नहीं जाते।
-- **Edge** में Edge 149 से Collections नहीं है।
+- **Edge** में Edge 149 से Collections नहीं है ([इसकी जगह क्या इस्तेमाल करें](/blog/edge-collections-replacement))।
+
+ग्रुप को सेव करने, फिर से खोलने और सिंक करने का तरीका, कदम-दर-कदम, हमारी [Chrome टैब ग्रुप गाइड](/blog/chrome-tab-groups) में है।
 
 {/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
 
@@ -260,14 +264,14 @@ Firefox हाल में बंद किए गए टैब और वि�
   head={['शॉर्टकट', 'क्या सेव होता है']}
   keysColumn={0}
   rows={[
-    ['Ctrl+Shift+P', 'विंडो के बाकी सभी टैब'],
-    ['Ctrl+Shift+S', 'मौजूदा टैब'],
-    ['Ctrl+Shift+K', 'बाईं ओर के टैब'],
-    ['Ctrl+Shift+U', 'दाईं ओर के टैब'],
+    ['Alt+Shift+O', 'विंडो के बाकी सभी टैब'],
+    ['Alt+Shift+S', 'मौजूदा टैब'],
+    ['Alt+Shift+Comma', 'बाईं ओर के टैब'],
+    ['Alt+Shift+Period', 'दाईं ओर के टैब'],
   ]}
 />
 
-Mac पर <Kbd>⌘</Kbd> इस्तेमाल करें। हर शॉर्टकट पूछता है कि कहाँ सेव करना है; **त्वरित सहेज (नया समूह)** तुरंत एक ग्रुप बना देता है। Firefox में <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> प्राइवेट विंडो खोलता है, इसलिए `about:addons` → “एक्सटेंशन शॉर्टकट प्रबंधित करें” (“Manage Extension Shortcuts”) में कोई दूसरी की चुनें।
+Mac पर <Kbd>Alt</Kbd> की जगह <Kbd>Control</Kbd> दबाएँ। हर शॉर्टकट पूछता है कि कहाँ सेव करना है; **त्वरित सहेज (नया समूह)** तुरंत एक ग्रुप बना देता है। नए इंस्टॉल को यही की मिलती हैं; पहले का इंस्टॉल अपनी पुरानी की रखता है, और आप इनमें से कोई भी की अपने ब्राउज़र के शॉर्टकट पेज पर बदल सकते हैं; हमारी [टैब कीबोर्ड शॉर्टकट गाइड](/blog/tab-keyboard-shortcuts) में तरीका बताया गया है।
 
 ### गलती से कुछ बंद हो गया?
 
@@ -308,7 +312,7 @@ Mac पर <Kbd>⌘</Kbd> इस्तेमाल करें। हर शॉ
   ]}
 />
 
-आप कुछ भी चुनें, स्टार्टअप सेटिंग चालू रखें। रखने लायक किसी एक विंडो को बुकमार्क कर लें। जब आप कई विंडो के साथ काम करते हों या किसी बंद टैब की कई दिन बाद ज़रूरत हो, तब एक्सटेंशन इस्तेमाल करें। ज़्यादा जानकारी हमारे [तुलना पेज](/compare) पर।
+आप कुछ भी चुनें, स्टार्टअप सेटिंग चालू रखें। रखने लायक किसी एक विंडो को बुकमार्क कर लें। कई विंडो के लिए, या कई दिन पहले बंद किए गए टैब के लिए, TabMerger यह एक क्लिक में करता है, और [सब कुछ एक फ़ाइल में एक्सपोर्ट](/blog/export-open-tabs) भी कर सकता है। ज़्यादा जानकारी हमारे [तुलना पेज](/compare) पर और [सबसे अच्छे टैब मैनेजर एक्सटेंशन की तुलना](/blog/best-tab-manager-extensions) में।
 
 </Section>
 

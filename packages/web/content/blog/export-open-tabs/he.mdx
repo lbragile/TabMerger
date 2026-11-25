@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'export-open-tabs',
+  title: 'איך מייצאים את הכרטיסיות הפתוחות',
+  navTitle: 'ייצוא הכרטיסיות הפתוחות',
+  seoTitle: 'איך לייצא כרטיסיות פתוחות ב-Chrome, ב-Edge וב-Firefox',
+  description:
+    'ייצוא של כל הכרטיסיות הפתוחות, עם הכותרת והכתובת של כל אחת, לקובץ שנשאר אצלכם: ייצוא JSON בלחיצה אחת ב-TabMerger (כרטיסיות פתוחות וקבוצות שמורות יחד), או ייצוא הסימניות המובנה של הדפדפן, צעד אחר צעד.',
+  shareSummary: 'ייצוא של כל הכרטיסיות הפתוחות לקובץ בלחיצה אחת, וייבוא חוזר בכל מקום.',
+  dek: 'קובץ ששייך לכם עדיף על סשן שמקווים שישרוד. לחיצה אחת ב-TabMerger, כמה לחיצות בדפדפן.',
+  published: '2026-12-02',
+  updated: '2026-12-02',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '"ייצוא JSON" ב-TabMerger שומר את הכרטיסיות הפתוחות ואת כל הקבוצות השמורות בקובץ אחד.', source: 'נבדק ב-TabMerger 3.16.1, 21 בנובמבר 2026' },
+    { text: 'TabMerger מייבא קובצי JSON, קובצי HTML של סימניות וקובצי טקסט של OneTab.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome מייצא סימניות מהתפריט של ניהול הסימניות.',
+      source: 'העזרה של Chrome',
+      href: 'https://support.google.com/chrome/answer/96816',
+    },
+    { text: 'Ctrl+Shift+D שומר את כל הכרטיסיות בחלון כסימניות, בכל שלושת הדפדפנים.', source: 'העזרה של Chrome ושל Edge; קיצורי המקלדת של Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'איך מעתיקים את הכתובות של כל הכרטיסיות?',
+      answer:
+        'העותק המלא המהיר ביותר הוא הגדרות ← נתונים ← ייצוא JSON ב-TabMerger: קובץ אחד עם הכותרת והכתובת של כל כרטיסייה פתוחה ושל כל קבוצה שמורה. בלי תוסף, שומרים את הכרטיסיות של החלון כסימניות (Ctrl+Shift+D) ומייצאים את הסימניות כקובץ HTML.',
+    },
+    {
+      question: 'אפשר לייצא כרטיסיות מכל החלונות בבת אחת?',
+      answer: 'כן, עם TabMerger: "פתוח עכשיו" כולל כל חלון פתוח, וייצוא ה-JSON כולל אותו. דרך הסימניות עובדת חלון אחד בכל פעם.',
+    },
+    {
+      question: 'איך מייבאים את הקובץ שוב?',
+      answer: 'ב-TabMerger, דרך הגדרות ← נתונים ← ייבוא קובץ: הוא קורא קובצי JSON של TabMerger, קובצי HTML של סימניות וקובצי טקסט של OneTab, ומוסיף אותם כקבוצות.',
+    },
+    {
+      question: 'האם הייצוא פרטי?',
+      answer: 'כן. הקובץ נוצר בדפדפן ונשמר במחשב שלכם; שום דבר לא מועלה. כדאי לשמור אותו במקום בטוח, כי הוא מפרט את הדפים שלכם.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: 'Settings (הגדרות) של TabMerger, הכרטיסייה Data (נתונים), עם הכפתורים Export JSON (ייצוא JSON) ו-Import file (ייבוא קובץ) תחת Import & export (ייבוא וייצוא), ערכת נושא בהירה' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: 'Settings (הגדרות) של TabMerger, הכרטיסייה Data (נתונים), עם הכפתורים Export JSON (ייצוא JSON) ו-Import file (ייבוא קובץ) תחת Import & export (ייבוא וייצוא), ערכת נושא כהה' },
+  ],
+  tags: ['save-tabs', 'bookmarks', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Import Chrome bookmarks & settings (export section)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/export-open-tabs/tm-settings-export-light.webp' },
+  ogImage: { src: '/blog/export-open-tabs/og.png', alt: 'איך מייצאים את הכרטיסיות הפתוחות: מדריך של TabMerger, עם הכפתור Export JSON (ייצוא JSON)' },
+  toc: [
+    { id: 'quick', label: 'תשובה קצרה' },
+    { id: 'tabmerger', label: 'ייצוא בלחיצה אחת' },
+    { id: 'inside', label: 'מה יש בקובץ' },
+    { id: 'builtin', label: 'הדרך דרך הסימניות' },
+    { id: 'import', label: 'להחזיר אותן' },
+    { id: 'faq', label: 'שאלות נפוצות' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'ייצוא סימניות',
+    values: { chrome: 'ניהול הסימניות ← ⋮ ← ייצוא סימניות', edge: 'Favorites → Export favorites', firefox: 'ספרייה ← ייצוא סימניות לקובץ HTML…' },
+  },
+}
+
+<QuickAnswer>
+
+פותחים את [TabMerger](/features), עוברים אל **הגדרות ← נתונים** (<bdi dir="ltr">Settings → Data</bdi>) ולוחצים על **ייצוא JSON** (<bdi dir="ltr">Export JSON</bdi>). לחיצה אחת שומרת קובץ עם הכותרת והכתובת של **כל כרטיסייה פתוחה בכל חלון**, וגם את כל הקבוצות ששמרתם. בלי תוסף, אפשר לשמור את הכרטיסיות של חלון כסימניות עם <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> ולייצא את הסימניות כקובץ HTML, חלון אחד בכל פעם.
+
+</QuickAnswer>
+
+<InstallCta>ייצוא של כל כרטיסייה פתוחה, מכל חלון, בלחיצה אחת. בחינם ל-Chrome, ל-Edge ול-Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="איך מייצאים את כל הכרטיסיות הפתוחות בלחיצה אחת?">
+
+1. פותחים את TabMerger ולוחצים על סמל החשבון ← **הגדרות**.
+2. פותחים את הכרטיסייה **נתונים**.
+3. תחת **ייבוא וייצוא**, לוחצים על **ייצוא JSON**. הקובץ יורד מיד, עם שם כמו `tabmerger-backup-2026-11-21.json`.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="Settings (הגדרות) של TabMerger, הכרטיסייה Data (נתונים), עם הכפתורים Export JSON (ייצוא JSON) ו-Import file (ייבוא קובץ) תחת Import & export (ייבוא וייצוא), ערכת נושא בהירה" darkAlt="Settings (הגדרות) של TabMerger, הכרטיסייה Data (נתונים), עם הכפתורים Export JSON (ייצוא JSON) ו-Import file (ייבוא קובץ) תחת Import & export (ייבוא וייצוא), ערכת נושא כהה" boxes={[{ id: 'export-json', label: 'ייצוא JSON' }, { id: 'import-file', label: 'ייבוא קובץ' }]} source="TabMerger 3.16.1"><bdi dir="ltr">Settings → Data</bdi> (הגדרות ← נתונים): כפתור אחד החוצה, כפתור אחד בחזרה.</ThemedScreenshot>
+
+זה זמין בכל התוכניות, כולל החינמית, והקובץ נוצר בדפדפן שלכם: שום דבר לא מועלה.
+
+</Section>
+
+<Section id="inside" title="מה יש בקובץ המיוצא?">
+
+רשימת JSON של הקבוצות שלכם. קודם מופיעה הקבוצה **פתוח עכשיו** (<bdi dir="ltr">Now Open</bdi>), כלומר החלונות והכרטיסיות שפתוחים עכשיו, ואחריה כל קבוצה שמורה. מתוך ייצוא אמיתי:
+
+<ComparisonTable
+  head={['שדה', 'דוגמה מהייצוא']}
+  rows={[
+    [<code>name</code>, '"Now Open", "Work", "Reading list"'],
+    [<code>windows[]</code>, 'רשומה אחת לכל חלון, כל אחת עם הכרטיסיות שלה'],
+    [<code>tabs[].title</code>, '"Spaced repetition - Wikipedia"'],
+    [<code>tabs[].url</code>, <code>https://en.wikipedia.org/wiki/Spaced_repetition</code>],
+    [<code>color</code>, <code>rgba(59, 130, 246, 1)</code>],
+  ]}
+/>
+
+JSON הוא טקסט פשוט, כך שכל סקריפט או עורך טקסט יכולים לקרוא אותו: לשלוף את הכתובות, להפוך אותן לרשימת Markdown, או לשמור את הקובץ כגיבוי.
+
+</Section>
+
+<Section id="builtin" title="איך מייצאים כרטיסיות בלי תוסף?">
+
+דפדפנים לא מייצאים כרטיסיות פתוחות ישירות, אבל הם כן מייצאים סימניות. לכן קודם שומרים את הכרטיסיות כסימניות, ואז מייצאים:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. בכל חלון לוחצים על <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> ב-Mac) ושומרים את הכרטיסיות בתיקייה חדשה.
+2. פותחים את **⋮ ← סימניות ורשימות ← ניהול הסימניות** (<bdi dir="ltr">Bookmarks and lists → Bookmark Manager</bdi>).
+3. בחלק העליון פותחים את **⋮ ← ייצוא סימניות** (<bdi dir="ltr">Export bookmarks</bdi>). Chrome שומר את כל הסימניות בקובץ HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. בכל חלון לוחצים על <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> כדי להוסיף את כל הכרטיסיות למועדפים, בתיקייה חדשה.
+2. לוחצים על <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd></bdi> כדי לפתוח את המועדפים (<bdi dir="ltr">Favorites</bdi>).
+3. בוחרים ב-<bdi dir="ltr">**Export favorites**</bdi> מהתפריט של הדף ושומרים את קובץ ה-HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. בכל חלון לוחצים על <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> כדי לשמור את כל הכרטיסיות כסימניות בתיקייה חדשה.
+2. לוחצים על <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd></bdi> כדי לפתוח את חלון הספרייה (<bdi dir="ltr">Library</bdi>).
+3. בוחרים ב**ייצוא סימניות לקובץ HTML…** (<bdi dir="ltr">Export Bookmarks to HTML…</bdi>) ושומרים את הקובץ.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>זה חלון אחד בכל פעם, זה מייצא את *כל* הסימניות שלכם ולא רק את הכרטיסיות האלה, והקובץ לא יודע אילו כרטיסיות היו פתוחות יחד.</Catch>
+
+</Section>
+
+<Section id="import" title="איך מחזירים את הכרטיסיות?">
+
+ב-TabMerger, **הגדרות ← נתונים ← ייבוא קובץ** (<bdi dir="ltr">Settings → Data → Import file</bdi>) קורא את שלושת סוגי הקבצים ומוסיף אותם כקבוצות לצד הקבוצות הקיימות:
+
+- **JSON של TabMerger**, מתוך "ייצוא JSON", עם הקבוצות והחלונות השמורים בדיוק כפי שהיו. "פתוח עכשיו" שבקובץ לא מתווסף (אלה היו הכרטיסיות הפתוחות של הדפדפן שממנו ייצאו), לכן אם רוצים לקבל בחזרה חלונות פתוחים, שומרים אותם בקבוצה לפני הייצוא.
+- **HTML של סימניות**, מכל דפדפן: כל תיקייה ברמה העליונה הופכת לקבוצה.
+- **טקסט של OneTab**: כל רשימה של OneTab הופכת לקבוצה. כדאי לקרוא את [המדריך שלנו לחלופות ל-OneTab](/blog/onetab-alternatives).
+
+לכן ייצוא הוא הדרך הפשוטה ביותר [להעביר כרטיסיות למחשב אחר](/blog/move-tabs-between-computers) בלי חשבון. רוצים שזה יקרה אוטומטית? [Pro](/pricing) שומר את 10 הגיבויים האוטומטיים האחרונים ומסנכרן את הקבוצות שלכם בין המכשירים, עם הצפנה מקצה לקצה. כדי לשמור כרטיסיות להמשך בלי קובץ בכלל, ראו [איך שומרים את כל הכרטיסיות הפתוחות](/blog/save-all-open-tabs); כדי לשלוח אוסף כרטיסיות למישהו אחר, ראו [איך משתפים אוסף כרטיסיות](/blog/share-a-set-of-tabs).
+
+<InstallCta>בחינם ל-Chrome, ל-Edge ול-Firefox. לא צריך חשבון כדי להתחיל.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="שאלות נפוצות">
+
+<Faq items={post.faq} />
+
+</Section>

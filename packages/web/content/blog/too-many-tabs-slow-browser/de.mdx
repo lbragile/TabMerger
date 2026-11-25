@@ -1,0 +1,170 @@
+export const post = {
+  slug: 'too-many-tabs-slow-browser',
+  title: 'Machen zu viele Tabs deinen Computer langsam?',
+  navTitle: 'Zu viele Tabs, langsamer Computer',
+  seoTitle: 'Zu viele Tabs machen den PC langsam? So behebst du es',
+  description:
+    'Zu viele Tabs offen und der Browser wird langsam? Jeder offene Tab belegt Arbeitsspeicher. Schalte die Schlaffunktion für Tabs in deinem Browser ein und speichere und schließe die Tabs, die du gerade nicht brauchst, mit TabMerger, ohne einen einzigen zu verlieren.',
+  shareSummary: 'Warum offene Tabs bremsen und wie du Speicher freigibst, ohne sie zu verlieren.',
+  dek: 'Der schnellste Tab ist der, der nicht offen ist. Speichern, schließen und mit einem Klick zurückholen.',
+  published: '2026-12-04',
+  updated: '2026-12-04',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Der Arbeitsspeicher-Sparmodus von Chrome gibt Speicher von inaktiven Tabs frei.',
+      source: 'Chrome-Hilfe',
+      href: 'https://support.google.com/chrome/answer/12929150',
+    },
+    { text: 'Edge 158 versetzt inaktive Tabs in den Ruhezustand, standardmäßig nach 15 Minuten.', source: 'edge://settings, 20. Nov. 2026' },
+    { text: 'Firefox 159 kann einen Tab über sein Kontextmenü entladen.', source: 'Menütext von Firefox 159' },
+    { text: 'TabMerger speichert alle offenen Fenster und schließt sie dann mit einem Klick.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Verbrauchen viele Tabs mehr Arbeitsspeicher?',
+      answer:
+        'Ja. Jede offene Seite hält ihre Inhalte im Arbeitsspeicher, und Seiten mit Skripten oder Medien belasten zusätzlich den Prozessor. Wie viel, hängt von den Websites ab, die Zahl der Tabs allein sagt also wenig.',
+    },
+    {
+      question: 'Wird mein Computer schneller, wenn ich Tabs schließe?',
+      answer:
+        'Wenn du Tabs schließt, wird ihr Speicher frei. Speichere sie vorher mit TabMerger (Mit aktueller zusammenführen, dann Alle Fenster schließen), dann geht nichts verloren: Jeder Tab lässt sich mit einem Klick wieder öffnen.',
+    },
+    {
+      question: 'Reichen der Arbeitsspeicher-Sparmodus oder schlafende Tabs aus?',
+      answer:
+        'Sie geben Speicher von ungenutzten Tabs frei und lassen sie in der Tableiste, das hilft dem Computer. Durchsehen musst du die Tabs aber trotzdem; sie zu speichern und zu schließen hilft auch dir.',
+    },
+    {
+      question: 'Wie sehe ich, welcher Tab am meisten Speicher verbraucht?',
+      answer: 'Drück in Chrome Shift+Esc, um den Task-Manager von Chrome zu öffnen, und such nach den Tabs, die am meisten Speicher belegen.',
+    },
+  ],
+  images: [
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-light.webp', alt: 'TabMerger-Menü von „Now Open“ (Jetzt geöffnet) mit hervorgehobenem „Close all windows“ (Alle Fenster schließen), „Close all browser windows in this group“ (Alle Browserfenster dieser Gruppe schließen), helles Design' },
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-dark.webp', alt: 'TabMerger-Menü von „Now Open“ (Jetzt geöffnet) mit hervorgehobenem „Close all windows“ (Alle Fenster schließen), „Close all browser windows in this group“ (Alle Browserfenster dieser Gruppe schließen), dunkles Design' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Chrome-Einstellungen, „Performance“ (Leistung), mit dem Schalter „Memory Saver“ (Arbeitsspeicher-Sparmodus)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Edge-Einstellungen, „Performance“, mit aktivierter Option „Automatically put tabs to sleep“, auf 15 Minuten gestellt' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/too-many-tabs-slow-browser/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/too-many-tabs-slow-browser/og.png', alt: 'Titelkarte „Do too many tabs slow your computer down?“: eine TabMerger-Anleitung mit dem Menü „Close all windows“ (Alle Fenster schließen)' },
+  toc: [
+    { id: 'quick', label: 'Kurze Antwort' },
+    { id: 'why', label: 'Warum Tabs bremsen' },
+    { id: 'tabmerger', label: 'Speichern und schließen in einem Rutsch' },
+    { id: 'browser', label: 'Tabs vom Browser schlafen legen lassen' },
+    { id: 'which', label: 'Den schweren Tab finden' },
+    { id: 'faq', label: 'Häufige Fragen' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'Speichereinstellung',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Einstellungen → System and performance → Performance',
+      firefox: 'Rechtsklick auf einen Tab → Tab entladen',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Ja: Jeder offene Tab belegt Arbeitsspeicher, und genug davon machen den ganzen Computer langsamer. Am meisten bringt es, **die Tabs zu schließen, die du nicht brauchst, ohne sie zu verlieren**. Wähl in [TabMerger](/features) **Mit aktueller zusammenführen**, um alle offenen Fenster in einer Gruppe zu speichern, dann **Alle Fenster schließen**: Der Speicher ist frei, und jeder Tab ist nur einen Klick entfernt. Für die Tabs, die offen bleiben, schalte den **Arbeitsspeicher-Sparmodus** („Memory Saver“, Chrome) oder die **schlafenden Tabs** (Edge) ein.
+
+</QuickAnswer>
+
+<InstallCta>Alle Fenster speichern, alle schließen, den Speicher zurückholen. Kostenlos für Chrome, Edge und Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="why" title="Warum machen offene Tabs den Computer langsam?">
+
+Jeder offene Tab ist eine lebendige Webseite: Text, Bilder und Skripte bleiben im Arbeitsspeicher, und aktive Seiten (Videos, Live-Feeds, Web-Apps) beanspruchen außerdem laufend den Prozessor. Brauchen der Browser und deine anderen Apps mehr Speicher, als der Computer hat, wird alles langsamer. Die Chrome-Hilfe zu Abstürzen nennt fehlenden Arbeitsspeicher selbst als Absturzursache, und ihre erste Lösung ist, Tabs zu schließen.
+
+Wie viel ein Tab kostet, hängt ganz von der Website ab, eine sichere Zahl gibt es also nicht. Die Faustregel: Wenn du ihn heute nicht angesehen hast, muss er nicht offen sein.
+
+</Section>
+
+<Section id="tabmerger" title="Wie schließe ich Tabs, ohne sie zu verlieren?">
+
+Genau hier glänzt [TabMerger](/features). Zwei Schritte, alle Fenster auf einmal:
+
+1. Klick auf **Gruppe hinzufügen** und wähl dann im **⋯**-Menü der Gruppe **Mit aktueller zusammenführen**: Alle offenen Fenster und Tabs werden in der Gruppe gespeichert.
+2. Klick in der Seitenleiste mit der rechten Maustaste auf **Jetzt geöffnet** und wähl **Alle Fenster schließen**. Die Browserfenster werden geschlossen, die Gruppe behält jeden Tab.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/too-many-tabs-slow-browser/tm-close-all-menu" alt="TabMerger-Menü von „Now Open“ (Jetzt geöffnet) mit hervorgehobenem „Close all windows“ (Alle Fenster schließen), „Close all browser windows in this group“ (Alle Browserfenster dieser Gruppe schließen), helles Design" darkAlt="TabMerger-Menü von „Now Open“ (Jetzt geöffnet) mit hervorgehobenem „Close all windows“ (Alle Fenster schließen), „Close all browser windows in this group“ (Alle Browserfenster dieser Gruppe schließen), dunkles Design" boxes={[{ id: 'close-all', label: 'Alle Fenster schließen' }]} source="TabMerger 3.16.1">Nach dem Speichern schließt ein einziger Menüpunkt alle offenen Fenster.</ThemedScreenshot>
+
+Wenn du sie wieder brauchst, öffne die Gruppe und öffne einen Tab, ein Fenster oder alles wieder. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> findet jeden gespeicherten Tab mit einem Tastendruck, und das automatische Speichern kann das Speichern nach Zeitplan übernehmen. Mehr Gewohnheiten findest du in unserer [Routine gegen zu viele Tabs](/blog/manage-too-many-tabs).
+
+</Section>
+
+<Section id="browser" title="Wie lasse ich den Browser ungenutzte Tabs schlafen legen?">
+
+Bei Tabs, die offen bleiben, kann der Browser den Speicher freigeben, solange du sie nicht nutzt. Sie laden neu, wenn du sie anklickst.
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+Schalte den **Arbeitsspeicher-Sparmodus** („Memory Saver“) ein: **Einstellungen → Leistung** („Settings → Performance“), oder füge `chrome://settings/performance` in die Adressleiste ein. Wähl, wie schnell Tabs inaktiv werden: Mäßig („Moderate“), Ausgewogen („Balanced“) oder Maximal („Maximum“).
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Chrome-Einstellungen, „Performance“ (Leistung), mit dem Schalter „Memory Saver“ (Arbeitsspeicher-Sparmodus)" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">„Memory Saver“ (Arbeitsspeicher-Sparmodus) von Chrome, in einem neuen Chrome-157-Profil ausgeschaltet.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Aktiviere **Automatically put tabs to sleep** unter **Einstellungen → System and performance → Performance** und wähle, wie lange ein Tab wartet, bevor er in den Ruhezustand geht.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Edge-Einstellungen, „Performance“, mit aktivierter Option „Automatically put tabs to sleep“, auf 15 Minuten gestellt" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Die schlafenden Tabs von Edge sind standardmäßig aktiv: Inaktive Tabs gehen nach 15 Minuten in den Ruhezustand.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Klick mit der rechten Maustaste auf einen Tab und wähl **Tab entladen** („Unload Tab“), um seinen Speicher sofort freizugeben; markier vorher mehrere Tabs, um sie zusammen zu entladen.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>Schlafende Tabs drängen sich trotzdem in der Tableiste. Sie helfen dem Computer, nicht deiner Konzentration.</Catch>
+
+</Section>
+
+<Section id="which" title="Wie finde ich den Tab, der alles ausbremst?">
+
+Drück in Chrome <Kbd>Shift</Kbd>+<Kbd>Esc</Kbd>, um den **Task-Manager von Chrome** („Chrome Task Manager“) zu öffnen, und such nach den Tabs, die am meisten Speicher belegen. Speichere die schweren in einer TabMerger-Gruppe und schließ sie.
+
+{/* Screenshot still to capture by hand (needs a visible browser): the Chrome Task Manager window sorted by memory. */}
+
+<InstallCta>Kostenlos für Chrome, Edge und Firefox. Zum Start ist kein Konto nötig.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Häufige Fragen">
+
+<Faq items={post.faq} />
+
+</Section>

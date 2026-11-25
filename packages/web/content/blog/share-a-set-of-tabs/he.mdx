@@ -1,0 +1,141 @@
+export const post = {
+  slug: 'share-a-set-of-tabs',
+  title: 'איך לשתף כמה כרטיסיות בבת אחת עם מישהו',
+  navTitle: 'שיתוף כמה כרטיסיות בבת אחת',
+  seoTitle: 'איך לשתף כמה כרטיסיות בבת אחת (Chrome, Edge, Firefox)',
+  description:
+    'שולחים לעמית או לחבר סט שלם של כרטיסיות: מעתיקים את הקישורים, משתפים קובץ סימניות או יוצרים קישור שיתוף של TabMerger עם הצפנה מקצה לקצה, שנפתח בלחיצה אחת ובלי חשבון.',
+  shareSummary: 'שיתוף כמה כרטיסיות בבת אחת: קישורים, קובץ סימניות או קישור מוצפן שנפתח בלחיצה אחת.',
+  dek: 'להדביק שנים־עשר קישורים בצ׳אט זו טרחה לשני הצדדים. קישור אחד לכל הסט – לא.',
+  published: '2026-12-10',
+  updated: '2026-12-10',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'קישור שיתוף של TabMerger פותח דף לקריאה בלבד; לא צריך חשבון כדי לצפות בו.', source: 'דף השיתוף של TabMerger' },
+    { text: 'מפתח הפענוח נשאר בחלק ה-#fragment של הקישור, שדפדפנים אף פעם לא שולחים לשרת.', source: 'קוד המקור של TabMerger', href: 'https://github.com/lbragile/TabMerger' },
+    { text: 'יצירת קישורי שיתוף דורשת Pro.', source: 'המחירים של TabMerger', href: '/pricing' },
+    { text: 'Firefox 159 יכול להעתיק את כל הקישורים בקבוצת כרטיסיות.', source: 'נוסח התפריט ב-Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'איך משתפים כמה כרטיסיות בבת אחת?',
+      answer:
+        'ב-TabMerger Pro בוחרים את הקבוצות ולוחצים על שיתוף: קישור מוצפן אחד פותח את כולן בדף לקריאה בלבד. עם הכלים המובנים של הדפדפן אפשר להוסיף את הכרטיסיות לסימניות ולשלוח את קובץ הסימניות המיוצא, או ב-Firefox להעתיק את כל הקישורים בקבוצת כרטיסיות.',
+    },
+    {
+      question: 'האם הצד השני צריך TabMerger?',
+      answer: 'לא. קישור שיתוף נפתח בכל דפדפן, ואפשר לפתוח כרטיסייה אחת, חלון אחד או הכול. מי שמותקן אצלו TabMerger יכול אחר כך לשמור את הכרטיסיות כקבוצה משלו.',
+    },
+    {
+      question: 'האם TabMerger יכול לקרוא את הכרטיסיות שאני משתף?',
+      answer: 'לא. הכרטיסיות מוצפנות בדפדפן שלכם לפני ההעלאה, והמפתח נמצא רק בחלק ה-#fragment של הקישור, שאף פעם לא מגיע לשרת.',
+    },
+    {
+      question: 'האם השיתוף בחינם?',
+      answer: 'יצירת קישורי שיתוף היא חלק מ-Pro. העתקת קישורים ושיתוף של קובץ סימניות או קובץ JSON הם בחינם.',
+    },
+  ],
+  images: [
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp', alt: 'TabMerger עם הקבוצות Work ו-Reading list מסומנות, וסרגל הבחירה מציג את Star (סימון בכוכב), Unstar (הסרת הכוכב), Share (שיתוף) ו-Delete (מחיקה), ערכת נושא בהירה' },
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-dark.webp', alt: 'TabMerger עם הקבוצות Work ו-Reading list מסומנות, וסרגל הבחירה מציג את Star (סימון בכוכב), Unstar (הסרת הכוכב), Share (שיתוף) ו-Delete (מחיקה), ערכת נושא כהה' },
+    { src: '/blog/share-a-set-of-tabs/share-page-light.webp', alt: 'דף Shared Groups (קבוצות משותפות) של TabMerger, לקריאה בלבד, עם שתי קבוצות והלחצנים Open window (פתיחת החלון) ו-Open all tabs (פתיחת כל הכרטיסיות), ערכת נושא בהירה' },
+    { src: '/blog/share-a-set-of-tabs/share-page-dark.webp', alt: 'דף Shared Groups (קבוצות משותפות) של TabMerger, לקריאה בלבד, עם שתי קבוצות והלחצנים Open window (פתיחת החלון) ו-Open all tabs (פתיחת כל הכרטיסיות), ערכת נושא כהה' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'bookmarks', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Import Chrome bookmarks & settings (export section)', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/96816', checked: '2026-11-21' },
+    {
+      title: 'TabMerger source code (sharing)',
+      publisher: 'GitHub',
+      url: 'https://github.com/lbragile/TabMerger',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp' },
+  ogImage: { src: '/blog/share-a-set-of-tabs/og.png', alt: 'איך לשתף כמה כרטיסיות בבת אחת עם מישהו: מדריך של TabMerger, עם שתי קבוצות שנבחרו לשיתוף' },
+  toc: [
+    { id: 'quick', label: 'תשובה קצרה' },
+    { id: 'manual', label: 'בלי תוסף' },
+    { id: 'tabmerger', label: 'קישור מוצפן אחד' },
+    { id: 'what-they-see', label: 'מה הצד השני רואה' },
+    { id: 'faq', label: 'שאלות נפוצות' },
+  ],
+  browserSections: ['manual'],
+  browserFact: {
+    label: 'העתקה או ייצוא של קישורים',
+    values: { chrome: 'ניהול הסימניות ← ייצוא סימניות', edge: 'Favorites → Export favorites', firefox: 'קבוצת כרטיסיות ← העתקת הקישורים שבקבוצה' },
+  },
+}
+
+<QuickAnswer>
+
+הדרך של לחיצה אחת היא קישור שיתוף של [TabMerger](/features): בוחרים את הקבוצות, לוחצים על **שיתוף** (<bdi dir="ltr">Share</bdi>) ומדביקים את הקישור. מי שפותח אותו רואה את כל הכרטיסיות בדף לקריאה בלבד, ויכול לפתוח כרטיסייה אחת, חלון אחד או הכול, בלי חשבון. הכרטיסיות גם **מוצפנות מקצה לקצה**, כך שאפילו TabMerger לא יכול לקרוא אותן. בלי תוסף, מוסיפים את הכרטיסיות לסימניות ושולחים את קובץ הסימניות המיוצא, או ב-Firefox מעתיקים את כל הקישורים בקבוצת כרטיסיות.
+
+</QuickAnswer>
+
+<InstallCta>משתפים סט שלם של כרטיסיות בקישור מוצפן אחד. מתחילים בחינם; השיתוף הוא חלק מ-Pro.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="manual" title="איך משתפים כרטיסיות בלי תוסף?">
+
+<BrowserPanels section="manual">
+<BrowserPanel browser="chrome">
+
+1. לוחצים על <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> כדי להוסיף את הכרטיסיות של החלון לסימניות, בתיקייה חדשה.
+2. פותחים את **⋮ ← סימניות ורשימות ← ניהול הסימניות** (<bdi dir="ltr">Bookmark Manager</bdi>), ואז **⋮ (סמל האפשרויות הנוספות) ← ייצוא סימניות** (<bdi dir="ltr">Export bookmarks</bdi>).
+3. שולחים את קובץ ה-HTML. הצד השני מייבא אותו לדפדפן שלו (או ל-TabMerger).
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. לוחצים על <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> כדי להוסיף את הכרטיסיות של החלון למועדפים, בתיקייה חדשה.
+2. פותחים את המועדפים (<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd></bdi>) ובוחרים <bdi dir="ltr">**Export favorites**</bdi>.
+3. שולחים את קובץ ה-HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. מכניסים את הכרטיסיות לקבוצת כרטיסיות (גוררים כרטיסייה אחת אל אחרת).
+2. לוחצים לחיצה ימנית על התווית של הקבוצה ובוחרים **העתקת הקישורים שבקבוצה** (<bdi dir="ltr">Copy links in group</bdi>).
+3. מדביקים את הקישורים בהודעה או במסמך.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>קובץ סימניות מייצא את *כל* הסימניות שלכם, וקישורים מודבקים מגיעים כחומה של כתובות שהצד השני צריך לפתוח אחת־אחת.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="איך משתפים כרטיסיות בקישור אחד?">
+
+1. ב-TabMerger שומרים את הכרטיסיות בקבוצה (**מיזוג עם הנוכחיים**, <bdi dir="ltr">Merge with current</bdi>, שומר את כל החלונות הפתוחים).
+2. בסרגל הצד עושים **לחיצה עם <bdi dir="ltr">Ctrl</bdi>** (ב-Mac: לחיצה עם <bdi dir="ltr"><Kbd>⌘</Kbd></bdi>) על כל קבוצה שרוצים לשתף.
+3. לוחצים על **שיתוף** בסרגל הבחירה. הקישור מועתק ללוח; מדביקים אותו איפה שרוצים.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/tm-selection-share" alt="TabMerger עם הקבוצות Work ו-Reading list מסומנות, וסרגל הבחירה מציג את Star (סימון בכוכב), Unstar (הסרת הכוכב), Share (שיתוף) ו-Delete (מחיקה), ערכת נושא בהירה" darkAlt="TabMerger עם הקבוצות Work ו-Reading list מסומנות, וסרגל הבחירה מציג את Star (סימון בכוכב), Unstar (הסרת הכוכב), Share (שיתוף) ו-Delete (מחיקה), ערכת נושא כהה" boxes={[{ id: 'share', label: 'Share' }]} source="TabMerger 3.16.1">שתי קבוצות מסומנות; <bdi dir="ltr">Share</bdi> (שיתוף) יוצר קישור אחד לשתיהן (כאן בחשבון Free, שבו הלחצן כבוי).</ThemedScreenshot>
+
+איך זה נשאר פרטי: TabMerger יוצר מפתח חדש בדפדפן שלכם, מצפין בו את הקבוצות ומעלה רק את העותק המוצפן. המפתח נכנס לקישור אחרי ה-`#`, חלק של הכתובת שדפדפנים אף פעם לא שולחים לשרת, כך שרק מי שיש לו את הקישור המלא יכול לקרוא את הכרטיסיות. יצירת קישורים היא חלק מ-[Pro](/pricing).
+
+</Section>
+
+<Section id="what-they-see" title="מה הצד השני רואה?">
+
+דף לקריאה בלבד עם כל קבוצה וחלון, מספר הכרטיסיות, ולחצנים: **פתיחת כל הכרטיסיות** (<bdi dir="ltr">Open all tabs</bdi>) של חלון, **פתיחת החלון** (<bdi dir="ltr">Open window</bdi>) לקבוצה שלמה, או פתיחה של כרטיסיות בודדות. לא צריך חשבון, וגם לא TabMerger. מי שכן משתמש ב-TabMerger יכול לפתוח את הכרטיסיות ולשמור אותן כקבוצה משלו עם **מיזוג עם הנוכחיים**.
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/share-page" width={1600} height={1115} alt="דף Shared Groups (קבוצות משותפות) של TabMerger, לקריאה בלבד, עם שתי קבוצות והלחצנים Open window (פתיחת החלון) ו-Open all tabs (פתיחת כל הכרטיסיות), ערכת נושא בהירה" darkAlt="דף Shared Groups (קבוצות משותפות) של TabMerger, לקריאה בלבד, עם שתי קבוצות והלחצנים Open window (פתיחת החלון) ו-Open all tabs (פתיחת כל הכרטיסיות), ערכת נושא כהה" source="tabmerger.com/share/demo">דף השיתוף, מקישור ההדגמה הציבורי של TabMerger.</ThemedScreenshot>
+
+מעדיפים קובץ? [ייצוא JSON](/blog/export-open-tabs) (<bdi dir="ltr">Export JSON</bdi>) של TabMerger עובד גם בתוכנית החינמית, והמדריך [העברת כרטיסיות למחשב אחר](/blog/move-tabs-between-computers) מסביר איך עושים את זה בין המכשירים שלכם.
+
+<InstallCta>חינם ל-Chrome, ל-Edge ול-Firefox. לא צריך חשבון כדי להתחיל.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="שאלות נפוצות">
+
+<Faq items={post.faq} />
+
+</Section>

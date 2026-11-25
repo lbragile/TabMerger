@@ -1,0 +1,117 @@
+export const post = {
+  slug: 'organize-tabs-for-research',
+  title: 'Cara mengatur tab untuk riset: catatan, pengingat, dan sumber',
+  navTitle: 'Mengatur tab untuk riset',
+  seoTitle: 'Cara Mengatur Tab Browser untuk Riset (Catatan, Sesi, Sumber)',
+  description:
+    'Alur kerja tab untuk riset: satu grup TabMerger per proyek, catatan di setiap sumber penting, pengingat untuk kembali, sesi untuk menjeda seluruh proyek, dan ekspor sumber saat Anda mulai menulis.',
+  shareSummary: 'Satu grup per proyek, catatan di sumber, pengingat, dan ekspor saat Anda mulai menulis.',
+  dek: 'Empat puluh tab sumber adalah perpustakaan, bukan kekacauan, kalau masing-masing menjelaskan kenapa ia ada di sana.',
+  published: '2026-12-09',
+  updated: '2026-12-09',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Setiap tab tersimpan bisa punya catatan dan pengingat.', source: 'TabMerger 3.16.1' },
+    { text: 'Pengingat: 30 menit, 1 jam, 3 jam, besok, atau tanggal dan jam tertentu.', source: 'TabMerger 3.16.1' },
+    { text: 'Sesi menyimpan semua grup Anda untuk dipulihkan bersama; paket Gratis menyimpan 3.', source: 'Harga TabMerger', href: '/pricing' },
+    { text: 'Ekspor JSON mencantumkan judul dan alamat setiap sumber.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Bagaimana cara melacak sumber di browser?',
+      answer:
+        'Simpan tab setiap proyek sebagai grup TabMerger dan tambahkan catatan ke setiap sumber yang akan Anda kutip: kenapa penting, untuk bagian mana, untuk bab mana. Ctrl+K mencari judul dan alamat di semua grup Anda.',
+    },
+    {
+      question: 'Bisakah saya memasang pengingat untuk kembali ke sebuah tab?',
+      answer: 'Bisa. Klik kanan tab tersimpan di TabMerger lalu pilih “Ingatkan saya…”: 30 menit, 1 jam, 3 jam, besok, atau tanggal dan jam tertentu, dengan catatan opsional.',
+    },
+    {
+      question: 'Apakah tab riset sebaiknya dijadikan bookmark?',
+      answer: 'Untuk pekerjaan yang sedang berjalan, grup tersimpan lebih baik: semua tab tetap bersama catatannya dan bisa dibuka lagi dengan satu klik. Jadikan bookmark hanya beberapa yang akan Anda perlukan bertahun-tahun.',
+      link: { text: 'Jadikan bookmark', href: '/blog/tabs-vs-bookmarks' },
+    },
+    {
+      question: 'Bagaimana cara mengeluarkan daftar sumber saya?',
+      answer: 'Pengaturan → Data → Ekspor JSON menyimpan judul dan alamat semua grup dalam satu file yang bisa Anda ubah menjadi daftar pustaka.',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp', alt: 'Grup TabMerger “Thesis sources” dengan menu sebuah tab terbuka: Move to group (Pindahkan ke grup), Add note (Tambah catatan), Remind me… (Ingatkan saya…), Rename tab (Ganti nama tab), Remove tab (Hapus tab), tema terang' },
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-dark.webp', alt: 'Grup TabMerger “Thesis sources” dengan menu sebuah tab terbuka: Move to group (Pindahkan ke grup), Add note (Tambah catatan), Remind me… (Ingatkan saya…), Rename tab (Ganti nama tab), Remove tab (Hapus tab), tema gelap' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-light.webp', alt: 'Pemilih pengingat TabMerger di bawah sebuah tab: 30 min, 1 hour, 3 hours, Tomorrow (Besok), tanggal dan jam, serta catatan opsional, tema terang' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-dark.webp', alt: 'Pemilih pengingat TabMerger di bawah sebuah tab: 30 min, 1 hour, 3 hours, Tomorrow (Besok), tanggal dan jam, serta catatan opsional, tema gelap' },
+  ],
+  tags: ['research', 'tab-management', 'save-tabs', 'session-management'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-for-research/og.png', alt: 'Cara mengatur tab untuk riset: panduan TabMerger, dengan opsi catatan dan pengingat sebuah tab' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'project', label: 'Satu grup per proyek' },
+    { id: 'notes', label: 'Catatan dan pengingat' },
+    { id: 'sessions', label: 'Jeda seluruh proyek' },
+    { id: 'export', label: 'Ekspor sumber Anda' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Beri setiap proyek riset grup [TabMerger](/features) sendiri, dan tambahkan **catatan** ke setiap sumber yang akan Anda pakai, berisi alasan sumber itu penting. Pasang **pengingat** pada sumber yang perlu Anda buka lagi, simpan **sesi** untuk menjeda seluruh proyek lalu mengembalikannya dengan satu klik, dan **ekspor** grup ke sebuah file saat Anda menulis daftar pustaka.
+
+</QuickAnswer>
+
+<InstallCta>Ubah empat puluh tab sumber menjadi perpustakaan yang beranotasi dan bisa dicari. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+<Section id="project" title="Bagaimana cara mengatur tab proyek riset?">
+
+1. Klik **Tambah Grup** (Add Group) dan beri nama sesuai proyeknya, misalnya “Sumber skripsi” (di tangkapan layar “Thesis sources”).
+2. Buka menu **⋯** grup itu dan pilih **Gabungkan dengan sesi saat ini** (Merge with current): setiap tab yang terbuka disimpan ke dalamnya.
+3. Tutup jendela-jendelanya saat Anda selesai hari ini. Grup menyimpan semuanya, dan <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> menemukan sumber mana pun lewat judul atau alamatnya nanti.
+
+Simpan satu jendela per topik (makalah, data, latar belakang) di dalam grup, dan beri nama masing-masing. Separuh pekerjaan dengan tab riset adalah memutuskan apa yang layak disimpan; [panduan tab vs bookmark](/blog/tabs-vs-bookmarks) kami membantu Anda memutuskannya.
+
+</Section>
+
+<Section id="notes" title="Bagaimana cara memberi anotasi pada sumber dan kembali ke sana?">
+
+Klik kanan tab tersimpan mana pun:
+
+- **Tambah catatan** (Add note): kenapa sumber ini penting. Ikon catatan menandai tab yang punya catatan.
+- **Ingatkan saya…** (Remind me…): 30 menit, 1 jam, 3 jam, besok, atau tanggal dan jam pilihan Anda, dengan catatan opsional. TabMerger menampilkan notifikasi browser saat waktunya tiba.
+- **Ganti nama tab** (Rename tab): ganti judul halaman yang sulit dipahami (“[1706.03762]”) dengan sesuatu yang akan Anda cari.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Catatan dan pengingat pada sebuah sumber" steps={[{ title: 'Menu tab' }, { title: 'Pengingat' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-tab-menu" alt="Grup TabMerger “Thesis sources” dengan menu sebuah tab terbuka: Move to group (Pindahkan ke grup), Add note (Tambah catatan), Remind me… (Ingatkan saya…), Rename tab (Ganti nama tab), Remove tab (Hapus tab), tema terang" darkAlt="Grup TabMerger “Thesis sources” dengan menu sebuah tab terbuka: Move to group (Pindahkan ke grup), Add note (Tambah catatan), Remind me… (Ingatkan saya…), Rename tab (Ganti nama tab), Remove tab (Hapus tab), tema gelap" boxes={[{ id: 'add-note', label: 'Tambah catatan' }, { id: 'remind-me', label: 'Ingatkan saya…' }]} source="TabMerger 3.16.1">Klik kanan sebuah sumber untuk memberinya anotasi; tab pertama sudah punya catatan.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-reminder" alt="Pemilih pengingat TabMerger di bawah sebuah tab: 30 min, 1 hour, 3 hours, Tomorrow (Besok), tanggal dan jam, serta catatan opsional, tema terang" darkAlt="Pemilih pengingat TabMerger di bawah sebuah tab: 30 min, 1 hour, 3 hours, Tomorrow (Besok), tanggal dan jam, serta catatan opsional, tema gelap" boxes={[{ id: 'remind-in', label: 'Ingatkan saya dalam…' }]} source="TabMerger 3.16.1">Pilih kapan kembali, dan tinggalkan catatan untuk diri Anda di masa depan.</ThemedScreenshot>
+</Carousel>
+
+Untuk menjalankan seluruh daftar bacaan dengan cara ini, lihat [memakai tab sebagai daftar tugas](/blog/tabs-as-a-to-do-list).
+
+</Section>
+
+<Section id="sessions" title="Bagaimana cara menjeda seluruh proyek dan melanjutkannya nanti?">
+
+**Simpan sesi saat ini** (Save current session, di bagian Sesi pada sidebar) mengambil snapshot bernama dari semua grup tersimpan Anda; **Pulihkan sesi** (Restore session) mengembalikan semuanya sekaligus. Gunakan di setiap tahap penting, seperti “Sebelum tinjauan pustaka”, agar nanti Anda bisa kembali ke kumpulan yang persis sama. Paket Gratis menyimpan 3 sesi di browser; [Pro](/pricing) menyimpan sesi tanpa batas dan menyinkronkannya antarperangkat Anda, terenkripsi end-to-end. Selengkapnya tentang sesi di [apa yang dilakukan pengelola sesi](/blog/browser-session-manager).
+
+</Section>
+
+<Section id="export" title="Bagaimana cara mengekspor sumber saat mulai menulis?">
+
+Buka **Pengaturan → Data** (Settings → Data) lalu tekan **Ekspor JSON** (Export JSON). File itu mencantumkan setiap grup, jendela, dan tab beserta judul dan alamatnya, siap diubah menjadi daftar pustaka dengan skrip pendek atau editor teks. Detail dan contoh per kolomnya ada di [cara mengekspor tab yang terbuka](/blog/export-open-tabs).
+
+<InstallCta>Gratis untuk Chrome, Edge, dan Firefox. Tidak perlu akun untuk mulai.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

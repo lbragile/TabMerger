@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'Un atajo, restaurar al iniciar y recuperar pestañas cerradas en Chrome, Edge y Firefox.',
   dek: 'Cinco formas de conservar todas tus pestañas abiertas, y lo que cada una pasa por alto sin avisar.',
   published: '2026-11-19',
-  updated: '2026-11-19',
+  updated: '2026-11-24',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D guarda solo la ventana actual.', source: 'Probado en los tres, 19 nov. 2026' },
@@ -117,9 +117,11 @@ export const post = {
 
 <QuickAnswer>
 
-Para guardar todas las pestañas abiertas, pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> en Mac): cada pestaña de la ventana actual se guarda como marcador en una carpeta nueva. Funciona en Chrome, Edge y Firefox. Para que las pestañas se reabran solas, activa **Continuar donde lo dejaste** («Continue where you left off», Chrome), **Open tabs from the previous session** (Edge) o **Abrir ventanas y pestañas anteriores** («Open previous windows and tabs», Firefox).
+Para guardar todas las pestañas abiertas, pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> en Mac): cada pestaña de la ventana actual se guarda como marcador en una carpeta nueva. Funciona en Chrome, Edge y Firefox. Para que las pestañas se reabran solas, activa **Continuar donde lo dejaste** («Continue where you left off», Chrome), **Open tabs from the previous session** (Edge) o **Abrir ventanas y pestañas anteriores** («Open previous windows and tabs», Firefox). Para guardar **todas las ventanas a la vez** y buscar las pestañas más tarde, usa [TabMerger](/features): con un clic guardas todas tus ventanas abiertas en un grupo con nombre.
 
 </QuickAnswer>
+
+<InstallCta>Guarda todas tus ventanas abiertas con un clic. Gratis para Chrome, Edge y Firefox.</InstallCta>
 
 <BrowserSwitcher />
 
@@ -200,7 +202,7 @@ En Firefox: **Ajustes → Inicio → Abrir ventanas y pestañas anteriores** («
 
 <Section id="closed" title="3. Recupera pestañas que ya cerraste">
 
-Pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) para reabrir la última pestaña o ventana que cerraste; vuelve a pulsarlo para seguir retrocediendo. Para algo más antiguo, abre el historial con <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>.
+Pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>) para reabrir la última pestaña o ventana que cerraste; vuelve a pulsarlo para seguir retrocediendo. Para algo más antiguo, abre el historial con <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>. Si se bloqueó o se cerró todo el navegador, sigue estos pasos para [restaurar las pestañas tras un bloqueo](/blog/restore-tabs-after-crash).
 
 <BrowserPanels section="closed">
 <BrowserPanel browser="chrome">
@@ -232,7 +234,9 @@ Firefox muestra las pestañas y ventanas cerradas recientemente en el menú **Hi
 
 - **Chrome** puede guardar un grupo y volver a abrirlo, pero las extensiones no ven un grupo guardado que está cerrado ([API tabGroups](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
 - Los grupos de **Firefox** se quedan en el dispositivo y no viajan con Firefox Sync.
-- **Edge** ya no tiene Colecciones («Collections») desde Edge 149.
+- **Edge** ya no tiene Colecciones («Collections») desde Edge 149 ([qué usar en su lugar](/blog/edge-collections-replacement)).
+
+Cómo guardar, reabrir y sincronizar grupos, paso a paso, lo explica nuestra [guía de los grupos de pestañas de Chrome](/blog/chrome-tab-groups).
 
 {/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
 
@@ -260,14 +264,14 @@ Cada método integrado cubre una ventana, un reinicio o una pestaña cerrada a l
   head={['Atajo', 'Guarda']}
   keysColumn={0}
   rows={[
-    ['Ctrl+Shift+P', 'Todas las demás pestañas de la ventana'],
-    ['Ctrl+Shift+S', 'La pestaña actual'],
-    ['Ctrl+Shift+K', 'Las pestañas a la izquierda'],
-    ['Ctrl+Shift+U', 'Las pestañas a la derecha'],
+    ['Alt+Shift+O', 'Todas las demás pestañas de la ventana'],
+    ['Alt+Shift+S', 'La pestaña actual'],
+    ['Alt+Shift+Comma', 'Las pestañas a la izquierda'],
+    ['Alt+Shift+Period', 'Las pestañas a la derecha'],
   ]}
 />
 
-En Mac, usa <Kbd>⌘</Kbd>. Cada atajo pregunta dónde guardar; **Guardado rápido (grupo nuevo)** crea un grupo al momento. En Firefox, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> abre una ventana privada, así que elige otra tecla en `about:addons` → «Manage Extension Shortcuts».
+En Mac, pulsa <Kbd>Control</Kbd> en lugar de <Kbd>Alt</Kbd>. Cada atajo pregunta dónde guardar; **Guardado rápido (grupo nuevo)** crea un grupo al momento. Estas son las teclas de una instalación nueva; una anterior conserva las que tenía, y puedes cambiar cualquiera en la página de atajos de tu navegador, como explica nuestra [guía de atajos de teclado para pestañas](/blog/tab-keyboard-shortcuts).
 
 ### ¿Cerraste algo sin querer?
 
@@ -308,7 +312,7 @@ En Mac, usa <Kbd>⌘</Kbd>. Cada atajo pregunta dónde guardar; **Guardado rápi
   ]}
 />
 
-Activa el ajuste de inicio elijas lo que elijas. Guarda en marcadores una ventana suelta que valga la pena. Usa una extensión cuando manejas varias ventanas o necesitas una pestaña cerrada días después. Más en nuestra [página de comparación](/compare).
+Activa el ajuste de inicio elijas lo que elijas. Guarda en marcadores una ventana suelta que valga la pena. Para varias ventanas, o una pestaña cerrada hace días, TabMerger lo hace con un clic y también puede [exportarlo todo a un archivo](/blog/export-open-tabs). Más en nuestra [página de comparación](/compare) y en [las mejores extensiones para gestionar pestañas, comparadas](/blog/best-tab-manager-extensions).
 
 </Section>
 

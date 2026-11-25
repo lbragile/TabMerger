@@ -1,0 +1,183 @@
+export const post = {
+  slug: 'browser-tab-features-compared',
+  title: 'Chrome, Edge ve Firefox karşılaştırması: yerleşik sekme özellikleri',
+  navTitle: 'Sekme özellikleri: Chrome, Edge, Firefox',
+  seoTitle: 'Chrome vs Edge vs Firefox: Sekme Özellikleri Karşılaştırması (2026)',
+  description:
+    'Sekme grupları, sekme arama, dikey sekmeler, bölünmüş görünüm, uyuyan sekmeler ve yinelenenleri kapatma: Chrome 157, Edge 158 ve Firefox 159’da hangi yerleşik sekme özellikleri var ve TabMerger aynı katmanı üçüne de nasıl ekliyor.',
+  shareSummary: 'Chrome, Edge ve Firefox’ta yerleşik gelen sekme özellikleri, yan yana.',
+  dek: 'Her tarayıcı sekme sorununun bir kısmını çözüyor. Hangi kısmını çözdüğü ve kalanını üçünde birden nasıl elde edeceğiniz burada.',
+  published: '2026-12-05',
+  updated: '2026-12-05',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Üçünde de sekme grupları, sekme arama, dikey sekmeler ve bölünmüş görünüm var.', source: 'Yardım sayfaları ve arayüz metinleri, 21 Kas 2026' },
+    { text: 'Yerleşik “Yinelenen sekmeleri kapat” (Close Duplicate Tabs) komutu yalnızca Firefox 159’da var.', source: 'Firefox 159 menü metni' },
+    {
+      text: 'Chrome, sekme gruplarını Google Hesabınız üzerinden senkronize eder.',
+      source: 'Chrome Yardım',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'TabMerger üçüne de tek bir arama, otomatik kaydetme ve şifreli senkronizasyon ekler.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Hangi tarayıcının sekme özellikleri en iyisi?',
+      answer:
+        'Her biri bir yerde öne çıkıyor: Chrome kaydedilen ve senkronize edilen sekme gruplarında, Edge varsayılan olarak açık gelen uyuyan sekmelerde, Firefox yinelenenleri kapatmada. TabMerger üçüne de aynı grupları, aynı aramayı, otomatik kaydetmeyi ve senkronizasyonu verir.',
+    },
+    {
+      question: 'Chrome, Edge ve Firefox’un hepsinde sekme grupları var mı?',
+      answer: 'Evet. Üçü de sekmeleri bir ad ve renkle gruplamanıza izin verir; Chrome ve Firefox ayrıca bir grubu kapatıp daha sonra yeniden açabilir.',
+    },
+    {
+      question: 'Chrome, Edge ve Firefox’ta aynı sekme yöneticisini kullanabilir miyim?',
+      answer: 'Evet. TabMerger üçünde de çalışır ve Pro, gruplarınızı aralarında uçtan uca şifreli olarak senkronize eder.',
+    },
+    {
+      question: 'Hangi tarayıcı yinelenen sekmeleri kapatır?',
+      answer: 'Firefox, herhangi bir sekmenin sağ tık menüsünden. Chrome ve Edge’de bunu TabMerger’in “Yinelenen sekmeleri kaldır” komutu tüm pencerelerde yapar.',
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'TabMerger araması açık ve boş, group:, window:, tag: ve closed: filtrelerini listeliyor, açık tema' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'TabMerger araması açık ve boş, group:, window:, tag: ve closed: filtrelerini listeliyor, koyu tema' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Chrome Ayarları, Performance (Performans) bölümü ve Memory Saver (Bellek Tasarrufu) anahtarı' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Edge Ayarları, Performance bölümü: Automatically put tabs to sleep açık ve 15 dakikaya ayarlı' },
+  ],
+  tags: ['cross-browser', 'comparison', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    { title: 'Chrome keyboard shortcuts', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/157179', checked: '2026-11-21' },
+    { title: 'Personalize Chrome performance', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/12929150', checked: '2026-11-21' },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp' },
+  ogImage: { src: '/blog/browser-tab-features-compared/og.png', alt: 'Chrome, Edge ve Firefox karşılaştırması: yerleşik sekme özellikleri. TabMerger’in arama filtreleriyle bir TabMerger rehberi' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'matrix', label: 'Özellik tablosu' },
+    { id: 'turn-on', label: 'Açmaya değer ayarlar' },
+    { id: 'tabmerger', label: 'Üçü için tek katman' },
+    { id: 'faq', label: 'SSS' },
+  ],
+  browserSections: ['turn-on'],
+  browserFact: {
+    label: 'Bellek ayarı',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Ayarlar → System and performance → Performance',
+      firefox: 'Sekmeye sağ tıklayın → Sekmeyi boşalt',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Üç tarayıcıda da artık **sekme grupları, sekme arama, dikey sekmeler ve bölünmüş görünüm** var. Chrome grupları kaydetme ve senkronize etmede önde, Edge boşta kalan sekmeleri varsayılan olarak uyutuyor, Firefox ise yinelenen sekmeleri kendiliğinden kapatan tek tarayıcı. Hiçbiri kaydettiğiniz ve kapattığınız sekmelerde arama yapmıyor, pencerelerinizi otomatik kaydetmiyor ya da tarayıcılar arasında çalışmıyor. [TabMerger](/features) tam olarak bu katmanı Chrome, Edge ve Firefox’a aynı şekilde ekliyor.
+
+</QuickAnswer>
+
+<InstallCta>Chrome, Edge ve Firefox’ta aynı gruplar, aynı arama ve senkronizasyon. Ücretsiz.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="matrix" title="Hangi tarayıcıda hangi sekme özellikleri var?">
+
+Chrome 157, Edge 158 ve Firefox 159’da, her tarayıcının yardım sayfalarına ve kendi arayüz metinlerine bakılarak 21 Kas 2026’da kontrol edildi. “Belirtilmemiş”, yardım sayfalarında ya da tarayıcının metinlerinde hiçbir iz bulamadığımız anlamına gelir; özelliğin olmadığının kanıtı değildir.
+
+<ComparisonTable
+  head={['Özellik', 'Chrome 157', 'Edge 158', 'Firefox 159', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="52rem"
+  rows={[
+    ['Sekme grupları', 'Evet', 'Evet', 'Evet', 'Tüm pencerelerde adlı, renk kodlu gruplar'],
+    ['Grubu kapatıp sonra yeniden açma', 'Evet (⋮ → Sekme grupları)', 'Close group (yeniden açma belirtilmemiş)', 'Evet (Grubu kaydet ve kapat)', 'Her grup kayıtlı kalır'],
+    ['Diğer cihazlarda gruplar', 'Evet, Google Hesabı üzerinden', 'Belirtilmemiş', 'Senkronizasyon ayarlarında yok', 'Pro, uçtan uca şifreli'],
+    ['Sekmelerde arama', 'Açık sekmeler (Ctrl+Shift+A, @sekmeler)', 'Search tabs (kısayol belirtilmemiş)', 'Tüm sekmeleri listele (Ctrl+Shift+A)', 'Açık, kayıtlı ve kapatılmış (Ctrl+K)'],
+    ['Dikey sekmeler', 'Evet', 'Evet', 'Evet', 'Geçerli değil'],
+    ['Bölünmüş görünüm', 'Evet', 'Evet', 'Evet', 'Geçerli değil'],
+    ['Boştaki sekmelerden bellek boşaltma', 'Bellek Tasarrufu (varsayılan olarak kapalı)', 'Uyuyan sekmeler (varsayılan olarak açık)', 'Sekmeyi boşalt, elle', 'Kaydet, sonra tek tıkla tüm pencereleri kapat'],
+    ['Yinelenen sekmeleri kapatma', 'Belirtilmemiş', 'Belirtilmemiş', 'Yinelenen sekmeleri kapat', 'Tüm pencerelerde “Yinelenen sekmeleri kaldır”'],
+    ['Kapatılan pencereyi yeniden açma', 'Ctrl+Shift+T', 'Belirtilmemiş', 'Ctrl+Shift+N', 'Son kapatılanlar: 2 gün (Ücretsiz), 30 (Pro)'],
+    ['Açık sekmeleri bir zamanlamayla kaydetme', 'Belirtilmemiş', 'Belirtilmemiş', 'Belirtilmemiş', 'Zamanlamaya ya da sekme sayısına göre otomatik kaydetme'],
+    ['Sekmeleri dışa aktarma', 'Yer işaretleri üzerinden (HTML)', 'Sık Kullanılanlar üzerinden (HTML)', 'Yer imleri üzerinden (HTML)', 'JSON, açık ve kayıtlı sekmeler bir arada'],
+  ]}
+/>
+
+Edge’in sayfa setlerini kaydetmenin eski yolu olan Koleksiyonlar artık yok: Microsoft onları Edge 149’da kaldırdı. [Edge Koleksiyonlar yerine ne kullanılacağına](/blog/edge-collections-replacement) göz atın.
+
+</Section>
+
+<Section id="turn-on" title="Hangi yerleşik ayarlar açmaya değer?">
+
+<BrowserPanels section="turn-on">
+<BrowserPanel browser="chrome">
+
+1. **Bellek Tasarrufu** (Memory Saver): Ayarlar → Performans (Settings → Performance, `chrome://settings/performance`). Yeni bir profilde kapalıdır.
+2. Çok sekme açık tutuyorsanız **dikey sekmeler**: sekme şeridine sağ tıklayıp **Sekmeleri Dikey Olarak Göster** (Show Tabs Vertically) seçeneğini seçin ya da Ayarlar → Görünüm → Sekme konumu (Settings → Appearance → Tab position) yolunu izleyin.
+3. **Sekme Arama** (Tab Search): <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> ya da adres çubuğuna `@sekmeler` yazın (İngilizce Chrome’da `@tabs`).
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Chrome Ayarları, Performance (Performans) bölümü ve Memory Saver (Bellek Tasarrufu) anahtarı" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">Chrome’un Memory Saver (Bellek Tasarrufu) özelliği, yeni bir Chrome 157 profilinde kapalı.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. **Uyuyan sekmeler** (Sleeping tabs) zaten açık: bekleme süresini Ayarlar → System and performance → Performance altından ayarlayın.
+2. Edge 158’de ayrıca **dikey sekmeler** ve **Search tabs** var (ikisi de arayüz metinlerinde geçiyor); Microsoft’un kısayol listesi Search tabs için tuş vermiyor.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Edge Ayarları, Performance bölümü: Automatically put tabs to sleep açık ve 15 dakikaya ayarlı" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Edge’in uyuyan sekmeleri varsayılan olarak açık: etkin olmayan sekmeler 15 dakika sonra uykuya geçer.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. **Dikey sekmeler**: kenar çubuğuna sağ tıklayıp **Dikey sekmeleri aç** (Turn on Vertical Tabs) seçeneğini seçin.
+2. **Yinelenen sekmeleri kapat** (Close Duplicate Tabs) ve **Sekmeyi boşalt** (Unload Tab) her sekmenin sağ tık menüsünde.
+3. **Tüm sekmeleri listele** (List all tabs): <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox tab right-click menu with Close Duplicate Tabs and Unload Tab. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+Tüm tuşlar [sekme klavye kısayolları rehberimizde](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="tabmerger" title="Eksik katmanı her tarayıcıya ekleyin">
+
+Tabloda her tarayıcının boş bir satırı var: hiçbiri sekmelerinizi kendi penceresinin **ötesinde** ya da tarayıcılar arasında düzenli tutmuyor. [TabMerger](/features) tutuyor, hem de Chrome, Edge ve Firefox’ta aynı şekilde:
+
+1. **Şu An Açık** açık olan her pencereyi gösterir; **Mevcutla birleştir** hepsini tek tıkla adlı bir gruba kaydeder.
+2. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>, açık, kayıtlı ve son kapatılan sekmelerde aynı anda `group:`, `window:`, `tag:` ve `closed:` filtreleriyle arama yapar.
+3. **Otomatik kaydetme**, sekmelerinizin güncel bir kopyasını bir zamanlamayla tutar; **Yinelenen sekmeleri kaldır** her penceredeki tekrarları temizler.
+4. [Pro](/pricing) ile gruplarınız tüm tarayıcılarınız arasında uçtan uca şifreli olarak senkronize olur.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="TabMerger araması açık ve boş, group:, window:, tag: ve closed: filtrelerini listeliyor, açık tema" darkAlt="TabMerger araması açık ve boş, group:, window:, tag: ve closed: filtrelerini listeliyor, koyu tema" boxes={[{ id: 'search-input', label: 'Arama' }]} source="TabMerger 3.16.1">Her sekme için tek arama, TabMerger’in çalıştığı her tarayıcıda.</ThemedScreenshot>
+
+Diğer uzantılarla bir karşılaştırma için [en iyi sekme yöneticisi uzantılarına](/blog/best-tab-manager-extensions) bakın.
+
+<InstallCta>Chrome, Edge ve Firefox için ücretsiz. Başlamak için hesap gerekmez.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

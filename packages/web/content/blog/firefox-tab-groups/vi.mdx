@@ -1,0 +1,134 @@
+export const post = {
+  slug: 'firefox-tab-groups',
+  title: 'Nhóm tab trong Firefox: cách lưu, mở lại và giữ chúng lâu dài',
+  navTitle: 'Nhóm tab trong Firefox',
+  seoTitle: 'Nhóm tab Firefox: Lưu, Mở lại, Đồng bộ và các giới hạn',
+  description:
+    'Cách nhóm tab hoạt động trong Firefox 159: tạo nhóm, chọn màu, thu gọn, lưu và đóng nhóm rồi mở lại sau, Firefox Sync đồng bộ những gì, và cách giữ nhóm an toàn trên mọi thiết bị với TabMerger.',
+  shareSummary: 'Tạo, lưu, mở lại và giữ nhóm tab Firefox, cùng những gì Firefox Sync đồng bộ.',
+  dek: 'Giờ đây có thể lưu và đóng nhóm trong Firefox. Đây là nơi chúng được cất và cách giữ chúng lâu dài.',
+  published: '2026-12-07',
+  updated: '2026-12-07',
+  testedOn: ['Firefox 159.0.1'],
+  keyFacts: [
+    { text: '“Lưu và đóng nhóm” giữ lại nhóm để mở lại sau.', source: 'Văn bản menu của Firefox 159' },
+    { text: 'Các nhóm đã đóng nằm trong “Nhóm đã đóng” và “Nhóm thẻ gần đây”.', source: 'Văn bản menu của Firefox 159' },
+    { text: 'Cài đặt Firefox Sync có mục “Các thẻ đang mở”, nhưng không có mục riêng cho nhóm tab.', source: 'Văn bản cài đặt của Firefox 159' },
+    { text: 'Menu của một nhóm có thể sao chép tất cả liên kết trong nhóm cùng lúc.', source: 'Văn bản menu của Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Làm thế nào để lưu một nhóm tab trong Firefox?',
+      answer: 'Nhấp chuột phải vào nhãn của nhóm và chọn “Lưu và đóng nhóm”. Sau đó mở lại từ “Nhóm đã đóng” hoặc danh sách “Nhóm thẻ”.',
+    },
+    {
+      question: 'Nhóm tab trong Firefox có đồng bộ không?',
+      answer:
+        'Cài đặt đồng bộ của Firefox 159 liệt kê Dấu trang, Lịch sử, Các thẻ đang mở và các mục khác, nhưng không có mục riêng cho nhóm tab. Để có cùng các nhóm trên mọi thiết bị, TabMerger Pro đồng bộ chúng với mã hóa đầu cuối.',
+    },
+    {
+      question: '“Lưu và đóng nhóm” khác “Xoá nhóm” thế nào?',
+      answer: '“Lưu và đóng nhóm” giữ lại nhóm để mở lại sau. “Xoá nhóm” xóa nhóm; “Bỏ nhóm thẻ” giữ các tab mở nhưng bỏ nhóm.',
+    },
+    {
+      question: 'Tôi có thể sao chép tất cả liên kết trong một nhóm tab Firefox không?',
+      answer: 'Có: menu nhóm trong Firefox 159 có “Sao chép liên kết trong nhóm”. TabMerger cũng có thể xuất toàn bộ nhóm ra tệp JSON.',
+    },
+  ],
+  images: [
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp', alt: 'Nhóm TabMerger Home renovation chứa ba cửa sổ đã lưu với chín tab, một số tab gắn nhãn nhóm tab Kitchen và Quotes của chúng, giao diện sáng' },
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-dark.webp', alt: 'Nhóm TabMerger Home renovation chứa ba cửa sổ đã lưu với chín tab, một số tab gắn nhãn nhóm tab Kitchen và Quotes của chúng, giao diện tối' },
+  ],
+  tags: ['firefox', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Tab groups in Firefox',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/tab-groups',
+      checked: '2026-11-21',
+      note: 'Menu names and settings were read from Firefox 159.0.1’s own interface text; this page blocked our automated check.',
+    },
+    {
+      title: 'Firefox Sync: what it is and how it works',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/firefox-sync-what-it-is-and-how-it-works',
+      checked: '2026-11-21',
+      note: 'The list of synced data was read from Firefox 159.0.1’s settings text.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-23',
+  cover: { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp' },
+  ogImage: { src: '/blog/firefox-tab-groups/og.png', alt: 'Thẻ tiêu đề “Firefox tab groups: how to save, reopen and keep them”: hướng dẫn của TabMerger, kèm một nhóm đã lưu gồm hai cửa sổ' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'basics', label: 'Tạo nhóm' },
+    { id: 'save', label: 'Lưu và mở lại' },
+    { id: 'sync', label: 'Có đồng bộ không?' },
+    { id: 'tabmerger', label: 'Giữ lâu dài' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+}
+
+<QuickAnswer>
+
+Kéo một tab thả lên tab khác, hoặc nhấp chuột phải vào một tab, để tạo nhóm trong Firefox. Để giữ nhóm cho lần sau, nhấp chuột phải vào nhãn của nhóm và chọn **Lưu và đóng nhóm** (“Save and close group”); mở lại từ **Nhóm đã đóng** (“Closed Groups”) hoặc danh sách **Nhóm thẻ** (“Tab groups”). Cài đặt Firefox Sync không có mục riêng cho nhóm tab, nên để có cùng các nhóm trên mọi thiết bị và tìm kiếm được cùng mọi thứ khác, hãy lưu chúng trong [TabMerger](/features).
+
+</QuickAnswer>
+
+<InstallCta>Giữ các nhóm Firefox của bạn được lưu, tìm kiếm được và đồng bộ. Miễn phí cho Firefox, Chrome và Edge.</InstallCta>
+
+<Section id="basics" title="Nhóm tab trong Firefox hoạt động thế nào?">
+
+Theo chính giao diện của Firefox 159 (Firefox gọi tab là “thẻ”):
+
+1. **Tạo:** kéo một tab thả lên tab khác, hoặc nhấp chuột phải vào một tab và thêm nó vào nhóm mới. Firefox hỏi **Tên** (“Name”) và màu (xanh dương, xanh lơ, xám, xanh lá cây, cam, hồng, tím, đỏ hoặc vàng).
+2. **Thu gọn:** nhấp vào nhãn của nhóm để gập nó lại bằng độ rộng một tab.
+3. **Quản lý:** nhấp chuột phải vào nhãn để thấy **Lưu và đóng nhóm**, **Bỏ nhóm thẻ** (“Ungroup tabs”), **Xoá nhóm** (“Delete group”), **Chuyển nhóm sang cửa sổ mới** (“Move group to new window”), **Sao chép liên kết trong nhóm** (“Copy links in group”) và **Chia sẻ nhóm** (“Share group”).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's tab group editor with Name, colours and Save and close group. */}
+
+</Section>
+
+<Section id="save" title="Làm sao để lưu một nhóm và lấy lại nó?">
+
+- **Lưu:** nhấp chuột phải vào nhãn của nhóm → **Lưu và đóng nhóm**. Các tab đóng lại; nhóm được giữ.
+- **Mở lại:** nhấp chuột phải vào một tab → thêm vào nhóm → **Nhóm đã đóng**, hoặc mở danh sách **Nhóm thẻ** (Firefox hiển thị **Nhóm thẻ gần đây** ở đó, “Recent tab groups”), chọn nhóm rồi chọn **Mở lại nhóm thẻ** (“Reopen tab group”).
+- **Xóa:** **Xoá nhóm** xóa nhóm vĩnh viễn.
+
+<Catch>nhóm đã lưu chỉ nằm trong hồ sơ Firefox này. Nó không phải bản sao lưu và, theo những gì cài đặt đồng bộ cho thấy, nó không theo bạn sang thiết bị khác.</Catch>
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's Tab groups list with a closed group. */}
+
+</Section>
+
+<Section id="sync" title="Nhóm tab trong Firefox có đồng bộ không?">
+
+Cài đặt **Đồng bộ hóa** (“Sync”) của Firefox 159 liệt kê những gì được đồng bộ: **Dấu trang, Lịch sử, Các thẻ đang mở, Mật khẩu, Địa chỉ, Phương thức thanh toán, Tiện ích và Cài đặt** (“Bookmarks, History, Open tabs, Passwords, Addresses, Payment methods, Add-ons and Settings”). “Các thẻ đang mở” được mô tả là “Danh sách những trang web đang mở trên các thiết bị được đồng bộ”. Không có mục riêng cho nhóm tab, nên đừng trông chờ một nhóm đã lưu sẽ xuất hiện trên máy tính khác của bạn.
+
+Với cùng ý tưởng trong Chrome, hãy xem [hướng dẫn về nhóm tab trong Chrome](/blog/chrome-tab-groups), nơi nhóm được đồng bộ qua Tài khoản Google.
+
+</Section>
+
+<Section id="tabmerger" title="Giữ các nhóm của bạn lâu dài với TabMerger">
+
+[TabMerger](/features) chạy trên Firefox, Chrome và Edge, và giữ những nhóm mà trình duyệt không giữ được:
+
+1. Nhấp **Thêm Nhóm**, đặt tên, rồi chọn **Hợp nhất với phiên hiện tại** trong menu **⋯** của nhóm: mọi cửa sổ và tab đang mở đều được lưu vào đó.
+2. Đóng các cửa sổ. Nhóm vẫn còn, với từng tab, và tìm kiếm được bằng <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+3. Mở lại một tab, một cửa sổ hoặc tất cả, bất cứ lúc nào.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/firefox-tab-groups/tm-kept-groups" alt="Nhóm TabMerger Home renovation chứa ba cửa sổ đã lưu với chín tab, một số tab gắn nhãn nhóm tab Kitchen và Quotes của chúng, giao diện sáng" darkAlt="Nhóm TabMerger Home renovation chứa ba cửa sổ đã lưu với chín tab, một số tab gắn nhãn nhóm tab Kitchen và Quotes của chúng, giao diện tối" boxes={[{ id: 'summary', label: 'Cửa sổ và tab đã lưu' }]} source="TabMerger 3.16.1">Một nhóm đã lưu: ba cửa sổ, chín tab, sẵn sàng để mở lại.</ThemedScreenshot>
+
+Với [Pro](/pricing), các nhóm của bạn đồng bộ giữa Firefox, Chrome và Edge trên mọi thiết bị, được mã hóa đầu cuối nên máy chủ không đọc được. Xem thêm thói quen trong [thói quen xử lý quá nhiều tab](/blog/manage-too-many-tabs).
+
+<InstallCta>Miễn phí cho Firefox, Chrome và Edge. Không cần tài khoản để bắt đầu.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+</Section>

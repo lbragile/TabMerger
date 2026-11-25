@@ -1,0 +1,183 @@
+export const post = {
+  slug: 'browser-tab-features-compared',
+  title: 'Chrome vs Edge vs Firefox : les fonctions d’onglets intégrées comparées',
+  navTitle: 'Fonctions d’onglets : Chrome, Edge, Firefox',
+  seoTitle: 'Chrome vs Edge vs Firefox : comparatif des fonctions d’onglets (2026)',
+  description:
+    'Groupes d’onglets, recherche d’onglets, onglets verticaux, vue partagée, onglets en veille et fermeture des doublons : les fonctions d’onglets intégrées à Chrome 157, Edge 158 et Firefox 159, et comment TabMerger ajoute la même couche aux trois.',
+  shareSummary: 'Les fonctions d’onglets intégrées à Chrome, Edge et Firefox, côte à côte.',
+  dek: 'Chaque navigateur règle une partie du problème des onglets. Voici laquelle, et comment obtenir le reste dans les trois.',
+  published: '2026-12-05',
+  updated: '2026-12-05',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Les trois ont des groupes d’onglets, une recherche d’onglets, des onglets verticaux et une vue partagée.', source: 'Leurs pages d’aide et textes d’interface, 21 nov. 2026' },
+    { text: 'Seul Firefox 159 intègre « Fermer les onglets en double » (Close Duplicate Tabs).', source: 'Texte de menu de Firefox 159' },
+    {
+      text: 'Chrome synchronise les groupes d’onglets via votre compte Google.',
+      source: 'Aide Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'TabMerger ajoute aux trois une recherche unique, l’enregistrement automatique et une synchronisation chiffrée.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Quel navigateur a les meilleures fonctions d’onglets ?',
+      answer:
+        'Chacun mène quelque part : Chrome sur les groupes d’onglets enregistrés et synchronisés, Edge sur les onglets en veille activés par défaut, Firefox sur la fermeture des doublons. TabMerger donne aux trois les mêmes groupes, la même recherche, l’enregistrement automatique et la synchronisation.',
+    },
+    {
+      question: 'Chrome, Edge et Firefox ont-ils tous des groupes d’onglets ?',
+      answer: 'Oui. Les trois permettent de regrouper des onglets sous un nom et une couleur ; Chrome et Firefox peuvent aussi fermer un groupe et le rouvrir plus tard.',
+    },
+    {
+      question: 'Puis-je utiliser le même gestionnaire d’onglets dans Chrome, Edge et Firefox ?',
+      answer: 'Oui. TabMerger fonctionne dans les trois, et Pro synchronise vos groupes entre eux, chiffrés de bout en bout.',
+    },
+    {
+      question: 'Quel navigateur ferme les onglets en double ?',
+      answer: 'Firefox, depuis le menu contextuel de n’importe quel onglet. Dans Chrome et Edge, « Dédupliquer les onglets » de TabMerger s’en charge dans toutes les fenêtres.',
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'Recherche TabMerger ouverte et vide, qui liste les filtres group:, window:, tag: et closed:, thème clair' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'Recherche TabMerger ouverte et vide, qui liste les filtres group:, window:, tag: et closed:, thème sombre' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Paramètres de Chrome, « Performance » (Performances), avec l’interrupteur « Memory Saver » (économiseur de mémoire)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Paramètres d’Edge, « Performance », avec « Automatically put tabs to sleep » activé et réglé sur 15 minutes' },
+  ],
+  tags: ['cross-browser', 'comparison', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    { title: 'Chrome keyboard shortcuts', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/157179', checked: '2026-11-21' },
+    { title: 'Personalize Chrome performance', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/12929150', checked: '2026-11-21' },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp' },
+  ogImage: { src: '/blog/browser-tab-features-compared/og.png', alt: 'Chrome vs Edge vs Firefox : les fonctions d’onglets intégrées comparées. Un guide TabMerger, avec les filtres de recherche de TabMerger' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'matrix', label: 'Le tableau des fonctions' },
+    { id: 'turn-on', label: 'Les réglages à activer' },
+    { id: 'tabmerger', label: 'Une couche pour les trois' },
+    { id: 'faq', label: 'Questions fréquentes' },
+  ],
+  browserSections: ['turn-on'],
+  browserFact: {
+    label: 'Réglage de la mémoire',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Paramètres → System and performance → Performance',
+      firefox: 'Clic droit sur un onglet → Décharger l’onglet',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Les trois navigateurs ont désormais **des groupes d’onglets, une recherche d’onglets, des onglets verticaux et une vue partagée**. Chrome est en tête pour enregistrer et synchroniser les groupes, Edge met en veille les onglets inactifs par défaut, et Firefox est le seul à fermer lui-même les onglets en double. Aucun ne cherche dans vos onglets enregistrés et fermés, n’enregistre automatiquement vos fenêtres ni ne fonctionne d’un navigateur à l’autre : c’est la couche qu’ajoute [TabMerger](/features), à l’identique, à Chrome, Edge et Firefox.
+
+</QuickAnswer>
+
+<InstallCta>Les mêmes groupes, la même recherche et la même synchronisation dans Chrome, Edge et Firefox. Gratuit.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="matrix" title="Quelles fonctions d’onglets chaque navigateur propose-t-il ?">
+
+Vérifié dans Chrome 157, Edge 158 et Firefox 159 d’après les pages d’aide de chaque navigateur et les textes de sa propre interface, le 21 nov. 2026. « Non mentionné » signifie que nous n’en avons trouvé aucune trace dans les pages d’aide ni dans les textes du navigateur, pas que la fonction manque à coup sûr.
+
+<ComparisonTable
+  head={['Fonction', 'Chrome 157', 'Edge 158', 'Firefox 159', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="52rem"
+  rows={[
+    ['Groupes d’onglets', 'Oui', 'Oui', 'Oui', 'Groupes nommés et colorés, toutes fenêtres confondues'],
+    ['Fermer un groupe, le rouvrir plus tard', 'Oui (⋮ → Groupes d\'onglets)', 'Close group (réouverture non mentionnée)', 'Oui (Enregistrer et fermer le groupe)', 'Chaque groupe reste enregistré'],
+    ['Groupes sur les autres appareils', 'Oui, via le compte Google', 'Non mentionné', 'Absent des réglages de Sync', 'Pro, chiffré de bout en bout'],
+    ['Rechercher des onglets', 'Onglets ouverts (Ctrl+Shift+A, @tabs)', 'Search tabs (aucun raccourci indiqué)', 'Lister tous les onglets (Ctrl+Shift+A)', 'Ouverts, enregistrés et fermés (Ctrl+K)'],
+    ['Onglets verticaux', 'Oui', 'Oui', 'Oui', 'Sans objet'],
+    ['Vue partagée', 'Oui', 'Oui', 'Oui', 'Sans objet'],
+    ['Libérer la mémoire des onglets inactifs', 'Économiseur de mémoire (désactivé par défaut)', 'Onglets en veille (activés par défaut)', 'Décharger l’onglet, à la main', 'Enregistrer, puis fermer toutes les fenêtres en un clic'],
+    ['Fermer les onglets en double', 'Non mentionné', 'Non mentionné', 'Fermer les onglets en double', '« Dédupliquer les onglets » dans toutes les fenêtres'],
+    ['Rouvrir une fenêtre fermée', 'Ctrl+Shift+T', 'Non mentionné', 'Ctrl+Shift+N', 'Fermés récemment : 2 jours (Gratuit), 30 (Pro)'],
+    ['Enregistrer les onglets ouverts selon un planning', 'Non mentionné', 'Non mentionné', 'Non mentionné', 'Enregistrement automatique planifié ou à partir d’un nombre d’onglets'],
+    ['Exporter les onglets', 'Via les favoris (HTML)', 'Via les favoris (HTML)', 'Via les marque-pages (HTML)', 'JSON, onglets ouverts et enregistrés ensemble'],
+  ]}
+/>
+
+Les Collections d’Edge, son ancienne façon d’enregistrer des ensembles de pages, n’existent plus : Microsoft les a retirées dans Edge 149. Voyez [quoi utiliser à la place des Collections d’Edge](/blog/edge-collections-replacement).
+
+</Section>
+
+<Section id="turn-on" title="Quels réglages intégrés valent la peine d’être activés ?">
+
+<BrowserPanels section="turn-on">
+<BrowserPanel browser="chrome">
+
+1. **Économiseur de mémoire** (« Memory Saver ») : Paramètres → Performances (« Settings → Performance », `chrome://settings/performance`). Il est désactivé dans un nouveau profil.
+2. **Onglets verticaux**, si vous en gardez beaucoup ouverts : faites un clic droit sur la barre d’onglets et choisissez **Afficher les onglets verticalement** (« Show Tabs Vertically »), ou Paramètres → Apparence → Position de l'onglet (« Settings → Appearance → Tab position »).
+3. **Recherche dans les onglets** (« Tab Search ») : <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>, ou tapez `@tabs` dans la barre d’adresse.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Paramètres de Chrome, « Performance » (Performances), avec l’interrupteur « Memory Saver » (économiseur de mémoire)" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">« Memory Saver » (économiseur de mémoire) de Chrome, désactivé dans un nouveau profil Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Les **onglets en veille** (« Sleeping tabs ») sont déjà activés : réglez le délai dans Paramètres → System and performance → Performance.
+2. Edge 158 a aussi des **onglets verticaux** et **Search tabs** (les deux figurent dans les textes de son interface) ; la liste des raccourcis de Microsoft n’attribue aucune touche à Search tabs.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Paramètres d’Edge, « Performance », avec « Automatically put tabs to sleep » activé et réglé sur 15 minutes" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Les onglets en veille d’Edge, activés par défaut : les onglets inactifs se mettent en veille au bout de 15 minutes.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. **Onglets verticaux** : faites un clic droit sur la barre latérale et choisissez **Activer les onglets verticaux** (« Turn on Vertical Tabs »).
+2. **Fermer les onglets en double** (« Close Duplicate Tabs ») et **Décharger l’onglet** (« Unload Tab ») figurent dans le menu contextuel de chaque onglet.
+3. **Lister tous les onglets** (« List all tabs ») : <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox tab right-click menu with Close Duplicate Tabs and Unload Tab. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+Toutes les touches sont dans notre [référence des raccourcis clavier pour les onglets](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="tabmerger" title="La couche manquante, dans chaque navigateur">
+
+Le tableau a une ligne vide pour chaque navigateur : aucun ne garde vos onglets organisés **au-delà** de sa propre fenêtre, ni d’un navigateur à l’autre. [TabMerger](/features), si, et de la même façon dans Chrome, Edge et Firefox :
+
+1. **Ouverts maintenant** affiche toutes les fenêtres ouvertes ; **Fusionner avec l’actuel** les enregistre toutes dans un groupe nommé en un clic.
+2. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> cherche à la fois dans les onglets ouverts, enregistrés et récemment fermés, avec les filtres `group:`, `window:`, `tag:` et `closed:`.
+3. L’**enregistrement automatique** garde une copie récente de vos onglets selon un planning ; **Dédupliquer les onglets** supprime les doublons de toutes les fenêtres.
+4. Avec [Pro](/pricing), vos groupes se synchronisent entre tous vos navigateurs, chiffrés de bout en bout.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="Recherche TabMerger ouverte et vide, qui liste les filtres group:, window:, tag: et closed:, thème clair" darkAlt="Recherche TabMerger ouverte et vide, qui liste les filtres group:, window:, tag: et closed:, thème sombre" boxes={[{ id: 'search-input', label: 'Recherche' }]} source="TabMerger 3.16.1">Une seule recherche pour tous les onglets, dans chaque navigateur où tourne TabMerger.</ThemedScreenshot>
+
+Pour une comparaison avec d’autres extensions, voyez [les meilleures extensions de gestion d’onglets](/blog/best-tab-manager-extensions).
+
+<InstallCta>Gratuit pour Chrome, Edge et Firefox. Aucun compte requis pour commencer.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Questions fréquentes">
+
+<Faq items={post.faq} />
+
+</Section>

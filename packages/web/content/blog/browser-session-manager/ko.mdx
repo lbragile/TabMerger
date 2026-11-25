@@ -1,0 +1,197 @@
+export const post = {
+  slug: 'browser-session-manager',
+  title: '브라우저 세션 관리자란 무엇이고, 꼭 필요할까?',
+  navTitle: '세션 관리자란?',
+  seoTitle: '세션 관리자 확장 프로그램 정리: 세션 저장과 북마크의 차이',
+  description:
+    '탭 세션이란 무엇인지, 브라우저 세션을 저장하는 확장 프로그램이 북마크나 방문 기록과 달리 무엇을 해 주는지, 고를 때 무엇을 봐야 하는지, 언제 브라우저만으로 충분한지 정리했습니다.',
+  shareSummary: '탭 세션, 세션 관리자, 북마크: 각각 무엇을 저장하고 언제 무엇이 필요한지 정리했습니다.',
+  dek: '브라우저는 이미 세션 하나를 기억합니다. 세션 관리자는 원하는 만큼, 이름을 붙여 기억합니다.',
+  published: '2026-11-25',
+  updated: '2026-11-25',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: '확장 프로그램이 불러올 수 있는 최근에 닫은 탭과 창은 최대 25개입니다.',
+      source: 'chrome.sessions 문서',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+    },
+    { text: 'Session Buddy는 데이터를 기기에 저장하며 동기화 기능이 없습니다.', source: 'Session Buddy 스토어 페이지, 2026년 11월 20일' },
+    { text: 'Tab Session Manager는 창을 닫을 때와 일정 간격으로 자동 저장합니다.', source: '해당 스토어 페이지, 2026년 11월 20일' },
+    { text: '시작 시 복원은 마지막 세션만 유지합니다.', source: 'Chrome, Edge, Firefox 설정' },
+  ],
+  faq: [
+    {
+      question: '탭 세션이란 무엇인가요?',
+      answer:
+        '어느 한 시점에 열려 있는 창과 탭을 순서대로 모은 것입니다. 브라우저는 다시 시작한 뒤 열 수 있도록 현재 세션을 기억하고, 세션 관리자는 이를 이름을 붙여 저장합니다.',
+    },
+    {
+      question: '세션 관리자와 북마크는 무엇이 다른가요?',
+      answer:
+        '북마크는 개별 페이지를 폴더에 저장합니다. 세션 관리자는 창 전체를 저장하고 그 구성을 유지하며, 이를 자동으로 할 수도 있고, 나중에 창 그대로 다시 엽니다.',
+    },
+    {
+      question: '세션 관리자 확장 프로그램이 필요한가요?',
+      answer:
+        '창 하나에서 작업하고 시작 설정을 켜 두었다면 필요 없습니다. 여러 프로젝트를 동시에 진행하거나, 비정상 종료로 탭을 잃거나, 어제 쓰던 창을 되찾고 싶다면 필요합니다.',
+    },
+    {
+      question: '세션 관리자는 개인정보 면에서 안전한가요?',
+      answer:
+        '데이터를 어디에 보관하느냐에 따라 다릅니다. 모든 데이터를 기기에만 저장하는 것도 있고, 동기화하는 것은 서버로 보내므로 엔드투엔드 암호화가 되는지 확인하세요.',
+    },
+  ],
+  images: [
+    { src: '/blog/browser-session-manager/tm-save-session-light.webp', alt: 'TabMerger의 Save Session(세션 저장) 대화상자에 Friday wrap-up이라는 이름이 입력된 화면, 라이트 테마' },
+    { src: '/blog/browser-session-manager/tm-save-session-dark.webp', alt: 'TabMerger의 Save Session(세션 저장) 대화상자에 Friday wrap-up이라는 이름이 입력된 화면, 다크 테마' },
+    { src: '/blog/browser-session-manager/tm-session-view-light.webp', alt: '저장된 세션 Friday wrap-up에 그룹 목록과 Restore session(세션 복원) 버튼이 보이는 화면, 라이트 테마' },
+    { src: '/blog/browser-session-manager/tm-session-view-dark.webp', alt: '저장된 세션 Friday wrap-up에 그룹 목록과 Restore session(세션 복원) 버튼이 보이는 화면, 다크 테마' },
+  ],
+  tags: ['session-management', 'tab-manager', 'save-tabs', 'comparison'],
+  sources: [
+    {
+      title: 'chrome.sessions API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'sessions (WebExtensions API)',
+      publisher: 'MDN Web Docs',
+      url: 'https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Session Buddy',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/session-buddy-tab-bookmar/edacconmaakjimmfgnblocblbcdcpbko',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tab Session Manager',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/tab-session-manager/iaiomicjabeggjcfkbimgmglanimpnae',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tabs Outliner',
+      publisher: 'tabsoutliner.com',
+      url: 'https://tabsoutliner.com/',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/browser-session-manager/tm-session-view-light.webp' },
+  ogImage: { src: '/blog/browser-session-manager/og.png', alt: '브라우저 세션 관리자란 무엇이고, 꼭 필요할까? 저장된 세션과 복원 버튼을 보여 주는 TabMerger 가이드' },
+  toc: [
+    { id: 'quick', label: '간단한 답' },
+    { id: 'session', label: '탭 세션이란?' },
+    { id: 'vs', label: '세션과 북마크' },
+    { id: 'need', label: '꼭 필요할까?' },
+    { id: 'look-for', label: '고를 때 볼 것' },
+    { id: 'examples', label: '대표적인 도구' },
+    { id: 'tabmerger', label: 'TabMerger의 세션' },
+    { id: 'faq', label: '자주 묻는 질문' },
+  ],
+}
+
+<QuickAnswer>
+
+**세션**은 어느 한 시점에 열려 있는 창과 탭 전체를 말합니다. 브라우저는 다시 시작한 뒤 열 수 있도록 현재 세션을 기억합니다. **세션 관리자**는 세션을 이름을 붙여, 대개는 자동으로 저장하고 나중에 창 그대로 다시 열어 주는 확장 프로그램입니다. 북마크는 페이지를 저장하고, 세션 관리자는 작업 공간 전체를 저장합니다. [TabMerger](/features)는 두 가지를 모두 해냅니다. 열린 창을 클릭 한 번으로 이름 있는 그룹에 모두 저장하고, 이름 있는 세션을 한꺼번에 복원하며, 일정에 따라 자동 저장하고, Pro에서는 엔드투엔드 암호화로 동기화합니다.
+
+</QuickAnswer>
+
+<InstallCta>창마다 이름 있는 그룹으로, 세션은 통째로 클릭 한 번에 저장하세요. Chrome, Edge, Firefox에서 무료입니다.</InstallCta>
+
+<Section id="session" title="탭 세션이란?">
+
+지금 열려 있는 모든 것입니다. 각 창, 그 안의 탭 순서, 어떤 탭이 활성 상태인지까지요. 브라우저는 이를 항상 추적하며, 두 가지 용도로 씁니다.
+
+- **시작 시 복원.** 이전 세션을 다시 여는 시작 옵션을 켜 두면, 브라우저가 시작할 때 마지막 세션을 다시 엽니다. 브라우저별로 이 옵션이 어디 있는지는 [비정상 종료 후 탭 복원하는 방법](/blog/restore-tabs-after-crash#prevent)에서 설명합니다.
+- **최근에 닫은 탭.** <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>를 누르면 닫은 탭과 창을 하나씩 거슬러 올라가며 다시 엽니다.
+
+둘 다 *가장 최근* 상태만 남깁니다. 지난 화요일의 창들은 브라우저가 되돌려 줄 수 있는 세션이 아니라, 방문 기록 속 몇 줄일 뿐입니다. 바로 이 빈틈을 세션 관리자가 채웁니다. 이미 탭을 잃었다면 [비정상 종료 후 탭 복원하는 방법](/blog/restore-tabs-after-crash)부터 보세요.
+
+</Section>
+
+<Section id="vs" title="세션 관리자, 북마크, 방문 기록 비교">
+
+<ComparisonTable
+  head={['', '북마크', '방문 기록', '세션 관리자']}
+  rowHeaders
+  highlight={3}
+  minWidth="36rem"
+  rows={[
+    ['저장 대상', '직접 고른 페이지', '방문한 모든 페이지', '창 전체와 그 안의 탭'],
+    ['창을 구분해 저장', '저장할 때마다 폴더 하나', '아니요', '예'],
+    ['자동 저장', '아니요', '예, 페이지 단위로', '대부분 일정 간격이나 닫을 때'],
+    ['다시 여는 방식', '폴더 하나씩', '페이지 하나씩', '창 단위로 클릭 한 번'],
+    ['브라우저 기본 기능', '예', '예', '아니요, 확장 프로그램'],
+  ]}
+/>
+
+몇 년씩 간직할 페이지라면 북마크가 낫습니다. 진행 중인 작업이라면 세션 관리자가 낫습니다. 반쯤 끝낸 작업의 탭 12개를 하나씩 정리하는 대신, 창 그대로 되찾을 수 있으니까요. 자세한 내용은 [탭과 북마크 비교](/blog/tabs-vs-bookmarks)에서 확인하세요.
+
+</Section>
+
+<Section id="need" title="꼭 필요할까?">
+
+창 하나에서 작업하고, 탭을 스무 개 남짓 이하로 유지하며, 시작 설정을 켜 두었다면 아마 필요 없을 겁니다. [탭이 너무 많을 때의 정리 습관](/blog/manage-too-many-tabs)과 가끔 만드는 북마크 폴더면 충분합니다.
+
+다음 중 하나라도 익숙하다면 아마 필요할 겁니다.
+
+- 프로젝트를 오가며 프로젝트마다 창을 그대로 되찾고 싶다.
+- 비정상 종료, 업데이트, 강제 재시작으로 탭을 잃은 적이 있다.
+- 하루를 마칠 때 아무것도 잃지 않고 전부 닫고 싶다.
+- 마지막 세션뿐 아니라 며칠 전 탭이 필요할 때가 있다.
+
+</Section>
+
+<Section id="look-for" title="좋은 세션 관리자라면 무엇을 해야 할까?">
+
+- **자동으로 저장**해야 합니다. 생각났을 때만이 아니라, 일정 간격으로, 창을 닫을 때, 또는 둘 다요.
+- **구성을 유지**해야 합니다. 창, 탭 순서, 가능하면 탭 그룹까지요.
+- **유연하게 복원**할 수 있어야 합니다. 세션 전체, 창 하나, 탭 하나 모두요.
+- 저장한 세션 전체를 **검색**할 수 있어야 지난주 탭도 찾을 수 있습니다.
+- 다른 곳에서도 읽을 수 있는 파일로 **내보내기**가 돼야 특정 도구에 묶이지 않습니다. (TabMerger는 클릭 한 번으로 JSON을 내보냅니다. [파일에 담기는 내용](/blog/export-open-tabs)을 확인하세요.)
+- **데이터가 어디에 저장되는지 분명**해야 합니다. 로컬에만 두면 사적이지만 프로필과 함께 사라지고, 동기화하면 데이터 손실에는 더 안전하지만 엔드투엔드 암호화가 돼야 합니다.
+
+기술적인 참고 사항: 브라우저가 닫은 탭과 관련해 확장 프로그램에 제공하는 API는 작습니다. `chrome.sessions`는 최근에 닫은 항목을 최대 25개까지만 돌려줍니다(`MAX_SESSION_RESULTS`). 그보다 더 거슬러 올라가는 세션 관리자는 자체 기록을 남깁니다.
+
+</Section>
+
+<Section id="examples" title="어떤 세션 관리자가 있을까?">
+
+자리 잡은 도구 몇 가지를 각자의 스토어 페이지와 사이트 내용을 바탕으로 소개합니다(2026년 11월 20일 확인).
+
+- **Session Buddy**(Chrome)는 세션을 저장하고 복원하며, 비정상 종료에 대비해 지난 세션 기록을 남깁니다. 데이터는 기기에 남고, 스토어 페이지에 따르면 동기화는 없습니다. 무료.
+- **Tab Session Manager**(Chrome, Firefox, Edge)는 세션을 이름과 태그로 저장하고, 창을 닫을 때와 일정 간격으로 자동 저장하며, 클라우드 동기화를 제공합니다. 무료.
+- **Tabs Outliner**(Chrome)는 열린 창과 저장된 창을 메모, 비정상 종료 복구 기능과 함께 하나의 트리로 관리합니다. 무료이며, 한 번 결제하는 Pro 업그레이드가 있습니다.
+
+아홉 가지 도구를 가격, 동기화, 암호화 기준으로 나란히 비교하려면 [최고의 탭 관리 확장 프로그램 비교](/blog/best-tab-manager-extensions)나 [비교 페이지](/compare)를 보세요.
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger에서 세션이 작동하는 방식">
+
+[TabMerger](/features)는 Chrome, Edge, Firefox용 무료 확장 프로그램으로, 세션 기능이 들어 있는 탭 관리자입니다. 열린 탭은 이름 있는 **그룹**에 저장되고, **현재 세션 저장**(Save current session)을 누르면 저장된 그룹들을 이름 있는 스냅샷으로 남겨 나중에 한꺼번에 복원할 수 있습니다. 무료에서는 브라우저에 세션 3개를 보관하고, Pro에서는 세션을 무제한으로 보관하며 기기 간에 엔드투엔드 암호화로 동기화합니다.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="세션 저장과 복원" steps={[{ title: '세션 저장' }, { title: '세션 보기' }]}>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-save-session" alt="TabMerger의 Save Session(세션 저장) 대화상자에 Friday wrap-up이라는 이름이 입력된 화면, 라이트 테마" darkAlt="TabMerger의 Save Session(세션 저장) 대화상자에 Friday wrap-up이라는 이름이 입력된 화면, 다크 테마" boxes={[{ id: 'session-name', label: '세션 이름' }]} source="TabMerger 3.16.1">Save current session(현재 세션 저장)을 누르면 이름을 묻습니다.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-session-view" alt="저장된 세션 Friday wrap-up에 그룹 목록과 Restore session(세션 복원) 버튼이 보이는 화면, 라이트 테마" darkAlt="저장된 세션 Friday wrap-up에 그룹 목록과 Restore session(세션 복원) 버튼이 보이는 화면, 다크 테마" boxes={[{ id: 'restore-session', label: '세션 복원' }]} source="TabMerger 3.16.1">저장된 세션에는 그룹이 나열되고, Restore session(세션 복원)을 누르면 모두 되돌아옵니다.</ThemedScreenshot>
+</Carousel>
+
+자동 저장은 **설정 → 데이터 → 열린 탭 자동 저장**(Settings → Data → Auto-save open tabs)에서 켭니다. 일정에 따라, 또는 탭 수가 정해 둔 개수를 넘으면 열린 탭을 새 그룹으로 저장합니다. 내보낸 파일은 일반 JSON입니다. 세션을 아침 루틴으로 만들고 싶다면 [저장한 탭으로 하루 업무 시작하기](/blog/start-your-workday-with-saved-tabs)를 보세요.
+
+<InstallCta>Chrome, Edge, Firefox에서 무료입니다. 시작하는 데 계정은 필요 없습니다.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="자주 묻는 질문">
+
+<Faq items={post.faq} />
+
+</Section>

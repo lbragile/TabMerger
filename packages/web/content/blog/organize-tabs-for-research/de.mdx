@@ -1,0 +1,117 @@
+export const post = {
+  slug: 'organize-tabs-for-research',
+  title: 'Tabs für die Recherche organisieren: Notizen, Erinnerungen und Quellen',
+  navTitle: 'Tabs für die Recherche organisieren',
+  seoTitle: 'Browser-Tabs für die Recherche organisieren (Notizen, Sitzungen, Quellen)',
+  description:
+    'Ein Tab-Workflow für die Recherche: eine TabMerger-Gruppe pro Projekt, eine Notiz zu jeder wichtigen Quelle, Erinnerungen zum Wiederkommen, Sitzungen, um ein ganzes Projekt zu pausieren, und ein Export deiner Quellen, wenn du schreibst.',
+  shareSummary: 'Eine Gruppe pro Projekt, Notizen zu Quellen, Erinnerungen und ein Export, wenn du schreibst.',
+  dek: 'Vierzig Tabs voller Quellen sind eine Bibliothek und kein Chaos, wenn jeder Tab sagt, warum er da ist.',
+  published: '2026-12-09',
+  updated: '2026-12-09',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Jeder gespeicherte Tab kann eine Notiz und eine Erinnerung haben.', source: 'TabMerger 3.16.1' },
+    { text: 'Erinnerungen: 30 Min., 1 Stunde, 3 Stunden, morgen oder ein Datum mit Uhrzeit.', source: 'TabMerger 3.16.1' },
+    { text: 'Eine Sitzung speichert alle deine Gruppen, um sie gemeinsam wiederherzustellen; kostenlos behältst du 3.', source: 'TabMerger-Preise', href: '/pricing' },
+    { text: 'Der JSON-Export listet Titel und Adresse jeder Quelle auf.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Wie behalte ich im Browser den Überblick über meine Quellen?',
+      answer:
+        'Speichere die Tabs jedes Projekts als TabMerger-Gruppe und gib jeder Quelle, die du zitieren willst, eine Notiz: warum sie wichtig ist, für welchen Abschnitt, für welches Kapitel. Ctrl+K durchsucht Titel und Adressen in all deinen Gruppen.',
+    },
+    {
+      question: 'Kann ich eine Erinnerung setzen, um zu einem Tab zurückzukehren?',
+      answer: 'Ja. Klicke in TabMerger mit der rechten Maustaste auf einen gespeicherten Tab und wähle „Erinnere mich …“: 30 Minuten, 1 Stunde, 3 Stunden, morgen oder ein Datum mit Uhrzeit, optional mit einer Notiz.',
+    },
+    {
+      question: 'Sollten Recherche-Tabs Lesezeichen sein?',
+      answer: 'Für laufende Arbeit ist eine gespeicherte Gruppe besser: Sie hält die Sammlung samt Notizen zusammen und öffnet sie mit einem Klick wieder. Setze Lesezeichen nur für die wenigen, die du jahrelang brauchst.',
+      link: { text: 'Setze Lesezeichen', href: '/blog/tabs-vs-bookmarks' },
+    },
+    {
+      question: 'Wie bekomme ich eine Liste meiner Quellen heraus?',
+      answer: 'Einstellungen → Daten → JSON exportieren speichert die Titel und Adressen aller Gruppen in einer Datei, aus der du ein Literaturverzeichnis machen kannst.',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp', alt: 'TabMerger-Gruppe „Thesis sources“ mit geöffnetem Tab-Menü: Move to group (In Gruppe verschieben), Add note (Notiz hinzufügen), Remind me… (Erinnere mich …), Rename tab (Tab umbenennen), Remove tab (Tab entfernen), helles Design' },
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-dark.webp', alt: 'TabMerger-Gruppe „Thesis sources“ mit geöffnetem Tab-Menü: Move to group (In Gruppe verschieben), Add note (Notiz hinzufügen), Remind me… (Erinnere mich …), Rename tab (Tab umbenennen), Remove tab (Tab entfernen), dunkles Design' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-light.webp', alt: 'TabMerger-Erinnerungsauswahl unter einem Tab: 30 min, 1 hour, 3 hours, Tomorrow (Morgen), Datum und Uhrzeit sowie eine optionale Notiz, helles Design' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-dark.webp', alt: 'TabMerger-Erinnerungsauswahl unter einem Tab: 30 min, 1 hour, 3 hours, Tomorrow (Morgen), Datum und Uhrzeit sowie eine optionale Notiz, dunkles Design' },
+  ],
+  tags: ['research', 'tab-management', 'save-tabs', 'session-management'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-for-research/og.png', alt: 'Tabs für die Recherche organisieren: ein TabMerger-Ratgeber mit den Notiz- und Erinnerungsoptionen eines Tabs' },
+  toc: [
+    { id: 'quick', label: 'Kurze Antwort' },
+    { id: 'project', label: 'Eine Gruppe pro Projekt' },
+    { id: 'notes', label: 'Notizen und Erinnerungen' },
+    { id: 'sessions', label: 'Ein ganzes Projekt pausieren' },
+    { id: 'export', label: 'Quellen exportieren' },
+    { id: 'faq', label: 'Häufige Fragen' },
+  ],
+}
+
+<QuickAnswer>
+
+Gib jedem Rechercheprojekt seine eigene [TabMerger](/features)-Gruppe und versieh jede Quelle, die du verwendest, mit einer **Notiz**, warum sie wichtig ist. Setze eine **Erinnerung** für die Quellen, die du dir noch einmal ansehen musst, speichere eine **Sitzung**, um das ganze Projekt zu pausieren und mit einem Klick zurückzuholen, und **exportiere** die Gruppe in eine Datei, wenn du dein Literaturverzeichnis schreibst.
+
+</QuickAnswer>
+
+<InstallCta>Mach aus vierzig Quellen-Tabs eine kommentierte, durchsuchbare Bibliothek. Kostenlos für Chrome, Edge und Firefox.</InstallCta>
+
+<Section id="project" title="Wie organisiere ich die Tabs eines Rechercheprojekts?">
+
+1. Klicke auf **Gruppe hinzufügen** (Add Group) und benenne die Gruppe nach dem Projekt, etwa „Quellen Abschlussarbeit“ (in den Screenshots „Thesis sources“).
+2. Öffne das **⋯**-Menü der Gruppe und wähle **Mit aktueller zusammenführen** (Merge with current): Jeder geöffnete Tab wird darin gespeichert.
+3. Schließ die Fenster, wenn du für heute fertig bist. Die Gruppe behält alles, und <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> findet später jede Quelle über Titel oder Adresse.
+
+Halte innerhalb der Gruppe ein Fenster pro Themenstrang (Papers, Daten, Hintergrund) und gib jedem einen Namen. Bei Recherche-Tabs ist die halbe Arbeit, zu entscheiden, was sich zu behalten lohnt; unser [Ratgeber zu Tabs und Lesezeichen](/blog/tabs-vs-bookmarks) hilft dir dabei.
+
+</Section>
+
+<Section id="notes" title="Wie kommentiere ich Quellen und komme später auf sie zurück?">
+
+Klicke mit der rechten Maustaste auf einen gespeicherten Tab:
+
+- **Notiz hinzufügen** (Add note): warum diese Quelle wichtig ist. Ein Notizsymbol markiert Tabs, die eine Notiz haben.
+- **Erinnere mich …** (Remind me…): 30 Minuten, 1 Stunde, 3 Stunden, morgen oder ein Datum mit Uhrzeit deiner Wahl, optional mit einer Notiz. Wenn es so weit ist, zeigt TabMerger eine Browserbenachrichtigung.
+- **Tab umbenennen** (Rename tab): Ersetze einen kryptischen Seitentitel („[1706.03762]“) durch etwas, wonach du suchen wirst.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Notizen und Erinnerungen zu einer Quelle" steps={[{ title: 'Tab-Menü' }, { title: 'Erinnerung' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-tab-menu" alt="TabMerger-Gruppe „Thesis sources“ mit geöffnetem Tab-Menü: Move to group (In Gruppe verschieben), Add note (Notiz hinzufügen), Remind me… (Erinnere mich …), Rename tab (Tab umbenennen), Remove tab (Tab entfernen), helles Design" darkAlt="TabMerger-Gruppe „Thesis sources“ mit geöffnetem Tab-Menü: Move to group (In Gruppe verschieben), Add note (Notiz hinzufügen), Remind me… (Erinnere mich …), Rename tab (Tab umbenennen), Remove tab (Tab entfernen), dunkles Design" boxes={[{ id: 'add-note', label: 'Notiz hinzufügen' }, { id: 'remind-me', label: 'Erinnere mich …' }]} source="TabMerger 3.16.1">Rechtsklicke auf eine Quelle, um sie zu kommentieren; der erste Tab hat schon eine Notiz.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-reminder" alt="TabMerger-Erinnerungsauswahl unter einem Tab: 30 min, 1 hour, 3 hours, Tomorrow (Morgen), Datum und Uhrzeit sowie eine optionale Notiz, helles Design" darkAlt="TabMerger-Erinnerungsauswahl unter einem Tab: 30 min, 1 hour, 3 hours, Tomorrow (Morgen), Datum und Uhrzeit sowie eine optionale Notiz, dunkles Design" boxes={[{ id: 'remind-in', label: 'Erinnere mich in …' }]} source="TabMerger 3.16.1">Wähle, wann du zurückkommen willst, und hinterlass deinem künftigen Ich eine Notiz.</ThemedScreenshot>
+</Carousel>
+
+Wie du eine ganze Leseliste so abarbeitest, steht in [Tabs als To-do-Liste nutzen](/blog/tabs-as-a-to-do-list).
+
+</Section>
+
+<Section id="sessions" title="Wie pausiere ich ein ganzes Projekt und mache später weiter?">
+
+**Aktuelle Sitzung speichern** (Save current session, im Bereich „Sitzungen“ der Seitenleiste) legt eine benannte Momentaufnahme all deiner gespeicherten Gruppen an; **Sitzung wiederherstellen** (Restore session) holt sie gemeinsam zurück. Nutze das an Meilensteinen, etwa „Vor der Literaturrecherche“, damit du später genau zu diesem Stand zurückkehren kannst. Kostenlos bleiben 3 Sitzungen im Browser; [Pro](/pricing) behält unbegrenzt viele Sitzungen und synchronisiert sie Ende-zu-Ende-verschlüsselt zwischen deinen Geräten. Mehr zu Sitzungen in [Was ein Sitzungsmanager macht](/blog/browser-session-manager).
+
+</Section>
+
+<Section id="export" title="Wie exportiere ich meine Quellen zum Schreiben?">
+
+Öffne **Einstellungen → Daten** (Settings → Data) und klicke auf **JSON exportieren** (Export JSON). Die Datei listet jede Gruppe, jedes Fenster und jeden Tab mit Titel und Adresse auf, bereit, um mit einem kurzen Skript oder einem Texteditor ein Literaturverzeichnis daraus zu machen. Details und ein Beispiel Feld für Feld findest du in [So exportierst du deine offenen Tabs](/blog/export-open-tabs).
+
+<InstallCta>Kostenlos für Chrome, Edge und Firefox. Zum Start ist kein Konto nötig.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Häufige Fragen">
+
+<Faq items={post.faq} />
+
+</Section>

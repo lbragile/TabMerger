@@ -1,0 +1,276 @@
+export const post = {
+  slug: 'tab-keyboard-shortcuts',
+  title: 'Phím tắt bàn phím cho tab trong Chrome, Edge và Firefox',
+  seoTitle: 'Phím tắt tab Chrome (cùng Edge, Firefox): Bảng tra đầy đủ',
+  description:
+    'Mọi phím tắt tab đáng học trong Chrome, Edge và Firefox: chuyển tab, mở lại tab và cửa sổ đã đóng, tìm tab và đánh dấu trang tất cả, trên Windows và Mac.',
+  shareSummary: 'Chuyển, mở lại, tìm và lưu tab bằng bàn phím trong Chrome, Edge và Firefox.',
+  dek: 'Một bảng cho cả ba trình duyệt, những điểm khác trên Mac và cách đặt phím tắt cho tiện ích mở rộng sao cho thật sự dùng được.',
+  published: '2026-11-22',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+T mở lại tab vừa đóng gần nhất ở cả ba trình duyệt.', source: 'Trợ giúp Chrome và Edge; bộ phím của Firefox 159' },
+    { text: 'Firefox mở lại cửa sổ đã đóng bằng Ctrl+Shift+N.', source: 'Bộ phím của Firefox 159' },
+    {
+      text: 'Ctrl+9 trong Chrome chuyển đến tab cuối cùng, không phải tab thứ chín.',
+      source: 'Trợ giúp Chrome',
+      href: 'https://support.google.com/chrome/answer/157179',
+    },
+    { text: 'Edge giữ Ctrl+Shift+K, U và P cho riêng mình, nên tiện ích mở rộng không dùng được.', source: 'Hỗ trợ của Microsoft; Edge 158' },
+  ],
+  faq: [
+    {
+      question: 'Làm sao chuyển tab bằng bàn phím?',
+      answer:
+        'Ctrl+Tab chuyển sang tab kế tiếp và Ctrl+Shift+Tab sang tab trước trong Chrome, Edge và Firefox. Ctrl+1 đến Ctrl+8 chuyển đến tab theo vị trí; Ctrl+9 đến tab cuối cùng.',
+    },
+    {
+      question: 'Làm sao mở lại một tab đã đóng?',
+      answer:
+        'Nhấn Ctrl+Shift+T (⌘+Shift+T trên Mac). Nhấn tiếp để lùi xa hơn. Trong Chrome, phím này cũng mang lại các cửa sổ đã đóng; trong Firefox, Ctrl+Shift+N mở lại cửa sổ đã đóng.',
+    },
+    {
+      question: 'Tôi có thể tìm trong các tab đang mở không?',
+      answer: 'Có. Ctrl+Shift+A mở Tìm thẻ trong Chrome và liệt kê mọi tab trong Firefox. Trong Chrome, bạn cũng có thể gõ @thẻ trên thanh địa chỉ (Chrome tiếng Anh: @tabs).',
+    },
+    {
+      question: 'Vì sao phím tắt của một tiện ích mở rộng không hoạt động?',
+      answer:
+        'Trình duyệt để trống phím tắt được đề xuất nếu nó trùng với phím tắt của chính trình duyệt. Hãy kiểm tra chrome://extensions/shortcuts hoặc edge://extensions/shortcuts và chọn phím khác.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp', alt: 'Trang phím tắt bàn phím cho tiện ích mở rộng của Edge với TabMerger: cả bốn lệnh lưu đều đã được đặt, là Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma và Alt+Shift+Period' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp', alt: 'Tìm kiếm của TabMerger đang mở với truy vấn docs, liệt kê các tab đang mở và đã lưu phù hợp, giao diện sáng' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-dark.webp', alt: 'Tìm kiếm của TabMerger đang mở với truy vấn docs, liệt kê các tab đang mở và đã lưu phù hợp, giao diện tối' },
+  ],
+  tags: ['browser-tips', 'cross-browser', 'chrome', 'edge', 'firefox', 'tab-management'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-20',
+      note: 'Các mục của Firefox được đọc từ chính định nghĩa phím của Firefox 159.0.1; trang này đã chặn lượt kiểm tra tự động của chúng tôi.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp' },
+  ogImage: { src: '/blog/tab-keyboard-shortcuts/og.png', alt: 'Phím tắt bàn phím cho tab trong Chrome, Edge và Firefox: hướng dẫn của TabMerger, với tìm kiếm của TabMerger đang mở' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'table', label: 'Phím tắt theo trình duyệt' },
+    { id: 'reopen', label: 'Mở lại tab đã đóng' },
+    { id: 'extensions', label: 'Phím tắt cho tiện ích' },
+    { id: 'tabmerger', label: 'Phím của TabMerger' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+  browserSections: ['table', 'reopen', 'extensions'],
+  browserFact: {
+    label: 'Phím tắt cho tiện ích',
+    values: { chrome: 'chrome://extensions/shortcuts', edge: 'edge://extensions/shortcuts', firefox: 'about:addons' },
+  },
+}
+
+<QuickAnswer>
+
+<Kbd>Ctrl</Kbd>+<Kbd>Tab</Kbd> và <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Tab</Kbd> chuyển sang tab kế tiếp và tab trước, <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> chuyển đến tab theo vị trí, <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> đóng tab và <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> mở lại tab đó. Các phím này hoạt động như nhau trong Chrome, Edge và Firefox trên Windows và Linux; trên Mac, dùng <Kbd>⌘</Kbd> thay cho <Kbd>Ctrl</Kbd>. Thêm [TabMerger](/features), và hai phím nữa sẽ gánh phần việc nặng nhất: lưu tab ngay từ bàn phím, và <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> để tìm bất kỳ tab nào, dù đang mở, đã lưu hay đã đóng.
+
+</QuickAnswer>
+
+<InstallCta>Lưu tab mà không cần rời tay khỏi bàn phím. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="table" title="Trình duyệt của bạn có những phím tắt tab nào?">
+
+Windows và Linux trước, rồi đến những gì khác trên Mac. Mỗi mục lấy từ trang trợ giúp của chính trình duyệt, còn với Firefox thì từ định nghĩa phím bên trong chính Firefox 159.0.1.
+
+<BrowserPanels section="table">
+<BrowserPanel browser="chrome">
+
+<ComparisonTable
+  head={['Thao tác', 'Phím tắt']}
+  rowHeaders
+  rows={[
+    ['Tab mới', 'Ctrl+T'],
+    ['Đóng tab', 'Ctrl+W'],
+    ['Mở lại tab và cửa sổ đã đóng', 'Ctrl+Shift+T'],
+    ['Tab kế tiếp', 'Ctrl+Tab hoặc Ctrl+PgDn'],
+    ['Tab trước', 'Ctrl+Shift+Tab hoặc Ctrl+PgUp'],
+    ['Tab 1 đến 8', 'Ctrl+1 … Ctrl+8'],
+    ['Tab cuối cùng', 'Ctrl+9'],
+    ['Tìm tab đang mở', 'Ctrl+Shift+A'],
+    ['Đánh dấu trang tất cả các tab', 'Ctrl+Shift+D'],
+    ['Lịch sử', 'Ctrl+H'],
+    ['Đóng cửa sổ', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+Bạn cũng có thể tìm tab đang mở từ thanh địa chỉ: gõ `@thẻ` (Chrome tiếng Anh: `@tabs`) rồi nhấn <Kbd>Tab</Kbd>. Để tìm cả tab đã lưu và đã đóng, hãy xem [cách tìm một tab giữa hàng trăm tab](/blog/find-a-tab-among-hundreds).
+
+**Trên Mac**, dùng <Kbd>⌘</Kbd> ở chỗ bảng ghi <Kbd>Ctrl</Kbd>, với các ngoại lệ sau từ trang trợ giúp của Chrome: tab kế tiếp và tab trước là <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>→</Kbd> và <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>←</Kbd>, lịch sử là <Kbd>⌘</Kbd>+<Kbd>Y</Kbd>, còn trình quản lý dấu trang là <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>B</Kbd>.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+<ComparisonTable
+  head={['Thao tác', 'Phím tắt']}
+  rowHeaders
+  rows={[
+    ['Tab mới', 'Ctrl+T'],
+    ['Đóng tab', 'Ctrl+W'],
+    ['Mở lại tab vừa đóng gần nhất', 'Ctrl+Shift+T'],
+    ['Tab kế tiếp', 'Ctrl+Tab hoặc Ctrl+PgDn'],
+    ['Tab trước', 'Ctrl+Shift+Tab hoặc Ctrl+PgUp'],
+    ['Tab 1 đến 8', 'Ctrl+1 … Ctrl+8'],
+    ['Tab cuối cùng', 'Ctrl+9'],
+    ['Lưu tất cả các tab vào Mục yêu thích của Edge', 'Ctrl+Shift+D'],
+    ['Lịch sử', 'Ctrl+H'],
+    ['Đóng cửa sổ', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+Danh sách phím tắt của Edge không có phím nào để tìm tab đang mở hay mở lại cửa sổ đã đóng.
+
+**Trên Mac**, dùng <Kbd>⌘</Kbd> ở chỗ bảng ghi <Kbd>Ctrl</Kbd>; lịch sử là <Kbd>⌘</Kbd>+<Kbd>Y</Kbd>. Microsoft liệt kê <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↓</Kbd> và <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↑</Kbd> cho tab kế tiếp và tab trước.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+<ComparisonTable
+  head={['Thao tác', 'Phím tắt']}
+  rowHeaders
+  rows={[
+    ['Tab mới', 'Ctrl+T'],
+    ['Đóng tab', 'Ctrl+W'],
+    ['Mở lại tab đã đóng', 'Ctrl+Shift+T'],
+    ['Mở lại cửa sổ đã đóng', 'Ctrl+Shift+N'],
+    ['Tab kế tiếp', 'Ctrl+Tab hoặc Ctrl+PgDn'],
+    ['Tab trước', 'Ctrl+Shift+Tab hoặc Ctrl+PgUp'],
+    ['Tab 1 đến 8', 'Ctrl+1 … Ctrl+8'],
+    ['Tab cuối cùng', 'Ctrl+9'],
+    ['Liệt kê tất cả các thẻ', 'Ctrl+Shift+A'],
+    ['Đánh dấu trang tất cả các tab', 'Ctrl+Shift+D'],
+    ['Lịch sử trong thanh bên', 'Ctrl+H'],
+    ['Lịch sử trong Thư viện', 'Ctrl+Shift+H'],
+    ['Đóng cửa sổ', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+**Trên Mac**, Firefox định nghĩa các phím tắt này bằng phím bổ trợ chính của hệ thống, nên hãy nhấn <Kbd>⌘</Kbd> ở chỗ bảng ghi <Kbd>Ctrl</Kbd>.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="reopen" title="Làm sao mở lại một tab lỡ tay đóng?">
+
+Nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> trên Mac). Mỗi lần nhấn lùi thêm một bước. Những gì được mở lại tùy vào trình duyệt:
+
+<BrowserPanels section="reopen">
+<BrowserPanel browser="chrome">
+
+Chrome mở lại tab *và* cửa sổ theo thứ tự đã đóng, nên hãy nhấn tiếp cho đến khi cửa sổ bị mất quay lại.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Tài liệu của Edge ghi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> là mở lại tab vừa đóng gần nhất. Với cửa sổ đã đóng, hãy mở lịch sử (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) và tìm trong **Recently closed** (mới đóng gần đây).
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox giữ các danh sách riêng: <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> cho tab và <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> cho cửa sổ. Trong Firefox 159, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> gắn với một lệnh khôi phục tab, cửa sổ hoặc phiên vừa đóng gần nhất, nên phím này cũng có thể mang lại phiên trước.
+
+</BrowserPanel>
+</BrowserPanels>
+
+Danh sách chỉ lùi được đến một mức nhất định. Nếu mất cả một phiên, hãy xem [cách khôi phục tab sau khi trình duyệt bị lỗi](/blog/restore-tabs-after-crash). Để ngay từ đầu không bị mất, hãy [lưu tất cả các tab đang mở](/blog/save-all-open-tabs) trước khi đóng thứ gì lớn.
+
+</Section>
+
+<Section id="extensions" title="Làm sao đặt phím tắt cho tiện ích mở rộng?">
+
+Tiện ích mở rộng có thể đề xuất phím tắt, nhưng trình duyệt mới là bên quyết định: phím được đề xuất mà trùng với một phím của chính trình duyệt sẽ bị để ở trạng thái **Not set** (chưa đặt), không có cảnh báo nào. Mở trang phím tắt của trình duyệt, nhấp vào biểu tượng bút chì cạnh một lệnh rồi nhấn tổ hợp phím bạn muốn.
+
+<BrowserPanels section="extensions">
+<BrowserPanel browser="chrome">
+
+Dán `chrome://extensions/shortcuts` vào thanh địa chỉ. Mỗi lệnh còn có một menu phạm vi: **In Chrome** (chỉ trong Chrome), hoặc **Global** (mọi nơi) để lệnh hoạt động cả khi Chrome không ở phía trước.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Dán `edge://extensions/shortcuts` vào thanh địa chỉ.
+
+Edge giữ <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd> (nhân bản tab), <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>U</Kbd> (Read Aloud, đọc to) và <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> (in bằng hộp thoại của hệ thống) cho riêng mình, nên lệnh của tiện ích mở rộng đề xuất một trong các phím đó sẽ bắt đầu ở trạng thái **Not set** trong Edge 158. Edge 158 cũng từ chối một số phím <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd> mà danh sách của Microsoft không nhắc đến, như <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> và <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Z</Kbd>. Các lệnh lưu của TabMerger tránh tất cả các phím đó, nên bản cài mới có đủ cả bốn phím:
+
+<AnnotatedFigure src="/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp" alt="Trang phím tắt bàn phím cho tiện ích mở rộng của Edge với TabMerger: cả bốn lệnh lưu đều đã được đặt, là Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma và Alt+Shift+Period" width={852} height={460} boxes={[{ id: 'save-shortcuts' }]} source="edge://extensions/shortcuts · Edge 158.0.4370.33">Một bản cài TabMerger mới trong Edge 158: cả bốn lệnh lưu đều có phím, không cần sửa gì.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Mở `about:addons`, nhấp vào menu hình bánh răng và chọn **Quản lý phím tắt tiện ích mở rộng** (Manage Extension Shortcuts). Lưu ý rằng <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> mở cửa sổ riêng tư trong Firefox, nên hãy chọn phím khác cho bất cứ thứ gì đề xuất phím này.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>trang phím tắt không cảnh báo bạn. Nếu một phím tắt “không làm gì cả”, hãy kiểm tra ở đó trước.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="Phím của TabMerger">
+
+[TabMerger](/features), tiện ích mở rộng miễn phí của chúng tôi cho Chrome, Edge và Firefox, lưu tab ngay từ bàn phím mà không cần mở nó. TabMerger đề xuất một phím cho mỗi lệnh trong bốn lệnh lưu, được chọn để tránh các phím tắt mà chính Chrome, Edge và Firefox dùng, và bạn có thể đổi bất kỳ phím nào trên trang phím tắt của trình duyệt (ở trên):
+
+<ComparisonTable
+  head={['Phím đề xuất', 'Lưu']}
+  keysColumn={0}
+  rows={[
+    ['Alt+Shift+S', 'Tab hiện tại'],
+    ['Alt+Shift+O', 'Mọi tab khác trong cửa sổ'],
+    ['Alt+Shift+Comma', 'Các tab bên trái'],
+    ['Alt+Shift+Period', 'Các tab bên phải'],
+  ]}
+/>
+
+Trên Mac, các phím này dùng <Kbd>Control</Kbd>+<Kbd>Shift</Kbd> thay cho <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>: <Kbd>Control</Kbd>+<Kbd>Shift</Kbd>+<Kbd>S</Kbd> lưu tab hiện tại. Đây là các phím mà bản cài mới nhận được. Bản cập nhật không đổi phím tắt, nên nếu bạn cài TabMerger trước khi có các phím này, nó vẫn giữ các phím cũ, kể cả những phím ở trạng thái **Not set**: hãy đặt chúng trên trang phím tắt.
+
+Trong cửa sổ bật lên, <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd>) tìm trong tab đang mở, đã lưu và mới đóng gần đây trong cùng một danh sách.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tab-keyboard-shortcuts/tm-search" alt="Tìm kiếm của TabMerger đang mở với truy vấn docs, liệt kê các tab đang mở và đã lưu phù hợp, giao diện sáng" darkAlt="Tìm kiếm của TabMerger đang mở với truy vấn docs, liệt kê các tab đang mở và đã lưu phù hợp, giao diện tối" boxes={[{ id: 'search-input', label: 'Tìm kiếm' }]} source="TabMerger 3.16.1">Ctrl+K rồi gõ: kết quả đến từ cả tab đang mở lẫn tab đã lưu.</ThemedScreenshot>
+
+<InstallCta>Miễn phí cho Chrome, Edge và Firefox. Không cần tài khoản để bắt đầu.</InstallCta>
+
+Thêm các thói quen giúp giữ số tab ở mức thấp có trong [hướng dẫn xử lý khi có quá nhiều tab](/blog/manage-too-many-tabs) của chúng tôi, còn những gì mỗi trình duyệt có ngoài phím tắt nằm trong [so sánh tính năng tab của Chrome, Edge và Firefox](/blog/browser-tab-features-compared).
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,145 @@
+export const post = {
+  slug: 'tab-management-for-developers',
+  title: 'Gerenciamento de abas para desenvolvedores: um projeto, um grupo',
+  navTitle: 'Gerenciamento de abas para desenvolvedores',
+  seoTitle: 'Gerenciamento de abas para desenvolvedores: projetos, docs e regras de URL',
+  description:
+    'Docs, pull requests, localhost e dashboards: um jeito de organizar abas para desenvolvedores, com um grupo do TabMerger por projeto, regras de URL que arquivam as abas sozinhas e uma busca que acha qualquer página de documentação com um atalho.',
+  shareSummary: 'Um grupo por projeto, regras de URL que arquivam suas abas e a documentação a um atalho.',
+  dek: 'O navegador é metade da sua IDE. Dê a ele a mesma estrutura: um grupo por projeto, que se preenche sozinho.',
+  published: '2026-12-08',
+  updated: '2026-12-08',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'As regras de URL copiam as novas abas correspondentes para um grupo, com * como curinga.', source: 'TabMerger 3.16.1' },
+    { text: 'As regras comparam o endereço sem http:// ou https://, então localhost:3000/* funciona.', source: 'Código-fonte do TabMerger 3.16.1' },
+    { text: 'O plano gratuito tem 3 regras de URL; o Pro não tem limite.', source: 'Preços do TabMerger', href: '/pricing' },
+    { text: 'Ctrl+K filtra por group:, window:, tag: e closed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Como os desenvolvedores devem organizar as abas do navegador?',
+      answer:
+        'Um grupo do TabMerger por projeto ou ticket, regras de URL que arquivam as novas abas no grupo certo automaticamente e a busca com Ctrl+K para pular para qualquer página de documentação. Salve e feche as abas de um projeto quando trocar de tarefa.',
+    },
+    {
+      question: 'Dá para separar as abas em grupos automaticamente pela URL?',
+      answer:
+        'Sim, com as regras de URL do TabMerger: um padrão como github.com/your-org/* envia cada nova aba correspondente para um grupo. A aba continua aberta; uma cópia é salva no grupo. O plano gratuito tem 3 regras e o Pro, ilimitadas.',
+    },
+    {
+      question: 'Funciona com localhost?',
+      answer: 'Sim. As regras ignoram a parte http:// ou https://, então um padrão como localhost:3000/* corresponde às páginas do seu servidor de desenvolvimento.',
+    },
+    {
+      question: 'Como encontro rápido uma aba de documentação?',
+      answer: 'Pressione Ctrl+K no TabMerger e digite parte do título ou do endereço; acrescente group:"Docs" para buscar em um só grupo.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp', alt: 'Caixa de diálogo “URL Rules” (Regras de URL) do TabMerger com a regra github.com/lbragile/* enviando abas para o grupo “Work”, tema claro' },
+    { src: '/blog/tab-management-for-developers/tm-url-rules-dark.webp', alt: 'Caixa de diálogo “URL Rules” (Regras de URL) do TabMerger com a regra github.com/lbragile/* enviando abas para o grupo “Work”, tema escuro' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-light.webp', alt: 'O grupo “Work” com a aba “Issues” recém-aberta, adicionada pela regra de URL, tema claro' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-dark.webp', alt: 'O grupo “Work” com a aba “Issues” recém-aberta, adicionada pela regra de URL, tema escuro' },
+  ],
+  tags: ['developers', 'tab-management', 'tab-manager', 'browser-productivity'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp' },
+  ogImage: { src: '/blog/tab-management-for-developers/og.png', alt: 'Cartão com o título “Tab management for developers”: um guia do TabMerger, com uma regra de URL arquivando abas do GitHub em um grupo' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'setup', label: 'Um projeto, um grupo' },
+    { id: 'rules', label: 'Arquivar abas automaticamente' },
+    { id: 'find', label: 'Achar qualquer doc rápido' },
+    { id: 'switch', label: 'Trocar de projeto sem bagunça' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Dê a cada projeto seu próprio grupo no [TabMerger](/features) e deixe as **Regras de URL** (URL rules) arquivarem por você: um padrão como `github.com/your-org/*` ou `localhost:3000/*` envia automaticamente cada nova aba correspondente para o grupo certo. Encontre qualquer página de documentação com <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> e, quando trocar de tarefa, salve as janelas do projeto e feche-as. Nada se perde, nada para garimpar.
+
+</QuickAnswer>
+
+<InstallCta>Um grupo por projeto, preenchido pelas regras de URL. Grátis para Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="setup" title="Como um desenvolvedor deve organizar as abas?">
+
+Do mesmo jeito que organiza o código: por projeto. Um projeto típico tem quatro tipos de abas:
+
+<ComparisonTable
+  head={['Tipo', 'Exemplos', 'Onde fica']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['Trabalho em andamento', 'Pull requests, issues, o ticket', 'O grupo do projeto, numa janela própria'],
+    ['Documentação e referência', 'Docs de API, MDN, uma especificação', 'Uma janela “Docs” no grupo do projeto'],
+    ['Local e staging', 'localhost, deploys de preview', 'Abertas enquanto roda; salvas por uma regra de URL'],
+    ['Dashboards', 'CI, logs, monitoramento', 'Uma janela fixada ou o grupo do projeto'],
+  ]}
+/>
+
+No TabMerger, um grupo pode ter várias janelas, então um mesmo grupo de projeto mantém “PRs”, “Docs” e “Local” separadas. Renomeie uma janela pelo menu **⋯** dela e adicione ao grupo uma nota com a branch ou o número do ticket.
+
+</Section>
+
+<Section id="rules" title="Como arquivo as abas no grupo certo automaticamente?">
+
+As **Regras de URL** do TabMerger ficam de olho nas suas abas. Quando uma aba abre ou termina de carregar um endereço que corresponde a uma regra, uma cópia é salva no grupo dessa regra; a aba em si continua aberta.
+
+1. Abra **Configurações → Geral** (Settings → General), encontre **Regras de URL** e clique em **Gerenciar** (Manage).
+2. Clique em **Adicionar regra** (Add rule), digite um padrão e escolha o grupo. `*` é um curinga; vale a primeira regra que corresponder.
+3. Clique em **Salvar** (Save).
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Uma regra de URL em ação" steps={[{ title: 'A regra' }, { title: 'O resultado' }]}>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-url-rules" alt="Caixa de diálogo “URL Rules” (Regras de URL) do TabMerger com a regra github.com/lbragile/* enviando abas para o grupo “Work”, tema claro" darkAlt="Caixa de diálogo “URL Rules” (Regras de URL) do TabMerger com a regra github.com/lbragile/* enviando abas para o grupo “Work”, tema escuro" boxes={[{ id: 'rule', label: 'O padrão' }]} source="TabMerger 3.16.1">Uma regra: tudo o que está em github.com/lbragile/ vai para “Work”.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-rule-result" alt="O grupo “Work” com a aba “Issues” recém-aberta, adicionada pela regra de URL, tema claro" darkAlt="O grupo “Work” com a aba “Issues” recém-aberta, adicionada pela regra de URL, tema escuro" boxes={[{ id: 'new-tab', label: 'Adicionada pela regra' }]} source="TabMerger 3.16.1">Ao abrir a página “Issues” do repositório, ela foi arquivada sozinha em “Work”.</ThemedScreenshot>
+</Carousel>
+
+Padrões que funcionam bem:
+
+- `github.com/your-org/*` para todos os repositórios, PRs e issues de um projeto
+- `localhost:3000/*` para o seu servidor de desenvolvimento (as regras ignoram `http://` e `https://`)
+- `docs.your-framework.dev/*` para a documentação que você vive reabrindo
+
+O plano gratuito inclui 3 regras; o [Pro](/pricing) não tem limite. Todas as opções de padrão, e a ordem das regras, estão em [organizar abas automaticamente com regras de URL](/blog/auto-sort-tabs-with-url-rules).
+
+</Section>
+
+<Section id="find" title="Como acho uma página de documentação com um atalho?">
+
+Pressione <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> no TabMerger e digite algumas letras do título ou do endereço. Os resultados incluem abas abertas, salvas e fechadas recentemente. Refine com filtros: `group:"Docs" fetch`, `window:"Local"` ou `closed:` para a página que você fechou uma hora atrás. Mais em [como encontrar uma aba entre centenas](/blog/find-a-tab-among-hundreds).
+
+Os menus de grupo também têm **Ordenar por URL** (Sort by URL), útil para uma janela comprida de documentação, e **Remover abas duplicadas** (Deduplicate tabs) para as cinco cópias da mesma issue.
+
+</Section>
+
+<Section id="switch" title="Como troco de projeto sem perder o contexto?">
+
+1. No grupo do projeto, escolha **Mesclar com as atuais** (Merge with current) para salvar as janelas abertas. Já **Substituir pelas atuais** (Replace with current) sobrescreve a cópia salva.
+2. Feche as janelas.
+3. Quando voltar ao projeto, reabra o grupo: cada PR, cada doc e cada dashboard, onde você deixou.
+
+<InstallCta>Grátis para Chrome, Edge e Firefox. Não precisa de conta para começar.</InstallCta>
+
+Para quem prefere o teclado, veja os [atalhos de teclado para abas](/blog/tab-keyboard-shortcuts); para a rotina geral, [como lidar com abas demais](/blog/manage-too-many-tabs).
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

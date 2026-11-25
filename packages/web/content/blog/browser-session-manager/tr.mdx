@@ -1,0 +1,197 @@
+export const post = {
+  slug: 'browser-session-manager',
+  title: 'Tarayıcı oturum yöneticisi nedir ve size gerekli mi?',
+  navTitle: 'Oturum yöneticisi nedir?',
+  seoTitle: 'Oturum yöneticisi eklentileri: oturumlar ve yer işaretleri',
+  description:
+    'Sekme oturumu nedir, tarayıcı oturumunu kaydeden bir eklenti yer işaretlerinin ve geçmişin yapamadığı neyi yapar, birinde nelere bakmalı ve tarayıcının kendisi ne zaman yeterli.',
+  shareSummary: 'Sekme oturumları, oturum yöneticileri, yer işaretleri: ne kaydederler, hangisi ne zaman gerekir?',
+  dek: 'Tarayıcınız zaten bir oturumu saklar. Bir oturum yöneticisi ise istediğiniz kadarını, adlarıyla saklar.',
+  published: '2026-11-25',
+  updated: '2026-11-25',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Eklentiler en fazla 25 yakın zamanda kapatılmış sekme ve pencereyi listeleyebilir.',
+      source: 'chrome.sessions belgeleri',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+    },
+    { text: 'Session Buddy verileri cihazda saklar ve senkronizasyonu yoktur.', source: 'Session Buddy mağaza sayfası, 20 Kas 2026' },
+    { text: 'Tab Session Manager, pencere kapanınca ve bir zamanlayıcıyla otomatik kaydeder.', source: 'Mağaza sayfası, 20 Kas 2026' },
+    { text: 'Başlangıçta geri yükleme yalnızca son oturumu tutar.', source: 'Chrome, Edge ve Firefox ayarları' },
+  ],
+  faq: [
+    {
+      question: 'Sekme oturumu nedir?',
+      answer:
+        'Belirli bir anda açık olan pencereler ve sekmeler, sıralarıyla birlikte. Tarayıcı, yeniden başlatmadan sonra açabilmek için mevcut oturumu saklar; bir oturum yöneticisi ise onu bir adla kaydeder.',
+    },
+    {
+      question: 'Oturum yöneticisi ile yer işaretleri arasındaki fark nedir?',
+      answer:
+        'Yer işaretleri tek tek sayfaları klasörlere kaydeder. Bir oturum yöneticisi pencerelerin tamamını kaydeder, yapılarını korur ve bunu otomatik yapabilir; sonra onları yine pencere olarak açar.',
+    },
+    {
+      question: 'Bir oturum yöneticisi eklentisine ihtiyacım var mı?',
+      answer:
+        'Tek pencerede çalışıyorsanız ve başlangıç ayarı açıksa hayır. Birden fazla projeyi aynı anda yürütüyor, çökmelerde sekme kaybediyor ya da dünkü pencerelerinizi geri istiyorsanız evet.',
+    },
+    {
+      question: 'Oturum yöneticileri gizliliğe saygılı mı?',
+      answer:
+        'Verileri nerede tuttuklarına bağlı. Bazıları her şeyi cihazınızda saklar; senkronize olanlar verileri bir sunucuya gönderir, bu yüzden uçtan uca şifreli olup olmadığına bakın.',
+    },
+  ],
+  images: [
+    { src: '/blog/browser-session-manager/tm-save-session-light.webp', alt: 'TabMerger Save Session (Oturumu Kaydet) penceresi, ad olarak Friday wrap-up yazılmış, açık tema' },
+    { src: '/blog/browser-session-manager/tm-save-session-dark.webp', alt: 'TabMerger Save Session (Oturumu Kaydet) penceresi, ad olarak Friday wrap-up yazılmış, koyu tema' },
+    { src: '/blog/browser-session-manager/tm-session-view-light.webp', alt: 'Friday wrap-up adlı kayıtlı oturum: grupları ve Restore session (Oturumu geri yükle) düğmesi, açık tema' },
+    { src: '/blog/browser-session-manager/tm-session-view-dark.webp', alt: 'Friday wrap-up adlı kayıtlı oturum: grupları ve Restore session (Oturumu geri yükle) düğmesi, koyu tema' },
+  ],
+  tags: ['session-management', 'tab-manager', 'save-tabs', 'comparison'],
+  sources: [
+    {
+      title: 'chrome.sessions API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'sessions (WebExtensions API)',
+      publisher: 'MDN Web Docs',
+      url: 'https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Session Buddy',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/session-buddy-tab-bookmar/edacconmaakjimmfgnblocblbcdcpbko',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tab Session Manager',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/tab-session-manager/iaiomicjabeggjcfkbimgmglanimpnae',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tabs Outliner',
+      publisher: 'tabsoutliner.com',
+      url: 'https://tabsoutliner.com/',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/browser-session-manager/tm-session-view-light.webp' },
+  ogImage: { src: '/blog/browser-session-manager/og.png', alt: 'Tarayıcı oturum yöneticisi nedir ve size gerekli mi? Kayıtlı bir oturum ve geri yükleme düğmesiyle bir TabMerger rehberi' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'session', label: 'Sekme oturumu nedir?' },
+    { id: 'vs', label: 'Oturumlar ve yer işaretleri' },
+    { id: 'need', label: 'Size gerekli mi?' },
+    { id: 'look-for', label: 'Nelere bakmalı' },
+    { id: 'examples', label: 'Örnekler' },
+    { id: 'tabmerger', label: 'TabMerger’da oturumlar' },
+    { id: 'faq', label: 'SSS' },
+  ],
+}
+
+<QuickAnswer>
+
+**Oturum**, belirli bir anda açık olan pencerelerin ve sekmelerin tamamıdır. Tarayıcınız, yeniden başlatmadan sonra açabilmek için mevcut oturumu saklar. **Oturum yöneticisi** ise oturumları adlarıyla, çoğu zaman otomatik olarak kaydeden ve sonra yeniden pencere olarak açan bir eklentidir. Yer işaretleri sayfaları kaydeder; oturum yöneticisi bütün çalışma alanını kaydeder. [TabMerger](/features) ikisini birden yapar: açık pencerelerin hepsi tek tıkla adlandırılmış gruplara kaydedilir, adlandırılmış oturumlar birlikte geri yüklenir, otomatik kaydetme bir zamanlamayla çalışır ve Pro’da uçtan uca şifreli senkronizasyon vardır.
+
+</QuickAnswer>
+
+<InstallCta>Her pencereyi adlandırılmış bir grup olarak, oturumların tamamını tek tıkla kaydedin. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+<Section id="session" title="Sekme oturumu nedir?">
+
+Şu anda açık olan her şey: her pencere, içindeki sekmeler sırasıyla ve hangi sekmenin etkin olduğu. Tarayıcılar bunu sürekli izler, iki iş için:
+
+- **Başlangıçta geri yükleme.** Önceki oturumu geri getiren başlangıç seçeneği açıksa tarayıcı, başlarken son oturumu yeniden açar. Bu seçeneğin her tarayıcıda nerede olduğunu [çökmeden sonra sekmeleri geri yükleme](/blog/restore-tabs-after-crash#prevent) rehberinde anlattık.
+- **Son kapatılanlar.** <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>, kapattığınız sekmeleri ve pencereleri tek tek geri getirir.
+
+İkisi de yalnızca *en son* durumu tutar. Geçen salının pencereleri, tarayıcının size geri verebileceği bir oturum değildir; geçmişte birkaç satırdan ibarettir. Oturum yöneticilerinin doldurduğu boşluk tam da budur. Sekmelerinizi zaten kaybettiyseniz [çökmeden sonra sekmeleri geri yükleme](/blog/restore-tabs-after-crash) rehberiyle başlayın.
+
+</Section>
+
+<Section id="vs" title="Oturum yöneticisi, yer işaretleri ve geçmiş">
+
+<ComparisonTable
+  head={['', 'Yer işaretleri', 'Geçmiş', 'Oturum yöneticisi']}
+  rowHeaders
+  highlight={3}
+  minWidth="36rem"
+  rows={[
+    ['Ne kaydeder', 'Seçtiğiniz sayfaları', 'Ziyaret ettiğiniz her sayfayı', 'Pencerelerin tamamını ve sekmelerini'],
+    ['Pencereleri ayrı tutar', 'Her kayıtta bir klasör', 'Hayır', 'Evet'],
+    ['Otomatik kaydeder', 'Hayır', 'Evet, sayfa sayfa', 'Genellikle, zamanlayıcıyla veya kapanınca'],
+    ['Nasıl açar', 'Bir seferde bir klasör', 'Bir seferde bir sayfa', 'Pencereler halinde, tek tıkla'],
+    ['Tarayıcıda yerleşik', 'Evet', 'Evet', 'Hayır, bir eklenti'],
+  ]}
+/>
+
+Yıllarca saklayacağınız sayfalarda yer işaretleri kazanır. Süren işlerde ise oturum yöneticisi kazanır: yarım kalmış bir işin on iki sekmesini tek tek dosyalamak yerine, aynen bir pencere olarak geri almak istersiniz. Ayrıntılar [sekmeler ve yer işaretleri](/blog/tabs-vs-bookmarks) yazısında.
+
+</Section>
+
+<Section id="need" title="Size gerekli mi?">
+
+Tek pencerede çalışıyor, birkaç düzineden az sekme açık tutuyor ve başlangıç ayarını açık bırakıyorsanız muhtemelen hayır. [Çok fazla sekme için bir düzen](/blog/manage-too-many-tabs) ve arada bir yer işareti klasörü yeterli olur.
+
+Şunlardan biri size tanıdık geliyorsa muhtemelen evet:
+
+- Projeler arasında geçiş yapıyor ve her birinin pencerelerini olduğu gibi geri istiyorsunuz.
+- Bir çökme, güncelleme ya da zorunlu yeniden başlatma size daha önce sekme kaybettirdi.
+- Gün sonunda hiçbir şey kaybetmeden her şeyi kapatmak istiyorsunuz.
+- Yalnızca son oturumdakilere değil, günler önceki sekmelere de ihtiyacınız oluyor.
+
+</Section>
+
+<Section id="look-for" title="İyi bir oturum yöneticisi ne yapmalı?">
+
+- **Otomatik kaydetmeli**, yalnızca siz hatırladığınızda değil: bir zamanlayıcıyla, bir pencere kapandığında ya da ikisinde de.
+- **Yapıyı korumalı**: pencereler, sekme sırası ve ideal olarak sekme grupları.
+- **Esnek geri yüklemeli**: oturumun tamamını, tek bir pencereyi ya da tek bir sekmeyi.
+- **Kayıtlı oturumlarda arama** yapabilmeli, böylece geçen haftaki bir sekme bulunabilir.
+- **Dışa aktarabilmeli**: başka yerde okunabilen bir dosyaya, böylece hiçbir zaman bir araca bağlı kalmazsınız. (TabMerger tek tıkla JSON olarak dışa aktarır: [içinde neler var](/blog/export-open-tabs).)
+- **Verilerin nerede durduğunu açıkça söylemeli.** Yalnızca yerel saklamak gizlidir ama profille birlikte yok olur; senkronize saklamak veri kaybına karşı daha güvenlidir ve uçtan uca şifreli olmalıdır.
+
+Teknik bir not: Tarayıcıların kapatılan sekmeler için eklentilere sunduğu API küçüktür. `chrome.sessions` en fazla 25 yakın zamanda kapatılmış öğe döndürür (`MAX_SESSION_RESULTS`). Daha geriye giden oturum yöneticileri kendi kayıtlarını tutar.
+
+</Section>
+
+<Section id="examples" title="Hangi oturum yöneticileri var?">
+
+Yerleşik birkaç tanesi, kendi mağaza sayfalarına ve sitelerine göre (20 Kas 2026’da kontrol edildi):
+
+- **Session Buddy** (Chrome) oturumları kaydeder ve geri yükler, çökmelere karşı geçmiş oturumların kaydını tutar. Veriler cihazda kalır; mağaza sayfasına göre senkronizasyon yoktur. Ücretsiz.
+- **Tab Session Manager** (Chrome, Firefox, Edge) oturumları adlar ve etiketlerle kaydeder, pencere kapanınca ve bir zamanlayıcıyla otomatik kaydeder, bulut senkronizasyonu sunar. Ücretsiz.
+- **Tabs Outliner** (Chrome) açık ve kayıtlı pencereleri notlarla ve çökme kurtarmayla tek bir ağaçta tutar. Ücretsiz, tek seferlik ücretli bir Pro yükseltmesiyle.
+
+Dokuz aracın fiyat, senkronizasyon ve şifreleme açısından yan yana karşılaştırması için [en iyi sekme yöneticisi eklentileri karşılaştırması](/blog/best-tab-manager-extensions) yazısına ya da [karşılaştırma sayfamıza](/compare) bakın.
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger’da oturumlar nasıl çalışır?">
+
+[TabMerger](/features), Chrome, Edge ve Firefox için ücretsiz eklentimiz, oturumları yerleşik olarak sunan bir sekme yöneticisidir. Açık sekmeleriniz adlandırılmış **gruplar** halinde kaydedilir; ardından **Mevcut oturumu kaydet** (Save current session), kayıtlı bu grupların adlandırılmış bir anlık görüntüsünü alır ve sonra hepsini birlikte geri yükleyebilirsiniz. Ücretsiz plan tarayıcıda 3 oturum tutar; Pro sınırsız oturum tutar ve bunları cihazlarınız arasında uçtan uca şifreli olarak senkronize eder.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Bir oturumu kaydetme ve geri yükleme" steps={[{ title: 'Oturumu kaydet' }, { title: 'Oturum görünümü' }]}>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-save-session" alt="TabMerger Save Session (Oturumu Kaydet) penceresi, ad olarak Friday wrap-up yazılmış, açık tema" darkAlt="TabMerger Save Session (Oturumu Kaydet) penceresi, ad olarak Friday wrap-up yazılmış, koyu tema" boxes={[{ id: 'session-name', label: 'Oturum adı' }]} source="TabMerger 3.16.1">Save current session (Mevcut oturumu kaydet) bir ad ister.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-session-view" alt="Friday wrap-up adlı kayıtlı oturum: grupları ve Restore session (Oturumu geri yükle) düğmesi, açık tema" darkAlt="Friday wrap-up adlı kayıtlı oturum: grupları ve Restore session (Oturumu geri yükle) düğmesi, koyu tema" boxes={[{ id: 'restore-session', label: 'Oturumu geri yükle' }]} source="TabMerger 3.16.1">Kayıtlı oturum gruplarını listeler; Restore session (Oturumu geri yükle) hepsini geri getirir.</ThemedScreenshot>
+</Carousel>
+
+Otomatik taraf için **Ayarlar → Veri → Açık sekmeleri otomatik kaydet** (Settings → Data → Auto-save open tabs), açık sekmelerinizi bir zamanlamayla ya da belirli bir sekme sayısını aştığınızda yeni bir grup olarak kaydeder. Dışa aktarılan dosyalar düz JSON’dur. Bir oturumu sabah rutininize dönüştürmek için [iş gününe kayıtlı sekmelerle başlayın](/blog/start-your-workday-with-saved-tabs) yazısına bakın.
+
+<InstallCta>Chrome, Edge ve Firefox için ücretsiz. Başlamak için hesap gerekmez.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

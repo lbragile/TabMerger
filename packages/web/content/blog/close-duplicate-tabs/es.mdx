@@ -1,0 +1,161 @@
+export const post = {
+  slug: 'close-duplicate-tabs',
+  title: 'Cómo cerrar pestañas duplicadas con un clic',
+  navTitle: 'Cerrar pestañas duplicadas',
+  seoTitle: 'Cómo cerrar pestañas duplicadas en Chrome, Edge y Firefox',
+  description:
+    '¿La misma página abierta tres veces? Cierra las pestañas duplicadas de todas las ventanas con un clic con TabMerger, o usa la opción integrada de Firefox, «Cerrar pestañas duplicadas». Qué ofrecen Chrome y Edge, y qué cuenta exactamente como duplicado.',
+  shareSummary: 'Cierra las pestañas duplicadas de todas las ventanas con un clic, en Chrome, Edge y Firefox.',
+  dek: 'Los duplicados se acumulan sin que te des cuenta. Quítalos de todas las ventanas a la vez y conserva la primera copia de cada página.',
+  published: '2026-12-01',
+  updated: '2026-12-01',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '«Quitar duplicadas» de TabMerger cierra las repetidas en todas las ventanas abiertas y conserva la primera.', source: 'Probado en TabMerger 3.16.1, 21 nov. 2026' },
+    { text: 'Primero pregunta, y dice cuántas pestañas va a quitar.', source: 'TabMerger 3.16.1' },
+    { text: 'El menú de pestañas de Firefox 159 tiene «Cerrar pestañas duplicadas».', source: 'Texto del menú de Firefox 159' },
+    { text: '«Duplicate tab» de Edge crea una copia; no quita ninguna.', source: 'Texto del menú de Edge 158' },
+  ],
+  faq: [
+    {
+      question: '¿Chrome tiene una función para quitar pestañas duplicadas?',
+      answer:
+        'Las páginas de ayuda de Chrome no describen ninguna. TabMerger la añade: abre el menú ⋯ de «Abiertas ahora» y elige «Quitar duplicadas» para cerrar todas las repetidas en todas tus ventanas.',
+    },
+    {
+      question: '¿Qué pestaña se conserva?',
+      answer: 'En TabMerger, la primera copia en orden de lectura: primero la ventana más antigua y, dentro de ella, de izquierda a derecha. Todas las copias posteriores de la misma dirección se quitan.',
+    },
+    {
+      question: '¿Son duplicadas las páginas con #anclas distintas?',
+      answer: 'No. TabMerger compara direcciones completas sin distinguir mayúsculas de minúsculas, así que page#top y page#faq, o la misma página con ?parámetros distintos, se conservan como pestañas diferentes.',
+    },
+    {
+      question: '¿También puedo limpiar duplicados de los grupos guardados?',
+      answer: 'Sí: la misma opción «Quitar duplicadas» está en el menú ⋯ de cada grupo, para las pestañas guardadas en él.',
+    },
+  ],
+  images: [
+    { src: '/blog/close-duplicate-tabs/tm-before-light.webp', alt: 'TabMerger, «Now Open» (Abiertas ahora), con dos ventanas y ocho pestañas, tres de ellas repetidas, tema claro' },
+    { src: '/blog/close-duplicate-tabs/tm-before-dark.webp', alt: 'TabMerger, «Now Open» (Abiertas ahora), con dos ventanas y ocho pestañas, tres de ellas repetidas, tema oscuro' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp', alt: 'Diálogo de TabMerger «Remove duplicates» (Quitar duplicadas), que indica que se quitarán 3 pestañas duplicadas, con un botón «Remove 3 duplicates» (Quitar 3 duplicadas), tema claro' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-dark.webp', alt: 'Diálogo de TabMerger «Remove duplicates» (Quitar duplicadas), que indica que se quitarán 3 pestañas duplicadas, con un botón «Remove 3 duplicates» (Quitar 3 duplicadas), tema oscuro' },
+    { src: '/blog/close-duplicate-tabs/tm-after-light.webp', alt: 'TabMerger, «Now Open» (Abiertas ahora) tras quitar los duplicados: dos ventanas, cinco pestañas, cada página una sola vez, tema claro' },
+    { src: '/blog/close-duplicate-tabs/tm-after-dark.webp', alt: 'TabMerger, «Now Open» (Abiertas ahora) tras quitar los duplicados: dos ventanas, cinco pestañas, cada página una sola vez, tema oscuro' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp' },
+  ogImage: { src: '/blog/close-duplicate-tabs/og.png', alt: 'Cómo cerrar pestañas duplicadas con un clic: una guía de TabMerger, con un diálogo «Remove 3 duplicates» (Quitar 3 duplicadas)' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'tabmerger', label: 'Un clic, todas las ventanas' },
+    { id: 'what-counts', label: 'Qué cuenta como duplicado' },
+    { id: 'builtin', label: 'Opciones integradas' },
+    { id: 'prevent', label: 'Menos duplicados' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Cierre integrado de duplicados',
+    values: { chrome: 'Ninguno en las páginas de ayuda', edge: 'Ninguno (Duplicate tab hace una copia)', firefox: 'Clic derecho → Cerrar pestañas duplicadas' },
+  },
+}
+
+<QuickAnswer>
+
+En [TabMerger](/features), abre el menú **⋯** de **Abiertas ahora** y elige **Quitar duplicadas**. Encuentra cada página que esté abierta más de una vez, **en todas tus ventanas**, muestra cuántas pestañas va a cerrar y conserva la primera copia de cada una. Firefox trae integrada la opción **Cerrar pestañas duplicadas** («Close Duplicate Tabs») en su menú de pestañas; las páginas de ayuda de Chrome no describen ninguna función para quitar duplicados.
+
+</QuickAnswer>
+
+<InstallCta>Quita las pestañas duplicadas de todas las ventanas con un clic. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="¿Cómo cierro todos los duplicados a la vez?">
+
+1. Abre TabMerger. **Abiertas ahora** muestra todas las ventanas y pestañas abiertas.
+2. Abre su menú **⋯** y elige **Quitar duplicadas**.
+3. Comprueba el número y pulsa el botón para quitarlas, aquí **Quitar 3 duplicadas**. Las pestañas sobrantes se cierran en el navegador; la primera copia de cada página se queda exactamente donde estaba.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Quitar duplicados de las pestañas abiertas" steps={[{ title: 'Antes' }, { title: 'Confirmar' }, { title: 'Después' }]}>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-before" alt="TabMerger, «Now Open» (Abiertas ahora), con dos ventanas y ocho pestañas, tres de ellas repetidas, tema claro" darkAlt="TabMerger, «Now Open» (Abiertas ahora), con dos ventanas y ocho pestañas, tres de ellas repetidas, tema oscuro" boxes={[{ id: 'summary', label: '8 pestañas' }]} source="TabMerger 3.16.1">Antes: dos ventanas, ocho pestañas, tres de ellas repetidas.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-confirm" alt="Diálogo de TabMerger «Remove duplicates» (Quitar duplicadas), que indica que se quitarán 3 pestañas duplicadas, con un botón «Remove 3 duplicates» (Quitar 3 duplicadas), tema claro" darkAlt="Diálogo de TabMerger «Remove duplicates» (Quitar duplicadas), que indica que se quitarán 3 pestañas duplicadas, con un botón «Remove 3 duplicates» (Quitar 3 duplicadas), tema oscuro" boxes={[{ id: 'confirm', label: 'Quitar' }]} source="TabMerger 3.16.1">TabMerger dice cuántas pestañas va a cerrar antes de hacerlo.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-after" alt="TabMerger, «Now Open» (Abiertas ahora) tras quitar los duplicados: dos ventanas, cinco pestañas, cada página una sola vez, tema claro" darkAlt="TabMerger, «Now Open» (Abiertas ahora) tras quitar los duplicados: dos ventanas, cinco pestañas, cada página una sola vez, tema oscuro" boxes={[{ id: 'summary', label: '5 pestañas' }]} source="TabMerger 3.16.1">Después: cinco pestañas, cada página una sola vez. Las pestañas del navegador se cerraron de verdad.</ThemedScreenshot>
+</Carousel>
+
+La misma opción funciona en cualquier grupo guardado, así que un grupo de investigación que crece durante semanas también se mantiene limpio.
+
+</Section>
+
+<Section id="what-counts" title="¿Qué cuenta como duplicado?">
+
+TabMerger compara la **dirección completa** en su forma estándar, sin distinguir mayúsculas de minúsculas:
+
+<ComparisonTable
+  head={['Estas dos pestañas', '¿Duplicadas?']}
+  rows={[
+    [<code>example.com/page</code>, 'La misma página dos veces: sí, se cierra una'],
+    [<code>example.com/Page</code>, 'Solo cambian mayúsculas y minúsculas: sí'],
+    [<code>example.com/page#faq</code>, 'Ancla distinta: no, se quedan las dos'],
+    [<code>example.com/page?ref=mail</code>, 'Parámetros distintos: no, se quedan las dos'],
+  ]}
+/>
+
+Es a propósito: dos pestañas en secciones distintas de un documento largo, o dos búsquedas, son pestañas diferentes para ti, así que se quedan. Solo se van las repeticiones reales.
+
+</Section>
+
+<Section id="builtin" title="¿Puede el navegador cerrar los duplicados por sí solo?">
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+Las páginas de ayuda de Chrome no describen ninguna función para quitar pestañas duplicadas. Lo más parecido es **Búsqueda en pestañas** («Tab Search», <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>): escribe el nombre de un sitio, localiza las repetidas en la lista y ciérralas una a una con el botón de cerrar de cada fila.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+El menú de pestañas de Edge tiene **Duplicate tab**, que abre otra copia: justo lo contrario de lo que buscas. Para encontrar las repetidas tendrás que hacerlo a mano, cerrándolas una a una a lo largo de la barra de pestañas.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Haz clic derecho en cualquier pestaña y elige **Cerrar pestañas duplicadas** («Close Duplicate Tabs») para cerrar las repetidas, o **Cerrar duplicados de esta pestaña** («Close Duplicates of This Tab») para una sola página.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="prevent" title="¿Cómo evito tantos duplicados desde el principio?">
+
+- **Busca antes de abrir.** <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> en TabMerger muestra si la página ya está abierta o guardada. Más en [encontrar una pestaña entre cientos](/blog/find-a-tab-among-hundreds).
+- **Combina ventanas con cuidado.** Al juntar ventanas es cuando se encuentran las repetidas; quita los duplicados justo después de [combinar ventanas](/blog/merge-browser-windows).
+- **Guarda y luego cierra.** Menos pestañas abiertas, menos copias. Nuestra [rutina para cuando tienes demasiadas pestañas](/blog/manage-too-many-tabs) lo convierte en un hábito.
+
+<InstallCta>Gratis para Chrome, Edge y Firefox. No necesitas una cuenta para empezar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

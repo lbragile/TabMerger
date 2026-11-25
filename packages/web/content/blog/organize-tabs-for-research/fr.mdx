@@ -1,0 +1,117 @@
+export const post = {
+  slug: 'organize-tabs-for-research',
+  title: 'Comment organiser ses onglets pour la recherche : notes, rappels et sources',
+  navTitle: 'Organiser ses onglets pour la recherche',
+  seoTitle: 'Comment organiser les onglets du navigateur pour la recherche (notes, sessions, sources)',
+  description:
+    'Une méthode pour vos onglets de recherche : un groupe TabMerger par projet, une note sur chaque source importante, des rappels pour y revenir, des sessions pour mettre tout un projet en pause et un export de vos sources au moment de rédiger.',
+  shareSummary: 'Un groupe par projet, des notes sur les sources, des rappels et un export au moment de rédiger.',
+  dek: 'Quarante onglets de sources forment une bibliothèque, pas un fouillis, si chacun dit pourquoi il est là.',
+  published: '2026-12-09',
+  updated: '2026-12-09',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Chaque onglet enregistré peut porter une note et un rappel.', source: 'TabMerger 3.16.1' },
+    { text: 'Rappels : 30 min, 1 heure, 3 heures, demain, ou une date et une heure.', source: 'TabMerger 3.16.1' },
+    { text: 'Une session enregistre tous vos groupes pour les restaurer ensemble ; l’offre gratuite en garde 3.', source: 'Tarifs de TabMerger', href: '/pricing' },
+    { text: 'L’export JSON liste le titre et l’adresse de chaque source.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Comment garder la trace de mes sources dans le navigateur ?',
+      answer:
+        'Enregistrez les onglets de chaque projet dans un groupe TabMerger et ajoutez une note à chaque source que vous citerez : pourquoi elle compte, pour quelle section, pour quel chapitre. Ctrl+K cherche dans les titres et les adresses de tous vos groupes.',
+    },
+    {
+      question: 'Puis-je programmer un rappel pour revenir à un onglet ?',
+      answer: 'Oui. Faites un clic droit sur un onglet enregistré dans TabMerger et choisissez « Me le rappeler… » : 30 minutes, 1 heure, 3 heures, demain, ou une date et une heure, avec une note facultative.',
+    },
+    {
+      question: 'Faut-il mettre ses onglets de recherche en favoris ?',
+      answer: 'Pour un travail en cours, un groupe enregistré vaut mieux : il garde l’ensemble réuni avec vos notes et se rouvre en un clic. Mettez en favoris les quelques pages que vous voudrez garder des années.',
+      link: { text: 'Mettez en favoris', href: '/blog/tabs-vs-bookmarks' },
+    },
+    {
+      question: 'Comment exporter la liste de mes sources ?',
+      answer: 'Paramètres → Données → Exporter en JSON enregistre les titres et les adresses de tous les groupes dans un seul fichier, que vous pouvez transformer en liste de références.',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp', alt: 'Groupe TabMerger « Thesis sources » avec le menu d’un onglet ouvert : Move to group (Déplacer vers un groupe), Add note (Ajouter une note), Remind me… (Me le rappeler…), Rename tab (Renommer l’onglet), Remove tab (Supprimer l’onglet), thème clair' },
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-dark.webp', alt: 'Groupe TabMerger « Thesis sources » avec le menu d’un onglet ouvert : Move to group (Déplacer vers un groupe), Add note (Ajouter une note), Remind me… (Me le rappeler…), Rename tab (Renommer l’onglet), Remove tab (Supprimer l’onglet), thème sombre' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-light.webp', alt: 'Sélecteur de rappel TabMerger sous un onglet : 30 min, 1 hour, 3 hours, Tomorrow (Demain), une date et une heure, et une note facultative, thème clair' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-dark.webp', alt: 'Sélecteur de rappel TabMerger sous un onglet : 30 min, 1 hour, 3 hours, Tomorrow (Demain), une date et une heure, et une note facultative, thème sombre' },
+  ],
+  tags: ['research', 'tab-management', 'save-tabs', 'session-management'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-for-research/og.png', alt: 'Comment organiser ses onglets pour la recherche : un guide TabMerger, avec les options de note et de rappel d’un onglet' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'project', label: 'Un groupe par projet' },
+    { id: 'notes', label: 'Notes et rappels' },
+    { id: 'sessions', label: 'Mettre tout un projet en pause' },
+    { id: 'export', label: 'Exporter vos sources' },
+    { id: 'faq', label: 'Questions fréquentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Donnez à chaque projet de recherche son propre groupe [TabMerger](/features), et ajoutez une **note** à chaque source que vous utiliserez, pour dire pourquoi elle compte. Placez un **rappel** sur celles que vous devez revoir, enregistrez une **session** pour mettre tout le projet en pause et le retrouver en un clic, et **exportez** le groupe dans un fichier au moment de rédiger vos références.
+
+</QuickAnswer>
+
+<InstallCta>Transformez quarante onglets de sources en une bibliothèque annotée où tout se retrouve. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+<Section id="project" title="Comment organiser les onglets d’un projet de recherche ?">
+
+1. Cliquez sur **Ajouter un groupe** (Add Group) et donnez-lui le nom du projet, par exemple « Sources de thèse » (« Thesis sources » sur les captures).
+2. Ouvrez le menu **⋯** du groupe et choisissez **Fusionner avec l’actuel** (Merge with current) : tous les onglets ouverts y sont enregistrés.
+3. Fermez les fenêtres quand vous avez fini pour la journée. Le groupe garde tout, et <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> retrouve plus tard n’importe quelle source par son titre ou son adresse.
+
+Gardez une fenêtre par axe (articles, données, contexte) dans le groupe, et donnez un nom à chacune. Avec les onglets de recherche, la moitié du travail consiste à décider ce qui mérite d’être gardé ; notre [guide onglets ou favoris](/blog/tabs-vs-bookmarks) vous aide à trancher.
+
+</Section>
+
+<Section id="notes" title="Comment annoter ses sources et y revenir plus tard ?">
+
+Faites un clic droit sur n’importe quel onglet enregistré :
+
+- **Ajouter une note** (Add note) : pourquoi cette source compte. Une icône de note signale les onglets qui en ont une.
+- **Me le rappeler…** (Remind me…) : 30 minutes, 1 heure, 3 heures, demain, ou une date et une heure de votre choix, avec une note facultative. TabMerger affiche une notification du navigateur au moment voulu.
+- **Renommer l’onglet** (Rename tab) : remplacez un titre de page obscur (« [1706.03762] ») par quelque chose que vous chercherez.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Notes et rappels sur une source" steps={[{ title: 'Menu de l’onglet' }, { title: 'Rappel' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-tab-menu" alt="Groupe TabMerger « Thesis sources » avec le menu d’un onglet ouvert : Move to group (Déplacer vers un groupe), Add note (Ajouter une note), Remind me… (Me le rappeler…), Rename tab (Renommer l’onglet), Remove tab (Supprimer l’onglet), thème clair" darkAlt="Groupe TabMerger « Thesis sources » avec le menu d’un onglet ouvert : Move to group (Déplacer vers un groupe), Add note (Ajouter une note), Remind me… (Me le rappeler…), Rename tab (Renommer l’onglet), Remove tab (Supprimer l’onglet), thème sombre" boxes={[{ id: 'add-note', label: 'Ajouter une note' }, { id: 'remind-me', label: 'Me le rappeler…' }]} source="TabMerger 3.16.1">Faites un clic droit sur une source pour l’annoter ; le premier onglet a déjà une note.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-reminder" alt="Sélecteur de rappel TabMerger sous un onglet : 30 min, 1 hour, 3 hours, Tomorrow (Demain), une date et une heure, et une note facultative, thème clair" darkAlt="Sélecteur de rappel TabMerger sous un onglet : 30 min, 1 hour, 3 hours, Tomorrow (Demain), une date et une heure, et une note facultative, thème sombre" boxes={[{ id: 'remind-in', label: 'Me rappeler dans…' }]} source="TabMerger 3.16.1">Choisissez quand y revenir, et laissez une note à votre futur vous.</ThemedScreenshot>
+</Carousel>
+
+Pour gérer toute une liste de lectures de cette façon, voyez [comment utiliser ses onglets comme liste de tâches](/blog/tabs-as-a-to-do-list).
+
+</Section>
+
+<Section id="sessions" title="Comment mettre tout un projet en pause et le reprendre plus tard ?">
+
+**Enregistrer la session actuelle** (Save current session, dans la section Sessions de la barre latérale) prend un instantané nommé de tous vos groupes enregistrés ; **Restaurer la session** (Restore session) les fait revenir ensemble. Utilisez-le aux étapes clés, comme « Avant l’état de l’art », pour pouvoir revenir plus tard exactement à cet ensemble. L’offre gratuite garde 3 sessions dans le navigateur ; [Pro](/pricing) garde un nombre illimité de sessions et les synchronise entre vos appareils, chiffrées de bout en bout. Pour en savoir plus sur les sessions : [à quoi sert un gestionnaire de sessions](/blog/browser-session-manager).
+
+</Section>
+
+<Section id="export" title="Comment exporter ses sources au moment de rédiger ?">
+
+Ouvrez **Paramètres → Données** (Settings → Data) et cliquez sur **Exporter en JSON** (Export JSON). Le fichier liste chaque groupe, fenêtre et onglet avec son titre et son adresse, prêt à devenir une liste de références grâce à un petit script ou un éditeur de texte. Les détails et un exemple champ par champ sont dans [comment exporter vos onglets ouverts](/blog/export-open-tabs).
+
+<InstallCta>Gratuit pour Chrome, Edge et Firefox. Aucun compte nécessaire pour commencer.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Questions fréquentes">
+
+<Faq items={post.faq} />
+
+</Section>

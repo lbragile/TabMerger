@@ -1,0 +1,175 @@
+export const post = {
+  slug: 'search-all-your-tabs-with-tabmerger',
+  title: 'TabMerger से अपने सभी टैब सर्च करें: Ctrl+K और उसके फ़िल्टर',
+  navTitle: 'अपने सभी टैब सर्च करें',
+  seoTitle: 'TabMerger से खुले, सेव और बंद किए टैब एक साथ सर्च करें',
+  description:
+    'आपके हर टैब के लिए एक सर्च बॉक्स: खुले, ग्रुप में सेव किए या इस हफ़्ते बंद किए गए। TabMerger का Ctrl+K टैब सर्च कैसे काम करता है, हर फ़िल्टर (group:, window:, tag:, closed:) क्या करता है और यह इसी तरह मिलान क्यों करता है।',
+  shareSummary: 'खुले, सेव और बंद किए टैब एक ही सर्च बॉक्स में, और फ़िल्टर जो पल भर में नतीजे छाँट दें।',
+  dek: 'खुला हो, सेव हो या घंटे भर पहले बंद किया हो: कुछ अक्षर टाइप करें और टैब हाइलाइट होकर सामने है।',
+  published: '2026-12-14',
+  updated: '2026-12-14',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Ctrl+K (Mac पर ⌘+K) खुले, सेव और हाल ही में बंद किए टैब एक साथ सर्च करता है।', source: 'TabMerger 3.16.1' },
+    { text: 'फ़िल्टर: group:, window:, tag: (Chrome टैब ग्रुप का लेबल) और closed:।', source: 'TabMerger 3.16.1' },
+    { text: 'मिलान अक्षरों का बिल्कुल सटीक क्रम होता है, कभी अंदाज़े वाला नहीं, इसलिए हर नतीजे में हाइलाइट होता है।', source: 'TabMerger 3.16.1 का सोर्स कोड' },
+    { text: 'सर्च और सभी फ़िल्टर मुफ़्त हैं।', source: 'TabMerger की कीमतें', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'मैं अपने सभी टैब एक साथ कैसे सर्च करूँ?',
+      answer:
+        'TabMerger खोलें और Ctrl+K (Mac पर ⌘+K) दबाएँ, फिर पेज के टाइटल या पते का कोई हिस्सा टाइप करें। नतीजों में आपके खुले टैब, हर सेव किया ग्रुप और उनके नीचे हाल ही में बंद किए टैब आते हैं।',
+    },
+    {
+      question: 'सिर्फ़ एक ग्रुप में कैसे सर्च करूँ?',
+      answer:
+        'group: टाइप करें और सूची से ग्रुप चुनें; TabMerger group:"Name" भर देता है। फिर उसके बाद अपने शब्द जोड़ें, जैसे group:"Thesis sources" wiki।',
+    },
+    {
+      question: 'क्या मैं बंद किए जा चुके टैब सर्च कर सकता हूँ?',
+      answer: 'हाँ। सिर्फ़ हाल ही में बंद किए टैब और विंडो देखने के लिए सर्च closed: से शुरू करें। किसी एक को चुनकर दोबारा खोलें; Ctrl-क्लिक या मिडिल-क्लिक उसे बैकग्राउंड में खोलता है।',
+    },
+    {
+      question: 'टाइपो होने पर सर्च पेज क्यों नहीं ढूँढता?',
+      answer:
+        'TabMerger अक्षरों का मिलान ठीक वैसे ही करता है जैसे आपने टाइप किए (बड़े-छोटे अक्षरों का फ़र्क़ छोड़कर), टाइटल में बिखरे अक्षरों का कभी नहीं। इससे नतीजे अनुमान के मुताबिक रहते हैं: हर नतीजे में हाइलाइट किया मिलान होता है, और हर हाइलाइट असली मिलान होता है।',
+    },
+    {
+      question: 'क्या सर्च मुफ़्त है?',
+      answer: 'हाँ, सर्च और उसके सभी फ़िल्टर Free प्लान में हैं। Pro सर्च के लिए बंद किए टैब 2 की जगह 30 दिन तक रखता है।',
+    },
+  ],
+  images: [
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-light.webp', alt: 'Ctrl+K से खुला TabMerger सर्च, जिसमें react, group:, window:, tag: और closed: के उदाहरण सर्च दिख रहे हैं, लाइट थीम' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-dark.webp', alt: 'Ctrl+K से खुला TabMerger सर्च, जिसमें react, group:, window:, tag: और closed: के उदाहरण सर्च दिख रहे हैं, डार्क थीम' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-light.webp', alt: 'TabMerger में docs का सर्च: Now Open (अभी खुले हुए) और Reading list से चार नतीजे, हर पते में docs हाइलाइट, लाइट थीम' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-dark.webp', alt: 'TabMerger में docs का सर्च: Now Open (अभी खुले हुए) और Reading list से चार नतीजे, हर पते में docs हाइलाइट, डार्क थीम' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-light.webp', alt: 'window: टाइप किया हुआ TabMerger सर्च, जिसमें चुनने के लिए Window, Papers और Tools विंडो दिख रही हैं, लाइट थीम' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-dark.webp', alt: 'window: टाइप किया हुआ TabMerger सर्च, जिसमें चुनने के लिए Window, Papers और Tools विंडो दिख रही हैं, डार्क थीम' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp', alt: 'Thesis sources ग्रुप में wiki सर्च करते समय, इकलौता मिलान हाइलाइट और बाकी टैब धुंधले, लाइट थीम' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-dark.webp', alt: 'Thesis sources ग्रुप में wiki सर्च करते समय, इकलौता मिलान हाइलाइट और बाकी टैब धुंधले, डार्क थीम' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'browser-tips'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp' },
+  ogImage: { src: '/blog/search-all-your-tabs-with-tabmerger/og.png', alt: 'TabMerger से अपने सभी टैब सर्च करें: खुले और सेव किए टैब में docs के नतीजे' },
+  toc: [
+    { id: 'quick', label: 'झटपट जवाब' },
+    { id: 'problem', label: 'वह टैब कहाँ था?' },
+    { id: 'why', label: 'सर्च ऐसे क्यों काम करता है' },
+    { id: 'steps', label: 'स्टेप बाय स्टेप सर्च' },
+    { id: 'filters', label: 'सभी फ़िल्टर' },
+    { id: 'panel', label: 'सर्च के बाद' },
+    { id: 'benefit', label: 'इससे क्या बचता है' },
+    { id: 'habits', label: 'अच्छी आदतें' },
+    { id: 'plans', label: 'Free बनाम Pro' },
+    { id: 'faq', label: 'अक्सर पूछे जाने वाले सवाल' },
+  ],
+}
+
+<QuickAnswer>
+
+[TabMerger](/features) खोलें और <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (Mac पर <Kbd>⌘</Kbd>+<Kbd>K</Kbd>) दबाएँ। किसी टाइटल या पते के कुछ अक्षर टाइप करें: नतीजे आपके खुले टैब, हर सेव किए ग्रुप और उनके नीचे हाल ही में बंद किए टैब से आते हैं, और हर नतीजे पर लिखा होता है कि वह कहाँ है। `group:`, `window:`, `tag:` या `closed:` से दायरा छोटा करें, फिर सीधे टैब पर जाने के लिए <Kbd>Enter</Kbd> दबाएँ।
+
+</QuickAnswer>
+
+<InstallCta>आपका हर टैब, बस एक सर्च की दूरी पर। Chrome, Edge और Firefox के लिए मुफ़्त।</InstallCta>
+
+<Section id="problem" title="“वह टैब कहाँ था?”">
+
+आप जानते हैं कि पेज मौजूद है। मंगलवार को वह पुल रिक्वेस्ट के बगल में खुला था। वह काम वाली विंडो में था या पढ़ने वाली में? आपने उसे किसी ग्रुप में सेव किया था या बंद कर दिया? ब्राउज़र का अपना टैब सर्च सिर्फ़ वही देखता है जो उस ब्राउज़र में अभी खुला है; हिस्ट्री वह सब देखती है जो आपने कभी खोला, पर उसे पता नहीं कि आपने जानबूझकर क्या रखा।
+
+आपको चाहिए एक ऐसा बॉक्स जो सब जानता हो: क्या खुला है, आपने क्या सेव किया और इस हफ़्ते क्या बंद किया। वह बॉक्स है TabMerger में <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>। (ब्राउज़र में बने टैब सर्च के लिए देखें [सैकड़ों टैब में से एक टैब कैसे ढूँढें](/blog/find-a-tab-among-hundreds)।)
+
+</Section>
+
+<Section id="why" title="TabMerger का सर्च ऐसे क्यों काम करता है">
+
+- **सब कुछ एक सूची में।** खुले टैब, सेव किए ग्रुप और हाल ही में बंद किए टैब एक ही सवाल (“वह कहाँ है?”) का जवाब देते हैं, इसलिए वे साथ में आते हैं। हर नतीजे पर उसके ग्रुप का बैज होता है, और अगर हो तो उसके Chrome टैब ग्रुप का लेबल भी।
+- **सटीक, अंदाज़े वाला नहीं।** नतीजा वह टैब है जिसके टाइटल या पते में आपके अक्षर एक लगातार क्रम में हों, बड़े-छोटे अक्षरों का फ़र्क़ छोड़कर। टाइटल में बिखरे अक्षर कभी नहीं गिने जाते। ऐसा जानबूझकर है: हर नतीजे में हाइलाइट है, और हर हाइलाइट असली मिलान है, इसलिए आप जो देखते हैं उस पर भरोसा कर सकते हैं।
+- **सबसे अच्छा मिलान पहले।** सटीक मिलान उस टाइटल से ऊपर आता है जो आपके टेक्स्ट से शुरू होता है, फिर वह शब्द जो उससे शुरू होता है, फिर कहीं भी मिला मिलान। सूची सबसे ऊपर के 12 नतीजे दिखाती है, इसलिए सही टैब ऊपर ही रहता है।
+- **चुनें, स्पेलिंग न लिखें।** `group:`, `window:` या `tag:` टाइप करते ही आपके ग्रुप, विंडो या लेबल की सूची चुनने के लिए खुल जाती है। TabMerger नाम को कोट्स में भर देता है, इसलिए स्पेस वाले लंबे नाम भी बिना दिक्कत चलते हैं।
+- **बंद टैब रास्ते में नहीं आते।** सेव किए नतीजों के नीचे हाल ही में बंद किए ज़्यादा से ज़्यादा 3 टैब दिखते हैं; सिर्फ़ बंद टैब देखने के लिए `closed:` से शुरू करें।
+- **कीबोर्ड काफ़ी है।** चलने के लिए <Kbd>↑</Kbd> <Kbd>↓</Kbd>, खोलने के लिए <Kbd>Enter</Kbd>, बंद करने के लिए <Kbd>Esc</Kbd> या <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>। बंद करने पर आपका टाइप किया हुआ बना रहता है, ताकि आप उस पर लौट सकें।
+
+</Section>
+
+<Section id="steps" title="स्टेप बाय स्टेप सर्च">
+
+1. TabMerger खोलें और <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (Mac पर <Kbd>⌘</Kbd>+<Kbd>K</Kbd>) दबाएँ, या सबसे ऊपर सर्च बॉक्स पर क्लिक करें।
+2. जब कुछ टाइप नहीं किया होता, तो बॉक्स आज़माने के लिए कुछ सर्च सुझाता है। उनमें से किसी पर क्लिक करके वहीं से शुरू करें।
+3. टाइटल या पते के कुछ अक्षर टाइप करें, जैसे `docs`। मिलान हाइलाइट हो जाते हैं।
+4. किसी टैब पर <Kbd>Enter</Kbd> दबाएँ: TabMerger उसका ग्रुप खोलता है और फ़ोकस उसी टैब पर ले जाता है। बंद किए टैब पर <Kbd>Enter</Kbd> उसे दोबारा खोलता है।
+
+<ScreenshotThemeToggle />
+
+<Carousel label="TabMerger में सर्च" steps={[{ title: 'Ctrl+K' }, { title: 'नतीजे' }, { title: 'window:' }]}>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-examples" alt="Ctrl+K से खुला TabMerger सर्च, जिसमें react, group:, window:, tag: और closed: के उदाहरण सर्च दिख रहे हैं, लाइट थीम" darkAlt="Ctrl+K से खुला TabMerger सर्च, जिसमें react, group:, window:, tag: और closed: के उदाहरण सर्च दिख रहे हैं, डार्क थीम" boxes={[{ id: 'search-input', label: 'सर्च बॉक्स' }, { id: 'examples', label: 'सुझाए गए सर्च' }]} source="TabMerger 3.16.1">खाली सर्च बताता है कि कहाँ से शुरू करें।</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-results" alt="TabMerger में docs का सर्च: Now Open (अभी खुले हुए) और Reading list से चार नतीजे, हर पते में docs हाइलाइट, लाइट थीम" darkAlt="TabMerger में docs का सर्च: Now Open (अभी खुले हुए) और Reading list से चार नतीजे, हर पते में docs हाइलाइट, डार्क थीम" boxes={[{ id: 'search-input', label: 'docs' }]} source="TabMerger 3.16.1">खुले और सेव किए टैब एक ही सूची में, हर एक पर उसका ग्रुप।</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker" alt="window: टाइप किया हुआ TabMerger सर्च, जिसमें चुनने के लिए Window, Papers और Tools विंडो दिख रही हैं, लाइट थीम" darkAlt="window: टाइप किया हुआ TabMerger सर्च, जिसमें चुनने के लिए Window, Papers और Tools विंडो दिख रही हैं, डार्क थीम" boxes={[{ id: 'search-input', label: 'window: फ़िल्टर' }, { id: 'pick-window', label: 'आपकी नाम वाली विंडो' }]} source="TabMerger 3.16.1">window: टाइप करें और चुनें; नाम की स्पेलिंग लिखने की ज़रूरत नहीं।</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="filters" title="सभी फ़िल्टर, उदाहरणों के साथ">
+
+<ComparisonTable
+  head={['फ़िल्टर', 'क्या ढूँढता है', 'उदाहरण']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['(सादे शब्द)', 'वे टैब जिनके टाइटल या पते में ये शब्द हों, और नाम से ग्रुप', 'pull request'],
+    ['group:', 'एक ग्रुप के टैब', 'group:"Thesis sources" wiki'],
+    ['window:', 'एक विंडो के टैब (उसके ⋯ मेन्यू से नाम दें)', 'window:"Papers"'],
+    ['tag:', 'उस लेबल वाले Chrome टैब ग्रुप के टैब', 'tag:"Sprint"'],
+    ['closed:', 'सिर्फ़ हाल ही में बंद किए टैब और विंडो', 'closed: seat'],
+  ]}
+/>
+
+फ़िल्टर शब्दों के साथ और आपस में मिलाए जा सकते हैं। फ़िल्टर के बाद शब्द जोड़ें तो कोट्स लगाएँ: उनके बिना फ़िल्टर बाकी पूरी लाइन ले लेता है, इसलिए `group:Work pull` “Work pull” नाम का ग्रुप ढूँढता है। सूची से चुनने पर कोट्स अपने आप लग जाते हैं।
+
+</Section>
+
+<Section id="panel" title="सर्च के बाद: बाकी टैब छिपाएँ या धुंधले करें">
+
+<Kbd>Esc</Kbd> से सर्च बंद करें, तो वह मुख्य व्यू में काम करता रहता है। साइडबार दिखाता है कि हर ग्रुप में कितने मिलान हैं (“1 मिले”), और ग्रुप के अंदर जो टैब मेल नहीं खाते वे डिफ़ॉल्ट रूप से **छिपे** रहते हैं। जगह का अंदाज़ा बनाए रखना चाहते हैं? **सेटिंग्स → सामान्य** (Settings → General) में **जो टैब खोज से मेल नहीं खाते** (Tabs that do not match a search) को **धुंधला करें** (Dim) पर सेट करें: हर टैब अपनी जगह पर धुंधला होकर रहता है और मिलान हाइलाइट रहते हैं। **खोज साफ़ करें** (Clear search) से सर्च खत्म होता है।
+
+जब टैब छिपे हों, तब खींचकर क्रम बदलना रुका रहता है (“आइटम ले जाने के लिए खोज साफ़ करें”): कुछ पंक्तियाँ नज़र से बाहर हों तो छोड़ा गया टैब कहाँ जाना चाहिए, यह बस अंदाज़ा होता।
+
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-dim" alt="Thesis sources ग्रुप में wiki सर्च करते समय, इकलौता मिलान हाइलाइट और बाकी टैब धुंधले, लाइट थीम" darkAlt="Thesis sources ग्रुप में wiki सर्च करते समय, इकलौता मिलान हाइलाइट और बाकी टैब धुंधले, डार्क थीम" boxes={[{ id: 'match', label: 'मिलान' }]} source="TabMerger 3.16.1">धुंधला मोड: मिलान अलग दिखता है, बाकी सब अपनी जगह पर रहता है।</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="इससे क्या बचता है">
+
+16 पिक्सेल के आइकन से भरी विंडो खंगालना और हिस्ट्री स्क्रॉल करना कुछ कीस्ट्रोक में बदल जाता है। आप कितने भी टैब रखें, यह एक जैसा काम करता है: महीनों पहले सेव किया ग्रुप उतना ही पास है जितना मिनट भर पहले खोला गया टैब। यही वजह है कि विंडो बंद करना सुरक्षित है: आपने जो भी सेव किया, वह बस एक सर्च की दूरी पर है।
+
+</Section>
+
+<Section id="habits" title="अच्छी आदतें">
+
+- **सिर्फ़ टाइटल नहीं, पता भी सर्च करें।** `github.com/your-org` या `localhost:3000` उन पेजों को ढूँढता है जिनके टाइटल एक जैसे दिखते हैं।
+- **जिन विंडो में अक्सर सर्च करते हैं, उन्हें नाम दें।** “Papers”, “PRs”, “Docs”: फिर `window:` आपको सीधे वहाँ ले जाता है।
+- **`closed:` से शुरू करें**, जब आपको पता हो कि टैब बंद कर दिया था; सूची छोटी होती है और उसमें सिर्फ़ ज़रूरी चीज़ें होती हैं।
+- **सर्च को ग्रुप के साथ इस्तेमाल करें।** आपके ग्रुप जितने बेहतर होंगे (देखें [टैब के साथ रोज़ का वर्कफ़्लो](/blog/tabmerger-daily-workflow)), `group:` फ़िल्टर उतना ज़्यादा दायरा छोटा करेगा।
+
+</Section>
+
+<Section id="plans" title="Free बनाम Pro">
+
+सर्च, सभी फ़िल्टर, चुनने वाली सूचियाँ और छिपाएं या धुंधला करें, सब Free प्लान में हैं, बिना अकाउंट के। फ़र्क़ बस इतना है कि बंद किए टैब कितने पीछे तक रहते हैं: Free पिछले 2 दिनों में बंद किए टैब रखता है, Pro पिछले 30 दिनों के। और Pro के अनलिमिटेड ग्रुप और टैब के साथ ढूँढने को बस ज़्यादा होता है। [कीमतों का पेज](/pricing) देखें।
+
+<InstallCta>आपने जो भी टैब रखा है, उसे एक कीस्ट्रोक में ढूँढें। Chrome, Edge और Firefox के लिए मुफ़्त।</InstallCta>
+
+सर्च के अलावा कीबोर्ड से काम करने के लिए देखें [टैब के कीबोर्ड शॉर्टकट](/blog/tab-keyboard-shortcuts)।
+
+</Section>
+
+<Section id="faq" title="अक्सर पूछे जाने वाले सवाल">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,175 @@
+export const post = {
+  slug: 'search-all-your-tabs-with-tabmerger',
+  title: 'Rechercher dans tous vos onglets avec TabMerger : Ctrl+K et ses filtres',
+  navTitle: 'Rechercher dans tous vos onglets',
+  seoTitle: 'Rechercher dans les onglets ouverts, enregistrés et fermés à la fois avec TabMerger',
+  description:
+    'Une seule zone de recherche pour tous vos onglets : ouverts, enregistrés dans des groupes ou fermés cette semaine. Comment fonctionne la recherche Ctrl+K de TabMerger, chaque filtre (group:, window:, tag:, closed:) et pourquoi elle trouve ce qu’elle trouve.',
+  shareSummary: 'Onglets ouverts, enregistrés et fermés dans une seule recherche, avec des filtres pour cibler vite.',
+  dek: 'Ouvert, enregistré ou fermé il y a une heure : tapez quelques lettres et il est là, surligné.',
+  published: '2026-12-14',
+  updated: '2026-12-14',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Ctrl+K (⌘+K sur Mac) recherche à la fois dans les onglets ouverts, enregistrés et récemment fermés.', source: 'TabMerger 3.16.1' },
+    { text: 'Filtres : group:, window:, tag: (étiquette de groupe d’onglets Chrome) et closed:.', source: 'TabMerger 3.16.1' },
+    { text: 'Les correspondances sont des suites exactes de lettres, jamais approximatives : chaque résultat a donc un surlignage.', source: 'Code source de TabMerger 3.16.1' },
+    { text: 'La recherche et tous les filtres sont gratuits.', source: 'Tarifs de TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Comment rechercher dans tous mes onglets à la fois ?',
+      answer:
+        'Ouvrez TabMerger, appuyez sur Ctrl+K (⌘+K sur Mac), puis tapez une partie du titre ou de l’adresse d’une page. Les résultats couvrent vos onglets ouverts, chaque groupe enregistré et, en dessous, les onglets fermés récemment.',
+    },
+    {
+      question: 'Comment rechercher dans un seul groupe ?',
+      answer:
+        'Tapez group: et choisissez le groupe dans la liste ; TabMerger complète group:"Name". Ajoutez ensuite vos mots à la suite, par exemple group:"Thesis sources" wiki.',
+    },
+    {
+      question: 'Puis-je rechercher des onglets déjà fermés ?',
+      answer: 'Oui. Commencez la recherche par closed: pour n’afficher que les onglets et fenêtres fermés récemment. Choisissez-en un pour le rouvrir ; Ctrl+clic ou clic du milieu le rouvre en arrière-plan.',
+    },
+    {
+      question: 'Pourquoi la recherche ne trouve-t-elle pas une page quand je fais une faute de frappe ?',
+      answer:
+        'TabMerger cherche les lettres exactement telles que vous les tapez (sans tenir compte de la casse), jamais des lettres éparpillées dans un titre. Les résultats restent ainsi prévisibles : chaque résultat a une correspondance surlignée, et chaque surlignage est une vraie correspondance.',
+    },
+    {
+      question: 'La recherche est-elle gratuite ?',
+      answer: 'Oui, la recherche et tous ses filtres font partie du forfait Free. Pro conserve 30 jours d’onglets fermés à rechercher au lieu de 2.',
+    },
+  ],
+  images: [
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-light.webp', alt: 'Recherche TabMerger ouverte avec Ctrl+K, avec des exemples de recherche pour react, group:, window:, tag: et closed:, thème clair' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-dark.webp', alt: 'Recherche TabMerger ouverte avec Ctrl+K, avec des exemples de recherche pour react, group:, window:, tag: et closed:, thème sombre' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-light.webp', alt: 'Recherche de docs dans TabMerger : quatre résultats issus de Now Open (Ouverts maintenant) et Reading list, docs surligné dans chaque adresse, thème clair' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-dark.webp', alt: 'Recherche de docs dans TabMerger : quatre résultats issus de Now Open (Ouverts maintenant) et Reading list, docs surligné dans chaque adresse, thème sombre' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-light.webp', alt: 'Recherche TabMerger avec window: saisi, qui propose les fenêtres Window, Papers et Tools, thème clair' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-dark.webp', alt: 'Recherche TabMerger avec window: saisi, qui propose les fenêtres Window, Papers et Tools, thème sombre' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp', alt: 'Le groupe Thesis sources pendant une recherche de wiki, avec la seule correspondance surlignée et les autres onglets estompés, thème clair' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-dark.webp', alt: 'Le groupe Thesis sources pendant une recherche de wiki, avec la seule correspondance surlignée et les autres onglets estompés, thème sombre' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'browser-tips'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp' },
+  ogImage: { src: '/blog/search-all-your-tabs-with-tabmerger/og.png', alt: 'Rechercher dans tous vos onglets avec TabMerger : résultats pour docs parmi les onglets ouverts et enregistrés' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'problem', label: 'Où était cet onglet ?' },
+    { id: 'why', label: 'Pourquoi la recherche fonctionne ainsi' },
+    { id: 'steps', label: 'Rechercher pas à pas' },
+    { id: 'filters', label: 'Tous les filtres' },
+    { id: 'panel', label: 'Après la recherche' },
+    { id: 'benefit', label: 'Ce que vous y gagnez' },
+    { id: 'habits', label: 'Bonnes habitudes' },
+    { id: 'plans', label: 'Free ou Pro' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Ouvrez [TabMerger](/features) et appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> sur Mac). Tapez quelques lettres d’un titre ou d’une adresse : les résultats viennent de vos onglets ouverts, de chaque groupe enregistré et, en dessous, des onglets fermés récemment, chacun indiquant où il se trouve. Affinez avec `group:`, `window:`, `tag:` ou `closed:`, puis appuyez sur <Kbd>Enter</Kbd> pour aller directement à l’onglet.
+
+</QuickAnswer>
+
+<InstallCta>Tous vos onglets, à une recherche près. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+<Section id="problem" title="« Où était cet onglet ? »">
+
+Vous savez que la page existe. Elle était ouverte mardi, à côté de la pull request. Était-elle dans la fenêtre de travail ou dans celle de lecture ? L’avez-vous enregistrée dans un groupe, ou fermée ? La recherche d’onglets du navigateur ne voit que ce qui est ouvert dans ce navigateur à cet instant ; l’historique voit tout ce que vous avez visité, sans savoir ce que vous avez gardé exprès.
+
+Ce qu’il vous faut, c’est une seule zone qui connaît tout : ce qui est ouvert, ce que vous avez enregistré et ce que vous avez fermé cette semaine. Cette zone, c’est <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> dans TabMerger. (Pour la recherche d’onglets intégrée aux navigateurs, voir [comment retrouver un onglet parmi des centaines](/blog/find-a-tab-among-hundreds).)
+
+</Section>
+
+<Section id="why" title="Pourquoi la recherche de TabMerger fonctionne ainsi">
+
+- **Tout dans une seule liste.** Les onglets ouverts, les groupes enregistrés et les onglets fermés récemment répondent à la même question (« où est-il ? »), ils reviennent donc ensemble. Chaque résultat porte un badge avec son groupe, et l’étiquette de son groupe d’onglets Chrome s’il en a une.
+- **Exacte, pas approximative.** Un résultat est un onglet dont le titre ou l’adresse contient vos lettres d’un seul tenant, sans tenir compte de la casse. Des lettres éparpillées dans un titre ne comptent jamais. C’est voulu : chaque résultat a un surlignage, et chaque surlignage est la vraie correspondance, vous pouvez donc vous fier à ce que vous voyez.
+- **La meilleure correspondance d’abord.** Une correspondance exacte passe avant un titre qui commence par votre texte, puis un mot qui commence par lui, puis une correspondance n’importe où. La liste affiche les 12 meilleurs résultats : le bon onglet est tout en haut.
+- **Choisissez, n’épelez pas.** Taper `group:`, `window:` ou `tag:` ouvre une liste de vos groupes, fenêtres ou étiquettes. TabMerger complète le nom entre guillemets, si bien que les noms longs avec des espaces fonctionnent tout seuls.
+- **Les onglets fermés restent discrets.** Jusqu’à 3 onglets fermés récemment apparaissent sous les résultats enregistrés ; commencez par `closed:` pour ne voir que les onglets fermés.
+- **Le clavier suffit.** <Kbd>↑</Kbd> <Kbd>↓</Kbd> pour vous déplacer, <Kbd>Enter</Kbd> pour ouvrir, <Kbd>Esc</Kbd> ou <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> pour fermer. Fermer conserve ce que vous avez tapé, pour que vous puissiez y revenir.
+
+</Section>
+
+<Section id="steps" title="Rechercher pas à pas">
+
+1. Ouvrez TabMerger et appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> sur Mac), ou cliquez dans la zone de recherche en haut.
+2. Tant que rien n’est tapé, la zone suggère des recherches à essayer. Cliquez sur l’une d’elles pour partir de là.
+3. Tapez quelques lettres du titre ou de l’adresse, par exemple `docs`. Les correspondances sont surlignées.
+4. Appuyez sur <Kbd>Enter</Kbd> sur un onglet : TabMerger ouvre son groupe et place le focus sur cet onglet. Sur un onglet fermé, <Kbd>Enter</Kbd> le rouvre.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Rechercher dans TabMerger" steps={[{ title: 'Ctrl+K' }, { title: 'Résultats' }, { title: 'window:' }]}>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-examples" alt="Recherche TabMerger ouverte avec Ctrl+K, avec des exemples de recherche pour react, group:, window:, tag: et closed:, thème clair" darkAlt="Recherche TabMerger ouverte avec Ctrl+K, avec des exemples de recherche pour react, group:, window:, tag: et closed:, thème sombre" boxes={[{ id: 'search-input', label: 'La zone de recherche' }, { id: 'examples', label: 'Recherches suggérées' }]} source="TabMerger 3.16.1">Une recherche vide vous suggère par où commencer.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-results" alt="Recherche de docs dans TabMerger : quatre résultats issus de Now Open (Ouverts maintenant) et Reading list, docs surligné dans chaque adresse, thème clair" darkAlt="Recherche de docs dans TabMerger : quatre résultats issus de Now Open (Ouverts maintenant) et Reading list, docs surligné dans chaque adresse, thème sombre" boxes={[{ id: 'search-input', label: 'docs' }]} source="TabMerger 3.16.1">Onglets ouverts et enregistrés dans une seule liste, chacun marqué de son groupe.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker" alt="Recherche TabMerger avec window: saisi, qui propose les fenêtres Window, Papers et Tools, thème clair" darkAlt="Recherche TabMerger avec window: saisi, qui propose les fenêtres Window, Papers et Tools, thème sombre" boxes={[{ id: 'search-input', label: 'Le filtre window:' }, { id: 'pick-window', label: 'Vos fenêtres nommées' }]} source="TabMerger 3.16.1">Tapez window: et choisissez : inutile d’épeler le nom.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="filters" title="Tous les filtres, avec des exemples">
+
+<ComparisonTable
+  head={['Filtre', 'Trouve', 'Exemple']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['(mots simples)', 'Les onglets dont le titre ou l’adresse les contient, et les groupes par leur nom', 'pull request'],
+    ['group:', 'Les onglets d’un groupe', 'group:"Thesis sources" wiki'],
+    ['window:', 'Les onglets d’une fenêtre (nommez-la depuis son menu ⋯)', 'window:"Papers"'],
+    ['tag:', 'Les onglets d’un groupe d’onglets Chrome portant cette étiquette', 'tag:"Sprint"'],
+    ['closed:', 'Uniquement les onglets et fenêtres fermés récemment', 'closed: seat'],
+  ]}
+/>
+
+Les filtres se combinent avec des mots et entre eux. Mettez des guillemets si vous ajoutez des mots après un filtre : sans eux, le filtre prend le reste de la ligne, donc `group:Work pull` cherche un groupe nommé « Work pull ». Choisir dans la liste ajoute les guillemets pour vous.
+
+</Section>
+
+<Section id="panel" title="Après la recherche : masquer ou estomper le reste">
+
+Fermez la recherche avec <Kbd>Esc</Kbd> : elle continue d’agir dans la vue principale. La barre latérale indique le nombre de correspondances de chaque groupe (« 1 trouvé(s) ») et, dans un groupe, les onglets qui ne correspondent pas sont **masqués** par défaut. Vous préférez garder vos repères ? Dans **Paramètres → Général** (Settings → General), réglez **Onglets ne correspondant pas à une recherche** (Tabs that do not match a search) sur **Estomper** (Dim) : chaque onglet reste à sa place, estompé, et les correspondances sont surlignées. **Effacer la recherche** (Clear search) y met fin.
+
+Tant que des onglets sont masqués, le réordonnancement par glisser-déposer est en pause (« Effacez la recherche pour déplacer des éléments ») : avec des lignes hors de vue, l’endroit où un onglet déposé devrait atterrir serait une devinette.
+
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-dim" alt="Le groupe Thesis sources pendant une recherche de wiki, avec la seule correspondance surlignée et les autres onglets estompés, thème clair" darkAlt="Le groupe Thesis sources pendant une recherche de wiki, avec la seule correspondance surlignée et les autres onglets estompés, thème sombre" boxes={[{ id: 'match', label: 'La correspondance' }]} source="TabMerger 3.16.1">Mode estompé : la correspondance ressort, tout le reste reste à sa place.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Ce que vous y gagnez">
+
+Parcourir des fenêtres remplies d’icônes de 16 pixels et faire défiler l’historique se réduit à quelques touches. Cela fonctionne de la même façon quel que soit le nombre d’onglets que vous gardez : un groupe enregistré il y a des mois est aussi proche que l’onglet ouvert il y a une minute. C’est ce qui permet de fermer des fenêtres sans crainte : tout ce que vous avez enregistré est à une recherche près.
+
+</Section>
+
+<Section id="habits" title="Bonnes habitudes">
+
+- **Cherchez dans l’adresse, pas seulement dans le titre.** `github.com/your-org` ou `localhost:3000` trouve des pages dont les titres se ressemblent tous.
+- **Nommez les fenêtres dans lesquelles vous cherchez souvent.** « Papers », « PRs », « Docs » : ensuite, `window:` vous y mène.
+- **Commencez par `closed:`** quand vous savez que vous l’avez fermé ; la liste est plus courte et ne contient que ce qu’il vous faut.
+- **Associez recherche et groupes.** Plus vos groupes sont soignés (voir [une routine quotidienne pour vos onglets](/blog/tabmerger-daily-workflow)), plus un filtre `group:` resserre les résultats.
+
+</Section>
+
+<Section id="plans" title="Free ou Pro">
+
+La recherche, tous les filtres, les listes de choix et Masquer ou Estomper font partie du forfait Free, sans compte. La seule différence porte sur l’ancienneté des onglets fermés : Free garde vos onglets fermés des 2 derniers jours, Pro ceux des 30 derniers jours. Et avec les groupes et onglets illimités de Pro, il y a tout simplement plus à trouver. Voir la [page des tarifs](/pricing).
+
+<InstallCta>Retrouvez en une touche n’importe quel onglet que vous avez gardé. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+Pour aller plus loin au clavier au-delà de la recherche, voir [les raccourcis clavier pour les onglets](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

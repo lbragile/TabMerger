@@ -1,0 +1,183 @@
+export const post = {
+  slug: 'browser-tab-features-compared',
+  title: 'Chrome vs Edge vs Firefox: porównanie wbudowanych funkcji kart',
+  navTitle: 'Funkcje kart: Chrome, Edge, Firefox',
+  seoTitle: 'Chrome vs Edge vs Firefox: porównanie funkcji kart (2026)',
+  description:
+    'Grupy kart, wyszukiwanie kart, karty pionowe, widok podzielony, uśpione karty i zamykanie duplikatów: jakie wbudowane funkcje kart mają Chrome 157, Edge 158 i Firefox 159 i jak TabMerger dodaje tę samą warstwę do wszystkich trzech.',
+  shareSummary: 'Jakie funkcje kart mają wbudowane Chrome, Edge i Firefox, obok siebie.',
+  dek: 'Każda przeglądarka rozwiązuje część problemu z kartami. Oto która część i jak dostać resztę we wszystkich trzech.',
+  published: '2026-12-05',
+  updated: '2026-12-05',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Wszystkie trzy mają grupy kart, wyszukiwanie kart, karty pionowe i widok podzielony.', source: 'Ich strony pomocy i teksty interfejsu, 21 lis 2026' },
+    { text: 'Tylko Firefox 159 ma wbudowane „Zamknij podwójne karty” (Close Duplicate Tabs).', source: 'Tekst menu Firefoksa 159' },
+    {
+      text: 'Chrome synchronizuje grupy kart przez Twoje konto Google.',
+      source: 'Pomoc Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'TabMerger dodaje do wszystkich trzech jedno wyszukiwanie, automatyczny zapis i szyfrowaną synchronizację.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Która przeglądarka ma najlepsze funkcje kart?',
+      answer:
+        'Każda w czymś prowadzi: Chrome w zapisanych, synchronizowanych grupach kart, Edge w uśpionych kartach włączonych domyślnie, Firefox w zamykaniu duplikatów. TabMerger daje wszystkim trzem te same grupy, to samo wyszukiwanie, automatyczny zapis i synchronizację.',
+    },
+    {
+      question: 'Czy Chrome, Edge i Firefox mają grupy kart?',
+      answer: 'Tak. Wszystkie trzy pozwalają pogrupować karty z nazwą i kolorem; Chrome i Firefox potrafią też zamknąć grupę i otworzyć ją później.',
+    },
+    {
+      question: 'Czy mogę używać tego samego menedżera kart w Chrome, Edge i Firefoksie?',
+      answer: 'Tak. TabMerger działa we wszystkich trzech, a Pro synchronizuje między nimi Twoje grupy, z szyfrowaniem end-to-end.',
+    },
+    {
+      question: 'Która przeglądarka zamyka zduplikowane karty?',
+      answer: 'Firefox, z menu kontekstowego dowolnej karty. W Chrome i Edge robi to „Usuń duplikaty kart” w TabMerger, we wszystkich oknach.',
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'Wyszukiwanie TabMerger otwarte i puste, z listą filtrów group:, window:, tag: i closed:, jasny motyw' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'Wyszukiwanie TabMerger otwarte i puste, z listą filtrów group:, window:, tag: i closed:, ciemny motyw' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Ustawienia Chrome, „Performance” (Wydajność), z przełącznikiem „Memory Saver” (Oszczędzanie pamięci)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Ustawienia Edge, „Performance”, z włączoną opcją „Automatically put tabs to sleep” ustawioną na 15 minut' },
+  ],
+  tags: ['cross-browser', 'comparison', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    { title: 'Chrome keyboard shortcuts', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/157179', checked: '2026-11-21' },
+    { title: 'Personalize Chrome performance', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/12929150', checked: '2026-11-21' },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp' },
+  ogImage: { src: '/blog/browser-tab-features-compared/og.png', alt: 'Chrome vs Edge vs Firefox: porównanie wbudowanych funkcji kart. Poradnik TabMerger z filtrami wyszukiwania TabMerger' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'matrix', label: 'Tabela funkcji' },
+    { id: 'turn-on', label: 'Ustawienia warte włączenia' },
+    { id: 'tabmerger', label: 'Jedna warstwa dla wszystkich trzech' },
+    { id: 'faq', label: 'Najczęstsze pytania' },
+  ],
+  browserSections: ['turn-on'],
+  browserFact: {
+    label: 'Ustawienie pamięci',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Ustawienia → System and performance → Performance',
+      firefox: 'Prawy przycisk myszy na karcie → Uśpij kartę',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Wszystkie trzy przeglądarki mają już **grupy kart, wyszukiwanie kart, karty pionowe i widok podzielony**. Chrome prowadzi w zapisywaniu i synchronizowaniu grup, Edge domyślnie usypia nieużywane karty, a Firefox jako jedyny sam zamyka zduplikowane karty. Żadna nie przeszukuje zapisanych i zamkniętych kart, nie zapisuje automatycznie okien ani nie działa między przeglądarkami. Tę warstwę dodaje [TabMerger](/features), identycznie w Chrome, Edge i Firefoksie.
+
+</QuickAnswer>
+
+<InstallCta>Te same grupy, to samo wyszukiwanie i synchronizacja w Chrome, Edge i Firefoksie. Za darmo.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="matrix" title="Jakie funkcje kart ma każda przeglądarka?">
+
+Sprawdzone w Chrome 157, Edge 158 i Firefoksie 159 na podstawie stron pomocy każdej przeglądarki i tekstów jej własnego interfejsu, 21 lis 2026. „Brak informacji” znaczy, że nie znaleźliśmy śladu funkcji ani w stronach pomocy, ani w tekstach przeglądarki, a nie, że na pewno jej nie ma.
+
+<ComparisonTable
+  head={['Funkcja', 'Chrome 157', 'Edge 158', 'Firefox 159', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="52rem"
+  rows={[
+    ['Grupy kart', 'Tak', 'Tak', 'Tak', 'Nazwane, kolorowe grupy we wszystkich oknach'],
+    ['Zamknięcie grupy i ponowne otwarcie', 'Tak (⋮ → Grupy kart)', 'Close group (brak informacji o ponownym otwarciu)', 'Tak (Zachowaj i zamknij grupę)', 'Każda grupa zostaje zapisana'],
+    ['Grupy na innych urządzeniach', 'Tak, przez konto Google', 'Brak informacji', 'Nie ma w ustawieniach synchronizacji', 'Pro, z szyfrowaniem end-to-end'],
+    ['Wyszukiwanie kart', 'Otwarte karty (Ctrl+Shift+A, @tabs)', 'Search tabs (brak podanego skrótu)', 'Pokaż wszystkie karty (Ctrl+Shift+A)', 'Otwarte, zapisane i zamknięte (Ctrl+K)'],
+    ['Karty pionowe', 'Tak', 'Tak', 'Tak', 'Nie dotyczy'],
+    ['Widok podzielony', 'Tak', 'Tak', 'Tak', 'Nie dotyczy'],
+    ['Zwalnianie pamięci nieużywanych kart', 'Oszczędzanie pamięci (domyślnie wyłączone)', 'Uśpione karty (domyślnie włączone)', 'Uśpij kartę, ręcznie', 'Zapisz, a potem zamknij wszystkie okna jednym kliknięciem'],
+    ['Zamykanie zduplikowanych kart', 'Brak informacji', 'Brak informacji', 'Zamknij podwójne karty', '„Usuń duplikaty kart” we wszystkich oknach'],
+    ['Ponowne otwarcie zamkniętego okna', 'Ctrl+Shift+T', 'Brak informacji', 'Ctrl+Shift+N', 'Ostatnio zamknięte: 2 dni (Darmowy), 30 (Pro)'],
+    ['Zapisywanie otwartych kart według harmonogramu', 'Brak informacji', 'Brak informacji', 'Brak informacji', 'Automatyczny zapis według harmonogramu lub liczby kart'],
+    ['Eksport kart', 'Przez zakładki (HTML)', 'Przez ulubione (HTML)', 'Przez zakładki (HTML)', 'JSON, otwarte i zapisane karty razem'],
+  ]}
+/>
+
+Kolekcje w Edge, jego dawny sposób na zapisywanie zestawów stron, zniknęły: Microsoft wycofał je w Edge 149. Zobacz, [czego używać zamiast Kolekcji w Edge](/blog/edge-collections-replacement).
+
+</Section>
+
+<Section id="turn-on" title="Które wbudowane ustawienia warto włączyć?">
+
+<BrowserPanels section="turn-on">
+<BrowserPanel browser="chrome">
+
+1. **Oszczędzanie pamięci** („Memory Saver”): Ustawienia → Wydajność („Settings → Performance”, `chrome://settings/performance`). W nowym profilu jest wyłączone.
+2. **Karty pionowe**, jeśli masz ich otwartych dużo: kliknij prawym przyciskiem pasek kart i wybierz **Pokaż karty w pionie** („Show Tabs Vertically”) albo Ustawienia → Wygląd → Pozycja karty („Settings → Appearance → Tab position”).
+3. **Wyszukiwanie kart** („Tab Search”): <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> albo wpisz `@tabs` w pasku adresu.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Ustawienia Chrome, „Performance” (Wydajność), z przełącznikiem „Memory Saver” (Oszczędzanie pamięci)" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">„Memory Saver” (Oszczędzanie pamięci) w Chrome, wyłączone w nowym profilu Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. **Uśpione karty** („Sleeping tabs”) są już włączone: czas oczekiwania ustawisz w Ustawienia → System and performance → Performance.
+2. Edge 158 ma też **karty pionowe** i **Search tabs** (oba są w tekstach jego interfejsu); lista skrótów Microsoftu nie przypisuje do Search tabs żadnego klawisza.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Ustawienia Edge, „Performance”, z włączoną opcją „Automatically put tabs to sleep” ustawioną na 15 minut" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Usypianie kart w Edge, domyślnie włączone: nieaktywne karty zasypiają po 15 minutach.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. **Karty pionowe**: kliknij prawym przyciskiem pasek boczny i wybierz **Włącz pionowe karty** („Turn on Vertical Tabs”).
+2. **Zamknij podwójne karty** („Close Duplicate Tabs”) i **Uśpij kartę** („Unload Tab”) są w menu kontekstowym każdej karty.
+3. **Pokaż wszystkie karty** („List all tabs”): <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox tab right-click menu with Close Duplicate Tabs and Unload Tab. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+Wszystkie klawisze znajdziesz w naszym [zestawieniu skrótów klawiszowych do kart](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="tabmerger" title="Brakująca warstwa w każdej przeglądarce">
+
+W tabeli każda przeglądarka ma jeden pusty wiersz: żadna nie utrzymuje porządku w kartach **poza** własnym oknem ani między przeglądarkami. [TabMerger](/features) tak, w ten sam sposób w Chrome, Edge i Firefoksie:
+
+1. **Teraz Otwarte** pokazuje każde otwarte okno; **Scal z bieżącą sesją** zapisuje je wszystkie w nazwanej grupie jednym kliknięciem.
+2. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> przeszukuje naraz otwarte, zapisane i niedawno zamknięte karty, z filtrami `group:`, `window:`, `tag:` i `closed:`.
+3. **Automatyczny zapis** trzyma świeżą kopię Twoich kart według harmonogramu; **Usuń duplikaty kart** usuwa powtórzenia ze wszystkich okien.
+4. W planie [Pro](/pricing) Twoje grupy synchronizują się między wszystkimi Twoimi przeglądarkami, z szyfrowaniem end-to-end.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="Wyszukiwanie TabMerger otwarte i puste, z listą filtrów group:, window:, tag: i closed:, jasny motyw" darkAlt="Wyszukiwanie TabMerger otwarte i puste, z listą filtrów group:, window:, tag: i closed:, ciemny motyw" boxes={[{ id: 'search-input', label: 'Wyszukiwanie' }]} source="TabMerger 3.16.1">Jedno wyszukiwanie dla każdej karty, w każdej przeglądarce, w której działa TabMerger.</ThemedScreenshot>
+
+Porównanie z innymi rozszerzeniami znajdziesz w artykule [najlepsze rozszerzenia do zarządzania kartami](/blog/best-tab-manager-extensions).
+
+<InstallCta>Za darmo dla Chrome, Edge i Firefoksa. Do startu nie trzeba konta.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Najczęstsze pytania">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,170 @@
+export const post = {
+  slug: 'too-many-tabs-slow-browser',
+  title: 'タブを開きすぎるとパソコンは重くなる？',
+  navTitle: 'タブの開きすぎでパソコンが重い',
+  seoTitle: 'タブの開きすぎでブラウザが重い？原因と解決方法',
+  description:
+    'タブを開きすぎてブラウザが重くなっていませんか？開いているタブはそれぞれメモリを使います。ブラウザのタブをスリープさせる設定をオンにし、使っていないタブは TabMerger で保存して閉じれば、1つも失わずに済みます。',
+  shareSummary: '開いたタブが動作を重くする理由と、タブを失わずにメモリを空ける方法。',
+  dek: 'いちばん速いタブは、開いていないタブです。保存して閉じ、1クリックで戻せます。',
+  published: '2026-12-04',
+  updated: '2026-12-04',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Chrome のメモリセーバーは、使っていないタブのメモリを解放します。',
+      source: 'Chrome ヘルプ',
+      href: 'https://support.google.com/chrome/answer/12929150',
+    },
+    { text: 'Edge 158 は使っていないタブをスリープさせます。初期設定では15分後です。', source: 'edge://settings、2026年11月20日' },
+    { text: 'Firefox 159 では、右クリックメニューからタブを解放できます。', source: 'Firefox 159 のメニュー表記' },
+    { text: 'TabMerger は開いているすべてのウィンドウを保存し、1クリックでまとめて閉じます。', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'タブが多いとメモリを多く使いますか？',
+      answer:
+        'はい。開いているページはそれぞれ内容をメモリに保持し、スクリプトを実行したりメディアを再生したりするページはプロセッサも使います。どれだけ使うかはサイト次第なので、タブの数だけでは判断できません。',
+    },
+    {
+      question: 'タブを閉じるとパソコンは速くなりますか？',
+      answer:
+        'タブを閉じると、そのタブが使っていたメモリが解放されます。先に TabMerger で保存しておけば（現在の内容と統合、続けてすべてのウィンドウを閉じる）何も失いません。どのタブも1クリックで開き直せます。',
+    },
+    {
+      question: 'メモリセーバーやスリープタブだけで十分ですか？',
+      answer:
+        '使っていないタブのメモリを解放しつつタブバーには残すので、パソコンの助けにはなります。ただ、タブは残ったままで目で探す必要があります。保存して閉じれば、あなた自身も楽になります。',
+    },
+    {
+      question: 'どのタブがいちばんメモリを使っているか確かめるには？',
+      answer: 'Chrome で Shift+Esc を押してChrome タスク マネージャーを開き、メモリ使用量の多いタブを探します。',
+    },
+  ],
+  images: [
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-light.webp', alt: 'TabMerger の「Now Open」（現在開いているタブ）メニュー。「Close all windows」（すべてのウィンドウを閉じる）、「Close all browser windows in this group」（このグループのすべてのブラウザウィンドウを閉じます）がハイライトされている。ライトテーマ' },
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-dark.webp', alt: 'TabMerger の「Now Open」（現在開いているタブ）メニュー。「Close all windows」（すべてのウィンドウを閉じる）、「Close all browser windows in this group」（このグループのすべてのブラウザウィンドウを閉じます）がハイライトされている。ダークテーマ' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Chrome の設定の「Performance」（パフォーマンス）。「Memory Saver」（メモリセーバー）のスイッチがある' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Edge の設定の「Performance」。「Automatically put tabs to sleep」がオンで、15分に設定されている' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/too-many-tabs-slow-browser/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/too-many-tabs-slow-browser/og.png', alt: 'タイトルカード「Do too many tabs slow your computer down?」。「Close all windows」（すべてのウィンドウを閉じる）メニューを添えた TabMerger のガイド' },
+  toc: [
+    { id: 'quick', label: '簡単な答え' },
+    { id: 'why', label: 'タブで重くなる理由' },
+    { id: 'tabmerger', label: 'まとめて保存して閉じる' },
+    { id: 'browser', label: 'ブラウザにタブをスリープさせる' },
+    { id: 'which', label: '重いタブを見つける' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'メモリの設定',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: '設定 → System and performance → Performance',
+      firefox: 'タブを右クリック → タブを解放',
+    },
+  },
+}
+
+<QuickAnswer>
+
+はい。開いているタブはそれぞれメモリを使い、数が増えればパソコン全体が重くなります。いちばん効くのは、**使っていないタブを失わずに閉じる**ことです。[TabMerger](/features) で **現在の内容と統合** を選んで開いているウィンドウをすべてグループに保存し、続けて **すべてのウィンドウを閉じる** を選びます。メモリが解放され、どのタブも1クリックで戻せます。開いたままにするタブには、**メモリセーバー**（Memory Saver、Chrome）か**スリープタブ**（Edge）をオンにしましょう。
+
+</QuickAnswer>
+
+<InstallCta>すべてのウィンドウを保存して閉じ、メモリを取り戻しましょう。Chrome、Edge、Firefox に無料で対応。</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="why" title="開いているタブでパソコンが重くなるのはなぜ？">
+
+開いているタブは、どれも動いている Web ページです。テキストや画像、スクリプトがメモリに残り、動きの多いページ（動画、ライブフィード、Web アプリ）はプロセッサも使い続けます。ブラウザとほかのアプリがパソコンの搭載量より多くのメモリを必要とすると、すべてが遅くなります。Chrome のクラッシュに関するヘルプ自体が、メモリ不足をクラッシュの原因に挙げ、最初の対処法としてタブを閉じることを勧めています。
+
+タブ1つの負荷はサイト次第なので、これなら安全という数はありません。目安はこうです。今日一度も見ていないタブなら、開いておく必要はありません。
+
+</Section>
+
+<Section id="tabmerger" title="タブを失わずに閉じるには？">
+
+ここで [TabMerger](/features) の出番です。2ステップで、すべてのウィンドウを一度に処理できます。
+
+1. **グループを追加** をクリックし、そのグループの **⋯** メニューで **現在の内容と統合** を選びます。開いているウィンドウとタブがすべてグループに保存されます。
+2. サイドバーの **現在開いているタブ** を右クリックし、**すべてのウィンドウを閉じる** を選びます。ブラウザのウィンドウは閉じ、グループにはすべてのタブが残ります。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/too-many-tabs-slow-browser/tm-close-all-menu" alt="TabMerger の「Now Open」（現在開いているタブ）メニュー。「Close all windows」（すべてのウィンドウを閉じる）、「Close all browser windows in this group」（このグループのすべてのブラウザウィンドウを閉じます）がハイライトされている。ライトテーマ" darkAlt="TabMerger の「Now Open」（現在開いているタブ）メニュー。「Close all windows」（すべてのウィンドウを閉じる）、「Close all browser windows in this group」（このグループのすべてのブラウザウィンドウを閉じます）がハイライトされている。ダークテーマ" boxes={[{ id: 'close-all', label: 'すべてのウィンドウを閉じる' }]} source="TabMerger 3.16.1">保存したら、メニューの1項目で開いているウィンドウをすべて閉じられます。</ThemedScreenshot>
+
+また必要になったら、グループを開いてタブを1つ、ウィンドウを1つ、またはすべてを開き直します。<Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> を押せば保存したタブをすぐに見つけられ、自動保存を使えばスケジュールに合わせて保存も任せられます。ほかの習慣は[タブが多すぎるときの整理術](/blog/manage-too-many-tabs)をご覧ください。
+
+</Section>
+
+<Section id="browser" title="使っていないタブをブラウザにスリープさせるには？">
+
+開いたままのタブは、使っていない間にブラウザがメモリを解放できます。クリックすると再読み込みされます。
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+**メモリセーバー**（Memory Saver）をオンにします。**設定 → パフォーマンス**（Settings → Performance）を開くか、アドレスバーに `chrome://settings/performance` を貼り付けます。タブが非アクティブになるまでの早さは、適度（Moderate）、バランス重視（Balanced）、最大（Maximum）から選べます。
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Chrome の設定の「Performance」（パフォーマンス）。「Memory Saver」（メモリセーバー）のスイッチがある" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">Chrome の「Memory Saver」（メモリセーバー）。新しい Chrome 157 プロファイルではオフでした。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+**設定 → System and performance → Performance** で **Automatically put tabs to sleep** をオンにし、タブがスリープするまでの時間を選びます。
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Edge の設定の「Performance」。「Automatically put tabs to sleep」がオンで、15分に設定されている" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Edge のスリープタブは初期設定でオン。使っていないタブは15分後にスリープします。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+タブを右クリックして **タブを解放**（Unload Tab）を選ぶと、そのタブのメモリをすぐに解放できます。複数のタブを先に選択しておけば、まとめて解放できます。
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>スリープ中のタブも、タブバーを埋め尽くすことに変わりはありません。助かるのはパソコンで、あなたの集中力ではありません。</Catch>
+
+</Section>
+
+<Section id="which" title="動作を重くしているタブを見つけるには？">
+
+Chrome で <Kbd>Shift</Kbd>+<Kbd>Esc</Kbd> を押して **Chrome タスク マネージャー**（Chrome Task Manager）を開き、メモリ使用量の多いタブを探します。重いタブは TabMerger のグループに保存して閉じましょう。
+
+{/* Screenshot still to capture by hand (needs a visible browser): the Chrome Task Manager window sorted by memory. */}
+
+<InstallCta>Chrome、Edge、Firefox に無料で対応。アカウントなしで始められます。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

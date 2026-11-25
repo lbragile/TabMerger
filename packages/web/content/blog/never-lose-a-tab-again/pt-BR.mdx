@@ -1,0 +1,174 @@
+export const post = {
+  slug: 'never-lose-a-tab-again',
+  title: 'Nunca mais perca uma aba: salvamento automático e como recuperar abas fechadas',
+  navTitle: 'Nunca mais perca uma aba',
+  seoTitle: 'Salve suas abas abertas automaticamente e recupere abas fechadas com o TabMerger',
+  description:
+    'Salve suas abas abertas automaticamente, em um horário ou quando passarem de um número, e recupere qualquer aba ou janela que você fechou. Como funcionam o salvamento automático e “Fechadas recentemente” do TabMerger, e por quê.',
+  shareSummary: 'Suas abas abertas salvas em um horário, e cada janela fechada a uma busca de distância.',
+  dek: 'Você não deveria precisar lembrar de salvar. Configure uma vez, e cada aba aberta tem uma cópia.',
+  published: '2026-12-13',
+  updated: '2026-12-13',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'O salvamento automático roda de a cada 15 minutos até uma vez por dia, ou quando as abas abertas passam de um número entre 20 e 100.', source: 'TabMerger 3.16.1' },
+    { text: 'Abas já salvas em um grupo são ignoradas; janelas privadas nunca são salvas.', source: 'TabMerger 3.16.1' },
+    { text: 'O Gratuito mantém os 2 salvamentos automáticos mais recentes; o Pro mantém todos.', source: 'Preços do TabMerger', href: '/pricing' },
+    { text: '“Fechadas recentemente” guarda seus últimos 2 dias no Gratuito e 30 dias no Pro.', source: 'Preços do TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Como salvo minhas abas abertas automaticamente?',
+      answer:
+        'No TabMerger, abra Configurações → Dados e ative “Salvar abas abertas automaticamente”. Escolha um horário (de a cada 15 minutos até uma vez por dia), um número de abas abertas que dispara o salvamento, ou os dois. Cada execução salva suas abas abertas como um novo grupo.',
+    },
+    {
+      question: 'O salvamento automático vai encher o TabMerger de duplicatas?',
+      answer:
+        'Não. Abas cujo endereço já está salvo em algum grupo são ignoradas, e uma página aberta em várias abas é salva uma vez só. Quando tudo já está salvo, a execução não salva nada.',
+    },
+    {
+      question: 'O salvamento automático precisa que o TabMerger esteja aberto?',
+      answer: 'Não. Ele roda em segundo plano na extensão enquanto o navegador está aberto, e verifica se perdeu algum salvamento quando o navegador inicia.',
+    },
+    {
+      question: 'Como recupero uma janela que fechei?',
+      answer:
+        'Pressione Ctrl+K no TabMerger e digite closed: para listar as abas e janelas fechadas recentemente, ou abra “Fechadas recentemente” na barra lateral. Escolher uma janela fechada restaura a janela inteira.',
+    },
+    {
+      question: 'O que o Gratuito mantém, e o que o Pro acrescenta?',
+      answer:
+        'O Gratuito mantém os 2 salvamentos automáticos mais recentes (mantenha um como grupo para guardá-lo) e seus últimos 2 dias de abas fechadas. O Pro mantém todos os salvamentos automáticos e 30 dias de abas fechadas, e acrescenta backups automáticos criptografados e as abas abertas dos seus outros dispositivos.',
+    },
+  ],
+  images: [
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-light.webp', alt: 'TabMerger, “Settings” (Configurações), “Data” (Dados): “Auto-save open tabs” (Salvar abas abertas automaticamente) ativado, a cada hora e quando as abas abertas passam de 50, com “Auto-save now” (Salvar agora), tema claro' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-dark.webp', alt: 'TabMerger, “Settings” (Configurações), “Data” (Dados): “Auto-save open tabs” (Salvar abas abertas automaticamente) ativado, a cada hora e quando as abas abertas passam de 50, com “Auto-save now” (Salvar agora), tema escuro' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp', alt: 'Um grupo em “Auto-saved” (Salvos automaticamente) com duas janelas e sete abas, e um botão “Keep as group” (Manter como grupo), tema claro' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-dark.webp', alt: 'Um grupo em “Auto-saved” (Salvos automaticamente) com duas janelas e sete abas, e um botão “Keep as group” (Manter como grupo), tema escuro' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-light.webp', alt: 'Busca do TabMerger por closed: mostrando uma janela com 3 abas fechada hoje, tema claro' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-dark.webp', alt: 'Busca do TabMerger por closed: mostrando uma janela com 3 abas fechada hoje, tema escuro' },
+  ],
+  tags: ['tabmerger-guides', 'save-tabs', 'restore-closed-tabs', 'session-management'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp' },
+  ogImage: { src: '/blog/never-lose-a-tab-again/og.png', alt: 'Nunca mais perca uma aba: um grupo salvo automaticamente no TabMerger com um botão “Keep as group” (Manter como grupo)' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'problem', label: 'Como as abas se perdem' },
+    { id: 'why', label: 'Por que funciona assim' },
+    { id: 'steps', label: 'Ative' },
+    { id: 'closed', label: 'Fechadas recentemente' },
+    { id: 'benefit', label: 'O que você ganha' },
+    { id: 'habits', label: 'Bons hábitos' },
+    { id: 'plans', label: 'Gratuito ou Pro' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Ative **Configurações → Dados → Salvar abas abertas automaticamente** (Settings → Data → Auto-save open tabs) no [TabMerger](/features) e escolha um horário, um número de abas ou os dois. A partir daí, suas abas abertas são salvas automaticamente como um novo grupo, pulando o que já está salvo. Fechou algo sem querer? <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> e `closed:` encontram cada aba e janela que você fechou recentemente, e reabrem uma janela inteira com um clique.
+
+</QuickAnswer>
+
+<InstallCta>Uma cópia de cada aba aberta, salva para você em um horário. Grátis para Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="problem" title="Como as abas se perdem de verdade">
+
+Raramente é uma grande falha. Na maioria das vezes é algo pequeno: você fecha a janela errada, justo a das trinta abas da pesquisa de hoje de manhã. Uma atualização reinicia o navegador e só uma das três janelas volta. Você arruma tudo na sexta e na segunda precisa da página que fechou. A essa altura, a aba está em algum lugar do histórico, entre centenas de outras páginas, se você lembrar como ela se chamava.
+
+Salvar à mão resolve, nos dias em que você lembra. O salvamento automático é para os outros dias.
+
+Para recuperar abas depois de uma falha ou de um reinício forçado, com as ferramentas de cada navegador, veja [como recuperar suas abas depois de uma falha](/blog/restore-tabs-after-crash). Este guia é para garantir que você sempre tenha uma cópia.
+
+</Section>
+
+<Section id="why" title="Por que o salvamento automático funciona assim">
+
+Cada regra do salvamento automático do TabMerger existe para que a cópia seja útil, não só para que exista:
+
+- **Ele salva em um novo grupo**, com o horário no nome (“Salvo automaticamente 21 de nov., 20:28”), mantendo as janelas inteiras e a ordem das abas. Nada do que você salvou antes é alterado. Cada novo salvamento automático recebe uma cor diferente do anterior, para ficar fácil distinguir um do outro.
+- **Dois gatilhos, porque as abas se acumulam de dois jeitos.** Um **horário** (a cada 15 ou 30 minutos, a cada hora, a cada 2 ou 4 horas, ou uma vez por dia) cobre o trabalho constante. Um **número de abas** (20, 30, 50, 75 ou 100 abas abertas) cobre aquela rajada de pesquisa que passa de qualquer horário.
+- **Uma rajada salva uma vez.** O gatilho por número dispara quando você passa dele, depois espera você voltar a ele ou ficar abaixo, e no mínimo 10 minutos, antes de poder disparar de novo. Abrir dez abas seguidas não cria dez grupos.
+- **Sem duplicatas.** Uma aba cujo endereço já está em algum dos seus grupos é ignorada, e uma página aberta em várias abas é salva uma vez. Se tudo já está salvo, a execução não salva nada e avisa você.
+- **O privado continua privado.** Janelas privadas nunca são salvas. As páginas do próprio TabMerger ficam de fora; abas fixadas e páginas do navegador entram.
+- **Ele não precisa de você.** O salvamento automático roda em segundo plano na extensão enquanto o navegador está aberto, e verifica se há um salvamento pendente quando o navegador inicia. Uma notificação opcional avisa você depois de cada execução; a linha de status nas configurações mostra o último resultado.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Salvamento automático no TabMerger" steps={[{ title: 'Configurações' }, { title: 'Grupo salvo automaticamente' }]}>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-save-settings" alt="TabMerger, “Settings” (Configurações), “Data” (Dados): “Auto-save open tabs” (Salvar abas abertas automaticamente) ativado, a cada hora e quando as abas abertas passam de 50, com “Auto-save now” (Salvar agora), tema claro" darkAlt="TabMerger, “Settings” (Configurações), “Data” (Dados): “Auto-save open tabs” (Salvar abas abertas automaticamente) ativado, a cada hora e quando as abas abertas passam de 50, com “Auto-save now” (Salvar agora), tema escuro" boxes={[{ id: 'schedule', label: 'Com que frequência salvar' }, { id: 'threshold', label: 'O gatilho de abas abertas' }, { id: 'run-now', label: 'Salvar agora mesmo' }]} source="TabMerger 3.16.1">A cada hora, e sempre que as abas abertas passarem de 50.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-saved" alt="Um grupo em “Auto-saved” (Salvos automaticamente) com duas janelas e sete abas, e um botão “Keep as group” (Manter como grupo), tema claro" darkAlt="Um grupo em “Auto-saved” (Salvos automaticamente) com duas janelas e sete abas, e um botão “Keep as group” (Manter como grupo), tema escuro" boxes={[{ id: 'keep', label: 'Manter como grupo' }]} source="TabMerger 3.16.1">O resultado: as duas janelas abertas, salvas como um grupo. Mantenha-o para guardá-lo de vez.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="steps" title="Ative em quatro passos">
+
+1. Abra o TabMerger e depois **Configurações** (Settings, no menu da conta) → **Dados** (Data).
+2. Ative **Salvar abas abertas automaticamente** (Auto-save open tabs). (No Pro já vem ativado, a cada hora.)
+3. Escolha um **Horário** (Schedule), um número em **Quando as abas abertas passarem de** (When open tabs pass), ou os dois. Ative **Mostrar uma notificação** (Show a notification) se quiser um aviso depois de cada salvamento.
+4. Clique uma vez em **Salvar agora** (Auto-save now) para ver o resultado: um novo grupo em **Salvos automaticamente** (Auto-saved), na barra lateral.
+
+Encontrou um salvamento automático que quer manter de vez? Abra-o e clique em **Manter como grupo** (Keep as group): ele vai para os seus grupos e nunca é removido automaticamente.
+
+</Section>
+
+<Section id="closed" title="Fechadas recentemente: a outra metade da rede">
+
+O salvamento automático cobre o que está aberto; **Fechadas recentemente** (Recently closed) cobre o que você acabou de fechar. Cada aba e janela que você fecha é guardada por dia, só neste dispositivo, e janelas privadas nunca são registradas.
+
+- Abra **Fechadas recentemente** na barra lateral para navegar por dia, ou pressione <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> e comece com `closed:` para buscar.
+- Uma **janela** fechada aparece como uma única entrada (“Janela · 3 abas”): escolha-a e a janela inteira volta.
+- Use <Kbd>Ctrl</Kbd>+clique (<Kbd>⌘</Kbd>+clique no Mac) ou o botão do meio em um resultado para reabri-lo em segundo plano.
+
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-closed-window" alt="Busca do TabMerger por closed: mostrando uma janela com 3 abas fechada hoje, tema claro" darkAlt="Busca do TabMerger por closed: mostrando uma janela com 3 abas fechada hoje, tema escuro" boxes={[{ id: 'search-input', label: 'O filtro closed:' }, { id: 'closed-window', label: 'Uma janela fechada inteira' }]} source="TabMerger 3.16.1">Uma janela fechada por engano, a uma busca de distância.</ThemedScreenshot>
+
+Mais truques de busca em [busque em todas as suas abas com o TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+
+</Section>
+
+<Section id="benefit" title="O que você ganha">
+
+O pior caso encolhe de “aquelas abas sumiram” para “perco o que abri desde o último salvamento”. Com um horário de hora em hora, um reinício ruim custa no máximo uma hora de abas novas; uma janela que você mesmo fechou está em “Fechadas recentemente”. Recuperar qualquer uma das duas é uma busca, não uma tarde no histórico.
+
+</Section>
+
+<Section id="habits" title="Bons hábitos">
+
+- **Ajuste o horário ao seu ritmo.** A cada hora serve para a maioria dos dias; a cada 15 minutos, para pesquisas pesadas.
+- **Adicione um número de abas se você abre abas em rajadas.** 50 é um bom começo.
+- **Mantenha, depois limpe.** Quando um salvamento automático tiver algo que valha a pena, clique em **Manter como grupo** e renomeie; apague o resto.
+- **Continue salvando de propósito.** O salvamento automático é a rede, não o plano: mantenha grupos com nome para os projetos de verdade (veja [uma rotina diária com abas](/blog/tabmerger-daily-workflow)).
+
+</Section>
+
+<Section id="plans" title="Gratuito ou Pro">
+
+<ComparisonTable
+  head={['', 'Gratuito', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Salvar abas abertas automaticamente', 'Desativado até você ativar; os 2 mais recentes mantidos', 'Ativado por padrão; todos mantidos'],
+    ['Salvamentos automáticos e limites do plano', 'Contam para os 5 grupos e 50 abas', 'Sem limites'],
+    ['Fechadas recentemente', 'Seus últimos 2 dias', 'Seus últimos 30 dias'],
+    ['Backups automáticos criptografados dos seus grupos', 'Não', 'De hora em hora a semanal, os 10 mais recentes mantidos'],
+    ['Abas abertas dos seus outros dispositivos', 'Não', 'Configurações → Dispositivos'],
+  ]}
+/>
+
+No Gratuito, cada novo salvamento automático substitui o mais antigo quando já existem 2; **Manter como grupo** tira um da rotação. Perto do limite de 50 abas, um salvamento automático salva as abas que cabem e avisa. Os backups e as abas dos seus dispositivos ficam guardados na sua conta, com criptografia de ponta a ponta, e nosso servidor se recusa a guardá-los para uma conta sem Pro. Detalhes na [página de preços](/pricing).
+
+<InstallCta>Configure uma vez e pare de se preocupar com janelas fechadas. Grátis para Chrome, Edge e Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

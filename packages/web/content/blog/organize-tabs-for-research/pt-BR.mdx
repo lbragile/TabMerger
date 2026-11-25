@@ -1,0 +1,117 @@
+export const post = {
+  slug: 'organize-tabs-for-research',
+  title: 'Como organizar abas para pesquisa: notas, lembretes e fontes',
+  navTitle: 'Organizar abas para pesquisa',
+  seoTitle: 'Como organizar as abas do navegador para pesquisa (notas, sessões, fontes)',
+  description:
+    'Um fluxo para as abas da sua pesquisa: um grupo do TabMerger por projeto, uma nota em cada fonte importante, lembretes para voltar, sessões para pausar um projeto inteiro e uma exportação das suas fontes na hora de escrever.',
+  shareSummary: 'Um grupo por projeto, notas nas fontes, lembretes e uma exportação na hora de escrever.',
+  dek: 'Quarenta abas de fontes são uma biblioteca, não uma bagunça, se cada uma diz por que está ali.',
+  published: '2026-12-09',
+  updated: '2026-12-09',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Qualquer aba salva pode ter uma nota e um lembrete.', source: 'TabMerger 3.16.1' },
+    { text: 'Lembretes: 30 min, 1 hora, 3 horas, amanhã, ou uma data e hora.', source: 'TabMerger 3.16.1' },
+    { text: 'Uma sessão salva todos os seus grupos para restaurar juntos; o plano grátis guarda 3.', source: 'Preços do TabMerger', href: '/pricing' },
+    { text: 'A exportação em JSON lista o título e o endereço de cada fonte.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Como acompanho minhas fontes no navegador?',
+      answer:
+        'Salve as abas de cada projeto como um grupo do TabMerger e adicione uma nota a cada fonte que você vai citar: por que ela importa, em qual seção, em qual capítulo. Ctrl+K pesquisa títulos e endereços em todos os seus grupos.',
+    },
+    {
+      question: 'Posso definir um lembrete para voltar a uma aba?',
+      answer: 'Sim. Clique com o botão direito em uma aba salva no TabMerger e escolha “Lembrar-me…”: 30 minutos, 1 hora, 3 horas, amanhã, ou uma data e hora, com uma nota opcional.',
+    },
+    {
+      question: 'Abas de pesquisa devem virar favoritos?',
+      answer: 'Para trabalho em andamento, um grupo salvo é melhor: ele mantém o conjunto unido com as notas e reabre com um clique. Adicione aos favoritos só as poucas que você vai querer por anos.',
+      link: { text: 'Adicione aos favoritos', href: '/blog/tabs-vs-bookmarks' },
+    },
+    {
+      question: 'Como tiro uma lista das minhas fontes?',
+      answer: 'Configurações → Dados → Exportar JSON salva os títulos e endereços de todos os grupos em um arquivo que você pode transformar em uma lista de referências.',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp', alt: 'Grupo “Thesis sources” do TabMerger com o menu de uma aba aberto: Move to group (Mover para o grupo), Add note (Adicionar nota), Remind me… (Lembrar-me…), Rename tab (Renomear aba), Remove tab (Remover aba), tema claro' },
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-dark.webp', alt: 'Grupo “Thesis sources” do TabMerger com o menu de uma aba aberto: Move to group (Mover para o grupo), Add note (Adicionar nota), Remind me… (Lembrar-me…), Rename tab (Renomear aba), Remove tab (Remover aba), tema escuro' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-light.webp', alt: 'Seletor de lembrete do TabMerger abaixo de uma aba: 30 min, 1 hour, 3 hours, Tomorrow (Amanhã), uma data e hora e uma nota opcional, tema claro' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-dark.webp', alt: 'Seletor de lembrete do TabMerger abaixo de uma aba: 30 min, 1 hour, 3 hours, Tomorrow (Amanhã), uma data e hora e uma nota opcional, tema escuro' },
+  ],
+  tags: ['research', 'tab-management', 'save-tabs', 'session-management'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-for-research/og.png', alt: 'Como organizar abas para pesquisa: um guia do TabMerger, com as opções de nota e lembrete de uma aba' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'project', label: 'Um grupo por projeto' },
+    { id: 'notes', label: 'Notas e lembretes' },
+    { id: 'sessions', label: 'Pausar um projeto inteiro' },
+    { id: 'export', label: 'Exportar suas fontes' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Dê a cada projeto de pesquisa o seu próprio grupo do [TabMerger](/features) e adicione uma **nota** a cada fonte que você vai usar, dizendo por que ela importa. Defina um **lembrete** nas que você precisa revisitar, salve uma **sessão** para pausar o projeto inteiro e trazê-lo de volta com um clique, e **exporte** o grupo para um arquivo quando for escrever as referências.
+
+</QuickAnswer>
+
+<InstallCta>Transforme quarenta abas de fontes em uma biblioteca anotada e pesquisável. Grátis para Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="project" title="Como organizo as abas de um projeto de pesquisa?">
+
+1. Clique em **Adicionar grupo** (Add Group) e dê a ele o nome do projeto, por exemplo “Fontes da tese” (nas capturas, “Thesis sources”).
+2. Abra o menu **⋯** do grupo e escolha **Mesclar com as atuais** (Merge with current): todas as abas abertas são salvas nele.
+3. Feche as janelas quando terminar o dia. O grupo guarda tudo, e <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> encontra depois qualquer fonte pelo título ou endereço.
+
+Mantenha uma janela por frente de trabalho (artigos, dados, contexto) dentro do grupo e dê um nome a cada uma. Com abas de pesquisa, metade do trabalho é decidir o que vale a pena guardar; nosso [guia de abas ou favoritos](/blog/tabs-vs-bookmarks) ajuda você a decidir.
+
+</Section>
+
+<Section id="notes" title="Como faço anotações nas fontes e volto a elas depois?">
+
+Clique com o botão direito em qualquer aba salva:
+
+- **Adicionar nota** (Add note): por que essa fonte importa. Um ícone de nota marca as abas que têm uma.
+- **Lembrar-me…** (Remind me…): 30 minutos, 1 hora, 3 horas, amanhã, ou uma data e hora que você escolher, com uma nota opcional. O TabMerger mostra uma notificação do navegador na hora marcada.
+- **Renomear aba** (Rename tab): troque um título de página enigmático (“[1706.03762]”) por algo que você vai pesquisar.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Notas e lembretes em uma fonte" steps={[{ title: 'Menu da aba' }, { title: 'Lembrete' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-tab-menu" alt="Grupo “Thesis sources” do TabMerger com o menu de uma aba aberto: Move to group (Mover para o grupo), Add note (Adicionar nota), Remind me… (Lembrar-me…), Rename tab (Renomear aba), Remove tab (Remover aba), tema claro" darkAlt="Grupo “Thesis sources” do TabMerger com o menu de uma aba aberto: Move to group (Mover para o grupo), Add note (Adicionar nota), Remind me… (Lembrar-me…), Rename tab (Renomear aba), Remove tab (Remover aba), tema escuro" boxes={[{ id: 'add-note', label: 'Adicionar nota' }, { id: 'remind-me', label: 'Lembrar-me…' }]} source="TabMerger 3.16.1">Clique com o botão direito em uma fonte para anotá-la; a primeira aba já tem uma nota.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-reminder" alt="Seletor de lembrete do TabMerger abaixo de uma aba: 30 min, 1 hour, 3 hours, Tomorrow (Amanhã), uma data e hora e uma nota opcional, tema claro" darkAlt="Seletor de lembrete do TabMerger abaixo de uma aba: 30 min, 1 hour, 3 hours, Tomorrow (Amanhã), uma data e hora e uma nota opcional, tema escuro" boxes={[{ id: 'remind-in', label: 'Lembrar-me em…' }]} source="TabMerger 3.16.1">Escolha quando voltar e deixe uma nota para o seu eu do futuro.</ThemedScreenshot>
+</Carousel>
+
+Para tocar uma lista de leitura inteira desse jeito, veja [como usar abas como lista de tarefas](/blog/tabs-as-a-to-do-list).
+
+</Section>
+
+<Section id="sessions" title="Como pauso um projeto inteiro e volto a ele depois?">
+
+**Salvar sessão atual** (Save current session, na seção Sessões da barra lateral) tira um snapshot com nome de todos os seus grupos salvos; **Restaurar sessão** (Restore session) traz todos de volta juntos. Use nos marcos do projeto, como “Antes da revisão de literatura”, para poder voltar depois exatamente àquele conjunto. O plano grátis guarda 3 sessões no navegador; o [Pro](/pricing) guarda sessões ilimitadas e as sincroniza entre seus dispositivos, com criptografia de ponta a ponta. Mais sobre sessões em [o que faz um gerenciador de sessões](/blog/browser-session-manager).
+
+</Section>
+
+<Section id="export" title="Como exporto minhas fontes na hora de escrever?">
+
+Abra **Configurações → Dados** (Settings → Data) e clique em **Exportar JSON** (Export JSON). O arquivo lista cada grupo, janela e aba com título e endereço, pronto para virar uma lista de referências com um script curto ou um editor de texto. Detalhes e um exemplo campo a campo estão em [como exportar suas abas abertas](/blog/export-open-tabs).
+
+<InstallCta>Grátis para Chrome, Edge e Firefox. Não precisa de conta para começar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

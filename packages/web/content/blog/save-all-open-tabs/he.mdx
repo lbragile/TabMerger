@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'קיצור מקשים אחד, שחזור בהפעלה והחזרת כרטיסיות שנסגרו ב-Chrome, ב-Edge וב-Firefox.',
   dek: 'חמש דרכים לשמור כל כרטיסייה פתוחה, והדבר שכל אחת מהן מפספסת בשקט.',
   published: '2026-11-19',
-  updated: '2026-11-19',
+  updated: '2026-11-24',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'הקיצור Ctrl+Shift+D שומר את החלון הנוכחי בלבד.', source: 'נבדק בשלושת הדפדפנים, 19 בנובמבר 2026' },
@@ -115,9 +115,11 @@ export const post = {
 
 <QuickAnswer>
 
-כדי לשמור את כל הכרטיסיות הפתוחות בחלון הנוכחי בתיקיית סימניות חדשה, לוחצים על <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> (או <bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> ב-Mac). זה עובד ב-Chrome, ב-Edge וב-Firefox. כדי שהכרטיסיות ייפתחו מחדש אוטומטית, מפעילים את **אני רוצה להמשיך מהמקום שבו הפסקתי** (<bdi dir="ltr">Continue where you left off</bdi>) ב-Chrome, את **Open tabs from the previous session** ב-Edge או את **פתיחת חלונות ולשוניות קודמות** (<bdi dir="ltr">Open previous windows and tabs</bdi>) ב-Firefox.
+כדי לשמור את כל הכרטיסיות הפתוחות בחלון הנוכחי בתיקיית סימניות חדשה, לוחצים על <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> (או <bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> ב-Mac). זה עובד ב-Chrome, ב-Edge וב-Firefox. כדי שהכרטיסיות ייפתחו מחדש אוטומטית, מפעילים את **אני רוצה להמשיך מהמקום שבו הפסקתי** (<bdi dir="ltr">Continue where you left off</bdi>) ב-Chrome, את **Open tabs from the previous session** ב-Edge או את **פתיחת חלונות ולשוניות קודמות** (<bdi dir="ltr">Open previous windows and tabs</bdi>) ב-Firefox. כדי לשמור **את כל החלונות בבת אחת** ולחפש בכרטיסיות אחר כך, משתמשים ב-[TabMerger](/features): לחיצה אחת שומרת את כל החלונות הפתוחים בקבוצה בעלת שם.
 
 </QuickAnswer>
+
+<InstallCta>שומרים את כל החלונות הפתוחים בלחיצה אחת. חינם ל-Chrome, ל-Edge ול-Firefox.</InstallCta>
 
 <BrowserSwitcher />
 
@@ -196,7 +198,7 @@ export const post = {
 
 <Section id="closed" title="3. להחזיר כרטיסיות שכבר נסגרו">
 
-לוחצים על <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> (<bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi>) כדי לפתוח מחדש את הכרטיסייה או החלון האחרונים שנסגרו; לוחצים שוב כדי להמשיך אחורה. לדברים ישנים יותר, פותחים את ההיסטוריה עם <bdi><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi>.
+לוחצים על <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> (<bdi><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi>) כדי לפתוח מחדש את הכרטיסייה או החלון האחרונים שנסגרו; לוחצים שוב כדי להמשיך אחורה. לדברים ישנים יותר, פותחים את ההיסטוריה עם <bdi><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi>. אם הדפדפן כולו קרס או נסגר, כדאי לעקוב אחרי [המדריך לשחזור כרטיסיות אחרי קריסה](/blog/restore-tabs-after-crash).
 
 <BrowserPanels section="closed">
 <BrowserPanel browser="chrome">
@@ -228,7 +230,9 @@ export const post = {
 
 - ב-**Chrome** אפשר לשמור קבוצה ולפתוח אותה שוב, אבל תוספים לא רואים קבוצה שמורה שנסגרה ([tabGroups API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
 - ב-**Firefox** הקבוצות נשארות במכשיר ולא עוברות עם Firefox Sync.
-- ב-**Edge** אין יותר Collections, החל מגרסה 149.
+- ב-**Edge** אין יותר Collections, החל מגרסה 149 ([במה להשתמש במקום](/blog/edge-collections-replacement)).
+
+איך שומרים, פותחים מחדש ומסנכרנים קבוצות, צעד אחר צעד, מוסבר ב[מדריך שלנו לקבוצות כרטיסיות ב-Chrome](/blog/chrome-tab-groups).
 
 {/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
 
@@ -256,14 +260,14 @@ export const post = {
   head={['קיצור', 'מה נשמר']}
   keysColumn={0}
   rows={[
-    ['Ctrl+Shift+P', 'כל שאר הכרטיסיות בחלון'],
-    ['Ctrl+Shift+S', 'הכרטיסייה הנוכחית'],
-    ['Ctrl+Shift+K', 'הכרטיסיות מימין'],
-    ['Ctrl+Shift+U', 'הכרטיסיות משמאל'],
+    ['Alt+Shift+O', 'כל שאר הכרטיסיות בחלון'],
+    ['Alt+Shift+S', 'הכרטיסייה הנוכחית'],
+    ['Alt+Shift+Comma', 'הכרטיסיות מימין'],
+    ['Alt+Shift+Period', 'הכרטיסיות משמאל'],
   ]}
 />
 
-ב-Mac משתמשים ב-<Kbd>⌘</Kbd>. כל אחד מהם שואל איפה לשמור; **שמירה מהירה (קבוצה חדשה)** יוצרת קבוצה במקום. ב-Firefox הקיצור <bdi><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd></bdi> פותח חלון פרטי, אז כדאי לבחור מקש אחר ב-`about:addons`, תחת "ניהול קיצורי דרך להרחבות" (<bdi dir="ltr">Manage Extension Shortcuts</bdi>).
+ב-Mac לוחצים על <Kbd>Control</Kbd> במקום <Kbd>Alt</Kbd>. כל אחד מהם שואל איפה לשמור; **שמירה מהירה (קבוצה חדשה)** יוצרת קבוצה במקום. אלה המקשים בהתקנה חדשה; התקנה מלפני כן שומרת על המקשים שהיו לה, ואפשר לשנות כל אחד מהם בדף קיצורי הדרך של הדפדפן; [מדריך קיצורי המקלדת לכרטיסיות](/blog/tab-keyboard-shortcuts) שלנו מראה איך.
 
 ### סגרתם משהו בטעות?
 
@@ -304,7 +308,7 @@ export const post = {
   ]}
 />
 
-לא משנה במה עוד תבחרו, כדאי להפעיל את הגדרת ההפעלה. חלון יחיד ששווה לשמור אפשר לשמור בסימניות. תוסף מתאים כשעובדים עם כמה חלונות או כשצריך כרטיסייה סגורה כעבור כמה ימים. עוד בנושא ב[דף ההשוואה](/compare).
+לא משנה במה עוד תבחרו, כדאי להפעיל את הגדרת ההפעלה. חלון יחיד ששווה לשמור אפשר לשמור בסימניות. לכמה חלונות, או לכרטיסייה שנסגרה לפני כמה ימים, TabMerger עושה את זה בלחיצה אחת, ויכול גם [לייצא הכול לקובץ](/blog/export-open-tabs). עוד בנושא ב[דף ההשוואה](/compare) וב[השוואת תוספי ניהול הכרטיסיות הטובים ביותר](/blog/best-tab-manager-extensions).
 
 </Section>
 

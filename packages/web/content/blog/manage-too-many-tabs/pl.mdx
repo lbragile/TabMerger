@@ -1,0 +1,246 @@
+export const post = {
+  slug: 'manage-too-many-tabs',
+  title: 'Za dużo otwartych kart? Czterostopniowa rutyna, która działa w każdej przeglądarce',
+  seoTitle: 'Za dużo otwartych kart? Jak je ogarnąć w każdej przeglądarce',
+  description:
+    'Za dużo otwartych kart? Rutyna w czterech krokach dla Chrome, Edge i Firefoksa oraz sposób, w jaki TabMerger zapisuje wszystkie okna jednym kliknięciem, żeby zamknąć je bez żadnych strat.',
+  shareSummary: 'Zamknij, pogrupuj, zapisz, zaplanuj: rutyna dla kart w Chrome, Edge i Firefoksie.',
+  dek: 'Zamknij to, co skończone, pogrupuj to, co w toku, zapisz resztę jednym kliknięciem i pozwól, by autozapis utrzymał porządek.',
+  published: '2026-11-21',
+  updated: '2026-11-21',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Oszczędzanie pamięci w Chrome było wyłączone w nowym profilu Chrome 157.', source: 'chrome://settings/performance, 20 lis 2026' },
+    { text: 'Edge 158 usypia nieaktywne karty, domyślnie po 15 minutach.', source: 'edge://settings, 20 lis 2026' },
+    {
+      text: 'Ctrl+Shift+A przeszukuje otwarte karty w Chrome i Firefoksie.',
+      source: 'Pomoc Chrome; skróty Firefoksa 159',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Menu karty w Firefoksie ma opcję „Zamknij podwójne karty”.', source: 'Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Ile kart to za dużo?',
+      answer:
+        'Nie ma stałej liczby. Jest ich za dużo, gdy nie da się przeczytać tytułów kart, nie znajdujesz karty bez szukania albo przeglądarka zaczyna ostrzegać o problemach z wydajnością.',
+    },
+    {
+      question: 'Jak przestać mieć za dużo otwartych kart?',
+      answer:
+        'Codziennie zamykaj skończone karty, grupuj te do dzisiejszego zadania, zapisuj resztę w miejscu, które da się przeszukać, i raz w tygodniu rób krótkie porządki.',
+    },
+    {
+      question: 'Czy otwarte karty spowalniają komputer?',
+      answer:
+        'Mogą, bo każda otwarta strona zajmuje pamięć. Oszczędzanie pamięci w Chrome i usypianie kart w Edge zwalniają pamięć kart, których nie używasz; wczytują się ponownie, gdy do nich wrócisz.',
+    },
+    {
+      question: 'Czy mogę bezpiecznie zamknąć karty, które mogą mi się jeszcze przydać?',
+      answer:
+        'Tak, jeśli najpierw je zapiszesz: folder zakładek, menedżer sesji albo TabMerger zachowa adres, żebyś mógł go ponownie otworzyć. Zajrzyj do naszego poradnika o zapisywaniu wszystkich otwartych kart.',
+      link: { text: 'zapisywaniu wszystkich otwartych kart', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp', alt: 'TabMerger, „Now Open” (Teraz Otwarte), z trzema oknami przeglądarki i 18 kartami, jasny motyw' },
+    { src: '/blog/manage-too-many-tabs/tm-now-open-dark.webp', alt: 'TabMerger, „Now Open” (Teraz Otwarte), z trzema oknami przeglądarki i 18 kartami, ciemny motyw' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-light.webp', alt: 'Ustawienia TabMergera, karta „Data” (Dane): włączony „Auto-save open tabs” (Autozapis otwartych kart), a „When open tabs pass” (Gdy otwartych kart jest więcej niż) ustawione na „30 open tabs”, jasny motyw' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-dark.webp', alt: 'Ustawienia TabMergera, karta „Data” (Dane): włączony „Auto-save open tabs” (Autozapis otwartych kart), a „When open tabs pass” (Gdy otwartych kart jest więcej niż) ustawione na „30 open tabs”, ciemny motyw' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Ustawienia Chrome, „Performance” (Wydajność), z przełącznikiem „Memory Saver” (Oszczędzanie pamięci)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Ustawienia Edge, „Performance”, z włączoną opcją „Automatically put tabs to sleep” ustawioną na 15 minut' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'save-tabs', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp' },
+  ogImage: { src: '/blog/manage-too-many-tabs/og.png', alt: 'Karta z tytułem „Too many tabs? A four-step routine that works in any browser”: poradnik TabMergera, z trzema oknami przeglądarki w jednym miejscu' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'how-many', label: 'Ile to za dużo?' },
+    { id: 'close', label: '1. Zamknij' },
+    { id: 'group', label: '2. Pogrupuj' },
+    { id: 'save', label: '3. Zapisz' },
+    { id: 'schedule', label: '4. Zaplanuj porządki' },
+    { id: 'memory', label: 'Niech przeglądarka pomoże' },
+    { id: 'tabmerger', label: 'W TabMergerze' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['close', 'memory'],
+  browserFact: {
+    label: 'Ustawienie pamięci',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Ustawienia → System and performance → Performance',
+      firefox: 'Prawy przycisk myszy na karcie → Uśpij kartę',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Wykonaj cztery kroki, w tej kolejności: **zamknij** każdą kartę, z którą skończyłeś, **pogrupuj** karty do zadania, którym się teraz zajmujesz, **zapisz** karty „na później” w miejscu, które da się przeszukać, i **zaplanuj** dziesięciominutowe porządki raz w tygodniu. Działa to w Chrome, Edge i Firefoksie. Najwięcej miejsca zwalnia zapisywanie, a [TabMerger](/features) robi to jednym kliknięciem: wszystkie otwarte okna trafiają do nazwanej grupy, którą możesz w każdej chwili przeszukać i ponownie otworzyć.
+
+</QuickAnswer>
+
+<InstallCta>Zapisz wszystkie otwarte okna jednym kliknięciem i zamknij je bez żadnych strat. Za darmo dla Chrome, Edge i Firefoksa.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="how-many" title="Ile kart to za dużo?">
+
+Nie ma magicznej liczby i nie będziemy jej wymyślać. Karty stają się problemem, gdy przestają spełniać swoje zadanie, czyli trzymać pod ręką to, do czego wkrótce wrócisz. Zwróć uwagę na te sygnały:
+
+- Pasek kart pokazuje już tylko ikony i nie da się przeczytać tytułów.
+- Otwierasz stronę i okazuje się, że była już otwarta, i to dwa razy.
+- Zostawiasz karty otwarte „na wszelki wypadek”, bo zamknięcie ich wydaje się ich utratą.
+- Przeglądarka cię ostrzega. Chrome pokazuje **Alerty o problemach z wydajnością** („Performance issue alerts”), które proponują dezaktywację kart, gdy wykryje słabą wydajność.
+
+Ostatni sygnał to problem przeglądarki i da się go rozwiązać (niżej). Pierwsze trzy to problem z porządkowaniem, a właśnie to naprawia rutyna.
+
+Zrzuty ekranu przeglądarek pokazują angielski interfejs. Gdy polska nazwa jest inna, angielska pojawia się w nawiasie przy pierwszym użyciu.
+
+</Section>
+
+<Section id="close" title="1. Zamknij to, z czym skończyłeś">
+
+Zacznij od najłatwiejszej wygranej. Zamknij karty, które spełniły już swoje zadanie: wyszukiwanie, na które masz już odpowiedź, przeczytany artykuł, stronę płatności.
+
+- <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> (<Kbd>⌘</Kbd>+<Kbd>W</Kbd> na Macu) zamyka bieżącą kartę we wszystkich trzech przeglądarkach.
+- Zamknąłeś o jedną za dużo? <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> otworzy ją ponownie. Więcej w naszym zestawieniu [skrótów klawiszowych do kart](/blog/tab-keyboard-shortcuts).
+
+<BrowserPanels section="close">
+<BrowserPanel browser="chrome">
+
+Naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> na Macu), żeby otworzyć **Wyszukiwanie kart** („Tab Search”): listę wszystkich otwartych kart z przyciskiem zamykania w każdym wierszu. Zamknij skończone karty prosto z listy.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Lista skrótów klawiszowych Edge nie ma klawisza do przeszukiwania otwartych kart, więc przejdź wzdłuż paska kart: kliknij kartę, z którą skończyłeś, i naciśnij <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd>.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> wyświetla listę wszystkich kart, żebyś mógł znaleźć i zamknąć te skończone.
+- Kliknij prawym przyciskiem myszy dowolną kartę i wybierz **Zamknij podwójne karty** („Close Duplicate Tabs”), żeby za jednym razem pozbyć się powtórzeń.
+
+TabMerger usuwa powtórzenia we **wszystkich** oknach naraz; zobacz, [jak zamknąć zduplikowane karty](/blog/close-duplicate-tabs).
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>zamykanie jest bezpieczne tylko dla kart, co do których masz pewność. Wszystko, przy czym się wahasz, trafia do kroku 3, a nie do kosza.</Catch>
+
+</Section>
+
+<Section id="group" title="2. Pogrupuj karty do dzisiejszego zadania">
+
+Grupy kart nadają zestawowi kart nazwę i kolor, a po zwinięciu zostaje z nich jedna etykieta. Mają je Chrome, Edge i Firefox: kliknij kartę prawym przyciskiem myszy i dodaj ją do nowej grupy.
+
+Trzymaj jedną grupę na każde zadanie, nad którym naprawdę dziś pracujesz, i zwijaj te, na które nie patrzysz. Zwinięta grupa zajmuje tyle miejsca co jedna karta. To, jak grupy są zapisywane, synchronizowane i ponownie otwierane, zależy od przeglądarki; nasz [poradnik o grupach kart w Chrome](/blog/chrome-tab-groups) opisuje szczegóły i ograniczenia.
+
+</Section>
+
+<Section id="save" title="3. Zapisz karty „na później”">
+
+To krok, który naprawdę skraca pasek kart. Karta, która może przydać się w przyszłym tygodniu, nie musi być otwarta; musi dać się znaleźć.
+
+- **Dodaj okno do zakładek.** <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> zapisuje wszystkie karty bieżącego okna w nowym folderze zakładek. Nasz poradnik o [zapisywaniu wszystkich otwartych kart](/blog/save-all-open-tabs) pokazuje to dla każdej przeglądarki.
+- **Użyj menedżera sesji.** Zapisuje całe okna, z nazwami, i przywraca je jednym kliknięciem. Zobacz, [co robi menedżer sesji przeglądarki](/blog/browser-session-manager) i czym różni się od zakładek.
+- **Przeczytaj później.** Jeśli to artykuł, lista do przeczytania jest lepsza niż karta. Nie wiesz, gdzie odłożyć stronę? Nasz [poradnik karty czy zakładki](/blog/tabs-vs-bookmarks) ma tabelę, która pomaga zdecydować.
+
+Potem zamknij to, co zapisałeś. Na tym polega cały trik: to zapisanie sprawia, że zamykanie jest bezpieczne.
+
+</Section>
+
+<Section id="schedule" title="4. Wpisz cotygodniowe porządki do kalendarza">
+
+Karty wracają. Krótkie, regularne porządki trzymają ich liczbę w ryzach bez siły woli:
+
+1. Raz w tygodniu otwórz zapisane foldery lub grupy.
+2. Usuń to, czego już nie potrzebujesz. Jeśli czegoś nie otworzyłeś od miesiąca, raczej już tego nie zrobisz.
+3. Zamknij okna, które zapisałeś w ciągu tygodnia.
+
+Jeśli zawodowo zajmujesz się researchem (studenci, analitycy, programiści czytający dokumentację), trzymaj jedną zapisaną grupę na projekt i porządkuj ją, gdy projekt się skończy, nie wcześniej.
+
+</Section>
+
+<Section id="memory" title="Pozwól przeglądarce zwolnić pamięć">
+
+Przeglądarki potrafią sprawić, że bezczynne karty przestają zajmować pamięć, bez ich zamykania. Karta zostaje na pasku i wczytuje się ponownie, gdy ją klikniesz.
+
+<BrowserPanels section="memory">
+<BrowserPanel browser="chrome">
+
+Włącz **Oszczędzanie pamięci** („Memory Saver”): **Ustawienia → Wydajność** („Settings → Performance”) albo wklej `chrome://settings/performance` w pasek adresu.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Ustawienia Chrome, „Performance” (Wydajność), z przełącznikiem „Memory Saver” (Oszczędzanie pamięci)" width={1600} height={524} eager boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">„Memory Saver” (Oszczędzanie pamięci) w Chrome, wyłączone w nowym profilu Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Zaznacz **Automatically put tabs to sleep** w **Ustawienia → System and performance → Performance** i wybierz, jak długo karta czeka, zanim zostanie uśpiona.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Ustawienia Edge, „Performance”, z włączoną opcją „Automatically put tabs to sleep” ustawioną na 15 minut" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Usypianie kart w Edge, domyślnie włączone: nieaktywne karty zasypiają po 15 minutach.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Kliknij kartę prawym przyciskiem myszy i wybierz **Uśpij kartę** („Unload Tab”), żeby ręcznie zwolnić jej pamięć.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>to pomaga komputerowi, nie tobie. Pięćdziesiąt uśpionych kart to nadal pięćdziesiąt kart do przejrzenia. Używaj tego obok rutyny, nie zamiast niej.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="Zrób to w TabMergerze">
+
+[TabMerger](/features), nasze bezpłatne rozszerzenie do Chrome, Edge i Firefoksa, zamienia kroki 3 i 4 w kilka kliknięć. **Teraz Otwarte** pokazuje wszystkie otwarte okna i ich karty w jednym miejscu, więc widzisz cały stos naraz. Zapisz je wszystkie w nazwanej grupie przez **Scal z bieżącą sesją**, zamknij okna i znajdź dowolną kartę jednym skrótem <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>, niezależnie od tego, czy jest otwarta, zapisana, czy niedawno zamknięta. Wolny komputer to często pierwszy sygnał, że kart jest za dużo; [zobacz, jak zapisywanie i zamykanie zwalnia pamięć](/blog/too-many-tabs-slow-browser).
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-now-open" alt="TabMerger, „Now Open” (Teraz Otwarte), z trzema oknami przeglądarki i 18 kartami, jasny motyw" darkAlt="TabMerger, „Now Open” (Teraz Otwarte), z trzema oknami przeglądarki i 18 kartami, ciemny motyw" boxes={[{ id: 'now-open-summary', label: 'Otwarte okna i karty' }]} source="TabMerger 3.16.1">„Now Open” (Teraz Otwarte): trzy okna i 18 kart, przed porządkami.</ThemedScreenshot>
+
+Na cotygodniowe porządki **Ustawienia → Dane → Autozapis otwartych kart** może zapisywać otwarte karty jako nową grupę według harmonogramu albo gdy tylko przekroczysz 20, 30, 50, 75 lub 100 otwartych kart. Plan darmowy zachowuje 2 najnowsze autozapisy, które wliczają się do jego 5 grup i 50 kart; Pro zachowuje wszystkie. Rutynę, która nie pozwala stosowi wrócić, opisuje [codzienny sposób pracy z kartami w TabMergerze](/blog/tabmerger-daily-workflow).
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-auto-save-threshold" alt="Ustawienia TabMergera, karta „Data” (Dane): włączony „Auto-save open tabs” (Autozapis otwartych kart), a „When open tabs pass” (Gdy otwartych kart jest więcej niż) ustawione na „30 open tabs”, jasny motyw" darkAlt="Ustawienia TabMergera, karta „Data” (Dane): włączony „Auto-save open tabs” (Autozapis otwartych kart), a „When open tabs pass” (Gdy otwartych kart jest więcej niż) ustawione na „30 open tabs”, ciemny motyw" boxes={[{ id: 'threshold', label: 'Gdy otwartych kart jest więcej niż' }]} source="TabMerger 3.16.1">„Auto-save open tabs” (Autozapis otwartych kart), ustawiony tak, by ruszył, gdy otwartych kart jest więcej niż 30.</ThemedScreenshot>
+
+Zapisane karty dostają też bursztynową kropkę, gdy przekroczą wybrany przez ciebie wiek (7, 14, 30 lub 60 dni), a menu **⋯** grupy ma opcję **Usuń duplikaty kart**.
+
+<InstallCta>Za darmo dla Chrome, Edge i Firefoksa. Na start nie potrzebujesz konta.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

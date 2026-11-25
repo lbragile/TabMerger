@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'edge-collections-replacement',
+  title: 'Edge Koleksiyonlar kaldırıldı: yerine ne kullanmalı?',
+  navTitle: 'Edge Koleksiyonlar alternatifi',
+  seoTitle: 'Edge Koleksiyonlar kaldırıldı mı? En iyi alternatif (ve taşıma adımları)',
+  description:
+    'Microsoft, Koleksiyonlar (Collections) özelliğini Edge 149 sürümünden itibaren kaldırdı. Koleksiyonlarınıza ne olduğu, onları nasıl dışarı alacağınız ve Edge Koleksiyonlar alternatifi TabMerger’a adlandırılmış gruplar olarak nasıl aktaracağınız.',
+  shareSummary: 'Edge 149 ile Koleksiyonlar kaldırıldı. Sayfalarınız nerede, şimdi ne kullanmalı?',
+  dek: 'Kaydettiğiniz sayfalar kaybolmadı. İşte nereye gittikleri ve onlar için daha iyi bir yer.',
+  published: '2026-12-06',
+  updated: '2026-12-06',
+  testedOn: ['Edge 158.0.4370.33', 'Chrome 157.0.8103.80'],
+  keyFacts: [
+    {
+      text: 'Koleksiyonlar, 4 Haziran 2026’da yayınlanan Edge 149’dan itibaren kullanılamıyor.',
+      source: 'Microsoft Destek',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'Edge 145’ten itibaren Koleksiyonlar’a sayfa eklenemiyordu.', source: 'Microsoft Destek' },
+    {
+      text: 'Move to Favorites sayfaların adreslerini korur, görselleri ve notları korumaz.',
+      source: 'Microsoft Destek',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'TabMerger, “Diğer favoriler” içindeki her klasörü adlandırılmış bir gruba dönüştürür.', source: 'TabMerger 3.16.1’de test edildi, 21 Kas 2026' },
+  ],
+  faq: [
+    {
+      question: 'Microsoft, Edge Koleksiyonlar’ı kaldırdı mı?',
+      answer:
+        'Evet. Microsoft’un destek sayfasına göre Koleksiyonlar, 4 Haziran 2026’da yayınlanan Edge 149’dan itibaren kullanılamıyor; Edge 145’ten itibaren de yeni sayfa eklenemiyordu.',
+    },
+    {
+      question: 'Koleksiyonlarım nereye gitti?',
+      answer:
+        'Microsoft, her koleksiyonu bir sık kullanılanlar klasörüne dönüştüren Move to Favorites seçeneğini sundu (yalnızca sayfalar). Kişisel hesaplar kaydedilmiş koleksiyonları bing.com/saves adresinde de görebilir; iş veya okul hesapları onları dışa aktarabiliyordu.',
+    },
+    {
+      question: 'Edge Koleksiyonlar için en iyi alternatif hangisi?',
+      answer:
+        'TabMerger: arayabileceğiniz, not ve hatırlatıcı ekleyebileceğiniz, Pro ile uçtan uca şifreli eşitleyebileceğiniz, adlandırılmış ve renk kodlu sekme grupları. Chrome ve Firefox’ta da çalışır.',
+    },
+    {
+      question: 'Koleksiyonlarımı TabMerger’a aktarabilir miyim?',
+      answer: 'Evet. Koleksiyon klasörlerini “Diğer favoriler” içine taşıyın, sık kullanılanlarınızı HTML dosyası olarak dışa aktarın ve dosyayı Ayarlar → Veri bölümünden içe aktarın: bu klasörlerin her biri bir TabMerger grubuna dönüşür.',
+    },
+  ],
+  images: [
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-light.webp', alt: 'favorites_edge.html dosyası için Import 2 groups? (2 grup içe aktarılsın mı?) diye soran TabMerger iletişim kutusu, açık tema' },
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-dark.webp', alt: 'favorites_edge.html dosyası için Import 2 groups? (2 grup içe aktarılsın mı?) diye soran TabMerger iletişim kutusu, koyu tema' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-light.webp', alt: 'Sık kullanılanlar klasörlerinden aktarılan Trip to Lisbon ve Thesis reading gruplarıyla TabMerger kenar çubuğu, açık tema' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-dark.webp', alt: 'Sık kullanılanlar klasörlerinden aktarılan Trip to Lisbon ve Thesis reading gruplarıyla TabMerger kenar çubuğu, koyu tema' },
+  ],
+  tags: ['edge', 'bookmarks', 'save-tabs', 'tab-manager'],
+  sources: [
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'EdgeCollectionsEnabled policy (obsolete)',
+      publisher: 'Microsoft Learn',
+      url: 'https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies/EdgeCollectionsEnabled',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/edge-collections-replacement/cover-edge-light.webp' },
+  ogImage: { src: '/blog/edge-collections-replacement/og.png', alt: 'Edge Koleksiyonlar kaldırıldı: yerine ne kullanmalı? Sık kullanılanlar klasörlerinin grup olarak aktarıldığı bir TabMerger rehberi' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'what-happened', label: 'Ne oldu' },
+    { id: 'where', label: 'Sayfalarınız nerede' },
+    { id: 'move', label: 'TabMerger’a taşıyın' },
+    { id: 'why', label: 'Neden TabMerger' },
+    { id: 'faq', label: 'SSS' },
+  ],
+}
+
+<QuickAnswer>
+
+Evet, kaldırıldı: Microsoft’a göre **Koleksiyonlar (Collections), Edge 149’dan itibaren kullanılamıyor** (4 Haziran 2026’da yayınlandı). Sayfalarınız silinmedi: **Move to Favorites** (sık kullanılanlara taşıma seçeneği) her koleksiyonu bir sık kullanılanlar klasörüne dönüştürdü. En iyi yeni yuva [TabMerger](/features): sık kullanılanlarınızı HTML olarak dışa aktarın, dosyayı içe aktarın; “Diğer favoriler” içindeki her klasör, Edge, Chrome ve Firefox’ta notlar, hatırlatıcılar ve şifreli eşitlemeyle aranabilir, adlandırılmış bir gruba dönüşür.
+
+</QuickAnswer>
+
+<InstallCta>Eski koleksiyonlarınızı adlandırılmış, aranabilir gruplar olarak geri getirin. Edge, Chrome ve Firefox için ücretsiz.</InstallCta>
+
+<Section id="what-happened" title="Microsoft, Edge Koleksiyonlar’ı gerçekten kaldırdı mı?">
+
+Evet, Microsoft’un kendi sayfalarına göre aşama aşama:
+
+<ComparisonTable
+  head={['Edge sürümü', 'Ne değişti']}
+  rowHeaders
+  rows={[
+    ['145', 'Koleksiyonlar’a sayfa eklenemez oldu; mevcut olanlar görünür kaldı'],
+    ['149 (4 Haziran 2026)', 'Koleksiyonlar artık kullanılamıyor'],
+    ['153', 'Koleksiyonlar’ın yönetici ilkesi “because the Collections feature was removed” (Koleksiyonlar özelliği kaldırıldığı için) geçersiz hale geldi'],
+  ]}
+/>
+
+Microsoft’un gerekçesi, kendi sözleriyle: “retiring Collections in Edge, to better simplify our offerings” (tekliflerini sadeleştirmek için Edge’de Koleksiyonlar’ı kullanımdan kaldırıyor).
+
+</Section>
+
+<Section id="where" title="Koleksiyonlarım nereye gitti?">
+
+Kullanımdan kaldırma sürecinde Edge, Koleksiyonlar bölmesinde iki seçenek gösterdi:
+
+- **Move to Favorites** (Microsoft’un önerdiği): her koleksiyon sık kullanılanlarınızda bir klasör oldu. Yalnızca kaydedilmiş web sayfaları taşındı; görseller ve notlar taşınmadı.
+- **Verilerinizi dışarı aktarma** (Export your data): yalnızca iş veya okul hesapları için.
+
+Kişisel Microsoft hesapları önceden kaydedilmiş koleksiyonları `bing.com/saves` adresinde de bulabilir. Yani önce Sık Kullanılanlar’a bakın (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>): koleksiyonlarınız büyük olasılıkla orada klasör olarak duruyor.
+
+</Section>
+
+<Section id="move" title="Koleksiyonlarımı TabMerger’a nasıl taşırım?">
+
+Birkaç dakika yeter; eski her koleksiyon bir gruba dönüşür:
+
+1. Edge’de Sık Kullanılanlar’ı açın (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>). Eski koleksiyonlarınız **Sık Kullanılanlar çubuğu** (Favorites bar) içindeyse bu klasörleri **Diğer favoriler** (Other favorites) içine taşıyın. Dışa aktarma Sık Kullanılanlar çubuğunun tamamını tek bir klasör olarak yazar; içinde kalan klasörler tek bir grupta birleşmiş olarak gelir.
+2. **Export favorites** seçeneğini seçin ve HTML dosyasını kaydedin.
+3. TabMerger’ı açın → **Ayarlar → Veri** → **Dosya içe aktar** (Settings → Data → Import file) ve bu dosyayı seçin.
+4. Onaylayın. “Diğer favoriler” içindeki her klasör, klasörün adını taşıyan bir grup olur; alt klasörler de o grubun içine katılır. Sık Kullanılanlar çubuğu ayrı bir grup olarak gelir.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Dışa aktarılan sık kullanılanları içe aktarma" steps={[{ title: 'Onaylayın' }, { title: 'Gruplarınız' }]}>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-import-confirm" alt="favorites_edge.html dosyası için Import 2 groups? (2 grup içe aktarılsın mı?) diye soran TabMerger iletişim kutusu, açık tema" darkAlt="favorites_edge.html dosyası için Import 2 groups? (2 grup içe aktarılsın mı?) diye soran TabMerger iletişim kutusu, koyu tema" boxes={[{ id: 'import-confirm', label: 'İçe aktar' }]} source="TabMerger 3.16.1">TabMerger bulduğu klasörleri sayar ve önce size sorar.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-imported-groups" alt="Sık kullanılanlar klasörlerinden aktarılan Trip to Lisbon ve Thesis reading gruplarıyla TabMerger kenar çubuğu, açık tema" darkAlt="Sık kullanılanlar klasörlerinden aktarılan Trip to Lisbon ve Thesis reading gruplarıyla TabMerger kenar çubuğu, koyu tema" boxes={[{ id: 'imported', label: 'Klasör adlarını taşıyan gruplar' }]} source="TabMerger 3.16.1">Her klasör artık aynı ada ve aynı sayfalara sahip bir grup.</ThemedScreenshot>
+</Carousel>
+
+“Diğer favoriler” içindeki diğer klasörleriniz de gelir; ihtiyacınız olmayan grupları silin. Tüm içe aktarma biçimleri [sekmeleri TabMerger’a aktarma](/blog/import-tabs-into-tabmerger) yazısında anlatılıyor. Ücretsiz sürüm 5 grup ve 50 sekme tutar; bu sınırı aşacak bir içe aktarma, hiçbir şey eklenmeden durdurulur. [Pro](/pricing) sürümünde sınır yoktur.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Edge Favorites page menu with Export favorites. */}
+
+</Section>
+
+<Section id="why" title="TabMerger neden Koleksiyonlar’dan daha iyi bir yuva?">
+
+- **Tüm sekme setleri, tek tıkla.** **Mevcutla birleştir** (Merge with current), açık tüm pencereleri adlandırılmış bir gruba kaydeder.
+- **Her sekmeye not ve hatırlatıcı,** Koleksiyonlar’ın taşıyamadığı notların yerine: bir sekmeye sağ tıklayıp **Not ekle** (Add note) veya **Bana hatırlat…** (Remind me…) seçin.
+- **Tek arama** açık, kayıtlı ve yakın zamanda kapatılan sekmeler için: <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+- **Tarayıcılar arası.** Edge, Chrome ve Firefox’ta aynı gruplar, Pro ile uçtan uca şifreli eşitlenir.
+- **Sizde kalır.** Her şeyi istediğiniz zaman JSON olarak dışa aktarın; hiçbir şey bir şirketin bir özelliği yaşatmasına bağlı değil.
+
+Sekme yöneticilerinde yeni misiniz? [Tarayıcı oturum yöneticisi ne yapar](/blog/browser-session-manager) ve [en iyi sekme yöneticisi uzantıları](/blog/best-tab-manager-extensions) yazıları genel bir bakış sunuyor.
+
+<InstallCta>Edge, Chrome ve Firefox için ücretsiz. Başlamak için hesap gerekmez.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

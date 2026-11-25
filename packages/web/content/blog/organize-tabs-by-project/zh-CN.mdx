@@ -1,0 +1,160 @@
+export const post = {
+  slug: 'organize-tabs-by-project',
+  title: '按项目整理标签页：一个项目，一个分组',
+  navTitle: '按项目整理标签页',
+  seoTitle: '如何用 TabMerger 按项目整理浏览器标签页',
+  description:
+    '给每个项目一个专属的 TabMerger 分组：工作的每个部分各用一个命名窗口，用备注记下背景，完成的项目放进归档。分步讲清分组为什么这样设计、该怎么用。',
+  shareSummary: '每个项目一个分组，组内是命名窗口，完成的工作放进归档。',
+  dek: '切换项目不该意味着在标签页里翻来找去。给每个项目一个可以打开、关闭和归档的固定位置。',
+  published: '2026-12-15',
+  updated: '2026-12-15',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: '一个 TabMerger 分组可以容纳多个窗口，每个窗口都有自己的名称和备注。', source: 'TabMerger 3.16.1' },
+    { text: '加了星标的分组固定在侧边栏顶部。', source: 'TabMerger 3.16.1 源代码' },
+    { text: '已归档的分组为只读，点击“恢复”即可找回。', source: 'TabMerger 3.16.1' },
+    { text: '免费版最多 5 个分组、50 个标签页，已归档的分组也计算在内；Pro 没有限制。', source: 'TabMerger 价格', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '按项目整理标签页，最好的方法是什么？',
+      answer:
+        '给每个项目建一个 TabMerger 分组，再按工作的不同部分拆成几个命名窗口（例如设计、开发、反馈）。为分组添加一条写明背景的备注，给本周在做的项目加星标，项目完成后就把它归档。',
+    },
+    {
+      question: '一个分组可以包含多个窗口吗？',
+      answer: '可以。一个 TabMerger 分组可以包含任意数量的窗口。每个窗口都可以有自己的名称、备注和星标，并会作为独立的浏览器窗口打开。',
+    },
+    {
+      question: '归档分组有什么作用？',
+      answer:
+        '它会把分组移到侧边栏的“已归档”区域，并设为只读：不再碍事，但也没有消失。点击其中的标签页照样能打开，点击“恢复”则会把分组放回你的列表。',
+    },
+    {
+      question: '保存后，Chrome 的标签页分组还在吗？',
+      answer: '还在。保存的标签页会保留其 Chrome 标签页分组的名称和颜色，所以你在标签栏里分好组的项目，在 TabMerger 中也保持同样的结构。',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp', alt: 'Website redesign 分组，包含 Design、Build 和 Feedback 三个命名窗口，浅色主题' },
+    { src: '/blog/organize-tabs-by-project/tm-project-group-dark.webp', alt: 'Website redesign 分组，包含 Design、Build 和 Feedback 三个命名窗口，深色主题' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-light.webp', alt: '侧边栏中某个分组的右键菜单，其中有 Archive group（归档分组），浅色主题' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-dark.webp', alt: '侧边栏中某个分组的右键菜单，其中有 Archive group（归档分组），深色主题' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-light.webp', alt: '一个只读的已归档分组，带有 Restore（恢复）按钮，侧边栏中的 Archived（已归档）区域已展开，浅色主题' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-dark.webp', alt: '一个只读的已归档分组，带有 Restore（恢复）按钮，侧边栏中的 Archived（已归档）区域已展开，深色主题' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-by-project/og.png', alt: '用 TabMerger 按项目整理标签页：一个包含 Design、Build 和 Feedback 窗口的分组' },
+  toc: [
+    { id: 'quick', label: '快速回答' },
+    { id: 'problem', label: '当多个项目挤在一条标签栏里' },
+    { id: 'why', label: '分组为什么这样设计' },
+    { id: 'steps', label: '设置一个项目' },
+    { id: 'archive', label: '归档已完成的工作' },
+    { id: 'benefit', label: '你能得到什么' },
+    { id: 'habits', label: '好习惯' },
+    { id: 'plans', label: '免费版与 Pro' },
+    { id: 'faq', label: '常见问题' },
+  ],
+}
+
+<QuickAnswer>
+
+给每个项目一个专属的 [TabMerger](/features) 分组。在组内，工作的每个部分各用一个命名窗口（“设计”“开发”“反馈”），再加一条写明背景的分组备注。给本周在做的项目加星标，让它们留在顶部；项目完成后，用**归档分组**（Archive group）把它以只读方式收起来，一个标签页都不会删除。
+
+</QuickAnswer>
+
+<InstallCta>每个项目都有自己的位置，一键即可打开。适用于 Chrome、Edge 和 Firefox，免费。</InstallCta>
+
+<Section id="problem" title="当三个项目挤在同一条标签栏里">
+
+你正在改版一个网站、写一份报告，同时还在规划一次旅行。到了周三，浏览器里三者全挤在一起：设计稿旁边是机票搜索，报告的两份资料之间夹着一个拉取请求。每次切换项目都得把整条标签栏扫一遍，关掉任何东西都让人不安，因为你分不清它属于哪个项目。
+
+浏览器自带的标签页分组在单个窗口内有用，但一个项目很少能装进一个窗口，而窗口一关，就再也说不清那些标签页去了哪里。
+
+</Section>
+
+<Section id="why" title="TabMerger 的分组为什么这样设计">
+
+- **分组是项目，而不是窗口**。每个分组可以容纳工作所需的任意数量窗口，每个窗口都作为独立的浏览器窗口打开。这正是项目的真实样子：设计相关的标签页在这里，开发相关的在那里。
+- **名称和备注留住背景信息**。窗口可以重命名，也可以有自己的备注，分组也一样。几个月后，“反馈”这个名称加上一条记录了决定内容的备注，远比一排网站图标更能说明问题。
+- **星标替你排序**。加了星标的分组固定在侧边栏顶部，加了星标的窗口在组内排在最前面。
+- **归档是收起来，而不是删除**。已归档的分组会离开你的列表，进入**已归档**（Archived）区域并变为只读，不会有东西被误挪动。其中的标签页仍可一键打开，**恢复**（Restore）可以把它找回来。
+- **保留浏览器里的结构**。保存的标签页会保留其 Chrome 标签页分组的名称和颜色，所以你已在标签栏里分好组的项目会保持原样。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-project-group" alt="Website redesign 分组，包含 Design、Build 和 Feedback 三个命名窗口，浅色主题" darkAlt="Website redesign 分组，包含 Design、Build 和 Feedback 三个命名窗口，深色主题" boxes={[{ id: 'windows', label: '按阶段划分的窗口' }]} source="TabMerger 3.16.1">一个项目，三个窗口，每个窗口都以它负责的那部分工作命名。</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="五步设置一个项目">
+
+1. 在侧边栏点击**添加分组**（Add Group），用项目名给分组命名。点击它的颜色圆点即可选择颜色。
+2. 打开项目的各个网页，然后在分组的 **⋯** 菜单中选择**与当前合并**（Merge with current），把当前打开的窗口保存进去。
+3. 通过每个窗口的 **⋯** 菜单（**重命名窗口**，Rename window），按其中的工作内容重命名。
+4. 添加分组备注（**⋯** 菜单中的**添加备注**，Add note），写下背景：截止日期、工单、怎样才算“完成”。
+5. 项目进行期间，给分组加星标（名称旁边的星形图标）。
+
+之后要在项目之间移动标签页，可以把它们拖到侧边栏的某个分组上，或使用标签页右键菜单中的**移动到分组**（Move to group）和**复制到分组**（Copy to group）。**合并窗口**（Unite windows）和**拆分窗口**（Split windows）可以一步调整分组的结构。
+
+</Section>
+
+<Section id="archive" title="归档已完成的工作">
+
+项目完成后，在侧边栏右键点击它的分组，选择**归档分组**。分组会以只读方式移到**已归档**区域：你仍然可以打开其中任何一个标签页，而**恢复**会把整个分组放回你的列表。
+
+<Carousel label="归档一个项目" steps={[{ title: '归档' }, { title: '已归档' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archive-menu" alt="侧边栏中某个分组的右键菜单，其中有 Archive group（归档分组），浅色主题" darkAlt="侧边栏中某个分组的右键菜单，其中有 Archive group（归档分组），深色主题" boxes={[{ id: 'archive', label: '归档分组' }]} source="TabMerger 3.16.1">在侧边栏中右键点击分组。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archived" alt="一个只读的已归档分组，带有 Restore（恢复）按钮，侧边栏中的 Archived（已归档）区域已展开，浅色主题" darkAlt="一个只读的已归档分组，带有 Restore（恢复）按钮，侧边栏中的 Archived（已归档）区域已展开，深色主题" boxes={[{ id: 'banner', label: '恢复之前为只读' }]} source="TabMerger 3.16.1">不再碍事，却依然一键可开。</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="benefit" title="你能得到什么">
+
+切换项目变成了打开一个分组，而不是在标签栏里翻找。你可以关掉手头不做的项目的所有窗口，同时清楚地知道它的标签页在哪里，侧边栏里也只显示正在进行的内容。
+
+</Section>
+
+<Section id="habits" title="好习惯">
+
+- **按项目建分组，而不是按主题**。用“网站改版”，而不是“设计链接”。
+- **按阶段或角色给窗口命名**，而不是按网站：“反馈”比“GitHub”用得更久。
+- **星标最多给几个**。星标的意思是“本周”。
+- **交付当天就归档**。已归档的项目仍然一键可达，没有理由继续留在列表里。
+- **让 URL 规则替繁忙的项目归置新标签页**：参见[用 URL 规则自动整理标签页](/blog/auto-sort-tabs-with-url-rules)。对于需要大量调研的项目，[做研究时如何整理标签页](/blog/organize-tabs-for-research)一文还会加上备注和提醒。
+
+</Section>
+
+<Section id="plans" title="免费版与 Pro">
+
+<ComparisonTable
+  head={['', '免费版', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['分组', '5 个（已归档的也计算在内）', '无限制'],
+    ['标签页', '50', '无限制'],
+    ['窗口、名称、备注、星标、归档', '有', '有'],
+    ['在你的其他设备上使用这些项目', '无', '有，端到端加密'],
+  ]}
+/>
+
+这里介绍的所有整理工具都包含在免费版中；限制只在于分组和标签页的数量。[Pro](/pricing) 取消这些限制，并在你的设备之间同步项目。
+
+<InstallCta>每个项目都有自己的分组，适用于 Chrome、Edge 和 Firefox。免费开始使用。</InstallCta>
+
+围绕项目的完整日常流程，请参见[用 TabMerger 打造每日标签页工作流](/blog/tabmerger-daily-workflow)。
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

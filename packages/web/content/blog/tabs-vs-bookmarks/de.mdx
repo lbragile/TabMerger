@@ -1,0 +1,162 @@
+export const post = {
+  slug: 'tabs-vs-bookmarks',
+  title: 'Tabs vs. Lesezeichen: was offen bleibt und was du speicherst',
+  navTitle: 'Tabs vs. Lesezeichen',
+  seoTitle: 'Tabs vs. Lesezeichen: Wann ein Tab offen bleibt und wann du ihn speicherst',
+  description:
+    'Lesezeichen setzen oder den Tab offen lassen? Eine kurze Entscheidungstabelle für Lesestoff, Projektarbeit und Nachschlageseiten, dazu der Mittelweg: gespeicherte Tab-Gruppen, die du durchsuchen und mit einem Klick wieder öffnen kannst.',
+  shareSummary: 'Lesezeichen oder offen lassen? Eine Entscheidungstabelle und der Mittelweg der gespeicherten Gruppe.',
+  dek: 'Offene Tabs sind für heute. Lesezeichen sind für Jahre. Alles dazwischen gehört in eine gespeicherte Gruppe.',
+  published: '2026-11-28',
+  updated: '2026-11-28',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D speichert jeden Tab des Fensters als Lesezeichen, in allen drei Browsern.', source: 'Hilfe zu Chrome und Edge; Tastenkürzel von Firefox 159' },
+    { text: 'TabMerger-Gruppen bewahren ganze Fenster samt Notiz auf und öffnen sie mit einem Klick wieder.', source: 'TabMerger 3.16.1' },
+    { text: 'Ctrl+K in TabMerger durchsucht offene, gespeicherte und kürzlich geschlossene Tabs auf einmal.', source: 'TabMerger 3.16.1' },
+    { text: 'Kostenlos: 5 Gruppen und 50 Tabs; Pro ist unbegrenzt und synchronisiert.', source: 'TabMerger-Preise', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Sollte ich Lesezeichen setzen oder Tabs offen lassen?',
+      answer:
+        'Lass nur offen, was du heute brauchst. Speichere laufende Arbeit als TabMerger-Gruppe, damit sie als Fenster wieder aufgeht, und setze Lesezeichen für Seiten, die du in Monaten oder Jahren noch brauchst.',
+    },
+    {
+      question: 'Machen offene Tabs meinen Browser langsam?',
+      answer: 'Jede offene Seite belegt Arbeitsspeicher. Am einfachsten ist es, Tabs, die du gerade nicht nutzt, zu speichern und zu schließen; mehr dazu in unserem Ratgeber zu zu vielen Tabs und einem langsamen Browser.',
+      link: { text: 'zu vielen Tabs und einem langsamen Browser', href: '/blog/too-many-tabs-slow-browser' },
+    },
+    {
+      question: 'Was ist der Unterschied zwischen einem Lesezeichen und einer gespeicherten Tab-Gruppe?',
+      answer:
+        'Ein Lesezeichen ist eine einzelne Seite in einem Ordner. Eine TabMerger-Gruppe bewahrt ganze Fenster mit Tabs auf, mit Name, Farbe und Notiz, und öffnet sie alle auf einmal wieder.',
+    },
+    {
+      question: 'Kann ich Lesezeichen in Tab-Gruppen umwandeln?',
+      answer: 'Ja. Exportiere deine Lesezeichen als HTML-Datei und importiere sie in TabMerger unter Einstellungen → Daten: Jeder Ordner der obersten Ebene wird zu einer Gruppe.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-light.webp', alt: 'TabMerger-Gruppe „Read this week“ mit vier gespeicherten Tabs und einer Gruppennotiz, helles Design' },
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-dark.webp', alt: 'TabMerger-Gruppe „Read this week“ mit vier gespeicherten Tabs und einer Gruppennotiz, dunkles Design' },
+  ],
+  tags: ['tab-management', 'bookmarks', 'save-tabs', 'tab-manager', 'browser-productivity'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-vs-bookmarks/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/tabs-vs-bookmarks/og.png', alt: 'Tabs vs. Lesezeichen: ein TabMerger-Ratgeber, mit einer gespeicherten Gruppe von Tabs, die diese Woche gelesen werden sollen' },
+  toc: [
+    { id: 'quick', label: 'Kurze Antwort' },
+    { id: 'decide', label: 'Die Entscheidungstabelle' },
+    { id: 'tabs', label: 'Wann Tabs offen bleiben' },
+    { id: 'bookmarks', label: 'Wann ein Lesezeichen passt' },
+    { id: 'middle', label: 'Der Mittelweg' },
+    { id: 'tabmerger', label: 'So geht’s in TabMerger' },
+    { id: 'faq', label: 'Häufige Fragen' },
+  ],
+}
+
+<QuickAnswer>
+
+Lass einen Tab nur offen, wenn du ihn **heute** brauchst. Setz ein Lesezeichen, wenn du die Seite noch **in Monaten oder Jahren** willst. Für alles dazwischen (ein Projekt, das du nächste Woche fortsetzt, eine Leseliste, laufende Recherche) speicherst du die Tabs als **Gruppe** in [TabMerger](/features): Das ganze Fenster bleibt erhalten, lässt sich mit <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> durchsuchen und ist mit einem Klick wieder auf dem Bildschirm.
+
+</QuickAnswer>
+
+<InstallCta>Die Tabs von heute mit einem Klick als Gruppe speichern. Kostenlos für Chrome, Edge und Firefox.</InstallCta>
+
+<Section id="decide" title="Lesezeichen setzen oder den Tab offen lassen?">
+
+Stell dir eine Frage: **Wann brauche ich das wieder?**
+
+<ComparisonTable
+  head={['Du brauchst es …', 'Bester Ort', 'Warum']}
+  rowHeaders
+  highlight={1}
+  minWidth="34rem"
+  rows={[
+    ['In den nächsten Stunden', 'Ein offener Tab', 'Du arbeitest gerade damit'],
+    ['Später in dieser Woche, zusammen mit anderen Tabs', 'Eine TabMerger-Gruppe', 'Das ganze Set kommt mit einem Klick als Fenster zurück'],
+    ['Zum Lesen, wenn du Zeit hast', 'Eine TabMerger-Gruppe mit Notiz', 'Eine durchsuchbare „Später lesen“-Liste'],
+    ['Für ein Projekt, das pausiert und weitergeht', 'Eine TabMerger-Gruppe', 'Hält Fenster getrennt und öffnet sie genau so wieder, wie sie gespeichert wurden'],
+    ['Als Nachschlagequelle für Monate oder Jahre', 'Ein Lesezeichen', 'Vom Browser synchronisiert, in Ordnern sortiert'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabs" title="Wann sollte ein Tab offen bleiben?">
+
+Offene Tabs sind dein Schreibtisch: das, woran du gerade arbeitest. Sie sind sofort erreichbar und behalten ihren Platz, die Scrollposition und alles, was du eingetippt hast. Genau das hat seinen Preis: Jede offene Seite belegt Arbeitsspeicher, und ab ein paar Dutzend schrumpfen die Titel zu Symbolen und der gesuchte Tab geht unter.
+
+Lass einen Tab offen, wenn du noch vor Feierabend zu ihm zurückkehrst. Alles andere ist Ballast; unsere [Routine gegen zu viele Tabs](/blog/manage-too-many-tabs) zeigt, wie du ihn in wenigen Minuten loswirst.
+
+</Section>
+
+<Section id="bookmarks" title="Wann ist ein Lesezeichen die richtige Wahl?">
+
+Lesezeichen sind dein Aktenschrank: eine Seite, so lange aufbewahrt, wie du willst, in Ordnern und vom Browser synchronisiert, wenn du angemeldet bist.
+
+- <Kbd>Ctrl</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>D</Kbd> auf dem Mac) setzt ein Lesezeichen für den aktuellen Tab.
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> speichert jeden Tab des Fensters als Lesezeichen in einem neuen Ordner, in Chrome, Edge und Firefox.
+
+<Catch>Lesezeichen speichern jeweils nur ein Fenster, behalten nur die Adresse und verraten dir nicht, welche Seiten zusammengehörten. Für eine Nachschlagebibliothek sind sie großartig, für laufende Arbeit umständlich.</Catch>
+
+</Section>
+
+<Section id="middle" title="Und alles dazwischen?">
+
+Die meisten Tabs sind weder „heute“ noch „für immer“. Sie sind das Projekt für nächste Woche, die Artikel, die du lesen willst, der Vergleich, bei dem du auf halbem Weg bist. Genau für diesen Mittelweg gibt es Tab-Manager, und darum ist es besser, [alle offenen Tabs](/blog/save-all-open-tabs) als Gruppe zu speichern, als sie offen zu lassen oder Ordner für Ordner als Lesezeichen abzulegen:
+
+- **Ganze Fenster statt einzelner Seiten.** Das Set bleibt zusammen, in den Fenstern, die du hattest.
+- **Mit Namen, Farbe und Notiz,** damit du „die Recherche vom Dienstag“ sofort findest.
+- **Durchsuchbar** zusammen mit deinen offenen und kürzlich geschlossenen Tabs.
+- **Ein Klick öffnet** alles wieder, und wenn du fertig bist, schließt du es wieder.
+
+Du recherchierst? [Tabs für die Recherche organisieren](/blog/organize-tabs-for-research) ergänzt das um Notizen und Erinnerungen.
+
+</Section>
+
+<Section id="tabmerger" title="So geht’s in TabMerger">
+
+Mit [TabMerger](/features) wird der Mittelweg zur Gewohnheit mit zwei Klicks:
+
+1. Klicke auf **Gruppe hinzufügen** und gib ihr einen Namen, etwa „Diese Woche lesen“ (in den Screenshots „Read this week“).
+2. Öffne das **⋯**-Menü der Gruppe und wähle **Mit aktueller zusammenführen**: Jedes offene Fenster wird darin gespeichert.
+3. Füge über das **⋯**-Menü der Gruppe eine Notiz hinzu und schließ dann die Fenster. Dein Schreibtisch ist frei, und nichts geht verloren.
+4. Wenn es so weit ist, öffne die Gruppe und öffne die Tabs wieder; <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> findet jeden einzelnen mit einem Tastendruck.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-vs-bookmarks/tm-read-later-group" alt="TabMerger-Gruppe „Read this week“ mit vier gespeicherten Tabs und einer Gruppennotiz, helles Design" darkAlt="TabMerger-Gruppe „Read this week“ mit vier gespeicherten Tabs und einer Gruppennotiz, dunkles Design" boxes={[{ id: 'group-note', label: 'Ihre Notiz' }, { id: 'group-row', label: 'Die Gruppe' }]} source="TabMerger 3.16.1">Eine Leseliste als Gruppe, mit einer Notiz an dein zukünftiges Ich.</ThemedScreenshot>
+
+Du hast schon Lesezeichen aus vielen Jahren? Exportiere sie als HTML und importiere die Datei unter **Einstellungen → Daten**: Jeder Ordner der obersten Ebene wird zu einer TabMerger-Gruppe. Kostenlos sind 5 Gruppen und 50 Tabs drin; [Pro](/pricing) hebt die Grenzen auf und synchronisiert deine Gruppen Ende-zu-Ende-verschlüsselt zwischen Computern.
+
+<InstallCta>Kostenlos für Chrome, Edge und Firefox. Zum Start ist kein Konto nötig.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Häufige Fragen">
+
+<Faq items={post.faq} />
+
+</Section>

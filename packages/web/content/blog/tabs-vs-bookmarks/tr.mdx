@@ -1,0 +1,162 @@
+export const post = {
+  slug: 'tabs-vs-bookmarks',
+  title: 'Sekmeler mi yer işaretleri mi: neyi açık tutmalı, neyi kaydetmeli',
+  navTitle: 'Sekmeler mi yer işaretleri mi',
+  seoTitle: 'Sekme mi Yer İşareti mi: Sekmeyi Ne Zaman Açık Tutmalı, Ne Zaman Kaydetmeli',
+  description:
+    'Yer işaretlerine mi eklemeli, sekmeyi açık mı bırakmalı? Okuma, proje çalışması ve başvuru sayfaları için hızlı bir karar tablosu ve orta yol: aranabilen ve tek tıklamayla yeniden açılan kayıtlı sekme grupları.',
+  shareSummary: 'Yer işareti mi, açık sekme mi? Bir karar tablosu ve orta yol: kayıtlı grup.',
+  dek: 'Açık sekmeler bugün içindir. Yer işaretleri yıllar için. Aradaki her şey kayıtlı bir gruba aittir.',
+  published: '2026-11-28',
+  updated: '2026-11-28',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D, üç tarayıcıda da penceredeki tüm sekmeleri yer işaretlerine ekler.', source: 'Chrome ve Edge yardımı; Firefox 159 kısayolları' },
+    { text: 'TabMerger grupları pencerelerin tamamını bir notla saklar ve tek tıklamayla yeniden açar.', source: 'TabMerger 3.16.1' },
+    { text: 'TabMerger’ın Ctrl+K araması açık, kayıtlı ve son kapatılan sekmelerde aynı anda arar.', source: 'TabMerger 3.16.1' },
+    { text: 'Ücretsiz: 5 grup ve 50 sekme; Pro sınırsız ve eşitlenir.', source: 'TabMerger fiyatlandırma', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Yer işareti mi eklemeliyim, sekmeleri açık mı bırakmalıyım?',
+      answer:
+        'Yalnızca bugün ihtiyacınız olanı açık bırakın. Süren işleri bir pencere olarak yeniden açılsın diye TabMerger grubu olarak kaydedin; aylarca ya da yıllarca isteyeceğiniz sayfaları yer işaretlerine ekleyin.',
+    },
+    {
+      question: 'Açık sekmeler tarayıcımı yavaşlatır mı?',
+      answer: 'Açık her sayfa bellek kullanır. En basit çözüm, kullanmadığınız sekmeleri kaydedip kapatmaktır; çok fazla sekme ve yavaş tarayıcı rehberimize göz atın.',
+      link: { text: 'çok fazla sekme ve yavaş tarayıcı', href: '/blog/too-many-tabs-slow-browser' },
+    },
+    {
+      question: 'Yer işareti ile kayıtlı sekme grubu arasındaki fark nedir?',
+      answer:
+        'Yer işareti, bir klasördeki tek bir sayfadır. TabMerger grubu ise sekmelerle dolu pencerelerin tamamını ad, renk ve notla saklar ve hepsini tek seferde yeniden açar.',
+    },
+    {
+      question: 'Yer işaretlerini sekme gruplarına dönüştürebilir miyim?',
+      answer: 'Evet. Yer işaretlerinizi HTML dosyası olarak dışa aktarın ve TabMerger’da Ayarlar → Veri bölümünden içe aktarın: en üst düzeydeki her klasör bir grup olur.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-light.webp', alt: 'Dört kayıtlı sekme ve bir grup notu içeren Read this week adlı TabMerger grubu, açık tema' },
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-dark.webp', alt: 'Dört kayıtlı sekme ve bir grup notu içeren Read this week adlı TabMerger grubu, koyu tema' },
+  ],
+  tags: ['tab-management', 'bookmarks', 'save-tabs', 'tab-manager', 'browser-productivity'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-vs-bookmarks/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/tabs-vs-bookmarks/og.png', alt: 'Sekmeler mi yer işaretleri mi: bu hafta okunacak sekmelerden oluşan kayıtlı bir grupla TabMerger rehberi' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'decide', label: 'Karar tablosu' },
+    { id: 'tabs', label: 'Sekmeler ne zaman açık kalmalı' },
+    { id: 'bookmarks', label: 'Ne zaman yer işareti eklenmeli' },
+    { id: 'middle', label: 'Orta yol' },
+    { id: 'tabmerger', label: 'TabMerger’da yapın' },
+    { id: 'faq', label: 'SSS' },
+  ],
+}
+
+<QuickAnswer>
+
+Bir sekmeyi yalnızca **bugün** kullanacaksanız açık tutun. **Aylar ya da yıllar** sonra isteyecekseniz yer işaretlerine ekleyin. Aradaki her şey için (gelecek hafta devam edeceğiniz bir proje, bir okuma listesi, süren bir araştırma) sekmeleri [TabMerger](/features)’da bir **grup** olarak kaydedin: pencerenin tamamı saklanır, <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> ile aranabilir ve tek tıklamayla yeniden ekrana gelir.
+
+</QuickAnswer>
+
+<InstallCta>Bugünün sekmelerini tek tıklamayla grup olarak kaydedin. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+<Section id="decide" title="Yer işaretlerine mi eklemeli, sekmeyi açık mı bırakmalı?">
+
+Kendinize tek bir soru sorun: **Buna tekrar ne zaman ihtiyacım olacak?**
+
+<ComparisonTable
+  head={['Ne zaman lazım…', 'En iyi yer', 'Neden']}
+  rowHeaders
+  highlight={1}
+  minWidth="34rem"
+  rows={[
+    ['Önümüzdeki birkaç saat içinde', 'Açık bir sekme', 'Şu anda onunla çalışıyorsunuz'],
+    ['Bu hafta daha sonra, başka sekmelerle birlikte', 'Bir TabMerger grubu', 'Setin tamamı tek tıklamayla pencere olarak geri gelir'],
+    ['Vaktiniz olunca okumak için', 'Notlu bir TabMerger grubu', 'Aranabilen tek bir “sonra oku” listesi'],
+    ['Durup yeniden başlayan bir proje için', 'Bir TabMerger grubu', 'Pencereleri ayrı tutar, kaydedildiği gibi yeniden açar'],
+    ['Aylarca ya da yıllarca başvuru kaynağı olarak', 'Bir yer işareti', 'Tarayıcınız eşitler, klasörlerde düzenlenir'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabs" title="Bir sekme ne zaman açık kalmalı?">
+
+Açık sekmeler masanızdır: şu anda üzerinde çalıştığınız şeyler. Anında ulaşılırlar; yerlerini, kaydırma konumlarını ve yazdığınız her şeyi korurlar. Bedelleri de budur: açık her sayfa bellek kullanır ve birkaç düzineyi geçince başlıklar simgelere küçülür, aradığınız sekme kaybolur.
+
+Gün bitmeden geri döneceğiniz sekmeyi açık tutun. Geri kalan her şey kalabalıktır; [çok fazla sekme rutinimiz](/blog/manage-too-many-tabs) bunu dakikalar içinde nasıl temizleyeceğinizi gösteriyor.
+
+</Section>
+
+<Section id="bookmarks" title="Yer işareti ne zaman doğru seçimdir?">
+
+Yer işaretleri dosya dolabınızdır: tek bir sayfa, istediğiniz kadar uzun süre, klasörlerde saklanır ve oturum açtığınızda tarayıcınız tarafından eşitlenir.
+
+- <Kbd>Ctrl</Kbd>+<Kbd>D</Kbd> (Mac’te <Kbd>⌘</Kbd>+<Kbd>D</Kbd>) geçerli sekmeyi yer işaretlerine ekler.
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>, Chrome, Edge ve Firefox’ta penceredeki tüm sekmeleri yeni bir klasöre yer işareti olarak ekler.
+
+<Catch>yer işaretleri her seferinde tek bir pencereyi kaydeder, yalnızca adresi tutar ve hangi sayfaların birlikte olduğunu söylemez. Başvuru kitaplığı için harikadır, süren işler için hantaldır.</Catch>
+
+</Section>
+
+<Section id="middle" title="Peki aradaki her şey?">
+
+Çoğu sekme ne “bugün” ne de “sonsuza dek” içindir. Gelecek haftanın projesi, okumayı düşündüğünüz makaleler, yarıda bıraktığınız karşılaştırmadır onlar. Sekme yöneticisi tam da bu orta yol içindir; [tüm açık sekmelerinizi](/blog/save-all-open-tabs) bir grup olarak kaydetmenin, onları açık bırakmaktan da klasör klasör yer işaretlerine eklemekten de iyi olmasının nedeni budur:
+
+- **Tek tek sayfalar değil, pencerelerin tamamı.** Set, sahip olduğunuz pencerelerde bir arada kalır.
+- **Adlı, renkli ve notlu,** böylece “salı günkü araştırma” kolayca göze çarpar.
+- **Aranabilir,** açık ve son kapatılan sekmelerinizle birlikte.
+- **Tek tıklamayla** her şeyi yeniden açın, işiniz bitince yine kapatın.
+
+Araştırma mı yapıyorsunuz? [Araştırma için sekmeleri düzenlemek](/blog/organize-tabs-for-research) buna notlar ve hatırlatıcılar ekler.
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger’da yapın">
+
+[TabMerger](/features) orta yolu iki tıklamalık bir alışkanlığa dönüştürür:
+
+1. **Grup Ekle**’ye tıklayın ve bir ad verin, örneğin “Bu hafta oku” (ekran görüntülerinde “Read this week”).
+2. Grubun **⋯** menüsünü açıp **Mevcutla birleştir**’i seçin: açık her pencere gruba kaydedilir.
+3. Grubun **⋯** menüsünden bir not ekleyin, ardından pencereleri kapatın. Masanız boşalır ve hiçbir şey kaybolmaz.
+4. Zamanı gelince grubu açıp sekmeleri yeniden açın; <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> herhangi birini tek tuşla bulur.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-vs-bookmarks/tm-read-later-group" alt="Dört kayıtlı sekme ve bir grup notu içeren Read this week adlı TabMerger grubu, açık tema" darkAlt="Dört kayıtlı sekme ve bir grup notu içeren Read this week adlı TabMerger grubu, koyu tema" boxes={[{ id: 'group-note', label: 'Notu' }, { id: 'group-row', label: 'Grup' }]} source="TabMerger 3.16.1">Grup olarak bir okuma listesi, gelecekteki size bir notla.</ThemedScreenshot>
+
+Yılların yer işaretleri mi var? Onları HTML olarak dışa aktarın ve dosyayı **Ayarlar → Veri** bölümünden içe aktarın: en üst düzeydeki her klasör bir TabMerger grubu olur. Ücretsiz sürümde 5 grup ve 50 sekme var; [Pro](/pricing) sınırları kaldırır ve gruplarınızı bilgisayarlar arasında uçtan uca şifreli olarak eşitler.
+
+<InstallCta>Chrome, Edge ve Firefox için ücretsiz. Başlamak için hesap gerekmez.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,160 @@
+export const post = {
+  slug: 'organize-tabs-by-project',
+  title: 'Organizzare le schede per progetto: un gruppo per ogni progetto',
+  navTitle: 'Organizzare le schede per progetto',
+  seoTitle: 'Come organizzare le schede del browser per progetto con TabMerger',
+  description:
+    'Dai a ogni progetto il suo gruppo TabMerger, con finestre con un nome per ogni parte del lavoro, note per il contesto e un archivio per i progetti finiti. Perché i gruppi funzionano così, passo dopo passo.',
+  shareSummary: 'Un gruppo per progetto, finestre con un nome al suo interno e un archivio per il lavoro finito.',
+  dek: 'Passare da un progetto all’altro non dovrebbe voler dire cercare tra le schede. Dai a ciascuno un posto da aprire, chiudere e archiviare.',
+  published: '2026-12-15',
+  updated: '2026-12-15',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Un gruppo TabMerger contiene più finestre, ognuna con il proprio nome e la propria nota.', source: 'TabMerger 3.16.1' },
+    { text: 'I gruppi con la stella restano in cima alla barra laterale.', source: 'Codice sorgente di TabMerger 3.16.1' },
+    { text: 'I gruppi archiviati sono di sola lettura e tornano con «Ripristina».', source: 'TabMerger 3.16.1' },
+    { text: 'Il piano Free ha 5 gruppi e 50 schede, gruppi archiviati compresi; Pro non ha limiti.', source: 'Prezzi di TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Qual è il modo migliore per organizzare le schede per progetto?',
+      answer:
+        'Dai a ogni progetto un gruppo TabMerger e dividilo in finestre con un nome per le parti del lavoro (per esempio Design, Sviluppo, Feedback). Aggiungi una nota al gruppo con il contesto, metti la stella ai progetti di questa settimana e archivia un progetto quando è finito.',
+    },
+    {
+      question: 'Un gruppo può contenere più di una finestra?',
+      answer: 'Sì. Un gruppo TabMerger contiene quante finestre vuoi. Ogni finestra può avere il proprio nome, la propria nota e la propria stella, e si apre come una finestra del browser a sé.',
+    },
+    {
+      question: 'Che cosa succede quando archivio un gruppo?',
+      answer:
+        'Il gruppo passa nella sezione «Archiviati» della barra laterale, in sola lettura: non è più tra i piedi, ma non è sparito. Un clic su una scheda la apre comunque, e «Ripristina» riporta il gruppo nel tuo elenco.',
+    },
+    {
+      question: 'I gruppi di schede di Chrome si conservano quando li salvo?',
+      answer: 'Sì. Le schede salvate mantengono il nome e il colore del loro gruppo di schede di Chrome, così un progetto che avevi raggruppato nella barra delle schede mantiene la stessa struttura dentro TabMerger.',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp', alt: 'Il gruppo «Website redesign» con tre finestre con un nome, Design, Build e Feedback, tema chiaro' },
+    { src: '/blog/organize-tabs-by-project/tm-project-group-dark.webp', alt: 'Il gruppo «Website redesign» con tre finestre con un nome, Design, Build e Feedback, tema scuro' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-light.webp', alt: 'Il menu contestuale di un gruppo nella barra laterale con Archive group (Archivia gruppo), tema chiaro' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-dark.webp', alt: 'Il menu contestuale di un gruppo nella barra laterale con Archive group (Archivia gruppo), tema scuro' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-light.webp', alt: 'Un gruppo archiviato, in sola lettura, con un pulsante Restore (Ripristina) e la sezione Archived (Archiviati) aperta nella barra laterale, tema chiaro' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-dark.webp', alt: 'Un gruppo archiviato, in sola lettura, con un pulsante Restore (Ripristina) e la sezione Archived (Archiviati) aperta nella barra laterale, tema scuro' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-by-project/og.png', alt: 'Organizzare le schede per progetto con TabMerger: un gruppo con le finestre Design, Build e Feedback' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'problem', label: 'Quando i progetti condividono la barra delle schede' },
+    { id: 'why', label: 'Perché i gruppi funzionano così' },
+    { id: 'steps', label: 'Impostare un progetto' },
+    { id: 'archive', label: 'Archiviare il lavoro finito' },
+    { id: 'benefit', label: 'Che cosa ci guadagni' },
+    { id: 'habits', label: 'Buone abitudini' },
+    { id: 'plans', label: 'Free o Pro' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+}
+
+<QuickAnswer>
+
+Dai a ogni progetto il suo gruppo [TabMerger](/features). Al suo interno, tieni una finestra con un nome per ogni parte del lavoro («Design», «Sviluppo», «Feedback») e una nota del gruppo con il contesto. Metti la stella ai progetti di questa settimana, così restano in cima, e quando uno è finito **Archivia gruppo** (Archive group) lo mette da parte in sola lettura, senza eliminare nemmeno una scheda.
+
+</QuickAnswer>
+
+<InstallCta>Un posto per ogni progetto, a un clic dall’apertura. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="problem" title="Quando tre progetti condividono la stessa barra delle schede">
+
+Stai rifacendo un sito web, scrivendo una relazione e organizzando un viaggio. Entro mercoledì il browser li contiene tutti e tre: mockup accanto a ricerche di voli, una pull request tra due fonti della relazione. Cambiare progetto significa scorrere tutta la barra, e chiudere qualcosa sembra rischioso, perché non sai a quale progetto appartiene.
+
+I gruppi di schede del browser aiutano dentro una finestra, ma un progetto raramente sta in una sola finestra, e quando chiudi la finestra non sai più dove sono finite quelle schede.
+
+</Section>
+
+<Section id="why" title="Perché i gruppi di TabMerger funzionano così">
+
+- **Un gruppo è un progetto, non una finestra.** Ogni gruppo contiene tutte le finestre che servono al lavoro, e ogni finestra si apre come una finestra del browser a sé. È così che sono fatti davvero i progetti: le schede del design qui, quelle dello sviluppo là.
+- **Nomi e note conservano il contesto.** Le finestre si possono rinominare e hanno una nota propria, come il gruppo. Dopo mesi, «Feedback» e una nota con quello che è stato deciso valgono più di una fila di favicon.
+- **Le stelle mettono in ordine al posto tuo.** I gruppi con la stella restano in cima alla barra laterale, e le finestre con la stella vengono per prime nel loro gruppo.
+- **Archiviare significa mettere via, non eliminare.** Un gruppo archiviato esce dal tuo elenco, passa nella sezione **Archiviati** (Archived) e diventa di sola lettura, così niente si sposta per sbaglio. Le sue schede si aprono ancora con un clic, e **Ripristina** (Restore) lo riporta indietro.
+- **La struttura del browser resta.** Le schede salvate mantengono il nome e il colore del loro gruppo di schede di Chrome, così un progetto che avevi già raggruppato nella barra delle schede mantiene la sua forma.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-project-group" alt="Il gruppo «Website redesign» con tre finestre con un nome, Design, Build e Feedback, tema chiaro" darkAlt="Il gruppo «Website redesign» con tre finestre con un nome, Design, Build e Feedback, tema scuro" boxes={[{ id: 'windows', label: 'Finestre per fase' }]} source="TabMerger 3.16.1">Un progetto, tre finestre, ognuna con il nome della sua parte di lavoro.</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="Imposta un progetto in cinque passaggi">
+
+1. Premi **Aggiungi gruppo** (Add Group) nella barra laterale e dagli il nome del progetto. Fai clic sul suo pallino colorato per scegliere un colore.
+2. Apri le pagine del progetto, poi scegli **Unisci con l'attuale** (Merge with current) nel menu **⋯** del gruppo per salvarci dentro le finestre aperte.
+3. Rinomina ogni finestra dal suo menu **⋯** (**Rinomina finestra**, Rename window) con la parte del lavoro che contiene.
+4. Aggiungi una nota al gruppo (**Aggiungi nota**, Add note, nel menu **⋯**) con il contesto: la scadenza, il ticket, che cosa vuol dire «finito».
+5. Metti la stella al gruppo (la stella accanto al nome) finché il progetto è attivo.
+
+Per spostare più avanti le schede da un progetto all’altro, trascinale su un gruppo nella barra laterale, oppure usa **Sposta nel gruppo** (Move to group) e **Copia nel gruppo** (Copy to group) nel menu contestuale della scheda. **Unisci finestre** (Unite windows) e **Dividi finestre** (Split windows) riorganizzano un gruppo in un solo passaggio.
+
+</Section>
+
+<Section id="archive" title="Archivia il lavoro finito">
+
+Quando un progetto è finito, fai clic destro sul suo gruppo nella barra laterale e scegli **Archivia gruppo**. Il gruppo passa nella sezione **Archiviati**, in sola lettura: puoi ancora aprire qualsiasi sua scheda, e **Ripristina** riporta l’intero gruppo nel tuo elenco.
+
+<Carousel label="Archiviare un progetto" steps={[{ title: 'Archivia' }, { title: 'Archiviato' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archive-menu" alt="Il menu contestuale di un gruppo nella barra laterale con Archive group (Archivia gruppo), tema chiaro" darkAlt="Il menu contestuale di un gruppo nella barra laterale con Archive group (Archivia gruppo), tema scuro" boxes={[{ id: 'archive', label: 'Archivia gruppo' }]} source="TabMerger 3.16.1">Fai clic destro sul gruppo nella barra laterale.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archived" alt="Un gruppo archiviato, in sola lettura, con un pulsante Restore (Ripristina) e la sezione Archived (Archiviati) aperta nella barra laterale, tema chiaro" darkAlt="Un gruppo archiviato, in sola lettura, con un pulsante Restore (Ripristina) e la sezione Archived (Archiviati) aperta nella barra laterale, tema scuro" boxes={[{ id: 'banner', label: 'Sola lettura finché non lo ripristini' }]} source="TabMerger 3.16.1">Fuori dai piedi, ma sempre a un clic dall’apertura.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="benefit" title="Che cosa ci guadagni">
+
+Cambiare progetto diventa aprire un gruppo invece di cercare in una barra delle schede. Puoi chiudere tutte le finestre di un progetto su cui non stai lavorando sapendo esattamente dove sono le sue schede, e la barra laterale mostra solo quello che è in corso.
+
+</Section>
+
+<Section id="habits" title="Buone abitudini">
+
+- **Un gruppo per progetto, non per argomento.** «Restyling del sito», non «Link di design».
+- **Dai alle finestre il nome di fasi o ruoli**, non di siti: «Feedback» dura più di «GitHub».
+- **Metti la stella al massimo a una manciata di gruppi.** La stella vuol dire «questa settimana».
+- **Archivia il giorno della consegna.** Un progetto archiviato resta a un clic di distanza, quindi non c’è motivo di tenerlo nel tuo elenco.
+- **Lascia che le regole URL smistino le nuove schede** nei progetti più movimentati: vedi [ordinare le schede in automatico con le regole URL](/blog/auto-sort-tabs-with-url-rules). Per i progetti con molta ricerca, [organizzare le schede per la ricerca](/blog/organize-tabs-for-research) aggiunge note e promemoria.
+
+</Section>
+
+<Section id="plans" title="Free o Pro">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Gruppi', '5 (contano anche gli archiviati)', 'Illimitati'],
+    ['Schede', '50', 'Illimitati'],
+    ['Finestre, nomi, note, stelle, archivio', 'Sì', 'Sì'],
+    ['I tuoi progetti sugli altri dispositivi', 'No', 'Sì, con crittografia end-to-end'],
+  ]}
+/>
+
+Tutti gli strumenti per organizzare di questa guida sono nel piano Free; i limiti riguardano il numero di gruppi e di schede. [Pro](/pricing) li toglie e sincronizza i tuoi progetti tra i dispositivi.
+
+<InstallCta>Ogni progetto nel suo gruppo, in Chrome, Edge e Firefox. Si comincia gratis.</InstallCta>
+
+Per tutta la routine attorno ai progetti, vedi [una routine quotidiana per le schede con TabMerger](/blog/tabmerger-daily-workflow).
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

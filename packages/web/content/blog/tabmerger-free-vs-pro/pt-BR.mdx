@@ -1,0 +1,149 @@
+export const post = {
+  slug: 'tabmerger-free-vs-pro',
+  title: 'TabMerger grátis vs. Pro: exatamente o que cada plano inclui',
+  navTitle: 'TabMerger grátis vs. Pro',
+  seoTitle: 'TabMerger grátis vs. Pro: limites, sincronização, preço e o que acontece se você cancelar',
+  description:
+    'Tudo o que vem no plano gratuito do TabMerger, tudo o que o Pro adiciona, como os limites são aplicados e o que acontece com suas abas se um plano Pro terminar. Sem letras miúdas.',
+  shareSummary: 'O que o plano gratuito inclui, o que o Pro adiciona e o que acontece se você cancelar.',
+  dek: 'O plano gratuito é um gerenciador de abas completo. O Pro é para mais abas, mais computadores e backups em que você nunca precisa pensar.',
+  published: '2026-12-20',
+  updated: '2026-12-20',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Gratuito: 5 grupos, 50 abas, 3 regras de URL, 3 sessões, sem precisar de conta.', source: 'Preços do TabMerger', href: '/pricing' },
+    { text: 'Pro: US$3.99 por mês ou US$42.99 por ano, sem limites e com sincronização criptografada.', source: 'Preços do TabMerger', href: '/pricing' },
+    { text: 'Tudo o que usa nossos servidores é verificado pelo servidor, não só pelo app.', source: 'Código-fonte do TabMerger 3.16.1' },
+    { text: 'Se o Pro terminar, nada é excluído.', source: 'Código-fonte do TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'O TabMerger é grátis?',
+      answer:
+        'Sim. O plano gratuito não precisa de conta e inclui grupos, sessões, busca, salvamento automático, “Fechadas recentemente”, regras de URL, importação e exportação, dentro dos seus limites: 5 grupos, 50 abas, 3 regras de URL e 3 sessões.',
+    },
+    {
+      question: 'O que o TabMerger Pro adiciona?',
+      answer:
+        'Sem limites de grupos, abas, regras ou sessões; sincronização com criptografia de ponta a ponta entre dispositivos; backups automáticos criptografados; todos os salvamentos automáticos guardados; 30 dias de “Fechadas recentemente” em vez de 2; e suporte prioritário.',
+    },
+    {
+      question: 'Quanto custa o TabMerger Pro?',
+      answer: 'US$3.99 por mês ou US$42.99 por ano (cerca de 10% a menos do que pagar mês a mês). Você pode cancelar quando quiser e mantém o Pro até o fim do período que pagou.',
+    },
+    {
+      question: 'O que acontece com minhas abas se eu cancelar o Pro?',
+      answer:
+        'Nada é excluído. Grupos e abas além dos limites do plano gratuito ficam no seu dispositivo, bloqueados, até você assinar de novo ou abrir espaço. As novas alterações deixam de ser sincronizadas; o que já está na sua conta continua lá.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabmerger-free-vs-pro/tm-over-limit-light.webp', alt: 'TabMerger no plano gratuito com 7 grupos salvos: os dois últimos estão bloqueados e um aviso oferece o Pro, tema claro' },
+    { src: '/blog/tabmerger-free-vs-pro/tm-over-limit-dark.webp', alt: 'TabMerger no plano gratuito com 7 grupos salvos: os dois últimos estão bloqueados e um aviso oferece o Pro, tema escuro' },
+  ],
+  tags: ['tabmerger-guides', 'tab-manager', 'comparison', 'browser-productivity'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabmerger-free-vs-pro/tm-over-limit-light.webp' },
+  ogImage: { src: '/blog/tabmerger-free-vs-pro/og.png', alt: 'TabMerger grátis vs. Pro: o plano gratuito com dois grupos bloqueados por passar do limite' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'problem', label: 'Grátis ou pago?' },
+    { id: 'compare', label: 'Lado a lado' },
+    { id: 'why', label: 'Por que o limite fica aqui' },
+    { id: 'enforce', label: 'Como os limites são verificados' },
+    { id: 'cancel', label: 'Se o Pro terminar' },
+    { id: 'choose', label: 'Qual plano combina com você' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+}
+
+<QuickAnswer>
+
+O plano **gratuito** é um gerenciador de abas completo e sem conta: 5 grupos, 50 abas, 3 regras de URL e 3 sessões, além de busca, salvamento automático (os 2 mais recentes ficam guardados), 2 dias de “Fechadas recentemente”, importação e exportação. O **Pro** (US$3.99 por mês ou US$42.99 por ano) remove todos os limites e adiciona sincronização com criptografia de ponta a ponta entre dispositivos, backups automáticos criptografados, todos os salvamentos automáticos guardados e 30 dias de “Fechadas recentemente”. Se o Pro terminar, nada é excluído.
+
+</QuickAnswer>
+
+<InstallCta>Comece grátis, sem precisar de conta. Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="problem" title="Grátis ou pago: a pergunta de verdade">
+
+Antes de instalar um gerenciador de abas, a maioria das pessoas quer saber duas coisas: “A versão gratuita vai mesmo ser útil?” e “Se eu pagar e depois parar, perco minhas abas?”. As duas merecem uma resposta direta, então aqui está tudo o que cada plano inclui, como isso é aplicado e o que acontece nos limites.
+
+</Section>
+
+<Section id="compare" title="Grátis e Pro, lado a lado">
+
+<ComparisonTable
+  head={['', 'Gratuito', 'Pro']}
+  rowHeaders
+  minWidth="34rem"
+  rows={[
+    ['Preço', 'US$0, sem precisar de conta', 'US$3.99 por mês ou US$42.99 por ano'],
+    ['Grupos', 'Até 5', 'Ilimitados'],
+    ['Abas', 'Até 50', 'Ilimitadas'],
+    ['Regras de URL', 'Até 3', 'Ilimitadas'],
+    ['Sessões', 'Até 3, neste navegador', 'Ilimitadas, sincronizadas entre dispositivos'],
+    ['Salvar abas abertas automaticamente', 'Os 2 mais recentes ficam guardados', 'Todos ficam guardados'],
+    ['Abas fechadas recentemente', 'Seus últimos 2 dias', 'Seus últimos 30 dias'],
+    ['Busca, notas, lembretes, importar e exportar', 'Sim', 'Sim'],
+    ['Arrastar e soltar, atalhos de teclado', 'Sim', 'Sim'],
+    ['Sincronização na nuvem entre dispositivos (criptografia de ponta a ponta)', 'Não, armazenado neste dispositivo', 'Sim'],
+    ['Backups automáticos criptografados', 'Não', 'Sim'],
+    ['Links de compartilhamento, Configurações → Dispositivos', 'Não', 'Sim'],
+    ['Suporte', 'Sim', 'Prioritário'],
+  ]}
+/>
+
+A [página de preços](/pricing) é a referência oficial para os preços; o plano anual custa cerca de 10% a menos que doze pagamentos mensais.
+
+</Section>
+
+<Section id="why" title="Por que o limite entre os planos fica onde fica">
+
+A linha segue o custo. Tudo o que roda só no seu navegador não nos custa nada oferecer de graça, então o plano gratuito recebe o gerenciador de abas inteiro: grupos, busca, salvamento automático, “Fechadas recentemente”, regras de URL, importação e exportação, com limites pensados para o trabalho diário de uma pessoa.
+
+O Pro paga pelo que roda nos nossos servidores: sincronizar e armazenar seus grupos, sessões e backups criptografados, e as abas abertas que seus dispositivos compartilham em Configurações → Dispositivos. Ele também remove os limites locais, para quem já passou de 5 grupos e 50 abas.
+
+</Section>
+
+<Section id="enforce" title="Como os limites são verificados">
+
+- **No seu dispositivo:** os limites de grupos, abas, regras e sessões, a rotação do salvamento automático e o tempo de retenção de “Fechadas recentemente” são aplicados pela extensão. Esses dados nunca saem do seu navegador, então não há nada para um servidor verificar.
+- **Nos nossos servidores:** qualquer recurso que guarda dados conosco (sincronização, sessões e backups na sua conta, as abas abertas dos seus dispositivos, links de compartilhamento, configuração da criptografia) é recusado pelo banco de dados para uma conta sem um plano Pro ativo. Um botão escondido nunca é a única trava.
+
+Quando você se aproxima dos limites do plano gratuito, o TabMerger avisa com um banner e oferece o Pro; ele nunca exclui seus grupos ou abas para abrir espaço.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabmerger-free-vs-pro/tm-over-limit" alt="TabMerger no plano gratuito com 7 grupos salvos: os dois últimos estão bloqueados e um aviso oferece o Pro, tema claro" darkAlt="TabMerger no plano gratuito com 7 grupos salvos: os dois últimos estão bloqueados e um aviso oferece o Pro, tema escuro" boxes={[{ id: 'banner', label: 'Aviso do plano gratuito' }, { id: 'locked', label: 'Acima do limite' }]} source="TabMerger 3.16.1">Sete grupos no plano gratuito: os cinco primeiros funcionam normalmente, os dois últimos são mantidos, mas bloqueados.</ThemedScreenshot>
+
+</Section>
+
+<Section id="cancel" title="Se um plano Pro terminar">
+
+Você mantém o Pro até o fim do período que pagou. Depois disso:
+
+- **Nada é excluído.** Grupos e abas além dos limites do plano gratuito ficam no seu dispositivo, com um cadeado, até você assinar de novo ou remover outros para abrir espaço.
+- **Suas regras de URL continuam funcionando**, mesmo que você tenha mais de 3; só adicionar novas além de 3 exige o Pro.
+- **A sincronização para nas novas alterações.** O que já está na sua conta continua lá; no painel você ainda pode abrir ou excluir sessões salvas e baixar ou excluir backups.
+- **Tudo o que é local continua funcionando:** busca, salvamento automático (os novos salvamentos automáticos se revezam e os 2 mais recentes ficam guardados), “Fechadas recentemente” (de volta a 2 dias), importação e exportação.
+
+</Section>
+
+<Section id="choose" title="Qual plano combina com você">
+
+- **Fique no plano gratuito** se você usa um computador e tem um punhado de projetos: ele é completo, privado por padrão e não precisa de conta.
+- **Escolha o Pro** se você trabalha em mais de um computador, mantém mais de 5 grupos ou 50 abas, ou quer backups e um mês de abas fechadas sem pensar nisso.
+
+Na dúvida? Comece no plano gratuito; assinar depois mantém tudo o que você já tem. Para a rotina que faz qualquer um dos planos funcionar, veja [uma rotina diária de abas com o TabMerger](/blog/tabmerger-daily-workflow); para saber como a sincronização protege seus dados, [sincronizar abas entre dispositivos](/blog/sync-tabs-between-devices-with-tabmerger).
+
+<InstallCta>Grátis para um computador, Pro quando você precisar de mais. Chrome, Edge e Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

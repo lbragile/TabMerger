@@ -1,0 +1,150 @@
+export const post = {
+  slug: 'tabs-as-a-to-do-list',
+  title: 'Use suas abas como lista de tarefas, sem deixá-las abertas',
+  navTitle: 'Abas como lista de tarefas',
+  seoTitle: 'Transforme as abas do navegador em lista de tarefas com notas e lembretes',
+  description:
+    'Mantenha as abas de “preciso ler isso” como uma lista de tarefas de verdade no TabMerger: uma nota em cada aba, um lembrete que aparece na hora certa, um título claro e um clique para limpar as abas paradas há tempo demais.',
+  shareSummary: 'Notas, lembretes e limpeza de abas inativas: uma lista de tarefas feita de abas, já fechadas.',
+  dek: 'Cada aba aberta é uma promessa de voltar. Anote o porquê, defina um horário e feche.',
+  published: '2026-12-16',
+  updated: '2026-12-16',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Lembretes: em 30 minutos, 1 hora, 3 horas, 24 horas ou em uma data e hora.', source: 'TabMerger 3.16.1' },
+    { text: 'Um lembrete mostra uma notificação do navegador; clicar nela abre a aba.', source: 'TabMerger 3.16.1, código-fonte' },
+    { text: 'Abas salvas há mais de 7, 14, 30 ou 60 dias (você escolhe) são marcadas como inativas.', source: 'TabMerger 3.16.1' },
+    { text: 'Notas, lembretes e renomear abas estão todos no plano gratuito.', source: 'Preços do TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Como transformo minhas abas em uma lista de tarefas?',
+      answer:
+        'Salve as abas em um grupo do TabMerger como “Esta semana”, adicione a cada uma uma nota dizendo o que fazer, defina lembretes nas que têm prazo e remova uma aba quando terminar. Depois feche as abas: a lista fica no TabMerger.',
+    },
+    {
+      question: 'Posso receber um lembrete para voltar a uma aba?',
+      answer:
+        'Sim. Clique com o botão direito em uma aba salva e escolha Lembrar-me…: 30 min, 1 hora, 3 horas, Amanhã (daqui a 24 horas) ou uma data e hora, com uma nota opcional. Uma notificação do navegador aparece nesse horário, e clicar nela abre a aba.',
+    },
+    {
+      question: 'O que são abas inativas?',
+      answer:
+        'Abas que você salvou há mais tempo que o seu limite (30 dias, a menos que você mude em Configurações → Geral). Elas ganham um pequeno ponto, e o cabeçalho do grupo oferece removê-las todas de uma vez.',
+    },
+    {
+      question: 'Os lembretes funcionam nos meus outros dispositivos?',
+      answer: 'Um lembrete avisa você no navegador onde foi definido. Com o Pro, a aba e o horário do lembrete são sincronizados com seus outros dispositivos junto com o grupo.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp', alt: 'Um grupo “This week” com uma nota em uma aba, uma aba renomeada com lembrete e duas abas inativas, tema claro' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-dark.webp', alt: 'Um grupo “This week” com uma nota em uma aba, uma aba renomeada com lembrete e duas abas inativas, tema escuro' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-light.webp', alt: 'Opções de lembrete do TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Amanhã), uma data e hora e uma nota, tema claro' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-dark.webp', alt: 'Opções de lembrete do TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Amanhã), uma data e hora e uma nota, tema escuro' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'research'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp' },
+  ogImage: { src: '/blog/tabs-as-a-to-do-list/og.png', alt: 'Use suas abas como lista de tarefas: um grupo do TabMerger com notas, um lembrete e abas inativas' },
+  toc: [
+    { id: 'quick', label: 'Resposta rápida' },
+    { id: 'problem', label: 'Abas como promessas' },
+    { id: 'why', label: 'Por que funciona assim' },
+    { id: 'steps', label: 'Monte a lista' },
+    { id: 'remind', label: 'Defina um lembrete' },
+    { id: 'benefit', label: 'O que você ganha' },
+    { id: 'habits', label: 'Bons hábitos' },
+    { id: 'plans', label: 'Gratuito ou Pro' },
+    { id: 'faq', label: 'Perguntas frequentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Salve suas abas de “depois eu vejo” em um grupo do [TabMerger](/features) como “Esta semana”. Clique com o botão direito em uma aba para **Adicionar nota** (Add note) com o que fazer, **Lembrar-me…** (Remind me…) para escolher quando, ou **Renomear aba** (Rename tab) para dar um título que pareça uma tarefa. Remova a aba quando terminar. As abas paradas há tempo demais ganham um ponto, e um botão no cabeçalho do grupo as limpa. Depois feche as abas: a lista vive no TabMerger, não na sua barra de abas.
+
+</QuickAnswer>
+
+<InstallCta>Uma lista de tarefas feita de abas, com as abas fechadas. Grátis para Chrome, Edge e Firefox.</InstallCta>
+
+<Section id="problem" title="Cada aba aberta é uma promessa">
+
+Um artigo para ler antes de quinta. Um chamado para triar antes da daily. Um horário de trem para conferir quando as datas estiverem definidas. Cada uma continua aberta porque fechar parece esquecer. Uma semana depois são quarenta, ninguém lembra por que metade está ali, e a que importava ficou atrás das outras.
+
+Uma aba não consegue dizer por que você a abriu nem para quando é. Uma lista de tarefas consegue.
+
+</Section>
+
+<Section id="why" title="Por que as ferramentas de tarefas do TabMerger funcionam assim">
+
+- **A nota fica na aba.** A nota é presa à própria aba, então o motivo vai junto com o link: para sessões, backups e exportações, e para seus outros dispositivos com o Pro.
+- **Um título que parece uma tarefa.** **Renomear aba** dá à aba um título seu, marcado como “renomeada”, e **Restaurar título original** (Reset to original title) desfaz. “Triar chamados novos” é uma tarefa; “Issues · lbragile/TabMerger” é o nome de uma página.
+- **Lembretes que você não perde.** No horário escolhido, o navegador mostra uma notificação com o título da aba e sua nota. Ela fica na tela até você resolver, e clicar nela abre a aba. Os lembretes são reagendados depois que o navegador reinicia, então uma reinicialização não os perde.
+- **Inativa quer dizer que você salvou há um tempo.** Uma aba salva há mais tempo que o seu limite (7, 14, 30 ou 60 dias; 30, a menos que você mude) ganha um ponto na cor do grupo, e o cabeçalho do grupo mostra **Remover N abas inativas** (Remove N stale tabs). As velhas abas de “um dia eu vejo” somem com um clique.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-todo-group" alt="Um grupo “This week” com uma nota em uma aba, uma aba renomeada com lembrete e duas abas inativas, tema claro" darkAlt="Um grupo “This week” com uma nota em uma aba, uma aba renomeada com lembrete e duas abas inativas, tema escuro" boxes={[{ id: 'note', label: 'Uma nota na aba' }, { id: 'reminder', label: 'Há um lembrete' }, { id: 'stale', label: 'Limpar abas inativas' }]} source="TabMerger 3.16.1">A lista da semana: por que, quando e o que está esperando há tempo demais.</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="Monte a lista">
+
+1. Crie com **Adicionar grupo** (Add Group), na barra lateral, um grupo com o nome do período, como “Esta semana” (“This week” nas capturas de tela).
+2. Arraste abas de **Abertas agora** (Now Open) para ele. A aba aberta é fechada e uma cópia é salva (Desfazer traz de volta).
+3. Clique com o botão direito em cada aba: **Adicionar nota** para o que fazer, **Renomear aba** para um título com cara de tarefa.
+4. Marque com estrela a janela ou o grupo que você está resolvendo, para que fique no topo.
+5. Quando terminar uma tarefa, clique com o botão direito na aba e escolha **Remover aba** (Remove tab).
+
+</Section>
+
+<Section id="remind" title="Defina um lembrete">
+
+Clique com o botão direito na aba e escolha **Lembrar-me…**. Escolha **30 min**, **1 hora**, **3 horas** ou **Amanhã** (daqui a 24 horas), ou defina uma data e hora; adicione uma nota se quiser. Um relógio na aba mostra que há um lembrete; clique com o botão direito de novo para **Editar lembrete** (Edit reminder) ou **Limpar lembrete** (Clear reminder).
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-reminder" alt="Opções de lembrete do TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Amanhã), uma data e hora e uma nota, tema claro" darkAlt="Opções de lembrete do TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Amanhã), uma data e hora e uma nota, tema escuro" boxes={[{ id: 'remind-in', label: 'Lembrar-me em…' }]} source="TabMerger 3.16.1">Um horário rápido ou um exato, mais uma nota para o você do futuro.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="O que você ganha">
+
+Sua barra de abas guarda só o que você está fazendo agora. Todo o resto tem um motivo escrito ao lado e, quando importa, um horário em que vai voltar até você. Nada depende de lembrar, e nada fica aberto só por precaução.
+
+</Section>
+
+<Section id="habits" title="Bons hábitos">
+
+- **Escreva a nota como uma ação:** “Resumir para quinta”, não “interessante”.
+- **Lembretes só para o que tem prazo.** O resto espera na lista.
+- **Limpe as abas inativas toda semana.** Se esperou 30 dias, raramente é urgente.
+- **Uma lista por horizonte:** “Hoje”, “Esta semana”, “Algum dia”. Mova abas entre elas com **Mover para o grupo** (Move to group).
+- Para trabalhos com muitas fontes, veja [como organizar abas para pesquisa](/blog/organize-tabs-for-research); para o dia inteiro, [uma rotina diária com o TabMerger](/blog/tabmerger-daily-workflow).
+
+</Section>
+
+<Section id="plans" title="Gratuito ou Pro">
+
+<ComparisonTable
+  head={['', 'Gratuito', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Notas, lembretes, abas renomeadas, abas inativas', 'Sim', 'Sim'],
+    ['Abas nas suas listas', '50 no total', 'Ilimitadas'],
+    ['Listas nos seus outros dispositivos', 'Não', 'Sim, com notas e horários dos lembretes'],
+  ]}
+/>
+
+Todas as ferramentas de tarefas estão no plano gratuito. O [Pro](/pricing) adiciona espaço e sincronização. Um lembrete avisa você no navegador onde foi definido.
+
+<InstallCta>Feche as abas, cumpra as promessas. Grátis para Chrome, Edge e Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Perguntas frequentes">
+
+<Faq items={post.faq} />
+
+</Section>

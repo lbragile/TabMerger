@@ -1,0 +1,276 @@
+export const post = {
+  slug: 'tab-keyboard-shortcuts',
+  title: 'اختصارات لوحة المفاتيح لعلامات التبويب في Chrome وEdge وFirefox',
+  seoTitle: 'اختصارات علامات التبويب في Chrome (وEdge وFirefox): المرجع الكامل',
+  description:
+    'كل اختصارات علامات التبويب التي تستحق التعلّم في Chrome وEdge وFirefox: التنقل بين علامات التبويب، وإعادة فتح علامات التبويب والنوافذ المغلقة، والبحث فيها، وإضافتها كلها إلى الإشارات المرجعية، على Windows وMac.',
+  shareSummary: 'بدّل علامات التبويب وأعد فتحها وابحث فيها واحفظها من لوحة المفاتيح في Chrome وEdge وFirefox.',
+  dek: 'جدول واحد للمتصفحات الثلاثة، والاختلافات على Mac، وكيف تضبط اختصارات الإضافات بحيث تبقى فعلًا.',
+  published: '2026-11-22',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'يعيد Ctrl+Shift+T فتح آخر علامة تبويب مغلقة في المتصفحات الثلاثة.', source: 'مساعدة Chrome وEdge؛ تعريفات المفاتيح في Firefox 159' },
+    { text: 'يعيد Firefox فتح نافذة مغلقة بالاختصار Ctrl+Shift+N.', source: 'تعريفات المفاتيح في Firefox 159' },
+    {
+      text: 'في Chrome ينتقل Ctrl+9 إلى آخر علامة تبويب، لا إلى التاسعة.',
+      source: 'مساعدة Chrome',
+      href: 'https://support.google.com/chrome/answer/157179',
+    },
+    { text: 'يحتفظ Edge بالاختصارات Ctrl+Shift+K وU وP لنفسه، فلا تستطيع الإضافات استخدامها.', source: 'دعم Microsoft؛ Edge 158' },
+  ],
+  faq: [
+    {
+      question: 'كيف أنتقل بين علامات التبويب بلوحة المفاتيح؟',
+      answer:
+        'في Chrome وEdge وFirefox ينقلك Ctrl+Tab إلى علامة التبويب التالية وCtrl+Shift+Tab إلى السابقة. ومن Ctrl+1 إلى Ctrl+8 تنتقل إلى علامة تبويب حسب موضعها؛ ويأخذك Ctrl+9 إلى آخر علامة تبويب.',
+    },
+    {
+      question: 'كيف أعيد فتح علامة تبويب مغلقة؟',
+      answer:
+        'اضغط Ctrl+Shift+T (أو ⌘+Shift+T على Mac). اضغطه مجددًا لتواصل الرجوع. في Chrome يعيد أيضًا النوافذ المغلقة؛ وفي Firefox يعيد Ctrl+Shift+N فتح نافذة مغلقة.',
+    },
+    {
+      question: 'هل أستطيع البحث في علامات التبويب المفتوحة؟',
+      answer: 'نعم. يفتح Ctrl+Shift+A ميزة البحث في علامات التبويب في Chrome، ويعرض قائمة بكل علامات التبويب في Firefox. وفي Chrome يمكنك أيضًا كتابة @tabs في شريط العناوين.',
+    },
+    {
+      question: 'لماذا لا يعمل اختصار إحدى الإضافات؟',
+      answer:
+        'يترك المتصفح الاختصار المقترح بلا تعيين عندما يتعارض مع أحد اختصاراته. افتح chrome://extensions/shortcuts أو edge://extensions/shortcuts واختر مفتاحًا آخر.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp', alt: 'صفحة اختصارات لوحة المفاتيح للإضافات في Edge لـ TabMerger: أوامر الحفظ الأربعة كلها معيّنة، إلى Alt+Shift+S وAlt+Shift+O وAlt+Shift+Comma وAlt+Shift+Period' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp', alt: 'بحث TabMerger مفتوح بالاستعلام docs ويعرض علامات التبويب المفتوحة والمحفوظة المطابقة، المظهر الفاتح' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-dark.webp', alt: 'بحث TabMerger مفتوح بالاستعلام docs ويعرض علامات التبويب المفتوحة والمحفوظة المطابقة، المظهر الداكن' },
+  ],
+  tags: ['browser-tips', 'cross-browser', 'chrome', 'edge', 'firefox', 'tab-management'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-20',
+      note: 'قُرئت بيانات Firefox من تعريفات المفاتيح داخل Firefox 159.0.1 نفسه؛ حجبت هذه الصفحة فحصنا الآلي.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp' },
+  ogImage: { src: '/blog/tab-keyboard-shortcuts/og.png', alt: 'اختصارات لوحة المفاتيح لعلامات التبويب في Chrome وEdge وFirefox: دليل من TabMerger، وبحث TabMerger مفتوح' },
+  toc: [
+    { id: 'quick', label: 'إجابة سريعة' },
+    { id: 'table', label: 'الاختصارات حسب المتصفح' },
+    { id: 'reopen', label: 'إعادة فتح علامات التبويب المغلقة' },
+    { id: 'extensions', label: 'اختصارات الإضافات' },
+    { id: 'tabmerger', label: 'مفاتيح TabMerger' },
+    { id: 'faq', label: 'الأسئلة الشائعة' },
+  ],
+  browserSections: ['table', 'reopen', 'extensions'],
+  browserFact: {
+    label: 'اختصارات الإضافات',
+    values: { chrome: 'chrome://extensions/shortcuts', edge: 'edge://extensions/shortcuts', firefox: 'about:addons' },
+  },
+}
+
+<QuickAnswer>
+
+ينقلك <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Tab</Kbd></bdi> و<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Tab</Kbd></bdi> إلى علامة التبويب التالية والسابقة، وتنتقل بـ <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd></bdi> إلى علامة تبويب حسب موضعها، ويغلقها <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>W</Kbd></bdi> ويعيدها <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi>. تعمل هذه الاختصارات بالطريقة نفسها في Chrome وEdge وFirefox على Windows وLinux؛ وعلى Mac استخدم <bdi dir="ltr"><Kbd>⌘</Kbd></bdi> بدلًا من <bdi dir="ltr"><Kbd>Ctrl</Kbd></bdi>. أضف [TabMerger](/features) ليتولى مفتاحان آخران العمل الأثقل: حفظ علامات التبويب مباشرة من لوحة المفاتيح، و<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> للعثور على أي علامة تبويب، مفتوحة كانت أو محفوظة أو مغلقة.
+
+</QuickAnswer>
+
+<InstallCta>احفظ علامات التبويب دون أن ترفع يديك عن لوحة المفاتيح. مجاني لـ Chrome وEdge وFirefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="table" title="ما اختصارات علامات التبويب في متصفحك؟">
+
+أولًا Windows وLinux، ثم ما يتغير على Mac. كل سطر مأخوذ من صفحة المساعدة الخاصة بالمتصفح، وفي Firefox من تعريفات المفاتيح داخل Firefox 159.0.1 نفسه.
+
+<BrowserPanels section="table">
+<BrowserPanel browser="chrome">
+
+<ComparisonTable
+  head={['الإجراء', 'الاختصار']}
+  rowHeaders
+  rows={[
+    ['علامة تبويب جديدة', 'Ctrl+T'],
+    ['إغلاق علامة التبويب', 'Ctrl+W'],
+    ['إعادة فتح علامات التبويب والنوافذ المغلقة', 'Ctrl+Shift+T'],
+    ['علامة التبويب التالية', <><bdi dir="ltr">Ctrl+Tab</bdi> أو <bdi dir="ltr">Ctrl+PgDn</bdi></>],
+    ['علامة التبويب السابقة', <><bdi dir="ltr">Ctrl+Shift+Tab</bdi> أو <bdi dir="ltr">Ctrl+PgUp</bdi></>],
+    ['علامات التبويب من 1 إلى 8', 'Ctrl+1 … Ctrl+8'],
+    ['آخر علامة تبويب', 'Ctrl+9'],
+    ['البحث في علامات التبويب المفتوحة', 'Ctrl+Shift+A'],
+    ['إضافة كل علامات التبويب إلى الإشارات المرجعية', 'Ctrl+Shift+D'],
+    ['السجل', 'Ctrl+H'],
+    ['إغلاق النافذة', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+يمكنك أيضًا البحث في علامات التبويب المفتوحة من شريط العناوين: اكتب <bdi dir="ltr">`@tabs`</bdi> واضغط <bdi dir="ltr"><Kbd>Tab</Kbd></bdi>. وللبحث في علامات التبويب المحفوظة والمغلقة أيضًا، اقرأ [كيف تجد علامة تبويب واحدة بين المئات](/blog/find-a-tab-among-hundreds).
+
+**على Mac** استخدم <bdi dir="ltr"><Kbd>⌘</Kbd></bdi> حيث يذكر الجدول <bdi dir="ltr"><Kbd>Ctrl</Kbd></bdi>، مع هذه الاستثناءات من صفحة مساعدة Chrome: علامة التبويب التالية والسابقة هما <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>→</Kbd></bdi> و<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>←</Kbd></bdi>، والسجل هو <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Y</Kbd></bdi>، ومدير الإشارات المرجعية هو <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>B</Kbd></bdi>.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+<ComparisonTable
+  head={['الإجراء', 'الاختصار']}
+  rowHeaders
+  rows={[
+    ['علامة تبويب جديدة', 'Ctrl+T'],
+    ['إغلاق علامة التبويب', 'Ctrl+W'],
+    ['إعادة فتح آخر علامة تبويب مغلقة', 'Ctrl+Shift+T'],
+    ['علامة التبويب التالية', <><bdi dir="ltr">Ctrl+Tab</bdi> أو <bdi dir="ltr">Ctrl+PgDn</bdi></>],
+    ['علامة التبويب السابقة', <><bdi dir="ltr">Ctrl+Shift+Tab</bdi> أو <bdi dir="ltr">Ctrl+PgUp</bdi></>],
+    ['علامات التبويب من 1 إلى 8', 'Ctrl+1 … Ctrl+8'],
+    ['آخر علامة تبويب', 'Ctrl+9'],
+    ['إضافة كل علامات التبويب إلى مفضلة Edge', 'Ctrl+Shift+D'],
+    ['السجل', 'Ctrl+H'],
+    ['إغلاق النافذة', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+لا تتضمن قائمة اختصارات Edge مفتاحًا للبحث في علامات التبويب المفتوحة ولا لإعادة فتح نافذة مغلقة.
+
+**على Mac** استخدم <bdi dir="ltr"><Kbd>⌘</Kbd></bdi> حيث يذكر الجدول <bdi dir="ltr"><Kbd>Ctrl</Kbd></bdi>؛ والسجل هو <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Y</Kbd></bdi>. وتذكر Microsoft الاختصارين <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↓</Kbd></bdi> و<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↑</Kbd></bdi> لعلامة التبويب التالية والسابقة.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+<ComparisonTable
+  head={['الإجراء', 'الاختصار']}
+  rowHeaders
+  rows={[
+    ['علامة تبويب جديدة', 'Ctrl+T'],
+    ['إغلاق علامة التبويب', 'Ctrl+W'],
+    ['إعادة فتح علامة تبويب مغلقة', 'Ctrl+Shift+T'],
+    ['إعادة فتح نافذة مغلقة', 'Ctrl+Shift+N'],
+    ['علامة التبويب التالية', <><bdi dir="ltr">Ctrl+Tab</bdi> أو <bdi dir="ltr">Ctrl+PgDn</bdi></>],
+    ['علامة التبويب السابقة', <><bdi dir="ltr">Ctrl+Shift+Tab</bdi> أو <bdi dir="ltr">Ctrl+PgUp</bdi></>],
+    ['علامات التبويب من 1 إلى 8', 'Ctrl+1 … Ctrl+8'],
+    ['آخر علامة تبويب', 'Ctrl+9'],
+    ['اسرد كل الألسنة', 'Ctrl+Shift+A'],
+    ['إضافة كل علامات التبويب إلى الإشارات المرجعية', 'Ctrl+Shift+D'],
+    ['التأريخ في الشريط الجانبي', 'Ctrl+H'],
+    ['التأريخ في المكتبة', 'Ctrl+Shift+H'],
+    ['إغلاق النافذة', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+**على Mac** يعرّف Firefox هذه الاختصارات بمفتاح التعديل الرئيسي في النظام، لذا اضغط <bdi dir="ltr"><Kbd>⌘</Kbd></bdi> حيث يذكر الجدول <bdi dir="ltr"><Kbd>Ctrl</Kbd></bdi>.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="reopen" title="كيف أعيد فتح علامة تبويب أغلقتها بالخطأ؟">
+
+اضغط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> (أو <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> على Mac). كل ضغطة ترجع خطوة أخرى إلى الوراء. وما يعود يتوقف على المتصفح:
+
+<BrowserPanels section="reopen">
+<BrowserPanel browser="chrome">
+
+يعيد Chrome فتح علامات التبويب *والنوافذ* بالترتيب الذي أُغلقت به، فواصل الضغط حتى تعود النافذة التي فقدتها.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+توثّق Edge الاختصار <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> على أنه يعيد فتح آخر علامة تبويب مغلقة. ولاستعادة نافذة مغلقة، افتح السجل (<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>H</Kbd></bdi>) وابحث تحت <bdi dir="ltr">**Recently closed**</bdi> (المغلقة مؤخرًا).
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+يحتفظ Firefox بقائمتين منفصلتين: <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> لعلامات التبويب و<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd></bdi> للنوافذ. وفي Firefox 159 يرتبط <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> بأمر يستعيد آخر علامة تبويب أو نافذة أو جلسة مغلقة، لذا قد يعيد أيضًا الجلسة السابقة.
+
+</BrowserPanel>
+</BrowserPanels>
+
+لا ترجع القائمة إلا إلى حد معين. وإذا ضاعت جلسة كاملة، فاقرأ [كيف تستعيد علامات التبويب بعد تعطل المتصفح](/blog/restore-tabs-after-crash). ولكي لا تفقدها أصلًا، [احفظ كل علامات التبويب المفتوحة](/blog/save-all-open-tabs) قبل أن تغلق شيئًا كبيرًا.
+
+</Section>
+
+<Section id="extensions" title="كيف أضبط اختصارات للإضافات؟">
+
+يمكن للإضافات أن تقترح اختصارات، لكن الكلمة الأخيرة للمتصفح: المفتاح المقترح الذي يتعارض مع أحد مفاتيح المتصفح يبقى على <bdi dir="ltr">**Not set**</bdi> (غير معيّن) دون أي تحذير. افتح صفحة الاختصارات في متصفحك، وانقر القلم بجوار الأمر، واضغط المفاتيح التي تريدها.
+
+<BrowserPanels section="extensions">
+<BrowserPanel browser="chrome">
+
+الصق <bdi dir="ltr">`chrome://extensions/shortcuts`</bdi> في شريط العناوين. ولكل أمر أيضًا قائمة للنطاق: <bdi dir="ltr">**In Chrome**</bdi> (داخل Chrome فقط)، أو <bdi dir="ltr">**Global**</bdi> (في كل مكان) ليعمل حتى عندما لا يكون Chrome في الواجهة.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+الصق <bdi dir="ltr">`edge://extensions/shortcuts`</bdi> في شريط العناوين.
+
+يحتفظ Edge لنفسه بالاختصارات <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd></bdi> (تكرار علامة التبويب) و<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>U</Kbd></bdi> (<bdi dir="ltr">Read Aloud</bdi>، القراءة بصوت عالٍ) و<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd></bdi> (الطباعة بمربع حوار النظام)، لذا يبدأ أي أمر إضافة يقترح أحدها على <bdi dir="ltr">**Not set**</bdi> في Edge 158. ويرفض Edge 158 أيضًا بعض مفاتيح <bdi dir="ltr"><Kbd>Alt</Kbd>+<Kbd>Shift</Kbd></bdi> التي لا تذكرها قائمة Microsoft، مثل <bdi dir="ltr"><Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi> و<bdi dir="ltr"><Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Z</Kbd></bdi>. وتتجنب أوامر الحفظ في TabMerger كل هذه المفاتيح، لذا تكون الأوامر الأربعة معيّنة في أي تثبيت جديد:
+
+<AnnotatedFigure src="/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp" alt="صفحة اختصارات لوحة المفاتيح للإضافات في Edge لـ TabMerger: أوامر الحفظ الأربعة كلها معيّنة، إلى Alt+Shift+S وAlt+Shift+O وAlt+Shift+Comma وAlt+Shift+Period" width={852} height={460} boxes={[{ id: 'save-shortcuts' }]} source="edge://extensions/shortcuts · Edge 158.0.4370.33">تثبيت جديد لـ TabMerger في Edge 158: لكل أوامر الحفظ الأربعة مفاتيحها، ولا شيء يحتاج إلى إصلاح.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+افتح <bdi dir="ltr">`about:addons`</bdi>، وانقر قائمة الترس، واختر **أدِر اختصارات الامتدادات** (<bdi dir="ltr">Manage Extension Shortcuts</bdi>). لاحظ أن <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd></bdi> يفتح نافذة خاصة في Firefox، لذا اختر مفتاحًا آخر لأي شيء يقترحه.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>صفحة الاختصارات لا تنبّهك. إذا كان اختصار ما «لا يفعل شيئًا»، فتحقق منها أولًا.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="مفاتيح TabMerger">
+
+يحفظ [TabMerger](/features)، إضافتنا المجانية لـ Chrome وEdge وFirefox، علامات التبويب مباشرة من لوحة المفاتيح دون أن تفتحه. ويقترح مفتاحًا لكل أمر من أوامر الحفظ الأربعة، اختير بحيث يتجنب الاختصارات التي يستخدمها Chrome وEdge وFirefox نفسها، ويمكنك تغيير أي منها من صفحة الاختصارات في متصفحك (أعلاه):
+
+<ComparisonTable
+  head={['المفتاح المقترح', 'ما يحفظه']}
+  keysColumn={0}
+  rows={[
+    ['Alt+Shift+S', 'علامة التبويب الحالية'],
+    ['Alt+Shift+O', 'كل علامات التبويب الأخرى في النافذة'],
+    ['Alt+Shift+Comma', 'علامات التبويب على اليمين'],
+    ['Alt+Shift+Period', 'علامات التبويب على اليسار'],
+  ]}
+/>
+
+على Mac تستخدم هذه الأوامر <bdi dir="ltr"><Kbd>Control</Kbd>+<Kbd>Shift</Kbd></bdi> بدلًا من <bdi dir="ltr"><Kbd>Alt</Kbd>+<Kbd>Shift</Kbd></bdi>: يحفظ <bdi dir="ltr"><Kbd>Control</Kbd>+<Kbd>Shift</Kbd>+<Kbd>S</Kbd></bdi> علامة التبويب الحالية. هذه هي المفاتيح التي يحصل عليها التثبيت الجديد. التحديثات لا تغيّر الاختصارات، لذا إذا ثبّتّ TabMerger قبل وصول هذه المفاتيح، فسيحتفظ بمفاتيحه السابقة، بما فيها ما هو على <bdi dir="ltr">**Not set**</bdi>: عيّنها من صفحة الاختصارات.
+
+داخل النافذة المنبثقة، يبحث <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>K</Kbd></bdi>) في علامات التبويب المفتوحة والمحفوظة والمغلقة مؤخرًا في قائمة واحدة.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tab-keyboard-shortcuts/tm-search" alt="بحث TabMerger مفتوح بالاستعلام docs ويعرض علامات التبويب المفتوحة والمحفوظة المطابقة، المظهر الفاتح" darkAlt="بحث TabMerger مفتوح بالاستعلام docs ويعرض علامات التبويب المفتوحة والمحفوظة المطابقة، المظهر الداكن" boxes={[{ id: 'search-input', label: 'البحث' }]} source="TabMerger 3.16.1">اضغط <bdi dir="ltr">Ctrl+K</bdi> ثم اكتب: تأتي النتائج من علامات التبويب المفتوحة والمحفوظة على حد سواء.</ThemedScreenshot>
+
+<InstallCta>مجاني لـ Chrome وEdge وFirefox. لا حاجة إلى حساب للبدء.</InstallCta>
+
+تجد عادات أخرى تبقي عدد علامات التبويب قليلًا في [دليلنا للتعامل مع كثرة علامات التبويب](/blog/manage-too-many-tabs)، وما يقدّمه كل متصفح بعيدًا عن الاختصارات في [مقارنة ميزات علامات التبويب في Chrome وEdge وFirefox](/blog/browser-tab-features-compared).
+
+</Section>
+
+<Section id="faq" title="الأسئلة الشائعة">
+
+<Faq items={post.faq} />
+
+</Section>

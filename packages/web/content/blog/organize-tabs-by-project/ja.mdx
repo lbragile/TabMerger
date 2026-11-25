@@ -1,0 +1,160 @@
+export const post = {
+  slug: 'organize-tabs-by-project',
+  title: 'タブをプロジェクトごとに整理する方法：1 つのプロジェクトに 1 つのグループ',
+  navTitle: 'タブをプロジェクトごとに整理する',
+  seoTitle: 'ブラウザのタブをプロジェクトごとに整理する方法（TabMerger）',
+  description:
+    'プロジェクトごとに TabMerger のグループを作り、作業の部分ごとに名前付きのウィンドウを置き、メモで背景を残し、終わったプロジェクトはアーカイブへ。グループがこう動く理由と手順を順に解説します。',
+  shareSummary: 'プロジェクトごとに 1 グループ、その中に名前付きのウィンドウ、終わった仕事はアーカイブへ。',
+  dek: 'プロジェクトを切り替えるたびにタブを探し回る必要はありません。開いて、閉じて、アーカイブできる居場所をプロジェクトごとに用意しましょう。',
+  published: '2026-12-15',
+  updated: '2026-12-15',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'TabMerger のグループには複数のウィンドウを入れられ、ウィンドウごとに名前とメモを付けられます。', source: 'TabMerger 3.16.1' },
+    { text: 'スターを付けたグループはサイドバーの上部に残ります。', source: 'TabMerger 3.16.1 のソースコード' },
+    { text: 'アーカイブしたグループは読み取り専用になり、「復元」で元に戻せます。', source: 'TabMerger 3.16.1' },
+    { text: '無料プランでは 5 グループ、50 タブまで（アーカイブしたグループも含む）。Pro は無制限です。', source: 'TabMerger の料金', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'タブをプロジェクトごとに整理するには、どうするのがいちばんですか？',
+      answer:
+        'プロジェクトごとに TabMerger のグループを 1 つ作り、作業の部分ごとに名前付きのウィンドウに分けます（たとえばデザイン、実装、フィードバック）。グループに背景を書いたメモを付け、今週取り組むプロジェクトにはスターを付け、終わったプロジェクトはアーカイブしましょう。',
+    },
+    {
+      question: '1 つのグループに複数のウィンドウを入れられますか？',
+      answer: 'はい。TabMerger のグループにはウィンドウをいくつでも入れられます。ウィンドウごとに名前、メモ、スターを付けられ、それぞれが別のブラウザウィンドウとして開きます。',
+    },
+    {
+      question: 'グループをアーカイブすると、どうなりますか？',
+      answer:
+        'グループはサイドバーの「アーカイブ済み」セクションに移り、読み取り専用になります。邪魔にはならず、なくなりもしません。タブをクリックすればこれまでどおり開き、「復元」でグループを一覧に戻せます。',
+    },
+    {
+      question: 'Chrome のタブグループは、保存しても残りますか？',
+      answer: 'はい。保存したタブは Chrome のタブグループの名前と色を保ちます。タブバーでグループ化していたプロジェクトは、TabMerger の中でも同じ構成のままです。',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp', alt: 'Design、Build、Feedback という名前付きの 3 つのウィンドウがある Website redesign グループ、ライトテーマ' },
+    { src: '/blog/organize-tabs-by-project/tm-project-group-dark.webp', alt: 'Design、Build、Feedback という名前付きの 3 つのウィンドウがある Website redesign グループ、ダークテーマ' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-light.webp', alt: 'Archive group（グループをアーカイブ）があるサイドバーのグループの右クリックメニュー、ライトテーマ' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-dark.webp', alt: 'Archive group（グループをアーカイブ）があるサイドバーのグループの右クリックメニュー、ダークテーマ' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-light.webp', alt: 'Restore（復元）ボタンのある読み取り専用のアーカイブ済みグループと、サイドバーで開いた Archived（アーカイブ済み）セクション、ライトテーマ' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-dark.webp', alt: 'Restore（復元）ボタンのある読み取り専用のアーカイブ済みグループと、サイドバーで開いた Archived（アーカイブ済み）セクション、ダークテーマ' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-by-project/og.png', alt: 'TabMerger でタブをプロジェクトごとに整理：Design、Build、Feedback のウィンドウを持つ 1 つのグループ' },
+  toc: [
+    { id: 'quick', label: '簡単な答え' },
+    { id: 'problem', label: '複数のプロジェクトがタブバーを共有すると' },
+    { id: 'why', label: 'グループがこう動く理由' },
+    { id: 'steps', label: 'プロジェクトを準備する' },
+    { id: 'archive', label: '終わった仕事をアーカイブ' },
+    { id: 'benefit', label: '得られること' },
+    { id: 'habits', label: 'よい習慣' },
+    { id: 'plans', label: '無料と Pro' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+}
+
+<QuickAnswer>
+
+プロジェクトごとに専用の [TabMerger](/features) グループを作りましょう。その中に、作業の部分ごとに名前付きのウィンドウ（「デザイン」「実装」「フィードバック」）を 1 つずつ置き、背景を書いたグループのメモを付けます。今週取り組むプロジェクトにはスターを付けて上部に残し、終わったら **グループをアーカイブ**（Archive group）で、タブを 1 つも削除せずに読み取り専用で片付けます。
+
+</QuickAnswer>
+
+<InstallCta>プロジェクトごとの居場所を、ワンクリックで開ける場所に。Chrome、Edge、Firefox 向けで無料です。</InstallCta>
+
+<Section id="problem" title="3 つのプロジェクトが 1 本のタブバーを共有すると">
+
+ウェブサイトのリニューアル、レポートの執筆、旅行の計画を同時に進めているとします。水曜日にはブラウザに 3 つすべてが詰まっています。航空券の検索の隣にモックアップ、レポートの 2 つの資料のあいだにプルリクエスト。プロジェクトを切り替えるたびにタブバー全体を見渡すことになり、どのプロジェクトのものかわからないので、何かを閉じるのも不安です。
+
+ブラウザ自体のタブグループは 1 つのウィンドウの中では役立ちますが、プロジェクトが 1 つのウィンドウに収まることはまずありません。そしてウィンドウを閉じれば、そのタブがどこへ行ったのかもわからなくなります。
+
+</Section>
+
+<Section id="why" title="TabMerger のグループがこのように動く理由">
+
+- **グループはウィンドウではなくプロジェクト**。1 つのグループには作業に必要なだけウィンドウを入れられ、各ウィンドウは別のブラウザウィンドウとして開きます。実際のプロジェクトもそういう形です。デザインのタブはここ、実装のタブはあそこ。
+- **名前とメモが背景を伝える**。ウィンドウは名前を変えられ、それぞれにメモを付けられます。グループも同じです。何か月か後には、ファビコンの列よりも「フィードバック」という名前と決まったことを書いたメモのほうが、ずっと多くを語ってくれます。
+- **並べ替えはスターにおまかせ**。スターを付けたグループはサイドバーの上部に残り、スターを付けたウィンドウはグループの中で先頭に並びます。
+- **アーカイブは削除ではなく片付け**。アーカイブしたグループは一覧から **アーカイブ済み**（Archived）セクションに移り、読み取り専用になるので、うっかり何かが動くこともありません。タブはクリックすれば開き、**復元**（Restore）で元に戻せます。
+- **ブラウザでの構成もそのまま**。保存したタブは Chrome のタブグループの名前と色を保つので、タブバーですでにグループ化していたプロジェクトはその形のまま残ります。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-project-group" alt="Design、Build、Feedback という名前付きの 3 つのウィンドウがある Website redesign グループ、ライトテーマ" darkAlt="Design、Build、Feedback という名前付きの 3 つのウィンドウがある Website redesign グループ、ダークテーマ" boxes={[{ id: 'windows', label: '段階ごとのウィンドウ' }]} source="TabMerger 3.16.1">1 つのプロジェクトに 3 つのウィンドウ。それぞれ作業の部分に合わせた名前です。</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="5 つの手順でプロジェクトを準備する">
+
+1. サイドバーの **グループを追加**（Add Group）を押し、プロジェクト名を付けます。色の丸をクリックすると色を選べます。
+2. プロジェクトのページを開いてから、グループの **⋯** メニューで **現在の内容と統合**（Merge with current）を選び、開いているウィンドウをグループに保存します。
+3. 各ウィンドウの **⋯** メニュー（**ウィンドウ名を変更**、Rename window）から、中身に合わせて作業の部分の名前を付けます。
+4. グループのメモ（ **⋯** メニューの **メモを追加**、Add note）に背景を書きます。締め切り、チケット、何をもって「完了」とするか。
+5. 進行中のあいだは、グループにスター（名前の横の星）を付けておきます。
+
+あとでタブを別のプロジェクトに移すときは、サイドバーのグループにドラッグするか、タブの右クリックメニューの **グループに移動**（Move to group）と **グループにコピー**（Copy to group）を使います。**ウィンドウを統合**（Unite windows）と **ウィンドウを分割**（Split windows）を使えば、グループの構成を一度に組み替えられます。
+
+</Section>
+
+<Section id="archive" title="終わった仕事をアーカイブする">
+
+プロジェクトが終わったら、サイドバーでそのグループを右クリックし、**グループをアーカイブ** を選びます。グループは読み取り専用で **アーカイブ済み** セクションに移ります。タブはどれでも開けますし、**復元** でグループ全体を一覧に戻せます。
+
+<Carousel label="プロジェクトのアーカイブ" steps={[{ title: 'アーカイブ' }, { title: 'アーカイブ済み' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archive-menu" alt="Archive group（グループをアーカイブ）があるサイドバーのグループの右クリックメニュー、ライトテーマ" darkAlt="Archive group（グループをアーカイブ）があるサイドバーのグループの右クリックメニュー、ダークテーマ" boxes={[{ id: 'archive', label: 'グループをアーカイブ' }]} source="TabMerger 3.16.1">サイドバーでグループを右クリックします。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archived" alt="Restore（復元）ボタンのある読み取り専用のアーカイブ済みグループと、サイドバーで開いた Archived（アーカイブ済み）セクション、ライトテーマ" darkAlt="Restore（復元）ボタンのある読み取り専用のアーカイブ済みグループと、サイドバーで開いた Archived（アーカイブ済み）セクション、ダークテーマ" boxes={[{ id: 'banner', label: '復元するまで読み取り専用' }]} source="TabMerger 3.16.1">邪魔にならず、それでもワンクリックで開けます。</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="benefit" title="得られること">
+
+プロジェクトの切り替えは、タブバーを探すことではなく、グループを開くことになります。いま手をつけていないプロジェクトのウィンドウはすべて閉じても、タブがどこにあるかは正確にわかっていますし、サイドバーには進行中のものだけが並びます。
+
+</Section>
+
+<Section id="habits" title="よい習慣">
+
+- **グループはトピックごとではなくプロジェクトごとに**。「デザインのリンク」ではなく「ウェブサイトのリニューアル」。
+- **ウィンドウにはサイト名ではなく、段階や役割の名前を付ける**。「GitHub」より「フィードバック」のほうが長く使えます。
+- **スターは多くても数個まで**。スターは「今週」の印です。
+- **納品したその日にアーカイブ**。アーカイブしたプロジェクトもワンクリックで開けるので、一覧に残しておく理由はありません。
+- **忙しいプロジェクトでは、新しいタブの振り分けを URL ルールに任せる**。[URL ルールでタブを自動で振り分ける方法](/blog/auto-sort-tabs-with-url-rules)をご覧ください。調べものが多いプロジェクトなら、[リサーチ用にタブを整理する方法](/blog/organize-tabs-for-research)でメモとリマインダーを加えられます。
+
+</Section>
+
+<Section id="plans" title="無料と Pro">
+
+<ComparisonTable
+  head={['', '無料', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['グループ', '5（アーカイブしたグループも含む）', '無制限'],
+    ['タブ', '50', '無制限'],
+    ['ウィンドウ、名前、メモ、スター、アーカイブ', 'はい', 'はい'],
+    ['ほかのデバイスでのプロジェクト', 'いいえ', 'はい（エンドツーエンドで暗号化）'],
+  ]}
+/>
+
+ここで紹介した整理の機能はすべて無料プランで使えます。制限されるのはグループとタブの数だけです。[Pro](/pricing) ならその制限がなくなり、プロジェクトをデバイス間で同期できます。
+
+<InstallCta>プロジェクトごとに専用のグループを。Chrome、Edge、Firefox で、無料で始められます。</InstallCta>
+
+プロジェクトまわりの毎日の流れは、[TabMerger で回す毎日のタブワークフロー](/blog/tabmerger-daily-workflow)をご覧ください。
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

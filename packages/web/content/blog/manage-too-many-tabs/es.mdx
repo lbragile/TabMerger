@@ -1,0 +1,246 @@
+export const post = {
+  slug: 'manage-too-many-tabs',
+  title: '¿Demasiadas pestañas abiertas? Una rutina de cuatro pasos que funciona en cualquier navegador',
+  seoTitle: '¿Demasiadas pestañas abiertas? Cómo ordenarlas en tu navegador',
+  description:
+    '¿Demasiadas pestañas abiertas? Una rutina de cuatro pasos para Chrome, Edge y Firefox, y cómo TabMerger guarda todas las ventanas con un clic para que puedas cerrarlas sin perder nada.',
+  shareSummary: 'Cerrar, agrupar, guardar y programar: una rutina de pestañas para Chrome, Edge y Firefox.',
+  dek: 'Cierra lo que ya terminaste, agrupa lo que tienes entre manos, guarda el resto con un clic y deja que el guardado automático lo mantenga así.',
+  published: '2026-11-21',
+  updated: '2026-11-21',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'El Ahorro de memoria de Chrome estaba desactivado en un perfil nuevo de Chrome 157.', source: 'chrome://settings/performance, 20 nov. 2026' },
+    { text: 'Edge 158 suspende las pestañas inactivas, a los 15 minutos de forma predeterminada.', source: 'edge://settings, 20 nov. 2026' },
+    {
+      text: 'Ctrl+Shift+A busca entre las pestañas abiertas en Chrome y Firefox.',
+      source: 'Ayuda de Chrome; atajos de Firefox 159',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'El menú de pestaña de Firefox tiene «Cerrar pestañas duplicadas».', source: 'Firefox 159' },
+  ],
+  faq: [
+    {
+      question: '¿Cuántas pestañas son demasiadas?',
+      answer:
+        'No hay un número fijo. Son demasiadas cuando ya no puedes leer los títulos de las pestañas, no encuentras una sin rebuscar o el navegador empieza a avisarte de problemas de rendimiento.',
+    },
+    {
+      question: '¿Cómo dejo de tener tantas pestañas abiertas?',
+      answer:
+        'Cierra cada día las pestañas que ya terminaste, agrupa las de la tarea de hoy, guarda el resto en un sitio donde puedas buscarlas y haz un repaso corto cada semana.',
+    },
+    {
+      question: '¿Las pestañas abiertas ralentizan el ordenador?',
+      answer:
+        'Pueden hacerlo, porque cada página abierta usa memoria. El Ahorro de memoria de Chrome y las pestañas suspendidas de Edge liberan la memoria de las pestañas que no usas; se recargan cuando vuelves a ellas.',
+    },
+    {
+      question: '¿Es seguro cerrar pestañas que quizá necesite más adelante?',
+      answer:
+        'Sí, si antes las guardas: una carpeta de marcadores, un gestor de sesiones o TabMerger conservan la dirección para que puedas volver a abrirla. Consulta nuestra guía para guardar todas las pestañas abiertas.',
+      link: { text: 'guardar todas las pestañas abiertas', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp', alt: 'TabMerger, «Now Open» (Abiertas ahora), con tres ventanas del navegador y 18 pestañas, tema claro' },
+    { src: '/blog/manage-too-many-tabs/tm-now-open-dark.webp', alt: 'TabMerger, «Now Open» (Abiertas ahora), con tres ventanas del navegador y 18 pestañas, tema oscuro' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-light.webp', alt: 'Ajustes de TabMerger, pestaña «Data» (Datos): «Auto-save open tabs» (Guardar pestañas abiertas automáticamente) activado y «When open tabs pass» (Cuando las pestañas abiertas superen) en «30 open tabs», tema claro' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-dark.webp', alt: 'Ajustes de TabMerger, pestaña «Data» (Datos): «Auto-save open tabs» (Guardar pestañas abiertas automáticamente) activado y «When open tabs pass» (Cuando las pestañas abiertas superen) en «30 open tabs», tema oscuro' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Configuración de Chrome, «Performance» (Rendimiento), con el interruptor «Memory Saver» (Ahorro de memoria)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Configuración de Edge, «Performance», con «Automatically put tabs to sleep» activado y fijado en 15 minutos' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'save-tabs', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp' },
+  ogImage: { src: '/blog/manage-too-many-tabs/og.png', alt: 'Tarjeta con el título «Too many tabs? A four-step routine that works in any browser»: una guía de TabMerger, con tres ventanas del navegador en un solo lugar' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'how-many', label: '¿Cuántas son demasiadas?' },
+    { id: 'close', label: '1. Cerrar' },
+    { id: 'group', label: '2. Agrupar' },
+    { id: 'save', label: '3. Guardar' },
+    { id: 'schedule', label: '4. Programar un repaso' },
+    { id: 'memory', label: 'Deja que el navegador ayude' },
+    { id: 'tabmerger', label: 'Hazlo en TabMerger' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+  browserSections: ['close', 'memory'],
+  browserFact: {
+    label: 'Ajuste de memoria',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Configuración → System and performance → Performance',
+      firefox: 'Clic derecho en una pestaña → Descargar pestaña',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Sigue cuatro pasos, en este orden: **cierra** todas las pestañas con las que ya terminaste, **agrupa** las de la tarea que tienes delante, **guarda** las de «quizá más tarde» en un sitio donde puedas buscarlas y **programa** un repaso de diez minutos una vez por semana. Funciona en Chrome, Edge y Firefox. El paso que más despeja es guardar, y [TabMerger](/features) lo resuelve con un clic: todas las ventanas abiertas se guardan en un grupo con nombre que puedes buscar y volver a abrir cuando quieras.
+
+</QuickAnswer>
+
+<InstallCta>Guarda todas las ventanas abiertas con un clic y ciérralas sin perder nada. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="how-many" title="¿Cuántas pestañas son demasiadas?">
+
+No hay un número mágico, y no vamos a inventarnos uno. Las pestañas se convierten en un problema cuando dejan de cumplir su función, que es tener a mano lo que vas a retomar pronto. Fíjate en estas señales:
+
+- La barra de pestañas solo muestra iconos y ya no puedes leer los títulos.
+- Abres una página y descubres que ya estaba abierta, dos veces.
+- Dejas pestañas abiertas «por si acaso», porque cerrarlas te parece perderlas.
+- El navegador te avisa. Chrome muestra **Alertas de problemas de rendimiento** («Performance issue alerts») que sugieren desactivar pestañas cuando detecta un rendimiento bajo.
+
+La última es un problema del navegador, y tiene solución (más abajo). Las tres primeras son un problema de orden, y eso es lo que arregla la rutina.
+
+Las capturas de los navegadores muestran la interfaz en inglés. Cuando el nombre en español es distinto, el inglés aparece entre paréntesis la primera vez.
+
+</Section>
+
+<Section id="close" title="1. Cierra lo que ya terminaste">
+
+Empieza por lo más fácil. Cierra las pestañas que ya cumplieron su función: la búsqueda que ya resolviste, el artículo que ya leíste, la página de pago.
+
+- <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> (<Kbd>⌘</Kbd>+<Kbd>W</Kbd> en Mac) cierra la pestaña actual en los tres navegadores.
+- ¿Cerraste una de más? <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> la vuelve a abrir. Hay más en nuestra referencia de [atajos de teclado para pestañas](/blog/tab-keyboard-shortcuts).
+
+<BrowserPanels section="close">
+<BrowserPanel browser="chrome">
+
+Pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> en Mac) para abrir la **Búsqueda en pestañas** («Tab Search»): una lista de todas las pestañas abiertas, con un botón de cerrar en cada fila. Cierra las que ya terminaste directamente desde la lista.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+La lista de atajos de teclado de Edge no incluye ninguna tecla para buscar entre las pestañas abiertas, así que recorre la barra de pestañas: haz clic en una pestaña que ya no necesites y pulsa <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd>.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> muestra la lista de todas tus pestañas, para que encuentres y cierres las que ya terminaste.
+- Haz clic derecho en cualquier pestaña y elige **Cerrar pestañas duplicadas** («Close Duplicate Tabs») para quitar las repetidas de una vez.
+
+TabMerger elimina las repetidas en **todas** las ventanas a la vez; consulta [cómo cerrar pestañas duplicadas](/blog/close-duplicate-tabs).
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>cerrar solo es seguro con las pestañas de las que estás seguro. Todo lo que te haga dudar va al paso 3, no a la papelera.</Catch>
+
+</Section>
+
+<Section id="group" title="2. Agrupa las pestañas de la tarea de hoy">
+
+Los grupos de pestañas dan a un conjunto de pestañas un nombre y un color, y se contraen en una sola etiqueta. Chrome, Edge y Firefox los tienen: haz clic derecho en una pestaña y añádela a un grupo nuevo.
+
+Mantén un grupo por cada tarea en la que de verdad estés trabajando hoy, y contrae los que no estés mirando. Un grupo contraído ocupa lo mismo que una pestaña. Cómo se guardan, se sincronizan y se vuelven a abrir los grupos depende del navegador; nuestra [guía de los grupos de pestañas de Chrome](/blog/chrome-tab-groups) cuenta los detalles y los límites.
+
+</Section>
+
+<Section id="save" title="3. Guarda las pestañas de «quizá más tarde»">
+
+Este es el paso que de verdad reduce la barra de pestañas. Una pestaña que quizá necesites la semana que viene no tiene por qué estar abierta; tiene que poder encontrarse.
+
+- **Guarda la ventana en marcadores.** <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> guarda todas las pestañas de la ventana actual en una carpeta de marcadores nueva. Nuestra guía para [guardar todas las pestañas abiertas](/blog/save-all-open-tabs) lo explica navegador por navegador.
+- **Usa un gestor de sesiones.** Guarda ventanas enteras, con nombre, y las restaura con un clic. Descubre [qué hace un gestor de sesiones del navegador](/blog/browser-session-manager) y en qué se diferencia de los marcadores.
+- **Léelo más tarde.** Si es un artículo, una lista de lectura es mejor que una pestaña. ¿No sabes dónde debe ir una página? Nuestra [guía de pestañas frente a marcadores](/blog/tabs-vs-bookmarks) tiene una tabla para decidir.
+
+Luego cierra lo que guardaste. Ese es todo el truco: guardar es lo que hace que cerrar sea seguro.
+
+</Section>
+
+<Section id="schedule" title="4. Apunta un repaso semanal en el calendario">
+
+Las pestañas vuelven a acumularse. Un repaso corto y regular mantiene el número bajo sin depender de la fuerza de voluntad:
+
+1. Una vez por semana, abre tus carpetas o grupos guardados.
+2. Borra lo que ya no necesites. Si no lo has abierto en un mes, probablemente no lo harás.
+3. Cierra las ventanas que guardaste durante la semana.
+
+Si investigar es parte de tu trabajo (estudiantes, analistas, desarrolladores que leen documentación), mantén un grupo guardado por proyecto y repásalo cuando termine el proyecto, no antes.
+
+</Section>
+
+<Section id="memory" title="Deja que el navegador libere la memoria">
+
+Los navegadores pueden evitar que las pestañas inactivas usen memoria sin cerrarlas. La pestaña se queda en la barra y se recarga cuando haces clic en ella.
+
+<BrowserPanels section="memory">
+<BrowserPanel browser="chrome">
+
+Activa el **Ahorro de memoria** («Memory Saver»): **Configuración → Rendimiento** («Settings → Performance»), o pega `chrome://settings/performance` en la barra de direcciones.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Configuración de Chrome, «Performance» (Rendimiento), con el interruptor «Memory Saver» (Ahorro de memoria)" width={1600} height={524} eager boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">«Memory Saver» (Ahorro de memoria) de Chrome, desactivado en un perfil nuevo de Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Activa **Automatically put tabs to sleep** en **Configuración → System and performance → Performance**, y elige cuánto espera una pestaña antes de suspenderse.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Configuración de Edge, «Performance», con «Automatically put tabs to sleep» activado y fijado en 15 minutos" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Las pestañas suspendidas de Edge, activadas de forma predeterminada: las pestañas inactivas se suspenden a los 15 minutos.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Haz clic derecho en una pestaña y elige **Descargar pestaña** («Unload Tab») para liberar su memoria a mano.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>esto ayuda al ordenador, no a ti. Cincuenta pestañas suspendidas siguen siendo cincuenta pestañas que revisar. Úsalo junto con la rutina, no en su lugar.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="Hazlo en TabMerger">
+
+[TabMerger](/features), nuestra extensión gratuita para Chrome, Edge y Firefox, convierte los pasos 3 y 4 en un par de clics. **Abiertas ahora** muestra todas las ventanas abiertas y sus pestañas en un solo lugar, así que ves todo el montón de una vez. Guárdalas todas en un grupo con nombre con **Combinar con lo actual**, cierra las ventanas y encuentra cualquier pestaña de nuevo con <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>, esté abierta, guardada o cerrada hace poco. Un ordenador lento suele ser la primera señal de que hay demasiadas pestañas; [así es como guardar y cerrar libera la memoria](/blog/too-many-tabs-slow-browser).
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-now-open" alt="TabMerger, «Now Open» (Abiertas ahora), con tres ventanas del navegador y 18 pestañas, tema claro" darkAlt="TabMerger, «Now Open» (Abiertas ahora), con tres ventanas del navegador y 18 pestañas, tema oscuro" boxes={[{ id: 'now-open-summary', label: 'Ventanas y pestañas abiertas' }]} source="TabMerger 3.16.1">«Now Open» (Abiertas ahora): tres ventanas y 18 pestañas, antes de ordenar.</ThemedScreenshot>
+
+Para el repaso semanal, **Ajustes → Datos → Guardar pestañas abiertas automáticamente** puede guardar tus pestañas abiertas como un grupo nuevo según un horario, o en cuanto superes 20, 30, 50, 75 o 100 pestañas abiertas. El plan gratuito conserva los 2 guardados automáticos más recientes, que cuentan para sus 5 grupos y 50 pestañas; Pro los conserva todos. Para una rutina que evite que el montón vuelva, consulta [un flujo de trabajo diario con TabMerger](/blog/tabmerger-daily-workflow).
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-auto-save-threshold" alt="Ajustes de TabMerger, pestaña «Data» (Datos): «Auto-save open tabs» (Guardar pestañas abiertas automáticamente) activado y «When open tabs pass» (Cuando las pestañas abiertas superen) en «30 open tabs», tema claro" darkAlt="Ajustes de TabMerger, pestaña «Data» (Datos): «Auto-save open tabs» (Guardar pestañas abiertas automáticamente) activado y «When open tabs pass» (Cuando las pestañas abiertas superen) en «30 open tabs», tema oscuro" boxes={[{ id: 'threshold', label: 'Cuando las pestañas abiertas superen' }]} source="TabMerger 3.16.1">«Auto-save open tabs» (Guardar pestañas abiertas automáticamente), configurado para activarse en cuanto haya más de 30 pestañas abiertas.</ThemedScreenshot>
+
+Las pestañas guardadas también reciben un punto ámbar cuando superan la antigüedad que elijas (7, 14, 30 o 60 días), y el menú **⋯** de un grupo tiene **Quitar duplicadas**.
+
+<InstallCta>Gratis para Chrome, Edge y Firefox. No necesitas cuenta para empezar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

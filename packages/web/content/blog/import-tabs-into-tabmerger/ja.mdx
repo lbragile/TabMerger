@@ -1,0 +1,166 @@
+export const post = {
+  slug: 'import-tabs-into-tabmerger',
+  title: 'TabMerger にタブをインポート：OneTab のリスト、ブックマーク、バックアップ',
+  navTitle: 'TabMerger にタブをインポート',
+  seoTitle: 'OneTab・ブックマーク・バックアップを TabMerger にインポートする方法',
+  description:
+    '保存したタブをそのまま持ち込めます。TabMerger は OneTab のエクスポート、リンクだけのリスト、ブラウザのブックマーク ファイル、自身の JSON バックアップをインポートできます。形式ごとに何になるか、何がスキップされるかを解説します。',
+  shareSummary: 'OneTab のリスト、ブックマーク ファイル、TabMerger のバックアップを一度でグループに。',
+  dek: 'ツールを乗り換えても、一からやり直す必要はありません。保存したリストはすべて持っていきましょう。',
+  published: '2026-12-19',
+  updated: '2026-12-19',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: '.txt（OneTab またはリンクだけのリスト）、.html（ブックマーク）、.json（TabMerger）をインポートできます。', source: 'TabMerger 3.16.1' },
+    { text: 'OneTab のリストは 1 つずつ別のグループになります。', source: 'TabMerger 3.16.1' },
+    { text: 'インポートは常にグループを追加するだけで、既存のものを置き換えることはありません。', source: 'TabMerger 3.16.1' },
+    { text: 'インポートとエクスポートは無料プランで使えます。', source: 'TabMerger の料金', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'OneTab を TabMerger にインポートするには？',
+      answer:
+        'OneTab で「インポートとエクスポート」を選び、テキストをコピーして .txt ファイルとして保存します。TabMerger で 設定 → データ → ファイルをインポート を開き、そのファイルを選びます。OneTab のリストは 1 つずつ別のグループになります。',
+    },
+    {
+      question: 'ブックマークを TabMerger にインポートできますか？',
+      answer:
+        'はい。ブックマークを HTML ファイルとしてエクスポートし、設定 → データ でインポートします。ファイルの最上位にある各フォルダーが、その名前のグループになり、中にあるフォルダーもそのグループにまとめられます。',
+    },
+    {
+      question: 'インポートすると既存のグループは置き換えられますか？',
+      answer: 'いいえ。インポートは、見つかったグループ数を示す確認のあと、ファイルのグループを常に既存のグループの隣に追加します。',
+    },
+    {
+      question: 'インポートできないリンクはどうなりますか？',
+      answer: 'ブックマークレットのように実際のウェブアドレスではない項目はスキップされ、インポート後のメッセージで除外された件数がわかります。',
+    },
+  ],
+  images: [
+    { src: '/blog/import-tabs-into-tabmerger/tm-data-tab-light.webp', alt: 'TabMerger の「Settings」（設定）の「Data」（データ）。「Import & export」（インポートとエクスポート）セクションに「Export JSON」（JSON をエクスポート）と「Import file」（ファイルをインポート）。ライトテーマ' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-data-tab-dark.webp', alt: 'TabMerger の「Settings」（設定）の「Data」（データ）。「Import & export」（インポートとエクスポート）セクションに「Export JSON」（JSON をエクスポート）と「Import file」（ファイルをインポート）。ダークテーマ' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-light.webp', alt: 'ファイル onetab-export.txt について「Import 2 groups?」（2個のグループをインポートしますか？）と尋ねる TabMerger。ライトテーマ' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-dark.webp', alt: 'ファイル onetab-export.txt について「Import 2 groups?」（2個のグループをインポートしますか？）と尋ねる TabMerger。ダークテーマ' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-imported-light.webp', alt: 'グループ「Imported 1」と「Imported 2」としてインポートされた 2 つの OneTab リスト。ライトテーマ' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-imported-dark.webp', alt: 'グループ「Imported 1」と「Imported 2」としてインポートされた 2 つの OneTab リスト。ダークテーマ' },
+  ],
+  tags: ['tabmerger-guides', 'save-tabs', 'bookmarks', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-light.webp' },
+  ogImage: { src: '/blog/import-tabs-into-tabmerger/og.png', alt: 'TabMerger にタブをインポート：グループとしてインポートされた 2 つの OneTab リスト' },
+  toc: [
+    { id: 'quick', label: '簡単な答え' },
+    { id: 'problem', label: 'ほかの場所に眠る保存済みタブ' },
+    { id: 'why', label: 'インポートの仕組み' },
+    { id: 'formats', label: 'すべての形式' },
+    { id: 'steps', label: 'ファイルをインポートする' },
+    { id: 'benefit', label: '得られるもの' },
+    { id: 'habits', label: 'おすすめの習慣' },
+    { id: 'plans', label: '無料と Pro' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+}
+
+<QuickAnswer>
+
+[TabMerger](/features) を開き、**設定 → データ**（Settings → Data）に進んで **ファイルをインポート**（Import file）を押します。OneTab のエクスポートかリンクだけのリスト（`.txt`）、ブックマーク ファイル（`.html`）、TabMerger のバックアップ（`.json`）を選びます。TabMerger は見つかったグループ数を表示し、確認すると自分のグループの隣に追加します。OneTab のリストと最上位のブックマーク フォルダーは、それぞれ 1 つのグループになります。
+
+</QuickAnswer>
+
+<InstallCta>保存したリストをすべて持ち込めます。Chrome、Edge、Firefox 向けに無料。</InstallCta>
+
+<Section id="problem" title="ほかの場所に眠ったままの保存済みタブ">
+
+何年分もの OneTab のリスト。旅行ごとのブックマーク フォルダー。古いノートパソコンのバックアップ。どれも保存されているのに、1 か所でまとめて検索できず、リンクを 1 つずつ手で移すのは、いつまでも手がつかない種類の作業です。
+
+インポートなら、その作業がファイル 1 つとクリック 1 回で終わります。
+
+</Section>
+
+<Section id="why" title="インポートがこのように動く理由">
+
+- **追加するだけ**。インポートはファイルのグループを既存のグループの隣に置き、手持ちのものには一切触れないので、ファイルを試しても安全です。
+- **まず確認**。何かを追加する前に、TabMerger はどのファイルにいくつのグループが見つかったかを伝え、**インポート**（Import）のクリックを待ちます。
+- **全項目をチェック**。取り込まれるのは実際のウェブアドレスだけです。ブックマークレット、`javascript:` リンク、絶対アドレスでないものはすべてスキップされて数えられ、あとのメッセージでその件数がわかります。
+- **ファイルに構造があれば維持**。TabMerger のバックアップでは、ウィンドウ、名前、色、メモ、スター、リマインダーの時刻が戻ります。ほかのツールの形式は、リストまたはフォルダーごとに 1 つのグループになります。
+- **プランの上限を事前にチェック**。無料プランでは、5 グループまたは 50 タブを超えるインポートは何も追加する前に止まり、ファイルの中身を知らせます。
+
+</Section>
+
+<Section id="formats" title="すべての形式と、インポート後の姿">
+
+<ComparisonTable
+  head={['ファイル', '内容', 'インポート結果']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['.txt（OneTab）', 'OneTab の「インポートとエクスポート」のテキスト。リンクごとに「アドレス | タイトル」が 1 行、リストの間に空行', 'リストごとに 1 グループ（「Imported 1」「Imported 2」…）、タイトルも保持'],
+    ['.txt（リンクだけのリスト）', '1 行に 1 つのアドレス', '行のまとまりごとに 1 グループ。アドレスがタイトルを兼ねる'],
+    ['.html（ブックマーク）', 'ブラウザからエクスポートしたブックマークまたはお気に入り', '最上位のフォルダーごとに、その名前の 1 グループ。中のフォルダーはまとめて取り込み'],
+    ['.json（TabMerger）', 'TabMerger の「JSON をエクスポート」で作ったファイル', 'ウィンドウ、名前、色、メモ、スター、リマインダーの時刻を含むグループ'],
+  ]}
+/>
+
+知っておきたい点が 2 つあります。
+
+- **ブックマーク**：グループになるのはファイルの最上位にあるフォルダーだけで、どのフォルダーにも入っていないリンクは取り込まれません。Chrome や Edge からの完全なエクスポートでは、ブックマーク バーが 1 つのグループとして入り（サブフォルダーもまとめて）、**その他のブックマーク**（Other bookmarks）や **その他のお気に入り**（Other favorites）にある各フォルダーはそれぞれ別のグループになります。
+- **TabMerger のバックアップ**：ファイル内の **現在開いているタブ**（Now Open）、つまりエクスポート時に開いていたタブはインポートされません。ファイルに含めたい場合は、エクスポートの前に開いているタブをグループに保存しておきましょう。
+
+</Section>
+
+<Section id="steps" title="ファイルをインポートする">
+
+1. TabMerger を開き、**設定** → **データ** に進みます。
+2. **インポートとエクスポート**（Import & export）で **ファイルをインポート** を押し、`.txt`、`.html`、`.json` のいずれかのファイルを選びます。
+3. 件数を確認して **インポート** を押します。新しいグループがサイドバーに表示されるので、好きな名前に変えましょう。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="OneTab のエクスポートをインポートする" steps={[{ title: '設定 → データ' }, { title: '確認' }, { title: 'グループ' }]}>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-data-tab" alt="TabMerger の「Settings」（設定）の「Data」（データ）。「Import & export」（インポートとエクスポート）セクションに「Export JSON」（JSON をエクスポート）と「Import file」（ファイルをインポート）。ライトテーマ" darkAlt="TabMerger の「Settings」（設定）の「Data」（データ）。「Import & export」（インポートとエクスポート）セクションに「Export JSON」（JSON をエクスポート）と「Import file」（ファイルをインポート）。ダークテーマ" boxes={[{ id: 'import', label: 'ファイルをインポート' }, { id: 'export', label: 'グループをエクスポート' }]} source="TabMerger 3.16.1">Settings → Data（設定 → データ）では、インポートとエクスポートが並んでいます。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-import-confirm" alt="ファイル onetab-export.txt について「Import 2 groups?」（2個のグループをインポートしますか？）と尋ねる TabMerger。ライトテーマ" darkAlt="ファイル onetab-export.txt について「Import 2 groups?」（2個のグループをインポートしますか？）と尋ねる TabMerger。ダークテーマ" boxes={[{ id: 'import-confirm', label: '2個のグループをインポート' }]} source="TabMerger 3.16.1">OneTab のリストが 2 つ見つかりました。確認するまで何も追加されません。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-imported" alt="グループ「Imported 1」と「Imported 2」としてインポートされた 2 つの OneTab リスト。ライトテーマ" darkAlt="グループ「Imported 1」と「Imported 2」としてインポートされた 2 つの OneTab リスト。ダークテーマ" boxes={[{ id: 'imported', label: 'リストごとに 1 グループ' }]} source="TabMerger 3.16.1">各リストがグループになり、名前の変更、検索、同期ができる状態です。</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="benefit" title="得られるもの">
+
+ほかの場所に保存していたものが、数分で 1 か所にまとまります。<Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> で検索でき、グループで整理され、Pro ならどのパソコンでも使えます。OneTab から乗り換えるなら、[OneTab の代替](/blog/onetab-alternatives)をご覧ください。Edge のコレクションから移るなら、[Edge のコレクションの代わりに使うもの](/blog/edge-collections-replacement)をご覧ください。
+
+</Section>
+
+<Section id="habits" title="おすすめの習慣">
+
+- **インポートしたグループの名前を変える**のはすぐに。「Imported 1」は仮の名前にすぎません。
+- **大きなアーカイブは分けてインポート**しましょう（無料プランの場合）。あるいは先にアップグレードを。上限を超えるインポートは丸ごと止まるためです。
+- **TabMerger のエクスポートを手元に**残して、自分用のバックアップにしましょう。**JSON をエクスポート**（Export JSON）ですべてのグループが 1 つのファイルに保存されます。中身は[開いているタブをエクスポートする方法](/blog/export-open-tabs)で説明しています。
+- **インポート後に並べ替え**ましょう。グループの **⋯** メニューの **タイトル順に並べ替え**（Sort by title）や **URL順に並べ替え**（Sort by URL）を使い、重複は **重複タブを削除**（Deduplicate tabs）で片付けます。
+
+</Section>
+
+<Section id="plans" title="無料と Pro">
+
+<ComparisonTable
+  head={['', '無料', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['インポートとエクスポート', 'はい', 'はい'],
+    ['1 回のインポートで追加できる量', '合計 5 グループ、50 タブまで', '無制限'],
+    ['ほかのデバイスでのインポート済みグループ', 'いいえ', 'はい（エンドツーエンド暗号化）'],
+  ]}
+/>
+
+インポートとエクスポートは誰でも無料で、アカウントも不要です。[Pro](/pricing) ならサイズの上限がなくなり、インポートしたものも同期されます。
+
+<InstallCta>最初のリストのインポートは 1 分もかかりません。Chrome、Edge、Firefox 向けに無料。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

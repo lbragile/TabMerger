@@ -1,0 +1,187 @@
+export const post = {
+  slug: 'find-a-tab-among-hundreds',
+  title: 'Cách tìm một tab giữa hàng trăm tab',
+  navTitle: 'Tìm một tab giữa hàng trăm tab',
+  seoTitle: 'Cách tìm tab đang mở trong Chrome, Edge và Firefox',
+  description:
+    'Tìm tab đang mở trong vài giây: tính năng tìm tab có sẵn trong Chrome, Edge và Firefox, cùng Ctrl+K của TabMerger, tìm cùng lúc tab đang mở, đã lưu và đã đóng với các bộ lọc như group: và closed:.',
+  shareSummary: 'Tìm tab đang mở trong Chrome, Edge và Firefox, cả tab đã lưu hoặc đã đóng.',
+  dek: 'Thôi dò từng tab bé bằng biểu tượng. Một phím tắt, vài chữ trong tiêu đề, là bạn tới nơi.',
+  published: '2026-11-29',
+  updated: '2026-11-29',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Ctrl+Shift+A mở Tìm thẻ trong Chrome.',
+      source: 'Trợ giúp Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Firefox 159 gán Ctrl+Shift+A cho danh sách tất cả các tab.', source: 'Phím tắt của Firefox 159' },
+    { text: 'Ctrl+K của TabMerger tìm cùng lúc tab đang mở, đã lưu và vừa đóng.', source: 'TabMerger 3.16.1' },
+    { text: 'Bộ lọc của TabMerger: group:, window:, tag: và closed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Làm sao để tìm trong các tab đang mở?',
+      answer:
+        'Trong TabMerger, nhấn Ctrl+K rồi gõ: kết quả gồm cả tab đang mở, đã lưu và vừa đóng. Có sẵn trong trình duyệt, Chrome có Tìm thẻ (Ctrl+Shift+A hoặc @thẻ trên thanh địa chỉ), còn Firefox liệt kê mọi tab bằng Ctrl+Shift+A.',
+    },
+    {
+      question: 'Có phím tắt để tìm tab không?',
+      answer: 'Ctrl+Shift+A trong Chrome và Firefox (⌘+Shift+A trong Chrome trên Mac), và Ctrl+K trong TabMerger. Danh sách phím tắt của Microsoft cho Edge không gán phím nào cho việc tìm tab.',
+    },
+    {
+      question: 'Tôi có tìm được các tab đã đóng không?',
+      answer: 'Có, trong TabMerger: bắt đầu tìm bằng closed: để chỉ tìm trong các tab vừa đóng. Bản miễn phí giữ chúng 2 ngày, Pro giữ 30 ngày.',
+    },
+    {
+      question: 'Tôi có tìm được tab trên các thiết bị khác không?',
+      answer:
+        'TabMerger Pro đồng bộ các nhóm đã lưu giữa các thiết bị với mã hóa đầu cuối, nên cùng một Ctrl+K tìm thấy chúng ở mọi nơi. Hướng dẫn chuyển tab giữa các máy tính của chúng tôi trình bày các cách có sẵn.',
+      link: { text: 'chuyển tab giữa các máy tính', href: '/blog/move-tabs-between-computers' },
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'Ô tìm kiếm của TabMerger đang mở và trống, liệt kê các bộ lọc group:, window:, tag: và closed:, giao diện sáng' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'Ô tìm kiếm của TabMerger đang mở và trống, liệt kê các bộ lọc group:, window:, tag: và closed:, giao diện tối' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp', alt: 'TabMerger tìm group:"Work" pull, thấy tab đã lưu Pull requests trong nhóm Work, giao diện sáng' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-dark.webp', alt: 'TabMerger tìm group:"Work" pull, thấy tab đã lưu Pull requests trong nhóm Work, giao diện tối' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-light.webp', alt: 'TabMerger tìm tag:Sprint, liệt kê ba tab đang mở trong nhóm thẻ Chrome Sprint, giao diện sáng' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-dark.webp', alt: 'TabMerger tìm tag:Sprint, liệt kê ba tab đang mở trong nhóm thẻ Chrome Sprint, giao diện tối' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-21',
+      note: 'Thông tin về Firefox được đọc trực tiếp từ định nghĩa phím và chữ trên menu của chính Firefox 159.0.1; trang này đã chặn bước kiểm tra tự động của chúng tôi.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp' },
+  ogImage: { src: '/blog/find-a-tab-among-hundreds/og.png', alt: '“How to find one tab among hundreds”: hướng dẫn của TabMerger, kèm một lượt tìm tab có bộ lọc' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'tabmerger', label: 'Tìm mọi thứ với Ctrl+K' },
+    { id: 'filters', label: 'Bộ lọc thu hẹp kết quả' },
+    { id: 'builtin', label: 'Tìm tab có sẵn' },
+    { id: 'tips', label: 'Để tab dễ tìm hơn' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Tìm tab có sẵn',
+    values: { chrome: 'Ctrl+Shift+A hoặc @thẻ', edge: 'Search tabs (không có phím tắt)', firefox: 'Ctrl+Shift+A' },
+  },
+}
+
+<QuickAnswer>
+
+Nhấn <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> trên Mac) trong [TabMerger](/features) và gõ vài chữ: tab sẽ hiện ra dù nó **đang mở, đã lưu trong một nhóm hay vừa đóng**, còn các bộ lọc như `group:` và `closed:` thu hẹp hàng trăm tab xuống còn một. Có sẵn trong trình duyệt, **Tìm thẻ** (Tab Search) của Chrome (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) và **Liệt kê tất cả các thẻ** (List all tabs) của Firefox (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) tìm trong những gì đang mở.
+
+</QuickAnswer>
+
+<InstallCta>Tìm bất kỳ tab nào, đang mở, đã lưu hay đã đóng, chỉ với một phím tắt. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Tìm mọi thứ với Ctrl+K">
+
+Tính năng tìm tab của trình duyệt chỉ biết những gì đang mở trong chính trình duyệt đó. Nhưng tab bạn cần thường nằm ở chỗ khác: trong một cửa sổ bạn lưu hôm qua, hoặc một cửa sổ bạn đóng cách đây một giờ. TabMerger tìm tất cả từ một ô duy nhất:
+
+1. Mở TabMerger và nhấn <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+2. Gõ một phần tiêu đề hoặc địa chỉ. Kết quả hiện cùng lúc tab đang mở, tab đã lưu và tab vừa đóng, mỗi tab có nhãn cho biết nó nằm ở đâu.
+3. Chọn một tab bằng phím mũi tên và <Kbd>Enter</Kbd>.
+
+Mọi bộ lọc, thứ tự kết quả và chế độ ẩn hoặc làm mờ được giải thích trong bài [tìm trong mọi tab với TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="Ô tìm kiếm của TabMerger đang mở và trống, liệt kê các bộ lọc group:, window:, tag: và closed:, giao diện sáng" darkAlt="Ô tìm kiếm của TabMerger đang mở và trống, liệt kê các bộ lọc group:, window:, tag: và closed:, giao diện tối" boxes={[{ id: 'search-input', label: 'Tìm kiếm' }]} source="TabMerger 3.16.1">Ctrl+K mở ô tìm kiếm, với các bộ lọc được liệt kê trước khi bạn gõ.</ThemedScreenshot>
+
+</Section>
+
+<Section id="filters" title="Những bộ lọc nào giúp thu hẹp kết quả?">
+
+Bắt đầu tìm bằng một bộ lọc để đến thẳng đúng chỗ:
+
+<ComparisonTable
+  head={['Bộ lọc', 'Tìm thấy']}
+  rows={[
+    [<code>group:"Work"</code>, 'Tab trong nhóm có tên chứa “Work”'],
+    [<code>window:"Docs"</code>, 'Tab trong cửa sổ có tên chứa “Docs”'],
+    [<code>tag:Sprint</code>, 'Tab trong nhóm thẻ Chrome có nhãn chứa “Sprint”'],
+    [<code>closed:</code>, 'Chỉ các tab bạn vừa đóng'],
+  ]}
+/>
+
+Kết hợp bộ lọc với từ khóa: `group:"Work" pull` tìm thấy tab pull request trong nhóm Work, ngay cả giữa hàng trăm tab. Hãy đặt tên trong dấu ngoặc kép khi bạn thêm từ phía sau; bộ lọc không có ngoặc kép sẽ lấy hết phần còn lại của dòng.
+
+<Carousel label="Tìm kiếm có bộ lọc" steps={[{ title: 'Bộ lọc group:' }, { title: 'Bộ lọc tag:' }]}>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-group-filter" alt="TabMerger tìm group:&quot;Work&quot; pull, thấy tab đã lưu Pull requests trong nhóm Work, giao diện sáng" darkAlt="TabMerger tìm group:&quot;Work&quot; pull, thấy tab đã lưu Pull requests trong nhóm Work, giao diện tối" boxes={[{ id: 'search-input', label: 'bộ lọc nhóm' }]} source="TabMerger 3.16.1">Một nhóm, một từ: đúng tab đã lưu bạn cần.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-tag-filter" alt="TabMerger tìm tag:Sprint, liệt kê ba tab đang mở trong nhóm thẻ Chrome Sprint, giao diện sáng" darkAlt="TabMerger tìm tag:Sprint, liệt kê ba tab đang mở trong nhóm thẻ Chrome Sprint, giao diện tối" boxes={[{ id: 'search-input', label: 'tag:Sprint' }]} source="TabMerger 3.16.1">tag: tìm các tab của một nhóm thẻ Chrome.</ThemedScreenshot>
+</Carousel>
+
+Tab vừa đóng được giữ 2 ngày ở bản miễn phí và 30 ngày ở [Pro](/pricing), nên khi cần, `closed:` có thể tìm lại từ nhiều tuần trước.
+
+</Section>
+
+<Section id="builtin" title="Làm sao tìm tab đang mở mà không cần tiện ích?">
+
+Trình duyệt nào cũng tìm được trong các tab đang mở (Chrome gọi tab là “thẻ”):
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+- Nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> trên Mac) để mở **Tìm thẻ** (Tab Search), gõ từ khóa rồi chọn một tab. Mỗi dòng còn có nút đóng.
+- Hoặc gõ `@thẻ` trên thanh địa chỉ (Chrome tiếng Anh: `@tabs`), nhấn <Kbd>Tab</Kbd> hoặc <Kbd>Space</Kbd> rồi gõ tiếp.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Menu của Edge 158 có **Search tabs** (tìm tab), nhưng danh sách phím tắt của Microsoft không gán phím nào cho nó. Khi có nhiều tab, <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> nhảy đến tab theo vị trí và <Kbd>Ctrl</Kbd>+<Kbd>9</Kbd> đến tab cuối cùng.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- Nhấn <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> trên Mac) để **Liệt kê tất cả các thẻ** (List all tabs) và tìm trong đó.
+- Thanh địa chỉ cũng có chế độ tìm **Thẻ**, nằm trong các lối tắt tìm kiếm của nó.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>các cách này chỉ thấy tab đang mở trong trình duyệt đó, vào lúc này. Tab bạn đã đóng hoặc lưu ở nơi khác sẽ không hiện ra.</Catch>
+
+Xem thêm phím tắt trong [bảng tra cứu phím tắt cho tab](/blog/tab-keyboard-shortcuts) của chúng tôi.
+
+</Section>
+
+<Section id="tips" title="Làm sao để lần sau tab dễ tìm hơn?">
+
+- **Nhóm theo công việc.** Nhóm có tên biến “một trong 200 tab” thành “nhóm Work”. [Quy trình xử lý quá nhiều tab](/blog/manage-too-many-tabs) của chúng tôi chỉ cách làm.
+- **Đóng những gì đã xong,** sau khi lưu. Ít tab đang mở hơn thì danh sách kết quả ngắn hơn.
+- **Đổi tên các tab quan trọng.** TabMerger cho phép đặt tiêu đề riêng cho một tab đã lưu, để nó khớp với từ bạn sẽ tìm.
+
+<InstallCta>Miễn phí cho Chrome, Edge và Firefox. Không cần tài khoản để bắt đầu.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+</Section>

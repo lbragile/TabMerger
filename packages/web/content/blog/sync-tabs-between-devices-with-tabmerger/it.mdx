@@ -1,0 +1,190 @@
+export const post = {
+  slug: 'sync-tabs-between-devices-with-tabmerger',
+  title: 'Sincronizzare le schede tra dispositivi, con crittografia end-to-end',
+  navTitle: 'Sincronizzare le schede tra dispositivi',
+  seoTitle: 'Sincronizzare le schede tra computer con crittografia end-to-end',
+  description:
+    'I tuoi gruppi di TabMerger su ogni computer, crittografati con una passphrase che conosci solo tu. Come configurare la sincronizzazione, cosa include e cosa può e non può vedere esattamente il nostro server.',
+  shareSummary: 'I tuoi gruppi su ogni computer, illeggibili persino per il nostro server.',
+  dek: 'Gli stessi gruppi a casa e al lavoro, e nessun altro può leggerli. Nemmeno noi.',
+  published: '2026-12-18',
+  updated: '2026-12-18',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'La sincronizzazione è crittografata end-to-end: AES-256-GCM, con una chiave protetta dalla tua passphrase.', source: 'Codice sorgente di TabMerger 3.16.1' },
+    { text: 'Indirizzi, titoli e note delle schede e nomi dei gruppi non sono mai leggibili dal nostro server.', source: 'Codice sorgente di TabMerger 3.16.1' },
+    { text: 'Ogni nuovo dispositivo chiede la passphrase una sola volta.', source: 'TabMerger 3.16.1' },
+    { text: 'La sincronizzazione fa parte di Pro: US$3.99 al mese o US$42.99 all’anno.', source: 'Prezzi di TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Come sincronizzo le schede tra due computer?',
+      answer:
+        'Accedi a TabMerger con un account Pro su entrambi i computer. Il primo ti chiede di scegliere una passphrase di crittografia; il secondo te la chiede una volta. Da lì in poi i tuoi gruppi e le tue sessioni si sincronizzano tra i due.',
+    },
+    {
+      question: 'TabMerger può vedere le mie schede?',
+      answer:
+        'No. Indirizzi, titoli e note delle schede, nomi di gruppi e sessioni e le schede aperte sui tuoi dispositivi vengono crittografati nel browser prima del caricamento, e la chiave non raggiunge mai il nostro server. Il server vede solo ciò che gli serve per memorizzare le righe: cose come il colore di un gruppo, se è preferito o archiviato, quando è cambiato e quante finestre e schede contiene.',
+    },
+    {
+      question: 'E se dimentico la passphrase di crittografia?',
+      answer: 'Nessuno può recuperarla, nemmeno TabMerger, perché non lascia mai i tuoi dispositivi. I tuoi gruppi restano sui dispositivi già sbloccati, quindi conserva la passphrase in un posto sicuro.',
+    },
+    {
+      question: 'Cosa include la sincronizzazione?',
+      answer:
+        'I gruppi salvati (finestre, schede, note, orari dei promemoria), le sessioni salvate e i backup automatici, più le schede aperte di ogni dispositivo per Impostazioni → Dispositivi. Impostazioni, regole URL e schede chiuse di recente restano su ciascun dispositivo.',
+    },
+    {
+      question: 'La sincronizzazione è gratuita?',
+      answer: 'No, la sincronizzazione fa parte di Pro. Il piano Free tiene tutto sul tuo dispositivo; il nostro server rifiuta i caricamenti di sincronizzazione degli account senza Pro.',
+    },
+  ],
+  images: [
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in-light.webp', alt: 'Finestra Sign In (Accedi) di TabMerger con accesso tramite Google oppure email e password, tema chiaro' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in-dark.webp', alt: 'Finestra Sign In (Accedi) di TabMerger con accesso tramite Google oppure email e password, tema scuro' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption-light.webp', alt: 'Finestra Set up encryption (Configura la crittografia) di TabMerger che chiede due volte una nuova passphrase, tema chiaro' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption-dark.webp', alt: 'Finestra Set up encryption (Configura la crittografia) di TabMerger che chiede due volte una nuova passphrase, tema scuro' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock-light.webp', alt: 'Finestra Unlock encryption (Sblocca la crittografia) di TabMerger su un secondo browser, che chiede la passphrase una volta, tema chiaro' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock-dark.webp', alt: 'Finestra Unlock encryption (Sblocca la crittografia) di TabMerger su un secondo browser, che chiede la passphrase una volta, tema scuro' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups-light.webp', alt: 'Il secondo browser dopo lo sblocco, con i gruppi Work e Reading list del primo, tema chiaro' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups-dark.webp', alt: 'Il secondo browser dopo lo sblocco, con i gruppi Work e Reading list del primo, tema scuro' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-light.webp', alt: 'TabMerger, Settings → Devices (Impostazioni → Dispositivi): il dispositivo Home laptop con le sue 4 schede aperte e un pulsante Restore 4 tabs (Ripristina 4 schede), tema chiaro' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-dark.webp', alt: 'TabMerger, Settings → Devices (Impostazioni → Dispositivi): il dispositivo Home laptop con le sue 4 schede aperte e un pulsante Restore 4 tabs (Ripristina 4 schede), tema scuro' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync-light.webp', alt: 'TabMerger, Settings → General (Impostazioni → Generale), con l’interruttore Cloud sync (Sincronizzazione cloud) attivo, tema chiaro' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync-dark.webp', alt: 'TabMerger, Settings → General (Impostazioni → Generale), con l’interruttore Cloud sync (Sincronizzazione cloud) attivo, tema scuro' },
+  ],
+  tags: ['tabmerger-guides', 'cross-browser', 'session-management', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-light.webp' },
+  ogImage: { src: '/blog/sync-tabs-between-devices-with-tabmerger/og.png', alt: 'Sincronizzare le schede tra dispositivi con TabMerger: gli stessi gruppi su un secondo browser dopo lo sblocco' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'problem', label: 'Due computer, due serie di schede' },
+    { id: 'why', label: 'Perché la sincronizzazione funziona così' },
+    { id: 'server', label: 'Cosa vede il nostro server' },
+    { id: 'steps', label: 'Configurala' },
+    { id: 'devices', label: 'Le schede degli altri dispositivi' },
+    { id: 'benefit', label: 'Cosa ci guadagni' },
+    { id: 'habits', label: 'Buone abitudini' },
+    { id: 'plans', label: 'Free o Pro' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+}
+
+<QuickAnswer>
+
+Accedi a [TabMerger](/features) con un account Pro. Il primo computer ti chiede di scegliere una passphrase di crittografia; ogni altro computer te la chiede una volta. Da quel momento gruppi, sessioni e backup si sincronizzano tra loro, crittografati nel browser prima di uscirne, quindi il nostro server conserva solo dati che non può leggere. **Impostazioni → Dispositivi** (Settings → Devices) mostra persino cosa è aperto sugli altri tuoi computer.
+
+</QuickAnswer>
+
+<InstallCta>Gli stessi gruppi su ogni computer, leggibili solo da te. Si inizia gratis, la sincronizzazione è con Pro.</InstallCta>
+
+<Section id="problem" title="Due computer, due serie di schede">
+
+La sera, sul portatile di casa, fai ricerche per un acquisto. La mattina dopo, al lavoro, le schede sono su un computer rimasto a casa. Le ricostruisci a memoria o ti mandi i link per email. La sincronizzazione del browser aiuta quando ogni computer usa lo stesso browser e lo stesso account, ma magari al lavoro usi Edge e sul portatile Chrome, oppure l’account di lavoro è bloccato.
+
+La sincronizzazione di TabMerger funziona tra Chrome, Edge e Firefox con un solo account TabMerger, e porta con sé i tuoi gruppi organizzati, non solo ciò che è aperto in quel momento.
+
+</Section>
+
+<Section id="why" title="Perché la sincronizzazione di TabMerger funziona così">
+
+- **Crittografato prima di lasciare il browser.** Il contenuto di gruppi e sessioni viene crittografato con AES-256-GCM nel tuo browser. La chiave è casuale; sul nostro server è salvata solo avvolta (crittografata) con una chiave derivata dalla tua passphrase (PBKDF2-SHA256, 600.000 iterazioni). La passphrase in sé non viene mai inviata da nessuna parte.
+- **Obbligatoria, non un’opzione.** Ogni account Pro sincronizza in forma crittografata. Non esiste una modalità in chiaro da attivare per sbaglio.
+- **Un passaggio con la passphrase per dispositivo.** Un nuovo dispositivo chiede la passphrase una volta; poi resta sbloccato finché non esci dall’account, quindi la sincronizzazione non ti disturba.
+- **Salvato prima sul dispositivo.** Tutto viene scritto in locale prima del caricamento. Offline continua a funzionare tutto; le modifiche partono alla volta successiva.
+- **Vince la modifica più recente.** Se lo stesso gruppo è stato modificato su due dispositivi, si tiene la modifica più recente.
+- **Sincronizza mentre TabMerger è aperto:** quando lo apri, ogni 30 secondi finché resta aperto e appena arriva una modifica da un altro dispositivo.
+
+</Section>
+
+<Section id="server" title="Cosa può e non può vedere il nostro server">
+
+<ComparisonTable
+  head={['', 'Salvato crittografato (illeggibile per noi)', 'Salvato leggibile']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['Gruppi', 'Nome, nota, ogni finestra e scheda (titoli, indirizzi, note delle schede, orari dei promemoria)', 'Colore, preferito, archiviato, ultima modifica, numero di finestre e schede, ordine'],
+    ['Sessioni e backup', 'Nome, descrizione, colore, se si tratta di un backup, i gruppi contenuti', 'Quando sono stati salvati'],
+    ['Dispositivi', 'Le schede aperte su ogni dispositivo', 'Nome del dispositivo, ultima attività'],
+    ['Account', '-', 'Indirizzo email e piano'],
+  ]}
+/>
+
+Le colonne leggibili sono ciò che serve al server per tenere in ordine le tue righe e mostrare i conteggi; nessuna dice quali pagine conservi. I link condivisi usano una chiave separata che si trova solo nel link stesso; vedi [condividere più schede](/blog/share-a-set-of-tabs).
+
+</Section>
+
+<Section id="steps" title="Configurala">
+
+1. Sul primo computer apri TabMerger, poi il menu dell’account (in alto a destra) → **Accedi** (Sign in). Usa Google, email e password o un magic link.
+2. Compare **Configura la crittografia** (Set up encryption). Scegli una passphrase (almeno 8 caratteri, senza spazi), digitala due volte e conferma. I tuoi gruppi iniziano a sincronizzarsi.
+3. Sul secondo computer installa TabMerger e accedi con lo stesso account.
+4. Compare **Sblocca la crittografia** (Unlock encryption). Inserisci la passphrase una volta. I tuoi gruppi compaiono un attimo dopo.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Sincronizzare un secondo computer" steps={[{ title: 'Accesso' }, { title: 'Passphrase' }, { title: 'Sblocco' }, { title: 'Sincronizzato' }]}>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in" alt="Finestra Sign In (Accedi) di TabMerger con accesso tramite Google oppure email e password, tema chiaro" darkAlt="Finestra Sign In (Accedi) di TabMerger con accesso tramite Google oppure email e password, tema scuro" boxes={[{ id: 'email', label: 'L’email del tuo account' }]} source="TabMerger 3.16.1">Accedi dal menu dell’account.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption" alt="Finestra Set up encryption (Configura la crittografia) di TabMerger che chiede due volte una nuova passphrase, tema chiaro" darkAlt="Finestra Set up encryption (Configura la crittografia) di TabMerger che chiede due volte una nuova passphrase, tema scuro" boxes={[{ id: 'passphrase', label: 'La conosci solo tu' }]} source="TabMerger 3.16.1">Il primo dispositivo: scegli la passphrase che protegge la tua chiave.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock" alt="Finestra Unlock encryption (Sblocca la crittografia) di TabMerger su un secondo browser, che chiede la passphrase una volta, tema chiaro" darkAlt="Finestra Unlock encryption (Sblocca la crittografia) di TabMerger su un secondo browser, che chiede la passphrase una volta, tema scuro" boxes={[{ id: 'unlock', label: 'Una volta per dispositivo' }]} source="TabMerger 3.16.1">Ogni altro dispositivo: inseriscila una volta.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups" alt="Il secondo browser dopo lo sblocco, con i gruppi Work e Reading list del primo, tema chiaro" darkAlt="Il secondo browser dopo lo sblocco, con i gruppi Work e Reading list del primo, tema scuro" boxes={[{ id: 'groups', label: 'Dall’altro dispositivo' }]} source="TabMerger 3.16.1">Un browser appena installato, pochi secondi dopo: i gruppi del primo computer, decrittografati in locale.</ThemedScreenshot>
+</Carousel>
+
+La sincronizzazione si può mettere in pausa per ogni browser con l’interruttore **Sincronizzazione cloud** (Cloud sync) in **Impostazioni → Generale** (Settings → General). Su tabmerger.com, la dashboard mostra i tuoi gruppi sincronizzati dopo che inserisci la stessa passphrase.
+
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync" alt="TabMerger, Settings → General (Impostazioni → Generale), con l’interruttore Cloud sync (Sincronizzazione cloud) attivo, tema chiaro" darkAlt="TabMerger, Settings → General (Impostazioni → Generale), con l’interruttore Cloud sync (Sincronizzazione cloud) attivo, tema scuro" boxes={[{ id: 'sync', label: 'Sincronizzazione cloud' }]} source="TabMerger 3.16.1">Attiva per ogni account Pro; disattivala su un browser che non deve sincronizzare.</ThemedScreenshot>
+
+</Section>
+
+<Section id="devices" title="Guarda cosa è aperto sugli altri tuoi dispositivi">
+
+**Impostazioni → Dispositivi** elenca ogni browser del tuo account attivo negli ultimi 30 giorni, con le finestre e le schede che ha aperte. Espandine uno per aprire una singola scheda, oppure usa **Ripristina** (Restore) per riaprirle tutte qui. Rinomina questo dispositivo perché l’elenco sia facile da leggere («Portatile di casa»), oppure rimuovi i dispositivi che non usi più.
+
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-devices" alt="TabMerger, Settings → Devices (Impostazioni → Dispositivi): il dispositivo Home laptop con le sue 4 schede aperte e un pulsante Restore 4 tabs (Ripristina 4 schede), tema chiaro" darkAlt="TabMerger, Settings → Devices (Impostazioni → Dispositivi): il dispositivo Home laptop con le sue 4 schede aperte e un pulsante Restore 4 tabs (Ripristina 4 schede), tema scuro" boxes={[{ id: 'other-device', label: 'Il tuo altro browser' }, { id: 'restore', label: 'Apri qui le sue schede' }]} source="TabMerger 3.16.1">Le schede aperte del portatile, viste dal computer di lavoro. Crittografate lungo il tragitto.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Cosa ci guadagni">
+
+Ti alzi da un computer e riprendi su un altro con gli stessi gruppi, sessioni e note, qualunque browser usi. E poiché il contenuto è crittografato con una chiave che hai solo tu, una violazione del nostro database mostrerebbe colori e conteggi, non le tue schede.
+
+</Section>
+
+<Section id="habits" title="Buone abitudini">
+
+- **Salva la passphrase nel tuo gestore di password.** Nessuno può reimpostarla per te.
+- **Dai un nome a ogni dispositivo** in Impostazioni → Dispositivi.
+- **Apri TabMerger una volta quando ti siedi** così scarica le ultime modifiche.
+- **Ciò che è specifico del browser resta su ogni dispositivo:** regole URL e impostazioni sono salvate per browser, di proposito. Per altri modi di portare con te le schede, vedi [trasferire le schede su un altro computer](/blog/move-tabs-between-computers).
+
+</Section>
+
+<Section id="plans" title="Free o Pro">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Sincronizzazione di gruppi, sessioni e backup', 'No (resta sul tuo dispositivo)', 'Sì, crittografata end-to-end'],
+    ['Impostazioni → Dispositivi', 'No', 'Sì'],
+    ['Prezzo', 'US$0', 'US$3.99 al mese o US$42.99 all’anno'],
+  ]}
+/>
+
+La sincronizzazione è imposta dal server, non solo dall’app: il database rifiuta i caricamenti di sincronizzazione di qualsiasi account senza un piano Pro attivo. Se un piano termina, non viene eliminato nulla; semplicemente le nuove modifiche smettono di sincronizzarsi. Dettagli nella [pagina dei prezzi](/pricing) e in [TabMerger Free vs Pro](/blog/tabmerger-free-vs-pro).
+
+<InstallCta>Inizia gratis oggi e aggiungi la sincronizzazione crittografata quando ti serve un secondo computer.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

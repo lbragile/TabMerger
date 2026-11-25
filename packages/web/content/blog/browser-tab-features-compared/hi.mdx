@@ -1,0 +1,183 @@
+export const post = {
+  slug: 'browser-tab-features-compared',
+  title: 'Chrome vs Edge vs Firefox: बिल्ट-इन टैब फ़ीचर की तुलना',
+  navTitle: 'टैब फ़ीचर: Chrome, Edge, Firefox',
+  seoTitle: 'Chrome vs Edge vs Firefox टैब फ़ीचर की तुलना (2026)',
+  description:
+    'टैब ग्रुप, टैब सर्च, वर्टिकल टैब, स्प्लिट व्यू, स्लीपिंग टैब और डुप्लिकेट टैब बंद करना: Chrome 157, Edge 158 और Firefox 159 में कौन-से बिल्ट-इन टैब फ़ीचर हैं, और TabMerger तीनों में एक जैसी परत कैसे जोड़ता है।',
+  shareSummary: 'Chrome, Edge और Firefox में कौन-से टैब फ़ीचर बिल्ट-इन हैं, आमने-सामने।',
+  dek: 'हर ब्राउज़र टैब की समस्या का एक हिस्सा हल करता है। यहाँ देखें कौन-सा हिस्सा, और बाकी तीनों में कैसे पाएँ।',
+  published: '2026-12-05',
+  updated: '2026-12-05',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'तीनों में टैब ग्रुप, टैब सर्च, वर्टिकल टैब और स्प्लिट व्यू हैं।', source: 'उनके सहायता पेज और इंटरफ़ेस टेक्स्ट, 21 नवं॰ 2026' },
+    { text: 'सिर्फ़ Firefox 159 में बिल्ट-इन Close Duplicate Tabs (डुप्लिकेट टैब बंद करें) है।', source: 'Firefox 159 का मेन्यू टेक्स्ट' },
+    {
+      text: 'Chrome आपके Google खाते के ज़रिए टैब ग्रुप सिंक करता है।',
+      source: 'Chrome सहायता',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'TabMerger तीनों में एक ही सर्च, ऑटो-सेव और एन्क्रिप्टेड सिंक जोड़ता है।', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'किस ब्राउज़र में सबसे अच्छे टैब फ़ीचर हैं?',
+      answer:
+        'हर एक किसी चीज़ में आगे है: Chrome सेव और सिंक होने वाले टैब ग्रुप में, Edge डिफ़ॉल्ट रूप से चालू स्लीपिंग टैब में, Firefox डुप्लिकेट बंद करने में। TabMerger तीनों को एक जैसे ग्रुप, सर्च, ऑटो-सेव और सिंक देता है।',
+    },
+    {
+      question: 'क्या Chrome, Edge और Firefox तीनों में टैब ग्रुप हैं?',
+      answer: 'हाँ। तीनों में आप टैब को नाम और रंग के साथ ग्रुप कर सकते हैं; Chrome और Firefox किसी ग्रुप को बंद करके बाद में फिर खोल भी सकते हैं।',
+    },
+    {
+      question: 'क्या मैं Chrome, Edge और Firefox में एक ही टैब मैनेजर इस्तेमाल कर सकता हूँ?',
+      answer: 'हाँ। TabMerger तीनों में चलता है, और Pro आपके ग्रुप उनके बीच सिंक करता है, एंड-टू-एंड एन्क्रिप्टेड।',
+    },
+    {
+      question: 'कौन-सा ब्राउज़र डुप्लिकेट टैब बंद करता है?',
+      answer: 'Firefox, किसी भी टैब के राइट-क्लिक मेन्यू से। Chrome और Edge में यह काम TabMerger का “डुप्लिकेट टैब हटाएं” हर विंडो में करता है।',
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'TabMerger सर्च खुला और खाली, जिसमें group:, window:, tag: और closed: फ़िल्टर की सूची है, लाइट थीम' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'TabMerger सर्च खुला और खाली, जिसमें group:, window:, tag: और closed: फ़िल्टर की सूची है, डार्क थीम' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Chrome की सेटिंग, Performance (परफ़ॉर्मेंस), Memory Saver (मेमोरी सेवर) स्विच के साथ' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Edge की Settings, Performance: Automatically put tabs to sleep चालू और 15 मिनट पर सेट' },
+  ],
+  tags: ['cross-browser', 'comparison', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    { title: 'Chrome keyboard shortcuts', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/157179', checked: '2026-11-21' },
+    { title: 'Personalize Chrome performance', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/12929150', checked: '2026-11-21' },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp' },
+  ogImage: { src: '/blog/browser-tab-features-compared/og.png', alt: 'Chrome vs Edge vs Firefox: बिल्ट-इन टैब फ़ीचर की तुलना। TabMerger की एक गाइड, TabMerger के सर्च फ़िल्टर के साथ' },
+  toc: [
+    { id: 'quick', label: 'छोटा जवाब' },
+    { id: 'matrix', label: 'फ़ीचर टेबल' },
+    { id: 'turn-on', label: 'चालू करने लायक सेटिंग' },
+    { id: 'tabmerger', label: 'तीनों के लिए एक परत' },
+    { id: 'faq', label: 'अक्सर पूछे जाने वाले प्रश्न' },
+  ],
+  browserSections: ['turn-on'],
+  browserFact: {
+    label: 'मेमोरी सेटिंग',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Settings → System and performance → Performance',
+      firefox: 'टैब पर राइट-क्लिक करें → Unload Tab',
+    },
+  },
+}
+
+<QuickAnswer>
+
+तीनों ब्राउज़र में अब **टैब ग्रुप, टैब सर्च, वर्टिकल टैब और स्प्लिट व्यू** हैं। ग्रुप सेव और सिंक करने में Chrome आगे है, Edge डिफ़ॉल्ट रूप से खाली पड़े टैब को स्लीप में भेज देता है, और Firefox अकेला है जो डुप्लिकेट टैब खुद बंद करता है। इनमें से कोई भी आपके सेव और बंद किए टैब में सर्च नहीं करता, आपकी विंडो अपने-आप सेव नहीं करता, और न ही अलग-अलग ब्राउज़र में काम करता है। यही परत [TabMerger](/features) जोड़ता है, Chrome, Edge और Firefox में बिल्कुल एक जैसी।
+
+</QuickAnswer>
+
+<InstallCta>Chrome, Edge और Firefox में एक जैसे ग्रुप, सर्च और सिंक। मुफ़्त।</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="matrix" title="किस ब्राउज़र में कौन-से टैब फ़ीचर हैं?">
+
+Chrome 157, Edge 158 और Firefox 159 में, हर ब्राउज़र के सहायता पेज और उसके अपने इंटरफ़ेस टेक्स्ट से 21 नवं॰ 2026 को जाँचा गया। “नहीं बताया गया” का मतलब है कि हमें सहायता पेज या ब्राउज़र के टेक्स्ट में इसका कोई निशान नहीं मिला, यह इस बात का सबूत नहीं कि फ़ीचर है ही नहीं।
+
+<ComparisonTable
+  head={['फ़ीचर', 'Chrome 157', 'Edge 158', 'Firefox 159', 'TabMerger']}
+  rowHeaders
+  highlight={4}
+  minWidth="52rem"
+  rows={[
+    ['टैब ग्रुप', 'हाँ', 'हाँ', 'हाँ', 'सभी विंडो में नाम और रंग वाले ग्रुप'],
+    ['ग्रुप बंद करें, बाद में फिर खोलें', 'हाँ (⋮ → टैब ग्रुप)', 'Close group (फिर खोलना नहीं बताया गया)', 'हाँ (Save and close group)', 'हर ग्रुप सेव रहता है'],
+    ['दूसरे डिवाइस पर ग्रुप', 'हाँ, Google खाते के ज़रिए', 'नहीं बताया गया', 'Sync सेटिंग में नहीं', 'Pro, एंड-टू-एंड एन्क्रिप्टेड'],
+    ['टैब सर्च करना', 'खुले टैब (Ctrl+Shift+A, @tabs)', 'Search tabs (कोई शॉर्टकट नहीं दिया गया)', 'सभी टैब सूचीबद्ध करें (Ctrl+Shift+A)', 'खुले, सेव किए और बंद किए (Ctrl+K)'],
+    ['वर्टिकल टैब', 'हाँ', 'हाँ', 'हाँ', 'लागू नहीं'],
+    ['स्प्लिट व्यू', 'हाँ', 'हाँ', 'हाँ', 'लागू नहीं'],
+    ['खाली पड़े टैब से मेमोरी खाली करना', 'मेमोरी सेवर (डिफ़ॉल्ट रूप से बंद)', 'स्लीपिंग टैब (डिफ़ॉल्ट रूप से चालू)', 'Unload Tab, हाथ से', 'सेव करें, फिर एक क्लिक में हर विंडो बंद करें'],
+    ['डुप्लिकेट टैब बंद करना', 'नहीं बताया गया', 'नहीं बताया गया', 'Close Duplicate Tabs', 'हर विंडो में “डुप्लिकेट टैब हटाएं”'],
+    ['बंद की गई विंडो फिर खोलना', 'Ctrl+Shift+T', 'नहीं बताया गया', 'Ctrl+Shift+N', 'हाल ही में बंद किए गए: 2 दिन (Free), 30 (Pro)'],
+    ['खुले टैब शेड्यूल पर सेव करना', 'नहीं बताया गया', 'नहीं बताया गया', 'नहीं बताया गया', 'शेड्यूल पर या टैब की गिनती पार होने पर ऑटो-सेव'],
+    ['टैब एक्सपोर्ट करना', 'बुकमार्क के ज़रिए (HTML)', 'फ़ेवरेट के ज़रिए (HTML)', 'बुकमार्क के ज़रिए (HTML)', 'JSON, खुले और सेव किए टैब एक साथ'],
+  ]}
+/>
+
+Edge का Collections, पेजों के सेट सेव करने का उसका पुराना तरीका, अब नहीं रहा: Microsoft ने इसे Edge 149 में बंद कर दिया। देखें [Edge Collections की जगह क्या इस्तेमाल करें](/blog/edge-collections-replacement)।
+
+</Section>
+
+<Section id="turn-on" title="कौन-सी बिल्ट-इन सेटिंग चालू करने लायक हैं?">
+
+<BrowserPanels section="turn-on">
+<BrowserPanel browser="chrome">
+
+1. **मेमोरी सेवर** (Memory Saver): सेटिंग → परफ़ॉर्मेंस (Settings → Performance, `chrome://settings/performance`)। नई प्रोफ़ाइल में यह बंद रहता है।
+2. **वर्टिकल टैब**, अगर आप बहुत सारे टैब खुले रखते हैं: टैब बार पर राइट-क्लिक करें और **टैब को वर्टिकल तरीके से दिखाएं** (Show Tabs Vertically) चुनें, या सेटिंग → दिखने का तरीका → टैब की पोज़िशन (Settings → Appearance → Tab position)।
+3. **टैब सर्च** (Tab Search): <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>, या पता बार में `@tabs` टाइप करें।
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Chrome की सेटिंग, Performance (परफ़ॉर्मेंस), Memory Saver (मेमोरी सेवर) स्विच के साथ" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">Chrome का Memory Saver (मेमोरी सेवर), नई Chrome 157 प्रोफ़ाइल में बंद।</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. **स्लीपिंग टैब** (Sleeping tabs) पहले से चालू हैं: देरी Settings → System and performance → Performance में बदलें।
+2. Edge 158 में **वर्टिकल टैब** और **Search tabs** भी हैं (दोनों उसके इंटरफ़ेस टेक्स्ट में हैं); Microsoft की शॉर्टकट सूची में Search tabs के लिए कोई की नहीं दी गई है।
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Edge की Settings, Performance: Automatically put tabs to sleep चालू और 15 मिनट पर सेट" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Edge के स्लीपिंग टैब डिफ़ॉल्ट रूप से चालू रहते हैं: इनऐक्टिव टैब 15 मिनट बाद स्लीप में चले जाते हैं।</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. **वर्टिकल टैब**: साइडबार पर राइट-क्लिक करें और **Turn on Vertical Tabs** (वर्टिकल टैब चालू करें) चुनें।
+2. **Close Duplicate Tabs** (डुप्लिकेट टैब बंद करें) और **Unload Tab** (टैब अनलोड करें) हर टैब के राइट-क्लिक मेन्यू में हैं।
+3. **सभी टैब सूचीबद्ध करें** (List all tabs): <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>।
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox tab right-click menu with Close Duplicate Tabs and Unload Tab. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+सारी कीज़ हमारी [टैब कीबोर्ड शॉर्टकट गाइड](/blog/tab-keyboard-shortcuts) में हैं।
+
+</Section>
+
+<Section id="tabmerger" title="हर ब्राउज़र में छूटी हुई परत पाएँ">
+
+टेबल में हर ब्राउज़र की एक पंक्ति खाली है: कोई भी आपके टैब को ब्राउज़र की अपनी विंडो से **आगे** या अलग-अलग ब्राउज़र में व्यवस्थित नहीं रखता। [TabMerger](/features) रखता है, Chrome, Edge और Firefox में एक ही तरह से:
+
+1. **अभी खुले हुए** आपकी हर खुली विंडो दिखाता है; **वर्तमान के साथ विलय करें** एक क्लिक में सबको एक नाम वाले ग्रुप में सेव कर देता है।
+2. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> खुले, सेव किए और हाल ही में बंद किए टैब में एक साथ सर्च करता है, `group:`, `window:`, `tag:` और `closed:` फ़िल्टर के साथ।
+3. **ऑटो-सेव** शेड्यूल पर आपके टैब की एक ताज़ा कॉपी रखता है; **डुप्लिकेट टैब हटाएं** हर विंडो से दोहराए गए टैब हटा देता है।
+4. [Pro](/pricing) पर आपके ग्रुप आपके सभी ब्राउज़र के बीच सिंक होते हैं, एंड-टू-एंड एन्क्रिप्टेड।
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="TabMerger सर्च खुला और खाली, जिसमें group:, window:, tag: और closed: फ़िल्टर की सूची है, लाइट थीम" darkAlt="TabMerger सर्च खुला और खाली, जिसमें group:, window:, tag: और closed: फ़िल्टर की सूची है, डार्क थीम" boxes={[{ id: 'search-input', label: 'सर्च' }]} source="TabMerger 3.16.1">हर टैब के लिए एक सर्च, हर उस ब्राउज़र में जिसमें TabMerger चलता है।</ThemedScreenshot>
+
+दूसरे एक्सटेंशन से तुलना के लिए [सबसे अच्छे टैब मैनेजर एक्सटेंशन](/blog/best-tab-manager-extensions) देखें।
+
+<InstallCta>Chrome, Edge और Firefox के लिए मुफ़्त। शुरू करने के लिए खाते की ज़रूरत नहीं।</InstallCta>
+
+</Section>
+
+<Section id="faq" title="अक्सर पूछे जाने वाले प्रश्न">
+
+<Faq items={post.faq} />
+
+</Section>

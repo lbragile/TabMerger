@@ -1,0 +1,162 @@
+export const post = {
+  slug: 'tabs-vs-bookmarks',
+  title: 'Tab hay dấu trang: nên để mở gì và lưu gì',
+  navTitle: 'Tab hay dấu trang',
+  seoTitle: 'Tab hay dấu trang (bookmark): khi nào nên để tab mở, khi nào nên lưu',
+  description:
+    'Nên thêm dấu trang hay để tab mở? Một bảng quyết định nhanh cho việc đọc, công việc dự án và trang tham khảo, cùng giải pháp ở giữa: nhóm tab đã lưu mà bạn có thể tìm kiếm và mở lại chỉ với một cú nhấp.',
+  shareSummary: 'Thêm dấu trang hay để tab mở? Một bảng quyết định và giải pháp ở giữa: nhóm đã lưu.',
+  dek: 'Tab đang mở dành cho hôm nay. Dấu trang dành cho nhiều năm. Mọi thứ ở giữa thuộc về một nhóm đã lưu.',
+  published: '2026-11-28',
+  updated: '2026-11-28',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D thêm dấu trang cho mọi tab trong cửa sổ, ở cả ba trình duyệt.', source: 'Trợ giúp Chrome và Edge; phím tắt Firefox 159' },
+    { text: 'Nhóm TabMerger giữ nguyên cả cửa sổ, kèm ghi chú, và mở lại chỉ với một cú nhấp.', source: 'TabMerger 3.16.1' },
+    { text: 'Ctrl+K của TabMerger tìm cùng lúc trong các tab đang mở, đã lưu và vừa đóng.', source: 'TabMerger 3.16.1' },
+    { text: 'Miễn phí giữ 5 nhóm và 50 tab; Pro không giới hạn và được đồng bộ.', source: 'Bảng giá TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Nên thêm dấu trang hay để tab mở?',
+      answer:
+        'Chỉ để mở những gì bạn cần hôm nay. Lưu công việc đang làm dở thành một nhóm TabMerger để mở lại dưới dạng cửa sổ, và thêm dấu trang cho những trang bạn sẽ cần trong nhiều tháng hoặc nhiều năm.',
+    },
+    {
+      question: 'Tab đang mở có làm chậm trình duyệt không?',
+      answer: 'Mỗi trang đang mở đều dùng bộ nhớ. Cách đơn giản nhất là lưu các tab bạn không dùng rồi đóng chúng; xem hướng dẫn của chúng tôi về quá nhiều tab và trình duyệt chậm.',
+      link: { text: 'quá nhiều tab và trình duyệt chậm', href: '/blog/too-many-tabs-slow-browser' },
+    },
+    {
+      question: 'Dấu trang và nhóm tab đã lưu khác nhau thế nào?',
+      answer:
+        'Dấu trang là một trang trong một thư mục. Nhóm TabMerger giữ nguyên cả cửa sổ tab, có tên, màu và ghi chú, và mở lại tất cả cùng lúc.',
+    },
+    {
+      question: 'Có thể biến dấu trang thành nhóm tab không?',
+      answer: 'Có. Xuất dấu trang của bạn thành tệp HTML rồi nhập vào TabMerger trong Cài đặt → Dữ liệu: mỗi thư mục cấp cao nhất trở thành một nhóm.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-light.webp', alt: 'Nhóm TabMerger Read this week có bốn tab đã lưu và một ghi chú nhóm, giao diện sáng' },
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-dark.webp', alt: 'Nhóm TabMerger Read this week có bốn tab đã lưu và một ghi chú nhóm, giao diện tối' },
+  ],
+  tags: ['tab-management', 'bookmarks', 'save-tabs', 'tab-manager', 'browser-productivity'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-vs-bookmarks/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/tabs-vs-bookmarks/og.png', alt: 'Tab hay dấu trang: hướng dẫn của TabMerger, với một nhóm tab đã lưu để đọc trong tuần này' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'decide', label: 'Bảng quyết định' },
+    { id: 'tabs', label: 'Khi nào để tab mở' },
+    { id: 'bookmarks', label: 'Khi nào thêm dấu trang' },
+    { id: 'middle', label: 'Giải pháp ở giữa' },
+    { id: 'tabmerger', label: 'Làm trong TabMerger' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+}
+
+<QuickAnswer>
+
+Chỉ để tab mở nếu bạn sẽ dùng nó **hôm nay**. Thêm dấu trang nếu bạn sẽ cần nó **trong nhiều tháng hoặc nhiều năm**. Với mọi thứ ở giữa (một dự án bạn sẽ làm tiếp vào tuần sau, một danh sách đọc, một nghiên cứu đang dở), hãy lưu các tab thành một **nhóm** trong [TabMerger](/features): cả cửa sổ được giữ lại, tìm được bằng <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> và trở lại màn hình chỉ với một cú nhấp.
+
+</QuickAnswer>
+
+<InstallCta>Lưu các tab hôm nay thành một nhóm chỉ với một cú nhấp. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+<Section id="decide" title="Nên thêm dấu trang hay để tab mở?">
+
+Hãy tự hỏi một câu: **khi nào mình sẽ cần lại cái này?**
+
+<ComparisonTable
+  head={['Bạn cần nó…', 'Nơi phù hợp nhất', 'Lý do']}
+  rowHeaders
+  highlight={1}
+  minWidth="34rem"
+  rows={[
+    ['Trong vài giờ tới', 'Một tab đang mở', 'Bạn đang dùng nó'],
+    ['Vài hôm nữa trong tuần này, cùng với các tab khác', 'Một nhóm TabMerger', 'Cả bộ trở lại dưới dạng cửa sổ, chỉ với một cú nhấp'],
+    ['Để đọc khi có thời gian', 'Một nhóm TabMerger có ghi chú', 'Một danh sách “đọc sau” duy nhất mà bạn tìm kiếm được'],
+    ['Cho một dự án lúc tạm dừng, lúc làm tiếp', 'Một nhóm TabMerger', 'Giữ các cửa sổ tách biệt, mở lại đúng như khi lưu'],
+    ['Làm tài liệu tham khảo trong nhiều tháng hoặc nhiều năm', 'Một dấu trang', 'Được trình duyệt đồng bộ, sắp xếp trong thư mục'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabs" title="Khi nào một tab nên để mở?">
+
+Tab đang mở là bàn làm việc của bạn: những gì bạn đang làm ngay lúc này. Chúng có thể mở ra tức thì và giữ nguyên vị trí, vị trí cuộn và mọi thứ bạn đã nhập. Đó cũng là cái giá của chúng: mỗi trang đang mở đều dùng bộ nhớ, và khi vượt quá vài chục tab, tiêu đề co lại thành biểu tượng và tab bạn cần sẽ bị lạc mất.
+
+Hãy để tab mở nếu bạn sẽ quay lại với nó trước khi hết ngày. Mọi thứ khác chỉ là bừa bộn; [quy trình xử lý quá nhiều tab](/blog/manage-too-many-tabs) của chúng tôi chỉ cách dọn sạch trong vài phút.
+
+</Section>
+
+<Section id="bookmarks" title="Khi nào dấu trang là lựa chọn đúng?">
+
+Dấu trang là tủ hồ sơ của bạn: một trang, giữ lâu bao nhiêu tùy bạn, trong thư mục, và được trình duyệt đồng bộ khi bạn đăng nhập.
+
+- <Kbd>Ctrl</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>D</Kbd> trên Mac) thêm dấu trang cho tab hiện tại.
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> thêm dấu trang cho mọi tab trong cửa sổ vào một thư mục mới, trong Chrome, Edge và Firefox.
+
+<Catch>dấu trang chỉ lưu một cửa sổ mỗi lần, chỉ giữ địa chỉ và không cho bạn biết những trang nào đi cùng nhau. Chúng rất hợp cho một thư viện tham khảo, nhưng vụng về với công việc đang dở.</Catch>
+
+</Section>
+
+<Section id="middle" title="Còn mọi thứ ở giữa thì sao?">
+
+Hầu hết các tab không phải “hôm nay” cũng chẳng phải “mãi mãi”. Đó là dự án tuần sau, những bài báo bạn định đọc, bản so sánh bạn đang làm dở. Giải pháp ở giữa đó chính là thứ trình quản lý tab sinh ra để làm, và là lý do [lưu tất cả các tab đang mở](/blog/save-all-open-tabs) thành một nhóm tốt hơn cả việc để chúng mở lẫn việc thêm dấu trang từng thư mục một:
+
+- **Cả cửa sổ, không phải từng trang lẻ.** Cả bộ vẫn ở cùng nhau, trong những cửa sổ bạn đã có.
+- **Có tên, màu và ghi chú,** nên “cuộc nghiên cứu hôm thứ Ba” rất dễ nhận ra.
+- **Tìm kiếm được** cùng với các tab đang mở và vừa đóng.
+- **Một cú nhấp để mở lại** tất cả, rồi đóng lại khi bạn xong việc.
+
+Đang nghiên cứu? [Sắp xếp tab để nghiên cứu](/blog/organize-tabs-for-research) bổ sung ghi chú và lời nhắc cho cách này.
+
+</Section>
+
+<Section id="tabmerger" title="Làm trong TabMerger">
+
+[TabMerger](/features) biến giải pháp ở giữa thành thói quen chỉ hai cú nhấp:
+
+1. Nhấp **Thêm Nhóm** và đặt tên, chẳng hạn “Đọc trong tuần này” (trong ảnh chụp màn hình là “Read this week”).
+2. Mở menu **⋯** của nhóm và chọn **Hợp nhất với phiên hiện tại**: mọi cửa sổ đang mở đều được lưu vào đó.
+3. Thêm ghi chú từ menu **⋯** của nhóm, rồi đóng các cửa sổ. Bàn làm việc gọn gàng mà không mất gì.
+4. Khi đến lúc, mở nhóm và mở lại các tab; <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> tìm ra bất kỳ tab nào chỉ với một lần nhấn phím.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-vs-bookmarks/tm-read-later-group" alt="Nhóm TabMerger Read this week có bốn tab đã lưu và một ghi chú nhóm, giao diện sáng" darkAlt="Nhóm TabMerger Read this week có bốn tab đã lưu và một ghi chú nhóm, giao diện tối" boxes={[{ id: 'group-note', label: 'Ghi chú của nhóm' }, { id: 'group-row', label: 'Nhóm' }]} source="TabMerger 3.16.1">Một danh sách đọc dưới dạng nhóm, kèm ghi chú cho chính bạn sau này.</ThemedScreenshot>
+
+Đã có dấu trang tích lũy nhiều năm? Xuất chúng thành HTML rồi nhập tệp trong **Cài đặt → Dữ liệu**: mỗi thư mục cấp cao nhất trở thành một nhóm TabMerger. Bản miễn phí chứa 5 nhóm và 50 tab; [Pro](/pricing) gỡ bỏ giới hạn và đồng bộ các nhóm của bạn giữa các máy tính, được mã hóa đầu cuối.
+
+<InstallCta>Miễn phí cho Chrome, Edge và Firefox. Không cần tài khoản để bắt đầu.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,141 @@
+export const post = {
+  slug: 'share-a-set-of-tabs',
+  title: 'So teilst du mehrere Tabs auf einmal mit anderen',
+  navTitle: 'Mehrere Tabs teilen',
+  seoTitle: 'Mehrere Tabs auf einmal teilen (Chrome, Edge, Firefox)',
+  description:
+    'Schick Teamkollegen oder Freunden eine ganze Sammlung von Tabs: Links kopieren, eine Lesezeichendatei teilen oder einen Ende-zu-Ende-verschlüsselten TabMerger-Link erstellen, der sich mit einem Klick öffnet, ganz ohne Konto.',
+  shareSummary: 'Mehrere Tabs teilen: als Links, als Lesezeichendatei oder als verschlüsselter Link mit einem Klick.',
+  dek: 'Zwölf Links in einen Chat zu kopieren ist für beide Seiten mühsam. Ein einziger Link zur ganzen Sammlung nicht.',
+  published: '2026-12-10',
+  updated: '2026-12-10',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ein TabMerger-Link öffnet eine schreibgeschützte Seite; zum Ansehen ist kein Konto nötig.', source: 'TabMerger-Freigabeseite' },
+    { text: 'Der Schlüssel zum Entschlüsseln steht im #Fragment des Links, das Browser nie an den Server senden.', source: 'TabMerger-Quellcode', href: 'https://github.com/lbragile/TabMerger' },
+    { text: 'Zum Erstellen von Freigabelinks brauchst du Pro.', source: 'TabMerger-Preise', href: '/pricing' },
+    { text: 'Firefox 159 kann alle Links einer Tabgruppe kopieren.', source: 'Menütext von Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Wie teile ich mehrere Tabs auf einmal?',
+      answer:
+        'Mit TabMerger Pro wählst du die Gruppen aus und drückst auf Teilen: Ein verschlüsselter Link öffnet sie alle auf einer schreibgeschützten Seite. Mit Bordmitteln kannst du die Tabs als Lesezeichen speichern und die exportierte Lesezeichendatei verschicken oder in Firefox alle Links einer Tabgruppe kopieren.',
+    },
+    {
+      question: 'Braucht die andere Person TabMerger?',
+      answer: 'Nein. Ein Freigabelink öffnet sich in jedem Browser, und man kann einen Tab, ein Fenster oder alles öffnen. Wer TabMerger installiert hat, kann die Tabs danach als eigene Gruppe speichern.',
+    },
+    {
+      question: 'Kann TabMerger die geteilten Tabs lesen?',
+      answer: 'Nein. Die Tabs werden vor dem Hochladen in deinem Browser verschlüsselt, und der Schlüssel steht nur im #Fragment des Links, das nie beim Server ankommt.',
+    },
+    {
+      question: 'Ist das Teilen kostenlos?',
+      answer: 'Freigabelinks zu erstellen gehört zu Pro. Links zu kopieren und eine Lesezeichen- oder JSON-Datei zu teilen ist kostenlos.',
+    },
+  ],
+  images: [
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp', alt: 'TabMerger mit den ausgewählten Gruppen „Work“ und „Reading list“; die Auswahlleiste zeigt Star (Mit Stern markieren), Unstar (Stern entfernen), Share (Teilen) und Delete (Löschen), helles Design' },
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-dark.webp', alt: 'TabMerger mit den ausgewählten Gruppen „Work“ und „Reading list“; die Auswahlleiste zeigt Star (Mit Stern markieren), Unstar (Stern entfernen), Share (Teilen) und Delete (Löschen), dunkles Design' },
+    { src: '/blog/share-a-set-of-tabs/share-page-light.webp', alt: 'TabMergers schreibgeschützte Seite „Shared Groups“ (Geteilte Gruppen) mit zwei Gruppen und den Schaltflächen Open window (Fenster öffnen) und Open all tabs (Alle Tabs öffnen), helles Design' },
+    { src: '/blog/share-a-set-of-tabs/share-page-dark.webp', alt: 'TabMergers schreibgeschützte Seite „Shared Groups“ (Geteilte Gruppen) mit zwei Gruppen und den Schaltflächen Open window (Fenster öffnen) und Open all tabs (Alle Tabs öffnen), dunkles Design' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'bookmarks', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Import Chrome bookmarks & settings (export section)', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/96816', checked: '2026-11-21' },
+    {
+      title: 'TabMerger source code (sharing)',
+      publisher: 'GitHub',
+      url: 'https://github.com/lbragile/TabMerger',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp' },
+  ogImage: { src: '/blog/share-a-set-of-tabs/og.png', alt: 'So teilst du mehrere Tabs auf einmal mit anderen: ein TabMerger-Ratgeber, mit zwei zum Teilen ausgewählten Gruppen' },
+  toc: [
+    { id: 'quick', label: 'Kurze Antwort' },
+    { id: 'manual', label: 'Ohne Erweiterung' },
+    { id: 'tabmerger', label: 'Ein verschlüsselter Link' },
+    { id: 'what-they-see', label: 'Was die andere Person sieht' },
+    { id: 'faq', label: 'Häufige Fragen' },
+  ],
+  browserSections: ['manual'],
+  browserFact: {
+    label: 'Links kopieren oder exportieren',
+    values: { chrome: 'Lesezeichenmanager → Lesezeichen exportieren', edge: 'Favorites → Export favorites', firefox: 'Tabgruppe → Links in Gruppe kopieren' },
+  },
+}
+
+<QuickAnswer>
+
+Am schnellsten geht es mit einem Freigabelink von [TabMerger](/features): Gruppen auswählen, auf **Teilen** („Share“) drücken und den Link einfügen. Wer ihn öffnet, sieht alle Tabs auf einer schreibgeschützten Seite und kann einen Tab, ein Fenster oder alles öffnen, ganz ohne Konto. Die Tabs sind **Ende-zu-Ende-verschlüsselt**, sodass nicht einmal TabMerger sie lesen kann. Ohne Erweiterung speicherst du die Tabs als Lesezeichen und verschickst die exportierte Lesezeichendatei, oder du kopierst in Firefox alle Links einer Tabgruppe.
+
+</QuickAnswer>
+
+<InstallCta>Teile eine ganze Sammlung von Tabs mit einem verschlüsselten Link. Kostenlos starten; Teilen gehört zu Pro.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="manual" title="Wie teile ich Tabs ohne Erweiterung?">
+
+<BrowserPanels section="manual">
+<BrowserPanel browser="chrome">
+
+1. Drücke <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>, um die Tabs des Fensters als Lesezeichen in einem neuen Ordner zu speichern.
+2. Öffne **⋮ → Lesezeichen und Listen → Lesezeichenmanager** („Bookmark Manager“) und dann **⋮ (Mehr) → Lesezeichen exportieren** („Export bookmarks“).
+3. Schick die HTML-Datei. Die andere Person importiert sie in ihren Browser (oder in TabMerger).
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Drücke <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>, um die Tabs des Fensters als Favoriten in einem neuen Ordner zu speichern.
+2. Öffne die Favoriten (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>) und wähle **Export favorites**.
+3. Schick die HTML-Datei.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Leg die Tabs in eine Tabgruppe (zieh einen Tab auf einen anderen).
+2. Klicke mit der rechten Maustaste auf den Namen der Gruppe und wähle **Links in Gruppe kopieren** („Copy links in group“).
+3. Füge die Links in eine Nachricht oder ein Dokument ein.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>Eine Lesezeichendatei exportiert *alle* deine Lesezeichen, und eingefügte Links kommen als Adresswand an, die die andere Person Link für Link öffnen muss.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="Wie teile ich Tabs mit einem einzigen Link?">
+
+1. Speichere die Tabs in TabMerger in einer Gruppe (**Mit aktueller zusammenführen**, „Merge with current“, speichert alle offenen Fenster).
+2. Wähle in der Seitenleiste per **Ctrl-Klick** (auf dem Mac <Kbd>⌘</Kbd>-Klick) jede Gruppe aus, die du teilen willst.
+3. Drücke in der Auswahlleiste auf **Teilen**. Der Link landet in deiner Zwischenablage; füge ihn ein, wo du willst.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/tm-selection-share" alt="TabMerger mit den ausgewählten Gruppen „Work“ und „Reading list“; die Auswahlleiste zeigt Star (Mit Stern markieren), Unstar (Stern entfernen), Share (Teilen) und Delete (Löschen), helles Design" darkAlt="TabMerger mit den ausgewählten Gruppen „Work“ und „Reading list“; die Auswahlleiste zeigt Star (Mit Stern markieren), Unstar (Stern entfernen), Share (Teilen) und Delete (Löschen), dunkles Design" boxes={[{ id: 'share', label: 'Share' }]} source="TabMerger 3.16.1">Zwei Gruppen ausgewählt; Share (Teilen) erstellt einen Link für beide (hier in einem kostenlosen Konto, in dem die Schaltfläche deaktiviert ist).</ThemedScreenshot>
+
+So bleibt alles privat: TabMerger erzeugt in deinem Browser einen neuen Schlüssel, verschlüsselt die Gruppen damit und lädt nur die verschlüsselte Kopie hoch. Der Schlüssel steht im Link nach dem `#`, einem Teil der Adresse, den Browser nie an einen Server senden. Lesen kann die Tabs also nur, wer den vollständigen Link hat. Links zu erstellen gehört zu [Pro](/pricing).
+
+</Section>
+
+<Section id="what-they-see" title="Was sieht die andere Person?">
+
+Eine schreibgeschützte Seite mit jeder Gruppe und jedem Fenster, der Anzahl der Tabs und Schaltflächen, um mit **Alle Tabs öffnen** („Open all tabs“) die Tabs eines Fensters, mit **Fenster öffnen** („Open window“) eine ganze Gruppe oder einzelne Tabs zu öffnen. Dafür braucht sie weder ein Konto noch TabMerger. Nutzt sie TabMerger, kann sie die Tabs öffnen und mit **Mit aktueller zusammenführen** als eigene Gruppe speichern.
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/share-page" width={1600} height={1115} alt="TabMergers schreibgeschützte Seite „Shared Groups“ (Geteilte Gruppen) mit zwei Gruppen und den Schaltflächen Open window (Fenster öffnen) und Open all tabs (Alle Tabs öffnen), helles Design" darkAlt="TabMergers schreibgeschützte Seite „Shared Groups“ (Geteilte Gruppen) mit zwei Gruppen und den Schaltflächen Open window (Fenster öffnen) und Open all tabs (Alle Tabs öffnen), dunkles Design" source="tabmerger.com/share/demo">Die Freigabeseite, aus dem öffentlichen Demo-Link von TabMerger.</ThemedScreenshot>
+
+Lieber eine Datei? [JSON exportieren](/blog/export-open-tabs) („Export JSON“) funktioniert in TabMerger auch im kostenlosen Plan, und [Tabs auf einen anderen Computer übertragen](/blog/move-tabs-between-computers) erklärt den Weg zwischen deinen eigenen Geräten.
+
+<InstallCta>Kostenlos für Chrome, Edge und Firefox. Zum Start ist kein Konto nötig.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Häufige Fragen">
+
+<Faq items={post.faq} />
+
+</Section>

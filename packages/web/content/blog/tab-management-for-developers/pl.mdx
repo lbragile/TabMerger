@@ -1,0 +1,145 @@
+export const post = {
+  slug: 'tab-management-for-developers',
+  title: 'Zarządzanie kartami dla programistów: jeden projekt, jedna grupa',
+  navTitle: 'Zarządzanie kartami dla programistów',
+  seoTitle: 'Zarządzanie kartami dla programistów: projekty, dokumentacja i reguły URL',
+  description:
+    'Dokumentacja, pull requesty, localhost i dashboardy: układ kart dla programistów z jedną grupą TabMergera na projekt, regułami URL, które same odkładają karty, i wyszukiwarką, która znajdzie każdą stronę dokumentacji jednym skrótem.',
+  shareSummary: 'Grupa na projekt, reguły URL, które same odkładają karty, i dokumentacja pod jednym skrótem.',
+  dek: 'Przeglądarka to połowa twojego IDE. Nadaj jej tę samą strukturę: grupa na projekt, która sama się zapełnia.',
+  published: '2026-12-08',
+  updated: '2026-12-08',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Reguły URL kopiują pasujące nowe karty do grupy, a * działa jako symbol wieloznaczny.', source: 'TabMerger 3.16.1' },
+    { text: 'Reguły porównują adres bez http:// i https://, więc localhost:3000/* działa.', source: 'Kod źródłowy TabMergera 3.16.1' },
+    { text: 'W planie darmowym są 3 reguły URL; Pro nie ma limitu.', source: 'Cennik TabMergera', href: '/pricing' },
+    { text: 'Ctrl+K filtruje według group:, window:, tag: i closed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Jak programiści powinni porządkować karty w przeglądarce?',
+      answer:
+        'Jedna grupa TabMergera na projekt lub zgłoszenie, reguły URL, które automatycznie odkładają nowe karty do właściwej grupy, i wyszukiwanie Ctrl+K, by przejść do dowolnej strony dokumentacji. Gdy zmieniasz zadanie, zapisz i zamknij karty projektu.',
+    },
+    {
+      question: 'Czy karty mogą same trafiać do grup według adresu URL?',
+      answer:
+        'Tak, dzięki regułom URL w TabMergerze: wzorzec taki jak github.com/your-org/* wysyła każdą pasującą nową kartę do grupy. Karta zostaje otwarta, a w grupie zapisuje się jej kopia. Plan darmowy ma 3 reguły, Pro bez limitu.',
+    },
+    {
+      question: 'Czy to działa z localhost?',
+      answer: 'Tak. Reguły pomijają część http:// lub https://, więc wzorzec taki jak localhost:3000/* pasuje do stron twojego serwera deweloperskiego.',
+    },
+    {
+      question: 'Jak szybko znaleźć kartę z dokumentacją?',
+      answer: 'Naciśnij Ctrl+K w TabMergerze i wpisz fragment tytułu lub adresu; dodaj group:"Docs", aby szukać tylko w jednej grupie.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp', alt: 'Okno „URL Rules” (Reguły URL) w TabMergerze z regułą github.com/lbragile/*, która wysyła karty do grupy „Work”, motyw jasny' },
+    { src: '/blog/tab-management-for-developers/tm-url-rules-dark.webp', alt: 'Okno „URL Rules” (Reguły URL) w TabMergerze z regułą github.com/lbragile/*, która wysyła karty do grupy „Work”, motyw ciemny' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-light.webp', alt: 'Grupa „Work” z nowo otwartą kartą „Issues” dodaną przez regułę URL, motyw jasny' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-dark.webp', alt: 'Grupa „Work” z nowo otwartą kartą „Issues” dodaną przez regułę URL, motyw ciemny' },
+  ],
+  tags: ['developers', 'tab-management', 'tab-manager', 'browser-productivity'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp' },
+  ogImage: { src: '/blog/tab-management-for-developers/og.png', alt: 'Karta z tytułem „Tab management for developers”: poradnik TabMergera, z regułą URL odkładającą karty z GitHuba do grupy' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'setup', label: 'Jeden projekt, jedna grupa' },
+    { id: 'rules', label: 'Automatyczne odkładanie kart' },
+    { id: 'find', label: 'Szybkie szukanie dokumentacji' },
+    { id: 'switch', label: 'Czysta zmiana projektu' },
+    { id: 'faq', label: 'Najczęstsze pytania' },
+  ],
+}
+
+<QuickAnswer>
+
+Daj każdemu projektowi osobną grupę w [TabMergerze](/features), a odkładaniem niech zajmą się **Reguły URL** (URL rules): wzorzec taki jak `github.com/your-org/*` czy `localhost:3000/*` automatycznie wysyła każdą pasującą nową kartę do właściwej grupy. Każdą stronę dokumentacji znajdziesz skrótem <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>, a gdy zmieniasz zadanie, zapisz okna projektu i je zamknij. Nic nie ginie i niczego nie trzeba szukać.
+
+</QuickAnswer>
+
+<InstallCta>Grupa na projekt, zapełniana za ciebie przez reguły URL. Za darmo dla Chrome, Edge i Firefoksa.</InstallCta>
+
+<Section id="setup" title="Jak programista powinien porządkować karty?">
+
+Tak samo jak kod: według projektu. Typowy projekt ma cztery rodzaje kart:
+
+<ComparisonTable
+  head={['Rodzaj', 'Przykłady', 'Gdzie trafia']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['Bieżąca praca', 'Pull requesty, issues, zgłoszenie', 'Grupa projektu, we własnym oknie'],
+    ['Dokumentacja i materiały', 'Dokumentacja API, MDN, specyfikacja', 'Okno „Docs” w grupie projektu'],
+    ['Lokalne i staging', 'localhost, wdrożenia podglądowe', 'Otwarte, gdy coś działa; zapisuje je reguła URL'],
+    ['Dashboardy', 'CI, logi, monitoring', 'Przypięte okno albo grupa projektu'],
+  ]}
+/>
+
+W TabMergerze grupa może mieć kilka okien, więc jedna grupa projektu trzyma osobno „PRs”, „Docs” i „Local”. Zmień nazwę okna w jego menu **⋯** i dodaj do grupy notatkę z gałęzią lub numerem zgłoszenia.
+
+</Section>
+
+<Section id="rules" title="Jak automatycznie odkładać karty do właściwej grupy?">
+
+**Reguły URL** w TabMergerze pilnują twoich kart. Gdy karta otwiera lub kończy ładować adres pasujący do reguły, jej kopia zapisuje się w grupie tej reguły; sama karta zostaje otwarta.
+
+1. Otwórz **Ustawienia → Ogólne** (Settings → General), znajdź **Reguły URL** i kliknij **Zarządzaj** (Manage).
+2. Kliknij **Dodaj regułę** (Add rule), wpisz wzorzec i wybierz grupę. `*` to symbol wieloznaczny; wygrywa pierwsza pasująca reguła.
+3. Kliknij **Zapisz** (Save).
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Reguła URL w działaniu" steps={[{ title: 'Reguła' }, { title: 'Efekt' }]}>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-url-rules" alt="Okno „URL Rules” (Reguły URL) w TabMergerze z regułą github.com/lbragile/*, która wysyła karty do grupy „Work”, motyw jasny" darkAlt="Okno „URL Rules” (Reguły URL) w TabMergerze z regułą github.com/lbragile/*, która wysyła karty do grupy „Work”, motyw ciemny" boxes={[{ id: 'rule', label: 'Wzorzec' }]} source="TabMerger 3.16.1">Jedna reguła: wszystko pod github.com/lbragile/ trafia do „Work”.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-rule-result" alt="Grupa „Work” z nowo otwartą kartą „Issues” dodaną przez regułę URL, motyw jasny" darkAlt="Grupa „Work” z nowo otwartą kartą „Issues” dodaną przez regułę URL, motyw ciemny" boxes={[{ id: 'new-tab', label: 'Dodana przez regułę' }]} source="TabMerger 3.16.1">Otwarcie strony „Issues” repozytorium samo odłożyło ją do „Work”.</ThemedScreenshot>
+</Carousel>
+
+Wzorce, które dobrze się sprawdzają:
+
+- `github.com/your-org/*` dla wszystkich repozytoriów, PR-ów i issues projektu
+- `localhost:3000/*` dla twojego serwera deweloperskiego (reguły pomijają `http://` i `https://`)
+- `docs.your-framework.dev/*` dla dokumentacji, którą ciągle otwierasz na nowo
+
+Plan darmowy obejmuje 3 reguły; [Pro](/pricing) nie ma limitu. Wszystkie opcje wzorców i kolejność reguł opisuje poradnik [automatyczne sortowanie kart regułami URL](/blog/auto-sort-tabs-with-url-rules).
+
+</Section>
+
+<Section id="find" title="Jak znaleźć stronę dokumentacji jednym skrótem?">
+
+Naciśnij <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> w TabMergerze i wpisz kilka liter tytułu lub adresu. Wyniki obejmują karty otwarte, zapisane i niedawno zamknięte. Zawęź je filtrami: `group:"Docs" fetch`, `window:"Local"` albo `closed:` dla strony zamkniętej godzinę temu. Więcej w poradniku [jak znaleźć jedną kartę wśród setek](/blog/find-a-tab-among-hundreds).
+
+Menu grup mają też **Sortuj według URL** (Sort by URL), przydatne przy długim oknie z dokumentacją, oraz **Usuń duplikaty kart** (Deduplicate tabs) na pięć kopii tego samego issue.
+
+</Section>
+
+<Section id="switch" title="Jak zmienić projekt, nie tracąc kontekstu?">
+
+1. W grupie projektu wybierz **Scal z bieżącą sesją** (Merge with current), aby zapisać jego otwarte okna. **Zastąp bieżącą sesją** (Replace with current) nadpisuje zamiast tego zapisaną kopię.
+2. Zamknij okna.
+3. Gdy do niego wrócisz, otwórz grupę ponownie: każdy PR, dokument i dashboard dokładnie tam, gdzie były.
+
+<InstallCta>Za darmo dla Chrome, Edge i Firefoksa. Na start nie potrzebujesz konta.</InstallCta>
+
+Jeśli wolisz klawiaturę, zobacz [skróty klawiszowe dla kart](/blog/tab-keyboard-shortcuts); ogólną rutynę opisuje poradnik [co zrobić ze zbyt wieloma kartami](/blog/manage-too-many-tabs).
+
+</Section>
+
+<Section id="faq" title="Najczęstsze pytania">
+
+<Faq items={post.faq} />
+
+</Section>

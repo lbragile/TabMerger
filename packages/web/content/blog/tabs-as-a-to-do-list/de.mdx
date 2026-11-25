@@ -1,0 +1,150 @@
+export const post = {
+  slug: 'tabs-as-a-to-do-list',
+  title: 'Tabs als To-do-Liste nutzen, ohne sie offen zu lassen',
+  navTitle: 'Tabs als To-do-Liste',
+  seoTitle: 'Browser-Tabs als To-do-Liste: mit Notizen und Erinnerungen',
+  description:
+    'Mach aus „Muss ich noch lesen“-Tabs eine echte To-do-Liste in TabMerger: eine Notiz an jedem Tab, eine Erinnerung, die sich rechtzeitig meldet, ein klarer Titel und ein Klick, der zu lange liegende Tabs aufräumt.',
+  shareSummary: 'Notizen, Erinnerungen und Aufräumen alter Tabs: eine To-do-Liste aus Tabs, die Tabs geschlossen.',
+  dek: 'Jeder offene Tab ist ein Versprechen, zurückzukommen. Schreib auf, warum, setz einen Termin und schließ ihn.',
+  published: '2026-12-16',
+  updated: '2026-12-16',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Erinnerungen: in 30 Minuten, 1 Stunde, 3 Stunden, 24 Stunden oder zu einem Datum mit Uhrzeit.', source: 'TabMerger 3.16.1' },
+    { text: 'Eine Erinnerung zeigt eine Browserbenachrichtigung; ein Klick darauf öffnet den Tab.', source: 'TabMerger 3.16.1, Quellcode' },
+    { text: 'Tabs, die vor mehr als 7, 14, 30 oder 60 Tagen (du wählst) gespeichert wurden, gelten als alt.', source: 'TabMerger 3.16.1' },
+    { text: 'Notizen, Erinnerungen und Umbenennen gibt es alle im kostenlosen Plan.', source: 'TabMerger-Preise', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Wie mache ich aus Tabs eine To-do-Liste?',
+      answer:
+        'Speichere die Tabs in einer TabMerger-Gruppe wie „Diese Woche“, gib jedem eine Notiz, was zu tun ist, setz Erinnerungen für die zeitkritischen und entferne einen Tab, sobald er erledigt ist. Dann schließ die Tabs: Die Liste bleibt in TabMerger.',
+    },
+    {
+      question: 'Kann ich mich daran erinnern lassen, zu einem Tab zurückzukommen?',
+      answer:
+        'Ja. Klicke mit der rechten Maustaste auf einen gespeicherten Tab und wähle „Erinnere mich …“: 30 Min., 1 Stunde, 3 Stunden, Morgen (in 24 Stunden) oder ein Datum mit Uhrzeit, optional mit einer Notiz. Zu diesem Zeitpunkt erscheint eine Browserbenachrichtigung, und ein Klick darauf öffnet den Tab.',
+    },
+    {
+      question: 'Was sind alte Tabs?',
+      answer:
+        'Tabs, die du vor längerer Zeit gespeichert hast als deine Schwelle für alte Tabs (30 Tage, sofern du das unter Einstellungen → Allgemein nicht änderst). Sie bekommen einen kleinen Punkt, und der Kopf der Gruppe bietet an, sie alle auf einmal zu entfernen.',
+    },
+    {
+      question: 'Funktionieren Erinnerungen auf meinen anderen Geräten?',
+      answer: 'Eine Erinnerung meldet sich in dem Browser, in dem du sie gesetzt hast. Mit Pro werden der Tab und seine Erinnerungszeit zusammen mit der Gruppe auf deine anderen Geräte synchronisiert.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp', alt: 'Eine Gruppe „This week“ mit einer Notiz an einem Tab, einem umbenannten Tab mit Erinnerung und zwei alten Tabs, helles Design' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-dark.webp', alt: 'Eine Gruppe „This week“ mit einer Notiz an einem Tab, einem umbenannten Tab mit Erinnerung und zwei alten Tabs, dunkles Design' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-light.webp', alt: 'Erinnerungsoptionen von TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Morgen), ein Datum mit Uhrzeit und eine Notiz, helles Design' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-dark.webp', alt: 'Erinnerungsoptionen von TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Morgen), ein Datum mit Uhrzeit und eine Notiz, dunkles Design' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'research'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp' },
+  ogImage: { src: '/blog/tabs-as-a-to-do-list/og.png', alt: 'Tabs als To-do-Liste nutzen: eine TabMerger-Gruppe mit Notizen, einer Erinnerung und alten Tabs' },
+  toc: [
+    { id: 'quick', label: 'Kurze Antwort' },
+    { id: 'problem', label: 'Tabs als Versprechen' },
+    { id: 'why', label: 'Warum es so funktioniert' },
+    { id: 'steps', label: 'Die Liste anlegen' },
+    { id: 'remind', label: 'Eine Erinnerung setzen' },
+    { id: 'benefit', label: 'Was du davon hast' },
+    { id: 'habits', label: 'Gute Gewohnheiten' },
+    { id: 'plans', label: 'Kostenlos oder Pro' },
+    { id: 'faq', label: 'Häufige Fragen' },
+  ],
+}
+
+<QuickAnswer>
+
+Speichere deine „Später“-Tabs in einer [TabMerger](/features)-Gruppe wie „Diese Woche“. Ein Rechtsklick auf einen Tab bietet **Notiz hinzufügen** (Add note) für das, was zu tun ist, **Erinnere mich …** (Remind me…) für das Wann und **Tab umbenennen** (Rename tab) für einen Titel, der sich wie eine Aufgabe liest. Entferne einen Tab, sobald er erledigt ist. Tabs, die zu lange liegen, bekommen einen Punkt, und eine Schaltfläche im Kopf der Gruppe räumt sie weg. Dann schließ die Tabs: Die Liste lebt in TabMerger, nicht in deiner Tableiste.
+
+</QuickAnswer>
+
+<InstallCta>Eine To-do-Liste aus Tabs, die Tabs geschlossen. Kostenlos für Chrome, Edge und Firefox.</InstallCta>
+
+<Section id="problem" title="Jeder offene Tab ist ein Versprechen">
+
+Ein Artikel, den du bis Donnerstag lesen willst. Ein Issue, das vor dem Stand-up gesichtet werden muss. Ein Zugfahrplan, den du prüfst, sobald die Termine feststehen. Jeder bleibt offen, weil sich Schließen wie Vergessen anfühlt. Eine Woche später sind es vierzig, niemand weiß mehr, warum die Hälfte davon da ist, und der eine, auf den es ankam, steckt hinter allen anderen.
+
+Ein Tab kann dir nicht sagen, warum du ihn geöffnet hast oder bis wann er erledigt sein muss. Eine To-do-Liste schon.
+
+</Section>
+
+<Section id="why" title="Warum die To-do-Werkzeuge von TabMerger so funktionieren">
+
+- **Die Notiz hängt am Tab.** Eine Notiz gehört zum Tab selbst, also reist der Grund mit dem Link mit: in Sitzungen, Sicherungen und Exporte und mit Pro auf deine anderen Geräte.
+- **Ein Titel, der sich wie eine Aufgabe liest.** **Tab umbenennen** gibt einem Tab deinen eigenen Titel, markiert mit „umbenannt“, und **Auf ursprünglichen Titel zurücksetzen** (Reset to original title) macht es rückgängig. „Neue Issues sichten“ ist eine Aufgabe; „Issues · lbragile/TabMerger“ ist ein Seitenname.
+- **Erinnerungen, die du nicht verpasst.** Zur gewählten Zeit zeigt der Browser eine Benachrichtigung mit dem Titel des Tabs und deiner Notiz. Sie bleibt auf dem Bildschirm, bis du dich darum kümmerst, und ein Klick darauf öffnet den Tab. Nach einem Neustart des Browsers werden Erinnerungen neu gesetzt, ein Neustart verliert sie also nicht.
+- **Alt heißt: Du hast ihn vor einer Weile gespeichert.** Ein Tab, der vor längerer Zeit gespeichert wurde als deine Schwelle (7, 14, 30 oder 60 Tage; 30, sofern du nichts änderst), bekommt einen Punkt in der Farbe seiner Gruppe, und der Kopf der Gruppe zeigt **N alte Tabs entfernen** (Remove N stale tabs). Alte „Irgendwann“-Tabs sind mit einem Klick weg.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-todo-group" alt="Eine Gruppe „This week“ mit einer Notiz an einem Tab, einem umbenannten Tab mit Erinnerung und zwei alten Tabs, helles Design" darkAlt="Eine Gruppe „This week“ mit einer Notiz an einem Tab, einem umbenannten Tab mit Erinnerung und zwei alten Tabs, dunkles Design" boxes={[{ id: 'note', label: 'Eine Notiz am Tab' }, { id: 'reminder', label: 'Erinnerung gesetzt' }, { id: 'stale', label: 'Alte Tabs entfernen' }]} source="TabMerger 3.16.1">Die Liste für diese Woche: warum, wann und was schon zu lange wartet.</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="Die Liste anlegen">
+
+1. Lege mit **Gruppe hinzufügen** (Add Group) in der Seitenleiste eine Gruppe an, benannt nach dem Zeitraum, etwa „Diese Woche“ (in den Screenshots „This week“).
+2. Zieh Tabs aus **Jetzt geöffnet** (Now Open) hinein. Der offene Tab wird geschlossen und eine Kopie gespeichert (Rückgängig holt ihn zurück).
+3. Rechtsklick auf jeden Tab: **Notiz hinzufügen** für das, was zu tun ist, **Tab umbenennen** für einen Titel wie eine Aufgabe.
+4. Markiere das Fenster oder die Gruppe, die du gerade abarbeitest, mit einem Stern, damit sie oben bleibt.
+5. Ist eine Aufgabe erledigt, klicke mit der rechten Maustaste auf den Tab und wähle **Tab entfernen** (Remove tab).
+
+</Section>
+
+<Section id="remind" title="Eine Erinnerung setzen">
+
+Klicke mit der rechten Maustaste auf den Tab und wähle **Erinnere mich …**. Wähle **30 Min.**, **1 Stunde**, **3 Stunden** oder **Morgen** (in 24 Stunden) oder stell ein Datum mit Uhrzeit ein; füge eine Notiz hinzu, wenn du willst. Eine Uhr am Tab zeigt, dass eine Erinnerung gesetzt ist; ein erneuter Rechtsklick bietet **Erinnerung bearbeiten** (Edit reminder) oder **Erinnerung löschen** (Clear reminder).
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-reminder" alt="Erinnerungsoptionen von TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Morgen), ein Datum mit Uhrzeit und eine Notiz, helles Design" darkAlt="Erinnerungsoptionen von TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Morgen), ein Datum mit Uhrzeit und eine Notiz, dunkles Design" boxes={[{ id: 'remind-in', label: 'Erinnere mich in …' }]} source="TabMerger 3.16.1">Eine schnelle Zeit oder eine genaue, dazu eine Notiz für dein künftiges Ich.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Was du davon hast">
+
+In deiner Tableiste steht nur, woran du gerade arbeitest. Alles andere hat einen Grund daneben stehen und, wo es zählt, einen Zeitpunkt, an dem es sich wieder meldet. Nichts hängt davon ab, dass du dich erinnerst, und nichts bleibt nur für alle Fälle offen.
+
+</Section>
+
+<Section id="habits" title="Gute Gewohnheiten">
+
+- **Schreib die Notiz als Handlung:** „Bis Donnerstag zusammenfassen“, nicht „interessant“.
+- **Erinnerungen nur für das, was eine Frist hat.** Alles andere wartet in der Liste.
+- **Räum alte Tabs wöchentlich auf.** Was 30 Tage gewartet hat, ist selten dringend.
+- **Eine Liste pro Zeithorizont:** „Heute“, „Diese Woche“, „Irgendwann“. Verschiebe Tabs zwischen ihnen mit **In Gruppe verschieben** (Move to group).
+- Für quellenlastige Arbeit siehe [Tabs für die Recherche organisieren](/blog/organize-tabs-for-research); für den ganzen Tag [ein täglicher Tab-Workflow mit TabMerger](/blog/tabmerger-daily-workflow).
+
+</Section>
+
+<Section id="plans" title="Kostenlos oder Pro">
+
+<ComparisonTable
+  head={['', 'Kostenlos', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Notizen, Erinnerungen, umbenannte Tabs, alte Tabs', 'Ja', 'Ja'],
+    ['Tabs in deinen Listen', '50 insgesamt', 'Unbegrenzt'],
+    ['Listen auf deinen anderen Geräten', 'Nein', 'Ja, samt Notizen und Erinnerungszeiten'],
+  ]}
+/>
+
+Jedes To-do-Werkzeug ist im kostenlosen Plan enthalten. [Pro](/pricing) bringt mehr Platz und Synchronisierung. Eine Erinnerung meldet sich in dem Browser, in dem du sie gesetzt hast.
+
+<InstallCta>Schließ die Tabs, halte die Versprechen. Kostenlos für Chrome, Edge und Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Häufige Fragen">
+
+<Faq items={post.faq} />
+
+</Section>

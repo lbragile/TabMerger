@@ -1,0 +1,276 @@
+export const post = {
+  slug: 'tab-keyboard-shortcuts',
+  title: 'Raccourcis clavier des onglets pour Chrome, Edge et Firefox',
+  seoTitle: 'Raccourcis d’onglets Chrome (et Edge, Firefox) : la liste complète',
+  description:
+    'Tous les raccourcis d’onglets à connaître dans Chrome, Edge et Firefox : changer d’onglet, rouvrir des onglets et fenêtres fermés, chercher parmi les onglets et tous les mettre en favoris, sous Windows et sur Mac.',
+  shareSummary: 'Changez, rouvrez, cherchez et enregistrez vos onglets au clavier dans Chrome, Edge et Firefox.',
+  dek: 'Un seul tableau pour les trois navigateurs, les différences sur Mac et comment définir des raccourcis d’extensions qui tiennent vraiment.',
+  published: '2026-11-22',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+T rouvre le dernier onglet fermé dans les trois.', source: 'Aide de Chrome et d’Edge ; touches de Firefox 159' },
+    { text: 'Firefox rouvre une fenêtre fermée avec Ctrl+Shift+N.', source: 'Touches de Firefox 159' },
+    {
+      text: 'Dans Chrome, Ctrl+9 va au dernier onglet, pas au neuvième.',
+      source: 'Aide de Chrome',
+      href: 'https://support.google.com/chrome/answer/157179',
+    },
+    { text: 'Edge garde Ctrl+Shift+K, U et P pour lui : les extensions ne peuvent pas les prendre.', source: 'Support Microsoft ; Edge 158' },
+  ],
+  faq: [
+    {
+      question: 'Comment changer d’onglet au clavier ?',
+      answer:
+        'Ctrl+Tab passe à l’onglet suivant et Ctrl+Shift+Tab au précédent dans Chrome, Edge et Firefox. Ctrl+1 à Ctrl+8 vont à un onglet selon sa position ; Ctrl+9 va au dernier onglet.',
+    },
+    {
+      question: 'Comment rouvrir un onglet fermé ?',
+      answer:
+        'Appuyez sur Ctrl+Shift+T (⌘+Shift+T sur Mac). Appuyez de nouveau pour remonter plus loin. Dans Chrome, cela rouvre aussi les fenêtres fermées ; dans Firefox, Ctrl+Shift+N rouvre une fenêtre fermée.',
+    },
+    {
+      question: 'Puis-je chercher parmi mes onglets ouverts ?',
+      answer: 'Oui. Ctrl+Shift+A ouvre la Recherche dans les onglets dans Chrome et liste tous les onglets dans Firefox. Dans Chrome, vous pouvez aussi taper @tabs dans la barre d’adresse.',
+    },
+    {
+      question: 'Pourquoi le raccourci d’une extension ne fonctionne-t-il pas ?',
+      answer:
+        'Le navigateur laisse un raccourci suggéré non attribué quand il entre en conflit avec l’un des siens. Vérifiez chrome://extensions/shortcuts ou edge://extensions/shortcuts et choisissez une autre touche.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp', alt: 'Page des raccourcis clavier des extensions d’Edge pour TabMerger : les quatre commandes d’enregistrement attribuées, à Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma et Alt+Shift+Period' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp', alt: 'Recherche de TabMerger ouverte avec la requête docs, listant les onglets ouverts et enregistrés correspondants, thème clair' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-dark.webp', alt: 'Recherche de TabMerger ouverte avec la requête docs, listant les onglets ouverts et enregistrés correspondants, thème sombre' },
+  ],
+  tags: ['browser-tips', 'cross-browser', 'chrome', 'edge', 'firefox', 'tab-management'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-20',
+      note: 'Les entrées Firefox ont été lues dans les définitions de touches de Firefox 159.0.1 lui-même ; cette page a bloqué notre vérification automatique.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp' },
+  ogImage: { src: '/blog/tab-keyboard-shortcuts/og.png', alt: 'Raccourcis clavier des onglets pour Chrome, Edge et Firefox : un guide TabMerger, avec la recherche de TabMerger ouverte' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'table', label: 'Raccourcis par navigateur' },
+    { id: 'reopen', label: 'Rouvrir des onglets fermés' },
+    { id: 'extensions', label: 'Raccourcis d’extensions' },
+    { id: 'tabmerger', label: 'Les touches de TabMerger' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['table', 'reopen', 'extensions'],
+  browserFact: {
+    label: 'Raccourcis d’extensions',
+    values: { chrome: 'chrome://extensions/shortcuts', edge: 'edge://extensions/shortcuts', firefox: 'about:addons' },
+  },
+}
+
+<QuickAnswer>
+
+<Kbd>Ctrl</Kbd>+<Kbd>Tab</Kbd> et <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Tab</Kbd> passent à l’onglet suivant et au précédent, <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> vont à un onglet selon sa position, <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> le ferme et <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> le fait revenir. Ils fonctionnent de la même façon dans Chrome, Edge et Firefox sous Windows et Linux ; sur Mac, utilisez <Kbd>⌘</Kbd> au lieu de <Kbd>Ctrl</Kbd>. Ajoutez [TabMerger](/features) et deux touches de plus font le gros du travail : enregistrer des onglets directement au clavier, et <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> pour retrouver n’importe quel onglet, ouvert, enregistré ou fermé.
+
+</QuickAnswer>
+
+<InstallCta>Enregistrez vos onglets sans lâcher le clavier. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="table" title="Quels raccourcis d’onglets votre navigateur propose-t-il ?">
+
+D’abord Windows et Linux, puis ce qui change sur Mac. Chaque entrée vient de la page d’aide du navigateur ou, pour Firefox, des définitions de touches de Firefox 159.0.1 lui-même.
+
+<BrowserPanels section="table">
+<BrowserPanel browser="chrome">
+
+<ComparisonTable
+  head={['Action', 'Raccourci']}
+  rowHeaders
+  rows={[
+    ['Nouvel onglet', 'Ctrl+T'],
+    ['Fermer l’onglet', 'Ctrl+W'],
+    ['Rouvrir les onglets et fenêtres fermés', 'Ctrl+Shift+T'],
+    ['Onglet suivant', 'Ctrl+Tab ou Ctrl+PgDn'],
+    ['Onglet précédent', 'Ctrl+Shift+Tab ou Ctrl+PgUp'],
+    ['Onglets 1 à 8', 'Ctrl+1 … Ctrl+8'],
+    ['Dernier onglet', 'Ctrl+9'],
+    ['Chercher parmi les onglets ouverts', 'Ctrl+Shift+A'],
+    ['Mettre tous les onglets en favoris', 'Ctrl+Shift+D'],
+    ['Historique', 'Ctrl+H'],
+    ['Fermer la fenêtre', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+Vous pouvez aussi chercher parmi les onglets ouverts depuis la barre d’adresse : tapez `@tabs` et appuyez sur <Kbd>Tab</Kbd>. Pour chercher aussi parmi les onglets enregistrés et fermés, voyez [comment retrouver un onglet parmi des centaines](/blog/find-a-tab-among-hundreds).
+
+**Sur Mac**, utilisez <Kbd>⌘</Kbd> là où le tableau indique <Kbd>Ctrl</Kbd>, avec ces exceptions tirées de l’aide de Chrome : l’onglet suivant et le précédent sont <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>→</Kbd> et <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>←</Kbd>, l’historique est <Kbd>⌘</Kbd>+<Kbd>Y</Kbd> et le gestionnaire de favoris <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>B</Kbd>.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+<ComparisonTable
+  head={['Action', 'Raccourci']}
+  rowHeaders
+  rows={[
+    ['Nouvel onglet', 'Ctrl+T'],
+    ['Fermer l’onglet', 'Ctrl+W'],
+    ['Rouvrir le dernier onglet fermé', 'Ctrl+Shift+T'],
+    ['Onglet suivant', 'Ctrl+Tab ou Ctrl+PgDn'],
+    ['Onglet précédent', 'Ctrl+Shift+Tab ou Ctrl+PgUp'],
+    ['Onglets 1 à 8', 'Ctrl+1 … Ctrl+8'],
+    ['Dernier onglet', 'Ctrl+9'],
+    ['Ajouter tous les onglets aux favoris', 'Ctrl+Shift+D'],
+    ['Historique', 'Ctrl+H'],
+    ['Fermer la fenêtre', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+La liste de raccourcis d’Edge n’a aucune touche pour chercher parmi les onglets ouverts ni pour rouvrir une fenêtre fermée.
+
+**Sur Mac**, utilisez <Kbd>⌘</Kbd> là où le tableau indique <Kbd>Ctrl</Kbd> ; l’historique est <Kbd>⌘</Kbd>+<Kbd>Y</Kbd>. Microsoft indique <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↓</Kbd> et <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↑</Kbd> pour l’onglet suivant et le précédent.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+<ComparisonTable
+  head={['Action', 'Raccourci']}
+  rowHeaders
+  rows={[
+    ['Nouvel onglet', 'Ctrl+T'],
+    ['Fermer l’onglet', 'Ctrl+W'],
+    ['Rouvrir l’onglet fermé', 'Ctrl+Shift+T'],
+    ['Rouvrir la fenêtre fermée', 'Ctrl+Shift+N'],
+    ['Onglet suivant', 'Ctrl+Tab ou Ctrl+PgDn'],
+    ['Onglet précédent', 'Ctrl+Shift+Tab ou Ctrl+PgUp'],
+    ['Onglets 1 à 8', 'Ctrl+1 … Ctrl+8'],
+    ['Dernier onglet', 'Ctrl+9'],
+    ['Lister tous les onglets', 'Ctrl+Shift+A'],
+    ['Mettre tous les onglets en favoris', 'Ctrl+Shift+D'],
+    ['Historique dans la barre latérale', 'Ctrl+H'],
+    ['Historique dans la bibliothèque', 'Ctrl+Shift+H'],
+    ['Fermer la fenêtre', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+**Sur Mac**, Firefox définit ces raccourcis avec la touche de modification principale du système : appuyez donc sur <Kbd>⌘</Kbd> là où le tableau indique <Kbd>Ctrl</Kbd>.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="reopen" title="Comment rouvrir un onglet fermé par erreur ?">
+
+Appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> sur Mac). Chaque appui remonte d’un cran. Ce qui revient dépend du navigateur :
+
+<BrowserPanels section="reopen">
+<BrowserPanel browser="chrome">
+
+Chrome rouvre les onglets *et* les fenêtres, dans l’ordre où ils ont été fermés : continuez d’appuyer jusqu’à ce que la fenêtre perdue revienne.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge documente <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> comme la réouverture du dernier onglet fermé. Pour une fenêtre fermée, ouvrez l’historique (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) et regardez sous **Recently closed** (fermés récemment).
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox tient des listes séparées : <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> pour les onglets et <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> pour les fenêtres. Dans Firefox 159, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> est relié à une commande qui restaure le dernier onglet, la dernière fenêtre ou la dernière session fermés, il peut donc aussi faire revenir la session précédente.
+
+</BrowserPanel>
+</BrowserPanels>
+
+La liste ne remonte pas indéfiniment. Pour toute une session perdue, voyez [comment restaurer ses onglets après un plantage](/blog/restore-tabs-after-crash). Pour ne pas les perdre du tout, [enregistrez tous vos onglets ouverts](/blog/save-all-open-tabs) avant de fermer quelque chose d’important.
+
+</Section>
+
+<Section id="extensions" title="Comment définir des raccourcis pour les extensions ?">
+
+Les extensions peuvent suggérer des raccourcis, mais le navigateur a le dernier mot : une touche suggérée qui entre en conflit avec l’une des siennes reste sur **Not set** (non défini), sans avertissement. Ouvrez la page des raccourcis de votre navigateur, cliquez sur le crayon à côté d’une commande et appuyez sur les touches voulues.
+
+<BrowserPanels section="extensions">
+<BrowserPanel browser="chrome">
+
+Collez `chrome://extensions/shortcuts` dans la barre d’adresse. Chaque commande a aussi un menu de portée : **In Chrome** (dans Chrome seulement) ou **Global** (partout), pour qu’elle fonctionne même quand Chrome n’est pas au premier plan.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Collez `edge://extensions/shortcuts` dans la barre d’adresse.
+
+Edge garde pour lui <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd> (dupliquer l’onglet), <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>U</Kbd> (Read Aloud, lecture à voix haute) et <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> (imprimer avec la boîte de dialogue du système) : une commande d’extension qui suggère l’un d’eux démarre donc sur **Not set** dans Edge 158. Edge 158 refuse aussi certaines touches <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd> que la liste de Microsoft ne mentionne pas, comme <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> et <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Z</Kbd>. Les commandes d’enregistrement de TabMerger les évitent toutes, si bien qu’une nouvelle installation a ses quatre raccourcis attribués :
+
+<AnnotatedFigure src="/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp" alt="Page des raccourcis clavier des extensions d’Edge pour TabMerger : les quatre commandes d’enregistrement attribuées, à Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma et Alt+Shift+Period" width={852} height={460} boxes={[{ id: 'save-shortcuts' }]} source="edge://extensions/shortcuts · Edge 158.0.4370.33">Une nouvelle installation de TabMerger dans Edge 158 : les quatre commandes d’enregistrement ont leurs touches, rien à corriger.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Ouvrez `about:addons`, cliquez sur le menu en forme de roue dentée et choisissez **Gérer les raccourcis d’extensions** (Manage Extension Shortcuts). Notez que <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> ouvre une fenêtre privée dans Firefox : choisissez une autre touche pour tout ce qui le suggère.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>la page des raccourcis ne vous prévient pas. Si un raccourci « ne fait rien », vérifiez-la d’abord.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="Les touches de TabMerger">
+
+[TabMerger](/features), notre extension gratuite pour Chrome, Edge et Firefox, enregistre des onglets directement au clavier, sans l’ouvrir. Elle suggère une touche pour chacune de ses quatre commandes d’enregistrement, choisie pour éviter les raccourcis de Chrome, d’Edge et de Firefox eux-mêmes, et vous pouvez changer chacune sur la page des raccourcis de votre navigateur (voir plus haut) :
+
+<ComparisonTable
+  head={['Touche suggérée', 'Enregistre']}
+  keysColumn={0}
+  rows={[
+    ['Alt+Shift+S', 'L’onglet actif'],
+    ['Alt+Shift+O', 'Tous les autres onglets de la fenêtre'],
+    ['Alt+Shift+Comma', 'Les onglets à gauche'],
+    ['Alt+Shift+Period', 'Les onglets à droite'],
+  ]}
+/>
+
+Sur Mac, elles utilisent <Kbd>Control</Kbd>+<Kbd>Shift</Kbd> au lieu de <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd> : <Kbd>Control</Kbd>+<Kbd>Shift</Kbd>+<Kbd>S</Kbd> enregistre l’onglet actif. Ce sont les touches d’une nouvelle installation. Les mises à jour ne changent pas les raccourcis : si vous avez installé TabMerger avant l’arrivée de ces touches, il garde celles qu’il avait, y compris celles sur **Not set**. Définissez-les sur la page des raccourcis.
+
+Dans la fenêtre de l’extension, <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd>) cherche parmi les onglets ouverts, enregistrés et fermés récemment, dans une seule liste.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tab-keyboard-shortcuts/tm-search" alt="Recherche de TabMerger ouverte avec la requête docs, listant les onglets ouverts et enregistrés correspondants, thème clair" darkAlt="Recherche de TabMerger ouverte avec la requête docs, listant les onglets ouverts et enregistrés correspondants, thème sombre" boxes={[{ id: 'search-input', label: 'Recherche' }]} source="TabMerger 3.16.1">Ctrl+K, puis tapez : les résultats viennent aussi bien des onglets ouverts que des onglets enregistrés.</ThemedScreenshot>
+
+<InstallCta>Gratuit pour Chrome, Edge et Firefox. Aucun compte nécessaire pour commencer.</InstallCta>
+
+D’autres habitudes pour garder peu d’onglets ouverts se trouvent dans notre [guide pour gérer trop d’onglets](/blog/manage-too-many-tabs), et ce que chaque navigateur propose au-delà des raccourcis dans [les fonctions d’onglets de Chrome, Edge et Firefox comparées](/blog/browser-tab-features-compared).
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

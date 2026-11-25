@@ -1,0 +1,170 @@
+export const post = {
+  slug: 'too-many-tabs-slow-browser',
+  title: '¿Tener muchas pestañas abiertas ralentiza el ordenador?',
+  navTitle: 'Muchas pestañas, ordenador lento',
+  seoTitle: '¿Demasiadas pestañas ralentizan tu navegador? Cómo solucionarlo',
+  description:
+    '¿El navegador va lento por tener demasiadas pestañas abiertas? Cada pestaña usa memoria. Activa la función del navegador que suspende pestañas, y guarda y cierra con TabMerger las que no estás usando, sin perder ni una.',
+  shareSummary: 'Por qué las pestañas abiertas lo ralentizan todo y cómo liberar memoria sin perderlas.',
+  dek: 'La pestaña más rápida es la que no está abierta. Guárdala, ciérrala y recupérala con un clic.',
+  published: '2026-12-04',
+  updated: '2026-12-04',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'El Ahorro de memoria de Chrome libera la memoria de las pestañas inactivas.',
+      source: 'Ayuda de Chrome',
+      href: 'https://support.google.com/chrome/answer/12929150',
+    },
+    { text: 'Edge 158 suspende las pestañas inactivas, a los 15 minutos de forma predeterminada.', source: 'edge://settings, 20 nov. 2026' },
+    { text: 'Firefox 159 puede descargar una pestaña desde su menú contextual.', source: 'Texto de los menús de Firefox 159' },
+    { text: 'TabMerger guarda todas las ventanas abiertas y después las cierra con un clic.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: '¿Tener muchas pestañas usa más memoria?',
+      answer:
+        'Sí. Cada página abierta mantiene su contenido en memoria, y las que ejecutan scripts o reproducen contenido multimedia también usan el procesador. Cuánto depende de los sitios, así que el número de pestañas por sí solo no lo dice todo.',
+    },
+    {
+      question: '¿Cerrar pestañas hará que mi ordenador vaya más rápido?',
+      answer:
+        'Cerrar pestañas libera la memoria que usan. Guárdalas antes con TabMerger (Combinar con lo actual y después Cerrar todas las ventanas) y no perderás nada: vuelve a abrir cualquiera de ellas con un clic.',
+    },
+    {
+      question: '¿Basta con el Ahorro de memoria o las pestañas suspendidas?',
+      answer:
+        'Liberan la memoria de las pestañas inactivas y las mantienen en la barra de pestañas, lo que ayuda al ordenador. Pero las pestañas siguen ahí y tienes que revisarlas; guardarlas y cerrarlas también te ayuda a ti.',
+    },
+    {
+      question: '¿Cómo veo qué pestaña usa más memoria?',
+      answer: 'En Chrome, pulsa Shift+Esc para abrir el administrador de tareas de Chrome y busca las pestañas que más memoria usan.',
+    },
+  ],
+  images: [
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-light.webp', alt: 'Menú «Now Open» (Abiertas ahora) de TabMerger con «Close all windows» (Cerrar todas las ventanas), «Close all browser windows in this group» (Cierra todas las ventanas del navegador de este grupo), resaltado, tema claro' },
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-dark.webp', alt: 'Menú «Now Open» (Abiertas ahora) de TabMerger con «Close all windows» (Cerrar todas las ventanas), «Close all browser windows in this group» (Cierra todas las ventanas del navegador de este grupo), resaltado, tema oscuro' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Configuración de Chrome, «Performance» (Rendimiento), con el interruptor «Memory Saver» (Ahorro de memoria)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Configuración de Edge, «Performance», con «Automatically put tabs to sleep» activado y fijado en 15 minutos' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/too-many-tabs-slow-browser/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/too-many-tabs-slow-browser/og.png', alt: 'Portada «Do too many tabs slow your computer down?»: una guía de TabMerger, con el menú «Close all windows» (Cerrar todas las ventanas)' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'why', label: 'Por qué las pestañas ralentizan' },
+    { id: 'tabmerger', label: 'Guardar y cerrar de una vez' },
+    { id: 'browser', label: 'Que el navegador suspenda pestañas' },
+    { id: 'which', label: 'Encontrar la pestaña pesada' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'Ajuste de memoria',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Configuración → System and performance → Performance',
+      firefox: 'Clic derecho en una pestaña → Descargar pestaña',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Sí: cada pestaña abierta usa memoria, y con suficientes el ordenador entero va más lento. Lo que más se nota es **cerrar las pestañas que no estás usando, sin perderlas**. En [TabMerger](/features), elige **Combinar con lo actual** para guardar todas las ventanas abiertas en un grupo y después **Cerrar todas las ventanas**: la memoria queda libre y cada pestaña está a un clic. Para las pestañas que mantienes abiertas, activa el **Ahorro de memoria** («Memory Saver», Chrome) o las **pestañas suspendidas** (Edge).
+
+</QuickAnswer>
+
+<InstallCta>Guarda todas las ventanas, ciérralas y recupera la memoria. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="why" title="¿Por qué las pestañas abiertas ralentizan el ordenador?">
+
+Cada pestaña abierta es una página web viva: su texto, sus imágenes y sus scripts se quedan en memoria, y las páginas con mucha actividad (vídeo, feeds en directo, aplicaciones web) siguen usando también el procesador. Cuando el navegador y tus otras aplicaciones necesitan más memoria de la que tiene el ordenador, todo va más lento. La propia ayuda de Chrome sobre bloqueos cita la falta de memoria como una de sus causas, y su primera solución es cerrar pestañas.
+
+Lo que cuesta una pestaña depende por completo del sitio, así que no hay un número seguro. La regla práctica: si no la has mirado hoy, no debería estar abierta.
+
+</Section>
+
+<Section id="tabmerger" title="¿Cómo cierro pestañas sin perderlas?">
+
+Aquí es donde [TabMerger](/features) brilla. Dos pasos, todas las ventanas a la vez:
+
+1. Haz clic en **Agregar grupo** y elige **Combinar con lo actual** en su menú **⋯**: todas las ventanas y pestañas abiertas se guardan en el grupo.
+2. Haz clic derecho en **Abiertas ahora** en la barra lateral y elige **Cerrar todas las ventanas**. Las ventanas del navegador se cierran; el grupo conserva todas las pestañas.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/too-many-tabs-slow-browser/tm-close-all-menu" alt="Menú «Now Open» (Abiertas ahora) de TabMerger con «Close all windows» (Cerrar todas las ventanas), «Close all browser windows in this group» (Cierra todas las ventanas del navegador de este grupo), resaltado, tema claro" darkAlt="Menú «Now Open» (Abiertas ahora) de TabMerger con «Close all windows» (Cerrar todas las ventanas), «Close all browser windows in this group» (Cierra todas las ventanas del navegador de este grupo), resaltado, tema oscuro" boxes={[{ id: 'close-all', label: 'Cerrar todas las ventanas' }]} source="TabMerger 3.16.1">Después de guardar, una sola opción del menú cierra todas las ventanas abiertas.</ThemedScreenshot>
+
+Cuando las necesites de nuevo, abre el grupo y vuelve a abrir una pestaña, una ventana o todo. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> encuentra cualquier pestaña guardada con una pulsación, y el guardado automático puede guardarlas por ti según un horario. Más hábitos en nuestra [rutina para tener demasiadas pestañas a raya](/blog/manage-too-many-tabs).
+
+</Section>
+
+<Section id="browser" title="¿Cómo hago que el navegador suspenda las pestañas inactivas?">
+
+Con las pestañas que mantienes abiertas, el navegador puede liberar su memoria mientras no las usas. Se recargan cuando haces clic en ellas.
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+Activa el **Ahorro de memoria** («Memory Saver»): **Configuración → Rendimiento** («Settings → Performance»), o pega `chrome://settings/performance` en la barra de direcciones. Elige lo pronto que las pestañas pasan a estar inactivas: Moderado («Moderate»), Equilibrado («Balanced») o Máximo («Maximum»).
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Configuración de Chrome, «Performance» (Rendimiento), con el interruptor «Memory Saver» (Ahorro de memoria)" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">«Memory Saver» (Ahorro de memoria) de Chrome, desactivado en un perfil nuevo de Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Activa **Automatically put tabs to sleep** en **Configuración → System and performance → Performance**, y elige cuánto espera una pestaña antes de suspenderse.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Configuración de Edge, «Performance», con «Automatically put tabs to sleep» activado y fijado en 15 minutos" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Las pestañas suspendidas de Edge, activadas de forma predeterminada: las pestañas inactivas se suspenden a los 15 minutos.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Haz clic derecho en una pestaña y elige **Descargar pestaña** («Unload Tab») para liberar su memoria ya; selecciona antes varias pestañas para descargarlas juntas.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>las pestañas suspendidas siguen llenando la barra de pestañas. Ayudan al ordenador, no a tu concentración.</Catch>
+
+</Section>
+
+<Section id="which" title="¿Cómo encuentro la pestaña que lo ralentiza todo?">
+
+En Chrome, pulsa <Kbd>Shift</Kbd>+<Kbd>Esc</Kbd> para abrir el **administrador de tareas de Chrome** («Chrome Task Manager») y busca las pestañas que más memoria usan. Guarda las pesadas en un grupo de TabMerger y ciérralas.
+
+{/* Screenshot still to capture by hand (needs a visible browser): the Chrome Task Manager window sorted by memory. */}
+
+<InstallCta>Gratis para Chrome, Edge y Firefox. No necesitas una cuenta para empezar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

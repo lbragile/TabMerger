@@ -1,0 +1,173 @@
+export const post = {
+  slug: 'onetab-alternatives',
+  title: 'Alternativas a OneTab, y cómo trasladar tus listas sin perder ni una pestaña',
+  navTitle: 'Alternativas a OneTab y cómo cambiarte',
+  seoTitle: 'Alternativas a OneTab (con sincronización) y cómo exportar tus listas',
+  description:
+    '¿Buscas una alternativa a OneTab? Qué hace OneTab hoy (ya tiene sincronización), qué herramientas hacen lo que OneTab no hace y cómo exportar tus listas e importarlas en otra.',
+  shareSummary: 'Alternativas a OneTab, su nueva sincronización y una forma segura de trasladar tus listas.',
+  dek: 'Exporta antes de desinstalar nada: quitar OneTab borra su lista.',
+  published: '2026-11-27',
+  updated: '2026-11-27',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'OneTab ofrece Backup & Sync, de pago y con cifrado de extremo a extremo.',
+      source: 'one-tab.com/sync',
+      href: 'https://www.one-tab.com/sync',
+    },
+    {
+      text: 'Desinstalar OneTab borra tus pestañas guardadas.',
+      source: 'one-tab.com',
+      href: 'https://www.one-tab.com/',
+    },
+    { text: 'Una licencia de OneTab sincroniza hasta 100 navegadores o perfiles.', source: 'one-tab.com/sync' },
+    { text: 'TabMerger convierte cada lista de OneTab en su propio grupo.', source: 'Probado en TabMerger 3.16.1, 20 nov. 2026' },
+  ],
+  faq: [
+    {
+      question: '¿Hay alguna alternativa a OneTab con sincronización?',
+      answer:
+        'Sí. TabMerger Pro sincroniza tus grupos y sesiones con cifrado de extremo a extremo, en Chrome, Edge y Firefox. Toby, Workona y Tab Session Manager también sincronizan, y OneTab ofrece ahora Backup & Sync de pago.',
+    },
+    {
+      question: '¿Cómo exporto desde OneTab?',
+      answer:
+        'Abre OneTab, elige «Importar y exportar» y copia el texto. Cada línea es una dirección y un título; una línea en blanco separa tus listas. Guárdalo como archivo .txt.',
+    },
+    {
+      question: '¿Perderé mis pestañas si desinstalo OneTab?',
+      answer: 'Sí. La propia web de OneTab avisa de que desinstalarlo borra tus pestañas guardadas. Exporta primero y conserva el archivo.',
+    },
+    {
+      question: '¿Puedo importar OneTab en TabMerger?',
+      answer: 'Sí. Ajustes → Datos → Importar archivo, elige la exportación .txt y confirma. Cada lista de OneTab se convierte en un grupo de TabMerger, con los títulos incluidos.',
+    },
+  ],
+  images: [
+    { src: '/blog/onetab-alternatives/tm-settings-import-light.webp', alt: 'Ajustes de TabMerger, «Data» (Datos), con el botón «Import file» (Importar archivo) en «Import & export» (Importar y exportar), tema claro' },
+    { src: '/blog/onetab-alternatives/tm-settings-import-dark.webp', alt: 'Ajustes de TabMerger, «Data» (Datos), con el botón «Import file» (Importar archivo) en «Import & export» (Importar y exportar), tema oscuro' },
+    { src: '/blog/onetab-alternatives/tm-import-confirm-light.webp', alt: 'Diálogo de TabMerger que pregunta «Import 2 groups?» (¿Importar 2 grupos?) para el archivo onetab.txt, tema claro' },
+    { src: '/blog/onetab-alternatives/tm-import-confirm-dark.webp', alt: 'Diálogo de TabMerger que pregunta «Import 2 groups?» (¿Importar 2 grupos?) para el archivo onetab.txt, tema oscuro' },
+    { src: '/blog/onetab-alternatives/tm-imported-groups-light.webp', alt: 'Barra lateral de TabMerger con los nuevos grupos «Imported 1» e «Imported 2», el segundo con cuatro pestañas, tema claro' },
+    { src: '/blog/onetab-alternatives/tm-imported-groups-dark.webp', alt: 'Barra lateral de TabMerger con los nuevos grupos «Imported 1» e «Imported 2», el segundo con cuatro pestañas, tema oscuro' },
+  ],
+  tags: ['comparison', 'tab-manager', 'save-tabs', 'session-management'],
+  sources: [
+    { title: 'OneTab', publisher: 'one-tab.com', url: 'https://www.one-tab.com/', checked: '2026-11-20' },
+    { title: 'OneTab Backup & Sync', publisher: 'one-tab.com', url: 'https://www.one-tab.com/sync', checked: '2026-11-20' },
+    {
+      title: 'OneTab',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/onetab/chphlpgkkbolifaimnlloiipkdnihall',
+      checked: '2026-11-20',
+    },
+    { title: 'Session Buddy', publisher: 'sessionbuddy.com', url: 'https://sessionbuddy.com/', checked: '2026-11-20' },
+    {
+      title: 'Tab Session Manager',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/tab-session-manager/iaiomicjabeggjcfkbimgmglanimpnae',
+      checked: '2026-11-20',
+    },
+    { title: 'Toby pricing', publisher: 'gettoby.com', url: 'https://www.gettoby.com/pricing', checked: '2026-11-20' },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/onetab-alternatives/tm-imported-groups-light.webp' },
+  ogImage: { src: '/blog/onetab-alternatives/og.png', alt: 'Tarjeta de título «OneTab alternatives, and how to move your lists without losing a tab»: una guía de TabMerger, con dos listas de OneTab importadas' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'today', label: 'Qué hace OneTab hoy' },
+    { id: 'alternatives', label: 'Las alternativas' },
+    { id: 'export', label: 'Exportar desde OneTab' },
+    { id: 'import', label: 'Importar en TabMerger' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Primero, exporta: en OneTab elige **Importar y exportar** (Import & Export), copia el texto y guárdalo como archivo `.txt`, porque desinstalar OneTab borra su lista. Después impórtalo en **TabMerger**, que convierte cada lista en un grupo con nombre y añade lo que una sola lista no puede: ventanas separadas, una sola búsqueda en las pestañas abiertas, guardadas y cerradas recientemente, guardado automático y sincronización con cifrado de extremo a extremo en Chrome, Edge y Firefox. Otras opciones: **Tab Session Manager** para sesiones guardadas automáticamente, **Session Buddy** para recuperarte de un bloqueo en local y **Toby** para un tablero visual.
+
+</QuickAnswer>
+
+<InstallCta>Lleva tus listas de OneTab a grupos con nombre en los que puedes buscar. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+<Section id="today" title="¿Qué hace OneTab hoy?">
+
+Muchos artículos sobre OneTab están desactualizados, así que esto es lo que dice su propia web (consultada el 20 nov. 2026):
+
+- Con un clic, tus pestañas se convierten en una lista para ahorrar memoria. Puedes restaurarlas de una en una o todas a la vez.
+- Las listas sobreviven a cerrar OneTab, a reiniciar el navegador o el ordenador y a los bloqueos del navegador.
+- Funciona en Chrome, Firefox, Edge y Safari, con carpetas, notas e importación y exportación.
+- **Ya tiene sincronización.** Backup & Sync es una suscripción anual de pago: los cambios aparecen en tus otros navegadores, con una copia de seguridad automática en la nube cifrada de extremo a extremo. Una licencia cubre hasta 100 navegadores o perfiles, y si dejas la suscripción conservas tus pestañas; solo se detiene la sincronización.
+- **Desinstalarlo borra tus pestañas.** Por eso mismo, la nota de solución de problemas de OneTab advierte que no lo reinstales para arreglar un fallo.
+
+Así que la sincronización por sí sola ya no los diferencia. Lo que añade TabMerger es estructura: grupos que mantienen las ventanas separadas, una sola búsqueda en las pestañas abiertas, guardadas y cerradas recientemente, guardado automático de las pestañas abiertas y la misma herramienta en Chrome, Edge y Firefox.
+
+</Section>
+
+<Section id="alternatives" title="¿Qué alternativa a OneTab deberías elegir?">
+
+<ComparisonTable
+  head={['Si quieres', 'Mira', 'Por qué']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['Grupos entre ventanas, una sola búsqueda, sincronización cifrada', 'TabMerger', 'Grupos con nombre, búsqueda en pestañas abiertas, guardadas y cerradas, guardado automático; sincronización en Pro, siempre cifrada de extremo a extremo'],
+    ['Sincronización gratis', 'Tab Session Manager', 'Sincronización en la nube, guardado automático al cerrar y cada cierto tiempo; sin plan de pago'],
+    ['Recuperación gratis tras un bloqueo, sin cuenta', 'Session Buddy', 'Historial de sesiones en tu dispositivo; sin sincronización'],
+    ['Un tablero visual', 'Toby', 'Colecciones en la página de nueva pestaña; gratis hasta 60 pestañas guardadas'],
+    ['Que cierre por ti las pestañas inactivas', 'Tab Wrangler', 'Cierra las pestañas que no usas y las guarda para volver a abrirlas'],
+  ]}
+/>
+
+Cada una se describe a partir de su propia web o de su ficha en la tienda. Para ver diez herramientas lado a lado, consulta [las mejores extensiones para gestionar pestañas, comparadas](/blog/best-tab-manager-extensions); para saber qué son las sesiones y por qué importan, consulta [qué hace un gestor de sesiones del navegador](/blog/browser-session-manager). Los precios están en nuestra [página de comparación](/compare).
+
+</Section>
+
+<Section id="export" title="¿Cómo exporto mis listas desde OneTab?">
+
+1. Abre OneTab (con su icono de la barra de herramientas, o la página de OneTab si la tienes fijada).
+2. Elige **Importar y exportar** (Import & Export).
+3. Copia el texto del cuadro de exportación. OneTab tiene un botón **Copiar al portapapeles** (Copy to clipboard).
+4. Pégalo en un editor de texto sin formato (Notepad, o TextEdit en modo de texto sin formato) y guárdalo como `onetab.txt`.
+
+El formato es sencillo: una pestaña por línea como `address | title` y una línea en blanco entre listas. Una línea tiene este aspecto: `https://nodejs.org/en/docs | Documentation | Node.js`.
+
+<Catch>La exportación incluye direcciones y títulos. Los nombres de las listas, las notas y las carpetas no se trasladan, así que apunta qué lista era cuál antes de mudarte.</Catch>
+
+{/* Screenshot still to capture by hand (needs OneTab installed): OneTab's Import & Export page. */}
+
+</Section>
+
+<Section id="import" title="¿Cómo importo una exportación de OneTab en TabMerger?">
+
+[TabMerger](/features), nuestra extensión gratuita para Chrome, Edge y Firefox, lee directamente el archivo de OneTab. No se sube nada: el archivo se lee en tu navegador.
+
+1. Abre TabMerger y luego **Ajustes → Datos** (Settings → Data).
+2. En **Importar y exportar** (Import & export), pulsa **Importar archivo** (Import file) y elige tu archivo `.txt`.
+3. Confirma. Cada lista de OneTab se convierte en su propio grupo, llamado «Imported 1», «Imported 2», etc., con los títulos de las pestañas.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Importar una exportación de OneTab" steps={[{ title: 'Importar archivo' }, { title: 'Confirmar' }, { title: 'Tus grupos' }]}>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-settings-import" alt="Ajustes de TabMerger, «Data» (Datos), con el botón «Import file» (Importar archivo) en «Import & export» (Importar y exportar), tema claro" darkAlt="Ajustes de TabMerger, «Data» (Datos), con el botón «Import file» (Importar archivo) en «Import & export» (Importar y exportar), tema oscuro" boxes={[{ id: 'import-file', label: 'Importar archivo' }]} source="TabMerger 3.16.1">«Settings → Data» (Ajustes → Datos): «Import file» (Importar archivo) admite archivos .txt de OneTab, .html de marcadores y .json de TabMerger.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-import-confirm" alt="Diálogo de TabMerger que pregunta «Import 2 groups?» (¿Importar 2 grupos?) para el archivo onetab.txt, tema claro" darkAlt="Diálogo de TabMerger que pregunta «Import 2 groups?» (¿Importar 2 grupos?) para el archivo onetab.txt, tema oscuro" boxes={[{ id: 'import-confirm', label: 'Importar' }]} source="TabMerger 3.16.1">Dos listas de OneTab, dos grupos, añadidos junto a los grupos que ya tienes.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-imported-groups" alt="Barra lateral de TabMerger con los nuevos grupos «Imported 1» e «Imported 2», el segundo con cuatro pestañas, tema claro" darkAlt="Barra lateral de TabMerger con los nuevos grupos «Imported 1» e «Imported 2», el segundo con cuatro pestañas, tema oscuro" boxes={[{ id: 'imported', label: 'Grupos importados' }]} source="TabMerger 3.16.1">Las listas importadas como grupos. Cámbiales el nombre desde el menú de cada grupo.</ThemedScreenshot>
+</Carousel>
+
+Todos los formatos que importa TabMerger se explican en [importar pestañas en TabMerger](/blog/import-tabs-into-tabmerger). Algunos detalles que conviene saber:
+
+- Las líneas que no son una dirección web completa (o que ejecutarían un script) se omiten, y TabMerger te dice cuántas al terminar la importación.
+- En Free, una importación que te haría superar los 5 grupos o las 50 pestañas se detiene antes de añadir nada. Pro no tiene límite.
+- Mantén OneTab instalado hasta que hayas revisado los grupos. Después puedes quitarlo.
+
+<InstallCta>Gratis para Chrome, Edge y Firefox. Trae tus listas de OneTab contigo.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

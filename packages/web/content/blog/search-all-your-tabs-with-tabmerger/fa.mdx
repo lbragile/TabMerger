@@ -1,0 +1,175 @@
+export const post = {
+  slug: 'search-all-your-tabs-with-tabmerger',
+  title: 'جست‌وجو در همهٔ زبانه‌ها با TabMerger: میان‌بر Ctrl+K و فیلترهایش',
+  navTitle: 'جست‌وجو در همهٔ زبانه‌ها',
+  seoTitle: 'جست‌وجو در زبانه‌های باز، ذخیره‌شده و بسته‌شده به‌طور هم‌زمان با TabMerger',
+  description:
+    'یک کادر جست‌وجو برای همهٔ زبانه‌هایتان: باز، ذخیره‌شده در گروه‌ها یا بسته‌شده در همین هفته. جست‌وجوی زبانه با Ctrl+K در TabMerger چطور کار می‌کند، هر فیلتر (group: و window: و tag: و closed:) چه می‌کند و چرا این‌طور تطبیق می‌دهد.',
+  shareSummary: 'زبانه‌های باز، ذخیره‌شده و بسته‌شده در یک کادر جست‌وجو، با فیلترهایی که سریع محدودش می‌کنند.',
+  dek: 'باز باشد، ذخیره شده باشد یا یک ساعت پیش بسته شده باشد: چند حرف تایپ کنید و پیدا می‌شود، برجسته.',
+  published: '2026-12-14',
+  updated: '2026-12-14',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'میان‌بر Ctrl+K (یا ⌘+K در Mac) زبانه‌های باز، ذخیره‌شده و اخیراً بسته‌شده را با هم جست‌وجو می‌کند.', source: 'TabMerger 3.16.1' },
+    { text: 'فیلترها: group: و window: و tag: (برچسب گروه زبانهٔ Chrome) و closed:.', source: 'TabMerger 3.16.1' },
+    { text: 'تطبیق یعنی رشته‌ای دقیق از حروف، هرگز تقریبی؛ برای همین هر نتیجه بخشی برجسته دارد.', source: 'کد منبع TabMerger 3.16.1' },
+    { text: 'جست‌وجو و همهٔ فیلترها رایگان‌اند.', source: 'قیمت‌های TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'چطور در همهٔ زبانه‌هایم یک‌جا جست‌وجو کنم؟',
+      answer:
+        'TabMerger را باز کنید و Ctrl+K (یا ⌘+K در Mac) را بزنید، سپس بخشی از عنوان یا نشانی صفحه را تایپ کنید. نتیجه‌ها زبانه‌های باز، همهٔ گروه‌های ذخیره‌شده و زیر آن‌ها زبانه‌هایی را که اخیراً بسته‌اید در بر می‌گیرند.',
+    },
+    {
+      question: 'چطور فقط در یک گروه جست‌وجو کنم؟',
+      answer:
+        'group: را تایپ کنید و گروه را از فهرست انتخاب کنید؛ TabMerger عبارت group:"Name" را پر می‌کند. بعد واژه‌هایتان را پس از آن بنویسید، مثلاً group:"Thesis sources" wiki.',
+    },
+    {
+      question: 'می‌توانم در زبانه‌هایی که بسته‌ام جست‌وجو کنم؟',
+      answer: 'بله. جست‌وجو را با closed: شروع کنید تا فقط زبانه‌ها و پنجره‌های اخیراً بسته‌شده فهرست شوند. یکی را انتخاب کنید تا دوباره باز شود؛ کلیک همراه با Ctrl یا کلیک وسط آن را در پس‌زمینه باز می‌کند.',
+    },
+    {
+      question: 'چرا وقتی غلط تایپ می‌کنم جست‌وجو صفحه را پیدا نمی‌کند؟',
+      answer:
+        'TabMerger حروف را دقیقاً همان‌طور که تایپ شده تطبیق می‌دهد (بدون حساسیت به حروف بزرگ و کوچک) و هرگز حروف پراکنده در طول عنوان را تطبیق نمی‌دهد. به این ترتیب نتیجه‌ها قابل پیش‌بینی می‌مانند: هر نتیجه تطبیقی برجسته دارد و هر برجستگی یک تطبیق واقعی است.',
+    },
+    {
+      question: 'جست‌وجو رایگان است؟',
+      answer: 'بله، جست‌وجو و همهٔ فیلترهایش در طرح Free هستند. Pro زبانه‌های بسته‌شده را به‌جای ۲ روز، ۳۰ روز برای جست‌وجو نگه می‌دارد.',
+    },
+  ],
+  images: [
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-light.webp', alt: 'جست‌وجوی TabMerger که با Ctrl+K باز شده و نمونه جست‌وجوهایی برای react و group: و window: و tag: و closed: نشان می‌دهد، پوستهٔ روشن' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-dark.webp', alt: 'جست‌وجوی TabMerger که با Ctrl+K باز شده و نمونه جست‌وجوهایی برای react و group: و window: و tag: و closed: نشان می‌دهد، پوستهٔ تیره' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-light.webp', alt: 'جست‌وجوی docs در TabMerger: چهار نتیجه از Now Open (هم‌اکنون باز) و Reading list که docs در هر نشانی برجسته شده، پوستهٔ روشن' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-dark.webp', alt: 'جست‌وجوی docs در TabMerger: چهار نتیجه از Now Open (هم‌اکنون باز) و Reading list که docs در هر نشانی برجسته شده، پوستهٔ تیره' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-light.webp', alt: 'جست‌وجوی TabMerger با window: تایپ‌شده که پنجره‌های Window و Papers و Tools را برای انتخاب فهرست می‌کند، پوستهٔ روشن' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-dark.webp', alt: 'جست‌وجوی TabMerger با window: تایپ‌شده که پنجره‌های Window و Papers و Tools را برای انتخاب فهرست می‌کند، پوستهٔ تیره' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp', alt: 'گروه Thesis sources هنگام جست‌وجوی wiki در آن، با تنها تطبیق برجسته و بقیهٔ زبانه‌ها کم‌رنگ، پوستهٔ روشن' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-dark.webp', alt: 'گروه Thesis sources هنگام جست‌وجوی wiki در آن، با تنها تطبیق برجسته و بقیهٔ زبانه‌ها کم‌رنگ، پوستهٔ تیره' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'browser-tips'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp' },
+  ogImage: { src: '/blog/search-all-your-tabs-with-tabmerger/og.png', alt: 'جست‌وجو در همهٔ زبانه‌ها با TabMerger: نتیجه‌های docs از زبانه‌های باز و ذخیره‌شده' },
+  toc: [
+    { id: 'quick', label: 'پاسخ کوتاه' },
+    { id: 'problem', label: 'آن زبانه کجا بود؟' },
+    { id: 'why', label: 'چرا جست‌وجو این‌طور کار می‌کند' },
+    { id: 'steps', label: 'جست‌وجو گام‌به‌گام' },
+    { id: 'filters', label: 'همهٔ فیلترها' },
+    { id: 'panel', label: 'بعد از جست‌وجو' },
+    { id: 'benefit', label: 'چه چیزی صرفه‌جویی می‌شود' },
+    { id: 'habits', label: 'عادت‌های خوب' },
+    { id: 'plans', label: 'Free یا Pro' },
+    { id: 'faq', label: 'پرسش‌های متداول' },
+  ],
+}
+
+<QuickAnswer>
+
+[TabMerger](/features) را باز کنید و <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>K</Kbd></bdi> در Mac) را بزنید. چند حرف از یک عنوان یا نشانی تایپ کنید: نتیجه‌ها از زبانه‌های باز، همهٔ گروه‌های ذخیره‌شده و زیر آن‌ها از زبانه‌هایی که اخیراً بسته‌اید می‌آیند و کنار هر کدام نوشته شده که کجاست. با <bdi dir="ltr">`group:`</bdi> یا <bdi dir="ltr">`window:`</bdi> یا <bdi dir="ltr">`tag:`</bdi> یا <bdi dir="ltr">`closed:`</bdi> دامنه را تنگ کنید، بعد <bdi dir="ltr"><Kbd>Enter</Kbd></bdi> را بزنید تا مستقیم به آن زبانه بروید.
+
+</QuickAnswer>
+
+<InstallCta>همهٔ زبانه‌هایتان، فقط یک جست‌وجو فاصله دارند. رایگان برای Chrome و Edge و Firefox.</InstallCta>
+
+<Section id="problem" title="«آن زبانه کجا بود؟»">
+
+می‌دانید که صفحه وجود دارد. سه‌شنبه باز بود، کنار درخواست ادغام (<bdi dir="ltr">pull request</bdi>). در پنجرهٔ کار بود یا پنجرهٔ مطالعه؟ آن را در گروهی ذخیره کردید یا بستید؟ جست‌وجوی زبانه‌های خود مرورگر فقط چیزی را می‌بیند که همین حالا در همان مرورگر باز است؛ سابقهٔ مرور همه‌چیزهایی را که تا حالا دیده‌اید می‌بیند، اما نمی‌داند کدام را عمداً نگه داشته‌اید.
+
+چیزی که لازم دارید یک کادر است که همه‌چیز را بداند: چه چیزی باز است، چه چیزی را ذخیره کرده‌اید و این هفته چه چیزی را بسته‌اید. آن کادر همان <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> در TabMerger است. (برای جست‌وجوی داخلی زبانه‌ها در مرورگرها، [چطور یک زبانه را میان صدها زبانه پیدا کنیم](/blog/find-a-tab-among-hundreds) را ببینید.)
+
+</Section>
+
+<Section id="why" title="چرا جست‌وجوی TabMerger این‌طور کار می‌کند">
+
+- **همه‌چیز در یک فهرست.** زبانه‌های باز، گروه‌های ذخیره‌شده و زبانه‌های اخیراً بسته‌شده به یک پرسش («کجاست؟») پاسخ می‌دهند، پس با هم نشان داده می‌شوند. هر نتیجه نشانی با نام گروهش دارد و اگر در گروه زبانهٔ Chrome باشد، برچسب آن گروه را هم.
+- **دقیق، نه تقریبی.** نتیجه زبانه‌ای است که عنوان یا نشانی‌اش حروف شما را پشت سر هم داشته باشد، بدون حساسیت به حروف بزرگ و کوچک. حروف پراکنده در طول عنوان هرگز حساب نمی‌شوند. این عمدی است: هر نتیجه بخشی برجسته دارد و هر بخش برجسته همان تطبیق واقعی است، پس می‌توانید به آنچه می‌بینید اعتماد کنید.
+- **بهترین تطبیق اول.** تطبیق کامل بالاتر از عنوانی می‌آید که با متن شما شروع می‌شود، بعد واژه‌ای که با آن شروع می‌شود و بعد تطبیق در هر جای دیگر. فهرست ۱۲ نتیجهٔ برتر را نشان می‌دهد، پس زبانهٔ درست نزدیک بالای فهرست است.
+- **انتخاب کنید، هجی نکنید.** تایپ <bdi dir="ltr">`group:`</bdi> یا <bdi dir="ltr">`window:`</bdi> یا <bdi dir="ltr">`tag:`</bdi> فهرستی از گروه‌ها، پنجره‌ها یا برچسب‌هایتان را برای انتخاب باز می‌کند. TabMerger نام را داخل گیومه پر می‌کند، پس نام‌های بلندِ دارای فاصله هم بی‌دردسر کار می‌کنند.
+- **زبانه‌های بسته‌شده مزاحم نیستند.** حداکثر ۳ زبانهٔ اخیراً بسته‌شده زیر نتیجه‌های ذخیره‌شده می‌آیند؛ برای دیدن فقط زبانه‌های بسته‌شده با <bdi dir="ltr">`closed:`</bdi> شروع کنید.
+- **صفحه‌کلید کافی است.** <bdi dir="ltr"><Kbd>↑</Kbd></bdi> <bdi dir="ltr"><Kbd>↓</Kbd></bdi> برای جابه‌جا شدن، <bdi dir="ltr"><Kbd>Enter</Kbd></bdi> برای باز کردن، <bdi dir="ltr"><Kbd>Esc</Kbd></bdi> یا <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> برای بستن. بستن، آنچه تایپ کرده‌اید را دست نمی‌زند، پس می‌توانید به آن برگردید.
+
+</Section>
+
+<Section id="steps" title="جست‌وجو گام‌به‌گام">
+
+1. TabMerger را باز کنید و <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> (<bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>K</Kbd></bdi> در Mac) را بزنید یا روی کادر جست‌وجو در بالا کلیک کنید.
+2. تا وقتی چیزی تایپ نکرده‌اید، کادر چند جست‌وجو برای امتحان پیشنهاد می‌کند. روی یکی کلیک کنید تا از همان شروع کنید.
+3. چند حرف از عنوان یا نشانی تایپ کنید، مثلاً <bdi dir="ltr">`docs`</bdi>. تطبیق‌ها برجسته می‌شوند.
+4. روی یک زبانه <bdi dir="ltr"><Kbd>Enter</Kbd></bdi> را بزنید: TabMerger گروه آن را باز می‌کند و تمرکز را روی همان زبانه می‌برد. روی زبانهٔ بسته‌شده، <bdi dir="ltr"><Kbd>Enter</Kbd></bdi> آن را دوباره باز می‌کند.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="جست‌وجو در TabMerger" steps={[{ title: 'Ctrl+K' }, { title: 'نتیجه‌ها' }, { title: 'window:' }]}>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-examples" alt="جست‌وجوی TabMerger که با Ctrl+K باز شده و نمونه جست‌وجوهایی برای react و group: و window: و tag: و closed: نشان می‌دهد، پوستهٔ روشن" darkAlt="جست‌وجوی TabMerger که با Ctrl+K باز شده و نمونه جست‌وجوهایی برای react و group: و window: و tag: و closed: نشان می‌دهد، پوستهٔ تیره" boxes={[{ id: 'search-input', label: 'کادر جست‌وجو' }, { id: 'examples', label: 'جست‌وجوهای پیشنهادی' }]} source="TabMerger 3.16.1">جست‌وجوی خالی پیشنهاد می‌دهد از کجا شروع کنید.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-results" alt="جست‌وجوی docs در TabMerger: چهار نتیجه از Now Open (هم‌اکنون باز) و Reading list که docs در هر نشانی برجسته شده، پوستهٔ روشن" darkAlt="جست‌وجوی docs در TabMerger: چهار نتیجه از Now Open (هم‌اکنون باز) و Reading list که docs در هر نشانی برجسته شده، پوستهٔ تیره" boxes={[{ id: 'search-input', label: 'docs' }]} source="TabMerger 3.16.1">زبانه‌های باز و ذخیره‌شده در یک فهرست، هر کدام با نام گروهش.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker" alt="جست‌وجوی TabMerger با window: تایپ‌شده که پنجره‌های Window و Papers و Tools را برای انتخاب فهرست می‌کند، پوستهٔ روشن" darkAlt="جست‌وجوی TabMerger با window: تایپ‌شده که پنجره‌های Window و Papers و Tools را برای انتخاب فهرست می‌کند، پوستهٔ تیره" boxes={[{ id: 'search-input', label: 'فیلتر window:' }, { id: 'pick-window', label: 'پنجره‌هایی که نام داده‌اید' }]} source="TabMerger 3.16.1"><bdi dir="ltr">window:</bdi> را تایپ کنید و انتخاب کنید؛ لازم نیست نام را هجی کنید.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="filters" title="همهٔ فیلترها، با مثال">
+
+<ComparisonTable
+  head={['فیلتر', 'چه چیزی پیدا می‌کند', 'مثال']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['(واژه‌های ساده)', 'زبانه‌هایی که عنوان یا نشانی‌شان آن واژه‌ها را دارد، و گروه‌ها بر اساس نام', <bdi dir="ltr">pull request</bdi>],
+    [<bdi dir="ltr">group:</bdi>, 'زبانه‌های یک گروه', <bdi dir="ltr">group:"Thesis sources" wiki</bdi>],
+    [<bdi dir="ltr">window:</bdi>, 'زبانه‌های یک پنجره (از منوی ⋯ آن نامش را بگذارید)', <bdi dir="ltr">window:"Papers"</bdi>],
+    [<bdi dir="ltr">tag:</bdi>, 'زبانه‌های گروه زبانه‌ای در Chrome با آن برچسب', <bdi dir="ltr">tag:"Sprint"</bdi>],
+    [<bdi dir="ltr">closed:</bdi>, 'فقط زبانه‌ها و پنجره‌های اخیراً بسته‌شده', <bdi dir="ltr">closed: seat</bdi>],
+  ]}
+/>
+
+فیلترها را می‌شود با واژه‌ها و با هم ترکیب کرد. اگر بعد از فیلتر واژه اضافه می‌کنید، از گیومه استفاده کنید: بدون آن، فیلتر بقیهٔ سطر را برمی‌دارد، پس <bdi dir="ltr">`group:Work pull`</bdi> دنبال گروهی به نام «Work pull» می‌گردد. انتخاب از فهرست، گیومه‌ها را خودش اضافه می‌کند.
+
+</Section>
+
+<Section id="panel" title="بعد از جست‌وجو: بقیه را پنهان یا کم‌رنگ کنید">
+
+جست‌وجو را با <bdi dir="ltr"><Kbd>Esc</Kbd></bdi> ببندید؛ در نمای اصلی همچنان کار می‌کند. نوار کناری نشان می‌دهد هر گروه چند تطبیق دارد («1 مورد پیدا شد») و درون گروه، زبانه‌هایی که تطبیق ندارند به‌طور پیش‌فرض **پنهان** هستند. ترجیح می‌دهید جهت را گم نکنید؟ در **تنظیمات ← عمومی** (<bdi dir="ltr">Settings → General</bdi>)، گزینهٔ **زبانه‌هایی که با جست‌وجو مطابقت ندارند** (<bdi dir="ltr">Tabs that do not match a search</bdi>) را روی **کم‌رنگ کردن** (<bdi dir="ltr">Dim</bdi>) بگذارید: هر زبانه سر جایش می‌ماند، کم‌رنگ، و تطبیق‌ها برجسته می‌شوند. **پاک کردن جست‌وجو** (<bdi dir="ltr">Clear search</bdi>) جست‌وجو را تمام می‌کند.
+
+تا وقتی زبانه‌هایی پنهان‌اند، جابه‌جا کردن ترتیب با کشیدن متوقف است («برای جابه‌جا کردن موارد، جست‌وجو را پاک کنید»): وقتی بعضی ردیف‌ها دیده نمی‌شوند، جایی که زبانهٔ رهاشده باید بنشیند فقط حدس می‌شد.
+
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-dim" alt="گروه Thesis sources هنگام جست‌وجوی wiki در آن، با تنها تطبیق برجسته و بقیهٔ زبانه‌ها کم‌رنگ، پوستهٔ روشن" darkAlt="گروه Thesis sources هنگام جست‌وجوی wiki در آن، با تنها تطبیق برجسته و بقیهٔ زبانه‌ها کم‌رنگ، پوستهٔ تیره" boxes={[{ id: 'match', label: 'تطبیق' }]} source="TabMerger 3.16.1">حالت کم‌رنگ: تطبیق به چشم می‌آید و بقیه همه سر جایشان می‌مانند.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="چه چیزی صرفه‌جویی می‌شود">
+
+گشتن در پنجره‌های پر از آیکون‌های ۱۶ پیکسلی و پیمایش سابقهٔ مرور به چند کلید خلاصه می‌شود. هر تعداد زبانه که نگه دارید، همین‌طور کار می‌کند: گروهی که ماه‌ها پیش ذخیره کرده‌اید همان‌قدر نزدیک است که زبانه‌ای که یک دقیقه پیش باز کرده‌اید. همین است که بستن پنجره‌ها را بی‌خطر می‌کند: هر چه ذخیره کرده‌اید فقط یک جست‌وجو فاصله دارد.
+
+</Section>
+
+<Section id="habits" title="عادت‌های خوب">
+
+- **نشانی را هم جست‌وجو کنید، نه فقط عنوان را.** <bdi dir="ltr">`github.com/your-org`</bdi> یا <bdi dir="ltr">`localhost:3000`</bdi> صفحه‌هایی را پیدا می‌کند که عنوان‌هایشان همه شبیه هم است.
+- **به پنجره‌هایی که زیاد در آن‌ها جست‌وجو می‌کنید نام بدهید.** «Papers» و «PRs» و «Docs»: بعد <bdi dir="ltr">`window:`</bdi> شما را مستقیم به آنجا می‌برد.
+- **با <bdi dir="ltr">`closed:`</bdi> شروع کنید** وقتی می‌دانید آن را بسته‌اید؛ فهرست کوتاه‌تر است و فقط چیزی را دارد که لازم دارید.
+- **جست‌وجو را با گروه‌ها همراه کنید.** هر چه گروه‌هایتان بهتر باشند ([یک روال روزانه برای زبانه‌ها](/blog/tabmerger-daily-workflow) را ببینید)، فیلتر <bdi dir="ltr">`group:`</bdi> دامنه را بیشتر تنگ می‌کند.
+
+</Section>
+
+<Section id="plans" title="Free یا Pro">
+
+جست‌وجو، همهٔ فیلترها، فهرست‌های انتخاب و پنهان کردن یا کم‌رنگ کردن همه در طرح Free هستند، بدون حساب کاربری. تنها تفاوت این است که زبانه‌های بسته‌شده تا کجا عقب می‌روند: Free زبانه‌هایی را که در ۲ روز گذشته بسته‌اید نگه می‌دارد و Pro زبانه‌های ۳۰ روز گذشته را. و با گروه‌ها و زبانه‌های نامحدود Pro، به‌سادگی چیزهای بیشتری برای پیدا کردن هست. [صفحهٔ قیمت‌ها](/pricing) را ببینید.
+
+<InstallCta>هر زبانه‌ای را که نگه داشته‌اید با یک کلید پیدا کنید. رایگان برای Chrome و Edge و Firefox.</InstallCta>
+
+برای کار با صفحه‌کلید فراتر از جست‌وجو، [میان‌برهای صفحه‌کلید برای زبانه‌ها](/blog/tab-keyboard-shortcuts) را ببینید.
+
+</Section>
+
+<Section id="faq" title="پرسش‌های متداول">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'move-tabs-between-computers',
+  title: 'Cách chuyển tab sang máy tính khác',
+  navTitle: 'Chuyển tab sang máy tính khác',
+  seoTitle: 'Cách chuyển tab sang máy tính khác (Chrome, Edge, Firefox)',
+  description:
+    'Chuyển các tab đang mở từ máy tính này sang máy tính khác: đồng bộ hóa trình duyệt và tab từ thiết bị khác, tính năng gửi tab, một tệp bạn mang theo, hoặc đồng bộ hóa mã hóa đầu cuối của TabMerger Pro trên Chrome, Edge và Firefox.',
+  shareSummary: 'Đưa tab từ máy này sang máy kia: đồng bộ hóa, gửi tab, một tệp hoặc đồng bộ hóa mã hóa.',
+  dek: 'Từ laptop sang máy bàn, từ chỗ làm về nhà, từ PC cũ sang PC mới: bốn cách mang theo tab của bạn.',
+  published: '2026-12-03',
+  updated: '2026-12-03',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger Pro đồng bộ hóa nhóm và phiên với mã hóa đầu cuối trên Chrome, Edge và Firefox.', source: 'Bảng giá và tính năng của TabMerger', href: '/pricing' },
+    { text: 'Xuất JSON và Nhập tệp của TabMerger chuyển được mọi thứ ngay trong gói miễn phí.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome chỉ liệt kê tab của thiết bị khác khi bật đồng bộ hóa Nhật ký và thẻ.',
+      source: 'Trợ giúp Chrome',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'Firefox có thể gửi một tab sang thiết bị khác từ menu của tab đó.', source: 'Văn bản menu Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Làm sao để gửi tab sang điện thoại hoặc laptop của tôi?',
+      answer:
+        'Trong cùng một trình duyệt, hãy đăng nhập trên cả hai thiết bị và dùng tính năng đồng bộ hóa của nó: Chrome và Edge liệt kê tab từ thiết bị khác trong nhật ký duyệt web, còn Firefox có thể gửi một tab từ menu chuột phải. Giữa các trình duyệt khác nhau, TabMerger Pro đồng bộ hóa các nhóm đã lưu của bạn.',
+    },
+    {
+      question: 'Tôi có thể chuyển tab từ Chrome sang Firefox không?',
+      answer:
+        'Đồng bộ hóa trình duyệt chỉ hoạt động trong một trình duyệt. TabMerger chạy trên Chrome, Edge và Firefox: xuất một tệp JSON rồi nhập ở bên kia miễn phí, hoặc để đồng bộ hóa Pro giữ cho chúng luôn khớp nhau.',
+    },
+    {
+      question: 'Tôi có cần tài khoản không?',
+      answer: 'Không cần nếu dùng tệp: Xuất JSON và Nhập tệp của TabMerger không cần tài khoản. Đồng bộ hóa trình duyệt và đồng bộ hóa TabMerger Pro thì cần.',
+    },
+    {
+      question: 'Dữ liệu tab được đồng bộ hóa có riêng tư không?',
+      answer:
+        'TabMerger Pro mã hóa nhóm và phiên trên thiết bị của bạn trước khi đồng bộ hóa, nên máy chủ không thể đọc được. Mức độ riêng tư của đồng bộ hóa trình duyệt phụ thuộc vào cài đặt của chính trình duyệt đó.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: 'Cài đặt TabMerger, Data (Dữ liệu), với các nút Export JSON (Xuất JSON) và Import file (Nhập tệp) trong mục Import & export (Nhập và xuất), giao diện sáng' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: 'Cài đặt TabMerger, Data (Dữ liệu), với các nút Export JSON (Xuất JSON) và Import file (Nhập tệp) trong mục Import & export (Nhập và xuất), giao diện tối' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'session-management', 'cross-browser', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/move-tabs-between-computers/tm-merge-menu-light.webp' },
+  ogImage: { src: '/blog/move-tabs-between-computers/og.png', alt: 'Cách chuyển tab sang máy tính khác: hướng dẫn của TabMerger, với các nút Export JSON và Import file' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'pick', label: 'Nên dùng cách nào' },
+    { id: 'tabmerger', label: 'Với TabMerger' },
+    { id: 'browser', label: 'Với đồng bộ hóa trình duyệt' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'Tab của thiết bị khác',
+    values: { chrome: 'Nhật ký → Thẻ trên các thiết bị khác', edge: 'History → Tabs from other devices', firefox: 'Firefox View → Thẻ từ thiết bị khác' },
+  },
+}
+
+<QuickAnswer>
+
+Để chuyển một lần, hãy dùng **Cài đặt → Dữ liệu → Xuất JSON** (Settings → Data → Export JSON) của [TabMerger](/features) trên máy cũ và **Nhập tệp** (Import file) trên máy mới: mọi nhóm đã lưu đều được chuyển sang (trước tiên hãy lưu các cửa sổ đang mở vào một nhóm), miễn phí, không cần tài khoản, trên Chrome, Edge hay Firefox. Để giữ hai máy luôn khớp nhau, **TabMerger Pro** tự động đồng bộ hóa nhóm và phiên của bạn với mã hóa đầu cuối. Chỉ dùng một trình duyệt? Hãy đăng nhập trên cả hai máy và dùng tính năng đồng bộ hóa của nó.
+
+</QuickAnswer>
+
+<InstallCta>Mang mọi tab sang máy tính mới chỉ với hai cú nhấp. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="pick" title="Bạn nên dùng cách nào?">
+
+<ComparisonTable
+  head={['Bạn muốn…', 'Cách tốt nhất']}
+  rowHeaders
+  minWidth="34rem"
+  rows={[
+    ['Chuyển mọi thứ một lần sang máy tính mới', 'TabMerger Xuất JSON → Nhập tệp (miễn phí)'],
+    ['Giữ hai máy tính trở lên luôn khớp nhau', 'Đồng bộ hóa TabMerger Pro, mã hóa đầu cuối'],
+    ['Chuyển giữa các trình duyệt khác nhau', 'TabMerger (tệp ở gói miễn phí, đồng bộ hóa ở gói Pro)'],
+    ['Lấy một tab từ thiết bị kia của bạn, cùng trình duyệt', 'Đồng bộ hóa trình duyệt hoặc gửi tab'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabmerger" title="Làm sao để chuyển tab bằng TabMerger?">
+
+**Một lần, bằng tệp (miễn phí):**
+
+1. Trên máy cũ, lưu các cửa sổ đang mở mà bạn muốn chuyển vào một nhóm: trong menu **⋯** của một nhóm, chọn **Hợp nhất với phiên hiện tại** (Merge with current). Thao tác nhập sẽ thêm các nhóm đã lưu; phần Đang Mở (Now Open) trong tệp được bỏ qua, vì đó là các tab đang mở của trình duyệt cũ.
+2. Mở TabMerger → **Cài đặt → Dữ liệu** → **Xuất JSON**.
+3. Sao chép tệp sang máy mới (bằng USB, gửi email cho chính bạn, hoặc qua bộ nhớ đám mây).
+4. Trên máy mới, cài TabMerger, rồi vào **Cài đặt → Dữ liệu** → **Nhập tệp**. Các nhóm của bạn sẽ xuất hiện bên cạnh những nhóm bạn đã có.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="Cài đặt TabMerger, Data (Dữ liệu), với các nút Export JSON (Xuất JSON) và Import file (Nhập tệp) trong mục Import & export (Nhập và xuất), giao diện sáng" darkAlt="Cài đặt TabMerger, Data (Dữ liệu), với các nút Export JSON (Xuất JSON) và Import file (Nhập tệp) trong mục Import & export (Nhập và xuất), giao diện tối" boxes={[{ id: 'export-json', label: 'Xuất JSON' }, { id: 'import-file', label: 'Nhập tệp' }]} source="TabMerger 3.16.1">Xuất trên một máy, nhập trên máy kia.</ThemedScreenshot>
+
+**Luôn luôn, bằng đồng bộ hóa ([Pro](/pricing)):** đăng nhập TabMerger trên từng máy và các nhóm, phiên của bạn sẽ đi theo bạn, trên Chrome, Edge hay Firefox. Mọi thứ đều được mã hóa trên thiết bị của bạn trước khi đồng bộ hóa, nên máy chủ không thể đọc tab của bạn. Pro còn hiển thị các tab đang mở trên những thiết bị khác của bạn, khôi phục chúng tại đây và tự động sao lưu. Cách hoạt động, và máy chủ của chúng tôi thấy được gì, không thấy được gì: [đồng bộ hóa tab giữa các thiết bị](/blog/sync-tabs-between-devices-with-tabmerger).
+
+Tệp chứa những gì được giải thích trong [cách xuất các tab đang mở](/blog/export-open-tabs).
+
+</Section>
+
+<Section id="browser" title="Làm sao để chuyển tab bằng tính năng đồng bộ hóa của chính trình duyệt?">
+
+Cách này dùng được khi cả hai máy dùng cùng một trình duyệt và bạn đăng nhập vào trình duyệt đó trên cả hai máy:
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+1. Đăng nhập Chrome trên cả hai máy.
+2. Bật **Nhật ký và thẻ** (History and tabs): **Cài đặt → Bạn và Google** (Settings → You and Google), chọn tên tài khoản của bạn, rồi bật tùy chọn này.
+3. Trên máy kia, mở nhật ký duyệt web (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) và chọn **Thẻ trên các thiết bị khác** (Tabs from other devices).
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Đăng nhập Edge trên cả hai máy và bật đồng bộ hóa.
+2. Trên máy kia, mở lịch sử (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) và chọn **Tabs from other devices** (tab từ thiết bị khác).
+3. Edge 158 còn có **Send tab to your devices** (gửi tab đến thiết bị của bạn) cho một trang riêng lẻ.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Đăng nhập Firefox trên cả hai máy, với đồng bộ hóa tab đang mở được bật.
+2. Nhấp chuột phải vào một tab và chọn **Gửi đến thiết bị** (Send to Device) để đẩy nó sang máy kia.
+3. Hoặc mở **Firefox View** trên máy đó và xem trong mục **Thẻ từ thiết bị khác** (Tabs from other devices).
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>đồng bộ hóa trình duyệt chỉ hoạt động trong một trình duyệt, chỉ hiển thị những gì đang mở trên thiết bị kia ngay lúc này và không giữ các tab bạn đã đóng. Với toàn bộ tab của bạn, trên nhiều trình duyệt, hãy dùng TabMerger.</Catch>
+
+Mất tab sau khi trình duyệt bị sập trên máy cũ? Hãy bắt đầu với [cách khôi phục tab sau khi trình duyệt bị sập](/blog/restore-tabs-after-crash). Để có cái nhìn tổng quan, xem [trình quản lý phiên làm được gì](/blog/browser-session-manager).
+
+<InstallCta>Miễn phí cho Chrome, Edge và Firefox. Không cần tài khoản để bắt đầu.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+</Section>

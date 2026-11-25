@@ -1,0 +1,134 @@
+export const post = {
+  slug: 'firefox-tab-groups',
+  title: 'Firefox sekme grupları: kaydetme, yeniden açma ve kalıcı olarak saklama',
+  navTitle: 'Firefox sekme grupları',
+  seoTitle: 'Firefox Sekme Grupları: Kaydetme, Yeniden Açma, Senkronizasyon ve Sınırları',
+  description:
+    'Firefox 159’da sekme grupları nasıl çalışır: grup oluşturma, renk verme, daraltma, kaydedip kapatma ve sonra yeniden açma, Firefox Sync’in neleri kapsadığı ve gruplarınızı TabMerger ile tüm cihazlarda nasıl güvende tutacağınız.',
+  shareSummary: 'Firefox sekme gruplarını oluşturun, kaydedin, yeniden açın, saklayın. Firefox Sync neleri kapsıyor?',
+  dek: 'Firefox’taki gruplar artık kaydedilip kapatılabiliyor. Nereye gittiklerini ve onları nasıl kalıcı olarak saklayacağınızı anlatıyoruz.',
+  published: '2026-12-07',
+  updated: '2026-12-07',
+  testedOn: ['Firefox 159.0.1'],
+  keyFacts: [
+    { text: '“Grubu kaydet ve kapat”, bir grubu daha sonra yeniden açmak üzere saklar.', source: 'Firefox 159 menü metni' },
+    { text: 'Kapatılan gruplar “Kapalı gruplar” ve “Son sekme grupları” altında listelenir.', source: 'Firefox 159 menü metni' },
+    { text: 'Firefox Sync ayarlarında “Açık sekmeler” var, ancak sekme grupları için ayrı bir seçenek yok.', source: 'Firefox 159 ayar metni' },
+    { text: 'Bir grubun menüsü, gruptaki tüm bağlantıları tek seferde kopyalayabilir.', source: 'Firefox 159 menü metni' },
+  ],
+  faq: [
+    {
+      question: 'Firefox’ta bir sekme grubunu nasıl kaydederim?',
+      answer: 'Grubun etiketine sağ tıklayın ve “Grubu kaydet ve kapat” seçeneğini seçin. Daha sonra “Kapalı gruplar” bölümünden veya “Sekme grupları” listesinden yeniden açın.',
+    },
+    {
+      question: 'Firefox sekme grupları senkronize olur mu?',
+      answer:
+        'Firefox 159’un eşitleme ayarlarında Yer imleri, Geçmiş, Açık sekmeler ve diğerleri var, ancak sekme grupları için ayrı bir seçenek yok. Her cihazda aynı grupların olması için TabMerger Pro onları uçtan uca şifreli olarak senkronize eder.',
+    },
+    {
+      question: '“Grubu kaydet ve kapat” ile “Grubu sil” arasındaki fark nedir?',
+      answer: '“Grubu kaydet ve kapat”, grubu daha sonra yeniden açmak üzere saklar. “Grubu sil” onu siler; “Sekmeleri gruptan çıkar” ise sekmeleri açık bırakır ama grubu kaldırır.',
+    },
+    {
+      question: 'Bir Firefox sekme grubundaki tüm bağlantıları kopyalayabilir miyim?',
+      answer: 'Evet: Firefox 159’da grubun menüsünde “Gruptaki bağlantıyı kopyala” seçeneği var. TabMerger da grupların tamamını bir JSON dosyasına aktarabilir.',
+    },
+  ],
+  images: [
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp', alt: 'Üç kayıtlı pencere ve dokuz sekme içeren Home renovation adlı TabMerger grubu; bazı sekmeler Kitchen ve Quotes sekme gruplarıyla etiketli, açık tema' },
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-dark.webp', alt: 'Üç kayıtlı pencere ve dokuz sekme içeren Home renovation adlı TabMerger grubu; bazı sekmeler Kitchen ve Quotes sekme gruplarıyla etiketli, koyu tema' },
+  ],
+  tags: ['firefox', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Tab groups in Firefox',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/tab-groups',
+      checked: '2026-11-21',
+      note: 'Menu names and settings were read from Firefox 159.0.1’s own interface text; this page blocked our automated check.',
+    },
+    {
+      title: 'Firefox Sync: what it is and how it works',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/firefox-sync-what-it-is-and-how-it-works',
+      checked: '2026-11-21',
+      note: 'The list of synced data was read from Firefox 159.0.1’s settings text.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-23',
+  cover: { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp' },
+  ogImage: { src: '/blog/firefox-tab-groups/og.png', alt: '“Firefox tab groups: how to save, reopen and keep them” başlık kartı: iki pencerelik kayıtlı bir grupla bir TabMerger rehberi' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'basics', label: 'Grup oluşturma' },
+    { id: 'save', label: 'Kaydetme ve yeniden açma' },
+    { id: 'sync', label: 'Senkronize olur mu?' },
+    { id: 'tabmerger', label: 'Kalıcı olarak saklama' },
+    { id: 'faq', label: 'SSS' },
+  ],
+}
+
+<QuickAnswer>
+
+Firefox’ta grup başlatmak için bir sekmeyi diğerinin üzerine sürükleyin veya bir sekmeye sağ tıklayın. Grubu sonrası için saklamak isterseniz grubun etiketine sağ tıklayıp **Grubu kaydet ve kapat** (Save and close group) seçeneğini seçin; onu **Kapalı gruplar** (Closed Groups) bölümünden veya **Sekme grupları** (Tab groups) listesinden yeniden açabilirsiniz. Firefox Sync ayarlarında sekme grupları için ayrı bir seçenek yok; bu yüzden her cihazda aynı gruplara sahip olmak ve onları diğer her şeyle birlikte aramak için gruplarınızı [TabMerger](/features)’a kaydedin.
+
+</QuickAnswer>
+
+<InstallCta>Firefox gruplarınızı kayıtlı, aranabilir ve senkronize tutun. Firefox, Chrome ve Edge için ücretsiz.</InstallCta>
+
+<Section id="basics" title="Firefox sekme grupları nasıl çalışır?">
+
+Firefox 159’un kendi arayüzüne göre:
+
+1. **Oluşturma:** bir sekmeyi diğerinin üzerine sürükleyin ya da bir sekmeye sağ tıklayıp onu yeni bir gruba ekleyin. Firefox bir **Ad** (Name) ve bir renk ister (mavi, camgöbeği, gri, yeşil, turuncu, pembe, mor, kırmızı veya sarı).
+2. **Daraltma:** grubu tek bir sekme genişliğine indirmek için etiketine tıklayın.
+3. **Yönetme:** etikete sağ tıkladığınızda **Grubu kaydet ve kapat**, **Sekmeleri gruptan çıkar** (Ungroup tabs), **Grubu sil** (Delete group), **Grubu yeni pencereye taşı** (Move group to new window), **Gruptaki bağlantıyı kopyala** (Copy links in group) ve **Grubu paylaş** (Share group) seçenekleri çıkar.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's tab group editor with Name, colours and Save and close group. */}
+
+</Section>
+
+<Section id="save" title="Bir grubu nasıl kaydeder ve geri getiririm?">
+
+- **Kaydetme:** grubun etiketine sağ tıklayın → **Grubu kaydet ve kapat**. Sekmeler kapanır, grup saklanır.
+- **Yeniden açma:** bir sekmeye sağ tıklayın → gruba ekle → **Kapalı gruplar**; ya da **Sekme grupları** listesini açın (Firefox orada **Son sekme grupları** başlığını gösterir, Recent tab groups), grubu seçin ve ardından **Sekme grubunu yeniden aç** (Reopen tab group) seçeneğine tıklayın.
+- **Silme:** **Grubu sil** onu kalıcı olarak kaldırır.
+
+<Catch>kaydedilmiş bir grup bu Firefox profilinde durur. Bir yedek değildir ve eşitleme ayarlarının gösterdiği kadarıyla sizi başka bir cihaza takip etmez.</Catch>
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's Tab groups list with a closed group. */}
+
+</Section>
+
+<Section id="sync" title="Firefox sekme grupları senkronize olur mu?">
+
+Firefox 159’un **Eşitleme** (Sync) ayarları neleri eşitlediğini listeler: **Yer imleri, Geçmiş, Açık sekmeler, Parolalar, Adresler, Ödeme yöntemleri, Eklentiler ve Ayarlar** (Bookmarks, History, Open tabs, Passwords, Addresses, Payment methods, Add-ons and Settings). “Açık sekmeler” için açıklama: “Eşitlenen tüm cihazlarınızdaki açık sekmelerin listesi”. Sekme grupları için ayrı bir seçenek yok; yani kaydedilmiş bir grubun diğer bilgisayarınızda görüneceğine güvenmeyin.
+
+Aynı konunun Chrome tarafı için, grupların bir Google Hesabı üzerinden senkronize olduğu [Chrome sekme grupları rehberimiz](/blog/chrome-tab-groups)’e bakın.
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger ile gruplarınızı kalıcı olarak saklayın">
+
+[TabMerger](/features) Firefox, Chrome ve Edge’de çalışır ve tarayıcının saklayamadığı grupları saklar:
+
+1. **Grup Ekle**’ye tıklayın, gruba bir ad verin, ardından grubun **⋯** menüsünden **Mevcutla birleştir**’i seçin: açık olan her pencere ve sekme gruba kaydedilir.
+2. Pencereleri kapatın. Grup her sekmesiyle birlikte kalır ve <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> ile aranabilir.
+3. İstediğiniz zaman tek bir sekmeyi, tek bir pencereyi ya da her şeyi yeniden açın.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/firefox-tab-groups/tm-kept-groups" alt="Üç kayıtlı pencere ve dokuz sekme içeren Home renovation adlı TabMerger grubu; bazı sekmeler Kitchen ve Quotes sekme gruplarıyla etiketli, açık tema" darkAlt="Üç kayıtlı pencere ve dokuz sekme içeren Home renovation adlı TabMerger grubu; bazı sekmeler Kitchen ve Quotes sekme gruplarıyla etiketli, koyu tema" boxes={[{ id: 'summary', label: 'Kaydedilen pencereler ve sekmeler' }]} source="TabMerger 3.16.1">Kaydedilmiş bir grup: üç pencere, dokuz sekme, yeniden açılmaya hazır.</ThemedScreenshot>
+
+[Pro](/pricing) planında gruplarınız tüm cihazlarınızda Firefox, Chrome ve Edge arasında uçtan uca şifreli olarak senkronize edilir; böylece sunucu onları okuyamaz. Daha fazla alışkanlık için [çok fazla sekme rutini](/blog/manage-too-many-tabs) yazımıza göz atın.
+
+<InstallCta>Firefox, Chrome ve Edge için ücretsiz. Başlamak için hesap gerekmez.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

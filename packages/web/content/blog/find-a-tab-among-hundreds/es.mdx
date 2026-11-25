@@ -1,0 +1,187 @@
+export const post = {
+  slug: 'find-a-tab-among-hundreds',
+  title: 'Cómo encontrar una pestaña entre cientos',
+  navTitle: 'Encontrar una pestaña entre cientos',
+  seoTitle: 'Cómo buscar pestañas abiertas en Chrome, Edge y Firefox',
+  description:
+    'Busca entre tus pestañas abiertas en segundos: la búsqueda de pestañas integrada en Chrome, Edge y Firefox, y el Ctrl+K de TabMerger, que encuentra a la vez pestañas abiertas, guardadas y cerradas con filtros como group: y closed:.',
+  shareSummary: 'Busca pestañas abiertas en Chrome, Edge y Firefox, y también las guardadas o cerradas.',
+  dek: 'Deja de recorrer pestañas del tamaño de un icono. Un atajo, unas letras del título y ya estás.',
+  published: '2026-11-29',
+  updated: '2026-11-29',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Ctrl+Shift+A abre la Búsqueda en pestañas de Chrome.',
+      source: 'Ayuda de Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Firefox 159 asigna Ctrl+Shift+A a una lista de todas las pestañas.', source: 'Atajos de teclado de Firefox 159' },
+    { text: 'Ctrl+K en TabMerger busca a la vez en las pestañas abiertas, guardadas y cerradas recientemente.', source: 'TabMerger 3.16.1' },
+    { text: 'Filtros de TabMerger: group:, window:, tag: y closed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: '¿Cómo busco entre mis pestañas abiertas?',
+      answer:
+        'En TabMerger pulsa Ctrl+K y escribe: busca a la vez en las pestañas abiertas, guardadas y cerradas recientemente. De serie, Chrome tiene la Búsqueda en pestañas (Ctrl+Shift+A o @tabs en la barra de direcciones), y Firefox muestra todas las pestañas con Ctrl+Shift+A.',
+    },
+    {
+      question: '¿Hay un atajo para buscar pestañas?',
+      answer: 'Ctrl+Shift+A en Chrome y Firefox (⌘+Shift+A en Chrome en Mac), y Ctrl+K dentro de TabMerger. La lista de atajos de Microsoft para Edge no asigna ninguna tecla a la búsqueda de pestañas.',
+    },
+    {
+      question: '¿Puedo buscar pestañas que ya cerré?',
+      answer: 'Sí, en TabMerger: empieza la búsqueda con closed: para buscar solo entre las pestañas cerradas recientemente. El plan gratuito las guarda 2 días; Pro, 30.',
+    },
+    {
+      question: '¿Puedo buscar pestañas de mis otros dispositivos?',
+      answer:
+        'TabMerger Pro sincroniza tus grupos guardados entre dispositivos con cifrado de extremo a extremo, así que el mismo Ctrl+K los encuentra en todas partes. Nuestra guía para pasar pestañas entre ordenadores explica las opciones integradas.',
+      link: { text: 'pasar pestañas entre ordenadores', href: '/blog/move-tabs-between-computers' },
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'Búsqueda de TabMerger abierta y vacía, con la lista de filtros group:, window:, tag: y closed:, tema claro' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'Búsqueda de TabMerger abierta y vacía, con la lista de filtros group:, window:, tag: y closed:, tema oscuro' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp', alt: 'Búsqueda de TabMerger de group:"Work" pull, que encuentra la pestaña guardada Pull requests en el grupo Work, tema claro' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-dark.webp', alt: 'Búsqueda de TabMerger de group:"Work" pull, que encuentra la pestaña guardada Pull requests en el grupo Work, tema oscuro' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-light.webp', alt: 'Búsqueda de TabMerger de tag:Sprint, con las tres pestañas abiertas del grupo de pestañas de Chrome Sprint, tema claro' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-dark.webp', alt: 'Búsqueda de TabMerger de tag:Sprint, con las tres pestañas abiertas del grupo de pestañas de Chrome Sprint, tema oscuro' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-21',
+      note: 'Los datos de Firefox se tomaron de las definiciones de teclas y los textos de menú del propio Firefox 159.0.1; esta página bloqueó nuestra comprobación automática.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp' },
+  ogImage: { src: '/blog/find-a-tab-among-hundreds/og.png', alt: '«How to find one tab among hundreds»: una guía de TabMerger, con una búsqueda de pestañas filtrada' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'tabmerger', label: 'Busca en todo con Ctrl+K' },
+    { id: 'filters', label: 'Filtros para acotar' },
+    { id: 'builtin', label: 'Búsqueda integrada' },
+    { id: 'tips', label: 'Pestañas más fáciles de encontrar' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Búsqueda de pestañas integrada',
+    values: { chrome: 'Ctrl+Shift+A o @tabs', edge: 'Search tabs (sin atajo indicado)', firefox: 'Ctrl+Shift+A' },
+  },
+}
+
+<QuickAnswer>
+
+Pulsa <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> en Mac) en [TabMerger](/features) y escribe unas letras: encuentra la pestaña tanto si está **abierta, guardada en un grupo o cerrada recientemente**, y filtros como `group:` y `closed:` reducen cientos de pestañas a una. De serie, la **Búsqueda en pestañas** («Tab Search») de Chrome (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) y **Mostrar todas las pestañas** («List all tabs») de Firefox (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) buscan en lo que tienes abierto ahora mismo.
+
+</QuickAnswer>
+
+<InstallCta>Encuentra cualquier pestaña, abierta, guardada o cerrada, con una tecla. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Busca en todo con Ctrl+K">
+
+La búsqueda de pestañas de un navegador solo conoce lo que está abierto en ese navegador ahora mismo. Pero la pestaña que necesitas suele estar en otro sitio: en una ventana que guardaste ayer o en una que cerraste hace una hora. TabMerger lo busca todo desde un solo cuadro:
+
+1. Abre TabMerger y pulsa <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+2. Escribe parte del título o de la dirección. Los resultados muestran juntas las pestañas abiertas, las guardadas y las cerradas recientemente, cada una con una etiqueta que indica dónde está.
+3. Elige una con las flechas y <Kbd>Enter</Kbd>.
+
+Todos los filtros, el orden de los resultados y la vista para ocultar o atenuar se explican en [busca en todas tus pestañas con TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="Búsqueda de TabMerger abierta y vacía, con la lista de filtros group:, window:, tag: y closed:, tema claro" darkAlt="Búsqueda de TabMerger abierta y vacía, con la lista de filtros group:, window:, tag: y closed:, tema oscuro" boxes={[{ id: 'search-input', label: 'Búsqueda' }]} source="TabMerger 3.16.1">Ctrl+K abre la búsqueda, con los filtros listados antes de que escribas.</ThemedScreenshot>
+
+</Section>
+
+<Section id="filters" title="¿Qué filtros acotan la búsqueda?">
+
+Empieza la búsqueda con un filtro para ir directo al lugar correcto:
+
+<ComparisonTable
+  head={['Filtro', 'Encuentra']}
+  rows={[
+    [<code>group:"Work"</code>, 'Pestañas de un grupo cuyo nombre contiene «Work»'],
+    [<code>window:"Docs"</code>, 'Pestañas de una ventana cuyo nombre contiene «Docs»'],
+    [<code>tag:Sprint</code>, 'Pestañas de un grupo de pestañas de Chrome cuya etiqueta contiene «Sprint»'],
+    [<code>closed:</code>, 'Solo tus pestañas cerradas recientemente'],
+  ]}
+/>
+
+Combina un filtro con palabras: `group:"Work" pull` encuentra la pestaña de la pull request en tu grupo Work, incluso entre cientos. Pon el nombre entre comillas cuando añadas palabras después; un filtro sin comillas se queda con el resto de la línea.
+
+<Carousel label="Búsquedas con filtro" steps={[{ title: 'Filtro group:' }, { title: 'Filtro tag:' }]}>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-group-filter" alt="Búsqueda de TabMerger de group:&quot;Work&quot; pull, que encuentra la pestaña guardada Pull requests en el grupo Work, tema claro" darkAlt="Búsqueda de TabMerger de group:&quot;Work&quot; pull, que encuentra la pestaña guardada Pull requests en el grupo Work, tema oscuro" boxes={[{ id: 'search-input', label: 'filtro de grupo' }]} source="TabMerger 3.16.1">Un grupo, una palabra: la pestaña guardada que buscabas.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-tag-filter" alt="Búsqueda de TabMerger de tag:Sprint, con las tres pestañas abiertas del grupo de pestañas de Chrome Sprint, tema claro" darkAlt="Búsqueda de TabMerger de tag:Sprint, con las tres pestañas abiertas del grupo de pestañas de Chrome Sprint, tema oscuro" boxes={[{ id: 'search-input', label: 'tag:Sprint' }]} source="TabMerger 3.16.1">tag: encuentra las pestañas de un grupo de pestañas de Chrome.</ThemedScreenshot>
+</Carousel>
+
+Las pestañas cerradas recientemente se guardan 2 días en el plan gratuito y 30 con [Pro](/pricing), así que `closed:` llega semanas atrás cuando lo necesitas.
+
+</Section>
+
+<Section id="builtin" title="¿Cómo busco pestañas abiertas sin una extensión?">
+
+Cada navegador puede buscar entre las pestañas que están abiertas ahora mismo:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+- Pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> en Mac) para abrir la **Búsqueda en pestañas** («Tab Search»), escribe palabras clave y elige una pestaña. Cada fila tiene además un botón para cerrarla.
+- O escribe `@tabs` en la barra de direcciones, pulsa <Kbd>Tab</Kbd> o <Kbd>Space</Kbd> y escribe.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Los menús de Edge 158 incluyen **Search tabs** (buscar pestañas), pero la lista de atajos de teclado de Microsoft no le asigna ninguna tecla. Con muchas pestañas, <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> saltan a una pestaña según su posición y <Kbd>Ctrl</Kbd>+<Kbd>9</Kbd> a la última.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- Pulsa <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> en Mac) para **Mostrar todas las pestañas** («List all tabs») y buscar entre ellas.
+- La barra de direcciones también tiene un modo de búsqueda **Pestañas**, entre sus atajos de búsqueda.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>estas búsquedas solo ven las pestañas abiertas en ese navegador, ahora. Una pestaña que cerraste o guardaste en otro sitio no aparecerá.</Catch>
+
+Hay más teclas en nuestra [referencia de atajos de teclado para pestañas](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="tips" title="¿Cómo hago que las pestañas sean más fáciles de encontrar la próxima vez?">
+
+- **Agrupa por tarea.** Los grupos con nombre convierten «una de 200 pestañas» en «el grupo Work». Nuestra [rutina para cuando tienes demasiadas pestañas](/blog/manage-too-many-tabs) explica cómo.
+- **Cierra lo que hayas terminado,** después de guardarlo. Menos pestañas abiertas significa listas de resultados más cortas.
+- **Cambia el nombre de las pestañas importantes.** TabMerger te deja poner un título propio a una pestaña guardada, para que coincida con la palabra que vas a buscar.
+
+<InstallCta>Gratis para Chrome, Edge y Firefox. No necesitas cuenta para empezar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

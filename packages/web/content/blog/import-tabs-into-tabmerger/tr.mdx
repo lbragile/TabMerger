@@ -1,0 +1,166 @@
+export const post = {
+  slug: 'import-tabs-into-tabmerger',
+  title: 'Sekmeleri TabMerger’a aktarma: OneTab listeleri, yer işaretleri ve yedekler',
+  navTitle: 'Sekmeleri TabMerger’a aktarma',
+  seoTitle: 'OneTab, yer işaretleri ve yedekleri TabMerger’a içe aktarma',
+  description:
+    'Kayıtlı sekmelerinizi yanınızda götürün: TabMerger, OneTab dışa aktarımlarını, düz bağlantı listelerini, tarayıcı yer işareti dosyalarını ve kendi JSON yedeklerini içe aktarır. Her biçim neye dönüşür, ne atlanır?',
+  shareSummary: 'OneTab listeleri, yer işareti dosyaları ve TabMerger yedekleri tek adımda gruplara dönüşür.',
+  dek: 'Araç değiştirmek sıfırdan başlamak demek olmamalı. Kayıtlı her listeyi yanınızda götürün.',
+  published: '2026-12-19',
+  updated: '2026-12-19',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: '.txt (OneTab ya da düz bağlantı listesi), .html (yer işaretleri) ve .json (TabMerger) dosyalarını içe aktarır.', source: 'TabMerger 3.16.1' },
+    { text: 'Her OneTab listesi ayrı bir grup olur.', source: 'TabMerger 3.16.1' },
+    { text: 'İçe aktarma her zaman grup ekler; elinizdekinin yerine hiçbir zaman geçmez.', source: 'TabMerger 3.16.1' },
+    { text: 'İçe ve dışa aktarma ücretsiz planda vardır.', source: 'TabMerger fiyatları', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'OneTab’ı TabMerger’a nasıl aktarırım?',
+      answer:
+        'OneTab’da “İçe ve dışa aktar” seçeneğini seçin, metni kopyalayıp .txt dosyası olarak kaydedin. TabMerger’da Ayarlar → Veri → Dosya içe aktar yolunu açıp bu dosyayı seçin. Her OneTab listesi ayrı bir grup olur.',
+    },
+    {
+      question: 'Yer işaretlerimi TabMerger’a aktarabilir miyim?',
+      answer:
+        'Evet. Yer işaretlerinizi HTML dosyası olarak dışa aktarın ve Ayarlar → Veri altında içe aktarın. Dosyanın en üst düzeyindeki her klasör, adını taşıyan bir grup olur; içindeki klasörler de bu gruba katılır.',
+    },
+    {
+      question: 'İçe aktarma gruplarımın yerine geçer mi?',
+      answer: 'Hayır. İçe aktarma, kaç grup bulduğunu söyleyen bir onaydan sonra dosyadaki grupları her zaman mevcut gruplarınızın yanına ekler.',
+    },
+    {
+      question: 'İçe aktarılamayan bağlantılara ne olur?',
+      answer: 'Yer işareti uygulamacıkları (bookmarklet) gibi gerçek web adresi olmayan girişler atlanır ve içe aktarmadan sonraki mesaj kaç tanesinin dışarıda kaldığını söyler.',
+    },
+  ],
+  images: [
+    { src: '/blog/import-tabs-into-tabmerger/tm-data-tab-light.webp', alt: 'TabMerger, “Settings” (Ayarlar), “Data” (Veri): “Export JSON” (JSON olarak dışa aktar) ve “Import file” (Dosya içe aktar) düğmeleriyle “Import & export” (İçe ve dışa aktarma) bölümü, açık tema' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-data-tab-dark.webp', alt: 'TabMerger, “Settings” (Ayarlar), “Data” (Veri): “Export JSON” (JSON olarak dışa aktar) ve “Import file” (Dosya içe aktar) düğmeleriyle “Import & export” (İçe ve dışa aktarma) bölümü, koyu tema' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-light.webp', alt: 'onetab-export.txt dosyası için “Import 2 groups?” (2 grup içe aktarılsın mı?) diye soran TabMerger, açık tema' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-dark.webp', alt: 'onetab-export.txt dosyası için “Import 2 groups?” (2 grup içe aktarılsın mı?) diye soran TabMerger, koyu tema' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-imported-light.webp', alt: '“Imported 1” ve “Imported 2” grupları olarak içe aktarılmış iki OneTab listesi, açık tema' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-imported-dark.webp', alt: '“Imported 1” ve “Imported 2” grupları olarak içe aktarılmış iki OneTab listesi, koyu tema' },
+  ],
+  tags: ['tabmerger-guides', 'save-tabs', 'bookmarks', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-light.webp' },
+  ogImage: { src: '/blog/import-tabs-into-tabmerger/og.png', alt: 'Sekmeleri TabMerger’a aktarma: gruplar olarak içe aktarılmış iki OneTab listesi' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'problem', label: 'Başka yerde sıkışmış sekmeler' },
+    { id: 'why', label: 'İçe aktarma neden böyle çalışır' },
+    { id: 'formats', label: 'Tüm biçimler' },
+    { id: 'steps', label: 'Dosya içe aktarma' },
+    { id: 'benefit', label: 'Ne kazanırsınız' },
+    { id: 'habits', label: 'İyi alışkanlıklar' },
+    { id: 'plans', label: 'Ücretsiz ve Pro' },
+    { id: 'faq', label: 'SSS' },
+  ],
+}
+
+<QuickAnswer>
+
+[TabMerger](/features)’ı açın, **Ayarlar → Veri** (Settings → Data) bölümüne gidin ve **Dosya içe aktar** (Import file) düğmesine basın. Bir OneTab dışa aktarımı ya da düz bağlantı listesi (`.txt`), bir yer işareti dosyası (`.html`) veya bir TabMerger yedeği (`.json`) seçin. TabMerger kaç grup bulduğunu gösterir ve siz onayladıktan sonra bunları kendi gruplarınızın yanına ekler. Her OneTab listesi ve en üst düzeydeki her yer işareti klasörü ayrı bir grup olur.
+
+</QuickAnswer>
+
+<InstallCta>Kayıtlı her listeyi yanınızda getirin. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+<Section id="problem" title="Kayıtlı sekmeler, başka bir yerde sıkışıp kalmış">
+
+Yıllardır biriken OneTab listeleri. Her gezi için bir yer işareti klasörü. Eski bir dizüstü bilgisayardan kalma bir yedek. Hepsi kayıtlı, hiçbiri tek bir yerden aranamıyor ve hepsini elle, bağlantı bağlantı taşımak hiçbir zaman yapılmayan türden bir iş.
+
+İçe aktarma bu işi tek bir dosyaya ve tek bir tıklamaya indirir.
+
+</Section>
+
+<Section id="why" title="İçe aktarma neden bu şekilde çalışır">
+
+- **Yalnızca ekler.** İçe aktarma, dosyadaki grupları sizinkilerin yanına koyar ve elinizdekilere hiç dokunmaz; bu yüzden bir dosyayı denemek güvenlidir.
+- **Önce sorar.** TabMerger, bir şey eklemeden önce hangi dosyada kaç grup bulduğunu söyler ve **İçe aktar** (Import) düğmesine basmanızı bekler.
+- **Her giriş denetlenir.** Yalnızca gerçek web adresleri içeri girer. Yer işareti uygulamacıkları, `javascript:` bağlantıları ve mutlak adres olmayan her şey atlanır ve sayılır; sonraki mesaj kaç tane olduğunu söyler.
+- **Dosyada yapı varsa korunur.** Bir TabMerger yedeği pencereleri, adları, renkleri, notları, yıldızları ve hatırlatıcı saatlerini geri getirir; diğer araçların biçimleri liste ya da klasör başına bir grup olur.
+- **Planınızın sınırları baştan denetlenir.** Ücretsiz planda 5 grubu ya da 50 sekmeyi aşacak bir içe aktarma, hiçbir şey eklemeden durur ve dosyanın neler içerdiğini söyler.
+
+</Section>
+
+<Section id="formats" title="Tüm biçimler ve neye dönüştükleri">
+
+<ComparisonTable
+  head={['Dosya', 'Nedir', 'Ne elde edersiniz']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['.txt (OneTab)', 'OneTab’ın “İçe ve dışa aktar” metni: bağlantı başına bir “adres | başlık” satırı, listeler arasında boş bir satır', 'Liste başına bir grup (“Imported 1”, “Imported 2”, …), başlıklar korunur'],
+    ['.txt (düz liste)', 'Her satırda bir adres', 'Satır bloğu başına bir grup; adres aynı zamanda başlık olarak kullanılır'],
+    ['.html (yer işaretleri)', 'Tarayıcınızdan alınmış bir yer işaretleri ya da sık kullanılanlar dışa aktarımı', 'En üst düzeydeki klasör başına, o klasörün adını taşıyan bir grup; içteki klasörler gruba katılır'],
+    ['.json (TabMerger)', 'TabMerger’da “JSON olarak dışa aktar” ile oluşturulan bir dosya', 'Pencereleri, adları, renkleri, notları, yıldızları ve hatırlatıcı saatleriyle gruplarınız'],
+  ]}
+/>
+
+Bilmeye değer iki ayrıntı:
+
+- **Yer işaretleri:** Yalnızca dosyanın en üst düzeyindeki klasörler grup olur, hiçbir klasörde olmayan bağlantılar dışarıda kalır. Chrome ya da Edge’den yapılan tam bir dışa aktarımda yer işareti çubuğu tek bir grup olarak gelir (alt klasörleri içine katılmış olarak), **Diğer yer işaretleri** (Other bookmarks) ya da **Diğer favoriler** (Other favorites) içindeki her klasör ise ayrı bir grup olur.
+- **TabMerger yedekleri:** Dosyadaki **Şu An Açık** (Now Open), yani dışa aktarma sırasında açık olan sekmeler, içe aktarılmaz. Bunların dosyada olmasını istiyorsanız dışa aktarmadan önce açık sekmeleri bir gruba kaydedin.
+
+</Section>
+
+<Section id="steps" title="Dosya içe aktarma">
+
+1. TabMerger’ı açın, ardından **Ayarlar** → **Veri** bölümüne gidin.
+2. **İçe ve dışa aktarma** (Import & export) altında **Dosya içe aktar** düğmesine basın ve `.txt`, `.html` ya da `.json` dosyanızı seçin.
+3. Sayıyı kontrol edin ve **İçe aktar** düğmesine basın. Yeni gruplar kenar çubuğunda görünür; dilediğiniz gibi yeniden adlandırın.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Bir OneTab dışa aktarımını içe aktarma" steps={[{ title: 'Ayarlar → Veri' }, { title: 'Onaylayın' }, { title: 'Gruplarınız' }]}>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-data-tab" alt="TabMerger, “Settings” (Ayarlar), “Data” (Veri): “Export JSON” (JSON olarak dışa aktar) ve “Import file” (Dosya içe aktar) düğmeleriyle “Import & export” (İçe ve dışa aktarma) bölümü, açık tema" darkAlt="TabMerger, “Settings” (Ayarlar), “Data” (Veri): “Export JSON” (JSON olarak dışa aktar) ve “Import file” (Dosya içe aktar) düğmeleriyle “Import & export” (İçe ve dışa aktarma) bölümü, koyu tema" boxes={[{ id: 'import', label: 'Dosya içe aktarın' }, { id: 'export', label: 'Gruplarınızı dışa aktarın' }]} source="TabMerger 3.16.1">İçe ve dışa aktarma, Settings → Data (Ayarlar → Veri) altında yan yana durur.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-import-confirm" alt="onetab-export.txt dosyası için “Import 2 groups?” (2 grup içe aktarılsın mı?) diye soran TabMerger, açık tema" darkAlt="onetab-export.txt dosyası için “Import 2 groups?” (2 grup içe aktarılsın mı?) diye soran TabMerger, koyu tema" boxes={[{ id: 'import-confirm', label: '2 grubu içe aktar' }]} source="TabMerger 3.16.1">İki OneTab listesi bulundu; siz onaylayana kadar hiçbir şey eklenmez.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-imported" alt="“Imported 1” ve “Imported 2” grupları olarak içe aktarılmış iki OneTab listesi, açık tema" darkAlt="“Imported 1” ve “Imported 2” grupları olarak içe aktarılmış iki OneTab listesi, koyu tema" boxes={[{ id: 'imported', label: 'Liste başına bir grup' }]} source="TabMerger 3.16.1">Her liste artık yeniden adlandırılmaya, aranmaya ve eşitlenmeye hazır bir grup.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="benefit" title="Ne kazanırsınız">
+
+Başka yerlerde kaydettiğiniz her şey, dakikalar içinde tek bir yerde: <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> ile aranabilir, gruplar hâlinde düzenli ve Pro ile her bilgisayarda. Doğrudan OneTab’dan mı geliyorsunuz? [OneTab alternatifleri](/blog/onetab-alternatives) yazısına bakın. Edge Koleksiyonlar’dan mı geliyorsunuz? [Edge Koleksiyonlar yerine ne kullanılır](/blog/edge-collections-replacement) yazısına bakın.
+
+</Section>
+
+<Section id="habits" title="İyi alışkanlıklar">
+
+- **İçe aktarılan grupları yeniden adlandırın**, hem de hemen: “Imported 1” yalnızca geçici bir ad.
+- **Büyük arşivleri parça parça içe aktarın** (ücretsiz planda) ya da önce yükseltin, çünkü sınırları aşan bir içe aktarma bütünüyle durdurulur.
+- **Bir TabMerger dışa aktarımı saklayın**, kendi yedeğiniz olsun: **JSON olarak dışa aktar** (Export JSON) tüm grupları tek dosyaya kaydeder. İçinde neler olduğu [açık sekmeleri dışa aktarma](/blog/export-open-tabs) yazısında anlatılıyor.
+- **İçe aktardıktan sonra sıralayın:** grubun **⋯** menüsündeki **Başlığa göre sırala** (Sort by title) ya da **URL'ye göre sırala** (Sort by URL) ile; tekrarları da **Yinelenen sekmeleri kaldır** (Deduplicate tabs) ile temizleyin.
+
+</Section>
+
+<Section id="plans" title="Ücretsiz ve Pro">
+
+<ComparisonTable
+  head={['', 'Ücretsiz', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['İçe ve dışa aktarma', 'Evet', 'Evet'],
+    ['Bir içe aktarmanın ekleyebileceği miktar', 'Toplamda en fazla 5 grup ve 50 sekme', 'Sınır yok'],
+    ['Diğer cihazlarınızda içe aktarılan gruplar', 'Hayır', 'Evet, uçtan uca şifreli'],
+  ]}
+/>
+
+İçe ve dışa aktarma herkes için ücretsizdir, hesap gerekmez. [Pro](/pricing) boyut sınırlarını kaldırır ve içe aktardıklarınızı eşitler.
+
+<InstallCta>İlk listenizi bir dakikadan kısa sürede içe aktarın. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

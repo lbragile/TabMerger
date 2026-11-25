@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'export-open-tabs',
+  title: 'Как экспортировать открытые вкладки',
+  navTitle: 'Экспорт открытых вкладок',
+  seoTitle: 'Как экспортировать открытые вкладки в Chrome, Edge и Firefox',
+  description:
+    'Экспортируйте все открытые вкладки, с названиями и адресами, в файл, который останется у вас: экспорт в JSON в TabMerger одним щелчком (открытые вкладки и сохранённые группы вместе) или экспорт закладок в браузере, шаг за шагом.',
+  shareSummary: 'Экспортируйте все открытые вкладки в файл одним щелчком и импортируйте их где угодно.',
+  dek: 'Собственный файл надёжнее сессии, которая, как вы надеетесь, уцелеет. Один щелчок в TabMerger, несколько в браузере.',
+  published: '2026-12-02',
+  updated: '2026-12-02',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '«Экспорт в JSON» в TabMerger сохраняет открытые вкладки и все сохранённые группы в одном файле.', source: 'Проверено в TabMerger 3.16.1, 21 нояб. 2026 г.' },
+    { text: 'TabMerger импортирует файлы JSON, HTML-файлы закладок и текстовые файлы OneTab.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome экспортирует закладки из меню диспетчера закладок.',
+      source: 'Справка Chrome',
+      href: 'https://support.google.com/chrome/answer/96816',
+    },
+    { text: 'Ctrl+Shift+D добавляет в закладки все вкладки окна во всех трёх браузерах.', source: 'Справка Chrome и Edge; сочетания клавиш Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Как скопировать адреса всех вкладок?',
+      answer:
+        'Самая быстрая полная копия — Настройки → Данные → Экспорт в JSON в TabMerger: один файл с названием и адресом каждой открытой вкладки и каждой сохранённой группы. Без расширений добавьте вкладки окна в закладки (Ctrl+Shift+D) и экспортируйте закладки в HTML.',
+    },
+    {
+      question: 'Можно ли экспортировать вкладки из всех окон сразу?',
+      answer: 'Да, в TabMerger: «Сейчас открыто» охватывает все открытые окна, и экспорт в JSON включает эту группу. Через закладки придётся действовать по одному окну.',
+    },
+    {
+      question: 'Как снова импортировать файл?',
+      answer: 'В TabMerger откройте Настройки → Данные → Импорт файла: TabMerger читает файлы JSON из TabMerger, HTML-файлы закладок и текстовые файлы OneTab и добавляет их как группы.',
+    },
+    {
+      question: 'Экспорт приватный?',
+      answer: 'Да. Файл создаётся в браузере и сохраняется на вашем компьютере; ничего не загружается в сеть. Храните его в надёжном месте, ведь в нём перечислены ваши страницы.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: '«Settings» (Настройки) в TabMerger, вкладка «Data» (Данные) с кнопками «Export JSON» (Экспорт в JSON) и «Import file» (Импорт файла) в разделе «Import & export» (Импорт и экспорт), светлая тема' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: '«Settings» (Настройки) в TabMerger, вкладка «Data» (Данные) с кнопками «Export JSON» (Экспорт в JSON) и «Import file» (Импорт файла) в разделе «Import & export» (Импорт и экспорт), тёмная тема' },
+  ],
+  tags: ['save-tabs', 'bookmarks', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Import Chrome bookmarks & settings (export section)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/export-open-tabs/tm-settings-export-light.webp' },
+  ogImage: { src: '/blog/export-open-tabs/og.png', alt: 'Как экспортировать открытые вкладки: руководство TabMerger с кнопкой «Export JSON» (Экспорт в JSON)' },
+  toc: [
+    { id: 'quick', label: 'Короткий ответ' },
+    { id: 'tabmerger', label: 'Экспорт одним щелчком' },
+    { id: 'inside', label: 'Что внутри файла' },
+    { id: 'builtin', label: 'Через закладки' },
+    { id: 'import', label: 'Как вернуть вкладки' },
+    { id: 'faq', label: 'Частые вопросы' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Экспорт закладок',
+    values: { chrome: 'Диспетчер закладок → ⋮ → Экспортировать закладки', edge: 'Favorites → Export favorites', firefox: 'Библиотека → Экспорт закладок в HTML-файл…' },
+  },
+}
+
+<QuickAnswer>
+
+Откройте [TabMerger](/features), перейдите в **Настройки → Данные** (Settings → Data) и нажмите **Экспорт в JSON** (Export JSON). Один щелчок сохраняет файл с названием и адресом **каждой открытой вкладки в каждом окне**, а также все сохранённые вами группы. Без расширений можно добавить вкладки окна в закладки сочетанием <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> и экспортировать закладки в HTML-файл, по одному окну за раз.
+
+</QuickAnswer>
+
+<InstallCta>Экспортируйте все открытые вкладки из всех окон одним щелчком. Бесплатно для Chrome, Edge и Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Как экспортировать все открытые вкладки одним щелчком?">
+
+1. Откройте TabMerger и нажмите значок аккаунта → **Настройки**.
+2. Откройте вкладку **Данные**.
+3. В разделе **Импорт и экспорт** нажмите **Экспорт в JSON**. Файл сразу скачается под именем вроде `tabmerger-backup-2026-11-21.json`.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="«Settings» (Настройки) в TabMerger, вкладка «Data» (Данные) с кнопками «Export JSON» (Экспорт в JSON) и «Import file» (Импорт файла) в разделе «Import & export» (Импорт и экспорт), светлая тема" darkAlt="«Settings» (Настройки) в TabMerger, вкладка «Data» (Данные) с кнопками «Export JSON» (Экспорт в JSON) и «Import file» (Импорт файла) в разделе «Import & export» (Импорт и экспорт), тёмная тема" boxes={[{ id: 'export-json', label: 'Экспорт в JSON' }, { id: 'import-file', label: 'Импорт файла' }]} source="TabMerger 3.16.1">Settings → Data (Настройки → Данные): одна кнопка для выгрузки, другая для загрузки обратно.</ThemedScreenshot>
+
+Это есть во всех тарифах, включая бесплатный, а файл создаётся в браузере: ничего не загружается в сеть.
+
+</Section>
+
+<Section id="inside" title="Что внутри экспортированного файла?">
+
+Список ваших групп в формате JSON. Первой идёт группа **Сейчас открыто** (Now Open), то есть открытые сейчас окна и вкладки, за ней каждая сохранённая группа. Пример из настоящего экспорта:
+
+<ComparisonTable
+  head={['Поле', 'Пример из экспорта']}
+  rows={[
+    [<code>name</code>, '«Now Open», «Work», «Reading list»'],
+    [<code>windows[]</code>, 'Одна запись на окно, у каждой свои вкладки'],
+    [<code>tabs[].title</code>, '«Spaced repetition - Wikipedia»'],
+    [<code>tabs[].url</code>, <code>https://en.wikipedia.org/wiki/Spaced_repetition</code>],
+    [<code>color</code>, <code>rgba(59, 130, 246, 1)</code>],
+  ]}
+/>
+
+JSON — это обычный текст, поэтому его прочитает любой скрипт или текстовый редактор: извлеките адреса, превратите их в список Markdown или храните файл как резервную копию.
+
+</Section>
+
+<Section id="builtin" title="Как экспортировать вкладки без расширения?">
+
+Браузеры не умеют экспортировать открытые вкладки напрямую, зато экспортируют закладки. Поэтому сначала добавьте вкладки в закладки, а затем экспортируйте:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. В каждом окне нажмите <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> на Mac) и сохраните вкладки в новую папку.
+2. Откройте **⋮ → Закладки и списки → Диспетчер закладок** (Bookmarks and lists → Bookmark Manager).
+3. Вверху откройте **⋮ → Экспортировать закладки** (Export bookmarks). Chrome сохранит все закладки в HTML-файл.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. В каждом окне нажмите <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>, чтобы добавить все вкладки в избранное, в новую папку.
+2. Нажмите <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>, чтобы открыть избранное (Favorites).
+3. Выберите **Export favorites** в меню страницы и сохраните HTML-файл.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. В каждом окне нажмите <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>, чтобы добавить все вкладки в закладки, в новую папку.
+2. Нажмите <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>, чтобы открыть окно «Библиотека» (Library).
+3. Выберите **Экспорт закладок в HTML-файл…** (Export Bookmarks to HTML…) и сохраните файл.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>только по одному окну, экспортируются *все* ваши закладки, а не только эти вкладки, и файл не знает, какие вкладки были открыты вместе.</Catch>
+
+</Section>
+
+<Section id="import" title="Как вернуть вкладки?">
+
+В TabMerger **Настройки → Данные → Импорт файла** (Settings → Data → Import file) читает все три вида файлов и добавляет их как группы рядом с уже имеющимися:
+
+- **JSON из TabMerger**, созданный кнопкой «Экспорт в JSON», с сохранёнными группами и окнами в прежнем виде. Группа «Сейчас открыто» из файла не добавляется (это были открытые вкладки браузера, где делали экспорт), поэтому перед экспортом сохраните открытые окна в группу, если хотите их вернуть.
+- **HTML-файл закладок** из любого браузера: каждая папка верхнего уровня становится группой.
+- **Текст OneTab**: каждый список OneTab становится группой. См. наше [руководство по альтернативам OneTab](/blog/onetab-alternatives).
+
+Поэтому экспорт — самый простой способ [перенести вкладки на другой компьютер](/blog/move-tabs-between-computers) без аккаунта. Хотите, чтобы всё происходило само? [Pro](/pricing) хранит 10 последних автоматических резервных копий и синхронизирует группы между устройствами со сквозным шифрованием. Чтобы отложить вкладки на потом вообще без файла, см. [как сохранить все открытые вкладки](/blog/save-all-open-tabs); чтобы отправить набор вкладок другому человеку, см. [как поделиться набором вкладок](/blog/share-a-set-of-tabs).
+
+<InstallCta>Бесплатно для Chrome, Edge и Firefox. Для начала аккаунт не нужен.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Частые вопросы">
+
+<Faq items={post.faq} />
+
+</Section>

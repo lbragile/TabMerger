@@ -7,7 +7,7 @@ export const post = {
   shareSummary: '一个快捷键保存、启动时恢复、找回已关闭的标签页，适用于 Chrome、Edge 和 Firefox。',
   dek: '保留所有打开标签页的五种方法，以及每种方法悄悄漏掉的那一点。',
   published: '2026-11-19',
-  updated: '2026-11-19',
+  updated: '2026-11-24',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D 只保存当前窗口。', source: '已在三款浏览器中测试，2026 年 11 月 19 日' },
@@ -115,9 +115,11 @@ export const post = {
 
 <QuickAnswer>
 
-要保存所有打开的标签页，请按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>（Mac 上按 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>），当前窗口中的每个标签页都会存入一个新的书签文件夹。这在 Chrome、Edge 和 Firefox 中都适用。如果想让标签页自动重新打开，请开启 Chrome 的“继续浏览上次打开的网页”（Continue where you left off）、Edge 的“Open tabs from the previous session”或 Firefox 的“打开先前的窗口和标签页”（Open previous windows and tabs）。
+要保存所有打开的标签页，请按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>（Mac 上按 <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>），当前窗口中的每个标签页都会存入一个新的书签文件夹。这在 Chrome、Edge 和 Firefox 中都适用。如果想让标签页自动重新打开，请开启 Chrome 的“继续浏览上次打开的网页”（Continue where you left off）、Edge 的“Open tabs from the previous session”或 Firefox 的“打开先前的窗口和标签页”（Open previous windows and tabs）。如果想 **一次保存所有窗口**，并在以后搜索其中的标签页，请使用 [TabMerger](/features)：点一下，就能把所有打开的窗口保存到一个命名分组中。
 
 </QuickAnswer>
+
+<InstallCta>一键保存所有打开的窗口。免费用于 Chrome、Edge 和 Firefox。</InstallCta>
 
 <BrowserSwitcher />
 
@@ -196,7 +198,7 @@ export const post = {
 
 <Section id="closed" title="3. 找回已经关闭的标签页">
 
-按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>（<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>）可重新打开最近关闭的标签页或窗口；再按一次就继续往前找。更早的内容，可以按 <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> 打开历史记录查找。
+按 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>（<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>）可重新打开最近关闭的标签页或窗口；再按一次就继续往前找。更早的内容，可以按 <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> 打开历史记录查找。如果整个浏览器崩溃或退出了，请按照[崩溃后如何恢复标签页](/blog/restore-tabs-after-crash)操作。
 
 <BrowserPanels section="closed">
 <BrowserPanel browser="chrome">
@@ -228,7 +230,9 @@ Firefox 在“历史”（History）菜单的“最近关闭的标签页”和�
 
 - **Chrome** 可以保存分组并重新打开，但扩展程序看不到已关闭的已保存分组（[tabGroups API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)）。
 - **Firefox** 的分组只留在本机，不会随 Firefox Sync 同步。
-- **Edge** 从 149 版起不再提供集锦。
+- **Edge** 从 149 版起不再提供集锦（[替代方案](/blog/edge-collections-replacement)）。
+
+分组如何保存、重新打开和同步，我们的 [Chrome 标签页分组指南](/blog/chrome-tab-groups)有分步说明。
 
 {/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
 
@@ -256,14 +260,14 @@ Firefox 在“历史”（History）菜单的“最近关闭的标签页”和�
   head={['快捷键', '保存的内容']}
   keysColumn={0}
   rows={[
-    ['Ctrl+Shift+P', '窗口中的其他所有标签页'],
-    ['Ctrl+Shift+S', '当前标签页'],
-    ['Ctrl+Shift+K', '左侧的标签页'],
-    ['Ctrl+Shift+U', '右侧的标签页'],
+    ['Alt+Shift+O', '窗口中的其他所有标签页'],
+    ['Alt+Shift+S', '当前标签页'],
+    ['Alt+Shift+Comma', '左侧的标签页'],
+    ['Alt+Shift+Period', '右侧的标签页'],
   ]}
 />
 
-在 Mac 上用 <Kbd>⌘</Kbd>。每个快捷键都会询问保存到哪里；选择 **快速保存（新分组）** 会当场新建一个分组。在 Firefox 中，<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> 会打开隐私窗口，所以请在 `about:addons` 的“管理扩展快捷键”（Manage Extension Shortcuts）中另选一个按键。
+在 Mac 上，用 <Kbd>Control</Kbd> 代替 <Kbd>Alt</Kbd>。每个快捷键都会询问保存到哪里；选择 **快速保存（新分组）** 会当场新建一个分组。新安装会使用这些按键；之前安装的会保留原有按键。每个按键都可以在浏览器的快捷键页面中更改，具体做法见我们的[标签页键盘快捷键参考](/blog/tab-keyboard-shortcuts)。
 
 ### 不小心关掉了？
 
@@ -304,7 +308,7 @@ Firefox 在“历史”（History）菜单的“最近关闭的标签页”和�
   ]}
 />
 
-无论还选了什么，都建议开启启动设置。只想留住一个窗口时，用书签就够了。如果你同时用好几个窗口，或者几天后还需要某个已关闭的标签页，就用扩展程序。更多内容见我们的[对比页面](/compare)。
+无论还选了什么，都建议开启启动设置。只想留住一个窗口时，用书签就够了。如果要处理好几个窗口，或者找回几天前关闭的标签页，TabMerger 点一下就能搞定，还可以[把所有内容导出到文件](/blog/export-open-tabs)。更多内容见我们的[对比页面](/compare)和[最佳标签页管理扩展对比](/blog/best-tab-manager-extensions)。
 
 </Section>
 

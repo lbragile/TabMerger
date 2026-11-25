@@ -1,0 +1,145 @@
+export const post = {
+  slug: 'tab-management-for-developers',
+  title: 'Gestion des onglets pour développeurs : un projet, un groupe',
+  navTitle: 'Gestion des onglets pour développeurs',
+  seoTitle: 'Gestion des onglets pour développeurs : projets, docs et règles d’URL',
+  description:
+    'Docs, pull requests, localhost et tableaux de bord : une organisation des onglets pour développeurs, avec un groupe TabMerger par projet, des règles d’URL qui rangent les onglets automatiquement et une recherche qui trouve n’importe quelle page de doc d’une touche.',
+  shareSummary: 'Un groupe par projet, des règles d’URL qui rangent vos onglets, et la doc à portée de touche.',
+  dek: 'Votre navigateur, c’est la moitié de votre IDE. Donnez-lui la même structure : un groupe par projet, rangé pour vous.',
+  published: '2026-12-08',
+  updated: '2026-12-08',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Les règles d’URL copient les nouveaux onglets correspondants dans un groupe, avec * comme joker.', source: 'TabMerger 3.16.1' },
+    { text: 'Les règles comparent l’adresse sans http:// ni https://, donc localhost:3000/* fonctionne.', source: 'Code source de TabMerger 3.16.1' },
+    { text: 'L’offre gratuite a 3 règles d’URL ; Pro n’a aucune limite.', source: 'Tarifs de TabMerger', href: '/pricing' },
+    { text: 'Ctrl+K filtre par group:, window:, tag: et closed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Comment les développeurs devraient-ils organiser leurs onglets ?',
+      answer:
+        'Un groupe TabMerger par projet ou par ticket, des règles d’URL qui rangent automatiquement les nouveaux onglets dans le bon groupe, et la recherche Ctrl+K pour aller à n’importe quelle page de doc. Enregistrez puis fermez les onglets d’un projet quand vous changez de tâche.',
+    },
+    {
+      question: 'Peut-on trier automatiquement les onglets dans des groupes selon l’URL ?',
+      answer:
+        'Oui, avec les règles d’URL de TabMerger : un motif comme github.com/your-org/* envoie chaque nouvel onglet correspondant dans un groupe. L’onglet reste ouvert ; une copie est enregistrée dans le groupe. L’offre gratuite a 3 règles, Pro un nombre illimité.',
+    },
+    {
+      question: 'Est-ce que ça marche avec localhost ?',
+      answer: 'Oui. Les règles ignorent la partie http:// ou https://, donc un motif comme localhost:3000/* correspond aux pages de votre serveur de développement.',
+    },
+    {
+      question: 'Comment trouver vite un onglet de documentation ?',
+      answer: 'Appuyez sur Ctrl+K dans TabMerger et tapez une partie du titre ou de l’adresse ; ajoutez group:"Docs" pour ne chercher que dans un groupe.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp', alt: 'Boîte de dialogue « URL Rules » (Règles d’URL) de TabMerger, avec la règle github.com/lbragile/* qui envoie les onglets dans le groupe « Work », thème clair' },
+    { src: '/blog/tab-management-for-developers/tm-url-rules-dark.webp', alt: 'Boîte de dialogue « URL Rules » (Règles d’URL) de TabMerger, avec la règle github.com/lbragile/* qui envoie les onglets dans le groupe « Work », thème sombre' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-light.webp', alt: 'Le groupe « Work » avec l’onglet « Issues » tout juste ouvert, ajouté par la règle d’URL, thème clair' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-dark.webp', alt: 'Le groupe « Work » avec l’onglet « Issues » tout juste ouvert, ajouté par la règle d’URL, thème sombre' },
+  ],
+  tags: ['developers', 'tab-management', 'tab-manager', 'browser-productivity'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp' },
+  ogImage: { src: '/blog/tab-management-for-developers/og.png', alt: 'Carte titrée « Tab management for developers » : un guide TabMerger, avec une règle d’URL qui range des onglets GitHub dans un groupe' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'setup', label: 'Un projet, un groupe' },
+    { id: 'rules', label: 'Ranger les onglets automatiquement' },
+    { id: 'find', label: 'Trouver une doc en un instant' },
+    { id: 'switch', label: 'Changer de projet proprement' },
+    { id: 'faq', label: 'Questions fréquentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Donnez à chaque projet son propre groupe [TabMerger](/features), puis laissez les **Règles d’URL** (URL rules) faire le rangement : un motif comme `github.com/your-org/*` ou `localhost:3000/*` envoie automatiquement chaque nouvel onglet correspondant dans le bon groupe. Trouvez n’importe quelle page de doc avec <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> et, quand vous changez de tâche, enregistrez les fenêtres du projet puis fermez-les. Rien de perdu, rien à fouiller.
+
+</QuickAnswer>
+
+<InstallCta>Un groupe par projet, rangé pour vous par les règles d’URL. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+<Section id="setup" title="Comment un développeur devrait-il organiser ses onglets ?">
+
+Comme le code : par projet. Un projet type compte quatre sortes d’onglets :
+
+<ComparisonTable
+  head={['Type', 'Exemples', 'Où les mettre']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['Travail en cours', 'Pull requests, issues, le ticket', 'Le groupe du projet, dans sa propre fenêtre'],
+    ['Docs et référence', 'Docs d’API, MDN, une spécification', 'Une fenêtre « Docs » dans le groupe du projet'],
+    ['Local et staging', 'localhost, déploiements de préversion', 'Ouverts pendant l’exécution ; enregistrés par une règle d’URL'],
+    ['Tableaux de bord', 'CI, logs, monitoring', 'Une fenêtre épinglée, ou le groupe du projet'],
+  ]}
+/>
+
+Dans TabMerger, un groupe peut contenir plusieurs fenêtres : un même groupe de projet garde donc « PRs », « Docs » et « Local » séparées. Renommez une fenêtre depuis son menu **⋯** et ajoutez au groupe une note avec la branche ou le numéro de ticket.
+
+</Section>
+
+<Section id="rules" title="Comment ranger automatiquement les onglets dans le bon groupe ?">
+
+Les **Règles d’URL** de TabMerger surveillent vos onglets. Quand un onglet s’ouvre ou finit de charger une adresse qui correspond à une règle, une copie est enregistrée dans le groupe de cette règle ; l’onglet lui-même reste ouvert.
+
+1. Ouvrez **Paramètres → Général** (Settings → General), repérez **Règles d’URL** et cliquez sur **Gérer** (Manage).
+2. Cliquez sur **Ajouter une règle** (Add rule), saisissez un motif et choisissez le groupe. `*` est un joker ; la première règle qui correspond l’emporte.
+3. Cliquez sur **Enregistrer** (Save).
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Une règle d’URL à l’œuvre" steps={[{ title: 'La règle' }, { title: 'Le résultat' }]}>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-url-rules" alt="Boîte de dialogue « URL Rules » (Règles d’URL) de TabMerger, avec la règle github.com/lbragile/* qui envoie les onglets dans le groupe « Work », thème clair" darkAlt="Boîte de dialogue « URL Rules » (Règles d’URL) de TabMerger, avec la règle github.com/lbragile/* qui envoie les onglets dans le groupe « Work », thème sombre" boxes={[{ id: 'rule', label: 'Le motif' }]} source="TabMerger 3.16.1">Une seule règle : tout ce qui se trouve sous github.com/lbragile/ va dans « Work ».</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-rule-result" alt="Le groupe « Work » avec l’onglet « Issues » tout juste ouvert, ajouté par la règle d’URL, thème clair" darkAlt="Le groupe « Work » avec l’onglet « Issues » tout juste ouvert, ajouté par la règle d’URL, thème sombre" boxes={[{ id: 'new-tab', label: 'Ajouté par la règle' }]} source="TabMerger 3.16.1">En ouvrant la page « Issues » du dépôt, elle s’est rangée toute seule dans « Work ».</ThemedScreenshot>
+</Carousel>
+
+Des motifs qui fonctionnent bien :
+
+- `github.com/your-org/*` pour tous les dépôts, PR et issues d’un projet
+- `localhost:3000/*` pour votre serveur de développement (les règles ignorent `http://` et `https://`)
+- `docs.your-framework.dev/*` pour la doc que vous rouvrez sans cesse
+
+L’offre gratuite comprend 3 règles ; [Pro](/pricing) n’a aucune limite. Toutes les options des motifs, et l’ordre des règles, sont détaillés dans [trier automatiquement les onglets avec des règles d’URL](/blog/auto-sort-tabs-with-url-rules).
+
+</Section>
+
+<Section id="find" title="Comment trouver une page de doc d’une seule touche ?">
+
+Appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> dans TabMerger et tapez quelques lettres du titre ou de l’adresse. Les résultats couvrent les onglets ouverts, enregistrés et récemment fermés. Affinez avec des filtres : `group:"Docs" fetch`, `window:"Local"`, ou `closed:` pour la page fermée il y a une heure. Plus de détails dans [comment retrouver un onglet parmi des centaines](/blog/find-a-tab-among-hundreds).
+
+Les menus de groupe proposent aussi **Trier par URL** (Sort by URL), pratique pour une longue fenêtre de doc, et **Dédupliquer les onglets** (Deduplicate tabs) pour les cinq copies de la même issue.
+
+</Section>
+
+<Section id="switch" title="Comment changer de projet sans perdre le contexte ?">
+
+1. Dans le groupe du projet, choisissez **Fusionner avec l’actuel** (Merge with current) pour enregistrer ses fenêtres ouvertes. **Remplacer par l’actuel** (Replace with current) écrase plutôt la copie enregistrée.
+2. Fermez les fenêtres.
+3. Quand vous y revenez, rouvrez le groupe : chaque PR, chaque doc et chaque tableau de bord, là où vous les aviez laissés.
+
+<InstallCta>Gratuit pour Chrome, Edge et Firefox. Aucun compte nécessaire pour commencer.</InstallCta>
+
+Pour travailler au clavier, voir les [raccourcis clavier pour les onglets](/blog/tab-keyboard-shortcuts) ; pour la routine générale, [gérer trop d’onglets](/blog/manage-too-many-tabs).
+
+</Section>
+
+<Section id="faq" title="Questions fréquentes">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,187 @@
+export const post = {
+  slug: 'find-a-tab-among-hundreds',
+  title: 'Comment retrouver un onglet parmi des centaines',
+  navTitle: 'Retrouver un onglet parmi des centaines',
+  seoTitle: 'Rechercher dans les onglets ouverts sur Chrome, Edge et Firefox',
+  description:
+    'Retrouvez un onglet ouvert en quelques secondes : la recherche dans les onglets intégrée à Chrome, Edge et Firefox, et le Ctrl+K de TabMerger, qui trouve à la fois les onglets ouverts, enregistrés et fermés, avec des filtres comme group: et closed:.',
+  shareSummary: 'Rechercher dans les onglets ouverts sur Chrome, Edge et Firefox, et retrouver aussi les fermés.',
+  dek: 'Fini de scruter des onglets grands comme une icône. Un raccourci, quelques lettres du titre, et vous y êtes.',
+  published: '2026-11-29',
+  updated: '2026-11-29',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Ctrl+Shift+A ouvre la Recherche dans les onglets de Chrome.',
+      source: 'Aide Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Firefox 159 associe Ctrl+Shift+A à une liste de tous les onglets.', source: 'Raccourcis clavier de Firefox 159' },
+    { text: 'Le Ctrl+K de TabMerger cherche à la fois dans les onglets ouverts, enregistrés et récemment fermés.', source: 'TabMerger 3.16.1' },
+    { text: 'Filtres de TabMerger : group:, window:, tag: et closed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Comment rechercher dans mes onglets ouverts ?',
+      answer:
+        'Dans TabMerger, appuyez sur Ctrl+K et tapez : la recherche couvre à la fois les onglets ouverts, enregistrés et récemment fermés. En natif, Chrome propose la Recherche dans les onglets (Ctrl+Shift+A ou @tabs dans la barre d’adresse), et Firefox liste tous les onglets avec Ctrl+Shift+A.',
+    },
+    {
+      question: 'Existe-t-il un raccourci pour rechercher un onglet ?',
+      answer: 'Ctrl+Shift+A dans Chrome et Firefox (⌘+Shift+A dans Chrome sur Mac), et Ctrl+K dans TabMerger. La liste des raccourcis de Microsoft pour Edge n’attribue aucune touche à la recherche d’onglets.',
+    },
+    {
+      question: 'Puis-je rechercher des onglets déjà fermés ?',
+      answer: 'Oui, dans TabMerger : commencez votre recherche par closed: pour ne chercher que dans les onglets récemment fermés. La version gratuite les garde 2 jours, Pro 30.',
+    },
+    {
+      question: 'Puis-je rechercher les onglets de mes autres appareils ?',
+      answer:
+        'TabMerger Pro synchronise vos groupes enregistrés entre vos appareils avec un chiffrement de bout en bout, si bien que le même Ctrl+K les retrouve partout. Notre guide pour transférer des onglets d’un ordinateur à l’autre présente les options intégrées.',
+      link: { text: 'transférer des onglets d’un ordinateur à l’autre', href: '/blog/move-tabs-between-computers' },
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'Recherche TabMerger ouverte et vide, qui liste les filtres group:, window:, tag: et closed:, thème clair' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'Recherche TabMerger ouverte et vide, qui liste les filtres group:, window:, tag: et closed:, thème sombre' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp', alt: 'Recherche TabMerger group:"Work" pull, qui trouve l’onglet enregistré Pull requests dans le groupe Work, thème clair' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-dark.webp', alt: 'Recherche TabMerger group:"Work" pull, qui trouve l’onglet enregistré Pull requests dans le groupe Work, thème sombre' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-light.webp', alt: 'Recherche TabMerger tag:Sprint, qui liste les trois onglets ouverts du groupe d’onglets Chrome Sprint, thème clair' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-dark.webp', alt: 'Recherche TabMerger tag:Sprint, qui liste les trois onglets ouverts du groupe d’onglets Chrome Sprint, thème sombre' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-21',
+      note: 'Les informations sur Firefox ont été relevées dans les définitions de touches et les textes de menu de Firefox 159.0.1 lui-même ; cette page a bloqué notre vérification automatique.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp' },
+  ogImage: { src: '/blog/find-a-tab-among-hundreds/og.png', alt: '« How to find one tab among hundreds » : un guide TabMerger, avec une recherche d’onglets filtrée' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'tabmerger', label: 'Tout rechercher avec Ctrl+K' },
+    { id: 'filters', label: 'Les filtres pour cibler' },
+    { id: 'builtin', label: 'La recherche intégrée' },
+    { id: 'tips', label: 'Des onglets plus faciles à retrouver' },
+    { id: 'faq', label: 'Questions fréquentes' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Recherche d’onglets intégrée',
+    values: { chrome: 'Ctrl+Shift+A ou @tabs', edge: 'Search tabs (aucun raccourci indiqué)', firefox: 'Ctrl+Shift+A' },
+  },
+}
+
+<QuickAnswer>
+
+Appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> sur Mac) dans [TabMerger](/features) et tapez quelques lettres : l’onglet est trouvé, qu’il soit **ouvert, enregistré dans un groupe ou récemment fermé**, et des filtres comme `group:` et `closed:` réduisent des centaines d’onglets à un seul. En natif, la **Recherche dans les onglets** (« Tab Search ») de Chrome (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) et **Lister tous les onglets** (« List all tabs ») de Firefox (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) cherchent dans ce qui est ouvert à cet instant.
+
+</QuickAnswer>
+
+<InstallCta>Retrouvez n’importe quel onglet, ouvert, enregistré ou fermé, d’une seule touche. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Tout rechercher avec Ctrl+K">
+
+La recherche d’onglets d’un navigateur ne connaît que ce qui est ouvert dans ce navigateur à cet instant. Or l’onglet qu’il vous faut est souvent ailleurs : dans une fenêtre enregistrée hier, ou dans une autre fermée il y a une heure. TabMerger cherche partout depuis un seul champ :
+
+1. Ouvrez TabMerger et appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+2. Tapez une partie du titre ou de l’adresse. Les résultats affichent ensemble les onglets ouverts, enregistrés et récemment fermés, chacun avec une étiquette qui indique où il se trouve.
+3. Choisissez-en un avec les flèches et <Kbd>Enter</Kbd>.
+
+Tous les filtres, l’ordre des résultats et l’affichage qui masque ou estompe sont détaillés dans [Rechercher dans tous vos onglets avec TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="Recherche TabMerger ouverte et vide, qui liste les filtres group:, window:, tag: et closed:, thème clair" darkAlt="Recherche TabMerger ouverte et vide, qui liste les filtres group:, window:, tag: et closed:, thème sombre" boxes={[{ id: 'search-input', label: 'Recherche' }]} source="TabMerger 3.16.1">Ctrl+K ouvre la recherche, avec les filtres affichés avant même de taper.</ThemedScreenshot>
+
+</Section>
+
+<Section id="filters" title="Quels filtres affinent la recherche ?">
+
+Commencez votre recherche par un filtre pour aller droit au bon endroit :
+
+<ComparisonTable
+  head={['Filtre', 'Trouve']}
+  rows={[
+    [<code>group:"Work"</code>, 'Les onglets d’un groupe dont le nom contient « Work »'],
+    [<code>window:"Docs"</code>, 'Les onglets d’une fenêtre dont le nom contient « Docs »'],
+    [<code>tag:Sprint</code>, 'Les onglets d’un groupe d’onglets Chrome dont le libellé contient « Sprint »'],
+    [<code>closed:</code>, 'Uniquement vos onglets récemment fermés'],
+  ]}
+/>
+
+Combinez un filtre et des mots : `group:"Work" pull` trouve l’onglet de la pull request dans votre groupe Work, même parmi des centaines. Mettez le nom entre guillemets quand vous ajoutez des mots après ; sans guillemets, un filtre prend tout le reste de la ligne.
+
+<Carousel label="Recherches filtrées" steps={[{ title: 'Filtre group:' }, { title: 'Filtre tag:' }]}>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-group-filter" alt="Recherche TabMerger group:&quot;Work&quot; pull, qui trouve l’onglet enregistré Pull requests dans le groupe Work, thème clair" darkAlt="Recherche TabMerger group:&quot;Work&quot; pull, qui trouve l’onglet enregistré Pull requests dans le groupe Work, thème sombre" boxes={[{ id: 'search-input', label: 'filtre de groupe' }]} source="TabMerger 3.16.1">Un groupe, un mot : l’onglet enregistré que vous cherchiez.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-tag-filter" alt="Recherche TabMerger tag:Sprint, qui liste les trois onglets ouverts du groupe d’onglets Chrome Sprint, thème clair" darkAlt="Recherche TabMerger tag:Sprint, qui liste les trois onglets ouverts du groupe d’onglets Chrome Sprint, thème sombre" boxes={[{ id: 'search-input', label: 'tag:Sprint' }]} source="TabMerger 3.16.1">tag: trouve les onglets d’un groupe d’onglets Chrome.</ThemedScreenshot>
+</Carousel>
+
+Les onglets récemment fermés sont conservés 2 jours avec la version gratuite et 30 avec [Pro](/pricing) : `closed:` remonte donc plusieurs semaines en arrière si besoin.
+
+</Section>
+
+<Section id="builtin" title="Comment rechercher dans les onglets ouverts sans extension ?">
+
+Chaque navigateur sait chercher dans les onglets ouverts à cet instant :
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+- Appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> sur Mac) pour ouvrir la **Recherche dans les onglets** (« Tab Search »), tapez des mots clés et choisissez un onglet. Chaque ligne a aussi un bouton de fermeture.
+- Ou tapez `@tabs` dans la barre d’adresse, appuyez sur <Kbd>Tab</Kbd> ou <Kbd>Space</Kbd>, puis tapez.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Les menus d’Edge 158 comportent **Search tabs** (rechercher dans les onglets), mais la liste des raccourcis clavier de Microsoft ne lui attribue aucune touche. Avec beaucoup d’onglets, <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> sautent à un onglet selon sa position et <Kbd>Ctrl</Kbd>+<Kbd>9</Kbd> au dernier.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- Appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> sur Mac) pour **Lister tous les onglets** (« List all tabs ») et y chercher.
+- La barre d’adresse a aussi un mode de recherche **Onglets**, parmi ses raccourcis de recherche.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>ces recherches ne voient que les onglets ouverts dans ce navigateur, maintenant. Un onglet fermé ou enregistré ailleurs n’apparaîtra pas.</Catch>
+
+D’autres touches figurent dans notre [liste des raccourcis clavier pour les onglets](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="tips" title="Comment rendre les onglets plus faciles à retrouver la prochaine fois ?">
+
+- **Regroupez par tâche.** Avec des groupes nommés, « un onglet parmi 200 » devient « le groupe Work ». Notre [méthode contre la surcharge d’onglets](/blog/manage-too-many-tabs) montre comment faire.
+- **Fermez ce que vous avez terminé,** après l’avoir enregistré. Moins d’onglets ouverts, c’est des listes de résultats plus courtes.
+- **Renommez les onglets importants.** TabMerger vous permet de donner un titre personnalisé à un onglet enregistré, pour qu’il corresponde au mot que vous chercherez.
+
+<InstallCta>Gratuit pour Chrome, Edge et Firefox. Aucun compte nécessaire pour commencer.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Questions fréquentes">
+
+<Faq items={post.faq} />
+
+</Section>

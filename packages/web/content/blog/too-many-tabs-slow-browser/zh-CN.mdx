@@ -1,0 +1,170 @@
+export const post = {
+  slug: 'too-many-tabs-slow-browser',
+  title: '打开太多标签页会让电脑变卡吗？',
+  navTitle: '标签页太多，电脑变卡',
+  seoTitle: '标签页太多导致浏览器卡顿？解决方法在这里',
+  description:
+    '标签页开太多，浏览器变卡了？每个打开的标签页都会占用内存。打开浏览器让标签页休眠的设置，再用 TabMerger 保存并关闭暂时不用的标签页，一个都不会丢。',
+  shareSummary: '为什么打开的标签页会拖慢一切，以及如何在不丢失它们的前提下释放内存。',
+  dek: '最快的标签页，是没有打开的那个。保存、关闭，需要时点一下就回来。',
+  published: '2026-12-04',
+  updated: '2026-12-04',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Chrome 的省内存模式会释放闲置标签页占用的内存。',
+      source: 'Chrome 帮助',
+      href: 'https://support.google.com/chrome/answer/12929150',
+    },
+    { text: 'Edge 158 会让闲置的标签页进入睡眠，默认在 15 分钟后。', source: 'edge://settings，2026 年 11 月 20 日' },
+    { text: 'Firefox 159 可以从标签页的右键菜单卸载标签页。', source: 'Firefox 159 菜单文字' },
+    { text: 'TabMerger 会保存所有打开的窗口，再一键全部关闭。', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: '标签页多了会占用更多内存吗？',
+      answer:
+        '会。每个打开的网页都把内容留在内存里，运行脚本或播放媒体的网页还会占用处理器。具体占用多少取决于网站，所以只看标签页数量说明不了问题。',
+    },
+    {
+      question: '关闭标签页能让电脑变快吗？',
+      answer:
+        '关闭标签页会释放它们占用的内存。先用 TabMerger 保存（与当前合并，再关闭所有窗口），就什么都不会丢：任何一个标签页点一下就能重新打开。',
+    },
+    {
+      question: '只靠省内存模式或睡眠标签页够吗？',
+      answer:
+        '它们会释放闲置标签页的内存，同时把标签页留在标签栏里，这对电脑有帮助。但标签页依然摆在那里，你还得一个个扫过去；保存并关闭它们，对你自己也有帮助。',
+    },
+    {
+      question: '怎样查看哪个标签页占用内存最多？',
+      answer: '在 Chrome 中按 Shift+Esc 打开Chrome 任务管理器，找出占用内存最多的标签页。',
+    },
+  ],
+  images: [
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-light.webp', alt: 'TabMerger 的“Now Open”（当前打开）菜单，“Close all windows”（关闭所有窗口）、“Close all browser windows in this group”（关闭此分组中的所有浏览器窗口）处于高亮状态，浅色主题' },
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-dark.webp', alt: 'TabMerger 的“Now Open”（当前打开）菜单，“Close all windows”（关闭所有窗口）、“Close all browser windows in this group”（关闭此分组中的所有浏览器窗口）处于高亮状态，深色主题' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Chrome 设置中的“Performance”（性能）页面，带有“Memory Saver”（省内存模式）开关' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Edge 设置中的“Performance”页面，“Automatically put tabs to sleep”已开启并设为 15 分钟' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/too-many-tabs-slow-browser/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/too-many-tabs-slow-browser/og.png', alt: '标题卡片“Do too many tabs slow your computer down?”：一篇 TabMerger 指南，配有“Close all windows”（关闭所有窗口）菜单' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'why', label: '标签页为什么拖慢电脑' },
+    { id: 'tabmerger', label: '一次保存并关闭' },
+    { id: 'browser', label: '让浏览器让标签页休眠' },
+    { id: 'which', label: '找出占资源的标签页' },
+    { id: 'faq', label: '常见问题' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: '内存设置',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: '设置 → System and performance → Performance',
+      firefox: '右键点击标签页 → 卸载标签页',
+    },
+  },
+}
+
+<QuickAnswer>
+
+会。每个打开的标签页都会占用内存，数量一多，整台电脑都会变慢。最有效的办法是**关闭暂时不用的标签页，同时不丢失它们**。在 [TabMerger](/features) 中选择 **与当前合并**，把所有打开的窗口保存到一个分组里，再选择 **关闭所有窗口**：内存腾出来了，每个标签页点一下就能回来。对于要继续开着的标签页，打开**省内存模式**（Memory Saver，Chrome）或**睡眠标签页**（Edge）。
+
+</QuickAnswer>
+
+<InstallCta>保存所有窗口，全部关闭，把内存要回来。Chrome、Edge 和 Firefox 均可免费使用。</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="why" title="为什么打开的标签页会让电脑变慢？">
+
+每个打开的标签页都是一个活的网页：文字、图片和脚本都留在内存里，而忙碌的网页（视频、实时动态、网页应用）还会持续占用处理器。当浏览器和其他应用需要的内存超过电脑所有时，一切都会变慢。Chrome 自己的崩溃帮助就把内存不足列为崩溃原因之一，给出的第一个解决办法就是关闭标签页。
+
+一个标签页有多耗资源完全取决于网站，所以没有什么安全的数量。实用的原则是：今天还没看过的标签页，就不必开着。
+
+</Section>
+
+<Section id="tabmerger" title="怎样关闭标签页又不丢失它们？">
+
+这正是 [TabMerger](/features) 的拿手好戏。两步操作，一次处理所有窗口：
+
+1. 点击 **添加分组**，然后在该分组的 **⋯** 菜单中选择 **与当前合并**：所有打开的窗口和标签页都会保存到该分组中。
+2. 在侧边栏中右键点击 **当前打开**，选择 **关闭所有窗口**。浏览器窗口随即关闭，分组保留每一个标签页。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/too-many-tabs-slow-browser/tm-close-all-menu" alt="TabMerger 的“Now Open”（当前打开）菜单，“Close all windows”（关闭所有窗口）、“Close all browser windows in this group”（关闭此分组中的所有浏览器窗口）处于高亮状态，浅色主题" darkAlt="TabMerger 的“Now Open”（当前打开）菜单，“Close all windows”（关闭所有窗口）、“Close all browser windows in this group”（关闭此分组中的所有浏览器窗口）处于高亮状态，深色主题" boxes={[{ id: 'close-all', label: '关闭所有窗口' }]} source="TabMerger 3.16.1">保存之后，一个菜单项就能关闭所有打开的窗口。</ThemedScreenshot>
+
+再次需要时，打开分组，重新打开一个标签页、一个窗口或者全部。<Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> 一按就能找到任何已保存的标签页，自动保存还能按计划替你完成保存。更多习惯请看我们的[标签页太多时的整理流程](/blog/manage-too-many-tabs)。
+
+</Section>
+
+<Section id="browser" title="怎样让浏览器把闲置标签页转入睡眠？">
+
+对于一直开着的标签页，浏览器可以在它们闲置时释放内存。点击它们时会重新加载。
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+开启**省内存模式**（Memory Saver）：进入**设置 → 性能**（Settings → Performance），或在地址栏中粘贴 `chrome://settings/performance`。标签页多快变为非活动状态，可以在中等（Moderate）、平衡（Balanced）和最大值（Maximum）之间选择。
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Chrome 设置中的“Performance”（性能）页面，带有“Memory Saver”（省内存模式）开关" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">Chrome 的“Memory Saver”（省内存模式），在全新的 Chrome 157 配置文件中处于关闭状态。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+在**设置 → System and performance → Performance** 下勾选 **Automatically put tabs to sleep**，并选择标签页闲置多久后进入睡眠。
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Edge 设置中的“Performance”页面，“Automatically put tabs to sleep”已开启并设为 15 分钟" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Edge 的睡眠标签页默认开启：闲置的标签页在 15 分钟后进入睡眠。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+右键点击标签页，选择**卸载标签页**（Unload Tab），立即释放它占用的内存；先选中多个标签页，就能一起卸载。
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>睡眠中的标签页照样挤满标签栏。它们帮的是电脑，不是你的专注力。</Catch>
+
+</Section>
+
+<Section id="which" title="怎样找出拖慢一切的标签页？">
+
+在 Chrome 中按 <Kbd>Shift</Kbd>+<Kbd>Esc</Kbd> 打开 **Chrome 任务管理器**（Chrome Task Manager），找出占用内存最多的标签页。把占资源的标签页保存到 TabMerger 分组，然后关掉它们。
+
+{/* Screenshot still to capture by hand (needs a visible browser): the Chrome Task Manager window sorted by memory. */}
+
+<InstallCta>Chrome、Edge 和 Firefox 均可免费使用。无需账号即可开始。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

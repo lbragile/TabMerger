@@ -1,0 +1,161 @@
+export const post = {
+  slug: 'close-duplicate-tabs',
+  title: 'Cara menutup tab duplikat dengan satu klik',
+  navTitle: 'Menutup tab duplikat',
+  seoTitle: 'Cara Menutup Tab Duplikat di Chrome, Edge, dan Firefox',
+  description:
+    'Halaman yang sama terbuka tiga kali? Tutup tab duplikat di semua jendela dengan satu klik di TabMerger, atau pakai fitur bawaan Firefox, “Tutup Tab Berganda”. Apa yang ditawarkan Chrome dan Edge, dan apa persisnya yang dihitung sebagai duplikat.',
+  shareSummary: 'Tutup tab duplikat di semua jendela dengan satu klik, di Chrome, Edge, dan Firefox.',
+  dek: 'Tab duplikat menumpuk diam-diam. Bersihkan dari semua jendela sekaligus, dan simpan salinan pertama tiap halaman.',
+  published: '2026-12-01',
+  updated: '2026-12-01',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '“Hapus tab duplikat” di TabMerger menutup tab ganda di semua jendela yang terbuka dan menyimpan yang pertama.', source: 'Diuji di TabMerger 3.16.1, 21 Nov 2026' },
+    { text: 'Ia bertanya dulu, dan menyebutkan berapa tab yang akan dihapus.', source: 'TabMerger 3.16.1' },
+    { text: 'Menu tab Firefox 159 punya “Tutup Tab Berganda”.', source: 'Teks menu Firefox 159' },
+    { text: '“Duplicate tab” di Edge membuat salinan; fitur itu tidak menghapus apa pun.', source: 'Teks menu Edge 158' },
+  ],
+  faq: [
+    {
+      question: 'Apakah Chrome punya penghapus tab duplikat?',
+      answer:
+        'Halaman bantuan Chrome tidak menjelaskan fitur seperti itu. TabMerger menambahkannya: buka menu ⋯ di “Sedang Terbuka” dan pilih “Hapus tab duplikat” untuk menutup semua tab ganda di semua jendela Anda.',
+    },
+    {
+      question: 'Tab mana yang dipertahankan?',
+      answer: 'Di TabMerger, salinan pertama menurut urutan baca: jendela paling awal dulu, lalu dari kiri ke kanan. Setiap salinan berikutnya dari alamat yang sama dihapus.',
+    },
+    {
+      question: 'Apakah halaman dengan #anchor berbeda dihitung duplikat?',
+      answer: 'Tidak. TabMerger membandingkan alamat lengkap tanpa membedakan huruf besar dan kecil, jadi page#top dan page#faq, atau halaman yang sama dengan ?parameter berbeda, tetap menjadi tab yang berbeda.',
+    },
+    {
+      question: 'Bisakah saya juga membersihkan duplikat dari grup tersimpan?',
+      answer: 'Bisa: opsi “Hapus tab duplikat” yang sama ada di menu ⋯ setiap grup, untuk tab yang tersimpan di sana.',
+    },
+  ],
+  images: [
+    { src: '/blog/close-duplicate-tabs/tm-before-light.webp', alt: 'Now Open (Sedang Terbuka) di TabMerger dengan dua jendela dan delapan tab, tiga di antaranya ganda, tema terang' },
+    { src: '/blog/close-duplicate-tabs/tm-before-dark.webp', alt: 'Now Open (Sedang Terbuka) di TabMerger dengan dua jendela dan delapan tab, tiga di antaranya ganda, tema gelap' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp', alt: 'Dialog TabMerger Remove duplicates (Hapus duplikat) yang menyebutkan 3 tab duplikat akan dihapus, dengan tombol Remove 3 duplicates (Hapus 3 duplikat), tema terang' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-dark.webp', alt: 'Dialog TabMerger Remove duplicates (Hapus duplikat) yang menyebutkan 3 tab duplikat akan dihapus, dengan tombol Remove 3 duplicates (Hapus 3 duplikat), tema gelap' },
+    { src: '/blog/close-duplicate-tabs/tm-after-light.webp', alt: 'Now Open (Sedang Terbuka) di TabMerger setelah duplikat dihapus: dua jendela, lima tab, tiap halaman satu kali, tema terang' },
+    { src: '/blog/close-duplicate-tabs/tm-after-dark.webp', alt: 'Now Open (Sedang Terbuka) di TabMerger setelah duplikat dihapus: dua jendela, lima tab, tiap halaman satu kali, tema gelap' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp' },
+  ogImage: { src: '/blog/close-duplicate-tabs/og.png', alt: 'Cara menutup tab duplikat dengan satu klik: panduan TabMerger, dengan dialog Remove 3 duplicates (Hapus 3 duplikat)' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'tabmerger', label: 'Satu klik, semua jendela' },
+    { id: 'what-counts', label: 'Apa yang dihitung duplikat' },
+    { id: 'builtin', label: 'Opsi bawaan' },
+    { id: 'prevent', label: 'Lebih sedikit duplikat' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Penutupan duplikat bawaan',
+    values: { chrome: 'Tidak ada di halaman bantuan', edge: 'Tidak ada (Duplicate tab membuat salinan)', firefox: 'Klik kanan → Tutup Tab Berganda' },
+  },
+}
+
+<QuickAnswer>
+
+Di [TabMerger](/features), buka menu **⋯** di **Sedang Terbuka** lalu pilih **Hapus tab duplikat**. TabMerger menemukan setiap halaman yang terbuka lebih dari sekali, **di semua jendela Anda**, menunjukkan berapa tab yang akan ditutup, dan menyimpan salinan pertama masing-masing. Firefox punya fitur bawaan **Tutup Tab Berganda** (Close Duplicate Tabs) di menu tabnya; halaman bantuan Chrome tidak menjelaskan penghapus duplikat apa pun.
+
+</QuickAnswer>
+
+<InstallCta>Bersihkan tab duplikat dari semua jendela dengan satu klik. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Bagaimana cara menutup semua duplikat sekaligus?">
+
+1. Buka TabMerger. **Sedang Terbuka** menampilkan semua jendela dan tab yang terbuka.
+2. Buka menu **⋯** di bagian itu lalu pilih **Hapus tab duplikat**.
+3. Periksa jumlahnya dan tekan tombol hapus, di sini **Hapus 3 duplikat**. Tab browser yang berlebih ditutup; salinan pertama tiap halaman tetap persis di tempatnya.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Menghapus duplikat dari tab yang terbuka" steps={[{ title: 'Sebelum' }, { title: 'Konfirmasi' }, { title: 'Sesudah' }]}>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-before" alt="Now Open (Sedang Terbuka) di TabMerger dengan dua jendela dan delapan tab, tiga di antaranya ganda, tema terang" darkAlt="Now Open (Sedang Terbuka) di TabMerger dengan dua jendela dan delapan tab, tiga di antaranya ganda, tema gelap" boxes={[{ id: 'summary', label: '8 tab' }]} source="TabMerger 3.16.1">Sebelum: dua jendela, delapan tab, tiga di antaranya ganda.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-confirm" alt="Dialog TabMerger Remove duplicates (Hapus duplikat) yang menyebutkan 3 tab duplikat akan dihapus, dengan tombol Remove 3 duplicates (Hapus 3 duplikat), tema terang" darkAlt="Dialog TabMerger Remove duplicates (Hapus duplikat) yang menyebutkan 3 tab duplikat akan dihapus, dengan tombol Remove 3 duplicates (Hapus 3 duplikat), tema gelap" boxes={[{ id: 'confirm', label: 'Hapus' }]} source="TabMerger 3.16.1">TabMerger memberi tahu berapa tab yang akan ditutup sebelum menutupnya.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-after" alt="Now Open (Sedang Terbuka) di TabMerger setelah duplikat dihapus: dua jendela, lima tab, tiap halaman satu kali, tema terang" darkAlt="Now Open (Sedang Terbuka) di TabMerger setelah duplikat dihapus: dua jendela, lima tab, tiap halaman satu kali, tema gelap" boxes={[{ id: 'summary', label: '5 tab' }]} source="TabMerger 3.16.1">Sesudah: lima tab, tiap halaman satu kali. Tab browser benar-benar ditutup.</ThemedScreenshot>
+</Carousel>
+
+Opsi yang sama berfungsi di grup tersimpan mana pun, jadi grup riset yang terus bertambah selama berminggu-minggu juga tetap rapi.
+
+</Section>
+
+<Section id="what-counts" title="Apa yang dihitung sebagai duplikat?">
+
+TabMerger membandingkan **alamat lengkap** dalam bentuk standarnya, tanpa membedakan huruf besar dan kecil:
+
+<ComparisonTable
+  head={['Dua tab ini', 'Duplikat?']}
+  rows={[
+    [<code>example.com/page</code>, 'Halaman yang sama dua kali: ya, satu ditutup'],
+    [<code>example.com/Page</code>, 'Hanya beda huruf besar/kecil: ya'],
+    [<code>example.com/page#faq</code>, 'Anchor berbeda: tidak, keduanya tetap'],
+    [<code>example.com/page?ref=mail</code>, 'Parameter berbeda: tidak, keduanya tetap'],
+  ]}
+/>
+
+Itu disengaja: dua tab di bagian berbeda dari dokumen panjang, atau dua pencarian, adalah tab yang berbeda bagi Anda, jadi keduanya tetap. Hanya pengulangan sejati yang dihapus.
+
+</Section>
+
+<Section id="builtin" title="Bisakah browser menutup duplikat sendiri?">
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+Halaman bantuan Chrome tidak menjelaskan penghapus tab duplikat. Yang paling mendekati adalah **Penelusuran Tab** (Tab Search, <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>): ketik nama situs, temukan tab ganda di daftar, lalu tutup satu per satu dengan tombol tutup di tiap baris.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Menu tab Edge punya **Duplicate tab**, yang justru membuka salinan baru, kebalikan dari yang Anda inginkan. Tab ganda harus dicari secara manual dan ditutup satu per satu sambil menyusuri strip tab.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Klik kanan tab mana pun dan pilih **Tutup Tab Berganda** (Close Duplicate Tabs) untuk menutup tab ganda, atau **Close Duplicates of This Tab** untuk satu halaman saja (opsi kedua ini tampil dalam bahasa Inggris di Firefox berbahasa Indonesia).
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="prevent" title="Bagaimana agar duplikat tidak banyak sejak awal?">
+
+- **Cari sebelum membuka.** <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> di TabMerger menunjukkan apakah halaman itu sudah terbuka atau tersimpan. Selengkapnya di [menemukan satu tab di antara ratusan](/blog/find-a-tab-among-hundreds).
+- **Gabungkan jendela dengan cermat.** Tab ganda paling sering bertemu saat jendela digabungkan; hapus duplikat tepat setelah [menggabungkan jendela](/blog/merge-browser-windows).
+- **Simpan, lalu tutup.** Makin sedikit tab terbuka, makin sedikit salinan. [Rutinitas untuk tab yang terlalu banyak](/blog/manage-too-many-tabs) dari kami menjadikannya kebiasaan.
+
+<InstallCta>Gratis untuk Chrome, Edge, dan Firefox. Tidak perlu akun untuk mulai.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

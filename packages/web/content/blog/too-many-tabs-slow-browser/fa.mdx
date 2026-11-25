@@ -1,0 +1,170 @@
+export const post = {
+  slug: 'too-many-tabs-slow-browser',
+  title: 'آیا زیاد بودن زبانه‌ها کامپیوتر را کند می‌کند؟',
+  navTitle: 'زبانه‌های زیاد، کامپیوتر کند',
+  seoTitle: 'زبانه‌های زیاد مرورگر را کند کرده؟ راه حلش اینجاست',
+  description:
+    'مرورگر به خاطر زبانه‌های باز زیاد کند شده؟ هر زبانه حافظه مصرف می‌کند. تنظیم مرورگر برای به خواب بردن زبانه‌ها را روشن کنید و زبانه‌هایی را که استفاده نمی‌کنید با TabMerger ذخیره کنید و ببندید، بی‌آنکه حتی یکی را از دست بدهید.',
+  shareSummary: 'چرا زبانه‌های باز همه چیز را کند می‌کنند و چطور بدون از دست دادنشان حافظه را آزاد کنیم.',
+  dek: 'سریع‌ترین زبانه، زبانه‌ای است که باز نیست. ذخیره‌اش کنید، ببندیدش و با یک کلیک برش گردانید.',
+  published: '2026-12-04',
+  updated: '2026-12-04',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'بهینه‌سازی حافظه در Chrome حافظهٔ زبانه‌های غیرفعال را آزاد می‌کند.',
+      source: 'راهنمای Chrome',
+      href: 'https://support.google.com/chrome/answer/12929150',
+    },
+    { text: 'Edge 158 زبانه‌های غیرفعال را به خواب می‌برد؛ به‌طور پیش‌فرض پس از ۱۵ دقیقه.', source: 'edge://settings، ۲۰ نوامبر ۲۰۲۶' },
+    { text: 'Firefox 159 می‌تواند از منوی راست‌کلیک، یک زبانه را از حافظه تخلیه کند.', source: 'متن منوهای Firefox 159' },
+    { text: 'TabMerger همهٔ پنجره‌های باز را ذخیره می‌کند و بعد با یک کلیک همه را می‌بندد.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'آیا زبانه‌های زیاد حافظهٔ بیشتری مصرف می‌کنند؟',
+      answer:
+        'بله. هر صفحهٔ باز محتوایش را در حافظه نگه می‌دارد و صفحه‌هایی که اسکریپت اجرا می‌کنند یا رسانه پخش می‌کنند، پردازنده را هم مصرف می‌کنند. مقدارش به سایت‌ها بستگی دارد، پس تعداد زبانه‌ها به‌تنهایی چیزی نمی‌گوید.',
+    },
+    {
+      question: 'آیا بستن زبانه‌ها کامپیوترم را سریع‌تر می‌کند؟',
+      answer:
+        'بستن زبانه‌ها حافظه‌ای را که مصرف می‌کنند آزاد می‌کند. اول آنها را با TabMerger ذخیره کنید (ادغام با وضعیت فعلی، بعد بستن همهٔ پنجره‌ها) تا چیزی از دست نرود: هر کدام را با یک کلیک دوباره باز کنید.',
+    },
+    {
+      question: 'آیا بهینه‌سازی حافظه یا زبانه‌های خواب کافی است؟',
+      answer:
+        'این قابلیت‌ها حافظهٔ زبانه‌های بی‌کار را آزاد می‌کنند و آنها را در نوار زبانه‌ها نگه می‌دارند، که به کامپیوتر کمک می‌کند. اما زبانه‌ها هنوز آنجا هستند و باید از میانشان بگردید؛ ذخیره کردن و بستنشان به خود شما هم کمک می‌کند.',
+    },
+    {
+      question: 'چطور ببینم کدام زبانه بیشترین حافظه را مصرف می‌کند؟',
+      answer: 'در Chrome کلیدهای Shift+Esc را بزنید تا مدیر فعالیت‌های Chrome باز شود و زبانه‌هایی را پیدا کنید که بیشترین حافظه را مصرف می‌کنند.',
+    },
+  ],
+  images: [
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-light.webp', alt: 'منوی Now Open (هم‌اکنون باز) در TabMerger که گزینهٔ Close all windows (بستن همهٔ پنجره‌ها)، Close all browser windows in this group (همهٔ پنجره‌های مرورگر در این گروه را ببندید)، در آن برجسته شده، پوستهٔ روشن' },
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-dark.webp', alt: 'منوی Now Open (هم‌اکنون باز) در TabMerger که گزینهٔ Close all windows (بستن همهٔ پنجره‌ها)، Close all browser windows in this group (همهٔ پنجره‌های مرورگر در این گروه را ببندید)، در آن برجسته شده، پوستهٔ تیره' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'تنظیمات Chrome، بخش Performance (عملکرد)، با کلید Memory Saver (بهینه‌سازی حافظه)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'تنظیمات Edge، بخش Performance، با گزینهٔ Automatically put tabs to sleep روشن و تنظیم‌شده روی ۱۵ دقیقه' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/too-many-tabs-slow-browser/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/too-many-tabs-slow-browser/og.png', alt: 'کارت عنوان Do too many tabs slow your computer down?: راهنمایی از TabMerger با منوی Close all windows (بستن همهٔ پنجره‌ها)' },
+  toc: [
+    { id: 'quick', label: 'پاسخ کوتاه' },
+    { id: 'why', label: 'چرا زبانه‌ها کند می‌کنند' },
+    { id: 'tabmerger', label: 'ذخیره و بستن یک‌جا' },
+    { id: 'browser', label: 'خواباندن زبانه‌ها به دست مرورگر' },
+    { id: 'which', label: 'پیدا کردن زبانهٔ سنگین' },
+    { id: 'faq', label: 'پرسش‌های متداول' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'تنظیم حافظه',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Settings → System and performance → Performance',
+      firefox: 'راست‌کلیک روی زبانه ← تخلیهٔ زبانه از حافظه',
+    },
+  },
+}
+
+<QuickAnswer>
+
+بله: هر زبانهٔ باز حافظه مصرف می‌کند و وقتی تعدادشان به اندازهٔ کافی زیاد شود، کل کامپیوتر کند می‌شود. بیشترین اثر را **بستن زبانه‌هایی دارد که استفاده نمی‌کنید، بدون از دست دادنشان**. در [TabMerger](/features) گزینهٔ **ادغام با وضعیت فعلی** را بزنید تا همهٔ پنجره‌های باز در یک گروه ذخیره شوند، بعد **بستن همهٔ پنجره‌ها** را بزنید: حافظه آزاد می‌شود و هر زبانه فقط یک کلیک فاصله دارد. برای زبانه‌هایی که باز نگه می‌دارید، **بهینه‌سازی حافظه** (<bdi dir="ltr">Memory Saver</bdi> در Chrome) یا **زبانه‌های خواب** (در Edge) را روشن کنید.
+
+</QuickAnswer>
+
+<InstallCta>همهٔ پنجره‌ها را ذخیره کنید، همه را ببندید و حافظه را پس بگیرید. رایگان برای Chrome و Edge و Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="why" title="چرا زبانه‌های باز کامپیوتر را کند می‌کنند؟">
+
+هر زبانهٔ باز یک صفحهٔ وب زنده است: متن، تصاویر و اسکریپت‌هایش در حافظه می‌مانند و صفحه‌های پرکار (ویدیو، فیدهای زنده، برنامه‌های وب) پردازنده را هم مدام مصرف می‌کنند. وقتی مرورگر و برنامه‌های دیگرتان بیش از حافظهٔ کامپیوتر به حافظه نیاز داشته باشند، همه چیز کندتر می‌شود. خود راهنمای Chrome دربارهٔ از کار افتادن، کمبود حافظه را یکی از علت‌های آن می‌داند و اولین راه حلش بستن زبانه‌هاست.
+
+هزینهٔ هر زبانه کاملاً به سایت بستگی دارد، پس هیچ عدد امنی وجود ندارد. قاعدهٔ عملی: اگر امروز نگاهش نکرده‌اید، لازم نیست باز باشد.
+
+</Section>
+
+<Section id="tabmerger" title="چطور زبانه‌ها را ببندم بدون اینکه از دستشان بدهم؟">
+
+اینجاست که [TabMerger](/features) می‌درخشد. دو گام، همهٔ پنجره‌ها با هم:
+
+1. روی **افزودن گروه** کلیک کنید، بعد از منوی **⋯** آن گروه **ادغام با وضعیت فعلی** را بزنید: همهٔ پنجره‌ها و زبانه‌های باز در گروه ذخیره می‌شوند.
+2. در نوار کناری روی **هم‌اکنون باز** راست‌کلیک کنید و **بستن همهٔ پنجره‌ها** را بزنید. پنجره‌های مرورگر بسته می‌شوند؛ گروه همهٔ زبانه‌ها را نگه می‌دارد.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/too-many-tabs-slow-browser/tm-close-all-menu" alt="منوی Now Open (هم‌اکنون باز) در TabMerger که گزینهٔ Close all windows (بستن همهٔ پنجره‌ها)، Close all browser windows in this group (همهٔ پنجره‌های مرورگر در این گروه را ببندید)، در آن برجسته شده، پوستهٔ روشن" darkAlt="منوی Now Open (هم‌اکنون باز) در TabMerger که گزینهٔ Close all windows (بستن همهٔ پنجره‌ها)، Close all browser windows in this group (همهٔ پنجره‌های مرورگر در این گروه را ببندید)، در آن برجسته شده، پوستهٔ تیره" boxes={[{ id: 'close-all', label: 'بستن همهٔ پنجره‌ها' }]} source="TabMerger 3.16.1">بعد از ذخیره، یک گزینهٔ منو همهٔ پنجره‌های باز را می‌بندد.</ThemedScreenshot>
+
+هر وقت دوباره لازمشان داشتید، گروه را باز کنید و یک زبانه، یک پنجره یا همه را دوباره باز کنید. <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> هر زبانهٔ ذخیره‌شده را با یک کلید پیدا می‌کند و ذخیرهٔ خودکار می‌تواند ذخیره کردن را طبق یک برنامهٔ زمانی انجام دهد. عادت‌های بیشتر را در [روال ما برای زبانه‌های زیاد](/blog/manage-too-many-tabs) ببینید.
+
+</Section>
+
+<Section id="browser" title="چطور مرورگر را وادار کنم زبانه‌های بی‌کار را بخواباند؟">
+
+برای زبانه‌هایی که باز نگه می‌دارید، مرورگر می‌تواند تا وقتی از آنها استفاده نمی‌کنید حافظه‌شان را آزاد کند. با کلیک روی آنها دوباره بارگیری می‌شوند.
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+**بهینه‌سازی حافظه** (<bdi dir="ltr">Memory Saver</bdi>) را روشن کنید: **تنظیمات ← عملکرد** (<bdi dir="ltr">Settings → Performance</bdi>)، یا <bdi dir="ltr">`chrome://settings/performance`</bdi> را در نوار نشانی جای‌گذاری کنید. انتخاب کنید زبانه‌ها چقدر زود غیرفعال شوند: متوسط (<bdi dir="ltr">Moderate</bdi>)، متعادل (<bdi dir="ltr">Balanced</bdi>) یا حداکثر (<bdi dir="ltr">Maximum</bdi>).
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="تنظیمات Chrome، بخش Performance (عملکرد)، با کلید Memory Saver (بهینه‌سازی حافظه)" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">گزینهٔ <bdi dir="ltr">Memory Saver</bdi> (بهینه‌سازی حافظه) در Chrome، خاموش در یک نمایهٔ تازهٔ Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+گزینهٔ <bdi dir="ltr">**Automatically put tabs to sleep**</bdi> را در <bdi dir="ltr">**Settings → System and performance → Performance**</bdi> روشن کنید و انتخاب کنید یک زبانه چقدر صبر کند تا به خواب برود.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="تنظیمات Edge، بخش Performance، با گزینهٔ Automatically put tabs to sleep روشن و تنظیم‌شده روی ۱۵ دقیقه" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">زبانه‌های خواب Edge به‌طور پیش‌فرض روشن‌اند: زبانه‌های غیرفعال پس از ۱۵ دقیقه به خواب می‌روند.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+روی یک زبانه راست‌کلیک کنید و **تخلیهٔ زبانه از حافظه** (<bdi dir="ltr">Unload Tab</bdi>) را بزنید تا حافظه‌اش همین حالا آزاد شود؛ برای تخلیهٔ چند زبانه با هم، اول آنها را انتخاب کنید.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>زبانه‌های خواب همچنان نوار زبانه‌ها را شلوغ می‌کنند. به کامپیوتر کمک می‌کنند، نه به تمرکز شما.</Catch>
+
+</Section>
+
+<Section id="which" title="چطور زبانه‌ای را که همه چیز را کند کرده پیدا کنم؟">
+
+در Chrome کلیدهای <bdi dir="ltr"><Kbd>Shift</Kbd>+<Kbd>Esc</Kbd></bdi> را بزنید تا **مدیر فعالیت‌های Chrome** (<bdi dir="ltr">Chrome Task Manager</bdi>) باز شود و زبانه‌هایی را پیدا کنید که بیشترین حافظه را مصرف می‌کنند. سنگین‌ها را در یک گروه TabMerger ذخیره کنید و ببندید.
+
+{/* Screenshot still to capture by hand (needs a visible browser): the Chrome Task Manager window sorted by memory. */}
+
+<InstallCta>رایگان برای Chrome و Edge و Firefox. برای شروع به حساب کاربری نیازی نیست.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="پرسش‌های متداول">
+
+<Faq items={post.faq} />
+
+</Section>

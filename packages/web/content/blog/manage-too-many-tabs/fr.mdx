@@ -1,0 +1,246 @@
+export const post = {
+  slug: 'manage-too-many-tabs',
+  title: 'Trop d’onglets ouverts ? Une routine en quatre étapes qui marche dans tous les navigateurs',
+  seoTitle: 'Trop d’onglets ouverts ? Comment les gérer dans tout navigateur',
+  description:
+    'Trop d’onglets ouverts ? Une routine en quatre étapes pour Chrome, Edge et Firefox, et comment TabMerger enregistre toutes vos fenêtres en un clic pour les fermer sans rien perdre.',
+  shareSummary: 'Fermer, grouper, enregistrer, planifier : une routine d’onglets pour Chrome, Edge et Firefox.',
+  dek: 'Fermez ce qui est terminé, groupez ce qui est en cours, enregistrez le reste en un clic et laissez l’enregistrement automatique s’occuper de la suite.',
+  published: '2026-11-21',
+  updated: '2026-11-21',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'L’économiseur de mémoire de Chrome était désactivé dans un nouveau profil Chrome 157.', source: 'chrome://settings/performance, 20 nov. 2026' },
+    { text: 'Edge 158 met en veille les onglets inactifs, après 15 minutes par défaut.', source: 'edge://settings, 20 nov. 2026' },
+    {
+      text: 'Ctrl+Shift+A recherche parmi les onglets ouverts dans Chrome et Firefox.',
+      source: 'Aide Chrome ; raccourcis de Firefox 159',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Le menu d’onglet de Firefox propose « Fermer les onglets en double ».', source: 'Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'À partir de combien d’onglets y en a-t-il trop ?',
+      answer:
+        'Il n’y a pas de chiffre fixe. Il y en a trop quand vous ne pouvez plus lire les titres des onglets, quand vous ne trouvez plus un onglet sans chercher, ou quand le navigateur commence à signaler des problèmes de performances.',
+    },
+    {
+      question: 'Comment arrêter d’avoir trop d’onglets ouverts ?',
+      answer:
+        'Fermez chaque jour les onglets terminés, groupez ceux de la tâche du jour, enregistrez le reste dans un endroit où vous pouvez chercher, et faites un court tri chaque semaine.',
+    },
+    {
+      question: 'Les onglets ouverts ralentissent-ils mon ordinateur ?',
+      answer:
+        'C’est possible, car chaque page ouverte utilise de la mémoire. L’économiseur de mémoire de Chrome et les onglets en veille d’Edge libèrent la mémoire des onglets que vous n’utilisez pas ; ils se rechargent quand vous y revenez.',
+    },
+    {
+      question: 'Puis-je fermer sans risque des onglets dont j’aurai peut-être besoin plus tard ?',
+      answer:
+        'Oui, si vous les enregistrez d’abord : un dossier de favoris, un gestionnaire de sessions ou TabMerger garde l’adresse pour que vous puissiez la rouvrir. Consultez notre guide pour enregistrer tous les onglets ouverts.',
+      link: { text: 'enregistrer tous les onglets ouverts', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp', alt: 'TabMerger, « Now Open » (Ouverts maintenant), avec trois fenêtres de navigateur et 18 onglets, thème clair' },
+    { src: '/blog/manage-too-many-tabs/tm-now-open-dark.webp', alt: 'TabMerger, « Now Open » (Ouverts maintenant), avec trois fenêtres de navigateur et 18 onglets, thème sombre' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-light.webp', alt: 'Paramètres de TabMerger, onglet « Data » (Données) : « Auto-save open tabs » (Enregistrer automatiquement les onglets ouverts) activé, « When open tabs pass » (Quand les onglets ouverts dépassent) réglé sur « 30 open tabs », thème clair' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-dark.webp', alt: 'Paramètres de TabMerger, onglet « Data » (Données) : « Auto-save open tabs » (Enregistrer automatiquement les onglets ouverts) activé, « When open tabs pass » (Quand les onglets ouverts dépassent) réglé sur « 30 open tabs », thème sombre' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Paramètres de Chrome, « Performance » (Performances), avec l’interrupteur « Memory Saver » (économiseur de mémoire)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Paramètres d’Edge, « Performance », avec « Automatically put tabs to sleep » activé et réglé sur 15 minutes' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'save-tabs', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp' },
+  ogImage: { src: '/blog/manage-too-many-tabs/og.png', alt: 'Carte titrée « Too many tabs? A four-step routine that works in any browser » : un guide TabMerger, avec trois fenêtres de navigateur réunies au même endroit' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'how-many', label: 'Combien, c’est trop ?' },
+    { id: 'close', label: '1. Fermer' },
+    { id: 'group', label: '2. Grouper' },
+    { id: 'save', label: '3. Enregistrer' },
+    { id: 'schedule', label: '4. Planifier un tri' },
+    { id: 'memory', label: 'Laisser le navigateur aider' },
+    { id: 'tabmerger', label: 'Avec TabMerger' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['close', 'memory'],
+  browserFact: {
+    label: 'Réglage de la mémoire',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Paramètres → System and performance → Performance',
+      firefox: 'Clic droit sur un onglet → Décharger l’onglet',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Suivez quatre étapes, dans cet ordre : **fermez** tous les onglets dont vous avez fini de vous servir, **groupez** ceux de la tâche en cours, **enregistrez** les onglets « pour plus tard » dans un endroit où vous pouvez chercher, et **planifiez** un tri de dix minutes une fois par semaine. Cela marche dans Chrome, Edge et Firefox. L’étape qui libère le plus de place, c’est l’enregistrement, et [TabMerger](/features) le fait en un clic : toutes les fenêtres ouvertes sont enregistrées dans un groupe nommé, que vous pouvez rechercher et rouvrir à tout moment.
+
+</QuickAnswer>
+
+<InstallCta>Enregistrez toutes vos fenêtres ouvertes en un clic, puis fermez-les sans rien perdre. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="how-many" title="À partir de combien d’onglets y en a-t-il trop ?">
+
+Il n’y a pas de chiffre magique, et nous n’allons pas en inventer un. Les onglets deviennent un problème quand ils ne font plus leur travail, c’est-à-dire garder sous la main ce que vous allez bientôt reprendre. Surveillez ces signes :
+
+- La barre d’onglets n’affiche plus que des icônes et vous ne pouvez plus lire les titres.
+- Vous ouvrez une page et découvrez qu’elle était déjà ouverte, deux fois.
+- Vous gardez des onglets ouverts « au cas où », parce que les fermer donne l’impression de les perdre.
+- Le navigateur vous prévient. Chrome affiche des **Alertes concernant les problèmes de performances** (« Performance issue alerts ») qui suggèrent de désactiver des onglets quand il détecte de mauvaises performances.
+
+Le dernier signe est un problème du navigateur, et il a des solutions (plus bas). Les trois premiers sont un problème de rangement, et c’est ce que règle la routine.
+
+Les captures des navigateurs montrent l’interface en anglais. Quand le libellé français diffère, l’anglais figure entre parenthèses la première fois.
+
+</Section>
+
+<Section id="close" title="1. Fermez ce dont vous n’avez plus besoin">
+
+Commencez par le plus facile. Fermez les onglets dont le travail est terminé : la recherche qui a trouvé sa réponse, l’article déjà lu, la page de paiement.
+
+- <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> (<Kbd>⌘</Kbd>+<Kbd>W</Kbd> sur Mac) ferme l’onglet actif dans les trois navigateurs.
+- Un onglet de trop fermé ? <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> le rouvre. Plus de détails dans notre liste de [raccourcis clavier pour les onglets](/blog/tab-keyboard-shortcuts).
+
+<BrowserPanels section="close">
+<BrowserPanel browser="chrome">
+
+Appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> sur Mac) pour ouvrir la **Recherche dans les onglets** (« Tab Search ») : la liste de tous les onglets ouverts, avec un bouton de fermeture sur chaque ligne. Fermez ceux dont vous avez fini de vous servir, directement depuis la liste.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+La liste des raccourcis clavier d’Edge ne prévoit aucune touche pour rechercher parmi les onglets ouverts, alors parcourez la barre d’onglets : cliquez sur un onglet terminé et appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd>.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> affiche la liste de tous vos onglets, pour trouver et fermer ceux qui sont terminés.
+- Faites un clic droit sur n’importe quel onglet et choisissez **Fermer les onglets en double** (« Close Duplicate Tabs ») pour supprimer les doublons d’un coup.
+
+TabMerger supprime les doublons dans **toutes** les fenêtres à la fois ; voir [comment fermer les onglets en double](/blog/close-duplicate-tabs).
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>fermer n’est sans risque que pour les onglets dont vous êtes sûr. Tout ce qui vous fait hésiter passe à l’étape 3, pas à la corbeille.</Catch>
+
+</Section>
+
+<Section id="group" title="2. Groupez les onglets de la tâche du jour">
+
+Les groupes d’onglets donnent un nom et une couleur à un ensemble d’onglets, et se replient en une seule étiquette. Chrome, Edge et Firefox en ont tous : faites un clic droit sur un onglet et ajoutez-le à un nouveau groupe.
+
+Gardez un groupe par tâche sur laquelle vous travaillez vraiment aujourd’hui, et repliez ceux que vous ne regardez pas. Un groupe replié prend la place d’un seul onglet. La façon dont les groupes sont enregistrés, synchronisés et rouverts varie selon le navigateur ; notre [guide des groupes d’onglets de Chrome](/blog/chrome-tab-groups) détaille le fonctionnement et les limites.
+
+</Section>
+
+<Section id="save" title="3. Enregistrez les onglets « pour plus tard »">
+
+C’est l’étape qui réduit vraiment la barre d’onglets. Un onglet dont vous aurez peut-être besoin la semaine prochaine n’a pas besoin d’être ouvert ; il a besoin d’être retrouvable.
+
+- **Ajoutez la fenêtre aux favoris.** <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> enregistre tous les onglets de la fenêtre active dans un nouveau dossier de favoris. Notre guide pour [enregistrer tous les onglets ouverts](/blog/save-all-open-tabs) le détaille pour chaque navigateur.
+- **Utilisez un gestionnaire de sessions.** Il enregistre des fenêtres entières, avec un nom, et les restaure en un clic. Découvrez [ce que fait un gestionnaire de sessions](/blog/browser-session-manager) et en quoi il diffère des favoris.
+- **Lisez plus tard.** Si c’est un article, une liste de lecture vaut mieux qu’un onglet. Vous ne savez pas où ranger une page ? Notre [guide onglets ou favoris](/blog/tabs-vs-bookmarks) propose un tableau pour décider.
+
+Ensuite, fermez ce que vous avez enregistré. C’est tout le secret : c’est l’enregistrement qui rend la fermeture sans risque.
+
+</Section>
+
+<Section id="schedule" title="4. Inscrivez un tri hebdomadaire dans votre agenda">
+
+Les onglets reviennent toujours. Un tri court et régulier garde leur nombre bas sans effort de volonté :
+
+1. Une fois par semaine, ouvrez vos dossiers ou groupes enregistrés.
+2. Supprimez ce dont vous n’avez plus besoin. Si vous ne l’avez pas ouvert depuis un mois, vous ne le ferez probablement pas.
+3. Fermez les fenêtres que vous avez enregistrées pendant la semaine.
+
+Si la recherche fait partie de votre métier (étudiants, analystes, développeurs qui lisent de la documentation), gardez un groupe enregistré par projet et triez-le quand le projet se termine, pas avant.
+
+</Section>
+
+<Section id="memory" title="Laissez le navigateur libérer la mémoire">
+
+Les navigateurs peuvent empêcher les onglets inactifs d’utiliser de la mémoire sans les fermer. L’onglet reste dans la barre et se recharge quand vous cliquez dessus.
+
+<BrowserPanels section="memory">
+<BrowserPanel browser="chrome">
+
+Activez l’**économiseur de mémoire** (« Memory Saver ») : **Paramètres → Performances** (« Settings → Performance »), ou collez `chrome://settings/performance` dans la barre d’adresse.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Paramètres de Chrome, « Performance » (Performances), avec l’interrupteur « Memory Saver » (économiseur de mémoire)" width={1600} height={524} eager boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">« Memory Saver » (économiseur de mémoire) de Chrome, désactivé dans un nouveau profil Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Activez **Automatically put tabs to sleep** dans **Paramètres → System and performance → Performance**, et choisissez combien de temps un onglet attend avant de se mettre en veille.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Paramètres d’Edge, « Performance », avec « Automatically put tabs to sleep » activé et réglé sur 15 minutes" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Les onglets en veille d’Edge, activés par défaut : les onglets inactifs se mettent en veille au bout de 15 minutes.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Faites un clic droit sur un onglet et choisissez **Décharger l’onglet** (« Unload Tab ») pour libérer sa mémoire à la main.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>cela aide l’ordinateur, pas vous. Cinquante onglets en veille restent cinquante onglets à parcourir. Utilisez-le en plus de la routine, pas à sa place.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="Le faire avec TabMerger">
+
+[TabMerger](/features), notre extension gratuite pour Chrome, Edge et Firefox, transforme les étapes 3 et 4 en quelques clics. **Ouverts maintenant** affiche toutes les fenêtres ouvertes et leurs onglets au même endroit, pour voir toute la pile d’un coup. Enregistrez-les tous dans un groupe nommé avec **Fusionner avec l’actuel**, fermez les fenêtres, et retrouvez n’importe quel onglet d’une touche avec <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>, qu’il soit ouvert, enregistré ou récemment fermé. Un ordinateur lent est souvent le premier signe d’un trop grand nombre d’onglets ; [voici comment enregistrer et fermer libère la mémoire](/blog/too-many-tabs-slow-browser).
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-now-open" alt="TabMerger, « Now Open » (Ouverts maintenant), avec trois fenêtres de navigateur et 18 onglets, thème clair" darkAlt="TabMerger, « Now Open » (Ouverts maintenant), avec trois fenêtres de navigateur et 18 onglets, thème sombre" boxes={[{ id: 'now-open-summary', label: 'Fenêtres et onglets ouverts' }]} source="TabMerger 3.16.1">« Now Open » (Ouverts maintenant) : trois fenêtres et 18 onglets, avant le tri.</ThemedScreenshot>
+
+Pour le tri hebdomadaire, **Paramètres → Données → Enregistrer automatiquement les onglets ouverts** peut enregistrer vos onglets ouverts dans un nouveau groupe selon un horaire, ou dès que vous dépassez 20, 30, 50, 75 ou 100 onglets ouverts. L’offre gratuite garde les 2 enregistrements automatiques les plus récents, qui comptent dans ses 5 groupes et 50 onglets ; Pro les garde tous. Pour une routine qui empêche la pile de revenir, voir [une routine quotidienne avec TabMerger](/blog/tabmerger-daily-workflow).
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-auto-save-threshold" alt="Paramètres de TabMerger, onglet « Data » (Données) : « Auto-save open tabs » (Enregistrer automatiquement les onglets ouverts) activé, « When open tabs pass » (Quand les onglets ouverts dépassent) réglé sur « 30 open tabs », thème clair" darkAlt="Paramètres de TabMerger, onglet « Data » (Données) : « Auto-save open tabs » (Enregistrer automatiquement les onglets ouverts) activé, « When open tabs pass » (Quand les onglets ouverts dépassent) réglé sur « 30 open tabs », thème sombre" boxes={[{ id: 'threshold', label: 'Quand les onglets ouverts dépassent' }]} source="TabMerger 3.16.1">« Auto-save open tabs » (Enregistrer automatiquement les onglets ouverts), réglé pour se déclencher dès que plus de 30 onglets sont ouverts.</ThemedScreenshot>
+
+Les onglets enregistrés reçoivent aussi un point ambre une fois qu’ils dépassent l’âge que vous choisissez (7, 14, 30 ou 60 jours), et le menu **⋯** d’un groupe propose **Dédupliquer les onglets**.
+
+<InstallCta>Gratuit pour Chrome, Edge et Firefox. Aucun compte nécessaire pour commencer.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

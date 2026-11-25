@@ -1,0 +1,166 @@
+export const post = {
+  slug: 'import-tabs-into-tabmerger',
+  title: '将标签页导入 TabMerger：OneTab 列表、书签和备份',
+  navTitle: '将标签页导入 TabMerger',
+  seoTitle: '导入 OneTab 列表、书签和备份到 TabMerger',
+  description:
+    '把保存的标签页一起带走：TabMerger 可以导入 OneTab 导出内容、纯链接列表、浏览器书签文件以及它自己的 JSON 备份。每种格式会变成什么，哪些内容会被跳过，一文说清。',
+  shareSummary: 'OneTab 列表、书签文件和 TabMerger 备份，一步变成分组。',
+  dek: '换工具不该意味着从头再来。把每个保存的列表都带上。',
+  published: '2026-12-19',
+  updated: '2026-12-19',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: '可导入 .txt（OneTab 或纯链接列表）、.html（书签）和 .json（TabMerger）。', source: 'TabMerger 3.16.1' },
+    { text: '每个 OneTab 列表都会成为一个独立的分组。', source: 'TabMerger 3.16.1' },
+    { text: '导入只会添加分组，绝不会替换你已有的内容。', source: 'TabMerger 3.16.1' },
+    { text: '免费版即可导入和导出。', source: 'TabMerger 价格', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '如何将 OneTab 导入 TabMerger？',
+      answer:
+        '在 OneTab 中选择“导入与导出”，复制文本并保存为 .txt 文件。在 TabMerger 中打开 设置 → 数据 → 导入文件，选择该文件。每个 OneTab 列表都会成为一个独立的分组。',
+    },
+    {
+      question: '可以把书签导入 TabMerger 吗？',
+      answer:
+        '可以。把书签导出为 HTML 文件，然后在 设置 → 数据 中导入。文件顶层的每个文件夹都会成为以其名称命名的分组，里面的子文件夹会并入该分组。',
+    },
+    {
+      question: '导入会替换我的分组吗？',
+      answer: '不会。导入前会先确认并告诉你找到了多少个分组，之后总是把文件中的分组添加到你现有分组的旁边。',
+    },
+    {
+      question: '无法导入的链接会怎样？',
+      answer: '不是真实网址的条目（例如书签小工具）会被跳过，导入后的提示会告诉你有多少条未导入。',
+    },
+  ],
+  images: [
+    { src: '/blog/import-tabs-into-tabmerger/tm-data-tab-light.webp', alt: 'TabMerger 的“Settings”（设置）中的“Data”（数据）：“Import & export”（导入与导出）部分，含“Export JSON”（导出 JSON）和“Import file”（导入文件），浅色主题' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-data-tab-dark.webp', alt: 'TabMerger 的“Settings”（设置）中的“Data”（数据）：“Import & export”（导入与导出）部分，含“Export JSON”（导出 JSON）和“Import file”（导入文件），深色主题' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-light.webp', alt: 'TabMerger 针对文件 onetab-export.txt 询问“Import 2 groups?”（导入 2 个分组？），浅色主题' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-dark.webp', alt: 'TabMerger 针对文件 onetab-export.txt 询问“Import 2 groups?”（导入 2 个分组？），深色主题' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-imported-light.webp', alt: '两个 OneTab 列表被导入为分组“Imported 1”和“Imported 2”，浅色主题' },
+    { src: '/blog/import-tabs-into-tabmerger/tm-imported-dark.webp', alt: '两个 OneTab 列表被导入为分组“Imported 1”和“Imported 2”，深色主题' },
+  ],
+  tags: ['tabmerger-guides', 'save-tabs', 'bookmarks', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/import-tabs-into-tabmerger/tm-import-confirm-light.webp' },
+  ogImage: { src: '/blog/import-tabs-into-tabmerger/og.png', alt: '将标签页导入 TabMerger：两个 OneTab 列表被导入为分组' },
+  toc: [
+    { id: 'quick', label: '简要回答' },
+    { id: 'problem', label: '困在别处的标签页' },
+    { id: 'why', label: '导入为何这样设计' },
+    { id: 'formats', label: '所有格式' },
+    { id: 'steps', label: '导入文件' },
+    { id: 'benefit', label: '你能得到什么' },
+    { id: 'habits', label: '好习惯' },
+    { id: 'plans', label: '免费版与 Pro' },
+    { id: 'faq', label: '常见问题' },
+  ],
+}
+
+<QuickAnswer>
+
+打开 [TabMerger](/features)，进入 **设置 → 数据**（Settings → Data），点击 **导入文件**（Import file）。选择 OneTab 导出内容或纯链接列表（`.txt`）、书签文件（`.html`）或 TabMerger 备份（`.json`）。TabMerger 会显示找到了多少个分组，你确认后，它会把这些分组添加到你自己的分组旁边。每个 OneTab 列表和每个顶层书签文件夹都会成为一个独立的分组。
+
+</QuickAnswer>
+
+<InstallCta>把每个保存的列表都带过来。免费支持 Chrome、Edge 和 Firefox。</InstallCta>
+
+<Section id="problem" title="保存的标签页，困在了别处">
+
+多年积攒的 OneTab 列表。每次旅行一个书签文件夹。一份来自旧笔记本电脑的备份。它们都保存着，却没法在一个地方统一搜索；而手动搬运，一个链接一个链接地挪，是那种永远不会去做的活。
+
+有了导入，这件事只需要一个文件和一次点击。
+
+</Section>
+
+<Section id="why" title="导入为什么这样工作">
+
+- **只做添加**。导入会把文件中的分组放在你的分组旁边，从不改动你已有的内容，所以拿一个文件试试也很安全。
+- **先问再做**。添加任何内容之前，TabMerger 会告诉你在哪个文件中找到了多少个分组，并等你点击 **导入**（Import）。
+- **逐条检查**。只有真实的网址才会导入。书签小工具、`javascript:` 链接以及任何不是绝对地址的内容都会被跳过并计数，随后的提示会告诉你数量。
+- **文件有结构就保留结构**。TabMerger 备份会恢复窗口、名称、颜色、备注、星标和提醒时间；其他工具的格式则按每个列表或文件夹生成一个分组。
+- **预先检查套餐限额**。在免费版中，如果一次导入会超过 5 个分组或 50 个标签页，它会在添加任何内容之前停止，并告诉你文件里有什么。
+
+</Section>
+
+<Section id="formats" title="所有格式，以及导入后的样子">
+
+<ComparisonTable
+  head={['文件', '是什么', '导入结果']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['.txt（OneTab）', 'OneTab 的“导入与导出”文本：每个链接一行“地址 | 标题”，列表之间空一行', '每个列表一个分组（“Imported 1”“Imported 2”……），保留标题'],
+    ['.txt（纯链接列表）', '网址，每行一个', '每段连续的行一个分组；网址同时用作标题'],
+    ['.html（书签）', '从浏览器导出的书签或收藏夹', '每个顶层文件夹一个分组，以文件夹命名；里面的文件夹并入其中'],
+    ['.json（TabMerger）', 'TabMerger 中通过“导出 JSON”生成的文件', '你的分组，包括窗口、名称、颜色、备注、星标和提醒时间'],
+  ]}
+/>
+
+有两点值得了解：
+
+- **书签**：只有文件顶层的文件夹会成为分组，不在任何文件夹中的链接不会导入。从 Chrome 或 Edge 完整导出时，书签栏会作为一个分组导入（其子文件夹并入其中），而 **其他书签**（Other bookmarks）或 **其他收藏夹**（Other favorites）中的每个文件夹都会成为独立的分组。
+- **TabMerger 备份**：文件中的 **当前打开**（Now Open），也就是导出时打开着的标签页，不会被导入。如果希望文件里包含它们，请在导出前把打开的标签页保存到一个分组中。
+
+</Section>
+
+<Section id="steps" title="导入文件">
+
+1. 打开 TabMerger，然后进入 **设置** → **数据**。
+2. 在 **导入与导出**（Import & export）下点击 **导入文件**，选择你的 `.txt`、`.html` 或 `.json` 文件。
+3. 核对数量后点击 **导入**。新分组会出现在侧边栏中，可以随意重命名。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="导入 OneTab 导出内容" steps={[{ title: '设置 → 数据' }, { title: '确认' }, { title: '你的分组' }]}>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-data-tab" alt="TabMerger 的“Settings”（设置）中的“Data”（数据）：“Import & export”（导入与导出）部分，含“Export JSON”（导出 JSON）和“Import file”（导入文件），浅色主题" darkAlt="TabMerger 的“Settings”（设置）中的“Data”（数据）：“Import & export”（导入与导出）部分，含“Export JSON”（导出 JSON）和“Import file”（导入文件），深色主题" boxes={[{ id: 'import', label: '导入文件' }, { id: 'export', label: '导出你的分组' }]} source="TabMerger 3.16.1">导入和导出并排位于 Settings → Data（设置 → 数据）中。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-import-confirm" alt="TabMerger 针对文件 onetab-export.txt 询问“Import 2 groups?”（导入 2 个分组？），浅色主题" darkAlt="TabMerger 针对文件 onetab-export.txt 询问“Import 2 groups?”（导入 2 个分组？），深色主题" boxes={[{ id: 'import-confirm', label: '导入 2 个分组' }]} source="TabMerger 3.16.1">找到了两个 OneTab 列表；在你确认之前不会添加任何内容。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/import-tabs-into-tabmerger/tm-imported" alt="两个 OneTab 列表被导入为分组“Imported 1”和“Imported 2”，浅色主题" darkAlt="两个 OneTab 列表被导入为分组“Imported 1”和“Imported 2”，深色主题" boxes={[{ id: 'imported', label: '每个列表一个分组' }]} source="TabMerger 3.16.1">每个列表现在都是一个分组，可以重命名、搜索和同步。</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="benefit" title="你能得到什么">
+
+你在别处保存的一切，几分钟内集中到一处：可用 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> 搜索，按分组整理，升级到 Pro 后还能在每台电脑上使用。专门从 OneTab 迁移过来？请看 [OneTab 替代品](/blog/onetab-alternatives)。从 Edge 集合迁移过来？请看 [用什么替代 Edge 集合](/blog/edge-collections-replacement)。
+
+</Section>
+
+<Section id="habits" title="好习惯">
+
+- **及时重命名导入的分组**；“Imported 1”只是一个占位名称。
+- **分批导入大型存档**（免费版），或先升级，因为超过限额的导入会整体停止。
+- **保留一份 TabMerger 导出文件**作为自己的备份：**导出 JSON**（Export JSON）会把所有分组保存到一个文件中。文件里有什么，见[导出打开的标签页](/blog/export-open-tabs)。
+- **导入后排序**：使用分组 **⋯** 菜单中的 **按标题排序**（Sort by title）或 **按网址排序**（Sort by URL），并用 **去除重复标签页**（Deduplicate tabs）清除重复项。
+
+</Section>
+
+<Section id="plans" title="免费版与 Pro">
+
+<ComparisonTable
+  head={['', '免费版', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['导入和导出', '是', '是'],
+    ['一次导入能添加多少', '总共最多 5 个分组和 50 个标签页', '无限制'],
+    ['在其他设备上使用导入的分组', '否', '是，端到端加密'],
+  ]}
+/>
+
+导入和导出对所有人免费，无需账号。[Pro](/pricing) 取消大小限制，并同步你导入的内容。
+
+<InstallCta>一分钟内导入你的第一个列表。免费支持 Chrome、Edge 和 Firefox。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

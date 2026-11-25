@@ -1,0 +1,190 @@
+export const post = {
+  slug: 'sync-tabs-between-devices-with-tabmerger',
+  title: 'Sinkronkan tab antarperangkat, dengan enkripsi end-to-end',
+  navTitle: 'Sinkronkan tab antarperangkat',
+  seoTitle: 'Cara Sinkronkan Tab Antarkomputer dengan Enkripsi End-to-End',
+  description:
+    'Grup TabMerger Anda ada di setiap komputer, dienkripsi dengan frasa sandi yang hanya Anda ketahui. Cara menyiapkan sinkronisasi, apa saja yang dicakupnya, dan apa persisnya yang bisa dan tidak bisa dilihat server kami.',
+  shareSummary: 'Grup Anda di setiap komputer, tak terbaca bahkan oleh server kami.',
+  dek: 'Grup yang sama di rumah dan di kantor, dan tidak ada orang lain yang bisa membacanya. Bahkan kami pun tidak.',
+  published: '2026-12-18',
+  updated: '2026-12-18',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Sinkronisasi dienkripsi end-to-end: AES-256-GCM, dengan kunci yang dilindungi frasa sandi Anda.', source: 'Kode sumber TabMerger 3.16.1' },
+    { text: 'Alamat, judul, dan catatan tab serta nama grup tidak pernah bisa dibaca oleh server kami.', source: 'Kode sumber TabMerger 3.16.1' },
+    { text: 'Setiap perangkat baru meminta frasa sandi sekali saja.', source: 'TabMerger 3.16.1' },
+    { text: 'Sinkronisasi termasuk dalam Pro: US$3.99 per bulan atau US$42.99 per tahun.', source: 'Harga TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Bagaimana cara menyinkronkan tab di antara dua komputer?',
+      answer:
+        'Masuk ke TabMerger dengan akun Pro di kedua komputer. Komputer pertama meminta Anda memilih frasa sandi enkripsi; komputer kedua menanyakannya sekali. Sejak itu, grup dan sesi Anda tersinkron di antara keduanya.',
+    },
+    {
+      question: 'Bisakah TabMerger melihat tab saya?',
+      answer:
+        'Tidak. Alamat, judul, dan catatan tab, nama grup dan sesi, serta tab yang terbuka di perangkat Anda dienkripsi di browser sebelum diunggah, dan kuncinya tidak pernah sampai ke server kami. Server hanya melihat apa yang dibutuhkannya untuk menyimpan baris: misalnya warna grup, apakah grup diberi bintang atau diarsipkan, kapan grup berubah, dan berapa jendela serta tab di dalamnya.',
+    },
+    {
+      question: 'Bagaimana jika saya lupa frasa sandi enkripsi?',
+      answer: 'Tidak ada yang bisa memulihkannya, termasuk TabMerger, karena frasa sandi tidak pernah meninggalkan perangkat Anda. Grup Anda tetap ada di perangkat yang sudah dibuka kuncinya, jadi simpan frasa sandi di tempat yang aman.',
+    },
+    {
+      question: 'Apa saja yang disinkronkan?',
+      answer:
+        'Grup tersimpan (jendela, tab, catatan, waktu pengingat), sesi tersimpan, dan cadangan otomatis, ditambah tab yang terbuka di setiap perangkat untuk Pengaturan → Perangkat. Pengaturan, aturan URL, dan tab yang baru ditutup tetap di masing-masing perangkat.',
+    },
+    {
+      question: 'Apakah sinkronisasi gratis?',
+      answer: 'Tidak, sinkronisasi termasuk dalam Pro. Paket Free menyimpan semuanya di perangkat Anda; server kami menolak unggahan sinkronisasi dari akun tanpa Pro.',
+    },
+  ],
+  images: [
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in-light.webp', alt: 'Dialog Sign In (Masuk) TabMerger dengan pilihan masuk lewat Google atau email dan kata sandi, tema terang' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in-dark.webp', alt: 'Dialog Sign In (Masuk) TabMerger dengan pilihan masuk lewat Google atau email dan kata sandi, tema gelap' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption-light.webp', alt: 'Dialog Set up encryption (Atur enkripsi) TabMerger yang meminta frasa sandi baru dua kali, tema terang' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption-dark.webp', alt: 'Dialog Set up encryption (Atur enkripsi) TabMerger yang meminta frasa sandi baru dua kali, tema gelap' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock-light.webp', alt: 'Dialog Unlock encryption (Buka kunci enkripsi) TabMerger di browser kedua, meminta frasa sandi sekali, tema terang' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock-dark.webp', alt: 'Dialog Unlock encryption (Buka kunci enkripsi) TabMerger di browser kedua, meminta frasa sandi sekali, tema gelap' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups-light.webp', alt: 'Browser kedua setelah dibuka kuncinya, menampilkan grup Work dan Reading list dari browser pertama, tema terang' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups-dark.webp', alt: 'Browser kedua setelah dibuka kuncinya, menampilkan grup Work dan Reading list dari browser pertama, tema gelap' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-light.webp', alt: 'TabMerger, Settings → Devices (Pengaturan → Perangkat): perangkat Home laptop dengan 4 tab terbuka dan tombol Restore 4 tabs (Pulihkan 4 tab), tema terang' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-dark.webp', alt: 'TabMerger, Settings → Devices (Pengaturan → Perangkat): perangkat Home laptop dengan 4 tab terbuka dan tombol Restore 4 tabs (Pulihkan 4 tab), tema gelap' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync-light.webp', alt: 'TabMerger, Settings → General (Pengaturan → Umum), dengan sakelar Cloud sync (Sinkronisasi cloud) menyala, tema terang' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync-dark.webp', alt: 'TabMerger, Settings → General (Pengaturan → Umum), dengan sakelar Cloud sync (Sinkronisasi cloud) menyala, tema gelap' },
+  ],
+  tags: ['tabmerger-guides', 'cross-browser', 'session-management', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-light.webp' },
+  ogImage: { src: '/blog/sync-tabs-between-devices-with-tabmerger/og.png', alt: 'Sinkronkan tab antarperangkat dengan TabMerger: grup yang sama di browser kedua setelah dibuka kuncinya' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'problem', label: 'Dua komputer, dua kumpulan tab' },
+    { id: 'why', label: 'Mengapa sinkronisasi bekerja seperti ini' },
+    { id: 'server', label: 'Apa yang dilihat server kami' },
+    { id: 'steps', label: 'Cara menyiapkan' },
+    { id: 'devices', label: 'Tab di perangkat lain' },
+    { id: 'benefit', label: 'Apa yang Anda dapatkan' },
+    { id: 'habits', label: 'Kebiasaan yang baik' },
+    { id: 'plans', label: 'Free atau Pro' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Masuk ke [TabMerger](/features) dengan akun Pro. Komputer pertama meminta Anda memilih frasa sandi enkripsi; setiap komputer lain menanyakannya sekali. Setelah itu grup, sesi, dan cadangan Anda tersinkron di antara semuanya, dienkripsi di browser sebelum keluar dari browser, sehingga server kami hanya menyimpan data yang tidak bisa dibacanya. **Pengaturan → Perangkat** (Settings → Devices) bahkan menampilkan apa yang sedang terbuka di komputer Anda yang lain.
+
+</QuickAnswer>
+
+<InstallCta>Grup yang sama di setiap komputer, hanya bisa dibaca oleh Anda. Mulai gratis, sinkronisasi dengan Pro.</InstallCta>
+
+<Section id="problem" title="Dua komputer, dua kumpulan tab">
+
+Malam hari Anda mencari info sebelum membeli sesuatu di laptop rumah. Keesokan paginya di kantor, tab-tab itu ada di komputer yang tertinggal di rumah. Anda menyusunnya lagi dari ingatan, atau mengirim tautan ke email sendiri. Sinkronisasi browser membantu jika setiap komputer memakai browser dan akun yang sama, tetapi komputer kantor mungkin memakai Edge dan laptop Anda Chrome, atau akun kantor dibatasi.
+
+Sinkronisasi TabMerger bekerja di Chrome, Edge, dan Firefox dengan satu akun TabMerger, dan membawa grup yang sudah Anda tata, bukan sekadar apa yang kebetulan sedang terbuka.
+
+</Section>
+
+<Section id="why" title="Mengapa sinkronisasi TabMerger bekerja seperti ini">
+
+- **Dienkripsi sebelum keluar dari browser Anda.** Isi grup dan sesi dienkripsi dengan AES-256-GCM di browser Anda. Kuncinya acak; di server kami kunci itu hanya disimpan dalam keadaan terbungkus (terenkripsi) dengan kunci yang diturunkan dari frasa sandi Anda (PBKDF2-SHA256, 600.000 putaran). Frasa sandinya sendiri tidak pernah dikirim ke mana pun.
+- **Wajib, bukan pengaturan.** Setiap akun Pro menyinkronkan data secara terenkripsi. Tidak ada mode teks biasa yang bisa tidak sengaja diaktifkan.
+- **Satu langkah frasa sandi per perangkat.** Perangkat baru menanyakan frasa sandi sekali; setelah itu tetap terbuka kuncinya sampai Anda keluar, jadi sinkronisasi tidak terus mengganggu.
+- **Disimpan di perangkat dulu.** Semuanya ditulis secara lokal sebelum diunggah. Saat offline, semuanya tetap berjalan; perubahan dikirim pada kesempatan berikutnya.
+- **Perubahan terbaru yang menang.** Jika grup yang sama diubah di dua perangkat, perubahan yang paling baru yang dipertahankan.
+- **Menyinkronkan selama TabMerger terbuka:** saat Anda membukanya, setiap 30 detik selama tetap terbuka, dan begitu perubahan dari perangkat lain tiba.
+
+</Section>
+
+<Section id="server" title="Apa yang bisa dan tidak bisa dilihat server kami">
+
+<ComparisonTable
+  head={['', 'Disimpan terenkripsi (tidak terbaca oleh kami)', 'Disimpan dalam bentuk terbaca']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['Grup', 'Nama, catatan, setiap jendela dan tab (judul, alamat, catatan tab, waktu pengingat)', 'Warna, berbintang, diarsipkan, perubahan terakhir, jumlah jendela dan tab, urutan'],
+    ['Sesi dan cadangan', 'Nama, deskripsi, warna, apakah itu cadangan, grup di dalamnya', 'Kapan disimpan'],
+    ['Perangkat', 'Tab yang terbuka di setiap perangkat', 'Nama perangkat, waktu terakhir aktif'],
+    ['Akun', '-', 'Alamat email dan paket'],
+  ]}
+/>
+
+Kolom yang terbaca adalah yang dibutuhkan server untuk menjaga urutan baris dan menampilkan jumlah; tidak satu pun yang menunjukkan halaman apa yang Anda simpan. Tautan berbagi memakai kunci terpisah yang hanya ada di tautan itu sendiri; lihat [membagikan beberapa tab sekaligus](/blog/share-a-set-of-tabs).
+
+</Section>
+
+<Section id="steps" title="Cara menyiapkan">
+
+1. Di komputer pertama, buka TabMerger, lalu menu akun (kanan atas) → **Masuk** (Sign in). Gunakan Google, email dan kata sandi, atau magic link.
+2. **Atur enkripsi** (Set up encryption) muncul. Pilih frasa sandi (minimal 8 karakter, tanpa spasi), ketik dua kali, lalu konfirmasi. Grup Anda mulai tersinkron.
+3. Di komputer kedua, instal TabMerger dan masuk dengan akun yang sama.
+4. **Buka kunci enkripsi** (Unlock encryption) muncul. Masukkan frasa sandi sekali. Grup Anda muncul sesaat kemudian.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Menyinkronkan komputer kedua" steps={[{ title: 'Masuk' }, { title: 'Frasa sandi' }, { title: 'Buka kunci' }, { title: 'Tersinkron' }]}>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in" alt="Dialog Sign In (Masuk) TabMerger dengan pilihan masuk lewat Google atau email dan kata sandi, tema terang" darkAlt="Dialog Sign In (Masuk) TabMerger dengan pilihan masuk lewat Google atau email dan kata sandi, tema gelap" boxes={[{ id: 'email', label: 'Email akun Anda' }]} source="TabMerger 3.16.1">Masuk dari menu akun.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption" alt="Dialog Set up encryption (Atur enkripsi) TabMerger yang meminta frasa sandi baru dua kali, tema terang" darkAlt="Dialog Set up encryption (Atur enkripsi) TabMerger yang meminta frasa sandi baru dua kali, tema gelap" boxes={[{ id: 'passphrase', label: 'Hanya Anda yang tahu' }]} source="TabMerger 3.16.1">Perangkat pertama: pilih frasa sandi yang melindungi kunci Anda.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock" alt="Dialog Unlock encryption (Buka kunci enkripsi) TabMerger di browser kedua, meminta frasa sandi sekali, tema terang" darkAlt="Dialog Unlock encryption (Buka kunci enkripsi) TabMerger di browser kedua, meminta frasa sandi sekali, tema gelap" boxes={[{ id: 'unlock', label: 'Sekali per perangkat' }]} source="TabMerger 3.16.1">Setiap perangkat lain: masukkan sekali.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups" alt="Browser kedua setelah dibuka kuncinya, menampilkan grup Work dan Reading list dari browser pertama, tema terang" darkAlt="Browser kedua setelah dibuka kuncinya, menampilkan grup Work dan Reading list dari browser pertama, tema gelap" boxes={[{ id: 'groups', label: 'Dari perangkat lain' }]} source="TabMerger 3.16.1">Browser baru, beberapa detik kemudian: grup dari komputer pertama, didekripsi secara lokal.</ThemedScreenshot>
+</Carousel>
+
+Sinkronisasi bisa dijeda per browser dengan sakelar **Sinkronisasi cloud** (Cloud sync) di **Pengaturan → Umum** (Settings → General). Di tabmerger.com, dasbor menampilkan grup yang tersinkron setelah Anda memasukkan frasa sandi yang sama.
+
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync" alt="TabMerger, Settings → General (Pengaturan → Umum), dengan sakelar Cloud sync (Sinkronisasi cloud) menyala, tema terang" darkAlt="TabMerger, Settings → General (Pengaturan → Umum), dengan sakelar Cloud sync (Sinkronisasi cloud) menyala, tema gelap" boxes={[{ id: 'sync', label: 'Sinkronisasi cloud' }]} source="TabMerger 3.16.1">Menyala untuk setiap akun Pro; matikan di browser yang tidak perlu disinkronkan.</ThemedScreenshot>
+
+</Section>
+
+<Section id="devices" title="Lihat apa yang terbuka di perangkat lain">
+
+**Pengaturan → Perangkat** menampilkan setiap browser di akun Anda yang aktif dalam 30 hari terakhir, beserta jendela dan tab yang terbuka di dalamnya. Bentangkan salah satunya untuk membuka satu tab, atau gunakan **Pulihkan** (Restore) untuk membuka semuanya di sini. Beri nama perangkat ini agar daftarnya mudah dibaca (“Laptop rumah”), atau hapus perangkat yang tidak lagi Anda pakai.
+
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-devices" alt="TabMerger, Settings → Devices (Pengaturan → Perangkat): perangkat Home laptop dengan 4 tab terbuka dan tombol Restore 4 tabs (Pulihkan 4 tab), tema terang" darkAlt="TabMerger, Settings → Devices (Pengaturan → Perangkat): perangkat Home laptop dengan 4 tab terbuka dan tombol Restore 4 tabs (Pulihkan 4 tab), tema gelap" boxes={[{ id: 'other-device', label: 'Browser Anda yang lain' }, { id: 'restore', label: 'Buka tabnya di sini' }]} source="TabMerger 3.16.1">Tab yang terbuka di laptop, dilihat dari komputer kantor. Terenkripsi selama perjalanan.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Apa yang Anda dapatkan">
+
+Tinggalkan satu komputer dan lanjutkan di komputer lain dengan grup, sesi, dan catatan yang sama, apa pun browsernya. Dan karena isinya dienkripsi dengan kunci yang hanya Anda pegang, kebocoran database kami hanya akan memperlihatkan warna dan jumlah, bukan tab Anda.
+
+</Section>
+
+<Section id="habits" title="Kebiasaan yang baik">
+
+- **Simpan frasa sandi di pengelola kata sandi Anda.** Tidak ada yang bisa meresetnya untuk Anda.
+- **Beri nama setiap perangkat** di Pengaturan → Perangkat.
+- **Buka TabMerger sekali saat mulai bekerja** agar perubahan terbaru diambil.
+- **Hal yang khusus untuk browser tetap di tiap perangkat:** aturan URL dan pengaturan memang disimpan per browser. Untuk cara lain membawa tab, lihat [memindahkan tab ke komputer lain](/blog/move-tabs-between-computers).
+
+</Section>
+
+<Section id="plans" title="Free atau Pro">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Sinkronisasi grup, sesi, dan cadangan', 'Tidak (tetap di perangkat Anda)', 'Ya, terenkripsi end-to-end'],
+    ['Pengaturan → Perangkat', 'Tidak', 'Ya'],
+    ['Harga', 'US$0', 'US$3.99 per bulan atau US$42.99 per tahun'],
+  ]}
+/>
+
+Sinkronisasi ditegakkan oleh server, bukan hanya oleh aplikasi: database menolak unggahan sinkronisasi dari akun mana pun tanpa paket Pro yang aktif. Jika paket berakhir, tidak ada yang dihapus; perubahan baru hanya berhenti tersinkron. Detailnya ada di [halaman harga](/pricing) dan di [TabMerger Free vs Pro](/blog/tabmerger-free-vs-pro).
+
+<InstallCta>Mulai gratis hari ini, lalu tambahkan sinkronisasi terenkripsi saat Anda butuh komputer kedua.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

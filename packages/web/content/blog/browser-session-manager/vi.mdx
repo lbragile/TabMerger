@@ -1,0 +1,197 @@
+export const post = {
+  slug: 'browser-session-manager',
+  title: 'Trình quản lý phiên trình duyệt là gì, và bạn có cần không?',
+  navTitle: 'Trình quản lý phiên là gì?',
+  seoTitle: 'Tiện ích quản lý phiên: phiên khác dấu trang thế nào',
+  description:
+    'Phiên tab là gì, tiện ích lưu phiên trình duyệt làm được gì mà dấu trang và lịch sử không làm được, nên tìm gì ở một tiện ích như vậy, và khi nào chỉ cần trình duyệt là đủ.',
+  shareSummary: 'Phiên tab, trình quản lý phiên và dấu trang: mỗi thứ lưu gì, và khi nào bạn cần thứ nào.',
+  dek: 'Trình duyệt của bạn đã giữ sẵn một phiên. Trình quản lý phiên giữ bao nhiêu tùy bạn, kèm tên.',
+  published: '2026-11-25',
+  updated: '2026-11-25',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Tiện ích chỉ liệt kê được tối đa 25 tab và cửa sổ vừa đóng.',
+      source: 'Tài liệu chrome.sessions',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+    },
+    { text: 'Session Buddy lưu dữ liệu trên thiết bị và không có đồng bộ.', source: 'Trang cửa hàng của Session Buddy, 20/11/2026' },
+    { text: 'Tab Session Manager tự động lưu khi đóng cửa sổ và theo hẹn giờ.', source: 'Trang cửa hàng của tiện ích này, 20/11/2026' },
+    { text: 'Khôi phục khi khởi động chỉ giữ phiên gần nhất.', source: 'Cài đặt của Chrome, Edge và Firefox' },
+  ],
+  faq: [
+    {
+      question: 'Phiên tab là gì?',
+      answer:
+        'Là các cửa sổ và tab bạn đang mở tại một thời điểm, theo đúng thứ tự. Trình duyệt giữ phiên hiện tại để mở lại sau khi khởi động lại; trình quản lý phiên lưu nó dưới một cái tên.',
+    },
+    {
+      question: 'Trình quản lý phiên khác dấu trang ở điểm nào?',
+      answer:
+        'Dấu trang lưu từng trang riêng lẻ vào thư mục. Trình quản lý phiên lưu cả cửa sổ, giữ nguyên cấu trúc, có thể làm việc đó tự động, rồi mở lại chúng dưới dạng cửa sổ.',
+    },
+    {
+      question: 'Tôi có cần tiện ích quản lý phiên không?',
+      answer:
+        'Không, nếu bạn làm việc trong một cửa sổ và đã bật cài đặt khi khởi động. Có, nếu bạn xoay xở nhiều dự án cùng lúc, mất tab vì trình duyệt gặp sự cố, hoặc muốn lấy lại các cửa sổ của hôm qua.',
+    },
+    {
+      question: 'Trình quản lý phiên có riêng tư không?',
+      answer:
+        'Tùy vào nơi chúng lưu dữ liệu. Một số lưu mọi thứ trên thiết bị của bạn; loại có đồng bộ thì gửi dữ liệu lên máy chủ, nên hãy kiểm tra xem dữ liệu có được mã hóa đầu cuối không.',
+    },
+  ],
+  images: [
+    { src: '/blog/browser-session-manager/tm-save-session-light.webp', alt: 'Hộp thoại Save Session (Lưu Phiên) của TabMerger với tên Friday wrap-up, giao diện sáng' },
+    { src: '/blog/browser-session-manager/tm-save-session-dark.webp', alt: 'Hộp thoại Save Session (Lưu Phiên) của TabMerger với tên Friday wrap-up, giao diện tối' },
+    { src: '/blog/browser-session-manager/tm-session-view-light.webp', alt: 'Phiên đã lưu Friday wrap-up liệt kê các nhóm của nó, kèm nút Restore session (Khôi phục phiên), giao diện sáng' },
+    { src: '/blog/browser-session-manager/tm-session-view-dark.webp', alt: 'Phiên đã lưu Friday wrap-up liệt kê các nhóm của nó, kèm nút Restore session (Khôi phục phiên), giao diện tối' },
+  ],
+  tags: ['session-management', 'tab-manager', 'save-tabs', 'comparison'],
+  sources: [
+    {
+      title: 'chrome.sessions API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'sessions (WebExtensions API)',
+      publisher: 'MDN Web Docs',
+      url: 'https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Session Buddy',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/session-buddy-tab-bookmar/edacconmaakjimmfgnblocblbcdcpbko',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tab Session Manager',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/tab-session-manager/iaiomicjabeggjcfkbimgmglanimpnae',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tabs Outliner',
+      publisher: 'tabsoutliner.com',
+      url: 'https://tabsoutliner.com/',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/browser-session-manager/tm-session-view-light.webp' },
+  ogImage: { src: '/blog/browser-session-manager/og.png', alt: 'Trình quản lý phiên trình duyệt là gì, và bạn có cần không? Hướng dẫn của TabMerger, với một phiên đã lưu và nút khôi phục của nó' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'session', label: 'Phiên tab là gì?' },
+    { id: 'vs', label: 'Phiên và dấu trang' },
+    { id: 'need', label: 'Bạn có cần không?' },
+    { id: 'look-for', label: 'Nên tìm gì' },
+    { id: 'examples', label: 'Ví dụ' },
+    { id: 'tabmerger', label: 'Phiên trong TabMerger' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+}
+
+<QuickAnswer>
+
+**Phiên** là toàn bộ cửa sổ và tab bạn đang mở tại một thời điểm. Trình duyệt giữ phiên hiện tại để có thể mở lại sau khi khởi động lại. **Trình quản lý phiên** là tiện ích lưu các phiên dưới tên riêng, thường là tự động, rồi sau đó mở lại chúng dưới dạng cửa sổ. Dấu trang lưu từng trang; trình quản lý phiên lưu cả không gian làm việc. [TabMerger](/features) làm được cả hai: mọi cửa sổ đang mở được lưu vào các nhóm có tên chỉ với một cú nhấp, các phiên có tên để khôi phục cùng lúc, tự động lưu theo lịch, và đồng bộ mã hóa đầu cuối trên gói Pro.
+
+</QuickAnswer>
+
+<InstallCta>Lưu mỗi cửa sổ thành một nhóm có tên, và cả phiên chỉ với một cú nhấp. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+<Section id="session" title="Phiên tab là gì?">
+
+Mọi thứ đang mở ngay lúc này: từng cửa sổ, các tab của nó theo thứ tự, và tab nào đang được chọn. Trình duyệt luôn theo dõi điều này, cho hai việc:
+
+- **Khôi phục khi khởi động.** Khi tùy chọn khởi động mở lại phiên trước được bật, trình duyệt sẽ mở lại phiên gần nhất mỗi lần khởi động. Tùy chọn đó nằm ở đâu trong từng trình duyệt có trong bài [cách khôi phục tab sau khi trình duyệt gặp sự cố](/blog/restore-tabs-after-crash#prevent).
+- **Đã đóng gần đây.** <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> lần lượt mở lại các tab và cửa sổ bạn đã đóng.
+
+Cả hai chỉ giữ trạng thái *mới nhất*. Các cửa sổ của thứ Ba tuần trước không còn là một phiên mà trình duyệt có thể trả lại cho bạn; chúng chỉ là những dòng trong lịch sử. Đó chính là khoảng trống mà trình quản lý phiên lấp vào. Nếu bạn đã lỡ mất tab, hãy bắt đầu với bài [cách khôi phục tab sau khi trình duyệt gặp sự cố](/blog/restore-tabs-after-crash).
+
+</Section>
+
+<Section id="vs" title="Trình quản lý phiên, dấu trang và lịch sử">
+
+<ComparisonTable
+  head={['', 'Dấu trang', 'Lịch sử', 'Trình quản lý phiên']}
+  rowHeaders
+  highlight={3}
+  minWidth="36rem"
+  rows={[
+    ['Lưu gì', 'Các trang bạn chọn', 'Mọi trang bạn truy cập', 'Cả cửa sổ cùng các tab'],
+    ['Tách riêng các cửa sổ', 'Mỗi lần lưu một thư mục', 'Không', 'Có'],
+    ['Tự động lưu', 'Không', 'Có, từng trang một', 'Thường có, theo hẹn giờ hoặc khi đóng'],
+    ['Mở lại', 'Từng thư mục một', 'Từng trang một', 'Cả cửa sổ, chỉ một cú nhấp'],
+    ['Có sẵn trong trình duyệt', 'Có', 'Có', 'Không, là một tiện ích'],
+  ]}
+/>
+
+Dấu trang thắng với những trang bạn sẽ giữ trong nhiều năm. Trình quản lý phiên thắng với công việc đang dở dang: mười hai tab của một việc mới làm được một nửa mà bạn muốn lấy lại đúng nguyên dạng một cửa sổ, chứ không phải lưu từng cái một. Xem thêm trong bài [tab và dấu trang](/blog/tabs-vs-bookmarks).
+
+</Section>
+
+<Section id="need" title="Bạn có cần không?">
+
+Có lẽ là không, nếu bạn làm việc trong một cửa sổ, mở chưa đến vài chục tab và đã bật cài đặt khi khởi động. [Thói quen xử lý khi có quá nhiều tab](/blog/manage-too-many-tabs) cùng một thư mục dấu trang thỉnh thoảng là đủ.
+
+Có lẽ là có, nếu bạn thấy quen với một trong những điều sau:
+
+- Bạn chuyển qua lại giữa các dự án và muốn lấy lại nguyên vẹn các cửa sổ của từng dự án.
+- Một lần trình duyệt gặp sự cố, cập nhật hoặc buộc khởi động lại đã khiến bạn mất tab.
+- Bạn muốn đóng hết mọi thứ cuối ngày mà không mất gì.
+- Bạn cần các tab từ nhiều ngày trước, không chỉ từ phiên gần nhất.
+
+</Section>
+
+<Section id="look-for" title="Một trình quản lý phiên tốt nên làm gì?">
+
+- **Tự động lưu**, không chỉ khi bạn nhớ ra: theo hẹn giờ, khi đóng cửa sổ, hoặc cả hai.
+- **Giữ nguyên cấu trúc**: cửa sổ, thứ tự tab, và lý tưởng nhất là cả nhóm tab.
+- **Khôi phục linh hoạt**: cả phiên, một cửa sổ hoặc một tab.
+- **Tìm kiếm** trong tất cả các phiên đã lưu, để có thể tìm ra một tab từ tuần trước.
+- **Xuất** ra một tệp có thể đọc ở nơi khác, để bạn không bao giờ bị ràng buộc. (TabMerger xuất JSON chỉ với một cú nhấp: [đây là những gì bên trong](/blog/export-open-tabs).)
+- **Nói rõ dữ liệu nằm ở đâu.** Chỉ lưu cục bộ thì riêng tư nhưng mất theo hồ sơ trình duyệt; có đồng bộ thì an toàn hơn trước việc mất dữ liệu, và nên được mã hóa đầu cuối.
+
+Một lưu ý kỹ thuật: API mà trình duyệt cung cấp cho tiện ích để làm việc với tab đã đóng khá nhỏ. `chrome.sessions` trả về tối đa 25 mục vừa đóng (`MAX_SESSION_RESULTS`). Những trình quản lý phiên đi xa hơn đều tự lưu bản ghi riêng.
+
+</Section>
+
+<Section id="examples" title="Có những trình quản lý phiên nào?">
+
+Một vài cái tên lâu năm, được mô tả theo chính trang cửa hàng và trang web của họ (kiểm tra ngày 20/11/2026):
+
+- **Session Buddy** (Chrome) lưu và khôi phục phiên, đồng thời giữ lịch sử các phiên trước để khôi phục sau sự cố. Dữ liệu nằm trên thiết bị; trang cửa hàng của nó cho biết không có đồng bộ. Miễn phí.
+- **Tab Session Manager** (Chrome, Firefox, Edge) lưu phiên kèm tên và thẻ phân loại, tự động lưu khi đóng cửa sổ và theo hẹn giờ, và có đồng bộ đám mây. Miễn phí.
+- **Tabs Outliner** (Chrome) giữ các cửa sổ đang mở và đã lưu trong một cây duy nhất, có ghi chú và khôi phục sau sự cố. Miễn phí, kèm bản nâng cấp Pro trả phí một lần.
+
+Để so sánh song song chín công cụ về giá, đồng bộ và mã hóa, hãy xem [so sánh các tiện ích quản lý tab tốt nhất](/blog/best-tab-manager-extensions) hoặc [trang so sánh](/compare) của chúng tôi.
+
+</Section>
+
+<Section id="tabmerger" title="Phiên hoạt động thế nào trong TabMerger">
+
+[TabMerger](/features), tiện ích miễn phí của chúng tôi cho Chrome, Edge và Firefox, là một trình quản lý tab có sẵn tính năng phiên. Các tab đang mở được lưu vào những **nhóm** có tên; sau đó **Lưu phiên hiện tại** (Save current session) chụp lại các nhóm đã lưu đó thành một bản có tên để sau này bạn khôi phục cùng lúc. Gói Miễn phí giữ 3 phiên trong trình duyệt; Pro giữ số phiên không giới hạn và đồng bộ chúng giữa các thiết bị, mã hóa đầu cuối.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Lưu và khôi phục một phiên" steps={[{ title: 'Lưu phiên' }, { title: 'Xem phiên' }]}>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-save-session" alt="Hộp thoại Save Session (Lưu Phiên) của TabMerger với tên Friday wrap-up, giao diện sáng" darkAlt="Hộp thoại Save Session (Lưu Phiên) của TabMerger với tên Friday wrap-up, giao diện tối" boxes={[{ id: 'session-name', label: 'Tên phiên' }]} source="TabMerger 3.16.1">Save current session (Lưu phiên hiện tại) sẽ hỏi tên phiên.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-session-view" alt="Phiên đã lưu Friday wrap-up liệt kê các nhóm của nó, kèm nút Restore session (Khôi phục phiên), giao diện sáng" darkAlt="Phiên đã lưu Friday wrap-up liệt kê các nhóm của nó, kèm nút Restore session (Khôi phục phiên), giao diện tối" boxes={[{ id: 'restore-session', label: 'Khôi phục phiên' }]} source="TabMerger 3.16.1">Phiên đã lưu liệt kê các nhóm của nó; Restore session (Khôi phục phiên) mở lại tất cả.</ThemedScreenshot>
+</Carousel>
+
+Về phần tự động, **Cài đặt → Dữ liệu → Tự động lưu các thẻ đang mở** (Settings → Data → Auto-save open tabs) lưu các tab đang mở thành một nhóm mới theo lịch hoặc khi số tab vượt quá một ngưỡng. Tệp xuất là JSON thuần. Để biến một phiên thành thói quen mỗi sáng, hãy xem [bắt đầu ngày làm việc với các tab đã lưu](/blog/start-your-workday-with-saved-tabs).
+
+<InstallCta>Miễn phí cho Chrome, Edge và Firefox. Không cần tài khoản để bắt đầu.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+</Section>

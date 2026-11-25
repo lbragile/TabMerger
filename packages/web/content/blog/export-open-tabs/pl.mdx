@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'export-open-tabs',
+  title: 'Jak wyeksportować otwarte karty',
+  navTitle: 'Eksport otwartych kart',
+  seoTitle: 'Jak wyeksportować otwarte karty w Chrome, Edge i Firefoksie',
+  description:
+    'Wyeksportuj wszystkie otwarte karty, z tytułem i adresem, do pliku, który zostaje u Ciebie: eksport JSON w TabMerger jednym kliknięciem (otwarte karty i zapisane grupy razem) albo eksport zakładek w przeglądarce, krok po kroku.',
+  shareSummary: 'Wyeksportuj wszystkie otwarte karty do pliku jednym kliknięciem i zaimportuj je gdziekolwiek.',
+  dek: 'Własny plik jest lepszy niż sesja, która może przetrwa. Jedno kliknięcie w TabMerger, kilka w przeglądarce.',
+  published: '2026-12-02',
+  updated: '2026-12-02',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '„Eksportuj JSON” w TabMerger zapisuje otwarte karty i wszystkie zapisane grupy w jednym pliku.', source: 'Sprawdzone w TabMerger 3.16.1, 21 lis 2026' },
+    { text: 'TabMerger importuje pliki JSON, zakładki w HTML i pliki tekstowe z OneTab.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome eksportuje zakładki z menu menedżera zakładek.',
+      source: 'Pomoc Chrome',
+      href: 'https://support.google.com/chrome/answer/96816',
+    },
+    { text: 'Ctrl+Shift+D dodaje do zakładek wszystkie karty okna we wszystkich trzech przeglądarkach.', source: 'Pomoc Chrome i Edge; skróty Firefoksa 159' },
+  ],
+  faq: [
+    {
+      question: 'Jak skopiować adresy URL wszystkich kart?',
+      answer:
+        'Najszybsza pełna kopia to Ustawienia → Dane → Eksportuj JSON w TabMerger: jeden plik z tytułem i adresem każdej otwartej karty i każdej zapisanej grupy. Bez rozszerzenia dodaj karty okna do zakładek (Ctrl+Shift+D) i wyeksportuj zakładki do HTML.',
+    },
+    {
+      question: 'Czy mogę wyeksportować karty ze wszystkich okien naraz?',
+      answer: 'Tak, w TabMerger: „Teraz Otwarte” obejmuje każde otwarte okno, a eksport JSON je zawiera. Przez zakładki trzeba to robić okno po oknie.',
+    },
+    {
+      question: 'Jak ponownie zaimportować plik?',
+      answer: 'W TabMerger wybierz Ustawienia → Dane → Importuj plik: odczytuje pliki JSON z TabMerger, zakładki w HTML i pliki tekstowe z OneTab i dodaje je jako grupy.',
+    },
+    {
+      question: 'Czy eksport jest prywatny?',
+      answer: 'Tak. Plik powstaje w przeglądarce i zapisuje się na Twoim komputerze; nic nie jest wysyłane. Przechowuj go w bezpiecznym miejscu, bo zawiera listę Twoich stron.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: '„Settings” (Ustawienia) w TabMerger, karta „Data” (Dane), z przyciskami „Export JSON” (Eksportuj JSON) i „Import file” (Importuj plik) w sekcji „Import & export” (Import i eksport), motyw jasny' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: '„Settings” (Ustawienia) w TabMerger, karta „Data” (Dane), z przyciskami „Export JSON” (Eksportuj JSON) i „Import file” (Importuj plik) w sekcji „Import & export” (Import i eksport), motyw ciemny' },
+  ],
+  tags: ['save-tabs', 'bookmarks', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Import Chrome bookmarks & settings (export section)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/export-open-tabs/tm-settings-export-light.webp' },
+  ogImage: { src: '/blog/export-open-tabs/og.png', alt: 'Jak wyeksportować otwarte karty: poradnik TabMerger z przyciskiem „Export JSON” (Eksportuj JSON)' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'tabmerger', label: 'Eksport jednym kliknięciem' },
+    { id: 'inside', label: 'Co jest w pliku' },
+    { id: 'builtin', label: 'Sposób przez zakładki' },
+    { id: 'import', label: 'Przywracanie' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Eksport zakładek',
+    values: { chrome: 'Menedżer zakładek → ⋮ → Eksportuj zakładki', edge: 'Favorites → Export favorites', firefox: 'Biblioteka → Eksportuj zakładki do pliku HTML…' },
+  },
+}
+
+<QuickAnswer>
+
+Otwórz [TabMerger](/features), przejdź do **Ustawienia → Dane** (Settings → Data) i kliknij **Eksportuj JSON** (Export JSON). Jedno kliknięcie zapisuje plik z tytułem i adresem **każdej otwartej karty w każdym oknie**, a do tego każdą zapisaną grupę. Bez rozszerzenia możesz dodać karty okna do zakładek skrótem <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> i wyeksportować zakładki do pliku HTML, okno po oknie.
+
+</QuickAnswer>
+
+<InstallCta>Wyeksportuj każdą otwartą kartę z każdego okna jednym kliknięciem. Za darmo dla Chrome, Edge i Firefoksa.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Jak wyeksportować wszystkie otwarte karty jednym kliknięciem?">
+
+1. Otwórz TabMerger i kliknij ikonę konta → **Ustawienia**.
+2. Otwórz kartę **Dane**.
+3. W sekcji **Import i eksport** kliknij **Eksportuj JSON**. Plik pobiera się od razu, pod nazwą w rodzaju `tabmerger-backup-2026-11-21.json`.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="„Settings” (Ustawienia) w TabMerger, karta „Data” (Dane), z przyciskami „Export JSON” (Eksportuj JSON) i „Import file” (Importuj plik) w sekcji „Import & export” (Import i eksport), motyw jasny" darkAlt="„Settings” (Ustawienia) w TabMerger, karta „Data” (Dane), z przyciskami „Export JSON” (Eksportuj JSON) i „Import file” (Importuj plik) w sekcji „Import & export” (Import i eksport), motyw ciemny" boxes={[{ id: 'export-json', label: 'Eksportuj JSON' }, { id: 'import-file', label: 'Importuj plik' }]} source="TabMerger 3.16.1">Settings → Data (Ustawienia → Dane): jeden przycisk na eksport, drugi na import.</ThemedScreenshot>
+
+Działa w każdym planie, także w darmowym, a plik powstaje w przeglądarce: nic nie jest wysyłane.
+
+</Section>
+
+<Section id="inside" title="Co zawiera wyeksportowany plik?">
+
+Listę Twoich grup w formacie JSON. Najpierw jest **Teraz Otwarte** (Now Open), czyli aktualnie otwarte okna i karty, a po niej każda zapisana grupa. Z prawdziwego eksportu:
+
+<ComparisonTable
+  head={['Pole', 'Przykład z eksportu']}
+  rows={[
+    [<code>name</code>, '„Now Open”, „Work”, „Reading list”'],
+    [<code>windows[]</code>, 'Jeden wpis na okno, każdy z jego kartami'],
+    [<code>tabs[].title</code>, '„Spaced repetition - Wikipedia”'],
+    [<code>tabs[].url</code>, <code>https://en.wikipedia.org/wiki/Spaced_repetition</code>],
+    [<code>color</code>, <code>rgba(59, 130, 246, 1)</code>],
+  ]}
+/>
+
+JSON to zwykły tekst, więc odczyta go każdy skrypt i edytor tekstu: wyciągnij adresy, zrób z nich listę w Markdown albo zachowaj plik jako kopię zapasową.
+
+</Section>
+
+<Section id="builtin" title="Jak wyeksportować karty bez rozszerzenia?">
+
+Przeglądarki nie eksportują bezpośrednio otwartych kart, ale eksportują zakładki. Najpierw więc dodaj karty do zakładek, a potem je wyeksportuj:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. W każdym oknie naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> na Macu) i zapisz karty w nowym folderze.
+2. Otwórz **⋮ → Zakładki i listy → Menedżer zakładek** (Bookmarks and lists → Bookmark Manager).
+3. U góry otwórz **⋮ → Eksportuj zakładki** (Export bookmarks). Chrome zapisze wszystkie zakładki w pliku HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. W każdym oknie naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>, aby dodać wszystkie karty do ulubionych w nowym folderze.
+2. Naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>, aby otworzyć ulubione (Favorites).
+3. Wybierz **Export favorites** z menu strony i zapisz plik HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. W każdym oknie naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>, aby dodać wszystkie karty do zakładek w nowym folderze.
+2. Naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>, aby otworzyć okno Biblioteka (Library).
+3. Wybierz **Eksportuj zakładki do pliku HTML…** (Export Bookmarks to HTML…) i zapisz plik.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>działa okno po oknie, eksportuje *wszystkie* zakładki, a nie tylko te karty, a plik nie wie, które karty były otwarte razem.</Catch>
+
+</Section>
+
+<Section id="import" title="Jak przywrócić karty?">
+
+W TabMerger **Ustawienia → Dane → Importuj plik** (Settings → Data → Import file) odczytuje wszystkie trzy rodzaje plików i dodaje je jako grupy obok tych, które już masz:
+
+- **JSON z TabMerger**, z „Eksportuj JSON”, z zapisanymi grupami i oknami w takim stanie, w jakim były. „Teraz Otwarte” z pliku nie jest dodawane (to były otwarte karty przeglądarki, która eksportowała), więc przed eksportem zapisz otwarte okna w grupie, jeśli chcesz je odzyskać.
+- **Zakładki w HTML** z dowolnej przeglądarki: każdy folder najwyższego poziomu staje się grupą.
+- **Tekst z OneTab**: każda lista OneTab staje się grupą. Zobacz nasz [przewodnik po alternatywach dla OneTab](/blog/onetab-alternatives).
+
+Dlatego eksport to najprostszy sposób, by [przenieść karty na inny komputer](/blog/move-tabs-between-computers) bez konta. Chcesz, żeby działo się to samo? [Pro](/pricing) przechowuje 10 najnowszych automatycznych kopii zapasowych i synchronizuje grupy między urządzeniami, z szyfrowaniem end-to-end. Aby zachować karty na później bez żadnego pliku, zobacz, [jak zapisać wszystkie otwarte karty](/blog/save-all-open-tabs); aby wysłać zestaw komuś innemu, zobacz, [jak udostępnić zestaw kart](/blog/share-a-set-of-tabs).
+
+<InstallCta>Za darmo dla Chrome, Edge i Firefoksa. Na start nie potrzebujesz konta.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

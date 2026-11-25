@@ -1,0 +1,270 @@
+export const post = {
+  slug: 'restore-tabs-after-crash',
+  title: 'So holst du deine Tabs nach einem Absturz, einem Update oder versehentlichem Beenden zurück',
+  navTitle: 'Tabs nach einem Absturz zurückholen',
+  seoTitle: 'Tabs nach Absturz wiederherstellen in Chrome, Edge und Firefox',
+  description:
+    'Browser geschlossen und alle Tabs weg? So stellst du Tabs nach einem Absturz wieder her, Schritt für Schritt: neu öffnen, Verlauf, andere Geräte, dann die Einstellungen, damit es nicht wieder passiert.',
+  shareSummary: 'Tabs nach Absturz oder Neustart verloren? Die Schritte zur Wiederherstellung, der Reihe nach.',
+  dek: 'Probiere zuerst die schnellen Lösungen, der Reihe nach. Die meisten verlorenen Sitzungen sind in unter einer Minute zurück.',
+  published: '2026-11-24',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Laut Chromes Hilfe zu Abstürzen öffnet Ctrl+Shift+T die Tabs wieder, die du offen hattest.',
+      source: 'Chrome-Hilfe',
+      href: 'https://support.google.com/chrome/answer/142063',
+    },
+    { text: 'Das Firefox-Menü „Chronik“ enthält „Vorherige Sitzung wiederherstellen“.', source: 'Firefox 159' },
+    {
+      text: 'Chrome zeigt Tabs anderer Geräte nur, wenn die Synchronisierung von „Verlauf und Tabs“ an ist.',
+      source: 'Chrome-Hilfe',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'Die Verlaufsseite von Edge hat eine eigene Liste „Recently closed“.', source: 'edge://history, Edge 157' },
+  ],
+  faq: [
+    {
+      question: 'Wie bekomme ich meine Tabs zurück, nachdem Chrome geschlossen wurde?',
+      answer:
+        'Öffne Chrome wieder und drücke Ctrl+Shift+T (⌘+Shift+T auf dem Mac), wenn nötig mehrmals. Kommen sie so nicht zurück, öffne den Verlauf mit Ctrl+H und sieh bei den kürzlich geschlossenen Tabs nach.',
+    },
+    {
+      question: 'Warum wurden meine Tabs nicht wiederhergestellt?',
+      answer:
+        'Meist, weil die Starteinstellung eine neue Tab-Seite öffnet, die Tabs in einem privaten Fenster waren, du vor dem Beenden die Fenster einzeln geschlossen hast oder ein anderes Profil geöffnet hast.',
+    },
+    {
+      question: 'Kann ich Tabs von gestern wiederherstellen?',
+      answer: 'Nicht als Sitzung, aber jede besuchte Seite steht im Verlauf (Ctrl+H), sofern du ihn nicht gelöscht hast. Zuverlässig geht es nur mit einer gespeicherten Sitzung oder automatischem Speichern.',
+    },
+    {
+      question: 'Wie verhindere ich, dass das wieder passiert?',
+      answer: 'Schalte die Starteinstellung ein und speichere deine offenen Tabs vor riskanten Momenten wie Updates. Unsere Anleitung zum Speichern aller offenen Tabs erklärt beides.',
+      link: { text: 'Speichern aller offenen Tabs', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Edge-Verlauf mit „All“, „Recently closed“ und „Tabs from other devices“ in der Seitenleiste' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Chrome-Einstellungen, „On startup“ (Beim Start), mit ausgewählter Option „Continue where you left off“ (Zuletzt angesehene Seiten öffnen)' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Edge-Einstellungen, „Start, home, and new tab page“, mit ausgewählter Option „Open tabs from the previous session“' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Firefox-Einstellungen, „Home and startup“ (Startseite), mit aktivierter Option „Open previous windows and tabs“ (Vorherige Fenster und Tabs öffnen)' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-light.webp', alt: 'TabMerger-Einstellungen, „Data“ (Daten): „Auto-save open tabs“ (Offene Tabs automatisch speichern) an, Zeitplan auf „Every 30 minutes“ (Alle 30 Minuten), helles Design' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-dark.webp', alt: 'TabMerger-Einstellungen, „Data“ (Daten): „Auto-save open tabs“ (Offene Tabs automatisch speichern) an, Zeitplan auf „Every 30 minutes“ (Alle 30 Minuten), dunkles Design' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-light.webp', alt: 'TabMerger, „Recently closed“ (Zuletzt geschlossen), heute: drei geschlossene Tabs mit der Uhrzeit, zu der jeder geschlossen wurde, helles Design' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-dark.webp', alt: 'TabMerger, „Recently closed“ (Zuletzt geschlossen), heute: drei geschlossene Tabs mit der Uhrzeit, zu der jeder geschlossen wurde, dunkles Design' },
+  ],
+  tags: ['restore-closed-tabs', 'session-management', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-20',
+      note: 'Die Firefox-Menünamen stammen direkt aus Firefox 159.0.1; diese Seite hat unsere automatische Prüfung blockiert.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/restore-tabs-after-crash/cover-edge-light.webp' },
+  ogImage: { src: '/blog/restore-tabs-after-crash/og.png', alt: 'Titelkarte „How to get your tabs back after a crash, an update or an accidental quit“: eine TabMerger-Anleitung mit einer Liste zuletzt geschlossener Tabs' },
+  toc: [
+    { id: 'quick', label: 'Kurze Antwort' },
+    { id: 'first', label: '1. Neu öffnen, dann Ctrl+Shift+T' },
+    { id: 'recover', label: '2. Verlauf, je Browser' },
+    { id: 'devices', label: '3. Andere Geräte' },
+    { id: 'why', label: 'Warum die Tabs fehlten' },
+    { id: 'prevent', label: 'Beim nächsten Mal' },
+    { id: 'faq', label: 'Häufige Fragen' },
+  ],
+  browserSections: ['first', 'recover', 'devices', 'prevent'],
+  browserFact: {
+    label: 'Verlauf',
+    values: { chrome: 'chrome://history', edge: 'edge://history', firefox: 'Ctrl+Shift+H (Bibliothek)' },
+  },
+}
+
+<QuickAnswer>
+
+Öffne den Browser wieder und drücke <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> auf dem Mac), immer wieder, bis deine Fenster zurück sind. Klappt das nicht, öffne den Verlauf (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) und hole sie über die **kürzlich geschlossenen** Tabs zurück; in Firefox nimmst du **Chronik → Vorherige Sitzung wiederherstellen** („History → Restore Previous Session“). Fehlt immer noch etwas? Sieh bei den **Tabs von anderen Geräten** nach und durchsuche dann den Verlauf nach den Seiten selbst. Lass beim nächsten Mal [TabMerger](/features) deine offenen Tabs nach Zeitplan automatisch speichern, dann kostet dich ein Absturz nie mehr als ein paar Minuten.
+
+</QuickAnswer>
+
+<InstallCta>Nie wieder ein Fenster verlieren: Speichere deine offenen Tabs automatisch nach Zeitplan. Kostenlos für Chrome, Edge und Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="first" title="1. Browser neu öffnen, dann Ctrl+Shift+T drücken">
+
+Öffne vorher keine neuen Tabs: Starte mit einem leeren Fenster, damit du genau das zurückbekommst, was in der Liste „zuletzt geschlossen“ des Browsers steht.
+
+<BrowserPanels section="first">
+<BrowserPanel browser="chrome">
+
+1. Starte Chrome. Bietet es an, deine Seiten wiederherzustellen, nimm an.
+2. Drücke <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> auf dem Mac). Chromes eigene Hilfe zu Abstürzen verweist genau darauf: So öffnen sich die Tabs wieder, die vorher offen waren.
+3. Drücke es für jedes verlorene Fenster erneut. Chrome öffnet Tabs und Fenster in der Reihenfolge wieder, in der sie geschlossen wurden.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Starte Edge. Bietet es an, deine Seiten wiederherzustellen, nimm an.
+2. Drücke <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> auf dem Mac), um den zuletzt geschlossenen Tab wieder zu öffnen, und erneut, um weiter zurückzugehen.
+3. Fehlt ein ganzes Fenster? Geh direkt zu Schritt 2, dem Verlauf.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Starte Firefox. Bietet es an, deine Seiten wiederherzustellen, nimm an.
+2. Drücke <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> auf dem Mac). Firefox 159 verknüpft das Kürzel mit einem Befehl, der den zuletzt geschlossenen Tab, das zuletzt geschlossene Fenster oder die letzte Sitzung wiederherstellt. Nach einem Neustart kann es also die ganze vorherige Sitzung zurückholen.
+3. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> öffnet ein geschlossenes Fenster wieder; drücke es einmal pro Fenster.
+
+</BrowserPanel>
+</BrowserPanels>
+
+Alle Tastenkürzel findest du in unserer [Übersicht der Tastenkürzel für Tabs](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="recover" title="2. Über den Verlauf wieder öffnen">
+
+Bringt das Tastenkürzel nichts zurück, weiß der Verlauf des Browsers trotzdem noch, was offen war.
+
+<BrowserPanels section="recover">
+<BrowserPanel browser="chrome">
+
+1. Klicke auf **⋮ → Verlauf** („History“). Das Untermenü listet kürzlich geschlossene Tabs und Fenster.
+2. Klicke auf ein Fenster, um alle seine Tabs wieder zu öffnen.
+3. Nichts dabei? Drücke <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> und suche nach einer Seite, an die du dich erinnerst.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Drücke <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>, um den **Verlauf** zu öffnen.
+2. Wähle **Recently closed** (kürzlich geschlossen) und öffne das verlorene Fenster oder die Tabs wieder.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Edge-Verlauf mit „All“, „Recently closed“ und „Tabs from other devices“ in der Seitenleiste" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60">Die Verlaufsseite von Edge mit „Recently closed“ in der Seitenleiste.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Öffne das Menü **Chronik** („History“; drücke <Kbd>Alt</Kbd>, um die Menüleiste einzublenden) oder **☰ → Chronik**.
+2. Wähle **Vorherige Sitzung wiederherstellen** („Restore Previous Session“), um alle Fenster vom letzten Mal zurückzuholen.
+3. Oder wähle aus **Kürzlich geschlossene Fenster** und **Kürzlich geschlossene Tabs**.
+
+Ist Firefox selbst abgestürzt, öffnet es eventuell eine Seite **Sitzungswiederherstellung** („Restore Session“) mit dem Hinweis „Entschuldigung, beim Wiederherstellen Ihrer Seiten ist ein Problem aufgetreten“. Mit **Tabs der letzten Sitzung anzeigen** („View Previous Tabs“) kannst du einen Tab abwählen, der den Absturz verursachen könnte, bevor du auf **Sitzung wiederherstellen** klickst.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with Restore Previous Session. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="devices" title="3. Auf deinen anderen Geräten nachsehen">
+
+Warst du angemeldet und hast synchronisiert, stehen die verlorenen Tabs vielleicht noch auf einem anderen Gerät.
+
+<BrowserPanels section="devices">
+<BrowserPanel browser="chrome">
+
+Chrome zeigt die Tabs anderer Geräte im Verlauf, aber nur, wenn die Synchronisierung von **Verlauf und Tabs** („History and tabs“) an ist: **Einstellungen → Google und ich** („Settings → You and Google“), wähle deinen Kontonamen aus und aktiviere dann **Verlauf und Tabs**.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Öffne den Verlauf (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) und wähle in der Seitenleiste **Tabs from other devices** (Tabs von anderen Geräten).
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Öffne **Firefox View** und sieh unter **Tabs von anderen Geräten** („Tabs from other devices“) nach. Dafür muss Firefox Sync eingerichtet sein und offene Tabs synchronisieren.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox View, Tabs from other devices. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="why" title="Warum wurden meine Tabs nicht wiederhergestellt?">
+
+- **Die Starteinstellung öffnet eine neue Tab-Seite.** Nur die Startoption für die „vorherige Sitzung“ öffnet deine Tabs bei jedem Start wieder; im nächsten Abschnitt steht, wo du sie in deinem Browser findest.
+- **Sie waren in einem privaten Fenster.** Incognito- und InPrivate-Fenster werden nie wiederhergestellt.
+- **Du hast die Fenster einzeln geschlossen.** Beim Start kommt zurück, was offen war, als der Browser *beendet* wurde. Fenster, die du vorher geschlossen hast, stehen nur im Verlauf.
+- **Du hast ein anderes Profil geöffnet.** Jedes Profil hat seine eigene Sitzung; sieh dir das Profilsymbol an.
+
+</Section>
+
+<Section id="prevent" title="So passiert es beim nächsten Mal nicht">
+
+Schalte die Starteinstellung jetzt ein; diese eine Änderung deckt Updates und Neustarts ab.
+
+<BrowserPanels section="prevent">
+<BrowserPanel browser="chrome">
+
+**Einstellungen → Beim Start → Zuletzt angesehene Seiten öffnen** („Settings → On startup → Continue where you left off“). Oder füge `chrome://settings/onStartup` in die Adressleiste ein.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Chrome-Einstellungen, „On startup“ (Beim Start), mit ausgewählter Option „Continue where you left off“ (Zuletzt angesehene Seiten öffnen)" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">Chromes Einstellung „Beim Start“, so eingestellt, dass die letzte Sitzung wieder geöffnet wird.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+**Einstellungen → Start, home, and new tab page → On startup → Open tabs from the previous session**. Oder füge `edge://settings/startHomeNTP` in die Adressleiste ein.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Edge-Einstellungen, „Start, home, and new tab page“, mit ausgewählter Option „Open tabs from the previous session“" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">Die Edge-Einstellungen „Start, home, and new tab page“, so eingestellt, dass die letzte Sitzung wieder geöffnet wird.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+**Einstellungen → Startseite → Start → Vorherige Fenster und Tabs öffnen** („Settings → Home and startup → Startup → Open previous windows and tabs“). Oder füge `about:preferences#home` in die Adressleiste ein.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Firefox-Einstellungen, „Home and startup“ (Startseite), mit aktivierter Option „Open previous windows and tabs“ (Vorherige Fenster und Tabs öffnen)" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Die Firefox-Einstellungen unter „Startseite“, mit aktivierter Option „Vorherige Fenster und Tabs öffnen“.</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+Gegen ein Fenster, das du letzte Woche aus Versehen geschlossen hast, hilft auch die Wiederherstellung beim Start nicht. Dafür brauchst du eine gespeicherte Kopie: Speichere die Fenster als Lesezeichen oder nutze einen [Sitzungsmanager](/blog/browser-session-manager). Unsere Anleitung zum [Speichern aller offenen Tabs](/blog/save-all-open-tabs) vergleicht die Möglichkeiten.
+
+[TabMerger](/features), unsere kostenlose Erweiterung für Chrome, Edge und Firefox, kann das Speichern für dich übernehmen. **Einstellungen → Daten → Offene Tabs automatisch speichern** sichert deine offenen Tabs nach Zeitplan als Gruppe (von alle 15 Minuten bis täglich). **Zuletzt geschlossen** behält jeden Tab und jedes Fenster, das du schließt, nach Tagen geordnet: kostenlos 2 Tage, mit Pro 30. Wie beides funktioniert und wie du es einstellst, steht in [Nie wieder einen Tab verlieren](/blog/never-lose-a-tab-again).
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Nach Zeitplan speichern und geschlossene Tabs finden" steps={[{ title: 'Automatisch speichern' }, { title: 'Zuletzt geschlossen' }]}>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-auto-save-schedule" alt="TabMerger-Einstellungen, „Data“ (Daten): „Auto-save open tabs“ (Offene Tabs automatisch speichern) an, Zeitplan auf „Every 30 minutes“ (Alle 30 Minuten), helles Design" darkAlt="TabMerger-Einstellungen, „Data“ (Daten): „Auto-save open tabs“ (Offene Tabs automatisch speichern) an, Zeitplan auf „Every 30 minutes“ (Alle 30 Minuten), dunkles Design" boxes={[{ id: 'schedule', label: 'Zeitplan' }]} source="TabMerger 3.16.1">„Auto-save open tabs“ (Offene Tabs automatisch speichern) alle 30 Minuten: eine frische Kopie deiner offenen Tabs, egal was mit dem Browser passiert.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-recently-closed" alt="TabMerger, „Recently closed“ (Zuletzt geschlossen), heute: drei geschlossene Tabs mit der Uhrzeit, zu der jeder geschlossen wurde, helles Design" darkAlt="TabMerger, „Recently closed“ (Zuletzt geschlossen), heute: drei geschlossene Tabs mit der Uhrzeit, zu der jeder geschlossen wurde, dunkles Design" boxes={[{ id: 'today-row', label: 'Heute' }]} source="TabMerger 3.16.1">„Recently closed“ (Zuletzt geschlossen): die heute geschlossenen Tabs, jeweils mit der Uhrzeit, zu der sie geschlossen wurden.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Kostenlos für Chrome, Edge und Firefox. Zum Start ist kein Konto nötig.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Häufige Fragen">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,270 @@
+export const post = {
+  slug: 'restore-tabs-after-crash',
+  title: 'Come recuperare le schede dopo un crash, un aggiornamento o una chiusura accidentale',
+  navTitle: 'Recuperare le schede dopo un crash',
+  seoTitle: 'Ripristinare le schede dopo un crash in Chrome, Edge e Firefox',
+  description:
+    'Il browser si è chiuso e si è portato via le schede? Per ripristinare le schede dopo un crash segui questi passaggi in ordine: riapri, la cronologia, gli altri dispositivi e infine le impostazioni che evitano che succeda di nuovo.',
+  shareSummary: 'Schede perse per un crash o un riavvio? I passaggi per recuperarle, in ordine, per ogni browser.',
+  dek: 'Prova prima le soluzioni rapide, nell’ordine. La maggior parte delle sessioni perse torna in meno di un minuto.',
+  published: '2026-11-24',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Secondo la guida di Chrome sui crash, Ctrl+Shift+T riapre le schede che avevi aperte.',
+      source: 'Guida di Chrome',
+      href: 'https://support.google.com/chrome/answer/142063',
+    },
+    { text: 'Il menu Cronologia di Firefox contiene «Ripristina la sessione precedente».', source: 'Firefox 159' },
+    {
+      text: 'Chrome mostra le schede degli altri dispositivi solo con la sincronizzazione di «Cronologia e schede» attiva.',
+      source: 'Guida di Chrome',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'La pagina Cronologia di Edge ha un proprio elenco «Recently closed».', source: 'edge://history, Edge 157' },
+  ],
+  faq: [
+    {
+      question: 'Come recupero le schede dopo la chiusura di Chrome?',
+      answer:
+        'Riapri Chrome e premi Ctrl+Shift+T (⌘+Shift+T su Mac), anche più volte. Se non tornano, apri la cronologia con Ctrl+H e guarda tra le schede chiuse di recente.',
+    },
+    {
+      question: 'Perché le mie schede non sono state ripristinate?',
+      answer:
+        'Di solito perché l’impostazione di avvio apre una pagina Nuova scheda, le schede erano in una finestra privata, hai chiuso le finestre una alla volta prima di uscire oppure hai aperto un altro profilo.',
+    },
+    {
+      question: 'Posso ripristinare le schede di ieri?',
+      answer: 'Non come sessione, ma ogni pagina che hai visitato è nella cronologia (Ctrl+H), a meno che tu non l’abbia cancellata. Una sessione salvata o il salvataggio automatico è il metodo affidabile.',
+    },
+    {
+      question: 'Come evito che succeda di nuovo?',
+      answer: 'Attiva l’impostazione di avvio e salva le schede aperte prima dei momenti a rischio, come gli aggiornamenti. La nostra guida per salvare tutte le schede aperte spiega entrambe le cose.',
+      link: { text: 'salvare tutte le schede aperte', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Cronologia di Edge con «All», «Recently closed» e «Tabs from other devices» nella barra laterale' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Impostazioni di Chrome, «On startup» (All\'avvio), con «Continue where you left off» (Continua dal punto in cui avevi interrotto) selezionato' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Impostazioni di Edge, «Start, home, and new tab page», con «Open tabs from the previous session» selezionato' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Impostazioni di Firefox, «Home and startup» (Pagina iniziale e avvio), con «Open previous windows and tabs» (Apri finestre e schede esistenti) selezionato' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-light.webp', alt: 'Impostazioni di TabMerger, «Data» (Dati): «Auto-save open tabs» (Salva automaticamente le schede aperte) attivo, con la pianificazione su «Every 30 minutes» (Ogni 30 minuti), tema chiaro' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-dark.webp', alt: 'Impostazioni di TabMerger, «Data» (Dati): «Auto-save open tabs» (Salva automaticamente le schede aperte) attivo, con la pianificazione su «Every 30 minutes» (Ogni 30 minuti), tema scuro' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-light.webp', alt: 'TabMerger, «Recently closed» (Chiusi di recente), oggi: tre schede chiuse con l’ora in cui è stata chiusa ciascuna, tema chiaro' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-dark.webp', alt: 'TabMerger, «Recently closed» (Chiusi di recente), oggi: tre schede chiuse con l’ora in cui è stata chiusa ciascuna, tema scuro' },
+  ],
+  tags: ['restore-closed-tabs', 'session-management', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-20',
+      note: 'I nomi dei menu di Firefox sono stati letti direttamente da Firefox 159.0.1; questa pagina ha bloccato il nostro controllo automatico.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/restore-tabs-after-crash/cover-edge-light.webp' },
+  ogImage: { src: '/blog/restore-tabs-after-crash/og.png', alt: 'Scheda del titolo «How to get your tabs back after a crash, an update or an accidental quit»: una guida di TabMerger, con un elenco di schede chiuse di recente' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'first', label: '1. Riapri, poi Ctrl+Shift+T' },
+    { id: 'recover', label: '2. La cronologia, browser per browser' },
+    { id: 'devices', label: '3. Altri dispositivi' },
+    { id: 'why', label: 'Perché non si sono ripristinate' },
+    { id: 'prevent', label: 'La prossima volta' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+  browserSections: ['first', 'recover', 'devices', 'prevent'],
+  browserFact: {
+    label: 'Cronologia',
+    values: { chrome: 'chrome://history', edge: 'edge://history', firefox: 'Ctrl+Shift+H (Libreria)' },
+  },
+}
+
+<QuickAnswer>
+
+Riapri il browser e premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> su Mac), ancora e ancora, finché le finestre non tornano. Se non funziona, apri la cronologia (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) e riaprile dalle schede **chiuse di recente**; in Firefox usa **Cronologia → Ripristina la sessione precedente** («History → Restore Previous Session»). Manca ancora qualcosa? Controlla le **schede da altri dispositivi**, poi cerca le pagine stesse nella cronologia. La prossima volta lascia che [TabMerger](/features) salvi automaticamente le schede aperte secondo una pianificazione, così un crash non ti costerà mai più di qualche minuto.
+
+</QuickAnswer>
+
+<InstallCta>Non perdere mai più una finestra: salva automaticamente le schede aperte secondo una pianificazione. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="first" title="1. Riapri il browser, poi premi Ctrl+Shift+T">
+
+Non aprire prima nuove schede: parti da una finestra pulita, così recuperi proprio ciò che il browser ha nell’elenco delle ultime chiusure.
+
+<BrowserPanels section="first">
+<BrowserPanel browser="chrome">
+
+1. Avvia Chrome. Se propone di ripristinare le pagine, accetta.
+2. Premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> su Mac). È la stessa guida di Chrome sui crash a indicarlo: riapre le schede che erano aperte prima.
+3. Premilo di nuovo per ogni finestra persa. Chrome riapre schede e finestre nell’ordine in cui sono state chiuse.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Avvia Edge. Se propone di ripristinare le pagine, accetta.
+2. Premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> su Mac) per riaprire l’ultima scheda chiusa, e ancora per continuare a tornare indietro.
+3. Manca un’intera finestra? Passa subito al passaggio 2, la cronologia.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Avvia Firefox. Se propone di ripristinare le pagine, accetta.
+2. Premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> su Mac). Firefox 159 lo collega a un comando che ripristina l’ultima scheda, finestra o sessione chiusa, quindi dopo un riavvio può riportare indietro l’intera sessione precedente.
+3. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> riapre una finestra chiusa; premilo una volta per ogni finestra.
+
+</BrowserPanel>
+</BrowserPanels>
+
+L’elenco completo delle scorciatoie è nella nostra [guida alle scorciatoie da tastiera per le schede](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="recover" title="2. Riapri dalla cronologia">
+
+Se la scorciatoia non restituisce nulla, la cronologia del browser sa ancora cosa era aperto.
+
+<BrowserPanels section="recover">
+<BrowserPanel browser="chrome">
+
+1. Fai clic su **⋮ → Cronologia** («History»). Il sottomenu elenca le schede e le finestre chiuse di recente.
+2. Fai clic su una finestra per riaprire tutte le sue schede.
+3. Non c’è niente? Premi <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> e cerca una pagina che ricordi.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Premi <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> per aprire la **Cronologia**.
+2. Scegli **Recently closed** (chiuse di recente) e riapri la finestra o le schede perse.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Cronologia di Edge con «All», «Recently closed» e «Tabs from other devices» nella barra laterale" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60">La pagina Cronologia di Edge, con «Recently closed» nella barra laterale.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Apri il menu **Cronologia** («History»; premi <Kbd>Alt</Kbd> per mostrare la barra dei menu) oppure **☰ → Cronologia**.
+2. Scegli **Ripristina la sessione precedente** («Restore Previous Session») per riportare indietro tutte le finestre dell’ultima volta.
+3. Oppure scegli da **Finestre chiuse di recente** e **Schede chiuse di recente**.
+
+Se è stato Firefox stesso ad andare in crash, potrebbe aprire una pagina **Ripristino della sessione** («Restore Session») con il messaggio «Siamo spiacenti, c’è un problema con il ripristino delle pagine.». **Mostra schede precedenti** («View Previous Tabs») ti permette di togliere la spunta a una scheda che potrebbe causare il crash prima di premere **Ripristina sessione**.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with Restore Previous Session. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="devices" title="3. Controlla sugli altri dispositivi">
+
+Se avevi effettuato l’accesso e la sincronizzazione era attiva, le schede perse potrebbero comparire ancora su un altro dispositivo.
+
+<BrowserPanels section="devices">
+<BrowserPanel browser="chrome">
+
+Chrome mostra le schede degli altri dispositivi nella cronologia, ma solo se la sincronizzazione di **Cronologia e schede** («History and tabs») è attiva: **Impostazioni → Tu e Google** («Settings → You and Google»), seleziona il nome del tuo account e poi attiva **Cronologia e schede**.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Apri la cronologia (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) e scegli **Tabs from other devices** (schede da altri dispositivi) nella barra laterale.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Apri **Firefox View** e guarda in **Schede da altri dispositivi** («Tabs from other devices»). Serve Firefox Sync con la sincronizzazione delle schede aperte attiva.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox View, Tabs from other devices. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="why" title="Perché le mie schede non sono state ripristinate?">
+
+- **L’impostazione di avvio apre una pagina Nuova scheda.** Solo l’opzione di avvio «sessione precedente» riapre le schede a ogni avvio; la sezione successiva mostra dove si trova nel tuo browser.
+- **Erano in una finestra privata.** Le finestre Incognito e InPrivate non vengono mai ripristinate.
+- **Hai chiuso le finestre una alla volta.** All’avvio torna ciò che era aperto quando il browser è stato *chiuso*. Le finestre chiuse prima sono solo nella cronologia.
+- **Hai aperto un altro profilo.** Ogni profilo ha la propria sessione; controlla l’icona del profilo.
+
+</Section>
+
+<Section id="prevent" title="Fai in modo che non succeda la prossima volta">
+
+Attiva subito l’impostazione di avvio: è l’unica modifica che copre aggiornamenti e riavvii.
+
+<BrowserPanels section="prevent">
+<BrowserPanel browser="chrome">
+
+**Impostazioni → All'avvio → Continua dal punto in cui avevi interrotto** («Settings → On startup → Continue where you left off»). Oppure incolla `chrome://settings/onStartup` nella barra degli indirizzi.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Impostazioni di Chrome, «On startup» (All'avvio), con «Continue where you left off» (Continua dal punto in cui avevi interrotto) selezionato" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">L’impostazione All'avvio di Chrome, configurata per riaprire l’ultima sessione.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+**Impostazioni → Start, home, and new tab page → On startup → Open tabs from the previous session**. Oppure incolla `edge://settings/startHomeNTP` nella barra degli indirizzi.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Impostazioni di Edge, «Start, home, and new tab page», con «Open tabs from the previous session» selezionato" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">La pagina «Start, home, and new tab page» di Edge, configurata per riaprire l’ultima sessione.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+**Impostazioni → Pagina iniziale e avvio → Avvio → Apri finestre e schede esistenti** («Settings → Home and startup → Startup → Open previous windows and tabs»). Oppure incolla `about:preferences#home` nella barra degli indirizzi.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Impostazioni di Firefox, «Home and startup» (Pagina iniziale e avvio), con «Open previous windows and tabs» (Apri finestre e schede esistenti) selezionato" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Le impostazioni Pagina iniziale e avvio di Firefox, con «Apri finestre e schede esistenti» selezionato.</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+Il ripristino all’avvio non può aiutarti con una finestra chiusa per sbaglio la settimana scorsa. Per quella ti serve una copia salvata: aggiungi le finestre ai preferiti oppure usa un [gestore di sessioni](/blog/browser-session-manager). La nostra guida per [salvare tutte le schede aperte](/blog/save-all-open-tabs) confronta le opzioni.
+
+[TabMerger](/features), la nostra estensione gratuita per Chrome, Edge e Firefox, può salvare al posto tuo. **Impostazioni → Dati → Salva automaticamente le schede aperte** salva le schede aperte in un gruppo secondo una pianificazione (da ogni 15 minuti a ogni giorno). **Chiusi di recente** conserva ogni scheda e finestra che chiudi, divise per giorno: 2 giorni nella versione gratuita, 30 con Pro. Come funzionano entrambe e come regolarle lo spieghiamo in [non perdere mai più una scheda](/blog/never-lose-a-tab-again).
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Salvare secondo una pianificazione e trovare le schede chiuse" steps={[{ title: 'Salvataggio automatico' }, { title: 'Chiusi di recente' }]}>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-auto-save-schedule" alt="Impostazioni di TabMerger, «Data» (Dati): «Auto-save open tabs» (Salva automaticamente le schede aperte) attivo, con la pianificazione su «Every 30 minutes» (Ogni 30 minuti), tema chiaro" darkAlt="Impostazioni di TabMerger, «Data» (Dati): «Auto-save open tabs» (Salva automaticamente le schede aperte) attivo, con la pianificazione su «Every 30 minutes» (Ogni 30 minuti), tema scuro" boxes={[{ id: 'schedule', label: 'Pianificazione' }]} source="TabMerger 3.16.1">«Auto-save open tabs» (Salva automaticamente le schede aperte) ogni 30 minuti: una copia aggiornata delle schede aperte, qualunque cosa succeda al browser.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-recently-closed" alt="TabMerger, «Recently closed» (Chiusi di recente), oggi: tre schede chiuse con l’ora in cui è stata chiusa ciascuna, tema chiaro" darkAlt="TabMerger, «Recently closed» (Chiusi di recente), oggi: tre schede chiuse con l’ora in cui è stata chiusa ciascuna, tema scuro" boxes={[{ id: 'today-row', label: 'Oggi' }]} source="TabMerger 3.16.1">«Recently closed» (Chiusi di recente): le schede chiuse oggi, con l’ora in cui è stata chiusa ciascuna.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Gratis per Chrome, Edge e Firefox. Per iniziare non serve un account.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

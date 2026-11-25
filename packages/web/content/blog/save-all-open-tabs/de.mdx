@@ -7,7 +7,7 @@ export const post = {
   shareSummary: 'Ein Tastenkürzel, Start-Wiederherstellung und geschlossene Tabs zurück in Chrome, Edge und Firefox.',
   dek: 'Fünf Wege, alle offenen Tabs zu behalten, und was jeder davon stillschweigend auslässt.',
   published: '2026-11-19',
-  updated: '2026-11-19',
+  updated: '2026-11-24',
   testedOn: ['Chrome 157.0.8103.79', 'Edge 157.0.4341.60', 'Firefox 159.0.1'],
   keyFacts: [
     { text: 'Ctrl+Shift+D speichert nur das aktuelle Fenster.', source: 'In allen drei getestet, 19. Nov. 2026' },
@@ -117,9 +117,11 @@ export const post = {
 
 <QuickAnswer>
 
-Um alle offenen Tabs zu speichern, drücke <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> auf dem Mac): Jeder Tab des aktuellen Fensters landet als Lesezeichen in einem neuen Ordner. Das funktioniert in Chrome, Edge und Firefox. Damit Tabs automatisch wieder aufgehen, aktiviere **Zuletzt angesehene Seiten öffnen** („Continue where you left off“, Chrome), **Open tabs from the previous session** (Edge) oder **Vorherige Fenster und Tabs öffnen** („Open previous windows and tabs“, Firefox).
+Um alle offenen Tabs zu speichern, drücke <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> auf dem Mac): Jeder Tab des aktuellen Fensters landet als Lesezeichen in einem neuen Ordner. Das funktioniert in Chrome, Edge und Firefox. Damit Tabs automatisch wieder aufgehen, aktiviere **Zuletzt angesehene Seiten öffnen** („Continue where you left off“, Chrome), **Open tabs from the previous session** (Edge) oder **Vorherige Fenster und Tabs öffnen** („Open previous windows and tabs“, Firefox). Um **alle Fenster auf einmal** zu speichern und die Tabs später zu durchsuchen, nimm [TabMerger](/features): Ein Klick speichert alle offenen Fenster in einer benannten Gruppe.
 
 </QuickAnswer>
+
+<InstallCta>Alle offenen Fenster mit einem Klick speichern. Kostenlos für Chrome, Edge und Firefox.</InstallCta>
 
 <BrowserSwitcher />
 
@@ -200,7 +202,7 @@ In Firefox: **Einstellungen → Startseite → Start → Vorherige Fenster und T
 
 <Section id="closed" title="3. Bereits geschlossene Tabs zurückholen">
 
-Drücke <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>), um den zuletzt geschlossenen Tab oder das zuletzt geschlossene Fenster wieder zu öffnen; drücke erneut, um weiter zurückzugehen. Für Älteres öffnest du den Verlauf mit <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>.
+Drücke <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>), um den zuletzt geschlossenen Tab oder das zuletzt geschlossene Fenster wieder zu öffnen; drücke erneut, um weiter zurückzugehen. Für Älteres öffnest du den Verlauf mit <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>. Ist der ganze Browser abgestürzt oder wurde er beendet, hilft unsere Anleitung, [wie du Tabs nach einem Absturz wiederherstellst](/blog/restore-tabs-after-crash).
 
 <BrowserPanels section="closed">
 <BrowserPanel browser="chrome">
@@ -232,7 +234,9 @@ Firefox listet kürzlich geschlossene Tabs und Fenster im Menü **Chronik** („
 
 - **Chrome** kann eine Gruppe speichern und wieder öffnen, aber Erweiterungen sehen eine geschlossene gespeicherte Gruppe nicht ([tabGroups-API](https://developer.chrome.com/docs/extensions/reference/api/tabGroups)).
 - **Firefox**-Gruppen bleiben auf dem Gerät und werden nicht mit Firefox Sync übertragen.
-- **Edge** hat seit Edge 149 keine Sammlungen („Collections“) mehr.
+- **Edge** hat seit Edge 149 keine Sammlungen („Collections“) mehr ([was du stattdessen nutzen kannst](/blog/edge-collections-replacement)).
+
+Wie du Gruppen speicherst, wieder öffnest und synchronisierst, zeigt Schritt für Schritt unser [Leitfaden zu Tab-Gruppen in Chrome](/blog/chrome-tab-groups).
 
 {/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with the save option. */}
 
@@ -260,14 +264,14 @@ Die eingebauten Methoden decken jeweils ein Fenster, einen Neustart oder einen g
   head={['Tastenkürzel', 'Speichert']}
   keysColumn={0}
   rows={[
-    ['Ctrl+Shift+P', 'Alle anderen Tabs im Fenster'],
-    ['Ctrl+Shift+S', 'Den aktuellen Tab'],
-    ['Ctrl+Shift+K', 'Die Tabs links davon'],
-    ['Ctrl+Shift+U', 'Die Tabs rechts davon'],
+    ['Alt+Shift+O', 'Alle anderen Tabs im Fenster'],
+    ['Alt+Shift+S', 'Den aktuellen Tab'],
+    ['Alt+Shift+Comma', 'Die Tabs links davon'],
+    ['Alt+Shift+Period', 'Die Tabs rechts davon'],
   ]}
 />
 
-Auf dem Mac nimmst du <Kbd>⌘</Kbd>. Jedes Kürzel fragt, wohin gespeichert wird; **Schnellspeichern (neue Gruppe)** legt sofort eine Gruppe an. In Firefox öffnet <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> ein privates Fenster. Wähle dort unter `about:addons` → „Manage Extension Shortcuts“ eine andere Taste.
+Auf dem Mac drückst du <Kbd>Control</Kbd> statt <Kbd>Alt</Kbd>. Jedes Kürzel fragt, wohin gespeichert wird; **Schnellspeichern (neue Gruppe)** legt sofort eine Gruppe an. Diese Tasten bekommt eine neue Installation; eine ältere behält ihre bisherigen. Ändern kannst du jede davon auf der Tastenkürzel-Seite deines Browsers; wie das geht, zeigt unsere [Übersicht der Tastenkürzel für Tabs](/blog/tab-keyboard-shortcuts).
 
 ### Etwas aus Versehen geschlossen?
 
@@ -308,7 +312,7 @@ Auf dem Mac nimmst du <Kbd>⌘</Kbd>. Jedes Kürzel fragt, wohin gespeichert wir
   ]}
 />
 
-Schalte die Starteinstellung in jedem Fall ein. Ein einzelnes Fenster, das sich lohnt, speicherst du als Lesezeichen. Eine Erweiterung lohnt sich, wenn du mit mehreren Fenstern jonglierst oder einen geschlossenen Tab noch Tage später brauchst. Mehr dazu auf unserer [Vergleichsseite](/compare).
+Schalte die Starteinstellung in jedem Fall ein. Ein einzelnes Fenster, das sich lohnt, speicherst du als Lesezeichen. Für mehrere Fenster oder einen Tab, den du vor Tagen geschlossen hast, erledigt TabMerger das mit einem Klick und kann außerdem [alles in eine Datei exportieren](/blog/export-open-tabs). Mehr dazu auf unserer [Vergleichsseite](/compare) und in unserem [Vergleich der besten Tab-Manager-Erweiterungen](/blog/best-tab-manager-extensions).
 
 </Section>
 

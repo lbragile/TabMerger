@@ -1,0 +1,141 @@
+export const post = {
+  slug: 'share-a-set-of-tabs',
+  title: 'Comment partager plusieurs onglets à la fois avec quelqu’un',
+  navTitle: 'Partager plusieurs onglets',
+  seoTitle: 'Partager plusieurs onglets en une fois (Chrome, Edge, Firefox)',
+  description:
+    'Envoyez à un collègue ou à un ami tout un ensemble d’onglets : copiez les liens, partagez un fichier de favoris ou créez un lien de partage TabMerger chiffré de bout en bout, qui s’ouvre en un clic, sans compte.',
+  shareSummary: 'Partager plusieurs onglets : liens, fichier de favoris ou lien chiffré qui s’ouvre en un clic.',
+  dek: 'Coller douze liens dans une discussion, c’est pénible pour vous deux. Un seul lien vers tout l’ensemble, non.',
+  published: '2026-12-10',
+  updated: '2026-12-10',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Un lien de partage TabMerger ouvre une page en lecture seule ; aucun compte n’est nécessaire pour la consulter.', source: 'Page de partage TabMerger' },
+    { text: 'La clé de déchiffrement reste dans le #fragment du lien, que les navigateurs n’envoient jamais au serveur.', source: 'Code source de TabMerger', href: 'https://github.com/lbragile/TabMerger' },
+    { text: 'Créer des liens de partage nécessite Pro.', source: 'Tarifs de TabMerger', href: '/pricing' },
+    { text: 'Firefox 159 peut copier tous les liens d’un groupe d’onglets.', source: 'Texte du menu de Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Comment partager plusieurs onglets à la fois ?',
+      answer:
+        'Avec TabMerger Pro, sélectionnez les groupes et appuyez sur Partager : un seul lien chiffré les ouvre tous sur une page en lecture seule. Avec les outils du navigateur, vous pouvez ajouter les onglets aux favoris et envoyer le fichier de favoris exporté, ou, dans Firefox, copier tous les liens d’un groupe d’onglets.',
+    },
+    {
+      question: 'L’autre personne a-t-elle besoin de TabMerger ?',
+      answer: 'Non. Un lien de partage s’ouvre dans n’importe quel navigateur, et l’on peut ouvrir un onglet, une fenêtre ou tout à la fois. Avec TabMerger installé, la personne peut ensuite enregistrer les onglets dans son propre groupe.',
+    },
+    {
+      question: 'TabMerger peut-il lire les onglets que je partage ?',
+      answer: 'Non. Les onglets sont chiffrés dans votre navigateur avant l’envoi, et la clé se trouve uniquement dans le #fragment du lien, qui n’atteint jamais le serveur.',
+    },
+    {
+      question: 'Le partage est-il gratuit ?',
+      answer: 'La création de liens de partage fait partie de Pro. Copier des liens et partager un fichier de favoris ou un fichier JSON est gratuit.',
+    },
+  ],
+  images: [
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp', alt: 'TabMerger avec les groupes « Work » et « Reading list » sélectionnés et la barre de sélection affichant Star (Mettre en favori), Unstar (Retirer des favoris), Share (Partager) et Delete (Supprimer), thème clair' },
+    { src: '/blog/share-a-set-of-tabs/tm-selection-share-dark.webp', alt: 'TabMerger avec les groupes « Work » et « Reading list » sélectionnés et la barre de sélection affichant Star (Mettre en favori), Unstar (Retirer des favoris), Share (Partager) et Delete (Supprimer), thème sombre' },
+    { src: '/blog/share-a-set-of-tabs/share-page-light.webp', alt: 'La page Shared Groups (Groupes partagés) de TabMerger, en lecture seule, avec deux groupes et les boutons Open window (Ouvrir la fenêtre) et Open all tabs (Ouvrir tous les onglets), thème clair' },
+    { src: '/blog/share-a-set-of-tabs/share-page-dark.webp', alt: 'La page Shared Groups (Groupes partagés) de TabMerger, en lecture seule, avec deux groupes et les boutons Open window (Ouvrir la fenêtre) et Open all tabs (Ouvrir tous les onglets), thème sombre' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'bookmarks', 'chrome', 'edge', 'firefox'],
+  sources: [
+    { title: 'Import Chrome bookmarks & settings (export section)', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/96816', checked: '2026-11-21' },
+    {
+      title: 'TabMerger source code (sharing)',
+      publisher: 'GitHub',
+      url: 'https://github.com/lbragile/TabMerger',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/share-a-set-of-tabs/tm-selection-share-light.webp' },
+  ogImage: { src: '/blog/share-a-set-of-tabs/og.png', alt: 'Comment partager plusieurs onglets à la fois avec quelqu’un : un guide TabMerger, avec deux groupes sélectionnés pour le partage' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'manual', label: 'Sans extension' },
+    { id: 'tabmerger', label: 'Un seul lien chiffré' },
+    { id: 'what-they-see', label: 'Ce que voit l’autre personne' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['manual'],
+  browserFact: {
+    label: 'Copier ou exporter les liens',
+    values: { chrome: 'Gestionnaire de favoris → Exporter les favoris', edge: 'Favorites → Export favorites', firefox: 'Groupe d’onglets → Copier les liens dans le groupe' },
+  },
+}
+
+<QuickAnswer>
+
+La solution en un clic, c’est un lien de partage [TabMerger](/features) : sélectionnez vos groupes, appuyez sur **Partager** (Share) et collez le lien. La personne qui l’ouvre voit tous les onglets sur une page en lecture seule et peut ouvrir un onglet, une fenêtre ou tout à la fois, sans compte. Les onglets sont **chiffrés de bout en bout** : même TabMerger ne peut pas les lire. Sans extension, ajoutez les onglets aux favoris et envoyez le fichier de favoris exporté, ou, dans Firefox, copiez tous les liens d’un groupe d’onglets.
+
+</QuickAnswer>
+
+<InstallCta>Partagez tout un ensemble d’onglets avec un seul lien chiffré. Gratuit pour commencer ; le partage fait partie de Pro.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="manual" title="Comment partager des onglets sans extension ?">
+
+<BrowserPanels section="manual">
+<BrowserPanel browser="chrome">
+
+1. Appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> pour ajouter les onglets de la fenêtre aux favoris, dans un nouveau dossier.
+2. Ouvrez **⋮ → Favoris et listes → Gestionnaire de favoris** (Bookmark Manager), puis **⋮ (Plus) → Exporter les favoris** (Export bookmarks).
+3. Envoyez le fichier HTML. L’autre personne l’importe dans son navigateur (ou dans TabMerger).
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> pour ajouter les onglets de la fenêtre aux favoris, dans un nouveau dossier.
+2. Ouvrez les favoris (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>) et choisissez **Export favorites**.
+3. Envoyez le fichier HTML.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Placez les onglets dans un groupe d’onglets (faites glisser un onglet sur un autre).
+2. Faites un clic droit sur l’étiquette du groupe et choisissez **Copier les liens dans le groupe** (Copy links in group).
+3. Collez les liens dans un message ou un document.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>un fichier de favoris exporte *tous* vos favoris, et les liens collés arrivent sous forme d’un mur d’adresses que l’autre personne doit ouvrir un par un.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="Comment partager des onglets avec un seul lien ?">
+
+1. Dans TabMerger, enregistrez les onglets dans un groupe (**Fusionner avec l’actuel**, Merge with current, enregistre toutes les fenêtres ouvertes).
+2. Faites un **Ctrl+clic** (<Kbd>⌘</Kbd>+clic sur Mac) dans la barre latérale sur chaque groupe à partager.
+3. Appuyez sur **Partager** dans la barre de sélection. Le lien est copié dans le presse-papiers ; collez-le où vous voulez.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/tm-selection-share" alt="TabMerger avec les groupes « Work » et « Reading list » sélectionnés et la barre de sélection affichant Star (Mettre en favori), Unstar (Retirer des favoris), Share (Partager) et Delete (Supprimer), thème clair" darkAlt="TabMerger avec les groupes « Work » et « Reading list » sélectionnés et la barre de sélection affichant Star (Mettre en favori), Unstar (Retirer des favoris), Share (Partager) et Delete (Supprimer), thème sombre" boxes={[{ id: 'share', label: 'Share' }]} source="TabMerger 3.16.1">Deux groupes sélectionnés ; Share (Partager) crée un seul lien pour les deux (ici sur un compte gratuit, où le bouton est désactivé).</ThemedScreenshot>
+
+Comment le partage reste privé : TabMerger génère une nouvelle clé dans votre navigateur, chiffre les groupes avec elle et n’envoie que la copie chiffrée. La clé est placée dans le lien après le `#`, une partie de l’adresse que les navigateurs n’envoient jamais à un serveur : seules les personnes qui ont le lien complet peuvent lire les onglets. La création de liens fait partie de [Pro](/pricing).
+
+</Section>
+
+<Section id="what-they-see" title="Que voit l’autre personne ?">
+
+Une page en lecture seule avec chaque groupe et chaque fenêtre, le nombre d’onglets et des boutons pour **Ouvrir tous les onglets** (Open all tabs) d’une fenêtre, **Ouvrir la fenêtre** (Open window) pour un groupe entier, ou ouvrir des onglets un par un. Pas besoin de compte, ni de TabMerger. Si la personne utilise TabMerger, elle peut ouvrir les onglets et les enregistrer dans son propre groupe avec **Fusionner avec l’actuel**.
+
+<ThemedScreenshot src="/blog/share-a-set-of-tabs/share-page" width={1600} height={1115} alt="La page Shared Groups (Groupes partagés) de TabMerger, en lecture seule, avec deux groupes et les boutons Open window (Ouvrir la fenêtre) et Open all tabs (Ouvrir tous les onglets), thème clair" darkAlt="La page Shared Groups (Groupes partagés) de TabMerger, en lecture seule, avec deux groupes et les boutons Open window (Ouvrir la fenêtre) et Open all tabs (Ouvrir tous les onglets), thème sombre" source="tabmerger.com/share/demo">La page de partage, depuis le lien de démonstration public de TabMerger.</ThemedScreenshot>
+
+Vous préférez un fichier ? [Exporter en JSON](/blog/export-open-tabs) (Export JSON) fonctionne dans la version gratuite de TabMerger, et [transférer des onglets vers un autre ordinateur](/blog/move-tabs-between-computers) explique comment faire entre vos propres appareils.
+
+<InstallCta>Gratuit pour Chrome, Edge et Firefox. Aucun compte nécessaire pour commencer.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

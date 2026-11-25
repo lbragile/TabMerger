@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'chrome-tab-groups',
+  title: 'Chrome टैब ग्रुप: इन्हें सेव करने, फिर से खोलने और सिंक करने का तरीका',
+  seoTitle: 'Chrome टैब ग्रुप: सेव करें, फिर से खोलें और सिंक करें (और इनकी सीमाएँ)',
+  description:
+    'Chrome टैब ग्रुप कैसे काम करते हैं: ग्रुप बनाना, छोटा करना, बंद करना और सेव किया गया ग्रुप फिर से खोलना, आपके दूसरे डिवाइसों पर क्या सिंक होता है, और एक्सटेंशन क्या देख सकते हैं और क्या नहीं।',
+  shareSummary: 'Chrome टैब ग्रुप बनाएँ, सेव करें, फिर से खोलें और सिंक करें, और जानें कि वे कहाँ कम पड़ते हैं।',
+  dek: 'बंद किया गया ग्रुप मिटता नहीं, सेव हो जाता है। वह कहाँ जाता है, दूसरे डिवाइसों पर क्या साथ आता है और क्या नहीं, यहाँ जानें।',
+  published: '2026-11-23',
+  updated: '2026-11-23',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'ग्रुप बंद करने पर वह सेव हो जाता है; उसे बुकमार्क बार या ⋮ → टैब ग्रुप से फिर से खोलें।',
+      source: 'Chrome सहायता',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'ग्रुप मिटाने या ग्रुप से टैब अलग करने पर वह ग्रुप साइन इन किए गए हर डिवाइस से हट जाता है।', source: 'Chrome सहायता' },
+    {
+      text: 'chrome.tabGroups सिर्फ़ खुली विंडो के ग्रुप देखता है।',
+      source: 'chrome.tabGroups दस्तावेज़',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'नए इंस्टॉल किए गए Chrome 157 में बुकमार्क बार वाली टैब ग्रुप की दोनों सेटिंग चालू थीं।', source: 'chrome://settings/appearance, 20 नवंबर 2026' },
+  ],
+  faq: [
+    {
+      question: 'Chrome में टैब ग्रुप कैसे सेव करें?',
+      answer:
+        'ग्रुप के नाम पर राइट क्लिक करें और ग्रुप बंद करें चुनें। Chrome उसे रख लेता है, और आप उसे बुकमार्क बार से या ⋮ → टैब ग्रुप से फिर से खोल सकते हैं।',
+    },
+    {
+      question: 'क्या Chrome टैब ग्रुप डिवाइसों के बीच सिंक होते हैं?',
+      answer:
+        'सेव किए गए ग्रुप आपके Google खाते के साथ चलते हैं: Chrome सहायता चेतावनी देती है कि किसी ग्रुप को मिटाने या उसके टैब ग्रुप से अलग करने पर वह ग्रुप उसी खाते से साइन इन किए गए हर डिवाइस से हट जाता है।',
+    },
+    {
+      question: 'ग्रुप बंद करें और ग्रुप मिटाएं में क्या फ़र्क है?',
+      answer: 'ग्रुप बंद करें टैब बंद कर देता है और ग्रुप को रख लेता है, ताकि आप उसे बाद में फिर से खोल सकें। ग्रुप मिटाएं उसे हटा देता है, आपके दूसरे डिवाइसों पर भी।',
+    },
+    {
+      question: 'क्या कोई टैब मैनेजर एक्सटेंशन मेरे बंद किए गए Chrome ग्रुप सेव कर सकता है?',
+      answer:
+        'जब तक वे बंद हैं, नहीं: एक्सटेंशन API सिर्फ़ खुली विंडो के ग्रुप के बारे में बताता है। पहले ग्रुप को फिर से खोलें, फिर उसे एक्सटेंशन से सेव करें।',
+    },
+  ],
+  images: [
+    { src: '/blog/chrome-tab-groups/chrome-tab-groups-setting.webp', alt: 'Chrome सेटिंग में Appearance (दिखने का तरीका), जिसमें Show tab groups in bookmarks bar (बुकमार्क बार में टैब ग्रुप दिखाएं) और Automatically pin new tab groups created on any device to the bookmarks bar (बुकमार्क बार में नए टैब ग्रुप अपने-आप पिन करने की सुविधा) दोनों चालू हैं' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp', alt: 'TabMerger का Now Open (अभी खुले हुए): छह टैब, तीन पर नीला Sprint टैग और तीन पर हरा Thesis टैग, लाइट थीम' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-dark.webp', alt: 'TabMerger का Now Open (अभी खुले हुए): छह टैब, तीन पर नीला Sprint टैग और तीन पर हरा Thesis टैग, डार्क थीम' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-light.webp', alt: 'TabMerger ग्रुप Sprint + thesis, जिसमें वही छह टैब अपने Sprint और Thesis टैग के साथ हैं, लाइट थीम' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-dark.webp', alt: 'TabMerger ग्रुप Sprint + thesis, जिसमें वही छह टैब अपने Sprint और Thesis टैग के साथ हैं, डार्क थीम' },
+  ],
+  tags: ['chrome', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (tab groups with the keyboard)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp' },
+  ogImage: { src: '/blog/chrome-tab-groups/og.png', alt: 'Chrome tab groups: how to save, reopen and sync them टाइटल कार्ड: TabMerger की एक गाइड, जिसमें टैब अपने Chrome ग्रुप के हिसाब से टैग किए गए हैं' },
+  toc: [
+    { id: 'quick', label: 'छोटा जवाब' },
+    { id: 'basics', label: 'बनाना और छोटा करना' },
+    { id: 'save', label: 'सेव करना और फिर से खोलना' },
+    { id: 'sync', label: 'क्या ये सिंक होते हैं?' },
+    { id: 'limits', label: 'सीमाएँ' },
+    { id: 'tabmerger', label: 'ग्रुप हमेशा के लिए रखें' },
+    { id: 'faq', label: 'अक्सर पूछे जाने वाले प्रश्न' },
+  ],
+}
+
+<QuickAnswer>
+
+ग्रुप शुरू करने के लिए किसी टैब पर राइट क्लिक करें और **टैब को ग्रुप में जोड़ें** (“Add tab to group”) चुनें, फिर उसे नाम दें और रंग चुनें। ग्रुप सेव करने के लिए उसके नाम पर राइट क्लिक करें और **ग्रुप बंद करें** (“Close group”) चुनें: Chrome उसे रख लेता है, और आप उसे बुकमार्क बार से या **⋮ → टैब ग्रुप** (“Tab groups”) से फिर से खोल सकते हैं। सेव किए गए ग्रुप आपके Google खाते के साथ चलते हैं, इसलिए एक जगह मिटाया गया ग्रुप हर जगह से मिट जाता है। ग्रुप को हमेशा के लिए सुरक्षित रखने के लिए उन्हें [TabMerger](/features) में सेव करें: यह हर टैब के Chrome ग्रुप का नाम और रंग याद रखता है, और टैब फिर से खोलने पर उन्हें वापस ग्रुप में रख देता है।
+
+</QuickAnswer>
+
+<InstallCta>अपने Chrome टैब ग्रुप सुरक्षित, खोजने लायक और सिंक रखें। Chrome, Edge और Firefox के लिए मुफ़्त।</InstallCta>
+
+<Section id="basics" title="Chrome टैब ग्रुप कैसे काम करते हैं?">
+
+टैब ग्रुप एक ही विंडो में नाम और रंग वाले टैब की एक कतार है।
+
+1. किसी टैब पर राइट क्लिक करें और **टैब को ग्रुप में जोड़ें** → **नया ग्रुप** (“New group”) या कोई मौजूदा ग्रुप चुनें।
+2. ग्रुप को नाम दें और रंग चुनें। बाद में नाम पर राइट क्लिक करके आप उसका नाम या रंग बदल सकते हैं या उसमें नया टैब जोड़ सकते हैं।
+3. किसी टैब को जोड़ने के लिए उसे ग्रुप में खींचें; निकालने के लिए टैब पर राइट क्लिक करें → **ग्रुप से हटाएं** (“Remove from group”)।
+4. ग्रुप को एक लेबल जितना छोटा करने के लिए उसके नाम पर क्लिक करें, और बड़ा करने के लिए फिर से क्लिक करें।
+
+कीबोर्ड से: टैब पर फ़ोकस आने तक <Kbd>F6</Kbd> दबाएँ, <Kbd>Tab</Kbd> से ग्रुप तक जाएँ, फिर मेन्यू बटन ग्रुप का मेन्यू खोलता है। <Kbd>Space</Kbd> या <Kbd>Enter</Kbd> उसे छोटा करता है, और <Kbd>Ctrl</Kbd>+<Kbd>←</Kbd>/<Kbd>→</Kbd> उसे खिसकाता है।
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with Close group and Delete group. */}
+
+</Section>
+
+<Section id="save" title="टैब ग्रुप कैसे सेव करें और वापस कैसे पाएँ?">
+
+**ग्रुप बंद करें** ही Chrome का सेव बटन है। टैब बंद हो जाते हैं, ग्रुप नहीं: Chrome उसे रख लेता है और दो जगह दिखाता है।
+
+- **बुकमार्क बार:** ग्रुप के नाम वाला ग्रिड आइकॉन। फिर से खोलने के लिए उस पर क्लिक करें।
+- **⋮ मेन्यू → टैब ग्रुप:** आपके सेव किए गए ग्रुप।
+
+बुकमार्क बार वाला हिस्सा **सेटिंग → दिखने का तरीका** (“Settings → Appearance”) में मौजूद दो सेटिंग से तय होता है। नई Chrome 157 प्रोफ़ाइल में दोनों चालू थीं।
+
+<AnnotatedFigure src="/blog/chrome-tab-groups/chrome-tab-groups-setting.webp" alt="Chrome सेटिंग में Appearance (दिखने का तरीका), जिसमें Show tab groups in bookmarks bar (बुकमार्क बार में टैब ग्रुप दिखाएं) और Automatically pin new tab groups created on any device to the bookmarks bar (बुकमार्क बार में नए टैब ग्रुप अपने-आप पिन करने की सुविधा) दोनों चालू हैं" width={1600} height={844} eager boxes={[{ id: 'tab-groups-setting', label: 'बुकमार्क बार में दिखाएं' }, { id: 'auto-pin', label: 'नए ग्रुप पिन करें' }]} source="chrome://settings/appearance · Chrome 157.0.8103.80">Chrome के Appearance (दिखने का तरीका) पेज पर टैब ग्रुप की दोनों सेटिंग।</AnnotatedFigure>
+
+<Catch>सेव किए गए ग्रुप में सिर्फ़ पते रहते हैं। यह बैकअप नहीं है: एक बार मिटाया, तो वह हर डिवाइस से चला गया।</Catch>
+
+</Section>
+
+<Section id="sync" title="क्या टैब ग्रुप डिवाइसों के बीच सिंक होते हैं?">
+
+हाँ, आपके Google खाते के ज़रिए। Chrome सहायता इसके साइड इफ़ेक्ट के बारे में साफ़ बताती है: जब आप किसी ग्रुप को **मिटाते** हैं, या उसके टैब को ग्रुप से अलग करते हैं (**ग्रुप से अलग करें**, “Ungroup”), तो वह ग्रुप आपके डिवाइस *और* उसी खाते से साइन इन किए गए हर दूसरे डिवाइस से हट जाता है। **बुकमार्क बार में नए टैब ग्रुप अपने-आप पिन करने की सुविधा** (“Automatically pin new tab groups created on any device to the bookmarks bar”) सेटिंग उन ग्रुप को भी पिन करती है जो आपने कहीं और बनाए हैं।
+
+असल में इसका मतलब है:
+
+- एक कंप्यूटर पर बनाए गए ग्रुप उसी खाते से साइन इन किए गए दूसरे कंप्यूटर पर दिख सकते हैं; पिन वाली सेटिंग इसी की बात करती है।
+- लैपटॉप पर सफ़ाई करने से डेस्कटॉप पर भी वही ग्रुप मिट जाते हैं।
+
+Firefox 159 में भी टैब ग्रुप हैं, जिनमें **Save and close group** और **Closed Groups** सूची मिलती है; इस गाइड के चरण और स्क्रीनशॉट Chrome के हैं। Firefox इस्तेमाल करते हैं तो [Firefox टैब ग्रुप](/blog/firefox-tab-groups) देखें।
+
+</Section>
+
+<Section id="limits" title="टैब ग्रुप कहाँ कम पड़ते हैं?">
+
+- **हर ग्रुप एक विंडो में।** ग्रुप एक ही विंडो में रहता है। तीन विंडो में फैले “जो कुछ भी खुला है” उसे सेव करने के लिए तीन या ज़्यादा ग्रुप चाहिए।
+- **सिर्फ़ पते।** बुकमार्क की तरह, सेव किया गया ग्रुप पेज को नए सिरे से खोलता है: स्क्रॉल की जगह और फ़ॉर्म में भरी जानकारी चली जाती है।
+- **बंद होने पर एक्सटेंशन से छिपे।** `chrome.tabGroups` API उन ग्रुप के बारे में बताता है जो किसी खुली विंडो में हैं: इसके लौटाए हर ग्रुप में `windowId` होता है, ग्रुप बंद करने पर `onRemoved` चलता है, और ऐसा कोई कॉल नहीं है जो सेव किए गए, बंद ग्रुप की सूची दे। आपने जो ग्रुप बंद किया है, उसे कोई टैब मैनेजर तब तक बैकअप नहीं कर सकता, जब तक आप उसे फिर से न खोलें।
+- **मिटाना भी फैलता है।** जो सिंक ग्रुप को इतना काम का बनाता है, वही किसी गलती को भी हर डिवाइस तक पहुँचा देता है।
+
+[सभी खुले टैब सेव करने](/blog/save-all-open-tabs) वाली हमारी गाइड ग्रुप की तुलना बुकमार्क, स्टार्टअप पर रीस्टोर और सेशन मैनेजर से करती है, और [बहुत ज़्यादा टैब वाला रूटीन](/blog/manage-too-many-tabs) बताता है कि रोज़ के काम में ग्रुप कहाँ फ़िट होते हैं।
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger के साथ अपने ग्रुप हमेशा के लिए रखें">
+
+[TabMerger](/features), Chrome, Edge और Firefox के लिए हमारा मुफ़्त एक्सटेंशन, आपके खुले Chrome टैब ग्रुप पढ़ता है। **अभी खुले हुए** हर टैब पर उसके ग्रुप का नाम और रंग टैग करता है, और किसी विंडो को TabMerger ग्रुप में सेव करने पर ये टैग बने रहते हैं। वहाँ सेव किए गए टैब पर तब कोई असर नहीं पड़ता, जब किसी दूसरे डिवाइस पर Chrome ग्रुप मिटाया जाता है।
+
+<ScreenshotThemeToggle />
+
+<Carousel label="TabMerger में Chrome टैब ग्रुप सेव करना" steps={[{ title: 'अभी खुले हुए' }, { title: 'सेव किया गया ग्रुप' }]}>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-now-open-groups" alt="TabMerger का Now Open (अभी खुले हुए): छह टैब, तीन पर नीला Sprint टैग और तीन पर हरा Thesis टैग, लाइट थीम" darkAlt="TabMerger का Now Open (अभी खुले हुए): छह टैब, तीन पर नीला Sprint टैग और तीन पर हरा Thesis टैग, डार्क थीम" boxes={[{ id: 'group-badge-1', label: 'Sprint ग्रुप' }, { id: 'group-badge-4', label: 'Thesis ग्रुप' }]} source="TabMerger 3.16.1">Now Open (अभी खुले हुए) में दिखते दो Chrome टैब ग्रुप, Sprint और Thesis।</ThemedScreenshot>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-saved-groups" alt="TabMerger ग्रुप Sprint + thesis, जिसमें वही छह टैब अपने Sprint और Thesis टैग के साथ हैं, लाइट थीम" darkAlt="TabMerger ग्रुप Sprint + thesis, जिसमें वही छह टैब अपने Sprint और Thesis टैग के साथ हैं, डार्क थीम" boxes={[{ id: 'group-badge-1', label: 'Sprint ग्रुप' }, { id: 'group-badge-4', label: 'Thesis ग्रुप' }]} source="TabMerger 3.16.1">Merge with current (वर्तमान के साथ विलय करें) के बाद: सेव किया गया ग्रुप हर टैब का Chrome ग्रुप बनाए रखता है।</ThemedScreenshot>
+</Carousel>
+
+सेव की गई विंडो को Chrome या Edge में फिर से खोलें, और उसके टैब उन्हीं नामों और रंगों वाले टैब ग्रुप में लौट आते हैं।
+
+<InstallCta>Chrome, Edge और Firefox के लिए मुफ़्त। शुरू करने के लिए अकाउंट की ज़रूरत नहीं।</InstallCta>
+
+</Section>
+
+<Section id="faq" title="अक्सर पूछे जाने वाले प्रश्न">
+
+<Faq items={post.faq} />
+
+</Section>

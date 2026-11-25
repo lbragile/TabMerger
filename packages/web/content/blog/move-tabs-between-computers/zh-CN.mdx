@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'move-tabs-between-computers',
+  title: '如何把标签页转移到另一台电脑',
+  navTitle: '把标签页转移到另一台电脑',
+  seoTitle: '如何把标签页迁移到另一台电脑（Chrome、Edge、Firefox）',
+  description:
+    '把打开的标签页从一台电脑转移到另一台：浏览器同步和其他设备上的标签页、发送标签页功能、随身携带的文件，或 TabMerger Pro 在 Chrome、Edge 和 Firefox 之间的端到端加密同步。',
+  shareSummary: '把标签页从一台电脑带到另一台：同步、发送标签页、文件，或加密同步。',
+  dek: '从笔记本到台式机，从公司到家里，从旧电脑到新电脑：带走标签页的四种方法。',
+  published: '2026-12-03',
+  updated: '2026-12-03',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger Pro 以端到端加密的方式在 Chrome、Edge 和 Firefox 之间同步分组和会话。', source: 'TabMerger 价格与功能', href: '/pricing' },
+    { text: 'TabMerger 的“导出 JSON”和“导入文件”在免费版中就能转移全部内容。', source: 'TabMerger 3.16.1' },
+    {
+      text: '只有开启了“历史记录和标签页”同步，Chrome 才会列出其他设备上的标签页。',
+      source: 'Chrome 帮助',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'Firefox 可以从标签页的菜单把它发送到另一台设备。', source: 'Firefox 159 菜单文字' },
+  ],
+  faq: [
+    {
+      question: '怎样把标签页发送到我的手机或笔记本？',
+      answer:
+        '在同一个浏览器内，在两台设备上都登录并使用它的同步：Chrome 和 Edge 会在历史记录中列出其他设备上的标签页，Firefox 可以从右键菜单发送标签页。跨浏览器时，TabMerger Pro 会同步你保存的分组。',
+    },
+    {
+      question: '可以把标签页从 Chrome 转移到 Firefox 吗？',
+      answer:
+        '浏览器同步只在同一个浏览器内有效。TabMerger 可在 Chrome、Edge 和 Firefox 中使用：免费导出一个 JSON 文件并在另一端导入，或者让 Pro 同步让两边保持一致。',
+    },
+    {
+      question: '需要账户吗？',
+      answer: '用文件就不需要：TabMerger 的“导出 JSON”和“导入文件”无需账户。浏览器同步和 TabMerger Pro 同步则需要。',
+    },
+    {
+      question: '同步的标签页数据是私密的吗？',
+      answer:
+        'TabMerger Pro 会在同步之前在你的设备上加密分组和会话，因此服务器无法读取它们。浏览器同步的隐私取决于浏览器自身的设置。',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: 'TabMerger 设置中的 Data（数据），Import & export（导入与导出）下方有 Export JSON（导出 JSON）和 Import file（导入文件）按钮，浅色主题' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: 'TabMerger 设置中的 Data（数据），Import & export（导入与导出）下方有 Export JSON（导出 JSON）和 Import file（导入文件）按钮，深色主题' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'session-management', 'cross-browser', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/move-tabs-between-computers/tm-merge-menu-light.webp' },
+  ogImage: { src: '/blog/move-tabs-between-computers/og.png', alt: '如何把标签页转移到另一台电脑：TabMerger 指南，展示 Export JSON 和 Import file 按钮' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'pick', label: '该用哪种方法' },
+    { id: 'tabmerger', label: '用 TabMerger' },
+    { id: 'browser', label: '用浏览器同步' },
+    { id: 'faq', label: '常见问题' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: '其他设备的标签页',
+    values: { chrome: '历史记录 → 从其他设备打开的标签页', edge: 'History → Tabs from other devices', firefox: 'Firefox View → 其他设备' },
+  },
+}
+
+<QuickAnswer>
+
+如果只需迁移一次，在旧电脑上使用 [TabMerger](/features) 的 **设置 → 数据 → 导出 JSON**（Settings → Data → Export JSON），在新电脑上使用 **导入文件**（Import file）：所有已保存的分组都会转移过去（请先把打开的窗口保存到一个分组中），免费、无需账户，Chrome、Edge 和 Firefox 都能用。想让两台电脑始终保持一致，**TabMerger Pro** 会以端到端加密的方式自动同步你的分组和会话。只用一个浏览器？在两台电脑上都登录它并使用它的同步即可。
+
+</QuickAnswer>
+
+<InstallCta>两次点击，把所有标签页带到新电脑。Chrome、Edge 和 Firefox 均可免费使用。</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="pick" title="该用哪种方法？">
+
+<ComparisonTable
+  head={['你想要……', '最佳方法']}
+  rowHeaders
+  minWidth="34rem"
+  rows={[
+    ['一次性把所有内容转移到新电脑', 'TabMerger 导出 JSON → 导入文件（免费版）'],
+    ['让两台或更多电脑保持一致', 'TabMerger Pro 同步，端到端加密'],
+    ['在不同浏览器之间转移', 'TabMerger（免费版用文件，Pro 用同步）'],
+    ['在同一浏览器中，从另一台设备取回一个标签页', '浏览器同步或发送标签页'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabmerger" title="如何用 TabMerger 转移标签页？">
+
+**一次性，用文件（免费版）：**
+
+1. 在旧电脑上，把要转移的打开窗口保存到一个分组中：在分组的 **⋯** 菜单中选择 **与当前合并**（Merge with current）。导入会添加已保存的分组；文件中的“当前打开”（Now Open）不会导入，因为那是旧浏览器中打开的标签页。
+2. 打开 TabMerger → **设置 → 数据** → **导出 JSON**。
+3. 把文件复制到新电脑（用 U 盘、发邮件给自己，或通过云盘）。
+4. 在新电脑上安装 TabMerger，然后进入 **设置 → 数据** → **导入文件**。你的分组会出现在已有分组的旁边。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="TabMerger 设置中的 Data（数据），Import & export（导入与导出）下方有 Export JSON（导出 JSON）和 Import file（导入文件）按钮，浅色主题" darkAlt="TabMerger 设置中的 Data（数据），Import & export（导入与导出）下方有 Export JSON（导出 JSON）和 Import file（导入文件）按钮，深色主题" boxes={[{ id: 'export-json', label: '导出 JSON' }, { id: 'import-file', label: '导入文件' }]} source="TabMerger 3.16.1">在一台电脑上导出，在另一台电脑上导入。</ThemedScreenshot>
+
+**始终同步（[Pro](/pricing)）**：在每台电脑上登录 TabMerger，你的分组和会话就会跟着你走，无论在 Chrome、Edge 还是 Firefox 中。所有内容在同步之前都会在你的设备上加密，因此服务器无法读取你的标签页。Pro 还会显示你其他设备上打开的标签页并可在这里恢复，还会保留自动备份。工作原理，以及我们的服务器能看到什么、看不到什么：[在设备之间同步标签页](/blog/sync-tabs-between-devices-with-tabmerger)。
+
+文件包含哪些内容，请参阅 [如何导出打开的标签页](/blog/export-open-tabs)。
+
+</Section>
+
+<Section id="browser" title="如何用浏览器自带的同步转移标签页？">
+
+这种方法适用于两台电脑使用同一个浏览器，并且你在两台电脑上都登录了该浏览器的情况：
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+1. 在两台电脑上都登录 Chrome。
+2. 开启 **历史记录和标签页**（History and tabs）：进入 **设置 → 您与 Google**（Settings → You and Google），选择你的账号名称，然后开启它。
+3. 在另一台电脑上打开历史记录（<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>），选择 **从其他设备打开的标签页**（Tabs from other devices）。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. 在两台电脑上都登录 Edge 并开启同步。
+2. 在另一台电脑上打开历史记录（<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>），选择 **Tabs from other devices**（其他设备上的标签页）。
+3. Edge 158 还有 **Send tab to your devices**（将标签页发送到你的设备），可发送单个页面。
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. 在两台电脑上都登录 Firefox，并开启打开的标签页的同步。
+2. 右键点击标签页并选择 **发送到设备**（Send to Device），即可把它推送到另一台电脑。
+3. 或者在那台电脑上打开 **Firefox View**，在 **其他设备**（Tabs from other devices）下查看。
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>浏览器同步只在同一个浏览器内有效，只显示另一台设备上此刻打开的内容，也不会保留你关闭的标签页。要转移全部标签页并跨浏览器使用，请用 TabMerger。</Catch>
+
+旧电脑上浏览器崩溃后丢了标签页？先看 [如何在崩溃后恢复标签页](/blog/restore-tabs-after-crash)。想了解全貌，请看 [会话管理器能做什么](/blog/browser-session-manager)。
+
+<InstallCta>Chrome、Edge 和 Firefox 均可免费使用。无需账户即可开始。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

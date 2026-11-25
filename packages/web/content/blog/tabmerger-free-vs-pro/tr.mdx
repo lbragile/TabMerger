@@ -1,0 +1,149 @@
+export const post = {
+  slug: 'tabmerger-free-vs-pro',
+  title: 'TabMerger Ücretsiz ve Pro: her planda tam olarak neler var',
+  navTitle: 'TabMerger Ücretsiz ve Pro',
+  seoTitle: 'TabMerger Ücretsiz ve Pro: sınırlar, senkronizasyon, fiyat ve iptal edersen ne olur',
+  description:
+    'TabMerger Ücretsiz planındaki her şey, Pro’nun eklediği her şey, sınırların nasıl uygulandığı ve bir Pro planı sona ererse sekmelerine ne olduğu. Gizli madde yok.',
+  shareSummary: 'Ücretsiz planda neler var, Pro neler ekliyor ve iptal edersen ne oluyor. Gizli madde yok.',
+  dek: 'Ücretsiz plan eksiksiz bir sekme yöneticisidir. Pro ise daha fazla sekme, daha fazla bilgisayar ve hiç düşünmen gerekmeyen yedekler içindir.',
+  published: '2026-12-20',
+  updated: '2026-12-20',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Ücretsiz: 5 grup, 50 sekme, 3 URL kuralı, 3 oturum, hesap gerekmez.', source: 'TabMerger fiyatları', href: '/pricing' },
+    { text: 'Pro: ayda US$3.99 veya yılda US$42.99, sınır olmadan ve şifreli senkronizasyonla.', source: 'TabMerger fiyatları', href: '/pricing' },
+    { text: 'Sunucularımızı kullanan her şey yalnızca uygulamada değil, sunucuda da denetlenir.', source: 'TabMerger 3.16.1 kaynak kodu' },
+    { text: 'Pro sona ererse hiçbir şey silinmez.', source: 'TabMerger 3.16.1 kaynak kodu' },
+  ],
+  faq: [
+    {
+      question: 'TabMerger ücretsiz mi?',
+      answer:
+        'Evet. Ücretsiz plan hesap gerektirmez ve sınırları içinde gruplar, oturumlar, arama, otomatik kaydetme, “Son kapatılanlar”, URL kuralları, içe ve dışa aktarma sunar: 5 grup, 50 sekme, 3 URL kuralı ve 3 oturum.',
+    },
+    {
+      question: 'TabMerger Pro neler ekler?',
+      answer:
+        'Gruplarda, sekmelerde, kurallarda ve oturumlarda sınır yok; cihazlar arasında uçtan uca şifreli senkronizasyon; otomatik şifreli yedekler; her otomatik kayıt saklanır; 2 yerine 30 günlük “Son kapatılanlar”; ve öncelikli destek.',
+    },
+    {
+      question: 'TabMerger Pro ne kadar?',
+      answer: 'Ayda US$3.99 veya yılda US$42.99 (aylık ödemeye göre yaklaşık %10 daha az). İstediğin zaman iptal edebilir ve ödediğin dönemin sonuna kadar Pro’yu kullanmaya devam edersin.',
+    },
+    {
+      question: 'Pro’yu iptal edersem sekmelerime ne olur?',
+      answer:
+        'Hiçbir şey silinmez. Ücretsiz planın sınırlarını aşan gruplar ve sekmeler, yeniden yükseltene ya da yer açana kadar cihazında kilitli olarak kalır. Yeni değişiklikler artık senkronize edilmez; hesabında zaten olanlar orada kalır.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabmerger-free-vs-pro/tm-over-limit-light.webp', alt: 'Ücretsiz planda 7 kayıtlı grubuyla TabMerger: son ikisi kilitli ve bir başlık Pro öneriyor, açık tema' },
+    { src: '/blog/tabmerger-free-vs-pro/tm-over-limit-dark.webp', alt: 'Ücretsiz planda 7 kayıtlı grubuyla TabMerger: son ikisi kilitli ve bir başlık Pro öneriyor, koyu tema' },
+  ],
+  tags: ['tabmerger-guides', 'tab-manager', 'comparison', 'browser-productivity'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabmerger-free-vs-pro/tm-over-limit-light.webp' },
+  ogImage: { src: '/blog/tabmerger-free-vs-pro/og.png', alt: 'TabMerger Ücretsiz ve Pro: sınırı aşan iki grubu kilitli Ücretsiz plan' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'problem', label: 'Ücretsiz mi, ücretli mi?' },
+    { id: 'compare', label: 'Yan yana' },
+    { id: 'why', label: 'Sınır neden burada' },
+    { id: 'enforce', label: 'Sınırlar nasıl denetlenir' },
+    { id: 'cancel', label: 'Pro sona ererse' },
+    { id: 'choose', label: 'Hangi plan uygun' },
+    { id: 'faq', label: 'SSS' },
+  ],
+}
+
+<QuickAnswer>
+
+**Ücretsiz** plan, hesap gerektirmeyen eksiksiz bir sekme yöneticisidir: 5 grup, 50 sekme, 3 URL kuralı ve 3 oturum; bunlara ek olarak arama, otomatik kaydetme (en yeni 2 kayıt saklanır), 2 günlük “Son kapatılanlar” ile içe ve dışa aktarma. **Pro** (ayda US$3.99 veya yılda US$42.99) tüm sınırları kaldırır ve cihazlar arasında uçtan uca şifreli senkronizasyon, otomatik şifreli yedekler, saklanan tüm otomatik kayıtlar ve 30 günlük “Son kapatılanlar” ekler. Pro sona ererse hiçbir şey silinmez.
+
+</QuickAnswer>
+
+<InstallCta>Ücretsiz başla, hesap gerekmez. Chrome, Edge ve Firefox.</InstallCta>
+
+<Section id="problem" title="Ücretsiz mi, ücretli mi: asıl soru">
+
+Çoğu kişi bir sekme yöneticisi yüklemeden önce iki şeyi merak eder: “Ücretsiz sürüm gerçekten işe yarar mı?” ve “Ödeyip sonra bırakırsam sekmelerimi kaybeder miyim?” İkisi de net bir cevabı hak ediyor. Bu yüzden burada her planın neler içerdiği, bunun nasıl uygulandığı ve sınırlarda ne olduğu var.
+
+</Section>
+
+<Section id="compare" title="Ücretsiz ve Pro, yan yana">
+
+<ComparisonTable
+  head={['', 'Ücretsiz', 'Pro']}
+  rowHeaders
+  minWidth="34rem"
+  rows={[
+    ['Fiyat', 'US$0, hesap gerekmez', 'Ayda US$3.99 veya yılda US$42.99'],
+    ['Gruplar', 'En fazla 5', 'Sınırsız'],
+    ['Sekmeler', 'En fazla 50', 'Sınırsız'],
+    ['URL kuralları', 'En fazla 3', 'Sınırsız'],
+    ['Oturumlar', 'En fazla 3, bu tarayıcıda', 'Sınırsız, cihazlar arasında senkronize'],
+    ['Açık sekmeleri otomatik kaydet', 'En yeni 2 kayıt saklanır', 'Tümü saklanır'],
+    ['Son kapatılan sekmeler', 'Son 2 gün', 'Son 30 gün'],
+    ['Arama, notlar, hatırlatıcılar, içe ve dışa aktarma', 'Evet', 'Evet'],
+    ['Sürükle ve bırak, klavye kısayolları', 'Evet', 'Evet'],
+    ['Cihazlar arasında bulut eşitleme (uçtan uca şifreli)', 'Hayır, bu cihazda saklanır', 'Evet'],
+    ['Otomatik şifreli yedekler', 'Hayır', 'Evet'],
+    ['Paylaşım bağlantıları, Ayarlar → Cihazlar', 'Hayır', 'Evet'],
+    ['Destek', 'Evet', 'Öncelikli'],
+  ]}
+/>
+
+Fiyatlar için esas alınan kaynak [fiyatlandırma sayfasıdır](/pricing); yıllık plan, on iki aylık ödemeden yaklaşık %10 daha ucuzdur.
+
+</Section>
+
+<Section id="why" title="Planlar arasındaki sınır neden burada">
+
+Sınır maliyeti izler. Yalnızca tarayıcında çalışan her şeyi ücretsiz vermek bize hiçbir şeye mal olmaz; bu yüzden Ücretsiz plan sekme yöneticisinin tamamını alır: gruplar, arama, otomatik kaydetme, “Son kapatılanlar”, URL kuralları, içe ve dışa aktarma; sınırlar da bir kişinin günlük işine göre ayarlanmıştır.
+
+Pro, sunucularımızda çalışanların bedelini öder: şifreli gruplarının, oturumlarının ve yedeklerinin senkronize edilip saklanması ve cihazlarının Ayarlar → Cihazlar bölümünde paylaştığı açık sekmeler. Ayrıca sekmeleri 5 grubu ve 50 sekmeyi aşanlar için yerel sınırları da kaldırır.
+
+</Section>
+
+<Section id="enforce" title="Sınırlar nasıl denetlenir">
+
+- **Cihazında:** grup, sekme, kural ve oturum sınırlarını, otomatik kayıtların dönüşümünü ve “Son kapatılanlar” saklama süresini uzantı uygular. Bu veriler tarayıcından hiç çıkmaz, yani bir sunucunun denetleyeceği bir şey yoktur.
+- **Sunucularımızda:** bizde veri saklayan her özellik (senkronizasyon, hesabındaki oturumlar ve yedekler, cihazlarının açık sekmeleri, paylaşım bağlantıları, şifrelemenin kurulması), etkin bir Pro planı olmayan hesaplar için veritabanı tarafından reddedilir. Gizlenmiş bir düğme asla tek kilit değildir.
+
+Ücretsiz planın sınırlarına yaklaştığında TabMerger bunu bir başlıkla bildirir ve Pro önerir; yer açmak için gruplarını ya da sekmelerini asla silmez.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabmerger-free-vs-pro/tm-over-limit" alt="Ücretsiz planda 7 kayıtlı grubuyla TabMerger: son ikisi kilitli ve bir başlık Pro öneriyor, açık tema" darkAlt="Ücretsiz planda 7 kayıtlı grubuyla TabMerger: son ikisi kilitli ve bir başlık Pro öneriyor, koyu tema" boxes={[{ id: 'banner', label: 'Ücretsiz plan uyarısı' }, { id: 'locked', label: 'Sınırın üstünde' }]} source="TabMerger 3.16.1">Ücretsiz planda yedi grup: ilk beşi her zamanki gibi çalışır, son ikisi saklanır ama kilitlidir.</ThemedScreenshot>
+
+</Section>
+
+<Section id="cancel" title="Bir Pro planı sona ererse">
+
+Pro, ödediğin dönemin sonuna kadar sende kalır. Sonrasında:
+
+- **Hiçbir şey silinmez.** Ücretsiz planın sınırlarını aşan gruplar ve sekmeler, yeniden yükseltene ya da yer açmak için başkalarını kaldırana kadar cihazında kilit simgesiyle kalır.
+- **URL kuralların çalışmaya devam eder**, 3’ten fazla olsa bile; yalnızca 3’ün üstüne yeni kural eklemek Pro gerektirir.
+- **Yeni değişiklikler artık senkronize edilmez.** Hesabında zaten olanlar orada kalır; panelde kayıtlı oturumları açmaya ya da silmeye, yedekleri indirmeye ya da silmeye devam edebilirsin.
+- **Yerel her şey çalışmaya devam eder:** arama, otomatik kaydetme (yeni otomatik kayıtlar döner, en yeni 2 kayıt saklanır), “Son kapatılanlar” (yeniden 2 gün), içe ve dışa aktarma.
+
+</Section>
+
+<Section id="choose" title="Sana hangi plan uygun">
+
+- Tek bir bilgisayar kullanıyor ve bir avuç proje yürütüyorsan **Ücretsiz planda kal**: eksiksizdir, varsayılan olarak gizlilik dostudur ve hesap gerektirmez.
+- Birden fazla bilgisayarda çalışıyorsan, 5’ten fazla grup ya da 50’den fazla sekme tutuyorsan veya hiç düşünmeden yedekler ve bir aylık kapatılan sekme istiyorsan **Pro’yu seç**.
+
+Emin değil misin? Ücretsiz planla başla; sonradan yükseltmek elindeki her şeyi korur. İki planı da işe yarar kılan düzen için [TabMerger ile günlük sekme düzeni](/blog/tabmerger-daily-workflow) yazısına; senkronizasyonun verilerini nasıl koruduğu için [sekmeleri cihazlar arasında senkronize etme](/blog/sync-tabs-between-devices-with-tabmerger) yazısına bak.
+
+<InstallCta>Tek bilgisayar için Ücretsiz, daha fazlasına ihtiyaç duyduğunda Pro. Chrome, Edge ve Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

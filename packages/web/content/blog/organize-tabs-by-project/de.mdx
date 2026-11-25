@@ -1,0 +1,160 @@
+export const post = {
+  slug: 'organize-tabs-by-project',
+  title: 'Tabs nach Projekten organisieren: eine Gruppe pro Projekt',
+  navTitle: 'Tabs nach Projekten organisieren',
+  seoTitle: 'Browser-Tabs nach Projekten organisieren mit TabMerger',
+  description:
+    'Gib jedem Projekt eine eigene TabMerger-Gruppe, mit benannten Fenstern für jeden Teil der Arbeit, Notizen für den Kontext und einem Archiv für abgeschlossene Projekte. Warum Gruppen so funktionieren, Schritt für Schritt.',
+  shareSummary: 'Eine Gruppe pro Projekt, benannte Fenster darin und ein Archiv für erledigte Arbeit.',
+  dek: 'Ein Projektwechsel sollte keine Tab-Suche sein. Gib jedem Projekt ein Zuhause, das du öffnen, schließen und archivieren kannst.',
+  published: '2026-12-15',
+  updated: '2026-12-15',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Eine TabMerger-Gruppe enthält mehrere Fenster, jedes mit eigenem Namen und eigener Notiz.', source: 'TabMerger 3.16.1' },
+    { text: 'Mit Stern markierte Gruppen bleiben oben in der Seitenleiste.', source: 'Quellcode von TabMerger 3.16.1' },
+    { text: 'Archivierte Gruppen sind schreibgeschützt und kommen mit „Wiederherstellen“ zurück.', source: 'TabMerger 3.16.1' },
+    { text: 'Kostenlos gibt es 5 Gruppen und 50 Tabs, archivierte Gruppen mitgezählt; Pro hat kein Limit.', source: 'TabMerger-Preise', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Wie organisiere ich Tabs am besten nach Projekten?',
+      answer:
+        'Gib jedem Projekt eine TabMerger-Gruppe und teile sie in benannte Fenster für die einzelnen Teile der Arbeit auf (zum Beispiel Design, Umsetzung, Feedback). Füge eine Gruppennotiz mit dem Kontext hinzu, markiere die Projekte dieser Woche mit einem Stern und archiviere ein Projekt, sobald es fertig ist.',
+    },
+    {
+      question: 'Kann eine Gruppe mehr als ein Fenster enthalten?',
+      answer: 'Ja. Eine TabMerger-Gruppe enthält beliebig viele Fenster. Jedes Fenster kann einen eigenen Namen, eine Notiz und einen Stern haben und öffnet sich als eigenes Browserfenster.',
+    },
+    {
+      question: 'Was bewirkt das Archivieren einer Gruppe?',
+      answer:
+        'Die Gruppe wandert schreibgeschützt in den Bereich „Archiviert“ der Seitenleiste: aus dem Weg, aber nicht weg. Ein Klick auf einen Tab öffnet ihn weiterhin, und „Wiederherstellen“ holt die Gruppe zurück in deine Liste.',
+    },
+    {
+      question: 'Bleiben Chrome-Tabgruppen beim Speichern erhalten?',
+      answer: 'Ja. Gespeicherte Tabs behalten Namen und Farbe ihrer Chrome-Tabgruppe, sodass ein Projekt, das du in der Tableiste gruppiert hast, diese Struktur auch in TabMerger behält.',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp', alt: 'Die Gruppe „Website redesign“ mit drei benannten Fenstern, Design, Build und Feedback, helles Design' },
+    { src: '/blog/organize-tabs-by-project/tm-project-group-dark.webp', alt: 'Die Gruppe „Website redesign“ mit drei benannten Fenstern, Design, Build und Feedback, dunkles Design' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-light.webp', alt: 'Das Rechtsklickmenü einer Gruppe in der Seitenleiste mit Archive group (Gruppe archivieren), helles Design' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-dark.webp', alt: 'Das Rechtsklickmenü einer Gruppe in der Seitenleiste mit Archive group (Gruppe archivieren), dunkles Design' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-light.webp', alt: 'Eine archivierte, schreibgeschützte Gruppe mit der Schaltfläche Restore (Wiederherstellen) und dem geöffneten Bereich Archived (Archiviert) in der Seitenleiste, helles Design' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-dark.webp', alt: 'Eine archivierte, schreibgeschützte Gruppe mit der Schaltfläche Restore (Wiederherstellen) und dem geöffneten Bereich Archived (Archiviert) in der Seitenleiste, dunkles Design' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-by-project/og.png', alt: 'Tabs nach Projekten organisieren mit TabMerger: eine Gruppe mit den Fenstern Design, Build und Feedback' },
+  toc: [
+    { id: 'quick', label: 'Kurze Antwort' },
+    { id: 'problem', label: 'Wenn sich Projekte eine Tableiste teilen' },
+    { id: 'why', label: 'Warum Gruppen so funktionieren' },
+    { id: 'steps', label: 'Ein Projekt einrichten' },
+    { id: 'archive', label: 'Erledigte Arbeit archivieren' },
+    { id: 'benefit', label: 'Was du davon hast' },
+    { id: 'habits', label: 'Gute Gewohnheiten' },
+    { id: 'plans', label: 'Kostenlos oder Pro' },
+    { id: 'faq', label: 'Häufige Fragen' },
+  ],
+}
+
+<QuickAnswer>
+
+Gib jedem Projekt seine eigene [TabMerger](/features)-Gruppe. Darin hältst du ein benanntes Fenster pro Teil der Arbeit („Design“, „Umsetzung“, „Feedback“) und eine Gruppennotiz mit dem Kontext. Markiere die Projekte dieser Woche mit einem Stern, damit sie oben bleiben, und wenn eines fertig ist, räumt **Gruppe archivieren** (Archive group) es schreibgeschützt weg, ohne einen einzigen Tab zu löschen.
+
+</QuickAnswer>
+
+<InstallCta>Ein Zuhause für jedes Projekt, einen Klick vom Öffnen entfernt. Kostenlos für Chrome, Edge und Firefox.</InstallCta>
+
+<Section id="problem" title="Wenn sich drei Projekte eine Tableiste teilen">
+
+Du gestaltest eine Website neu, schreibst einen Bericht und planst eine Reise. Am Mittwoch hat der Browser alle drei geladen: Mockups neben Flugsuchen, ein Pull Request zwischen zwei Quellen für den Bericht. Jeder Projektwechsel heißt, die ganze Leiste abzusuchen, und etwas zu schließen fühlt sich riskant an, weil du nicht weißt, zu welchem Projekt es gehört.
+
+Die Tabgruppen des Browsers helfen innerhalb eines Fensters, aber ein Projekt passt selten in ein Fenster, und wer das Fenster schließt, weiß hinterher nicht mehr, wo diese Tabs geblieben sind.
+
+</Section>
+
+<Section id="why" title="Warum TabMerger-Gruppen so funktionieren, wie sie funktionieren">
+
+- **Eine Gruppe ist ein Projekt, kein Fenster.** Jede Gruppe enthält so viele Fenster, wie die Arbeit braucht, und jedes Fenster öffnet sich als eigenes Browserfenster. So sehen Projekte wirklich aus: die Design-Tabs hier, die Tabs für die Umsetzung dort.
+- **Namen und Notizen tragen den Kontext.** Fenster lassen sich umbenennen und haben eine eigene Notiz, genau wie die Gruppe. Monate später sagen dir „Feedback“ und eine Notiz mit dem, was entschieden wurde, mehr als eine Reihe Favicons.
+- **Sterne sortieren, damit du es nicht musst.** Gruppen mit Stern bleiben oben in der Seitenleiste; Fenster mit Stern stehen in ihrer Gruppe an erster Stelle.
+- **Archivieren heißt wegräumen, nicht löschen.** Eine archivierte Gruppe verlässt deine Liste, landet im Bereich **Archiviert** (Archived) und ist schreibgeschützt, damit nichts versehentlich verrutscht. Ihre Tabs öffnen sich weiterhin per Klick, und **Wiederherstellen** (Restore) holt sie zurück.
+- **Die Struktur aus deinem Browser bleibt erhalten.** Gespeicherte Tabs behalten Namen und Farbe ihrer Chrome-Tabgruppe, sodass ein Projekt, das du schon in der Tableiste gruppiert hast, seine Form behält.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-project-group" alt="Die Gruppe „Website redesign“ mit drei benannten Fenstern, Design, Build und Feedback, helles Design" darkAlt="Die Gruppe „Website redesign“ mit drei benannten Fenstern, Design, Build und Feedback, dunkles Design" boxes={[{ id: 'windows', label: 'Fenster nach Arbeitsschritt' }]} source="TabMerger 3.16.1">Ein Projekt, drei Fenster, jedes nach seinem Teil der Arbeit benannt.</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="Ein Projekt in fünf Schritten einrichten">
+
+1. Klicke in der Seitenleiste auf **Gruppe hinzufügen** (Add Group) und benenne die Gruppe nach dem Projekt. Ein Klick auf ihren Farbpunkt wählt eine Farbe.
+2. Öffne die Seiten des Projekts und wähle dann im **⋯**-Menü der Gruppe **Mit aktueller zusammenführen** (Merge with current), um die offenen Fenster darin zu speichern.
+3. Benenne jedes Fenster über sein **⋯**-Menü (**Fenster umbenennen**, Rename window) nach dem Teil der Arbeit, den es enthält.
+4. Füge eine Gruppennotiz hinzu (**Notiz hinzufügen**, Add note, im **⋯**-Menü) mit dem Kontext: die Deadline, das Ticket, was „fertig“ bedeutet.
+5. Markiere die Gruppe mit einem Stern (der Stern neben ihrem Namen), solange das Projekt läuft.
+
+Um später Tabs zwischen Projekten zu verschieben, ziehst du sie auf eine Gruppe in der Seitenleiste oder nutzt **In Gruppe verschieben** (Move to group) und **In Gruppe kopieren** (Copy to group) im Rechtsklickmenü des Tabs. **Fenster vereinen** (Unite windows) und **Fenster aufteilen** (Split windows) bauen eine Gruppe in einem Schritt um.
+
+</Section>
+
+<Section id="archive" title="Erledigte Arbeit archivieren">
+
+Ist ein Projekt fertig, klickst du in der Seitenleiste mit der rechten Maustaste auf seine Gruppe und wählst **Gruppe archivieren**. Sie wandert schreibgeschützt in den Bereich **Archiviert**: Du kannst jeden ihrer Tabs weiterhin öffnen, und **Wiederherstellen** holt die ganze Gruppe zurück in deine Liste.
+
+<Carousel label="Ein Projekt archivieren" steps={[{ title: 'Archivieren' }, { title: 'Archiviert' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archive-menu" alt="Das Rechtsklickmenü einer Gruppe in der Seitenleiste mit Archive group (Gruppe archivieren), helles Design" darkAlt="Das Rechtsklickmenü einer Gruppe in der Seitenleiste mit Archive group (Gruppe archivieren), dunkles Design" boxes={[{ id: 'archive', label: 'Gruppe archivieren' }]} source="TabMerger 3.16.1">Rechtsklicke auf die Gruppe in der Seitenleiste.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archived" alt="Eine archivierte, schreibgeschützte Gruppe mit der Schaltfläche Restore (Wiederherstellen) und dem geöffneten Bereich Archived (Archiviert) in der Seitenleiste, helles Design" darkAlt="Eine archivierte, schreibgeschützte Gruppe mit der Schaltfläche Restore (Wiederherstellen) und dem geöffneten Bereich Archived (Archiviert) in der Seitenleiste, dunkles Design" boxes={[{ id: 'banner', label: 'Schreibgeschützt bis zur Wiederherstellung' }]} source="TabMerger 3.16.1">Aus dem Weg und trotzdem nur einen Klick vom Öffnen entfernt.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="benefit" title="Was du davon hast">
+
+Ein Projektwechsel heißt dann, eine Gruppe zu öffnen, statt eine Tableiste abzusuchen. Du kannst jedes Fenster eines Projekts schließen, an dem du gerade nicht arbeitest, und weißt genau, wo seine Tabs sind. Deine Seitenleiste zeigt nur, was gerade aktuell ist.
+
+</Section>
+
+<Section id="habits" title="Gute Gewohnheiten">
+
+- **Eine Gruppe pro Projekt, nicht pro Thema.** „Website-Relaunch“, nicht „Design-Links“.
+- **Benenne Fenster nach Phasen oder Rollen**, nicht nach Websites: „Feedback“ hält länger als „GitHub“.
+- **Vergib höchstens eine Handvoll Sterne.** Ein Stern heißt „diese Woche“.
+- **Archiviere am Tag des Abschlusses.** Ein archiviertes Projekt ist nur einen Klick entfernt, also gibt es keinen Grund, es in deiner Liste zu behalten.
+- **Lass URL-Regeln neue Tabs einsortieren**, wenn in einem Projekt viel los ist: siehe [Tabs mit URL-Regeln automatisch sortieren](/blog/auto-sort-tabs-with-url-rules). Für rechercheintensive Projekte ergänzt [Tabs für die Recherche organisieren](/blog/organize-tabs-for-research) Notizen und Erinnerungen.
+
+</Section>
+
+<Section id="plans" title="Kostenlos oder Pro">
+
+<ComparisonTable
+  head={['', 'Kostenlos', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Gruppen', '5 (archivierte Gruppen zählen mit)', 'Unbegrenzt'],
+    ['Tabs', '50', 'Unbegrenzt'],
+    ['Fenster, Namen, Notizen, Sterne, Archiv', 'Ja', 'Ja'],
+    ['Deine Projekte auf deinen anderen Geräten', 'Nein', 'Ja, Ende-zu-Ende-verschlüsselt'],
+  ]}
+/>
+
+Jedes Werkzeug zum Organisieren aus diesem Ratgeber gehört zum kostenlosen Plan; begrenzt ist nur die Zahl der Gruppen und Tabs. [Pro](/pricing) hebt diese Grenzen auf und synchronisiert deine Projekte zwischen deinen Geräten.
+
+<InstallCta>Jedes Projekt in seiner eigenen Gruppe, in Chrome, Edge und Firefox. Kostenlos starten.</InstallCta>
+
+Die ganze Routine rund um Projekte findest du in [ein täglicher Tab-Workflow mit TabMerger](/blog/tabmerger-daily-workflow).
+
+</Section>
+
+<Section id="faq" title="Häufige Fragen">
+
+<Faq items={post.faq} />
+
+</Section>

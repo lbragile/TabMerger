@@ -1,0 +1,179 @@
+export const post = {
+  slug: 'auto-sort-tabs-with-url-rules',
+  title: '用网址规则把标签页自动归入分组',
+  navTitle: '用网址规则自动整理标签页',
+  seoTitle: '如何按网址自动给浏览器标签页分组',
+  description:
+    '让 TabMerger 替你整理标签页：网址规则会在你浏览时把每个匹配的页面复制到对应的分组。本文介绍模式和通配符 * 的用法、规则顺序，以及好用的模式。',
+  shareSummary: '一个模式加一个分组：浏览时，TabMerger 自动把每个匹配的标签页归入分组。',
+  dek: '规则只需写一次。之后打开的每个匹配页面都会归入正确的分组。',
+  published: '2026-12-17',
+  updated: '2026-12-17',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: '一条规则由模式和分组组成；* 可匹配任意一串字符。', source: 'TabMerger 3.16.1' },
+    { text: '模式与不含 http:// 或 https:// 的完整地址进行匹配。', source: 'TabMerger 3.16.1 源代码' },
+    { text: '规则从上到下检查，第一条匹配的规则生效。', source: 'TabMerger 3.16.1' },
+    { text: '免费版有 3 条网址规则，Pro 不限数量。', source: 'TabMerger 价格', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '浏览器标签页能自动归入分组吗？',
+      answer:
+        '可以，用 TabMerger 的网址规则。一条规则把地址模式（例如 github.com/your-org/*）与一个分组对应起来。每当匹配的页面打开或加载完成，TabMerger 都会把它的副本保存到该分组。标签页本身仍然打开。',
+    },
+    {
+      question: '网址规则的模式是怎么工作的？',
+      answer:
+        '模式必须匹配完整的地址，不含 http:// 或 https:// 部分。* 代表任意一串字符（也可以为空），并且是唯一的通配符。所以 github.com/* 匹配所有 GitHub 页面，*wikipedia.org/* 匹配任何语言的 Wikipedia。',
+    },
+    {
+      question: '如果两条规则匹配同一个页面怎么办？',
+      answer: '规则从列表顶部往下检查，第一条匹配的规则生效。用每条规则旁边的箭头，把具体的规则放在笼统的规则上面。',
+    },
+    {
+      question: '网址规则会关闭标签页吗？',
+      answer: '不会。规则只是把副本保存到分组；标签页仍在原处打开。',
+    },
+    {
+      question: '我可以设置多少条网址规则？',
+      answer: '免费版有 3 条。Pro 不限数量。如果你的套餐发生变化，已有的规则会继续生效。',
+    },
+  ],
+  images: [
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-light.webp', alt: 'TabMerger 的“Add URL Rule”（添加网址规则）对话框，模式为 *wikivoyage.org/wiki/*，分组为“Trip to Lisbon”，浅色主题' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-dark.webp', alt: 'TabMerger 的“Add URL Rule”（添加网址规则）对话框，模式为 *wikivoyage.org/wiki/*，分组为“Trip to Lisbon”，深色主题' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-light.webp', alt: 'TabMerger 的“URL Rules”（网址规则），三条规则各带调整顺序的箭头，并显示“3/3 used”（已用 3/3），浅色主题' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-dark.webp', alt: 'TabMerger 的“URL Rules”（网址规则），三条规则各带调整顺序的箭头，并显示“3/3 used”（已用 3/3），深色主题' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp', alt: '“Trip to Lisbon”分组中多了网址规则添加的“Sintra”页面，浅色主题' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-dark.webp', alt: '“Trip to Lisbon”分组中多了网址规则添加的“Sintra”页面，深色主题' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'developers'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp' },
+  ogImage: { src: '/blog/auto-sort-tabs-with-url-rules/og.png', alt: '用网址规则自动整理标签页：三条 TabMerger 规则把标签页归入分组' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'problem', label: '手动归类' },
+    { id: 'why', label: '规则为何这样设计' },
+    { id: 'steps', label: '添加规则' },
+    { id: 'patterns', label: '编写模式' },
+    { id: 'order', label: '规则顺序' },
+    { id: 'benefit', label: '你能得到什么' },
+    { id: 'habits', label: '好习惯' },
+    { id: 'plans', label: '免费版与 Pro' },
+    { id: 'faq', label: '常见问题' },
+  ],
+}
+
+<QuickAnswer>
+
+在 [TabMerger](/features) 中打开**设置 → 通用 → 网址规则 → 管理**（Settings → General → URL rules → Manage），然后添加一条规则：一个地址模式（例如 `github.com/your-org/*`）以及它所属的分组。从此，你浏览时每个匹配的页面都会保存到该分组，标签页仍然打开。`*` 匹配任何内容；第一条匹配的规则生效。
+
+</QuickAnswer>
+
+<InstallCta>标签页自己归入正确的分组。Chrome、Edge 和 Firefox 均可免费使用。</InstallCta>
+
+<Section id="problem" title="手动归类标签页坚持不了多久">
+
+一周开始时一切井井有条：工作放一个分组，旅行放另一个，阅读放第三个。然后忙碌的一天开始了。同事发来一个 issue 链接，你查了两趟火车的时间，一次搜索找到一篇文章。每一个都该放到某处，可每一个都要拖一下，而你不会去拖。到了周五，分组已经过时，当前打开（Now Open）又堆成了一堆。
+
+你最常打开的页面来自那么几个网站。这正是规则能够识别的。
+
+</Section>
+
+<Section id="why" title="网址规则为何这样设计">
+
+- **复制而不是移动**。规则把页面的副本保存到分组，标签页保持打开。归类永远不会打断你正在读的内容。
+- **在你浏览时留意**。标签页带着地址打开时，以及每次页面加载完成时，都会检查规则，所以你在标签页里点开的链接也会被归类。副本进入分组的第一个窗口。再次加载的页面（刷新或之后再访问）会被再次保存；分组 **⋯** 菜单中的**去除重复标签页**（Deduplicate tabs）可以清除重复项。
+- **完整地址，不含协议**。模式与 `http://` 或 `https://` 之后的完整地址比较，所以你无需输入这部分，`localhost:3000/*` 照写就能用。
+- **有意只用一个通配符**。`*` 表示任意一串字符，也可以为空。没有其他需要转义的特殊字符。模式按纯文本匹配，从不转换成正则表达式，所以再长的模式也能快速检查。
+- **顺序决定结果**。两条规则都匹配时，靠上的那条生效，所以具体的规则可以放在笼统的规则上面。
+
+</Section>
+
+<Section id="steps" title="添加规则">
+
+1. 打开 TabMerger，进入**设置** → **通用**（Settings → General）。在**网址规则**旁边，点击**管理**（Manage）。
+2. 点击**添加规则**（Add rule）。输入模式，选择目标分组，然后点击对话框中的**添加规则**。
+3. 为每个想要归类的网站重复以上操作，最后点击**保存**（Save）保存列表。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="一条网址规则的完整过程" steps={[{ title: '添加' }, { title: '列表' }, { title: '结果' }]}>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-add-rule" alt="TabMerger 的“Add URL Rule”（添加网址规则）对话框，模式为 *wikivoyage.org/wiki/*，分组为“Trip to Lisbon”，浅色主题" darkAlt="TabMerger 的“Add URL Rule”（添加网址规则）对话框，模式为 *wikivoyage.org/wiki/*，分组为“Trip to Lisbon”，深色主题" boxes={[{ id: 'pattern', label: '地址模式' }, { id: 'group', label: '目标分组' }]} source="TabMerger 3.16.1">每篇 Wikivoyage 文章都进入旅行分组。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rules-list" alt="TabMerger 的“URL Rules”（网址规则），三条规则各带调整顺序的箭头，并显示“3/3 used”（已用 3/3），浅色主题" darkAlt="TabMerger 的“URL Rules”（网址规则），三条规则各带调整顺序的箭头，并显示“3/3 used”（已用 3/3），深色主题" boxes={[{ id: 'order', label: '从上到下检查' }, { id: 'used', label: '免费版用量' }]} source="TabMerger 3.16.1">三条规则，三个分组。箭头决定先尝试哪条规则。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rule-result" alt="“Trip to Lisbon”分组中多了网址规则添加的“Sintra”页面，浅色主题" darkAlt="“Trip to Lisbon”分组中多了网址规则添加的“Sintra”页面，深色主题" boxes={[{ id: 'new-tab', label: '由规则归入' }]} source="TabMerger 3.16.1">打开“Sintra”文章后，它自动保存到了“Trip to Lisbon”。</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="patterns" title="编写能匹配的模式">
+
+<ComparisonTable
+  head={['模式', '匹配', '不匹配']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['github.com/your-org/*', 'your-org 的每个仓库、issue 和拉取请求', 'github.com/other-org/…'],
+    ['*wikipedia.org/wiki/*', '所有语言的文章 (en., de., …)', 'wikipedia.org 的首页'],
+    ['localhost:3000/*', '本地开发服务器的每个页面', 'localhost:8080/…'],
+    ['docs.example.com/*', '文档网站', 'www.docs.example.com/…（请添加 *docs.example.com/*）'],
+    ['github.com', '仅 github.com 这个地址本身', 'github.com/anything（请添加 /*）'],
+  ]}
+/>
+
+能帮你省下一轮调试的技巧：
+
+- **以 `/*` 结尾**，即可覆盖整个网站。没有 `*` 时，模式只匹配一个确切的地址。
+- **以 `*` 开头**，适用于使用子域名或 `www.` 的网站：`*example.com/*`。
+- **字母必须照原样匹配**。浏览器用小写字母书写域名，所以你也这样写。
+- **查询字符串也算在内**。`*youtube.com/watch*` 匹配视频，不管 `watch` 后面是什么。
+
+</Section>
+
+<Section id="order" title="规则顺序：具体的在前">
+
+规则从上往下尝试。用每条规则旁边的箭头，把范围窄的规则（`github.com/your-org/design-system/*` → “Design system”）放在范围宽的规则（`github.com/your-org/*` → “Work”）上面。第一条匹配的规则负责归类页面，其余的会被跳过。
+
+</Section>
+
+<Section id="benefit" title="你能得到什么">
+
+无需你动手归类，分组也始终保持最新。周二打开的页面，到周五已经在它所属项目的分组里了，在该分组中搜索就能找到。
+
+</Section>
+
+<Section id="habits" title="好习惯">
+
+- **为每天打开的网站设置规则**，而不是每个只访问一次的网站。
+- **每个项目域名或路径一条规则**，具体的规则放前面。
+- **把规则与按项目划分的分组搭配使用**：参见[按项目整理标签页](/blog/organize-tabs-by-project)。开发者可以在[面向开发者的标签页管理](/blog/tab-management-for-developers)中找到更多模式。
+- **时不时整理一下**，在规则经常填充的分组上使用**去除重复标签页**。
+
+</Section>
+
+<Section id="plans" title="免费版与 Pro">
+
+<ComparisonTable
+  head={['', '免费版', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['网址规则', '3', '无限制'],
+    ['模式、顺序及以上所有选项', '是', '是'],
+  ]}
+/>
+
+网址规则保存在你创建它们的浏览器中。如果 Pro 套餐到期，已有的规则会继续归类标签页；只有添加第四条规则才需要 [Pro](/pricing)。
+
+<InstallCta>今天就写下三条规则，不再手动归类标签页。Chrome、Edge 和 Firefox 均可免费使用。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

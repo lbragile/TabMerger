@@ -1,0 +1,246 @@
+export const post = {
+  slug: 'manage-too-many-tabs',
+  title: 'Troppe schede aperte? Una routine in quattro passaggi che funziona in ogni browser',
+  seoTitle: 'Troppe schede aperte? Come gestirle in qualsiasi browser',
+  description:
+    'Troppe schede aperte? Una routine in quattro passaggi per Chrome, Edge e Firefox, e come TabMerger salva tutte le finestre con un clic per chiuderle senza perdere nulla.',
+  shareSummary: 'Chiudi, raggruppa, salva, pianifica: una routine per le schede in Chrome, Edge e Firefox.',
+  dek: 'Chiudi ciò che hai finito, raggruppa ciò che stai usando, salva il resto con un clic e lascia che il salvataggio automatico mantenga l’ordine.',
+  published: '2026-11-21',
+  updated: '2026-11-21',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Il Risparmio memoria di Chrome era disattivato in un nuovo profilo di Chrome 157.', source: 'chrome://settings/performance, 20 nov 2026' },
+    { text: 'Edge 158 mette in sospensione le schede inattive, dopo 15 minuti per impostazione predefinita.', source: 'edge://settings, 20 nov 2026' },
+    {
+      text: 'Ctrl+Shift+A cerca tra le schede aperte in Chrome e Firefox.',
+      source: 'Guida di Chrome; scorciatoie di Firefox 159',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Il menu della scheda di Firefox ha «Chiudi schede duplicate».', source: 'Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Quante schede sono troppe?',
+      answer:
+        'Non c’è un numero fisso. Sono troppe quando non riesci più a leggere i titoli delle schede, non trovi una scheda senza cercarla a lungo o il browser inizia ad avvisarti di problemi di prestazioni.',
+    },
+    {
+      question: 'Come smetto di avere troppe schede aperte?',
+      answer:
+        'Chiudi ogni giorno le schede finite, raggruppa quelle del compito di oggi, salva il resto in un posto dove puoi cercare e fai una breve pulizia ogni settimana.',
+    },
+    {
+      question: 'Le schede aperte rallentano il computer?',
+      answer:
+        'Possono farlo, perché ogni pagina aperta usa memoria. Il Risparmio memoria di Chrome e le schede in sospensione di Edge liberano la memoria delle schede che non stai usando; si ricaricano quando ci torni.',
+    },
+    {
+      question: 'Posso chiudere senza rischi le schede che forse mi serviranno più avanti?',
+      answer:
+        'Sì, se prima le salvi: una cartella di preferiti, un gestore di sessioni o TabMerger conserva l’indirizzo, così puoi riaprirlo. Leggi la nostra guida per salvare tutte le schede aperte.',
+      link: { text: 'salvare tutte le schede aperte', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp', alt: 'TabMerger, «Now Open» (Aperte ora), con tre finestre del browser e 18 schede, tema chiaro' },
+    { src: '/blog/manage-too-many-tabs/tm-now-open-dark.webp', alt: 'TabMerger, «Now Open» (Aperte ora), con tre finestre del browser e 18 schede, tema scuro' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-light.webp', alt: 'Impostazioni di TabMerger, scheda «Data» (Dati): «Auto-save open tabs» (Salva automaticamente le schede aperte) attivo, con «When open tabs pass» (Quando le schede aperte superano) impostato su «30 open tabs», tema chiaro' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-dark.webp', alt: 'Impostazioni di TabMerger, scheda «Data» (Dati): «Auto-save open tabs» (Salva automaticamente le schede aperte) attivo, con «When open tabs pass» (Quando le schede aperte superano) impostato su «30 open tabs», tema scuro' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Impostazioni di Chrome, «Performance» (Prestazioni), con l’interruttore «Memory Saver» (Risparmio memoria)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Impostazioni di Edge, «Performance», con «Automatically put tabs to sleep» attivo e impostato su 15 minuti' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'save-tabs', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp' },
+  ogImage: { src: '/blog/manage-too-many-tabs/og.png', alt: 'Scheda con il titolo «Too many tabs? A four-step routine that works in any browser»: una guida di TabMerger, con tre finestre del browser riunite in un unico posto' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'how-many', label: 'Quante sono troppe?' },
+    { id: 'close', label: '1. Chiudi' },
+    { id: 'group', label: '2. Raggruppa' },
+    { id: 'save', label: '3. Salva' },
+    { id: 'schedule', label: '4. Pianifica una pulizia' },
+    { id: 'memory', label: 'Fatti aiutare dal browser' },
+    { id: 'tabmerger', label: 'Con TabMerger' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+  browserSections: ['close', 'memory'],
+  browserFact: {
+    label: 'Impostazione della memoria',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Impostazioni → System and performance → Performance',
+      firefox: 'Clic destro su una scheda → Scarica scheda dalla memoria',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Segui quattro passaggi, in quest’ordine: **chiudi** ogni scheda che hai finito di usare, **raggruppa** le schede del lavoro che hai davanti, **salva** quelle «per dopo» in un posto dove puoi cercarle e **pianifica** una pulizia di dieci minuti una volta a settimana. Funziona in Chrome, Edge e Firefox. Il passaggio che libera più spazio è il salvataggio, e [TabMerger](/features) lo fa con un clic: tutte le finestre aperte finiscono in un gruppo con un nome, che puoi cercare e riaprire quando vuoi.
+
+</QuickAnswer>
+
+<InstallCta>Salva tutte le finestre aperte con un clic e poi chiudile senza perdere nulla. Gratis per Chrome, Edge e Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="how-many" title="Quante schede sono troppe?">
+
+Non esiste un numero magico, e non ce ne inventeremo uno. Le schede diventano un problema quando smettono di fare il loro lavoro, cioè tenere a portata di mano ciò a cui tornerai presto. Fai attenzione a questi segnali:
+
+- La barra delle schede mostra solo icone e non riesci più a leggere i titoli.
+- Apri una pagina e scopri che era già aperta, due volte.
+- Tieni aperte delle schede «non si sa mai», perché chiuderle ti sembra come perderle.
+- Il browser ti avvisa. Chrome mostra **Avvisi relativi ai problemi di prestazioni** («Performance issue alerts») che suggeriscono di disattivare le schede quando rileva prestazioni scarse.
+
+L’ultimo è un problema del browser, e ha delle soluzioni (più sotto). I primi tre sono un problema di archiviazione, ed è quello che risolve la routine.
+
+Gli screenshot dei browser mostrano l’interfaccia in inglese. Quando il nome italiano è diverso, quello inglese compare tra parentesi la prima volta.
+
+</Section>
+
+<Section id="close" title="1. Chiudi ciò che hai finito">
+
+Inizia dalla vittoria più facile. Chiudi le schede che hanno già fatto il loro lavoro: la ricerca a cui hai già trovato risposta, l’articolo che hai già letto, la pagina di pagamento.
+
+- <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> (<Kbd>⌘</Kbd>+<Kbd>W</Kbd> su Mac) chiude la scheda attuale in tutti e tre i browser.
+- Ne hai chiusa una di troppo? <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> la riapre. Trovi di più nella nostra guida alle [scorciatoie da tastiera per le schede](/blog/tab-keyboard-shortcuts).
+
+<BrowserPanels section="close">
+<BrowserPanel browser="chrome">
+
+Premi <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> su Mac) per aprire la **ricerca di schede** («Tab Search»): un elenco di tutte le schede aperte, con un pulsante di chiusura su ogni riga. Chiudi quelle che hai finito direttamente dall’elenco.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+L’elenco delle scorciatoie da tastiera di Edge non ha un tasto per cercare tra le schede aperte, quindi scorri la barra delle schede: fai clic su una scheda che hai finito e premi <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd>.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> elenca tutte le tue schede, così puoi trovare e chiudere quelle che hai finito.
+- Fai clic destro su una scheda qualsiasi e scegli **Chiudi schede duplicate** («Close Duplicate Tabs») per eliminare i doppioni in un colpo solo.
+
+TabMerger elimina i doppioni in **tutte** le finestre contemporaneamente; leggi [come chiudere le schede duplicate](/blog/close-duplicate-tabs).
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>chiudere è sicuro solo per le schede su cui non hai dubbi. Tutto ciò su cui esiti va al passaggio 3, non nel cestino.</Catch>
+
+</Section>
+
+<Section id="group" title="2. Raggruppa le schede del lavoro di oggi">
+
+I gruppi di schede danno a un insieme di schede un nome e un colore, e si comprimono in un’unica etichetta. Chrome, Edge e Firefox li hanno tutti: fai clic destro su una scheda e aggiungila a un nuovo gruppo.
+
+Tieni un gruppo per ogni attività su cui stai davvero lavorando oggi, e comprimi quelli che non stai guardando. Un gruppo compresso occupa lo spazio di una sola scheda. Il modo in cui i gruppi vengono salvati, sincronizzati e riaperti cambia da browser a browser; la nostra [guida ai gruppi di schede di Chrome](/blog/chrome-tab-groups) spiega i dettagli e i limiti.
+
+</Section>
+
+<Section id="save" title="3. Salva le schede «per dopo»">
+
+È il passaggio che riduce davvero la barra delle schede. Una scheda che forse ti servirà la settimana prossima non deve stare aperta; deve essere facile da ritrovare.
+
+- **Aggiungi la finestra ai preferiti.** <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> salva tutte le schede della finestra attuale in una nuova cartella di preferiti. La nostra guida per [salvare tutte le schede aperte](/blog/save-all-open-tabs) lo spiega browser per browser.
+- **Usa un gestore di sessioni.** Salva intere finestre, con un nome, e le ripristina con un clic. Scopri [cosa fa un gestore di sessioni del browser](/blog/browser-session-manager) e in cosa è diverso dai preferiti.
+- **Leggi dopo.** Se è un articolo, un elenco di lettura è meglio di una scheda. Non sai dove mettere una pagina? La nostra [guida schede o preferiti](/blog/tabs-vs-bookmarks) ha una tabella per decidere.
+
+Poi chiudi ciò che hai salvato. È tutto qui il trucco: è il salvataggio a rendere sicura la chiusura.
+
+</Section>
+
+<Section id="schedule" title="4. Segna in calendario una pulizia settimanale">
+
+Le schede tornano ad accumularsi. Una pulizia breve e regolare tiene basso il numero senza bisogno di forza di volontà:
+
+1. Una volta a settimana, apri le cartelle o i gruppi che hai salvato.
+2. Elimina ciò che non ti serve più. Se non l’hai aperto da un mese, probabilmente non lo farai.
+3. Chiudi le finestre che hai salvato durante la settimana.
+
+Se fare ricerca è il tuo lavoro (studenti, analisti, sviluppatori che leggono documentazione), tieni un gruppo salvato per progetto e fai pulizia quando il progetto finisce, non prima.
+
+</Section>
+
+<Section id="memory" title="Lascia che il browser liberi la memoria">
+
+I browser possono impedire alle schede inattive di usare memoria senza chiuderle. La scheda resta nella barra e si ricarica quando ci fai clic.
+
+<BrowserPanels section="memory">
+<BrowserPanel browser="chrome">
+
+Attiva il **Risparmio memoria** («Memory Saver»): **Impostazioni → Prestazioni** («Settings → Performance»), oppure incolla `chrome://settings/performance` nella barra degli indirizzi.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Impostazioni di Chrome, «Performance» (Prestazioni), con l’interruttore «Memory Saver» (Risparmio memoria)" width={1600} height={524} eager boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">«Memory Saver» (Risparmio memoria) di Chrome, disattivato in un nuovo profilo di Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Attiva **Automatically put tabs to sleep** in **Impostazioni → System and performance → Performance** e scegli quanto deve aspettare una scheda prima di andare in sospensione.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Impostazioni di Edge, «Performance», con «Automatically put tabs to sleep» attivo e impostato su 15 minuti" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Le schede in sospensione di Edge, attive per impostazione predefinita: le schede inattive vanno in sospensione dopo 15 minuti.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Fai clic destro su una scheda e scegli **Scarica scheda dalla memoria** («Unload Tab») per liberarne la memoria a mano.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>questo aiuta il computer, non te. Cinquanta schede in sospensione restano cinquanta schede da scorrere. Usalo insieme alla routine, non al suo posto.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="Fallo con TabMerger">
+
+[TabMerger](/features), la nostra estensione gratuita per Chrome, Edge e Firefox, trasforma i passaggi 3 e 4 in un paio di clic. **Aperte ora** mostra tutte le finestre aperte e le loro schede in un unico posto, così vedi tutta la pila in una volta. Salvale tutte in un gruppo con un nome con **Unisci con l'attuale**, chiudi le finestre e ritrova qualsiasi scheda con <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>, che sia aperta, salvata o chiusa di recente. Un computer lento è spesso il primo segnale di troppe schede; [ecco come salvare e chiudere libera la memoria](/blog/too-many-tabs-slow-browser).
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-now-open" alt="TabMerger, «Now Open» (Aperte ora), con tre finestre del browser e 18 schede, tema chiaro" darkAlt="TabMerger, «Now Open» (Aperte ora), con tre finestre del browser e 18 schede, tema scuro" boxes={[{ id: 'now-open-summary', label: 'Finestre e schede aperte' }]} source="TabMerger 3.16.1">«Now Open» (Aperte ora): tre finestre e 18 schede, prima di fare ordine.</ThemedScreenshot>
+
+Per la pulizia settimanale, **Impostazioni → Dati → Salva automaticamente le schede aperte** può salvare le schede aperte come nuovo gruppo secondo una pianificazione, oppure appena superi 20, 30, 50, 75 o 100 schede aperte. Il piano gratuito conserva i 2 salvataggi automatici più recenti, che contano nei suoi 5 gruppi e 50 schede; Pro li conserva tutti. Per una routine che impedisce alla pila di tornare, leggi [un flusso di lavoro quotidiano con TabMerger](/blog/tabmerger-daily-workflow).
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-auto-save-threshold" alt="Impostazioni di TabMerger, scheda «Data» (Dati): «Auto-save open tabs» (Salva automaticamente le schede aperte) attivo, con «When open tabs pass» (Quando le schede aperte superano) impostato su «30 open tabs», tema chiaro" darkAlt="Impostazioni di TabMerger, scheda «Data» (Dati): «Auto-save open tabs» (Salva automaticamente le schede aperte) attivo, con «When open tabs pass» (Quando le schede aperte superano) impostato su «30 open tabs», tema scuro" boxes={[{ id: 'threshold', label: 'Quando le schede aperte superano' }]} source="TabMerger 3.16.1">«Auto-save open tabs» (Salva automaticamente le schede aperte), impostato per partire appena ci sono più di 30 schede aperte.</ThemedScreenshot>
+
+Le schede salvate ricevono anche un punto ambra quando superano l’età che scegli (7, 14, 30 o 60 giorni), e il menu **⋯** di un gruppo ha **Rimuovi schede duplicate**.
+
+<InstallCta>Gratis per Chrome, Edge e Firefox. Non serve un account per iniziare.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

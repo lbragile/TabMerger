@@ -1,0 +1,174 @@
+export const post = {
+  slug: 'never-lose-a-tab-again',
+  title: 'Bir daha asla sekme kaybetmeyin: otomatik kaydetme ve kapatılan sekmeleri geri getirme',
+  navTitle: 'Bir daha asla sekme kaybetmeyin',
+  seoTitle: 'TabMerger ile açık sekmeleri otomatik kaydedin, kapatılan sekmeleri geri getirin',
+  description:
+    'Açık sekmelerinizi bir zamanlamayla ya da belirli bir sayıyı geçtiklerinde otomatik kaydedin, kapattığınız her sekmeyi veya pencereyi geri getirin. TabMerger’ın otomatik kaydetmesi ve “Son kapatılanlar” bölümü nasıl çalışır, neden böyle çalışır.',
+  shareSummary: 'Açık sekmeleriniz zamanlamayla kaydedilir, kapatılan her pencere tek aramayla geri gelir.',
+  dek: 'Kaydetmeyi hatırlamak zorunda kalmamalısınız. Bir kez ayarlayın, her açık sekmenin bir kopyası olsun.',
+  published: '2026-12-13',
+  updated: '2026-12-13',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Otomatik kaydetme 15 dakikada birden günde bire kadar çalışır ya da açık sekmeler 20 ile 100 arasındaki bir sayıyı geçince devreye girer.', source: 'TabMerger 3.16.1' },
+    { text: 'Bir grupta zaten kayıtlı sekmeler atlanır; gizli pencereler asla kaydedilmez.', source: 'TabMerger 3.16.1' },
+    { text: 'Ücretsiz plan en yeni 2 otomatik kaydı tutar; Pro hepsini tutar.', source: 'TabMerger fiyatları', href: '/pricing' },
+    { text: '“Son kapatılanlar” Ücretsiz planda son 2 gününüzü, Pro’da son 30 gününüzü tutar.', source: 'TabMerger fiyatları', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Açık sekmelerimi otomatik olarak nasıl kaydederim?',
+      answer:
+        'TabMerger’da Ayarlar → Veri bölümünü açın ve “Açık sekmeleri otomatik kaydet” seçeneğini etkinleştirin. Bir zamanlama (15 dakikada birden günde bire kadar), kaydı başlatacak bir açık sekme sayısı ya da ikisini birden seçin. Her çalışma, açık sekmelerinizi yeni bir grup olarak kaydeder.',
+    },
+    {
+      question: 'Otomatik kaydetme TabMerger’ı kopyalarla doldurur mu?',
+      answer:
+        'Hayır. Adresi herhangi bir grupta zaten kayıtlı olan sekmeler atlanır ve birkaç sekmede açık olan bir sayfa bir kez kaydedilir. Her şey zaten kayıtlıysa, çalışma hiçbir şey kaydetmez.',
+    },
+    {
+      question: 'Otomatik kaydetme için TabMerger’ın açık olması gerekir mi?',
+      answer: 'Hayır. Tarayıcınız açık olduğu sürece eklentinin arka planında çalışır ve tarayıcı açılırken kaçırılmış bir kayıt olup olmadığını kontrol eder.',
+    },
+    {
+      question: 'Kapattığım bir pencereyi nasıl geri getiririm?',
+      answer:
+        'TabMerger’da Ctrl+K tuşlarına basın ve son kapatılan sekmeleri ve pencereleri listelemek için closed: yazın ya da kenar çubuğunda “Son kapatılanlar” bölümünü açın. Kapatılmış bir pencereyi seçmek pencerenin tamamını geri getirir.',
+    },
+    {
+      question: 'Ücretsiz plan neyi tutar, Pro neler ekler?',
+      answer:
+        'Ücretsiz plan en yeni 2 otomatik kaydı (birini saklamak için grup olarak tutun) ve kapatılan sekmelerinizin son 2 gününü tutar. Pro her otomatik kaydı ve kapatılan sekmelerin 30 gününü tutar; ayrıca şifreli otomatik yedekler ve diğer cihazlarınızın açık sekmelerini ekler.',
+    },
+  ],
+  images: [
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-light.webp', alt: 'TabMerger “Settings” (Ayarlar), “Data” (Veri): “Auto-save open tabs” (Açık sekmeleri otomatik kaydet) açık, saatte bir ve açık sekmeler 50’yi geçince, “Auto-save now” (Şimdi otomatik kaydet) düğmesiyle, açık tema' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-dark.webp', alt: 'TabMerger “Settings” (Ayarlar), “Data” (Veri): “Auto-save open tabs” (Açık sekmeleri otomatik kaydet) açık, saatte bir ve açık sekmeler 50’yi geçince, “Auto-save now” (Şimdi otomatik kaydet) düğmesiyle, koyu tema' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp', alt: '“Auto-saved” (Otomatik kayıtlar) altında iki pencere ve yedi sekmeli bir grup ve “Keep as group” (Grup olarak sakla) düğmesi, açık tema' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-dark.webp', alt: '“Auto-saved” (Otomatik kayıtlar) altında iki pencere ve yedi sekmeli bir grup ve “Keep as group” (Grup olarak sakla) düğmesi, koyu tema' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-light.webp', alt: 'TabMerger’da closed: araması, bugün kapatılmış 3 sekmeli bir pencereyi listeliyor, açık tema' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-dark.webp', alt: 'TabMerger’da closed: araması, bugün kapatılmış 3 sekmeli bir pencereyi listeliyor, koyu tema' },
+  ],
+  tags: ['tabmerger-guides', 'save-tabs', 'restore-closed-tabs', 'session-management'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp' },
+  ogImage: { src: '/blog/never-lose-a-tab-again/og.png', alt: 'Bir daha asla sekme kaybetmeyin: TabMerger’da “Keep as group” (Grup olarak sakla) düğmesi olan otomatik kaydedilmiş bir grup' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'problem', label: 'Sekmeler nasıl kaybolur' },
+    { id: 'why', label: 'Neden böyle çalışır' },
+    { id: 'steps', label: 'Açın' },
+    { id: 'closed', label: 'Son kapatılanlar' },
+    { id: 'benefit', label: 'Size ne kazandırır' },
+    { id: 'habits', label: 'İyi alışkanlıklar' },
+    { id: 'plans', label: 'Ücretsiz ve Pro' },
+    { id: 'faq', label: 'SSS' },
+  ],
+}
+
+<QuickAnswer>
+
+[TabMerger](/features) içinde **Ayarlar → Veri → Açık sekmeleri otomatik kaydet** (Settings → Data → Auto-save open tabs) seçeneğini açın ve bir zamanlama, bir sekme sayısı ya da ikisini birden seçin. Bundan sonra açık sekmeleriniz, zaten kayıtlı olanlar atlanarak, otomatik olarak yeni bir grup halinde kaydedilir. Yanlışlıkla bir şey mi kapattınız? <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> ve `closed:`, son kapattığınız her sekmeyi ve pencereyi bulur ve bütün bir pencereyi tek tıklamayla yeniden açar.
+
+</QuickAnswer>
+
+<InstallCta>Her açık sekmenin bir kopyası, sizin için bir zamanlamayla kaydedilir. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+<Section id="problem" title="Sekmeler aslında nasıl kaybolur">
+
+Nadiren büyük bir çökmeyle olur. Çoğu zaman küçük bir şeydir: yanlış pencereyi kapatırsınız, tam da bu sabahki araştırmanın otuz sekmesinin olduğu pencereyi. Bir güncelleme tarayıcıyı yeniden başlatır ve üç pencereden yalnızca biri geri gelir. Cuma günü ortalığı toplarsınız ve pazartesi kapattığınız sayfaya ihtiyacınız olur. O zamana kadar sekme, adını hatırlayabiliyorsanız, geçmişte yüzlerce sayfanın arasında bir yerdedir.
+
+Elle kaydetmek bu sorunu çözer, hatırladığınız günlerde. Otomatik kaydetme diğer günler içindir.
+
+Bir çökmenin ya da zorunlu yeniden başlatmanın ardından sekmeleri her tarayıcının kendi araçlarıyla geri getirmek için [çökmeden sonra sekmelerinizi geri getirme](/blog/restore-tabs-after-crash) rehberine bakın. Bu rehber, her zaman bir kopyanız olmasını sağlamakla ilgili.
+
+</Section>
+
+<Section id="why" title="Otomatik kaydetme neden böyle çalışır">
+
+TabMerger’ın otomatik kaydetmesindeki her kural, kopyanın yalnızca var olması için değil, işe yaraması için orada:
+
+- **Yeni bir gruba kaydeder**; grubun adı saattir (“Otomatik kaydedildi 21 Kas 20:28”), pencereler bütün olarak ve sekme sırası korunarak kaydedilir. Daha önce kaydettiğiniz hiçbir şey değişmez. Her yeni otomatik kayıt bir öncekinden farklı bir renk alır, böylece onları kolayca ayırt edersiniz.
+- **İki tetikleyici, çünkü sekmeler iki şekilde birikir.** Bir **zamanlama** (15 ya da 30 dakikada bir, saatte bir, 2 ya da 4 saatte bir veya günde bir) düzenli çalışmayı kapsar. Bir **sekme sayısı** (20, 30, 50, 75 ya da 100 açık sekme) hiçbir zamanlamanın yetişemediği araştırma patlamasını kapsar.
+- **Bir patlama bir kez kaydedilir.** Sayı tetikleyicisi siz sınırı geçtiğinizde devreye girer, ardından yeniden devreye girebilmek için sınıra ya da altına dönmenizi ve en az 10 dakika geçmesini bekler. Art arda on sekme açmak on grup oluşturmaz.
+- **Kopya yok.** Adresi gruplarınızdan birinde zaten bulunan bir sekme atlanır ve birkaç sekmede açık olan bir sayfa bir kez kaydedilir. Her şey zaten kayıtlıysa, çalışma hiçbir şey kaydetmez ve bunu size söyler.
+- **Gizli olan gizli kalır.** Gizli pencereler asla kaydedilmez. TabMerger’ın kendi sayfaları dışarıda bırakılır; sabitlenmiş sekmeler ve tarayıcı sayfaları kaydedilir.
+- **Size ihtiyaç duymaz.** Otomatik kaydetme, tarayıcı açık olduğu sürece eklentinin arka planında çalışır ve tarayıcı açılırken kayıt zamanının gelip gelmediğini kontrol eder. İsteğe bağlı bir bildirim her çalışmadan sonra size haber verir; ayarlardaki durum satırı son sonucu gösterir.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="TabMerger’da otomatik kaydetme" steps={[{ title: 'Ayarlar' }, { title: 'Otomatik kaydedilmiş grup' }]}>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-save-settings" alt="TabMerger “Settings” (Ayarlar), “Data” (Veri): “Auto-save open tabs” (Açık sekmeleri otomatik kaydet) açık, saatte bir ve açık sekmeler 50’yi geçince, “Auto-save now” (Şimdi otomatik kaydet) düğmesiyle, açık tema" darkAlt="TabMerger “Settings” (Ayarlar), “Data” (Veri): “Auto-save open tabs” (Açık sekmeleri otomatik kaydet) açık, saatte bir ve açık sekmeler 50’yi geçince, “Auto-save now” (Şimdi otomatik kaydet) düğmesiyle, koyu tema" boxes={[{ id: 'schedule', label: 'Ne sıklıkla kaydedilir' }, { id: 'threshold', label: 'Açık sekme tetikleyicisi' }, { id: 'run-now', label: 'Hemen kaydet' }]} source="TabMerger 3.16.1">Saatte bir ve açık sekmeler her 50’yi geçtiğinde.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-saved" alt="“Auto-saved” (Otomatik kayıtlar) altında iki pencere ve yedi sekmeli bir grup ve “Keep as group” (Grup olarak sakla) düğmesi, açık tema" darkAlt="“Auto-saved” (Otomatik kayıtlar) altında iki pencere ve yedi sekmeli bir grup ve “Keep as group” (Grup olarak sakla) düğmesi, koyu tema" boxes={[{ id: 'keep', label: 'Grup olarak sakla' }]} source="TabMerger 3.16.1">Sonuç: açık iki pencere, bir grup olarak kaydedildi. Kalıcı olarak saklamak için tutun.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="steps" title="Dört adımda açın">
+
+1. TabMerger’ı açın, ardından **Ayarlar** (Settings, hesap menüsünde) → **Veri** (Data).
+2. **Açık sekmeleri otomatik kaydet** (Auto-save open tabs) seçeneğini açın. (Pro’da zaten açıktır, saatte bir.)
+3. **Zamanlama** (Schedule) altında bir zamanlama, **Açık sekme sayısı şunu geçince** (When open tabs pass) altında bir sayı ya da ikisini birden seçin. Her kayıttan sonra haber almak isterseniz **Bildirim göster** (Show a notification) seçeneğini açın.
+4. Sonucu görmek için bir kez **Şimdi otomatik kaydet** (Auto-save now) düğmesine basın: kenar çubuğunda **Otomatik kayıtlar** (Auto-saved) altında yeni bir grup belirir.
+
+Kalıcı olarak saklamak istediğiniz bir otomatik kayıt mı buldunuz? Açın ve **Grup olarak sakla** (Keep as group) düğmesine basın: gruplarınıza taşınır ve asla otomatik olarak silinmez.
+
+</Section>
+
+<Section id="closed" title="Son kapatılanlar: ağın diğer yarısı">
+
+Otomatik kaydetme açık olanı kapsar; **Son kapatılanlar** (Recently closed) az önce kapattığınızı kapsar. Kapattığınız her sekme ve pencere, yalnızca bu cihazda, güne göre tutulur; gizli pencereler asla kaydedilmez.
+
+- Güne göre göz atmak için kenar çubuğunda **Son kapatılanlar** bölümünü açın ya da <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> tuşlarına basıp aramak için `closed:` ile başlayın.
+- Kapatılmış bir **pencere** tek bir kayıt olarak listelenir (“Pencere · 3 sekme”): onu seçin, pencerenin tamamı geri gelir.
+- Bir sonucu arka planda yeniden açmak için <Kbd>Ctrl</Kbd> tuşuyla (Mac’te <Kbd>⌘</Kbd>) ya da orta tuşla tıklayın.
+
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-closed-window" alt="TabMerger’da closed: araması, bugün kapatılmış 3 sekmeli bir pencereyi listeliyor, açık tema" darkAlt="TabMerger’da closed: araması, bugün kapatılmış 3 sekmeli bir pencereyi listeliyor, koyu tema" boxes={[{ id: 'search-input', label: 'closed: filtresi' }, { id: 'closed-window', label: 'Kapatılmış bir pencerenin tamamı' }]} source="TabMerger 3.16.1">Yanlışlıkla kapatılan bir pencere, tek aramayla geri gelir.</ThemedScreenshot>
+
+Daha fazla arama ipucu için [TabMerger ile tüm sekmelerinizde arama](/blog/search-all-your-tabs-with-tabmerger) yazısına bakın.
+
+</Section>
+
+<Section id="benefit" title="Size ne kazandırır">
+
+En kötü durum “o sekmeler gitti”den “son kayıttan beri açtıklarımı kaybederim”e iner. Saatlik bir zamanlamayla kötü bir yeniden başlatma size en fazla bir saatlik yeni sekmeye mal olur; kendi kapattığınız bir pencere “Son kapatılanlar” bölümündedir. İkisini de geri getirmek, geçmişte bir öğleden sonra yerine tek bir aramadır.
+
+</Section>
+
+<Section id="habits" title="İyi alışkanlıklar">
+
+- **Zamanlamayı temponuza göre seçin.** Saatte bir çoğu güne uyar; 15 dakikada bir yoğun araştırmaya uyar.
+- **Sekmeleri bir anda çok açıyorsanız bir sekme sayısı ekleyin.** 50 iyi bir başlangıçtır.
+- **Önce saklayın, sonra temizleyin.** Bir otomatik kayıtta saklamaya değer bir şey varsa **Grup olarak sakla** düğmesine basıp adını değiştirin; gerisini silin.
+- **Yine de bilinçli olarak kaydedin.** Otomatik kaydetme bir ağdır, plan değil: gerçek projeler için adlandırılmış gruplar tutun (bkz. [günlük bir sekme düzeni](/blog/tabmerger-daily-workflow)).
+
+</Section>
+
+<Section id="plans" title="Ücretsiz ve Pro">
+
+<ComparisonTable
+  head={['', 'Ücretsiz', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Açık sekmeleri otomatik kaydet', 'Siz açana kadar kapalı; en yeni 2 tanesi tutulur', 'Varsayılan olarak açık; hepsi tutulur'],
+    ['Otomatik kayıtlar ve plan sınırları', '5 grup ve 50 sekme sınırına sayılır', 'Sınır yok'],
+    ['Son kapatılanlar', 'Son 2 gününüz', 'Son 30 gününüz'],
+    ['Gruplarınızın şifreli otomatik yedekleri', 'Hayır', 'Saatlikten haftalığa, en yeni 10 tanesi tutulur'],
+    ['Diğer cihazlarınızın açık sekmeleri', 'Hayır', 'Ayarlar → Cihazlar'],
+  ]}
+/>
+
+Ücretsiz planda, 2 kayıt olduğunda her yeni otomatik kayıt en eskisinin yerini alır; **Grup olarak sakla** birini bu döngünün dışına çıkarır. 50 sekme sınırına yaklaşıldığında otomatik kayıt sığan sekmeleri kaydeder ve bunu söyler. Yedekler ve cihazlarınızın sekmeleri, uçtan uca şifrelenmiş olarak hesabınızda saklanır ve sunucumuz bunları Pro’su olmayan bir hesap için saklamayı reddeder. Ayrıntılar [fiyatlandırma sayfasında](/pricing).
+
+<InstallCta>Bir kez ayarlayın, kapatılan pencereler için endişelenmeyi bırakın. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

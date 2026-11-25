@@ -1,0 +1,276 @@
+export const post = {
+  slug: 'tab-keyboard-shortcuts',
+  title: 'Skróty klawiszowe do kart w Chrome, Edge i Firefoksie',
+  seoTitle: 'Skróty do kart w Chrome (oraz Edge i Firefoksie): pełna ściągawka',
+  description:
+    'Wszystkie skróty do kart, których warto się nauczyć w Chrome, Edge i Firefoksie: przełączanie kart, przywracanie zamkniętych kart i okien, wyszukiwanie kart i dodawanie ich wszystkich do zakładek, w Windowsie i na Macu.',
+  shareSummary: 'Przełączaj, przywracaj, wyszukuj i zapisuj karty z klawiatury w Chrome, Edge i Firefoksie.',
+  dek: 'Jedna tabela dla trzech przeglądarek, różnice na Macu i jak ustawić skróty rozszerzeń, które naprawdę działają.',
+  published: '2026-11-22',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+T przywraca ostatnio zamkniętą kartę we wszystkich trzech.', source: 'Pomoc Chrome i Edge; klawisze Firefoksa 159' },
+    { text: 'Firefox przywraca zamknięte okno skrótem Ctrl+Shift+N.', source: 'Klawisze Firefoksa 159' },
+    {
+      text: 'W Chrome Ctrl+9 przechodzi do ostatniej karty, nie do dziewiątej.',
+      source: 'Pomoc Chrome',
+      href: 'https://support.google.com/chrome/answer/157179',
+    },
+    { text: 'Edge zostawia sobie Ctrl+Shift+K, U i P, więc rozszerzenia nie mogą ich zająć.', source: 'Pomoc techniczna Microsoft; Edge 158' },
+  ],
+  faq: [
+    {
+      question: 'Jak przełączać karty z klawiatury?',
+      answer:
+        'Ctrl+Tab przechodzi do następnej karty, a Ctrl+Shift+Tab do poprzedniej w Chrome, Edge i Firefoksie. Ctrl+1 do Ctrl+8 przechodzą do karty według pozycji; Ctrl+9 do ostatniej karty.',
+    },
+    {
+      question: 'Jak przywrócić zamkniętą kartę?',
+      answer:
+        'Naciśnij Ctrl+Shift+T (⌘+Shift+T na Macu). Naciskaj dalej, żeby cofać się dalej. W Chrome przywraca to też zamknięte okna; w Firefoksie zamknięte okno przywraca Ctrl+Shift+N.',
+    },
+    {
+      question: 'Czy mogę przeszukać otwarte karty?',
+      answer: 'Tak. Ctrl+Shift+A otwiera Wyszukiwanie kart w Chrome i listę wszystkich kart w Firefoksie. W Chrome możesz też wpisać @tabs w pasku adresu.',
+    },
+    {
+      question: 'Dlaczego skrót rozszerzenia nie działa?',
+      answer:
+        'Przeglądarka zostawia proponowany skrót nieprzypisany, gdy koliduje z jednym z jej własnych. Sprawdź chrome://extensions/shortcuts lub edge://extensions/shortcuts i wybierz inny klawisz.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp', alt: 'Strona skrótów klawiszowych rozszerzeń w Edge dla TabMergera: wszystkie cztery polecenia zapisu przypisane, do Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma i Alt+Shift+Period' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp', alt: 'Wyszukiwanie TabMergera otwarte z zapytaniem docs, z pasującymi otwartymi i zapisanymi kartami, motyw jasny' },
+    { src: '/blog/tab-keyboard-shortcuts/tm-search-dark.webp', alt: 'Wyszukiwanie TabMergera otwarte z zapytaniem docs, z pasującymi otwartymi i zapisanymi kartami, motyw ciemny' },
+  ],
+  tags: ['browser-tips', 'cross-browser', 'chrome', 'edge', 'firefox', 'tab-management'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-20',
+      note: 'Dane Firefoksa odczytano z definicji klawiszy samego Firefoksa 159.0.1; ta strona zablokowała nasze automatyczne sprawdzanie.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/tab-keyboard-shortcuts/tm-search-light.webp' },
+  ogImage: { src: '/blog/tab-keyboard-shortcuts/og.png', alt: 'Skróty klawiszowe do kart w Chrome, Edge i Firefoksie: poradnik TabMergera, z otwartym wyszukiwaniem TabMergera' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'table', label: 'Skróty według przeglądarki' },
+    { id: 'reopen', label: 'Przywracanie zamkniętych kart' },
+    { id: 'extensions', label: 'Skróty rozszerzeń' },
+    { id: 'tabmerger', label: 'Klawisze TabMergera' },
+    { id: 'faq', label: 'Najczęstsze pytania' },
+  ],
+  browserSections: ['table', 'reopen', 'extensions'],
+  browserFact: {
+    label: 'Skróty rozszerzeń',
+    values: { chrome: 'chrome://extensions/shortcuts', edge: 'edge://extensions/shortcuts', firefox: 'about:addons' },
+  },
+}
+
+<QuickAnswer>
+
+<Kbd>Ctrl</Kbd>+<Kbd>Tab</Kbd> i <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Tab</Kbd> przechodzą do następnej i poprzedniej karty, <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> do karty według pozycji, <Kbd>Ctrl</Kbd>+<Kbd>W</Kbd> ją zamyka, a <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> przywraca. Działają tak samo w Chrome, Edge i Firefoksie w Windowsie i Linuksie; na Macu użyj <Kbd>⌘</Kbd> zamiast <Kbd>Ctrl</Kbd>. Dodaj [TabMergera](/features), a najcięższą pracę wykonają dwa kolejne klawisze: zapisywanie kart prosto z klawiatury i <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>, który znajdzie każdą kartę, otwartą, zapisaną czy zamkniętą.
+
+</QuickAnswer>
+
+<InstallCta>Zapisuj karty, nie odrywając rąk od klawiatury. Za darmo dla Chrome, Edge i Firefoksa.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="table" title="Jakie skróty do kart ma twoja przeglądarka?">
+
+Najpierw Windows i Linux, potem to, co zmienia się na Macu. Każdy wpis pochodzi ze strony pomocy danej przeglądarki, a w przypadku Firefoksa z definicji klawiszy wewnątrz samego Firefoksa 159.0.1.
+
+<BrowserPanels section="table">
+<BrowserPanel browser="chrome">
+
+<ComparisonTable
+  head={['Czynność', 'Skrót']}
+  rowHeaders
+  rows={[
+    ['Nowa karta', 'Ctrl+T'],
+    ['Zamknij kartę', 'Ctrl+W'],
+    ['Przywróć zamknięte karty i okna', 'Ctrl+Shift+T'],
+    ['Następna karta', 'Ctrl+Tab lub Ctrl+PgDn'],
+    ['Poprzednia karta', 'Ctrl+Shift+Tab lub Ctrl+PgUp'],
+    ['Karty od 1 do 8', 'Ctrl+1 … Ctrl+8'],
+    ['Ostatnia karta', 'Ctrl+9'],
+    ['Wyszukaj otwarte karty', 'Ctrl+Shift+A'],
+    ['Dodaj wszystkie karty do zakładek', 'Ctrl+Shift+D'],
+    ['Historia', 'Ctrl+H'],
+    ['Zamknij okno', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+Otwarte karty możesz też przeszukać z paska adresu: wpisz `@tabs` i naciśnij <Kbd>Tab</Kbd>. Żeby przeszukać także zapisane i zamknięte karty, zobacz, [jak znaleźć jedną kartę wśród setek](/blog/find-a-tab-among-hundreds).
+
+**Na Macu** używaj <Kbd>⌘</Kbd> tam, gdzie tabela podaje <Kbd>Ctrl</Kbd>, z tymi wyjątkami z pomocy Chrome: następna i poprzednia karta to <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>→</Kbd> i <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>←</Kbd>, historia to <Kbd>⌘</Kbd>+<Kbd>Y</Kbd>, a menedżer zakładek to <Kbd>⌘</Kbd>+<Kbd>Option</Kbd>+<Kbd>B</Kbd>.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+<ComparisonTable
+  head={['Czynność', 'Skrót']}
+  rowHeaders
+  rows={[
+    ['Nowa karta', 'Ctrl+T'],
+    ['Zamknij kartę', 'Ctrl+W'],
+    ['Przywróć ostatnio zamkniętą kartę', 'Ctrl+Shift+T'],
+    ['Następna karta', 'Ctrl+Tab lub Ctrl+PgDn'],
+    ['Poprzednia karta', 'Ctrl+Shift+Tab lub Ctrl+PgUp'],
+    ['Karty od 1 do 8', 'Ctrl+1 … Ctrl+8'],
+    ['Ostatnia karta', 'Ctrl+9'],
+    ['Dodaj wszystkie karty do Ulubionych Edge', 'Ctrl+Shift+D'],
+    ['Historia', 'Ctrl+H'],
+    ['Zamknij okno', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+Na liście skrótów Edge nie ma klawisza do przeszukiwania otwartych kart ani do przywracania zamkniętego okna.
+
+**Na Macu** używaj <Kbd>⌘</Kbd> tam, gdzie tabela podaje <Kbd>Ctrl</Kbd>; historia to <Kbd>⌘</Kbd>+<Kbd>Y</Kbd>. Dla następnej i poprzedniej karty Microsoft podaje <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↓</Kbd> i <Kbd>⌘</Kbd>+<Kbd>Fn</Kbd>+<Kbd>↑</Kbd>.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+<ComparisonTable
+  head={['Czynność', 'Skrót']}
+  rowHeaders
+  rows={[
+    ['Nowa karta', 'Ctrl+T'],
+    ['Zamknij kartę', 'Ctrl+W'],
+    ['Przywróć zamkniętą kartę', 'Ctrl+Shift+T'],
+    ['Przywróć zamknięte okno', 'Ctrl+Shift+N'],
+    ['Następna karta', 'Ctrl+Tab lub Ctrl+PgDn'],
+    ['Poprzednia karta', 'Ctrl+Shift+Tab lub Ctrl+PgUp'],
+    ['Karty od 1 do 8', 'Ctrl+1 … Ctrl+8'],
+    ['Ostatnia karta', 'Ctrl+9'],
+    ['Pokaż wszystkie karty', 'Ctrl+Shift+A'],
+    ['Dodaj wszystkie karty do zakładek', 'Ctrl+Shift+D'],
+    ['Historia w panelu bocznym', 'Ctrl+H'],
+    ['Historia w bibliotece', 'Ctrl+Shift+H'],
+    ['Zamknij okno', 'Ctrl+Shift+W'],
+  ]}
+/>
+
+**Na Macu** Firefox definiuje te skróty z głównym klawiszem modyfikującym systemu, więc naciskaj <Kbd>⌘</Kbd> tam, gdzie tabela podaje <Kbd>Ctrl</Kbd>.
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="reopen" title="Jak przywrócić kartę zamkniętą przez pomyłkę?">
+
+Naciśnij <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> na Macu). Każde naciśnięcie cofa o kolejny krok. To, co wraca, zależy od przeglądarki:
+
+<BrowserPanels section="reopen">
+<BrowserPanel browser="chrome">
+
+Chrome przywraca karty *i* okna, w kolejności zamykania, więc naciskaj dalej, aż wróci zgubione okno.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Według dokumentacji Edge <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> przywraca ostatnio zamkniętą kartę. Po zamknięte okno otwórz historię (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) i zajrzyj do sekcji **Recently closed** (ostatnio zamknięte).
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Firefox prowadzi osobne listy: <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> dla kart i <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> dla okien. W Firefoksie 159 <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> jest podpięty pod polecenie, które przywraca ostatnio zamkniętą kartę, okno lub sesję, więc może też przywrócić poprzednią sesję.
+
+</BrowserPanel>
+</BrowserPanels>
+
+Lista sięga tylko do pewnego momentu. Gdy przepadła cała sesja, zobacz, [jak przywrócić karty po awarii](/blog/restore-tabs-after-crash). Żeby w ogóle ich nie tracić, [zapisz wszystkie otwarte karty](/blog/save-all-open-tabs), zanim zamkniesz coś dużego.
+
+</Section>
+
+<Section id="extensions" title="Jak ustawić skróty dla rozszerzeń?">
+
+Rozszerzenia mogą proponować skróty, ale ostatnie słowo należy do przeglądarki: proponowany klawisz, który koliduje z jednym z jej własnych, zostaje bez ostrzeżenia na **Not set** (nieustawiony). Otwórz stronę skrótów swojej przeglądarki, kliknij ołówek obok polecenia i naciśnij wybrane klawisze.
+
+<BrowserPanels section="extensions">
+<BrowserPanel browser="chrome">
+
+Wklej `chrome://extensions/shortcuts` do paska adresu. Każde polecenie ma też menu zakresu: **In Chrome** (tylko w Chrome) albo **Global** (wszędzie), żeby działało także wtedy, gdy Chrome nie jest na pierwszym planie.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Wklej `edge://extensions/shortcuts` do paska adresu.
+
+Edge zostawia sobie <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>K</Kbd> (duplikowanie karty), <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>U</Kbd> (Read Aloud, czytanie na głos) i <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> (drukowanie z systemowym oknem dialogowym), więc polecenie rozszerzenia, które proponuje jeden z nich, startuje w Edge 158 jako **Not set**. Edge 158 odrzuca też niektóre klawisze <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>, których lista Microsoftu nie wymienia, na przykład <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> i <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>+<Kbd>Z</Kbd>. Polecenia zapisu TabMergera omijają je wszystkie, więc nowa instalacja ma przypisane wszystkie cztery:
+
+<AnnotatedFigure src="/blog/tab-keyboard-shortcuts/edge-extension-shortcuts.webp" alt="Strona skrótów klawiszowych rozszerzeń w Edge dla TabMergera: wszystkie cztery polecenia zapisu przypisane, do Alt+Shift+S, Alt+Shift+O, Alt+Shift+Comma i Alt+Shift+Period" width={852} height={460} boxes={[{ id: 'save-shortcuts' }]} source="edge://extensions/shortcuts · Edge 158.0.4370.33">Nowa instalacja TabMergera w Edge 158: wszystkie cztery polecenia zapisu mają swoje klawisze, nie trzeba nic poprawiać.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Otwórz `about:addons`, kliknij menu z ikoną koła zębatego i wybierz **Zarządzaj skrótami rozszerzeń** (Manage Extension Shortcuts). Pamiętaj, że <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>P</Kbd> otwiera w Firefoksie okno prywatne, więc dla wszystkiego, co go proponuje, wybierz inny klawisz.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>strona skrótów nie ostrzega. Jeśli skrót „nic nie robi”, najpierw sprawdź właśnie ją.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="Klawisze TabMergera">
+
+[TabMerger](/features), nasze darmowe rozszerzenie do Chrome, Edge i Firefoksa, zapisuje karty prosto z klawiatury, bez otwierania go. Proponuje klawisz dla każdego ze swoich czterech poleceń zapisu, dobrany tak, by omijać skróty, których Chrome, Edge i Firefox używają same, a każdy z nich zmienisz na stronie skrótów swojej przeglądarki (opisanej wyżej):
+
+<ComparisonTable
+  head={['Proponowany klawisz', 'Zapisuje']}
+  keysColumn={0}
+  rows={[
+    ['Alt+Shift+S', 'Bieżącą kartę'],
+    ['Alt+Shift+O', 'Wszystkie pozostałe karty w oknie'],
+    ['Alt+Shift+Comma', 'Karty po lewej'],
+    ['Alt+Shift+Period', 'Karty po prawej'],
+  ]}
+/>
+
+Na Macu używają <Kbd>Control</Kbd>+<Kbd>Shift</Kbd> zamiast <Kbd>Alt</Kbd>+<Kbd>Shift</Kbd>: <Kbd>Control</Kbd>+<Kbd>Shift</Kbd>+<Kbd>S</Kbd> zapisuje bieżącą kartę. Takie klawisze dostaje nowa instalacja. Aktualizacje nie zmieniają skrótów, więc jeśli zainstalowałeś TabMergera, zanim pojawiły się te klawisze, zachowuje on dotychczasowe, łącznie z tymi na **Not set**: ustaw je na stronie skrótów.
+
+W okienku rozszerzenia <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd>) przeszukuje otwarte, zapisane i ostatnio zamknięte karty na jednej liście.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tab-keyboard-shortcuts/tm-search" alt="Wyszukiwanie TabMergera otwarte z zapytaniem docs, z pasującymi otwartymi i zapisanymi kartami, motyw jasny" darkAlt="Wyszukiwanie TabMergera otwarte z zapytaniem docs, z pasującymi otwartymi i zapisanymi kartami, motyw ciemny" boxes={[{ id: 'search-input', label: 'Wyszukiwanie' }]} source="TabMerger 3.16.1">Ctrl+K i pisz: wyniki pochodzą zarówno z otwartych, jak i z zapisanych kart.</ThemedScreenshot>
+
+<InstallCta>Za darmo dla Chrome, Edge i Firefoksa. Na start nie potrzebujesz konta.</InstallCta>
+
+Więcej nawyków, które trzymają liczbę kart w ryzach, znajdziesz w naszym [poradniku o zbyt wielu kartach](/blog/manage-too-many-tabs), a to, co każda przeglądarka oferuje poza skrótami, w [porównaniu funkcji kart w Chrome, Edge i Firefoksie](/blog/browser-tab-features-compared).
+
+</Section>
+
+<Section id="faq" title="Najczęstsze pytania">
+
+<Faq items={post.faq} />
+
+</Section>

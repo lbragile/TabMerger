@@ -1,0 +1,161 @@
+export const post = {
+  slug: 'close-duplicate-tabs',
+  title: '如何一键关闭重复标签页',
+  navTitle: '关闭重复标签页',
+  seoTitle: '如何在 Chrome、Edge 和 Firefox 中关闭重复标签页',
+  description:
+    '同一个页面开了三次？用 TabMerger 一键关闭所有窗口中的重复标签页，或使用 Firefox 自带的“关闭重复标签页”。Chrome 和 Edge 能做什么，以及到底什么才算重复。',
+  shareSummary: '在 Chrome、Edge 和 Firefox 中，一键关闭所有窗口里的重复标签页。',
+  dek: '重复标签页会悄悄堆积。一次性从所有窗口中清掉它们，每个页面只保留第一份。',
+  published: '2026-12-01',
+  updated: '2026-12-01',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger 的“去除重复标签页”会关闭所有已打开窗口中的重复项，并保留第一个。', source: '在 TabMerger 3.16.1 中测试，2026 年 11 月 21 日' },
+    { text: '它会先询问，并说明将移除多少个标签页。', source: 'TabMerger 3.16.1' },
+    { text: 'Firefox 159 的标签页菜单中有“关闭重复标签页”。', source: 'Firefox 159 菜单文字' },
+    { text: 'Edge 的“Duplicate tab”会复制一个标签页，并不会移除重复项。', source: 'Edge 158 菜单文字' },
+  ],
+  faq: [
+    {
+      question: 'Chrome 有去除重复标签页的功能吗？',
+      answer:
+        'Chrome 的帮助页面中没有介绍这类功能。TabMerger 补上了这一点：打开“当前打开”的 ⋯ 菜单，选择“去除重复标签页”，即可关闭所有窗口中的每个重复项。',
+    },
+    {
+      question: '会保留哪个标签页？',
+      answer: '在 TabMerger 中，保留按阅读顺序排在最前的那一份：先看最早的窗口，再从左到右。同一地址之后的所有副本都会被移除。',
+    },
+    {
+      question: '#锚点不同的页面算重复吗？',
+      answer: '不算。TabMerger 比较完整地址，不区分大小写，所以 page#top 和 page#faq，或者 ?参数不同的同一页面，都会作为不同的标签页保留。',
+    },
+    {
+      question: '已保存的分组也能清理重复项吗？',
+      answer: '可以：每个分组的 ⋯ 菜单里都有同样的“去除重复标签页”，作用于该分组中保存的标签页。',
+    },
+  ],
+  images: [
+    { src: '/blog/close-duplicate-tabs/tm-before-light.webp', alt: 'TabMerger 的“Now Open”（当前打开），两个窗口共 8 个标签页，其中 3 个重复，浅色主题' },
+    { src: '/blog/close-duplicate-tabs/tm-before-dark.webp', alt: 'TabMerger 的“Now Open”（当前打开），两个窗口共 8 个标签页，其中 3 个重复，深色主题' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp', alt: 'TabMerger 的“Remove duplicates”（移除重复项）对话框，提示将移除 3 个重复的标签页，并有“Remove 3 duplicates”（移除 3 个重复项）按钮，浅色主题' },
+    { src: '/blog/close-duplicate-tabs/tm-confirm-dark.webp', alt: 'TabMerger 的“Remove duplicates”（移除重复项）对话框，提示将移除 3 个重复的标签页，并有“Remove 3 duplicates”（移除 3 个重复项）按钮，深色主题' },
+    { src: '/blog/close-duplicate-tabs/tm-after-light.webp', alt: '去除重复后 TabMerger 的“Now Open”（当前打开）：两个窗口，5 个标签页，每个页面只有一个，浅色主题' },
+    { src: '/blog/close-duplicate-tabs/tm-after-dark.webp', alt: '去除重复后 TabMerger 的“Now Open”（当前打开）：两个窗口，5 个标签页，每个页面只有一个，深色主题' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/close-duplicate-tabs/tm-confirm-light.webp' },
+  ogImage: { src: '/blog/close-duplicate-tabs/og.png', alt: '如何一键关闭重复标签页：TabMerger 指南，附“Remove 3 duplicates”（移除 3 个重复项）对话框' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'tabmerger', label: '一键清理所有窗口' },
+    { id: 'what-counts', label: '什么算重复' },
+    { id: 'builtin', label: '浏览器自带选项' },
+    { id: 'prevent', label: '减少重复' },
+    { id: 'faq', label: '常见问题' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: '自带的重复标签页关闭',
+    values: { chrome: '帮助页面中没有', edge: '没有（Duplicate tab 是复制）', firefox: '右键点击 → 关闭重复标签页' },
+  },
+}
+
+<QuickAnswer>
+
+在 [TabMerger](/features) 中，打开 **当前打开** 的 **⋯** 菜单，选择 **去除重复标签页**。它会 **在你的所有窗口中** 找出每个打开了不止一次的页面，显示将要关闭多少个标签页，并保留每个页面的第一份。Firefox 的标签页菜单里自带 **关闭重复标签页**（Close Duplicate Tabs）；Chrome 的帮助页面没有介绍任何去除重复项的功能。
+
+</QuickAnswer>
+
+<InstallCta>一键清理所有窗口中的重复标签页。免费支持 Chrome、Edge 和 Firefox。</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="如何一次关闭所有重复项？">
+
+1. 打开 TabMerger。**当前打开** 会列出所有已打开的窗口和标签页。
+2. 打开它的 **⋯** 菜单，选择 **去除重复标签页**。
+3. 核对数量，然后点击移除按钮，这里是 **移除 3 个重复项**。多余的浏览器标签页会关闭；每个页面的第一份原地保留，位置不变。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="去除已打开标签页中的重复项" steps={[{ title: '之前' }, { title: '确认' }, { title: '之后' }]}>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-before" alt="TabMerger 的“Now Open”（当前打开），两个窗口共 8 个标签页，其中 3 个重复，浅色主题" darkAlt="TabMerger 的“Now Open”（当前打开），两个窗口共 8 个标签页，其中 3 个重复，深色主题" boxes={[{ id: 'summary', label: '8 个标签页' }]} source="TabMerger 3.16.1">之前：两个窗口，8 个标签页，其中 3 个重复。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-confirm" alt="TabMerger 的“Remove duplicates”（移除重复项）对话框，提示将移除 3 个重复的标签页，并有“Remove 3 duplicates”（移除 3 个重复项）按钮，浅色主题" darkAlt="TabMerger 的“Remove duplicates”（移除重复项）对话框，提示将移除 3 个重复的标签页，并有“Remove 3 duplicates”（移除 3 个重复项）按钮，深色主题" boxes={[{ id: 'confirm', label: '移除' }]} source="TabMerger 3.16.1">TabMerger 在关闭之前会告诉你要关闭多少个。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/close-duplicate-tabs/tm-after" alt="去除重复后 TabMerger 的“Now Open”（当前打开）：两个窗口，5 个标签页，每个页面只有一个，浅色主题" darkAlt="去除重复后 TabMerger 的“Now Open”（当前打开）：两个窗口，5 个标签页，每个页面只有一个，深色主题" boxes={[{ id: 'summary', label: '5 个标签页' }]} source="TabMerger 3.16.1">之后：5 个标签页，每个页面只有一个。浏览器里的标签页确实关闭了。</ThemedScreenshot>
+</Carousel>
+
+同一个选项也适用于任何已保存的分组，所以持续了好几周的研究分组也能保持整洁。
+
+</Section>
+
+<Section id="what-counts" title="什么算重复？">
+
+TabMerger 比较标准形式的 **完整地址**，不区分大小写：
+
+<ComparisonTable
+  head={['这两个标签页', '算重复吗？']}
+  rows={[
+    [<code>example.com/page</code>, '同一页面两次：算，关闭其中一个'],
+    [<code>example.com/Page</code>, '只有大小写不同：算'],
+    [<code>example.com/page#faq</code>, '锚点不同：不算，两个都保留'],
+    [<code>example.com/page?ref=mail</code>, '参数不同：不算，两个都保留'],
+  ]}
+/>
+
+这是有意为之：停在长文档不同章节的两个标签页，或两次搜索，对你来说是不同的标签页，所以会保留。只有真正的重复项才会被移除。
+
+</Section>
+
+<Section id="builtin" title="浏览器自己能关闭重复项吗？">
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+Chrome 的帮助页面没有介绍任何去除重复标签页的功能。最接近的是 **标签页搜索**（Tab Search，<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>）：输入网站名称，在列表中找出重复项，再用每一行的关闭按钮逐个关闭。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge 的标签页菜单里有 **Duplicate tab**，它会再打开一个副本，和你想要的正好相反。要找出重复项只能手动操作，沿着标签栏逐个关闭。
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+右键点击任意标签页，选择 **关闭重复标签页**（Close Duplicate Tabs）即可关闭重复项；如果只想处理一个页面，选择 **关闭与此标签页重复项**（Close Duplicates of This Tab）。
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="prevent" title="怎样从一开始就减少重复？">
+
+- **先搜索，再打开**。在 TabMerger 中按 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>，就能看到这个页面是否已经打开或已保存。详见[如何在数百个标签页中找到一个](/blog/find-a-tab-among-hundreds)。
+- **合并窗口要小心**。合并窗口时最容易出现重复；[合并窗口](/blog/merge-browser-windows)之后马上去除重复项。
+- **先保存，再关闭**。打开的标签页越少，副本就越少。我们的[标签页过多时的整理习惯](/blog/manage-too-many-tabs)能帮你养成习惯。
+
+<InstallCta>免费支持 Chrome、Edge 和 Firefox。无需账号即可开始使用。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

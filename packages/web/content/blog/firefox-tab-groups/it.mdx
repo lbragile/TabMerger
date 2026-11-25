@@ -1,0 +1,134 @@
+export const post = {
+  slug: 'firefox-tab-groups',
+  title: 'Gruppi di schede in Firefox: come salvarli, riaprirli e conservarli',
+  navTitle: 'Gruppi di schede in Firefox',
+  seoTitle: 'Gruppi di schede di Firefox: salvare, riaprire, sincronizzare (e i limiti)',
+  description:
+    'Come funzionano i gruppi di schede in Firefox 159: creare un gruppo, colorarlo, comprimerlo, salvarlo e chiuderlo per riaprirlo più tardi, cosa copre Firefox Sync e come conservare i gruppi al sicuro su tutti i dispositivi con TabMerger.',
+  shareSummary: 'Crea, salva, riapri e conserva i gruppi di schede di Firefox, e scopri cosa copre Firefox Sync.',
+  dek: 'Ora i gruppi di Firefox si possono salvare e chiudere. Ecco dove finiscono e come conservarli per sempre.',
+  published: '2026-12-07',
+  updated: '2026-12-07',
+  testedOn: ['Firefox 159.0.1'],
+  keyFacts: [
+    { text: '«Salva e chiudi gruppo» conserva un gruppo da riaprire più tardi.', source: 'Testo dei menu di Firefox 159' },
+    { text: 'I gruppi chiusi sono elencati in «Gruppi chiusi» e «Gruppi di schede recenti».', source: 'Testo dei menu di Firefox 159' },
+    { text: 'Le impostazioni di Firefox Sync elencano «Schede aperte», senza una voce separata per i gruppi di schede.', source: 'Testo delle impostazioni di Firefox 159' },
+    { text: 'Il menu di un gruppo può copiare tutti i suoi link in una volta.', source: 'Testo dei menu di Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Come salvo un gruppo di schede in Firefox?',
+      answer: 'Fai clic destro sull’etichetta del gruppo e scegli «Salva e chiudi gruppo». Riaprilo più tardi da «Gruppi chiusi» o dall’elenco «Gruppi di schede».',
+    },
+    {
+      question: 'I gruppi di schede di Firefox si sincronizzano?',
+      answer:
+        'Le impostazioni di sincronizzazione di Firefox 159 elencano Segnalibri, Cronologia, Schede aperte e altro, senza una voce separata per i gruppi di schede. Per avere gli stessi gruppi su ogni dispositivo, TabMerger Pro li sincronizza con crittografia end-to-end.',
+    },
+    {
+      question: 'Che differenza c’è tra «Salva e chiudi gruppo» ed «Elimina gruppo»?',
+      answer: '«Salva e chiudi gruppo» conserva il gruppo da riaprire più tardi. «Elimina gruppo» lo rimuove; «Separa schede» lascia aperte le schede ma scioglie il gruppo.',
+    },
+    {
+      question: 'Posso copiare tutti i link di un gruppo di schede di Firefox?',
+      answer: 'Sì: il menu del gruppo in Firefox 159 ha «Copia link nel gruppo». TabMerger può anche esportare interi gruppi in un file JSON.',
+    },
+  ],
+  images: [
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp', alt: 'Il gruppo di TabMerger «Home renovation» con tre finestre salvate e nove schede, alcune contrassegnate con i loro gruppi di schede «Kitchen» e «Quotes», tema chiaro' },
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-dark.webp', alt: 'Il gruppo di TabMerger «Home renovation» con tre finestre salvate e nove schede, alcune contrassegnate con i loro gruppi di schede «Kitchen» e «Quotes», tema scuro' },
+  ],
+  tags: ['firefox', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Tab groups in Firefox',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/tab-groups',
+      checked: '2026-11-21',
+      note: 'Menu names and settings were read from Firefox 159.0.1’s own interface text; this page blocked our automated check.',
+    },
+    {
+      title: 'Firefox Sync: what it is and how it works',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/firefox-sync-what-it-is-and-how-it-works',
+      checked: '2026-11-21',
+      note: 'The list of synced data was read from Firefox 159.0.1’s settings text.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-23',
+  cover: { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp' },
+  ogImage: { src: '/blog/firefox-tab-groups/og.png', alt: 'Copertina «Firefox tab groups: how to save, reopen and keep them»: una guida di TabMerger, con un gruppo salvato di due finestre' },
+  toc: [
+    { id: 'quick', label: 'Risposta rapida' },
+    { id: 'basics', label: 'Creare un gruppo' },
+    { id: 'save', label: 'Salvare e riaprire' },
+    { id: 'sync', label: 'Si sincronizzano?' },
+    { id: 'tabmerger', label: 'Conservarli per sempre' },
+    { id: 'faq', label: 'Domande frequenti' },
+  ],
+}
+
+<QuickAnswer>
+
+Trascina una scheda su un’altra, o fai clic destro su una scheda, per creare un gruppo in Firefox. Per conservarlo per dopo, fai clic destro sull’etichetta del gruppo e scegli **Salva e chiudi gruppo** («Save and close group»); riaprilo da **Gruppi chiusi** («Closed Groups») o dall’elenco **Gruppi di schede** («Tab groups»). Le impostazioni di Firefox Sync non hanno una voce separata per i gruppi di schede: per avere gli stessi gruppi su ogni dispositivo, e poterli cercare insieme a tutto il resto, salvali in [TabMerger](/features).
+
+</QuickAnswer>
+
+<InstallCta>Tieni i tuoi gruppi di Firefox salvati, ricercabili e sincronizzati. Gratis per Firefox, Chrome ed Edge.</InstallCta>
+
+<Section id="basics" title="Come funzionano i gruppi di schede in Firefox?">
+
+Secondo l’interfaccia stessa di Firefox 159:
+
+1. **Creare:** trascina una scheda su un’altra, o fai clic destro su una scheda e aggiungila a un nuovo gruppo. Firefox chiede un **Nome** («Name») e un colore (blu, ciano, grigio, verde, arancio, rosa, viola, rosso o giallo).
+2. **Comprimere:** fai clic sull’etichetta del gruppo per ridurlo alla larghezza di una sola scheda.
+3. **Gestire:** con un clic destro sull’etichetta trovi **Salva e chiudi gruppo**, **Separa schede** («Ungroup tabs»), **Elimina gruppo** («Delete group»), **Sposta gruppo in una nuova finestra** («Move group to new window»), **Copia link nel gruppo** («Copy links in group») e **Condividi gruppo** («Share group»).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's tab group editor with Name, colours and Save and close group. */}
+
+</Section>
+
+<Section id="save" title="Come salvo un gruppo e lo recupero?">
+
+- **Salvare:** clic destro sull’etichetta del gruppo → **Salva e chiudi gruppo**. Le schede si chiudono; il gruppo resta.
+- **Riaprire:** clic destro su una scheda → aggiungi a un gruppo → **Gruppi chiusi**, oppure apri l’elenco **Gruppi di schede** (lì Firefox mostra **Gruppi di schede recenti**, «Recent tab groups»), scegli il gruppo e poi **Riapri gruppo di schede** («Reopen tab group»).
+- **Eliminare:** **Elimina gruppo** lo rimuove per sempre.
+
+<Catch>un gruppo salvato vive in questo profilo di Firefox. Non è un backup e, per quanto mostrano le impostazioni di sincronizzazione, non ti segue su un altro dispositivo.</Catch>
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's Tab groups list with a closed group. */}
+
+</Section>
+
+<Section id="sync" title="I gruppi di schede di Firefox si sincronizzano?">
+
+Le impostazioni di **Sincronizzazione** («Sync») di Firefox 159 elencano cosa viene sincronizzato: **Segnalibri, Cronologia, Schede aperte, Password, Indirizzi, Metodi di pagamento, Componenti aggiuntivi e Impostazioni** («Bookmarks, History, Open tabs, Passwords, Addresses, Payment methods, Add-ons and Settings»). «Schede aperte» è descritto come «Elementi aperti nei dispositivi sincronizzati». Non c’è una voce separata per i gruppi di schede, quindi non contare sul fatto che un gruppo salvato compaia sull’altro computer.
+
+Per la stessa cosa in Chrome, leggi la nostra [guida ai gruppi di schede di Chrome](/blog/chrome-tab-groups), che invece si sincronizzano tramite un account Google.
+
+</Section>
+
+<Section id="tabmerger" title="Conserva i tuoi gruppi per sempre con TabMerger">
+
+[TabMerger](/features) funziona in Firefox, Chrome ed Edge e conserva i gruppi che il browser non riesce a tenere:
+
+1. Fai clic su **Aggiungi gruppo**, dagli un nome, poi scegli **Unisci con l'attuale** nel suo menu **⋯**: tutte le finestre e le schede aperte vengono salvate al suo interno.
+2. Chiudi le finestre. Il gruppo resta, con ogni scheda, e puoi cercarci dentro con <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+3. Riapri una scheda, una finestra o tutto, quando vuoi.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/firefox-tab-groups/tm-kept-groups" alt="Il gruppo di TabMerger «Home renovation» con tre finestre salvate e nove schede, alcune contrassegnate con i loro gruppi di schede «Kitchen» e «Quotes», tema chiaro" darkAlt="Il gruppo di TabMerger «Home renovation» con tre finestre salvate e nove schede, alcune contrassegnate con i loro gruppi di schede «Kitchen» e «Quotes», tema scuro" boxes={[{ id: 'summary', label: 'Finestre e schede salvate' }]} source="TabMerger 3.16.1">Un gruppo salvato: tre finestre, nove schede, pronto da riaprire.</ThemedScreenshot>
+
+Con [Pro](/pricing), i tuoi gruppi si sincronizzano tra Firefox, Chrome ed Edge su tutti i tuoi dispositivi, con crittografia end-to-end, così il server non può leggerli. Altre abitudini nella [routine per le troppe schede](/blog/manage-too-many-tabs).
+
+<InstallCta>Gratis per Firefox, Chrome ed Edge. Non serve un account per iniziare.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Domande frequenti">
+
+<Faq items={post.faq} />
+
+</Section>

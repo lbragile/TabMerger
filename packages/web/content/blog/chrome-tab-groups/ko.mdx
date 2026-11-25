@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'chrome-tab-groups',
+  title: 'Chrome 탭 그룹: 저장하고, 다시 열고, 동기화하는 방법',
+  seoTitle: 'Chrome 탭 그룹 저장, 다시 열기, 동기화 (그리고 한계)',
+  description:
+    'Chrome 탭 그룹의 작동 방식: 그룹 만들기, 접기, 닫기, 저장된 그룹 다시 열기, 다른 기기로 동기화되는 것, 확장 프로그램이 볼 수 있는 것과 없는 것을 정리했습니다.',
+  shareSummary: 'Chrome 탭 그룹을 만들고, 저장하고, 다시 열고, 동기화하는 방법과 그 한계.',
+  dek: '닫은 그룹은 사라진 게 아니라 저장된 것입니다. 어디에 저장되는지, 다른 기기로 무엇이 따라가고 무엇이 따라가지 않는지 알아봅니다.',
+  published: '2026-11-23',
+  updated: '2026-11-23',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: '그룹을 닫으면 저장되며, 북마크바나 ⋮ → 탭 그룹에서 다시 열 수 있습니다.',
+      source: 'Chrome 고객센터',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: '그룹을 삭제하거나 해제하면 로그인된 모든 기기에서 그룹이 사라집니다.', source: 'Chrome 고객센터' },
+    {
+      text: 'chrome.tabGroups는 열려 있는 창의 그룹만 볼 수 있습니다.',
+      source: 'chrome.tabGroups 문서',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: '새로 설치한 Chrome 157에서는 북마크바 관련 탭 그룹 설정 두 가지가 모두 켜져 있었습니다.', source: 'chrome://settings/appearance, 2026년 11월 20일' },
+  ],
+  faq: [
+    {
+      question: 'Chrome에서 탭 그룹을 저장하려면 어떻게 하나요?',
+      answer:
+        '그룹 이름을 마우스 오른쪽 버튼으로 클릭하고 그룹 닫기를 선택하세요. Chrome이 그룹을 보관하며, 북마크바나 ⋮ → 탭 그룹에서 다시 열 수 있습니다.',
+    },
+    {
+      question: 'Chrome 탭 그룹은 기기 간에 동기화되나요?',
+      answer:
+        '저장된 그룹은 Google 계정을 따라갑니다. Chrome 고객센터는 그룹을 삭제하거나 해제하면 같은 계정으로 로그인한 모든 기기에서 그룹이 삭제된다고 안내합니다.',
+    },
+    {
+      question: '그룹 닫기와 그룹 삭제는 어떻게 다른가요?',
+      answer: '그룹 닫기는 탭을 닫고 그룹을 보관해 나중에 다시 열 수 있게 합니다. 그룹 삭제는 그룹을 없애며, 다른 기기에서도 사라집니다.',
+    },
+    {
+      question: '탭 관리 확장 프로그램이 닫은 Chrome 그룹을 저장할 수 있나요?',
+      answer:
+        '닫혀 있는 동안에는 안 됩니다. 확장 프로그램 API는 열려 있는 창의 그룹만 다루기 때문입니다. 먼저 그룹을 다시 연 다음 확장 프로그램으로 저장하세요.',
+    },
+  ],
+  images: [
+    { src: '/blog/chrome-tab-groups/chrome-tab-groups-setting.webp', alt: 'Chrome 설정의 Appearance(모양) 화면에서 Show tab groups in bookmarks bar(북마크바에 탭 그룹 표시)와 Automatically pin new tab groups created on any device to the bookmarks bar(새 탭 그룹을 북마크바에 자동으로 고정)가 모두 켜진 모습' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp', alt: 'TabMerger의 Now Open(현재 열린 탭): 탭 여섯 개 중 세 개는 파란색 Sprint, 세 개는 초록색 Thesis 태그가 붙은 화면, 라이트 테마' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-dark.webp', alt: 'TabMerger의 Now Open(현재 열린 탭): 탭 여섯 개 중 세 개는 파란색 Sprint, 세 개는 초록색 Thesis 태그가 붙은 화면, 다크 테마' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-light.webp', alt: '같은 탭 여섯 개를 Sprint와 Thesis 태그와 함께 담은 TabMerger 그룹 Sprint + thesis, 라이트 테마' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-dark.webp', alt: '같은 탭 여섯 개를 Sprint와 Thesis 태그와 함께 담은 TabMerger 그룹 Sprint + thesis, 다크 테마' },
+  ],
+  tags: ['chrome', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (tab groups with the keyboard)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp' },
+  ogImage: { src: '/blog/chrome-tab-groups/og.png', alt: 'Chrome tab groups: how to save, reopen and sync them 제목 카드: Chrome 그룹별로 태그가 붙은 탭이 보이는 TabMerger 가이드' },
+  toc: [
+    { id: 'quick', label: '간단한 답' },
+    { id: 'basics', label: '만들기와 접기' },
+    { id: 'save', label: '저장과 다시 열기' },
+    { id: 'sync', label: '동기화되나요?' },
+    { id: 'limits', label: '한계' },
+    { id: 'tabmerger', label: '그룹을 오래 보관하기' },
+    { id: 'faq', label: '자주 묻는 질문' },
+  ],
+}
+
+<QuickAnswer>
+
+탭을 마우스 오른쪽 버튼으로 클릭하고 **그룹에 탭 추가**(Add tab to group)를 선택해 그룹을 만든 다음, 이름을 붙이고 색을 고르세요. 그룹을 저장하려면 그룹 이름을 마우스 오른쪽 버튼으로 클릭하고 **그룹 닫기**(Close group)를 선택합니다. Chrome이 그룹을 보관하며, 북마크바나 **⋮ → 탭 그룹**(Tab groups)에서 다시 열 수 있습니다. 저장된 그룹은 Google 계정을 따라가므로, 하나를 삭제하면 모든 곳에서 삭제됩니다. 그룹을 오래도록 안전하게 보관하려면 [TabMerger](/features)에 저장하세요. 각 탭의 Chrome 그룹 이름과 색을 기억해 두었다가, 다시 열 때 탭을 그룹으로 되돌려 줍니다.
+
+</QuickAnswer>
+
+<InstallCta>Chrome 탭 그룹을 안전하게, 검색할 수 있게, 동기화된 상태로 보관하세요. Chrome, Edge, Firefox에서 무료로 쓸 수 있습니다.</InstallCta>
+
+<Section id="basics" title="Chrome 탭 그룹은 어떻게 작동하나요?">
+
+탭 그룹은 한 창 안에서 이름과 색이 붙은 탭 묶음입니다.
+
+1. 탭을 마우스 오른쪽 버튼으로 클릭하고 **그룹에 탭 추가** → **새 그룹**(New group) 또는 기존 그룹을 선택합니다.
+2. 그룹 이름을 정하고 색을 고릅니다. 나중에 이름을 마우스 오른쪽 버튼으로 클릭하면 이름이나 색을 바꾸거나 새 탭을 추가할 수 있습니다.
+3. 탭을 그룹 안으로 드래그하면 추가되고, 탭을 마우스 오른쪽 버튼으로 클릭 → **그룹에서 삭제**(Remove from group)를 선택하면 빠집니다.
+4. 그룹 이름을 클릭하면 라벨 하나로 접히고, 다시 클릭하면 펼쳐집니다.
+
+키보드로 하려면: 탭에 포커스가 갈 때까지 <Kbd>F6</Kbd>를 누르고, <Kbd>Tab</Kbd>으로 그룹까지 이동한 다음 메뉴 키를 누르면 그룹 메뉴가 열립니다. <Kbd>Space</Kbd> 또는 <Kbd>Enter</Kbd>로 그룹을 접고, <Kbd>Ctrl</Kbd>+<Kbd>←</Kbd>/<Kbd>→</Kbd>로 그룹을 옮깁니다.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with Close group and Delete group. */}
+
+</Section>
+
+<Section id="save" title="탭 그룹을 저장하고 다시 불러오려면?">
+
+**그룹 닫기**가 Chrome의 저장 버튼입니다. 탭은 닫히지만 그룹은 닫히지 않습니다. Chrome이 그룹을 보관하고 두 곳에 표시합니다.
+
+- **북마크바:** 그룹 이름이 붙은 그리드 아이콘입니다. 클릭하면 다시 열립니다.
+- **⋮ 메뉴 → 탭 그룹:** 저장한 그룹 목록입니다.
+
+북마크바 쪽은 **설정 → 모양**(Settings → Appearance)에 있는 두 가지 설정이 담당합니다. 새 Chrome 157 프로필에서는 둘 다 켜져 있었습니다.
+
+<AnnotatedFigure src="/blog/chrome-tab-groups/chrome-tab-groups-setting.webp" alt="Chrome 설정의 Appearance(모양) 화면에서 Show tab groups in bookmarks bar(북마크바에 탭 그룹 표시)와 Automatically pin new tab groups created on any device to the bookmarks bar(새 탭 그룹을 북마크바에 자동으로 고정)가 모두 켜진 모습" width={1600} height={844} eager boxes={[{ id: 'tab-groups-setting', label: '북마크바에 표시' }, { id: 'auto-pin', label: '새 그룹 고정' }]} source="chrome://settings/appearance · Chrome 157.0.8103.80">Chrome의 Appearance(모양) 페이지에 있는 탭 그룹 설정 두 가지.</AnnotatedFigure>
+
+<Catch>저장된 그룹에는 주소만 담깁니다. 백업이 아니므로 한 번 삭제하면 모든 기기에서 사라집니다.</Catch>
+
+</Section>
+
+<Section id="sync" title="탭 그룹은 기기 간에 동기화되나요?">
+
+네, Google 계정을 통해 동기화됩니다. Chrome 고객센터는 부작용을 분명히 밝힙니다. 그룹을 **삭제**하거나 **그룹 해제**(Ungroup)로 탭의 그룹을 풀면, 그 그룹은 내 기기*와* 같은 계정으로 로그인한 다른 모든 기기에서 삭제됩니다. **새 탭 그룹을 북마크바에 자동으로 고정**(Automatically pin new tab groups created on any device to the bookmarks bar) 설정은 다른 곳에서 만든 그룹도 고정합니다.
+
+실제로는 이런 뜻입니다.
+
+- 한 컴퓨터에서 만든 그룹이 같은 계정으로 로그인한 다른 컴퓨터에 나타날 수 있습니다. 고정 설정이 말하는 것이 바로 이것입니다.
+- 노트북에서 정리하면 데스크톱의 같은 그룹도 삭제됩니다.
+
+Firefox 159에도 탭 그룹이 있으며, **그룹 저장 후 닫기**(Save and close group)와 **닫힌 그룹**(Closed Groups) 목록을 제공합니다. 이 가이드의 단계와 스크린샷은 Chrome 기준입니다. Firefox를 쓴다면 [Firefox 탭 그룹](/blog/firefox-tab-groups)을 참고하세요.
+
+</Section>
+
+<Section id="limits" title="탭 그룹의 한계는 무엇인가요?">
+
+- **그룹마다 창 하나.** 그룹은 한 창 안에만 있습니다. 창 세 개에 걸친 “열려 있는 모든 것”을 저장하려면 그룹이 세 개 이상 필요합니다.
+- **주소만 저장.** 북마크처럼, 저장된 그룹은 페이지를 처음부터 다시 엽니다. 스크롤 위치와 양식에 입력한 내용은 사라집니다.
+- **닫혀 있으면 확장 프로그램에 보이지 않음.** `chrome.tabGroups` API는 열린 창에 있는 그룹을 다룹니다. 반환되는 모든 그룹에는 `windowId`가 있고, 그룹을 닫으면 `onRemoved`가 발생하며, 저장된 닫힌 그룹을 나열하는 호출은 없습니다. 탭 관리 도구는 닫은 그룹을 다시 열기 전까지 백업할 수 없습니다.
+- **삭제도 퍼짐.** 그룹을 편리하게 해 주는 동기화가 실수까지 모든 기기로 퍼뜨립니다.
+
+[열린 탭을 모두 저장하는 방법](/blog/save-all-open-tabs) 가이드에서는 그룹을 북마크, 시작 시 복원, 세션 관리자와 비교하고, [탭이 너무 많을 때의 정리 루틴](/blog/manage-too-many-tabs)에서는 일상에서 그룹을 어디에 활용하면 좋은지 보여 줍니다.
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger로 그룹을 오래 보관하기">
+
+Chrome, Edge, Firefox용 무료 확장 프로그램 [TabMerger](/features)는 열려 있는 Chrome 탭 그룹을 읽어 옵니다. **현재 열린 탭**은 각 탭에 그룹 이름과 색으로 태그를 붙이며, 창을 TabMerger 그룹에 저장해도 이 태그가 유지됩니다. 여기에 저장해 두면 다른 기기에서 Chrome 그룹이 삭제되어도 탭은 그대로입니다.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Chrome 탭 그룹을 TabMerger에 저장하기" steps={[{ title: '현재 열린 탭' }, { title: '저장된 그룹' }]}>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-now-open-groups" alt="TabMerger의 Now Open(현재 열린 탭): 탭 여섯 개 중 세 개는 파란색 Sprint, 세 개는 초록색 Thesis 태그가 붙은 화면, 라이트 테마" darkAlt="TabMerger의 Now Open(현재 열린 탭): 탭 여섯 개 중 세 개는 파란색 Sprint, 세 개는 초록색 Thesis 태그가 붙은 화면, 다크 테마" boxes={[{ id: 'group-badge-1', label: 'Sprint 그룹' }, { id: 'group-badge-4', label: 'Thesis 그룹' }]} source="TabMerger 3.16.1">Now Open(현재 열린 탭)에 보이는 Chrome 탭 그룹 두 개, Sprint와 Thesis.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-saved-groups" alt="같은 탭 여섯 개를 Sprint와 Thesis 태그와 함께 담은 TabMerger 그룹 Sprint + thesis, 라이트 테마" darkAlt="같은 탭 여섯 개를 Sprint와 Thesis 태그와 함께 담은 TabMerger 그룹 Sprint + thesis, 다크 테마" boxes={[{ id: 'group-badge-1', label: 'Sprint 그룹' }, { id: 'group-badge-4', label: 'Thesis 그룹' }]} source="TabMerger 3.16.1">Merge with current(현재 상태와 합치기) 후에도 저장된 그룹은 각 탭의 Chrome 그룹을 유지합니다.</ThemedScreenshot>
+</Carousel>
+
+저장한 창을 Chrome이나 Edge에서 다시 열면, 탭이 같은 이름과 색의 탭 그룹으로 돌아갑니다.
+
+<InstallCta>Chrome, Edge, Firefox에서 무료로 쓸 수 있습니다. 시작할 때 계정이 필요 없습니다.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="자주 묻는 질문">
+
+<Faq items={post.faq} />
+
+</Section>

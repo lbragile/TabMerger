@@ -1,0 +1,187 @@
+export const post = {
+  slug: 'find-a-tab-among-hundreds',
+  title: 'איך למצוא כרטיסייה אחת מתוך מאות',
+  navTitle: 'למצוא כרטיסייה אחת מתוך מאות',
+  seoTitle: 'איך לחפש בכרטיסיות פתוחות ב-Chrome, ב-Edge וב-Firefox',
+  description:
+    'מחפשים בכרטיסיות הפתוחות תוך שניות: החיפוש בכרטיסיות שמובנה ב-Chrome, ב-Edge וב-Firefox, וה-Ctrl+K של TabMerger, שמוצא בבת אחת כרטיסיות פתוחות, שמורות וסגורות, עם מסננים כמו group: ו-closed:.',
+  shareSummary: 'חיפוש בכרטיסיות פתוחות ב-Chrome, ב-Edge וב-Firefox, וגם בשמורות ובסגורות.',
+  dek: 'די לסרוק כרטיסיות בגודל של סמל. קיצור מקשים אחד, כמה אותיות מהכותרת, ואתם שם.',
+  published: '2026-11-29',
+  updated: '2026-11-29',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'ב-Chrome, הקיצור Ctrl+Shift+A פותח את החיפוש בכרטיסיות.',
+      source: 'העזרה של Chrome',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'ב-Firefox 159 הקיצור Ctrl+Shift+A פותח רשימה של כל הלשוניות.', source: 'הגדרות המקשים של Firefox 159' },
+    { text: 'ה-Ctrl+K של TabMerger מחפש יחד בכרטיסיות פתוחות, שמורות ושנסגרו לאחרונה.', source: 'TabMerger 3.16.1' },
+    { text: 'המסננים של TabMerger: group:, window:, tag: ו-closed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'איך מחפשים בכרטיסיות הפתוחות?',
+      answer:
+        'ב-TabMerger לוחצים על Ctrl+K ומקלידים: החיפוש עובר יחד על כרטיסיות פתוחות, שמורות ושנסגרו לאחרונה. בכלים המובנים, ל-Chrome יש חיפוש בכרטיסיות (Ctrl+Shift+A או @tabs בסרגל הכתובות), ו-Firefox מציג את כל הלשוניות ברשימה עם Ctrl+Shift+A.',
+    },
+    {
+      question: 'יש קיצור מקשים לחיפוש כרטיסיות?',
+      answer: 'Ctrl+Shift+A ב-Chrome וב-Firefox (ב-Chrome ב-Mac זה ⌘+Shift+A), ו-Ctrl+K בתוך TabMerger. ברשימת קיצורי המקשים של Microsoft ל-Edge אין מקש לחיפוש כרטיסיות.',
+    },
+    {
+      question: 'אפשר לחפש כרטיסיות שכבר סגרתי?',
+      answer: 'כן, ב-TabMerger: מתחילים את החיפוש ב-closed: כדי לחפש רק בכרטיסיות שנסגרו לאחרונה. בגרסה החינמית הן נשמרות יומיים, ב-Pro שלושים יום.',
+    },
+    {
+      question: 'אפשר לחפש כרטיסיות במכשירים האחרים שלי?',
+      answer:
+        'TabMerger Pro מסנכרן את הקבוצות השמורות בין המכשירים בהצפנה מקצה לקצה, כך שאותו Ctrl+K מוצא אותן בכל מקום. האפשרויות המובנות מוסברות במדריך שלנו להעברת כרטיסיות בין מחשבים.',
+      link: { text: 'להעברת כרטיסיות בין מחשבים', href: '/blog/move-tabs-between-computers' },
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'החיפוש של TabMerger פתוח וריק, עם רשימת המסננים group:, window:, tag: ו-closed:, ערכת נושא בהירה' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'החיפוש של TabMerger פתוח וריק, עם רשימת המסננים group:, window:, tag: ו-closed:, ערכת נושא כהה' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp', alt: 'חיפוש group:"Work" pull ב-TabMerger, שמוצא את הכרטיסייה השמורה Pull requests בקבוצה Work, ערכת נושא בהירה' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-dark.webp', alt: 'חיפוש group:"Work" pull ב-TabMerger, שמוצא את הכרטיסייה השמורה Pull requests בקבוצה Work, ערכת נושא כהה' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-light.webp', alt: 'חיפוש tag:Sprint ב-TabMerger, שמציג את שלוש הכרטיסיות הפתוחות בקבוצת הכרטיסיות Sprint של Chrome, ערכת נושא בהירה' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-dark.webp', alt: 'חיפוש tag:Sprint ב-TabMerger, שמציג את שלוש הכרטיסיות הפתוחות בקבוצת הכרטיסיות Sprint של Chrome, ערכת נושא כהה' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-21',
+      note: 'המידע על Firefox נלקח ישירות מהגדרות המקשים ומטקסט התפריטים של Firefox 159.0.1; הדף הזה חסם את הבדיקה האוטומטית שלנו.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp' },
+  ogImage: { src: '/blog/find-a-tab-among-hundreds/og.png', alt: '"How to find one tab among hundreds": מדריך של TabMerger, עם חיפוש כרטיסיות מסונן' },
+  toc: [
+    { id: 'quick', label: 'תשובה קצרה' },
+    { id: 'tabmerger', label: 'מחפשים הכול עם Ctrl+K' },
+    { id: 'filters', label: 'מסננים שמצמצמים' },
+    { id: 'builtin', label: 'חיפוש כרטיסיות מובנה' },
+    { id: 'tips', label: 'כרטיסיות שקל יותר למצוא' },
+    { id: 'faq', label: 'שאלות נפוצות' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'חיפוש כרטיסיות מובנה',
+    values: { chrome: 'Ctrl+Shift+A או @tabs', edge: 'Search tabs (אין קיצור ברשימה)', firefox: 'Ctrl+Shift+A' },
+  },
+}
+
+<QuickAnswer>
+
+לוחצים על <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> (או <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>K</Kbd></bdi> ב-Mac) ב-[TabMerger](/features) ומקלידים כמה אותיות: הכרטיסייה נמצאת בין אם היא **פתוחה, שמורה בקבוצה או נסגרה לאחרונה**, ומסננים כמו <bdi dir="ltr">`group:`</bdi> ו-<bdi dir="ltr">`closed:`</bdi> מצמצמים מאות כרטיסיות לאחת. בכלים המובנים, **החיפוש בכרטיסיות** (<bdi dir="ltr">Tab Search</bdi>) של Chrome (<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi>) ו**רשימת כל הלשוניות** (<bdi dir="ltr">List all tabs</bdi>) של Firefox (<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi>) מחפשים במה שפתוח כרגע.
+
+</QuickAnswer>
+
+<InstallCta>מוצאים כל כרטיסייה, פתוחה, שמורה או סגורה, בהקשה אחת. חינם ל-Chrome, ל-Edge ול-Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="מחפשים הכול עם Ctrl+K">
+
+החיפוש בכרטיסיות של דפדפן מכיר רק את מה שפתוח בו ברגע זה. אבל הכרטיסייה שאתם צריכים נמצאת הרבה פעמים במקום אחר: בחלון ששמרתם אתמול, או בחלון שסגרתם לפני שעה. TabMerger מחפש בכל המקומות האלה מתיבה אחת:
+
+1. פותחים את TabMerger ולוחצים על <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi>.
+2. מקלידים חלק מהכותרת או מהכתובת. התוצאות מציגות יחד כרטיסיות פתוחות, שמורות ושנסגרו לאחרונה, וליד כל אחת מסומן איפה היא נמצאת.
+3. בוחרים אחת עם מקשי החיצים ו-<bdi dir="ltr"><Kbd>Enter</Kbd></bdi>.
+
+כל המסננים, סדר התוצאות והתצוגה שמסתירה או מעמעמת מוסברים במדריך [חיפוש בכל הכרטיסיות עם TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="החיפוש של TabMerger פתוח וריק, עם רשימת המסננים group:, window:, tag: ו-closed:, ערכת נושא בהירה" darkAlt="החיפוש של TabMerger פתוח וריק, עם רשימת המסננים group:, window:, tag: ו-closed:, ערכת נושא כהה" boxes={[{ id: 'search-input', label: 'חיפוש' }]} source="TabMerger 3.16.1"><bdi dir="ltr">Ctrl+K</bdi> פותח את החיפוש, והמסננים מופיעים ברשימה עוד לפני שמקלידים.</ThemedScreenshot>
+
+</Section>
+
+<Section id="filters" title="אילו מסננים מצמצמים את החיפוש?">
+
+מתחילים את החיפוש במסנן כדי להגיע ישר למקום הנכון:
+
+<ComparisonTable
+  head={['מסנן', 'מה הוא מוצא']}
+  rows={[
+    [<bdi dir="ltr"><code>group:"Work"</code></bdi>, 'כרטיסיות בקבוצה ששמה מכיל "Work"'],
+    [<bdi dir="ltr"><code>window:"Docs"</code></bdi>, 'כרטיסיות בחלון ששמו מכיל "Docs"'],
+    [<bdi dir="ltr"><code>tag:Sprint</code></bdi>, 'כרטיסיות בקבוצת כרטיסיות של Chrome שהתווית שלה מכילה "Sprint"'],
+    [<bdi dir="ltr"><code>closed:</code></bdi>, 'רק הכרטיסיות שנסגרו לאחרונה'],
+  ]}
+/>
+
+משלבים מסנן עם מילים: <bdi dir="ltr">`group:"Work" pull`</bdi> מוצא את הכרטיסייה של ה-<bdi dir="ltr">pull request</bdi> בקבוצה Work, גם מתוך מאות. כשמוסיפים מילים אחרי השם, שמים אותו במירכאות; מסנן בלי מירכאות לוקח את כל שאר השורה.
+
+<Carousel label="חיפושים מסוננים" steps={[{ title: 'המסנן group:' }, { title: 'המסנן tag:' }]}>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-group-filter" alt="חיפוש group:&quot;Work&quot; pull ב-TabMerger, שמוצא את הכרטיסייה השמורה Pull requests בקבוצה Work, ערכת נושא בהירה" darkAlt="חיפוש group:&quot;Work&quot; pull ב-TabMerger, שמוצא את הכרטיסייה השמורה Pull requests בקבוצה Work, ערכת נושא כהה" boxes={[{ id: 'search-input', label: 'מסנן קבוצה' }]} source="TabMerger 3.16.1">קבוצה אחת, מילה אחת: הכרטיסייה השמורה שחיפשתם.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-tag-filter" alt="חיפוש tag:Sprint ב-TabMerger, שמציג את שלוש הכרטיסיות הפתוחות בקבוצת הכרטיסיות Sprint של Chrome, ערכת נושא בהירה" darkAlt="חיפוש tag:Sprint ב-TabMerger, שמציג את שלוש הכרטיסיות הפתוחות בקבוצת הכרטיסיות Sprint של Chrome, ערכת נושא כהה" boxes={[{ id: 'search-input', label: 'tag:Sprint' }]} source="TabMerger 3.16.1"><bdi dir="ltr">tag:</bdi> מוצא את הכרטיסיות של קבוצת כרטיסיות ב-Chrome.</ThemedScreenshot>
+</Carousel>
+
+כרטיסיות שנסגרו לאחרונה נשמרות יומיים בגרסה החינמית ושלושים יום ב-[Pro](/pricing), כך ש-<bdi dir="ltr">`closed:`</bdi> מגיע שבועות אחורה כשצריך.
+
+</Section>
+
+<Section id="builtin" title="איך מחפשים בכרטיסיות פתוחות בלי תוסף?">
+
+כל דפדפן יודע לחפש בכרטיסיות שפתוחות כרגע:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+- לוחצים על <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi> (או <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi> ב-Mac) כדי לפתוח את **החיפוש בכרטיסיות** (<bdi dir="ltr">Tab Search</bdi>), מקלידים מילות מפתח ובוחרים כרטיסייה. בכל שורה יש גם כפתור סגירה.
+- או מקלידים <bdi dir="ltr">`@tabs`</bdi> בסרגל הכתובות, לוחצים על <bdi dir="ltr"><Kbd>Tab</Kbd></bdi> או על <bdi dir="ltr"><Kbd>Space</Kbd></bdi> וממשיכים להקליד.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+בתפריטים של Edge 158 יש <bdi dir="ltr">**Search tabs**</bdi> (חיפוש בכרטיסיות), אבל ברשימת קיצורי המקשים של Microsoft אין לזה מקש. כשיש הרבה כרטיסיות, <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd></bdi> קופצים לכרטיסייה לפי המיקום שלה ו-<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>9</Kbd></bdi> לאחרונה.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- לוחצים על <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi> (או <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi> ב-Mac) כדי לפתוח את **רשימת כל הלשוניות** (<bdi dir="ltr">List all tabs</bdi>) ולחפש בה. ב-Firefox כרטיסיות נקראות "לשוניות".
+- בסרגל הכתובות יש גם מצב חיפוש **לשוניות**, בין קיצורי החיפוש שלו.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>הכלים האלה רואים רק את הכרטיסיות שפתוחות באותו דפדפן, עכשיו. כרטיסייה שסגרתם או ששמרתם במקום אחר לא תופיע.</Catch>
+
+עוד מקשים במדריך [קיצורי המקשים לכרטיסיות](/blog/tab-keyboard-shortcuts) שלנו.
+
+</Section>
+
+<Section id="tips" title="איך הופכים כרטיסיות לקלות יותר למציאה בפעם הבאה?">
+
+- **מקבצים לפי משימה.** קבוצות עם שם הופכות את "אחת מתוך 200 כרטיסיות" ל"קבוצת Work". [השגרה שלנו לטיפול ביותר מדי כרטיסיות](/blog/manage-too-many-tabs) מראה איך.
+- **סוגרים את מה שסיימתם איתו,** אחרי ששמרתם אותו. פחות כרטיסיות פתוחות, רשימות תוצאות קצרות יותר.
+- **משנים את השם של הכרטיסיות החשובות.** ב-TabMerger אפשר לתת לכרטיסייה שמורה כותרת משלכם, כך שהיא תתאים למילה שתחפשו.
+
+<InstallCta>חינם ל-Chrome, ל-Edge ול-Firefox. לא צריך חשבון כדי להתחיל.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="שאלות נפוצות">
+
+<Faq items={post.faq} />
+
+</Section>

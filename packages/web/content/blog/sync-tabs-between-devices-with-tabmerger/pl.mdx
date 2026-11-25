@@ -1,0 +1,190 @@
+export const post = {
+  slug: 'sync-tabs-between-devices-with-tabmerger',
+  title: 'Synchronizacja kart między urządzeniami, z szyfrowaniem end-to-end',
+  navTitle: 'Synchronizacja kart między urządzeniami',
+  seoTitle: 'Jak synchronizować karty między komputerami z szyfrowaniem end-to-end',
+  description:
+    'Twoje grupy TabMergera na każdym komputerze, zaszyfrowane hasłem, które znasz tylko Ty. Jak włączyć synchronizację, co obejmuje i co dokładnie nasz serwer widzi, a czego nie.',
+  shareSummary: 'Twoje grupy na każdym komputerze, nieczytelne nawet dla naszego serwera.',
+  dek: 'Te same grupy w domu i w pracy, a nikt inny nie może ich odczytać. Nawet my.',
+  published: '2026-12-18',
+  updated: '2026-12-18',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Synchronizacja jest szyfrowana end-to-end: AES-256-GCM, z kluczem chronionym Twoim hasłem.', source: 'Kod źródłowy TabMergera 3.16.1' },
+    { text: 'Adresy, tytuły i notatki kart oraz nazwy grup nigdy nie są czytelne dla naszego serwera.', source: 'Kod źródłowy TabMergera 3.16.1' },
+    { text: 'Każde nowe urządzenie prosi o hasło tylko raz.', source: 'TabMerger 3.16.1' },
+    { text: 'Synchronizacja jest częścią Pro: US$3.99 miesięcznie lub US$42.99 rocznie.', source: 'Cennik TabMergera', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Jak synchronizować karty między dwoma komputerami?',
+      answer:
+        'Zaloguj się do TabMergera kontem Pro na obu komputerach. Pierwszy poprosi Cię o wybranie hasła szyfrującego, a drugi raz o nie zapyta. Od tej chwili Twoje grupy i sesje synchronizują się między nimi.',
+    },
+    {
+      question: 'Czy TabMerger widzi moje karty?',
+      answer:
+        'Nie. Adresy, tytuły i notatki kart, nazwy grup i sesji oraz otwarte karty na Twoich urządzeniach są szyfrowane w przeglądarce przed wysłaniem, a klucz nigdy nie trafia na nasz serwer. Serwer widzi tylko to, czego potrzebuje do przechowywania wierszy: na przykład kolor grupy, czy jest oznaczona gwiazdką lub zarchiwizowana, kiedy się zmieniła i ile ma okien i kart.',
+    },
+    {
+      question: 'Co, jeśli zapomnę hasła szyfrującego?',
+      answer: 'Nikt nie może go odzyskać, także TabMerger, bo nigdy nie opuszcza Twoich urządzeń. Grupy zostają na urządzeniach, które są już odblokowane, więc przechowuj hasło w bezpiecznym miejscu.',
+    },
+    {
+      question: 'Co obejmuje synchronizacja?',
+      answer:
+        'Zapisane grupy (okna, karty, notatki, godziny przypomnień), zapisane sesje i automatyczne kopie zapasowe, a także otwarte karty każdego urządzenia na potrzeby Ustawienia → Urządzenia. Ustawienia, reguły URL i ostatnio zamknięte karty zostają na każdym urządzeniu.',
+    },
+    {
+      question: 'Czy synchronizacja jest darmowa?',
+      answer: 'Nie, synchronizacja jest częścią Pro. Plan Free trzyma wszystko na Twoim urządzeniu; nasz serwer odrzuca wysyłki synchronizacji z kont bez Pro.',
+    },
+  ],
+  images: [
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in-light.webp', alt: 'Okno Sign In (Logowanie) TabMergera z logowaniem przez Google oraz e-mailem i hasłem, motyw jasny' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in-dark.webp', alt: 'Okno Sign In (Logowanie) TabMergera z logowaniem przez Google oraz e-mailem i hasłem, motyw ciemny' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption-light.webp', alt: 'Okno Set up encryption (Skonfiguruj szyfrowanie) TabMergera, które dwa razy prosi o nowe hasło, motyw jasny' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption-dark.webp', alt: 'Okno Set up encryption (Skonfiguruj szyfrowanie) TabMergera, które dwa razy prosi o nowe hasło, motyw ciemny' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock-light.webp', alt: 'Okno Unlock encryption (Odblokuj szyfrowanie) TabMergera w drugiej przeglądarce, które raz prosi o hasło, motyw jasny' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock-dark.webp', alt: 'Okno Unlock encryption (Odblokuj szyfrowanie) TabMergera w drugiej przeglądarce, które raz prosi o hasło, motyw ciemny' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups-light.webp', alt: 'Druga przeglądarka po odblokowaniu, z grupami Work i Reading list z pierwszej, motyw jasny' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups-dark.webp', alt: 'Druga przeglądarka po odblokowaniu, z grupami Work i Reading list z pierwszej, motyw ciemny' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-light.webp', alt: 'TabMerger, Settings → Devices (Ustawienia → Urządzenia): urządzenie Home laptop z 4 otwartymi kartami i przyciskiem Restore 4 tabs (Przywróć 4 karty), motyw jasny' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-dark.webp', alt: 'TabMerger, Settings → Devices (Ustawienia → Urządzenia): urządzenie Home laptop z 4 otwartymi kartami i przyciskiem Restore 4 tabs (Przywróć 4 karty), motyw ciemny' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync-light.webp', alt: 'TabMerger, Settings → General (Ustawienia → Ogólne) z włączonym przełącznikiem Cloud sync (Synchronizacja w chmurze), motyw jasny' },
+    { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync-dark.webp', alt: 'TabMerger, Settings → General (Ustawienia → Ogólne) z włączonym przełącznikiem Cloud sync (Synchronizacja w chmurze), motyw ciemny' },
+  ],
+  tags: ['tabmerger-guides', 'cross-browser', 'session-management', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-22',
+  cover: { src: '/blog/sync-tabs-between-devices-with-tabmerger/tm-devices-light.webp' },
+  ogImage: { src: '/blog/sync-tabs-between-devices-with-tabmerger/og.png', alt: 'Synchronizacja kart między urządzeniami w TabMergerze: te same grupy w drugiej przeglądarce po odblokowaniu' },
+  toc: [
+    { id: 'quick', label: 'Krótka odpowiedź' },
+    { id: 'problem', label: 'Dwa komputery, dwa zestawy kart' },
+    { id: 'why', label: 'Dlaczego synchronizacja działa w ten sposób' },
+    { id: 'server', label: 'Co widzi nasz serwer' },
+    { id: 'steps', label: 'Konfiguracja' },
+    { id: 'devices', label: 'Karty z innych urządzeń' },
+    { id: 'benefit', label: 'Co zyskujesz' },
+    { id: 'habits', label: 'Dobre nawyki' },
+    { id: 'plans', label: 'Free czy Pro' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Zaloguj się do [TabMergera](/features) kontem Pro. Pierwszy komputer poprosi Cię o wybranie hasła szyfrującego; każdy kolejny zapyta o nie raz. Potem Twoje grupy, sesje i kopie zapasowe synchronizują się między nimi, zaszyfrowane w przeglądarce, zanim ją opuszczą, więc nasz serwer przechowuje tylko dane, których nie może odczytać. **Ustawienia → Urządzenia** (Settings → Devices) pokazuje nawet, co jest otwarte na Twoich innych komputerach.
+
+</QuickAnswer>
+
+<InstallCta>Te same grupy na każdym komputerze, czytelne tylko dla Ciebie. Za darmo na start, synchronizacja z Pro.</InstallCta>
+
+<Section id="problem" title="Dwa komputery, dwa zestawy kart">
+
+Wieczorem na domowym laptopie szukasz informacji przed zakupem. Następnego ranka w pracy karty są na komputerze, który został w domu. Odtwarzasz je z pamięci albo wysyłasz sobie linki e-mailem. Synchronizacja przeglądarki pomaga, gdy na każdym komputerze działa ta sama przeglądarka i to samo konto, ale w pracy możesz mieć Edge, a na laptopie Chrome, albo konto służbowe może być zablokowane.
+
+Synchronizacja TabMergera działa w Chrome, Edge i Firefoksie z jednym kontem TabMergera i przenosi Twoje uporządkowane grupy, a nie tylko to, co akurat jest otwarte.
+
+</Section>
+
+<Section id="why" title="Dlaczego synchronizacja TabMergera działa w ten sposób">
+
+- **Szyfrowane, zanim opuści przeglądarkę.** Zawartość grup i sesji jest szyfrowana w przeglądarce algorytmem AES-256-GCM. Klucz jest losowy; na naszym serwerze przechowujemy go tylko opakowanego (zaszyfrowanego) kluczem wyprowadzonym z Twojego hasła (PBKDF2-SHA256, 600 000 rund). Samo hasło nigdy nigdzie nie jest wysyłane.
+- **Obowiązkowe, a nie opcja.** Każde konto Pro synchronizuje dane w postaci zaszyfrowanej. Nie ma trybu jawnego tekstu, który można by włączyć przez pomyłkę.
+- **Jeden krok z hasłem na urządzenie.** Nowe urządzenie prosi o hasło raz; potem pozostaje odblokowane, dopóki się nie wylogujesz, więc synchronizacja nie męczy.
+- **Najpierw zapisane na urządzeniu.** Wszystko trafia na dysk lokalnie, zanim zostanie wysłane. Offline nic nie przestaje działać; zmiany pójdą następnym razem.
+- **Wygrywa najnowsza zmiana.** Gdy tę samą grupę zmieniono na dwóch urządzeniach, zostaje najnowsza zmiana.
+- **Synchronizuje, gdy TabMerger jest otwarty:** przy otwarciu, co 30 sekund, dopóki pozostaje otwarty, i gdy tylko nadejdzie zmiana z innego urządzenia.
+
+</Section>
+
+<Section id="server" title="Co nasz serwer widzi, a czego nie">
+
+<ComparisonTable
+  head={['', 'Przechowywane zaszyfrowane (nieczytelne dla nas)', 'Przechowywane czytelnie']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['Grupy', 'Nazwa, notatka, każde okno i karta (tytuły, adresy, notatki kart, godziny przypomnień)', 'Kolor, gwiazdka, archiwizacja, ostatnia zmiana, liczba okien i kart, kolejność'],
+    ['Sesje i kopie zapasowe', 'Nazwa, opis, kolor, czy to kopia zapasowa, grupy w środku', 'Kiedy zostały zapisane'],
+    ['Urządzenia', 'Karty otwarte na każdym urządzeniu', 'Nazwa urządzenia, czas ostatniej aktywności'],
+    ['Konto', '-', 'Adres e-mail i plan'],
+  ]}
+/>
+
+Czytelne kolumny to to, czego serwer potrzebuje, by utrzymać Twoje wiersze w kolejności i pokazywać liczby; żadna z nich nie mówi, jakie strony przechowujesz. Udostępnione linki używają osobnego klucza, który jest tylko w samym linku; zobacz [udostępnianie kilku kart naraz](/blog/share-a-set-of-tabs).
+
+</Section>
+
+<Section id="steps" title="Konfiguracja">
+
+1. Na pierwszym komputerze otwórz TabMergera, a potem menu konta (w prawym górnym rogu) → **Zaloguj się** (Sign in). Użyj Google, e-maila i hasła albo magicznego linku.
+2. Pojawi się **Skonfiguruj szyfrowanie** (Set up encryption). Wybierz hasło (co najmniej 8 znaków, bez spacji), wpisz je dwa razy i potwierdź. Twoje grupy zaczną się synchronizować.
+3. Na drugim komputerze zainstaluj TabMergera i zaloguj się na to samo konto.
+4. Pojawi się **Odblokuj szyfrowanie** (Unlock encryption). Wpisz hasło raz. Chwilę później pojawią się Twoje grupy.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Synchronizacja drugiego komputera" steps={[{ title: 'Logowanie' }, { title: 'Hasło' }, { title: 'Odblokowanie' }, { title: 'Zsynchronizowane' }]}>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-sign-in" alt="Okno Sign In (Logowanie) TabMergera z logowaniem przez Google oraz e-mailem i hasłem, motyw jasny" darkAlt="Okno Sign In (Logowanie) TabMergera z logowaniem przez Google oraz e-mailem i hasłem, motyw ciemny" boxes={[{ id: 'email', label: 'E-mail Twojego konta' }]} source="TabMerger 3.16.1">Zaloguj się z menu konta.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-setup-encryption" alt="Okno Set up encryption (Skonfiguruj szyfrowanie) TabMergera, które dwa razy prosi o nowe hasło, motyw jasny" darkAlt="Okno Set up encryption (Skonfiguruj szyfrowanie) TabMergera, które dwa razy prosi o nowe hasło, motyw ciemny" boxes={[{ id: 'passphrase', label: 'Znasz je tylko Ty' }]} source="TabMerger 3.16.1">Pierwsze urządzenie: wybierz hasło, które chroni Twój klucz.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-unlock" alt="Okno Unlock encryption (Odblokuj szyfrowanie) TabMergera w drugiej przeglądarce, które raz prosi o hasło, motyw jasny" darkAlt="Okno Unlock encryption (Odblokuj szyfrowanie) TabMergera w drugiej przeglądarce, które raz prosi o hasło, motyw ciemny" boxes={[{ id: 'unlock', label: 'Raz na urządzenie' }]} source="TabMerger 3.16.1">Każde kolejne urządzenie: wpisz je raz.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-synced-groups" alt="Druga przeglądarka po odblokowaniu, z grupami Work i Reading list z pierwszej, motyw jasny" darkAlt="Druga przeglądarka po odblokowaniu, z grupami Work i Reading list z pierwszej, motyw ciemny" boxes={[{ id: 'groups', label: 'Z innego urządzenia' }]} source="TabMerger 3.16.1">Świeża przeglądarka, kilka sekund później: grupy z pierwszego komputera, odszyfrowane lokalnie.</ThemedScreenshot>
+</Carousel>
+
+Synchronizację można wstrzymać w danej przeglądarce przełącznikiem **Synchronizacja w chmurze** (Cloud sync) w **Ustawienia → Ogólne** (Settings → General). Na tabmerger.com panel pokazuje Twoje zsynchronizowane grupy po wpisaniu tego samego hasła.
+
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-cloud-sync" alt="TabMerger, Settings → General (Ustawienia → Ogólne) z włączonym przełącznikiem Cloud sync (Synchronizacja w chmurze), motyw jasny" darkAlt="TabMerger, Settings → General (Ustawienia → Ogólne) z włączonym przełącznikiem Cloud sync (Synchronizacja w chmurze), motyw ciemny" boxes={[{ id: 'sync', label: 'Synchronizacja w chmurze' }]} source="TabMerger 3.16.1">Włączona na każdym koncie Pro; wyłącz ją w przeglądarce, która nie powinna się synchronizować.</ThemedScreenshot>
+
+</Section>
+
+<Section id="devices" title="Zobacz, co jest otwarte na innych urządzeniach">
+
+**Ustawienia → Urządzenia** pokazuje każdą przeglądarkę na Twoim koncie, która była aktywna w ciągu ostatnich 30 dni, razem z jej otwartymi oknami i kartami. Rozwiń jedną, by otworzyć pojedynczą kartę, albo użyj **Przywróć** (Restore), by otworzyć tutaj wszystkie. Nadaj temu urządzeniu nazwę, żeby lista była czytelna („Laptop domowy”), albo usuń urządzenia, których już nie używasz.
+
+<ThemedScreenshot src="/blog/sync-tabs-between-devices-with-tabmerger/tm-devices" alt="TabMerger, Settings → Devices (Ustawienia → Urządzenia): urządzenie Home laptop z 4 otwartymi kartami i przyciskiem Restore 4 tabs (Przywróć 4 karty), motyw jasny" darkAlt="TabMerger, Settings → Devices (Ustawienia → Urządzenia): urządzenie Home laptop z 4 otwartymi kartami i przyciskiem Restore 4 tabs (Przywróć 4 karty), motyw ciemny" boxes={[{ id: 'other-device', label: 'Twoja druga przeglądarka' }, { id: 'restore', label: 'Otwórz jej karty tutaj' }]} source="TabMerger 3.16.1">Otwarte karty laptopa widziane z komputera w pracy. Zaszyfrowane po drodze.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Co zyskujesz">
+
+Odchodzisz od jednego komputera i kontynuujesz na drugim z tymi samymi grupami, sesjami i notatkami, w jakiejkolwiek przeglądarce. A ponieważ zawartość jest zaszyfrowana kluczem, który masz tylko Ty, wyciek z naszej bazy danych pokazałby kolory i liczby, a nie Twoje karty.
+
+</Section>
+
+<Section id="habits" title="Dobre nawyki">
+
+- **Zapisz hasło w menedżerze haseł.** Nikt nie może go za Ciebie zresetować.
+- **Nazwij każde urządzenie** w Ustawienia → Urządzenia.
+- **Otwórz TabMergera raz, gdy siadasz do pracy**, żeby pobrał najnowsze zmiany.
+- **To, co zależy od przeglądarki, zostaje na każdym urządzeniu:** reguły URL i ustawienia są celowo zapisywane osobno dla każdej przeglądarki. Inne sposoby przenoszenia kart znajdziesz w poradniku [przenoszenie kart na inny komputer](/blog/move-tabs-between-computers).
+
+</Section>
+
+<Section id="plans" title="Free czy Pro">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Synchronizacja grup, sesji i kopii zapasowych', 'Nie (zostaje na Twoim urządzeniu)', 'Tak, szyfrowana end-to-end'],
+    ['Ustawienia → Urządzenia', 'Nie', 'Tak'],
+    ['Cena', 'US$0', 'US$3.99 miesięcznie lub US$42.99 rocznie'],
+  ]}
+/>
+
+Synchronizacji pilnuje serwer, nie tylko aplikacja: baza danych odrzuca wysyłki synchronizacji z każdego konta bez aktywnego planu Pro. Gdy plan się kończy, nic nie jest usuwane; nowe zmiany po prostu przestają się synchronizować. Szczegóły na [stronie cennika](/pricing) i w [TabMerger Free vs Pro](/blog/tabmerger-free-vs-pro).
+
+<InstallCta>Zacznij za darmo już dziś i dodaj szyfrowaną synchronizację, gdy potrzebujesz drugiego komputera.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

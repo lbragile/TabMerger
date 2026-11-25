@@ -1,0 +1,134 @@
+export const post = {
+  slug: 'firefox-tab-groups',
+  title: 'Tabgruppen in Firefox: speichern, wieder öffnen und dauerhaft behalten',
+  navTitle: 'Tabgruppen in Firefox',
+  seoTitle: 'Firefox-Tabgruppen: speichern, wieder öffnen, synchronisieren und ihre Grenzen',
+  description:
+    'So funktionieren Tabgruppen in Firefox 159: eine Gruppe erstellen, einfärben, einklappen, speichern und schließen und später wieder öffnen, was Firefox Sync abdeckt und wie TabMerger deine Gruppen auf allen Geräten sicher aufbewahrt.',
+  shareSummary: 'Firefox-Tabgruppen erstellen, speichern, wieder öffnen und behalten, und was Firefox Sync abdeckt.',
+  dek: 'Firefox kann Gruppen jetzt speichern und schließen. Hier erfährst du, wo sie landen und wie du sie dauerhaft behältst.',
+  published: '2026-12-07',
+  updated: '2026-12-07',
+  testedOn: ['Firefox 159.0.1'],
+  keyFacts: [
+    { text: '„Gruppe speichern und schließen“ bewahrt eine Gruppe auf, damit du sie später wieder öffnen kannst.', source: 'Menütext von Firefox 159' },
+    { text: 'Geschlossene Gruppen stehen unter „Geschlossene Gruppen“ und „Zuletzt verwendete Tab-Gruppen“.', source: 'Menütext von Firefox 159' },
+    { text: 'Die Sync-Einstellungen von Firefox führen „Offene Tabs“ auf, aber keinen eigenen Eintrag für Tabgruppen.', source: 'Einstellungstext von Firefox 159' },
+    { text: 'Über das Menü einer Gruppe kopierst du alle ihre Links auf einmal.', source: 'Menütext von Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'Wie speichere ich eine Tabgruppe in Firefox?',
+      answer: 'Klicke mit der rechten Maustaste auf den Namen der Gruppe und wähle „Gruppe speichern und schließen“. Wieder öffnen kannst du sie später über „Geschlossene Gruppen“ oder die Liste „Tab-Gruppen“.',
+    },
+    {
+      question: 'Werden Tabgruppen in Firefox synchronisiert?',
+      answer:
+        'Die Sync-Einstellungen von Firefox 159 führen Lesezeichen, Chronik, Offene Tabs und weitere Daten auf, aber keinen eigenen Eintrag für Tabgruppen. Damit du auf jedem Gerät dieselben Gruppen hast, synchronisiert TabMerger Pro sie mit Ende-zu-Ende-Verschlüsselung.',
+    },
+    {
+      question: 'Was ist der Unterschied zwischen „Gruppe speichern und schließen“ und „Gruppe löschen“?',
+      answer: '„Gruppe speichern und schließen“ bewahrt die Gruppe auf, damit du sie später wieder öffnen kannst. „Gruppe löschen“ entfernt sie; „Gruppierung der Tabs aufheben“ lässt die Tabs offen, löst aber die Gruppe auf.',
+    },
+    {
+      question: 'Kann ich alle Links einer Tabgruppe in Firefox kopieren?',
+      answer: 'Ja: Das Gruppenmenü von Firefox 159 enthält „Links in Gruppe kopieren“. TabMerger kann außerdem ganze Gruppen in eine JSON-Datei exportieren.',
+    },
+  ],
+  images: [
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp', alt: 'Die TabMerger-Gruppe „Home renovation“ mit drei gespeicherten Fenstern und neun Tabs, einige mit ihren Tabgruppen „Kitchen“ und „Quotes“ markiert, helles Design' },
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-dark.webp', alt: 'Die TabMerger-Gruppe „Home renovation“ mit drei gespeicherten Fenstern und neun Tabs, einige mit ihren Tabgruppen „Kitchen“ und „Quotes“ markiert, dunkles Design' },
+  ],
+  tags: ['firefox', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Tab groups in Firefox',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/tab-groups',
+      checked: '2026-11-21',
+      note: 'Menu names and settings were read from Firefox 159.0.1’s own interface text; this page blocked our automated check.',
+    },
+    {
+      title: 'Firefox Sync: what it is and how it works',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/firefox-sync-what-it-is-and-how-it-works',
+      checked: '2026-11-21',
+      note: 'The list of synced data was read from Firefox 159.0.1’s settings text.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-23',
+  cover: { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp' },
+  ogImage: { src: '/blog/firefox-tab-groups/og.png', alt: 'Titelkarte „Firefox tab groups: how to save, reopen and keep them“: eine TabMerger-Anleitung, mit einer gespeicherten Gruppe aus zwei Fenstern' },
+  toc: [
+    { id: 'quick', label: 'Kurze Antwort' },
+    { id: 'basics', label: 'Gruppe erstellen' },
+    { id: 'save', label: 'Speichern und wieder öffnen' },
+    { id: 'sync', label: 'Werden sie synchronisiert?' },
+    { id: 'tabmerger', label: 'Dauerhaft behalten' },
+    { id: 'faq', label: 'Häufige Fragen' },
+  ],
+}
+
+<QuickAnswer>
+
+Ziehe einen Tab auf einen anderen oder klicke mit der rechten Maustaste auf einen Tab, um in Firefox eine Gruppe anzulegen. Um sie für später aufzubewahren, klicke mit der rechten Maustaste auf den Namen der Gruppe und wähle **Gruppe speichern und schließen** („Save and close group“); wieder öffnen kannst du sie über **Geschlossene Gruppen** („Closed Groups“) oder die Liste **Tab-Gruppen** („Tab groups“). Die Sync-Einstellungen von Firefox haben keinen eigenen Eintrag für Tabgruppen. Wenn du also auf jedem Gerät dieselben Gruppen haben und sie zusammen mit allem anderen durchsuchen willst, speichere sie in [TabMerger](/features).
+
+</QuickAnswer>
+
+<InstallCta>Bewahre deine Firefox-Gruppen gespeichert, durchsuchbar und synchronisiert auf. Kostenlos für Firefox, Chrome und Edge.</InstallCta>
+
+<Section id="basics" title="Wie funktionieren Tabgruppen in Firefox?">
+
+Laut der Oberfläche von Firefox 159 selbst:
+
+1. **Erstellen:** Ziehe einen Tab auf einen anderen, oder klicke mit der rechten Maustaste auf einen Tab und füge ihn einer neuen Gruppe hinzu. Firefox fragt nach einem Namen (Feld **Name**) und einer Farbe (Blau, Cyan, Grau, Grün, Orange, Pink, Lila, Rot oder Gelb).
+2. **Einklappen:** Klicke auf den Namen der Gruppe, um sie auf die Breite eines einzelnen Tabs zusammenzufalten.
+3. **Verwalten:** Ein Rechtsklick auf den Namen bietet **Gruppe speichern und schließen**, **Gruppierung der Tabs aufheben** („Ungroup tabs“), **Gruppe löschen** („Delete group“), **Gruppe in neues Fenster verschieben** („Move group to new window“), **Links in Gruppe kopieren** („Copy links in group“) und **Gruppe teilen** („Share group“).
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's tab group editor with Name, colours and Save and close group. */}
+
+</Section>
+
+<Section id="save" title="Wie speichere ich eine Gruppe und hole sie zurück?">
+
+- **Speichern:** Rechtsklick auf den Namen der Gruppe → **Gruppe speichern und schließen**. Die Tabs werden geschlossen, die Gruppe bleibt erhalten.
+- **Wieder öffnen:** Rechtsklick auf einen Tab → zu einer Gruppe hinzufügen → **Geschlossene Gruppen**, oder öffne die Liste **Tab-Gruppen** (Firefox zeigt dort **Zuletzt verwendete Tab-Gruppen**, „Recent tab groups“), wähle die Gruppe und dann **Tab-Gruppe wieder öffnen** („Reopen tab group“).
+- **Löschen:** **Gruppe löschen** entfernt sie endgültig.
+
+<Catch>Eine gespeicherte Gruppe lebt in diesem einen Firefox-Profil. Sie ist keine Sicherung und folgt dir, soweit die Sync-Einstellungen erkennen lassen, nicht auf ein anderes Gerät.</Catch>
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's Tab groups list with a closed group. */}
+
+</Section>
+
+<Section id="sync" title="Werden Tabgruppen in Firefox synchronisiert?">
+
+Die Einstellungen unter **Synchronisation** („Sync“) in Firefox 159 führen auf, was synchronisiert wird: **Lesezeichen, Chronik, Offene Tabs, Passwörter, Adressen, Zahlungsmethoden, Add-ons und Einstellungen** („Bookmarks, History, Open tabs, Passwords, Addresses, Payment methods, Add-ons and Settings“). „Offene Tabs“ wird beschrieben als „Liste aller offenen Tabs von allen verbundenen Geräten“. Einen eigenen Eintrag für Tabgruppen gibt es nicht. Verlass dich also nicht darauf, dass eine gespeicherte Gruppe auf deinem anderen Computer auftaucht.
+
+Wie dasselbe in Chrome funktioniert, zeigt unsere [Anleitung zu Tab-Gruppen in Chrome](/blog/chrome-tab-groups); dort werden Gruppen über das Google-Konto synchronisiert.
+
+</Section>
+
+<Section id="tabmerger" title="Gruppen dauerhaft behalten mit TabMerger">
+
+[TabMerger](/features) läuft in Firefox, Chrome und Edge und behält Gruppen, die der Browser nicht halten kann:
+
+1. Klicke auf **Gruppe hinzufügen**, gib der Gruppe einen Namen und wähle dann in ihrem **⋯**-Menü **Mit aktueller zusammenführen**: Alle offenen Fenster und Tabs werden darin gespeichert.
+2. Schließ die Fenster. Die Gruppe bleibt, mit jedem Tab, durchsuchbar mit <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+3. Öffne jederzeit einen Tab, ein Fenster oder alles wieder.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/firefox-tab-groups/tm-kept-groups" alt="Die TabMerger-Gruppe „Home renovation“ mit drei gespeicherten Fenstern und neun Tabs, einige mit ihren Tabgruppen „Kitchen“ und „Quotes“ markiert, helles Design" darkAlt="Die TabMerger-Gruppe „Home renovation“ mit drei gespeicherten Fenstern und neun Tabs, einige mit ihren Tabgruppen „Kitchen“ und „Quotes“ markiert, dunkles Design" boxes={[{ id: 'summary', label: 'Gespeicherte Fenster und Tabs' }]} source="TabMerger 3.16.1">Eine gespeicherte Gruppe: drei Fenster, neun Tabs, bereit zum Wiederöffnen.</ThemedScreenshot>
+
+Mit [Pro](/pricing) werden deine Gruppen zwischen Firefox, Chrome und Edge auf all deinen Geräten synchronisiert, Ende-zu-Ende-verschlüsselt, sodass der Server sie nicht lesen kann. Weitere Gewohnheiten findest du in der [Routine gegen zu viele Tabs](/blog/manage-too-many-tabs).
+
+<InstallCta>Kostenlos für Firefox, Chrome und Edge. Zum Start ist kein Konto nötig.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Häufige Fragen">
+
+<Faq items={post.faq} />
+
+</Section>

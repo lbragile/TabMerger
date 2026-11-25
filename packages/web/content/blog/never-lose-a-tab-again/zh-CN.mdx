@@ -1,0 +1,174 @@
+export const post = {
+  slug: 'never-lose-a-tab-again',
+  title: '再也不丢标签页：自动保存标签页，恢复关闭的标签页',
+  navTitle: '再也不丢标签页',
+  seoTitle: '用 TabMerger 自动保存已打开的标签页，恢复关闭的标签页',
+  description:
+    '按计划或在标签页数量超过设定值时自动保存已打开的标签页，并找回任何关闭的标签页或窗口。TabMerger 的自动保存和“最近关闭”如何工作，以及为什么这样设计。',
+  shareSummary: '已打开的标签页按计划自动保存，每个关闭的窗口一搜即回。',
+  dek: '你不该还要记着去保存。设置一次，每个打开的标签页都会有一份副本。',
+  published: '2026-12-13',
+  updated: '2026-12-13',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: '自动保存的频率从每 15 分钟到每天一次，也可以在打开的标签页超过 20 到 100 之间的设定值时运行。', source: 'TabMerger 3.16.1' },
+    { text: '已保存在分组里的标签页会被跳过；无痕窗口永远不会被保存。', source: 'TabMerger 3.16.1' },
+    { text: '免费版保留最新的 2 份自动保存；Pro 全部保留。', source: 'TabMerger 价格', href: '/pricing' },
+    { text: '“最近关闭”在免费版保留最近 2 天，在 Pro 保留 30 天。', source: 'TabMerger 价格', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '如何自动保存已打开的标签页？',
+      answer:
+        '在 TabMerger 中打开设置 → 数据，开启“自动保存已打开的标签页”。选择一个计划（从每 15 分钟到每天一次）、一个触发保存的标签页数量，或两者都选。每次运行都会把已打开的标签页保存为一个新分组。',
+    },
+    {
+      question: '自动保存会让 TabMerger 塞满重复项吗？',
+      answer:
+        '不会。地址已保存在任一分组中的标签页会被跳过，在多个标签页中打开的同一网页只保存一次。如果全都已保存，这次运行就不会保存任何内容。',
+    },
+    {
+      question: '自动保存需要 TabMerger 保持打开吗？',
+      answer: '不需要。只要浏览器开着，它就在扩展的后台运行，并在浏览器启动时检查是否错过了保存。',
+    },
+    {
+      question: '如何找回关闭的窗口？',
+      answer:
+        '在 TabMerger 中按 Ctrl+K 并输入 closed:，即可列出最近关闭的标签页和窗口；也可以在侧边栏打开“最近关闭”。选择一个关闭的窗口，就能恢复整个窗口。',
+    },
+    {
+      question: '免费版保留什么，Pro 又多了什么？',
+      answer:
+        '免费版保留最新的 2 份自动保存（把某一份保留为分组即可长期留存）和最近 2 天关闭的标签页。Pro 保留每一份自动保存和 30 天内关闭的标签页，还提供加密的自动备份，并能查看你其他设备上打开的标签页。',
+    },
+  ],
+  images: [
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-light.webp', alt: 'TabMerger 的 Settings（设置）、Data（数据）：Auto-save open tabs（自动保存已打开的标签页）已开启，每小时一次，并在打开的标签页超过 50 时保存，带有 Auto-save now（立即自动保存）按钮，浅色主题' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-dark.webp', alt: 'TabMerger 的 Settings（设置）、Data（数据）：Auto-save open tabs（自动保存已打开的标签页）已开启，每小时一次，并在打开的标签页超过 50 时保存，带有 Auto-save now（立即自动保存）按钮，深色主题' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp', alt: 'Auto-saved（自动保存）下一个含两个窗口、七个标签页的分组，以及 Keep as group（保留为分组）按钮，浅色主题' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-dark.webp', alt: 'Auto-saved（自动保存）下一个含两个窗口、七个标签页的分组，以及 Keep as group（保留为分组）按钮，深色主题' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-light.webp', alt: '在 TabMerger 中搜索 closed:，列出今天关闭的一个含 3 个标签页的窗口，浅色主题' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-dark.webp', alt: '在 TabMerger 中搜索 closed:，列出今天关闭的一个含 3 个标签页的窗口，深色主题' },
+  ],
+  tags: ['tabmerger-guides', 'save-tabs', 'restore-closed-tabs', 'session-management'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp' },
+  ogImage: { src: '/blog/never-lose-a-tab-again/og.png', alt: '再也不丢标签页：TabMerger 中带有 Keep as group（保留为分组）按钮的自动保存分组' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'problem', label: '标签页是怎么丢的' },
+    { id: 'why', label: '为什么这样设计' },
+    { id: 'steps', label: '开启方法' },
+    { id: 'closed', label: '最近关闭' },
+    { id: 'benefit', label: '它为你省下什么' },
+    { id: 'habits', label: '好习惯' },
+    { id: 'plans', label: '免费版与 Pro' },
+    { id: 'faq', label: '常见问题' },
+  ],
+}
+
+<QuickAnswer>
+
+在 [TabMerger](/features) 中开启 **设置 → 数据 → 自动保存已打开的标签页**（Settings → Data → Auto-save open tabs），然后选择一个计划、一个标签页数量，或两者都选。此后，已打开的标签页会自动保存为一个新分组，已保存过的内容会被跳过。不小心关掉了什么？按 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> 再输入 `closed:`，就能找到最近关闭的每个标签页和窗口，一次点击即可重新打开整个窗口。
+
+</QuickAnswer>
+
+<InstallCta>每个打开的标签页都有副本，按计划替你保存。Chrome、Edge 和 Firefox 均可免费使用。</InstallCta>
+
+<Section id="problem" title="标签页到底是怎么丢的">
+
+很少是一次严重崩溃造成的。更多时候只是小事：你关错了窗口，偏偏是装着今天上午三十个调研标签页的那个。一次更新让浏览器重启，三个窗口只回来一个。周五你整理了一下，周一却需要那个已经关掉的网页。到那时，那个标签页已经埋在历史记录里，夹在几百个网页之间，前提是你还记得它叫什么。
+
+手动保存能解决问题，但只在你记得的那些天。自动保存是为其他日子准备的。
+
+想用各浏览器自带的工具在崩溃或强制重启后找回标签页，请看 [崩溃后如何找回标签页](/blog/restore-tabs-after-crash)。本指南讲的是如何确保你始终有一份副本。
+
+</Section>
+
+<Section id="why" title="自动保存为什么这样设计">
+
+TabMerger 自动保存的每条规则，都是为了让副本真正有用，而不只是存在：
+
+- **保存到新分组**，以时间命名（“自动保存 11月21日 20:28”），窗口完整保留，标签页顺序不变。你之前保存的内容不会有任何改动。每份新的自动保存都会用和上一份不同的颜色，方便区分。
+- **两种触发条件，因为标签页有两种堆积方式**。**计划**（每 15 或 30 分钟、每小时、每 2 或 4 小时，或每天一次）应对平稳的日常工作。**标签页数量**（20、30、50、75 或 100 个打开的标签页）应对任何计划都赶不上的调研高峰。
+- **一次高峰只保存一次**。数量触发在你超过设定值时运行，之后要等你回到设定值或以下，并且至少过 10 分钟，才会再次触发。连续打开十个标签页不会生成十个分组。
+- **没有重复**。地址已在你任一分组中的标签页会被跳过，在多个标签页中打开的同一网页只保存一次。如果全都已保存，这次运行不会保存任何内容，并会告诉你。
+- **隐私的依然隐私**。无痕窗口永远不会被保存。TabMerger 自己的页面不会保存；固定的标签页和浏览器页面会保存。
+- **不需要你操心**。只要浏览器开着，自动保存就在扩展的后台运行，并在浏览器启动时检查是否到了该保存的时间。可选的通知会在每次运行后告诉你；设置中的状态行会显示上一次的结果。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="TabMerger 中的自动保存" steps={[{ title: '设置' }, { title: '自动保存的分组' }]}>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-save-settings" alt="TabMerger 的 Settings（设置）、Data（数据）：Auto-save open tabs（自动保存已打开的标签页）已开启，每小时一次，并在打开的标签页超过 50 时保存，带有 Auto-save now（立即自动保存）按钮，浅色主题" darkAlt="TabMerger 的 Settings（设置）、Data（数据）：Auto-save open tabs（自动保存已打开的标签页）已开启，每小时一次，并在打开的标签页超过 50 时保存，带有 Auto-save now（立即自动保存）按钮，深色主题" boxes={[{ id: 'schedule', label: '保存频率' }, { id: 'threshold', label: '打开标签页数量触发' }, { id: 'run-now', label: '立即保存' }]} source="TabMerger 3.16.1">每小时一次，并在打开的标签页超过 50 时保存。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-saved" alt="Auto-saved（自动保存）下一个含两个窗口、七个标签页的分组，以及 Keep as group（保留为分组）按钮，浅色主题" darkAlt="Auto-saved（自动保存）下一个含两个窗口、七个标签页的分组，以及 Keep as group（保留为分组）按钮，深色主题" boxes={[{ id: 'keep', label: '保留为分组' }]} source="TabMerger 3.16.1">结果：两个打开的窗口，保存为一个分组。保留它即可永久留存。</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="steps" title="四步开启">
+
+1. 打开 TabMerger，然后进入 **设置**（Settings，在账户菜单中）→ **数据**（Data）。
+2. 开启 **自动保存已打开的标签页**（Auto-save open tabs）。（Pro 默认已开启，每小时一次。）
+3. 选择 **计划**（Schedule）、**当打开的标签页超过**（When open tabs pass）的数量，或两者都选。如果想在每次保存后收到提醒，就开启 **显示通知**（Show a notification）。
+4. 按一次 **立即自动保存**（Auto-save now）查看效果：侧边栏的 **自动保存**（Auto-saved）下会出现一个新分组。
+
+发现想永久保留的自动保存？打开它并按 **保留为分组**（Keep as group）：它会移到你的分组中，永远不会被自动删除。
+
+</Section>
+
+<Section id="closed" title="最近关闭：安全网的另一半">
+
+自动保存守护打开着的内容；**最近关闭**（Recently closed）守护你刚关掉的内容。你关闭的每个标签页和窗口都按天保留，只存在这台设备上，无痕窗口从不记录。
+
+- 在侧边栏打开 **最近关闭** 按天浏览，或按 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> 并以 `closed:` 开头进行搜索。
+- 关闭的 **窗口** 显示为一条记录（“窗口 · 3 个标签页”）：选中它，整个窗口就回来了。
+- 按住 <Kbd>Ctrl</Kbd> 点击（在 Mac 上按住 <Kbd>⌘</Kbd> 点击）或用鼠标中键点击结果，可在后台重新打开。
+
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-closed-window" alt="在 TabMerger 中搜索 closed:，列出今天关闭的一个含 3 个标签页的窗口，浅色主题" darkAlt="在 TabMerger 中搜索 closed:，列出今天关闭的一个含 3 个标签页的窗口，深色主题" boxes={[{ id: 'search-input', label: 'closed: 筛选' }, { id: 'closed-window', label: '整个关闭的窗口' }]} source="TabMerger 3.16.1">误关的窗口，一搜即回。</ThemedScreenshot>
+
+更多搜索技巧见 [用 TabMerger 搜索所有标签页](/blog/search-all-your-tabs-with-tabmerger)。
+
+</Section>
+
+<Section id="benefit" title="它为你省下什么">
+
+最坏的情况从“那些标签页没了”缩小到“我只会丢掉上次保存后打开的内容”。按每小时一次的计划，一次糟糕的重启最多让你损失一小时的新标签页；你自己关掉的窗口就在“最近关闭”里。找回其中任何一个都只需一次搜索，而不是在历史记录里耗掉一个下午。
+
+</Section>
+
+<Section id="habits" title="好习惯">
+
+- **让计划匹配你的节奏**。大多数日子每小时一次就够了；密集调研时每 15 分钟一次。
+- **如果你习惯一下子打开很多标签页，就再加一个数量触发**。50 是不错的起点。
+- **先保留，再清理**。当某份自动保存里有值得留下的内容时，按 **保留为分组** 并重命名；其余的删掉。
+- **仍然要有意识地保存**。自动保存是安全网，不是计划：为真正的项目保留有名称的分组（参见 [每天的标签页工作流](/blog/tabmerger-daily-workflow)）。
+
+</Section>
+
+<Section id="plans" title="免费版与 Pro">
+
+<ComparisonTable
+  head={['', '免费版', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['自动保存已打开的标签页', '需手动开启；保留最新 2 份', '默认开启；全部保留'],
+    ['自动保存与套餐限制', '计入 5 个分组和 50 个标签页的限制', '无限制'],
+    ['最近关闭', '最近 2 天', '最近 30 天'],
+    ['分组的加密自动备份', '否', '每小时到每周，保留最新 10 份'],
+    ['其他设备上打开的标签页', '否', '设置 → 设备'],
+  ]}
+/>
+
+在免费版中，自动保存满 2 份后，每份新的自动保存都会替换最旧的一份；**保留为分组** 能让其中一份退出轮换。接近 50 个标签页的上限时，自动保存会保存还放得下的标签页，并告诉你。备份和你各设备的标签页都以端到端加密的形式存储在你的账户中，对于没有 Pro 的账户，我们的服务器会拒绝存储。详情见 [价格页面](/pricing)。
+
+<InstallCta>设置一次，从此不再担心关掉的窗口。Chrome、Edge 和 Firefox 均可免费使用。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

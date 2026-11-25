@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'edge-collections-replacement',
+  title: 'Las Colecciones de Edge ya no existen: qué usar en su lugar',
+  navTitle: 'Alternativa a Colecciones de Edge',
+  seoTitle: '¿Edge eliminó Colecciones? La mejor alternativa (y cómo mudarte)',
+  description:
+    'Microsoft retiró Colecciones (Collections) de Edge a partir de la versión 149. Qué pasó con tus colecciones, cómo sacarlas y cómo llevarlas a TabMerger, la alternativa a Colecciones de Edge, como grupos con nombre.',
+  shareSummary: 'Edge 149 retiró Colecciones. Dónde quedaron tus páginas y qué usar ahora.',
+  dek: 'Tus páginas guardadas no se perdieron. Te contamos dónde están y te proponemos un hogar mejor para ellas.',
+  published: '2026-12-06',
+  updated: '2026-12-06',
+  testedOn: ['Edge 158.0.4370.33', 'Chrome 157.0.8103.80'],
+  keyFacts: [
+    {
+      text: 'Colecciones ya no está disponible desde Edge 149, publicado el 4 de junio de 2026.',
+      source: 'Soporte de Microsoft',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'Desde Edge 145 ya no se podían añadir páginas a Colecciones.', source: 'Soporte de Microsoft' },
+    {
+      text: '«Mover a Favoritos» conserva las direcciones de las páginas, pero no las imágenes ni las notas.',
+      source: 'Soporte de Microsoft',
+      href: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+    },
+    { text: 'TabMerger convierte cada carpeta de «Otros favoritos» en un grupo con nombre.', source: 'Probado en TabMerger 3.16.1, 21 nov. 2026' },
+  ],
+  faq: [
+    {
+      question: '¿Microsoft eliminó las Colecciones de Edge?',
+      answer:
+        'Sí. La página de soporte de Microsoft dice que Colecciones ya no está disponible a partir de Edge 149, publicado el 4 de junio de 2026; desde Edge 145 ya no se podían añadir páginas nuevas.',
+    },
+    {
+      question: '¿Dónde están mis colecciones?',
+      answer:
+        'Microsoft ofreció «Mover a Favoritos», que convierte cada colección en una carpeta de favoritos (solo las páginas). Con una cuenta personal también puedes ver las colecciones guardadas en bing.com/saves; las cuentas profesionales o educativas podían exportarlas.',
+    },
+    {
+      question: '¿Cuál es la mejor alternativa a Colecciones de Edge?',
+      answer:
+        'TabMerger: grupos de pestañas con nombre y color que puedes buscar, anotar con notas y recordatorios, y sincronizar con cifrado de extremo a extremo en Pro. También funciona en Chrome y Firefox.',
+    },
+    {
+      question: '¿Puedo importar mis colecciones a TabMerger?',
+      answer: 'Sí. Mueve las carpetas de las colecciones a «Otros favoritos», exporta tus favoritos como archivo HTML e impórtalo en Ajustes → Datos: cada una de esas carpetas se convierte en un grupo de TabMerger.',
+    },
+  ],
+  images: [
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-light.webp', alt: 'Diálogo de TabMerger que pregunta Import 2 groups? (¿Importar 2 grupos?) para el archivo favorites_edge.html, tema claro' },
+    { src: '/blog/edge-collections-replacement/tm-import-confirm-dark.webp', alt: 'Diálogo de TabMerger que pregunta Import 2 groups? (¿Importar 2 grupos?) para el archivo favorites_edge.html, tema oscuro' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-light.webp', alt: 'Barra lateral de TabMerger con los grupos Trip to Lisbon y Thesis reading, importados desde carpetas de favoritos, tema claro' },
+    { src: '/blog/edge-collections-replacement/tm-imported-groups-dark.webp', alt: 'Barra lateral de TabMerger con los grupos Trip to Lisbon y Thesis reading, importados desde carpetas de favoritos, tema oscuro' },
+  ],
+  tags: ['edge', 'bookmarks', 'save-tabs', 'tab-manager'],
+  sources: [
+    {
+      title: 'Organize your ideas with Collections in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/edge/organize-your-ideas-with-collections-in-microsoft-edge',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'EdgeCollectionsEnabled policy (obsolete)',
+      publisher: 'Microsoft Learn',
+      url: 'https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies/EdgeCollectionsEnabled',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/edge-collections-replacement/cover-edge-light.webp' },
+  ogImage: { src: '/blog/edge-collections-replacement/og.png', alt: 'Las Colecciones de Edge ya no existen: qué usar en su lugar. Una guía de TabMerger, con carpetas de favoritos importadas como grupos' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'what-happened', label: 'Qué pasó' },
+    { id: 'where', label: 'Dónde están tus páginas' },
+    { id: 'move', label: 'Pásalas a TabMerger' },
+    { id: 'why', label: 'Por qué TabMerger' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Sí, ya no existe: Microsoft dice que **Colecciones (Collections) ya no está disponible a partir de Edge 149** (publicado el 4 de junio de 2026). Tus páginas no se borraron: **Mover a Favoritos** (Move to Favorites) convirtió cada colección en una carpeta de favoritos. El mejor hogar nuevo es [TabMerger](/features): exporta tus favoritos como HTML, importa el archivo y cada carpeta de «Otros favoritos» se convierte en un grupo con nombre en el que puedes buscar, con notas, recordatorios y sincronización cifrada, en Edge, Chrome y Firefox.
+
+</QuickAnswer>
+
+<InstallCta>Recupera tus antiguas colecciones como grupos con nombre en los que puedes buscar. Gratis para Edge, Chrome y Firefox.</InstallCta>
+
+<Section id="what-happened" title="¿De verdad Microsoft eliminó las Colecciones de Edge?">
+
+Sí, por etapas, según las propias páginas de Microsoft:
+
+<ComparisonTable
+  head={['Versión de Edge', 'Qué cambió']}
+  rowHeaders
+  rows={[
+    ['145', 'Ya no se podían añadir páginas a Colecciones; las existentes seguían visibles'],
+    ['149 (4 de junio de 2026)', 'Colecciones ya no está disponible'],
+    ['153', 'La directiva de administración de Colecciones quedó obsoleta «because the Collections feature was removed» (porque se eliminó la función Colecciones)'],
+  ]}
+/>
+
+El motivo de Microsoft, en sus palabras: está «retiring Collections in Edge, to better simplify our offerings» (retirando Colecciones de Edge para simplificar su oferta).
+
+</Section>
+
+<Section id="where" title="¿Dónde están mis colecciones?">
+
+Durante la retirada, Edge mostraba dos opciones en el panel de Colecciones:
+
+- **Mover a Favoritos** (la que recomienda Microsoft): cada colección pasó a ser una carpeta de tus favoritos. Solo se movieron las páginas web guardadas; las imágenes y las notas no.
+- **Exportar los datos** (Export your data): solo para cuentas profesionales o educativas.
+
+Con una cuenta personal de Microsoft también puedes encontrar las colecciones guardadas en `bing.com/saves`. Así que revisa primero tus favoritos (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>): lo más probable es que tus colecciones estén ahí como carpetas.
+
+</Section>
+
+<Section id="move" title="¿Cómo paso mis colecciones a TabMerger?">
+
+Unos minutos, y cada antigua colección se convierte en un grupo:
+
+1. En Edge, abre Favoritos (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd>). Si tus antiguas colecciones están dentro de **Barra de favoritos** (Favorites bar), mueve esas carpetas a **Otros favoritos** (Other favorites). La exportación guarda toda la Barra de favoritos como una sola carpeta, así que las carpetas que queden dentro llegarían fusionadas en un solo grupo.
+2. Elige **Export favorites** y guarda el archivo HTML.
+3. Abre TabMerger → **Ajustes → Datos** → **Importar archivo** (Settings → Data → Import file) y elige ese archivo.
+4. Confirma. Cada carpeta de «Otros favoritos» se convierte en un grupo con el nombre de la carpeta, y las subcarpetas se integran en ese grupo. La Barra de favoritos llega como un grupo propio.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Importar los favoritos exportados" steps={[{ title: 'Confirmar' }, { title: 'Tus grupos' }]}>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-import-confirm" alt="Diálogo de TabMerger que pregunta Import 2 groups? (¿Importar 2 grupos?) para el archivo favorites_edge.html, tema claro" darkAlt="Diálogo de TabMerger que pregunta Import 2 groups? (¿Importar 2 grupos?) para el archivo favorites_edge.html, tema oscuro" boxes={[{ id: 'import-confirm', label: 'Importar' }]} source="TabMerger 3.16.1">TabMerger cuenta las carpetas que encontró y pregunta antes.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/edge-collections-replacement/tm-imported-groups" alt="Barra lateral de TabMerger con los grupos Trip to Lisbon y Thesis reading, importados desde carpetas de favoritos, tema claro" darkAlt="Barra lateral de TabMerger con los grupos Trip to Lisbon y Thesis reading, importados desde carpetas de favoritos, tema oscuro" boxes={[{ id: 'imported', label: 'Grupos con el nombre de las carpetas' }]} source="TabMerger 3.16.1">Cada carpeta es ahora un grupo con el mismo nombre y las mismas páginas.</ThemedScreenshot>
+</Carousel>
+
+Las demás carpetas de «Otros favoritos» también se importan; borra los grupos que no necesites. Todos los formatos de importación están en [importar pestañas a TabMerger](/blog/import-tabs-into-tabmerger). La versión gratuita admite 5 grupos y 50 pestañas, y una importación que superaría ese límite se detiene antes de añadir nada; [Pro](/pricing) no tiene límite.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Edge Favorites page menu with Export favorites. */}
+
+</Section>
+
+<Section id="why" title="¿Por qué TabMerger es un hogar mejor de lo que fue Colecciones?">
+
+- **Conjuntos completos de pestañas, con un clic.** **Combinar con lo actual** (Merge with current) guarda todas las ventanas abiertas en un grupo con nombre.
+- **Notas y recordatorios en cualquier pestaña,** para sustituir las notas que Colecciones no pudo mover: haz clic derecho en una pestaña y elige **Agregar nota** (Add note) o **Recordarme…** (Remind me…).
+- **Una sola búsqueda** para pestañas abiertas, guardadas y cerradas recientemente: <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+- **Multinavegador.** Los mismos grupos en Edge, Chrome y Firefox, sincronizados con cifrado de extremo a extremo en Pro.
+- **Tuyos para siempre.** Exporta todo a JSON cuando quieras; nada depende de que una empresa mantenga viva una función.
+
+¿Nuevo en los gestores de pestañas? [Qué hace un gestor de sesiones del navegador](/blog/browser-session-manager) y [las mejores extensiones para gestionar pestañas](/blog/best-tab-manager-extensions) te dan el panorama.
+
+<InstallCta>Gratis para Edge, Chrome y Firefox. No necesitas cuenta para empezar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,197 @@
+export const post = {
+  slug: 'browser-session-manager',
+  title: '¿Qué es un gestor de sesiones del navegador y lo necesitas?',
+  navTitle: '¿Qué es un gestor de sesiones?',
+  seoTitle: 'Extensiones de gestor de sesiones: sesiones vs. marcadores',
+  description:
+    'Qué es una sesión de pestañas, qué hace una extensión para guardar la sesión del navegador que los marcadores y el historial no hacen, qué buscar en una y cuándo basta con el navegador.',
+  shareSummary: 'Sesiones, gestores de sesiones y marcadores: qué guarda cada uno y cuándo necesitas cuál.',
+  dek: 'Tu navegador ya guarda una sesión. Un gestor de sesiones guarda todas las que quieras, con nombre.',
+  published: '2026-11-25',
+  updated: '2026-11-25',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Las extensiones pueden listar como máximo 25 pestañas y ventanas cerradas recientemente.',
+      source: 'Documentación de chrome.sessions',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+    },
+    { text: 'Session Buddy guarda los datos en el dispositivo y no tiene sincronización.', source: 'Ficha de Session Buddy en la tienda, 20 nov. 2026' },
+    { text: 'Tab Session Manager guarda automáticamente al cerrar una ventana y cada cierto tiempo.', source: 'Su ficha en la tienda, 20 nov. 2026' },
+    { text: 'La restauración al iniciar solo conserva la última sesión.', source: 'Ajustes de Chrome, Edge y Firefox' },
+  ],
+  faq: [
+    {
+      question: '¿Qué es una sesión de pestañas?',
+      answer:
+        'Las ventanas y pestañas que tienes abiertas en un momento dado, en orden. El navegador guarda la actual para poder reabrirla después de reiniciar; un gestor de sesiones la guarda con un nombre.',
+    },
+    {
+      question: '¿Qué diferencia hay entre un gestor de sesiones y los marcadores?',
+      answer:
+        'Los marcadores guardan páginas sueltas en carpetas. Un gestor de sesiones guarda ventanas enteras, conserva su estructura y puede hacerlo automáticamente, y luego las vuelve a abrir como ventanas.',
+    },
+    {
+      question: '¿Necesito una extensión de gestor de sesiones?',
+      answer:
+        'No si trabajas en una sola ventana y tienes activado el ajuste de inicio. Sí si llevas varios proyectos a la vez, pierdes pestañas por cierres inesperados o quieres recuperar las ventanas de ayer.',
+    },
+    {
+      question: '¿Los gestores de sesiones son privados?',
+      answer:
+        'Depende de dónde guarden los datos. Algunos lo guardan todo en tu dispositivo; los que sincronizan lo envían a un servidor, así que comprueba si usan cifrado de extremo a extremo.',
+    },
+  ],
+  images: [
+    { src: '/blog/browser-session-manager/tm-save-session-light.webp', alt: 'Diálogo «Save Session» (Guardar sesión) de TabMerger con el nombre «Friday wrap-up», tema claro' },
+    { src: '/blog/browser-session-manager/tm-save-session-dark.webp', alt: 'Diálogo «Save Session» (Guardar sesión) de TabMerger con el nombre «Friday wrap-up», tema oscuro' },
+    { src: '/blog/browser-session-manager/tm-session-view-light.webp', alt: 'La sesión guardada «Friday wrap-up» con sus grupos y el botón «Restore session» (Restaurar sesión), tema claro' },
+    { src: '/blog/browser-session-manager/tm-session-view-dark.webp', alt: 'La sesión guardada «Friday wrap-up» con sus grupos y el botón «Restore session» (Restaurar sesión), tema oscuro' },
+  ],
+  tags: ['session-management', 'tab-manager', 'save-tabs', 'comparison'],
+  sources: [
+    {
+      title: 'chrome.sessions API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'sessions (WebExtensions API)',
+      publisher: 'MDN Web Docs',
+      url: 'https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/sessions',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Session Buddy',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/session-buddy-tab-bookmar/edacconmaakjimmfgnblocblbcdcpbko',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tab Session Manager',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/tab-session-manager/iaiomicjabeggjcfkbimgmglanimpnae',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Tabs Outliner',
+      publisher: 'tabsoutliner.com',
+      url: 'https://tabsoutliner.com/',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/browser-session-manager/tm-session-view-light.webp' },
+  ogImage: { src: '/blog/browser-session-manager/og.png', alt: '¿Qué es un gestor de sesiones del navegador y lo necesitas? Una guía de TabMerger, con una sesión guardada y su botón para restaurarla' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'session', label: '¿Qué es una sesión de pestañas?' },
+    { id: 'vs', label: 'Sesiones vs. marcadores' },
+    { id: 'need', label: '¿Lo necesitas?' },
+    { id: 'look-for', label: 'Qué buscar' },
+    { id: 'examples', label: 'Ejemplos' },
+    { id: 'tabmerger', label: 'Sesiones en TabMerger' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Una **sesión** es el conjunto de ventanas y pestañas que tienes abiertas en un momento dado. Tu navegador guarda la actual para poder reabrirla después de reiniciar. Un **gestor de sesiones** es una extensión que guarda sesiones con nombre, a menudo de forma automática, y luego las vuelve a abrir como ventanas. Los marcadores guardan páginas; un gestor de sesiones guarda todo el espacio de trabajo. [TabMerger](/features) hace las dos cosas a la vez: todas las ventanas abiertas guardadas en grupos con nombre con un clic, sesiones con nombre que puedes restaurar juntas, guardado automático programado y sincronización con cifrado de extremo a extremo en Pro.
+
+</QuickAnswer>
+
+<InstallCta>Guarda cada ventana como un grupo con nombre, y sesiones enteras con un clic. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+<Section id="session" title="¿Qué es una sesión de pestañas?">
+
+Todo lo que está abierto ahora mismo: cada ventana, sus pestañas en orden y cuál es la pestaña activa. Los navegadores lo registran todo el tiempo, para dos cosas:
+
+- **Restauración al iniciar.** Con la opción de inicio que recupera la sesión anterior activada, el navegador reabre la última sesión al arrancar. Dónde está esa opción en cada navegador lo explicamos en [cómo restaurar pestañas después de un cierre inesperado](/blog/restore-tabs-after-crash#prevent).
+- **Cerradas recientemente.** <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> va recuperando, una a una, las pestañas y ventanas que cerraste.
+
+Las dos solo conservan el estado *más reciente*. Las ventanas del martes pasado no son una sesión que el navegador pueda devolverte; son solo líneas en el historial. Ese hueco es el que llenan los gestores de sesiones. Si ya has perdido pestañas, empieza por [cómo restaurar pestañas después de un cierre inesperado](/blog/restore-tabs-after-crash).
+
+</Section>
+
+<Section id="vs" title="Gestor de sesiones vs. marcadores vs. historial">
+
+<ComparisonTable
+  head={['', 'Marcadores', 'Historial', 'Gestor de sesiones']}
+  rowHeaders
+  highlight={3}
+  minWidth="36rem"
+  rows={[
+    ['Guarda', 'Las páginas que eliges', 'Cada página que visitas', 'Ventanas enteras y sus pestañas'],
+    ['Mantiene las ventanas separadas', 'Una carpeta por guardado', 'No', 'Sí'],
+    ['Guarda automáticamente', 'No', 'Sí, página a página', 'Normalmente, cada cierto tiempo o al cerrar'],
+    ['Reabre', 'Una carpeta cada vez', 'Una página cada vez', 'Ventanas, con un clic'],
+    ['Integrado', 'Sí', 'Sí', 'No, es una extensión'],
+  ]}
+/>
+
+Los marcadores ganan con las páginas que vas a conservar durante años. Un gestor de sesiones gana con el trabajo en curso: las doce pestañas de una tarea a medias que quieres recuperar tal cual, como ventana, sin archivarlas una a una. Más en [pestañas vs. marcadores](/blog/tabs-vs-bookmarks).
+
+</Section>
+
+<Section id="need" title="¿Lo necesitas?">
+
+Probablemente no si trabajas en una sola ventana, no pasas de un par de docenas de pestañas y tienes activado el ajuste de inicio. Con la [rutina para cuando tienes demasiadas pestañas](/blog/manage-too-many-tabs) y una carpeta de marcadores de vez en cuando tienes suficiente.
+
+Probablemente sí si algo de esto te suena:
+
+- Cambias de un proyecto a otro y quieres recuperar intactas las ventanas de cada uno.
+- Un cierre inesperado, una actualización o un reinicio forzado ya te ha hecho perder pestañas.
+- Quieres cerrarlo todo al final del día sin perder nada.
+- Necesitas pestañas de hace días, no solo de la última sesión.
+
+</Section>
+
+<Section id="look-for" title="¿Qué debería hacer un buen gestor de sesiones?">
+
+- **Guardar automáticamente**, no solo cuando te acuerdas: cada cierto tiempo, al cerrar una ventana o las dos cosas.
+- **Conservar la estructura**: ventanas, orden de las pestañas e, idealmente, grupos de pestañas.
+- **Restaurar con flexibilidad**: la sesión entera, una ventana o una pestaña.
+- **Buscar** en todas las sesiones guardadas, para que puedas encontrar una pestaña de la semana pasada.
+- **Exportar** a un archivo que puedas leer en otro sitio, para no quedarte atrapado nunca. (TabMerger exporta JSON con un clic: [esto es lo que contiene](/blog/export-open-tabs).)
+- **Dejar claro dónde están los datos.** Solo en local es privado, pero muere con el perfil; sincronizado está más a salvo de pérdidas de datos, y debería tener cifrado de extremo a extremo.
+
+Una nota técnica: la API que los navegadores ofrecen a las extensiones para las pestañas cerradas es pequeña. `chrome.sessions` devuelve como máximo 25 entradas cerradas recientemente (`MAX_SESSION_RESULTS`). Los gestores de sesiones que llegan más lejos llevan su propio registro.
+
+</Section>
+
+<Section id="examples" title="¿Qué gestores de sesiones hay?">
+
+Algunos de los más establecidos, descritos a partir de sus propias fichas en las tiendas y sus webs (consultadas el 20 nov. 2026):
+
+- **Session Buddy** (Chrome) guarda y restaura sesiones, y mantiene un historial de sesiones pasadas para recuperarte de cierres inesperados. Los datos se quedan en el dispositivo; su ficha dice que no hay sincronización. Gratis.
+- **Tab Session Manager** (Chrome, Firefox, Edge) guarda sesiones con nombres y etiquetas, guarda automáticamente al cerrar una ventana y cada cierto tiempo, y ofrece sincronización en la nube. Gratis.
+- **Tabs Outliner** (Chrome) reúne las ventanas abiertas y guardadas en un árbol, con notas y recuperación tras cierres inesperados. Gratis, con una mejora Pro de pago único.
+
+Para comparar nueve herramientas lado a lado en precio, sincronización y cifrado, consulta [las mejores extensiones para gestionar pestañas, comparadas](/blog/best-tab-manager-extensions) o nuestra [página de comparación](/compare).
+
+</Section>
+
+<Section id="tabmerger" title="Cómo funcionan las sesiones en TabMerger">
+
+[TabMerger](/features), nuestra extensión gratuita para Chrome, Edge y Firefox, es un gestor de pestañas con sesiones integradas. Tus pestañas abiertas se guardan en **grupos** con nombre; luego, **Guardar sesión actual** (Save current session) toma una instantánea con nombre de esos grupos guardados que puedes restaurar de una vez más adelante. El plan gratuito guarda 3 sesiones en el navegador; Pro guarda sesiones ilimitadas y las sincroniza entre dispositivos, con cifrado de extremo a extremo.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Guardar y restaurar una sesión" steps={[{ title: 'Guardar sesión' }, { title: 'Vista de la sesión' }]}>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-save-session" alt="Diálogo «Save Session» (Guardar sesión) de TabMerger con el nombre «Friday wrap-up», tema claro" darkAlt="Diálogo «Save Session» (Guardar sesión) de TabMerger con el nombre «Friday wrap-up», tema oscuro" boxes={[{ id: 'session-name', label: 'Nombre de la sesión' }]} source="TabMerger 3.16.1">«Save current session» (Guardar sesión actual) te pide un nombre.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/browser-session-manager/tm-session-view" alt="La sesión guardada «Friday wrap-up» con sus grupos y el botón «Restore session» (Restaurar sesión), tema claro" darkAlt="La sesión guardada «Friday wrap-up» con sus grupos y el botón «Restore session» (Restaurar sesión), tema oscuro" boxes={[{ id: 'restore-session', label: 'Restaurar sesión' }]} source="TabMerger 3.16.1">La sesión guardada muestra sus grupos; «Restore session» (Restaurar sesión) los recupera todos.</ThemedScreenshot>
+</Carousel>
+
+Para la parte automática, **Ajustes → Datos → Guardar pestañas abiertas automáticamente** (Settings → Data → Auto-save open tabs) guarda tus pestañas abiertas como un grupo nuevo de forma programada o cuando superas cierto número de pestañas. Las exportaciones son JSON sin más. Para convertir una sesión en tu rutina de cada mañana, consulta [empieza tu jornada con pestañas guardadas](/blog/start-your-workday-with-saved-tabs).
+
+<InstallCta>Gratis para Chrome, Edge y Firefox. No necesitas cuenta para empezar.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

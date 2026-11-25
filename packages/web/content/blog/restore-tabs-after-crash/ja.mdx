@@ -1,0 +1,270 @@
+export const post = {
+  slug: 'restore-tabs-after-crash',
+  title: 'クラッシュ、アップデート、うっかり終了のあとでタブを取り戻す方法',
+  navTitle: 'クラッシュ後にタブを取り戻す',
+  seoTitle: 'クラッシュ後にタブを復元する方法（Chrome・Edge・Firefox）',
+  description:
+    'ブラウザが閉じてタブが全部消えた？ クラッシュ後にタブを復元する手順を、試す順に解説します。開き直す、履歴、ほかの端末、そして二度と起きないようにする設定まで。',
+  shareSummary: 'クラッシュや再起動でタブが消えたら。ブラウザごとの復元手順を、試す順に。',
+  dek: 'まずは手早い方法から順に試しましょう。失われたセッションの多くは1分もかからずに戻ります。',
+  published: '2026-11-24',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Chrome のクラッシュに関するヘルプによると、Ctrl+Shift+T で開いていたタブが開き直します。',
+      source: 'Chrome ヘルプ',
+      href: 'https://support.google.com/chrome/answer/142063',
+    },
+    { text: 'Firefox の「履歴」メニューには「以前のセッションを復元」があります。', source: 'Firefox 159' },
+    {
+      text: 'Chrome がほかの端末のタブを表示するのは、「履歴とタブ」の同期がオンのときだけです。',
+      source: 'Chrome ヘルプ',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'Edge の履歴ページには、独自の「Recently closed」の一覧があります。', source: 'edge://history, Edge 157' },
+  ],
+  faq: [
+    {
+      question: 'Chrome が閉じたあと、タブを取り戻すにはどうすればいいですか？',
+      answer:
+        'Chrome を開き直して Ctrl+Shift+T（Mac では ⌘+Shift+T）を押します。必要なら何度か押してください。それでも戻らない場合は、Ctrl+H で履歴を開き、最近閉じたタブを確認します。',
+    },
+    {
+      question: 'タブが復元されなかったのはなぜですか？',
+      answer:
+        '多くの場合、起動時の設定が新しいタブページを開くようになっている、タブがプライベート ウィンドウにあった、終了する前にウィンドウを一つずつ閉じた、別のプロファイルを開いた、のいずれかが原因です。',
+    },
+    {
+      question: '昨日のタブを復元できますか？',
+      answer: 'セッションとしては復元できませんが、履歴を消去していなければ、訪れたページはすべて履歴（Ctrl+H）に残っています。確実なのは、セッションを保存しておくか自動保存を使う方法です。',
+    },
+    {
+      question: '二度と起きないようにするには？',
+      answer: '起動時の設定をオンにして、アップデートのような危ないタイミングの前に開いているタブを保存しておきましょう。両方の方法は、開いているタブをすべて保存するガイドで紹介しています。',
+      link: { text: '開いているタブをすべて保存するガイド', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Edge の履歴ページ。サイドバーに「All」「Recently closed」「Tabs from other devices」' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Chrome の設定の「On startup」（起動時）で「Continue where you left off」（前回開いていたページを開く）が選択されている' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Edge の設定の「Start, home, and new tab page」で「Open tabs from the previous session」が選択されている' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Firefox の設定の「Home and startup」（ホームと起動）で「Open previous windows and tabs」（前回のウィンドウとタブを開く）にチェックが入っている' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-light.webp', alt: 'TabMerger の設定の「Data」（データ）。「Auto-save open tabs」（開いているタブを自動保存）がオンで、スケジュールは「Every 30 minutes」（30 分ごと）。ライトテーマ' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-dark.webp', alt: 'TabMerger の設定の「Data」（データ）。「Auto-save open tabs」（開いているタブを自動保存）がオンで、スケジュールは「Every 30 minutes」（30 分ごと）。ダークテーマ' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-light.webp', alt: 'TabMerger の「Recently closed」（最近閉じたタブ）の今日の分。閉じたタブ3つと、それぞれを閉じた時刻。ライトテーマ' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-dark.webp', alt: 'TabMerger の「Recently closed」（最近閉じたタブ）の今日の分。閉じたタブ3つと、それぞれを閉じた時刻。ダークテーマ' },
+  ],
+  tags: ['restore-closed-tabs', 'session-management', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-20',
+      note: 'Firefox のメニュー名は Firefox 159.0.1 の画面から確認しました。このページは自動チェックをブロックしました。',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/restore-tabs-after-crash/cover-edge-light.webp' },
+  ogImage: { src: '/blog/restore-tabs-after-crash/og.png', alt: 'タイトルカード「How to get your tabs back after a crash, an update or an accidental quit」。最近閉じたタブの一覧を添えた TabMerger のガイド' },
+  toc: [
+    { id: 'quick', label: '結論' },
+    { id: 'first', label: '1. 開き直して Ctrl+Shift+T' },
+    { id: 'recover', label: '2. ブラウザごとの履歴' },
+    { id: 'devices', label: '3. ほかの端末' },
+    { id: 'why', label: 'タブが戻らなかった理由' },
+    { id: 'prevent', label: '次に備える' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+  browserSections: ['first', 'recover', 'devices', 'prevent'],
+  browserFact: {
+    label: '履歴',
+    values: { chrome: 'chrome://history', edge: 'edge://history', firefox: 'Ctrl+Shift+H（ブラウジングライブラリー）' },
+  },
+}
+
+<QuickAnswer>
+
+ブラウザを開き直して、ウィンドウが戻るまで <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>（Mac では <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>）を何度も押します。うまくいかなければ、履歴（<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>）を開いて **最近閉じた** タブから開き直します。Firefox では **履歴 → 以前のセッションを復元**（History → Restore Previous Session）を使います。それでも足りないときは **ほかの端末のタブ** を確認し、最後に履歴でページそのものを検索しましょう。次からは [TabMerger](/features) に開いているタブをスケジュールどおり自動保存させておけば、クラッシュで失うのはせいぜい数分ぶんで済みます。
+
+</QuickAnswer>
+
+<InstallCta>もうウィンドウをなくさない。開いているタブをスケジュールどおりに自動保存。Chrome、Edge、Firefox で無料。</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="first" title="1. ブラウザを開き直して、Ctrl+Shift+T を押す">
+
+先に新しいタブを開かないでください。まっさらなウィンドウから始めれば、ブラウザの「最後に閉じた」一覧がそのまま戻ってきます。
+
+<BrowserPanels section="first">
+<BrowserPanel browser="chrome">
+
+1. Chrome を起動します。ページの復元を提案されたら、受け入れます。
+2. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>（Mac では <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>）を押します。Chrome のクラッシュに関するヘルプでも案内されている方法で、それまで開いていたタブが開き直します。
+3. なくしたウィンドウの数だけ、もう一度押します。Chrome は閉じた順にタブとウィンドウを開き直します。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Edge を起動します。ページの復元を提案されたら、受け入れます。
+2. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>（Mac では <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>）を押すと、最後に閉じたタブが開き直します。続けて押すと、さらに前にさかのぼります。
+3. ウィンドウが丸ごと見つからない場合は、手順 2 の履歴に進みましょう。
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Firefox を起動します。ページの復元を提案されたら、受け入れます。
+2. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>（Mac では <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd>）を押します。Firefox 159 では、このショートカットが「最後に閉じたタブ、ウィンドウ、またはセッションを復元する」コマンドに割り当てられているため、再起動のあとなら前回のセッション全体を戻せます。
+3. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> を押すと、閉じたウィンドウが開き直します。ウィンドウ1つにつき1回押します。
+
+</BrowserPanel>
+</BrowserPanels>
+
+ショートカットの一覧は [タブのキーボード ショートカット早見表](/blog/tab-keyboard-shortcuts) にまとめています。
+
+</Section>
+
+<Section id="recover" title="2. 履歴から開き直す">
+
+ショートカットで何も戻らなくても、ブラウザの履歴は何が開いていたかを覚えています。
+
+<BrowserPanels section="recover">
+<BrowserPanel browser="chrome">
+
+1. **⋮ → 履歴**（History）をクリックします。サブメニューに、最近閉じたタブとウィンドウが表示されます。
+2. ウィンドウをクリックすると、そのタブがすべて開き直します。
+3. 見つからない場合は、<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> を押して、覚えているページを検索します。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> を押して **履歴** を開きます。
+2. **Recently closed**（最近閉じた項目）を選び、なくしたウィンドウやタブを開き直します。
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Edge の履歴ページ。サイドバーに「All」「Recently closed」「Tabs from other devices」" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60">Edge の履歴ページ。サイドバーに「Recently closed」があります。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. **履歴**（History）メニューを開くか（<Kbd>Alt</Kbd> キーでメニューバーを表示）、**☰ → 履歴** を開きます。
+2. **以前のセッションを復元**（Restore Previous Session）を選ぶと、前回のウィンドウがすべて戻ります。
+3. または **最近閉じたウィンドウ** と **最近閉じたタブ** から選びます。
+
+Firefox 自体がクラッシュした場合は、**セッションの復元**（Restore Session）ページが開くことがあります（「ご迷惑をおかけして申し訳ありません。」）。**前回のタブを表示**（View Previous Tabs）を使えば、**セッションを復元** を押す前に、クラッシュの原因になっていそうなタブのチェックを外せます。
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with Restore Previous Session. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="devices" title="3. ほかの端末で探す">
+
+ログインして同期していたなら、なくしたタブがほかの端末にまだ表示されているかもしれません。
+
+<BrowserPanels section="devices">
+<BrowserPanel browser="chrome">
+
+Chrome はほかの端末のタブを履歴に表示しますが、**履歴とタブ**（History and tabs）の同期がオンの場合に限ります。**設定 → Google の設定**（Settings → You and Google）でアカウント名を選び、**履歴とタブ** をオンにします。
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+履歴（<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>）を開き、サイドバーで **Tabs from other devices**（ほかのデバイスのタブ）を選びます。
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+**Firefox View** を開き、**他の端末のタブ**（Tabs from other devices）を確認します。Firefox Sync で開いているタブの同期をオンにしておく必要があります。
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox View, Tabs from other devices. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="why" title="タブが復元されなかったのはなぜ？">
+
+- **起動時の設定が新しいタブページを開くようになっている。** 起動のたびにタブを開き直すのは、「前回のセッション」を開く起動オプションだけです。ブラウザごとの場所は次のセクションで説明します。
+- **タブがプライベート ウィンドウにあった。** Incognito と InPrivate のウィンドウは復元されません。
+- **ウィンドウを一つずつ閉じた。** 起動時の復元で戻るのは、ブラウザを *終了* した時点で開いていたものです。それより前に閉じたウィンドウは履歴にしか残りません。
+- **別のプロファイルを開いた。** セッションはプロファイルごとに別々です。プロファイルのアイコンを確認しましょう。
+
+</Section>
+
+<Section id="prevent" title="次に同じことが起きないようにする">
+
+今のうちに起動時の設定をオンにしておきましょう。アップデートにも再起動にも、この一つの変更で備えられます。
+
+<BrowserPanels section="prevent">
+<BrowserPanel browser="chrome">
+
+**設定 → 起動時 → 前回開いていたページを開く**（Settings → On startup → Continue where you left off）を選びます。アドレスバーに `chrome://settings/onStartup` を貼り付けても開けます。
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Chrome の設定の「On startup」（起動時）で「Continue where you left off」（前回開いていたページを開く）が選択されている" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">前回のセッションを開き直すように設定した、Chrome の「起動時」。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+**設定 →「Start, home, and new tab page」→「On startup」→「Open tabs from the previous session」** を選びます。アドレスバーに `edge://settings/startHomeNTP` を貼り付けても開けます。
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Edge の設定の「Start, home, and new tab page」で「Open tabs from the previous session」が選択されている" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">前回のセッションを開き直すように設定した、Edge の「Start, home, and new tab page」。</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+**設定 → ホームと起動 → 起動 → 前回のウィンドウとタブを開く**（Settings → Home and startup → Startup → Open previous windows and tabs）を選びます。アドレスバーに `about:preferences#home` を貼り付けても開けます。
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Firefox の設定の「Home and startup」（ホームと起動）で「Open previous windows and tabs」（前回のウィンドウとタブを開く）にチェックが入っている" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Firefox の設定の「ホームと起動」。「前回のウィンドウとタブを開く」にチェックが入っています。</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+起動時の復元でも、先週うっかり閉じたウィンドウは戻せません。そのためには保存したコピーが必要です。ウィンドウをブックマークするか、[セッション マネージャー](/blog/browser-session-manager) を使いましょう。方法の比較は [開いているタブをすべて保存する方法](/blog/save-all-open-tabs) のガイドにまとめています。
+
+Chrome、Edge、Firefox 向けの無料拡張機能 [TabMerger](/features) なら、保存を任せられます。**設定 → データ → 開いているタブを自動保存** は、開いているタブをスケジュールどおりにグループとして保存します（15 分ごとから毎日まで）。**最近閉じたタブ** は、閉じたタブとウィンドウをすべて日ごとに残します。無料プランでは2日分、Pro では30日分です。どちらの仕組みも、調整のしかたも、[もうタブをなくさない](/blog/never-lose-a-tab-again) で詳しく説明しています。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="スケジュールで保存し、閉じたタブを見つける" steps={[{ title: '自動保存' }, { title: '最近閉じたタブ' }]}>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-auto-save-schedule" alt="TabMerger の設定の「Data」（データ）。「Auto-save open tabs」（開いているタブを自動保存）がオンで、スケジュールは「Every 30 minutes」（30 分ごと）。ライトテーマ" darkAlt="TabMerger の設定の「Data」（データ）。「Auto-save open tabs」（開いているタブを自動保存）がオンで、スケジュールは「Every 30 minutes」（30 分ごと）。ダークテーマ" boxes={[{ id: 'schedule', label: 'スケジュール' }]} source="TabMerger 3.16.1">30 分ごとの「Auto-save open tabs」（開いているタブを自動保存）。ブラウザに何が起きても、開いているタブの新しいコピーが残ります。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-recently-closed" alt="TabMerger の「Recently closed」（最近閉じたタブ）の今日の分。閉じたタブ3つと、それぞれを閉じた時刻。ライトテーマ" darkAlt="TabMerger の「Recently closed」（最近閉じたタブ）の今日の分。閉じたタブ3つと、それぞれを閉じた時刻。ダークテーマ" boxes={[{ id: 'today-row', label: '今日' }]} source="TabMerger 3.16.1">「Recently closed」（最近閉じたタブ）。今日閉じたタブと、それぞれを閉じた時刻。</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Chrome、Edge、Firefox で無料。アカウントなしで始められます。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

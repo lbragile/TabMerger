@@ -1,0 +1,179 @@
+export const post = {
+  slug: 'auto-sort-tabs-with-url-rules',
+  title: 'Tự động sắp xếp tab vào nhóm bằng quy tắc URL',
+  navTitle: 'Tự động sắp xếp tab bằng quy tắc URL',
+  seoTitle: 'Cách tự động nhóm tab trình duyệt theo URL',
+  description:
+    'Để TabMerger xếp tab giúp bạn: quy tắc URL sao chép mọi trang khớp vào đúng nhóm ngay khi bạn duyệt web. Cách hoạt động của mẫu và ký tự đại diện *, thứ tự quy tắc và những mẫu dùng hiệu quả.',
+  shareSummary: 'Một mẫu và một nhóm: TabMerger tự xếp mọi tab khớp vào nhóm khi bạn duyệt web.',
+  dek: 'Viết quy tắc một lần. Từ đó, mọi trang khớp mà bạn mở đều được xếp vào đúng nhóm.',
+  published: '2026-12-17',
+  updated: '2026-12-17',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Một quy tắc gồm một mẫu và một nhóm; * khớp với bất kỳ chuỗi ký tự nào.', source: 'TabMerger 3.16.1' },
+    { text: 'Mẫu được so với toàn bộ địa chỉ, không có http:// hay https://.', source: 'Mã nguồn TabMerger 3.16.1' },
+    { text: 'Quy tắc được kiểm tra từ trên xuống; quy tắc khớp đầu tiên được áp dụng.', source: 'TabMerger 3.16.1' },
+    { text: 'Gói Miễn phí có 3 quy tắc URL; Pro không giới hạn.', source: 'Bảng giá TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Có thể tự động sắp xếp tab trình duyệt vào nhóm không?',
+      answer:
+        'Có, với quy tắc URL của TabMerger. Một quy tắc ghép một mẫu địa chỉ, chẳng hạn github.com/your-org/*, với một nhóm. Mỗi khi một trang khớp được mở hoặc tải xong, TabMerger lưu một bản sao của trang đó vào nhóm. Bản thân tab vẫn mở.',
+    },
+    {
+      question: 'Mẫu của quy tắc URL hoạt động thế nào?',
+      answer:
+        'Mẫu phải khớp với toàn bộ địa chỉ, không tính phần http:// hay https://. * đại diện cho bất kỳ chuỗi ký tự nào, kể cả chuỗi rỗng, và là ký tự đại diện duy nhất. Vì vậy github.com/* khớp với mọi trang GitHub, còn *wikipedia.org/* khớp với Wikipedia ở mọi ngôn ngữ.',
+    },
+    {
+      question: 'Nếu hai quy tắc cùng khớp một trang thì sao?',
+      answer: 'Quy tắc được kiểm tra từ đầu danh sách xuống, và quy tắc khớp đầu tiên được áp dụng. Dùng các mũi tên cạnh mỗi quy tắc để đặt quy tắc cụ thể lên trên quy tắc chung.',
+    },
+    {
+      question: 'Quy tắc URL có đóng tab không?',
+      answer: 'Không. Quy tắc lưu một bản sao vào nhóm; tab vẫn mở ở chỗ cũ.',
+    },
+    {
+      question: 'Tôi có thể tạo bao nhiêu quy tắc URL?',
+      answer: 'Gói Miễn phí có 3. Pro không giới hạn. Các quy tắc bạn đã có vẫn hoạt động nếu gói của bạn thay đổi.',
+    },
+  ],
+  images: [
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-light.webp', alt: 'Hộp thoại Add URL Rule (Thêm Quy Tắc URL) của TabMerger với mẫu *wikivoyage.org/wiki/* và nhóm Trip to Lisbon, giao diện sáng' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-add-rule-dark.webp', alt: 'Hộp thoại Add URL Rule (Thêm Quy Tắc URL) của TabMerger với mẫu *wikivoyage.org/wiki/* và nhóm Trip to Lisbon, giao diện tối' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-light.webp', alt: 'URL Rules (Quy Tắc URL) của TabMerger với ba quy tắc, mỗi quy tắc có mũi tên để đổi thứ tự, và 3/3 used (Đã dùng 3/3), giao diện sáng' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rules-list-dark.webp', alt: 'URL Rules (Quy Tắc URL) của TabMerger với ba quy tắc, mỗi quy tắc có mũi tên để đổi thứ tự, và 3/3 used (Đã dùng 3/3), giao diện tối' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp', alt: 'Nhóm Trip to Lisbon với trang Sintra do quy tắc URL thêm vào, giao diện sáng' },
+    { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-dark.webp', alt: 'Nhóm Trip to Lisbon với trang Sintra do quy tắc URL thêm vào, giao diện tối' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'developers'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/auto-sort-tabs-with-url-rules/tm-rule-result-light.webp' },
+  ogImage: { src: '/blog/auto-sort-tabs-with-url-rules/og.png', alt: 'Tự động sắp xếp tab bằng quy tắc URL: ba quy tắc TabMerger xếp tab vào nhóm' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'problem', label: 'Xếp tab thủ công' },
+    { id: 'why', label: 'Vì sao quy tắc hoạt động như vậy' },
+    { id: 'steps', label: 'Thêm quy tắc' },
+    { id: 'patterns', label: 'Viết mẫu' },
+    { id: 'order', label: 'Thứ tự quy tắc' },
+    { id: 'benefit', label: 'Bạn được gì' },
+    { id: 'habits', label: 'Thói quen tốt' },
+    { id: 'plans', label: 'Miễn phí và Pro' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+}
+
+<QuickAnswer>
+
+Trong [TabMerger](/features), mở **Cài đặt → Chung → Quy tắc URL → Quản lý** (Settings → General → URL rules → Manage) rồi thêm một quy tắc: một mẫu địa chỉ như `github.com/your-org/*` và nhóm mà nó thuộc về. Từ đó, mọi trang khớp đều được lưu vào nhóm đó khi bạn duyệt web, còn tab vẫn mở. `*` khớp với mọi thứ; quy tắc khớp đầu tiên được áp dụng.
+
+</QuickAnswer>
+
+<InstallCta>Tab tự vào đúng nhóm. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+<Section id="problem" title="Xếp tab thủ công không kéo dài được lâu">
+
+Bạn bắt đầu tuần thật ngăn nắp: công việc ở một nhóm, chuyến đi ở nhóm khác, bài đọc ở nhóm thứ ba. Rồi ngày làm việc trôi qua. Một đồng nghiệp gửi link một issue, bạn tra hai giờ tàu, một lần tìm kiếm dẫn tới một bài báo. Thứ nào cũng nên được xếp vào đâu đó, và thứ nào cũng là một lần kéo thả mà bạn sẽ không làm. Đến thứ Sáu, các nhóm đã lỗi thời và Đang Mở (Now Open) lại thành một đống.
+
+Những trang bạn mở nhiều nhất đến từ cùng vài trang web. Đó chính là thứ một quy tắc có thể nhận ra.
+
+</Section>
+
+<Section id="why" title="Vì sao quy tắc URL hoạt động như vậy">
+
+- **Sao chép, không di chuyển.** Quy tắc lưu một bản sao của trang vào nhóm và để tab mở. Việc xếp tab không bao giờ làm gián đoạn thứ bạn đang đọc.
+- **Theo dõi khi bạn duyệt web.** Quy tắc được kiểm tra khi một tab mở với một địa chỉ và mỗi khi một trang tải xong, nên link bạn bấm bên trong một tab cũng được xếp. Bản sao được đưa vào cửa sổ đầu tiên của nhóm. Trang tải lại (khi làm mới, khi ghé lại sau) sẽ được lưu lần nữa; **Loại bỏ thẻ trùng lặp** (Deduplicate tabs) trong menu **⋯** của nhóm sẽ dọn các bản lặp.
+- **Toàn bộ địa chỉ, không có giao thức.** Mẫu được so với toàn bộ địa chỉ sau `http://` hoặc `https://`, nên bạn không bao giờ phải gõ phần đó, và `localhost:3000/*` hoạt động đúng như khi viết.
+- **Chỉ một ký tự đại diện, có chủ đích.** `*` nghĩa là bất kỳ chuỗi ký tự nào, kể cả rỗng. Không có ký tự đặc biệt nào khác cần thoát. Mẫu được so như văn bản thuần, không bao giờ bị biến thành biểu thức chính quy, nên cả mẫu dài cũng được kiểm tra nhanh.
+- **Thứ tự quyết định.** Khi hai quy tắc cùng khớp, quy tắc ở trên được áp dụng, nên quy tắc cụ thể có thể nằm trên quy tắc chung.
+
+</Section>
+
+<Section id="steps" title="Thêm quy tắc">
+
+1. Mở TabMerger, rồi vào **Cài đặt** → **Chung** (Settings → General). Cạnh **Quy tắc URL**, nhấn **Quản lý** (Manage).
+2. Nhấn **Thêm quy tắc** (Add rule). Gõ mẫu, chọn nhóm đích và nhấn **Thêm quy tắc** trong hộp thoại.
+3. Lặp lại cho từng trang web bạn muốn xếp, rồi nhấn **Lưu** (Save) để giữ danh sách.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Một quy tắc URL từ đầu đến cuối" steps={[{ title: 'Thêm' }, { title: 'Danh sách' }, { title: 'Kết quả' }]}>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-add-rule" alt="Hộp thoại Add URL Rule (Thêm Quy Tắc URL) của TabMerger với mẫu *wikivoyage.org/wiki/* và nhóm Trip to Lisbon, giao diện sáng" darkAlt="Hộp thoại Add URL Rule (Thêm Quy Tắc URL) của TabMerger với mẫu *wikivoyage.org/wiki/* và nhóm Trip to Lisbon, giao diện tối" boxes={[{ id: 'pattern', label: 'Mẫu địa chỉ' }, { id: 'group', label: 'Nhóm đích' }]} source="TabMerger 3.16.1">Mọi bài viết Wikivoyage đều vào nhóm chuyến đi.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rules-list" alt="URL Rules (Quy Tắc URL) của TabMerger với ba quy tắc, mỗi quy tắc có mũi tên để đổi thứ tự, và 3/3 used (Đã dùng 3/3), giao diện sáng" darkAlt="URL Rules (Quy Tắc URL) của TabMerger với ba quy tắc, mỗi quy tắc có mũi tên để đổi thứ tự, và 3/3 used (Đã dùng 3/3), giao diện tối" boxes={[{ id: 'order', label: 'Kiểm tra từ trên xuống' }, { id: 'used', label: 'Bộ đếm gói Miễn phí' }]} source="TabMerger 3.16.1">Ba quy tắc, ba nhóm. Các mũi tên quyết định quy tắc nào được thử trước.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/auto-sort-tabs-with-url-rules/tm-rule-result" alt="Nhóm Trip to Lisbon với trang Sintra do quy tắc URL thêm vào, giao diện sáng" darkAlt="Nhóm Trip to Lisbon với trang Sintra do quy tắc URL thêm vào, giao diện tối" boxes={[{ id: 'new-tab', label: 'Do quy tắc xếp vào' }]} source="TabMerger 3.16.1">Mở bài viết Sintra là nó tự được lưu vào Trip to Lisbon.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="patterns" title="Viết mẫu sao cho khớp">
+
+<ComparisonTable
+  head={['Mẫu', 'Khớp với', 'Không khớp với']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['github.com/your-org/*', 'Mọi repo, issue và pull request của your-org', 'github.com/other-org/…'],
+    ['*wikipedia.org/wiki/*', 'Bài viết ở mọi ngôn ngữ (en., de., …)', 'trang chủ wikipedia.org'],
+    ['localhost:3000/*', 'Mọi trang trên máy chủ phát triển cục bộ của bạn', 'localhost:8080/…'],
+    ['docs.example.com/*', 'Trang tài liệu', 'www.docs.example.com/… (thêm *docs.example.com/*)'],
+    ['github.com', 'Chỉ đúng địa chỉ github.com', 'github.com/bat-ky-gi (thêm /*)'],
+  ]}
+/>
+
+Mẹo giúp bạn khỏi mất một buổi gỡ lỗi:
+
+- **Kết thúc bằng `/*`** để bao trọn cả một trang web. Không có `*`, mẫu chỉ khớp với đúng một địa chỉ.
+- **Bắt đầu bằng `*`** khi trang web dùng tên miền phụ hoặc `www.`: `*example.com/*`.
+- **Chữ cái phải khớp đúng như viết.** Trình duyệt viết tên miền bằng chữ thường, nên bạn cũng viết như vậy.
+- **Chuỗi truy vấn cũng được tính.** `*youtube.com/watch*` khớp với video, bất kể phía sau `watch` là gì.
+
+</Section>
+
+<Section id="order" title="Thứ tự quy tắc: cụ thể trước">
+
+Quy tắc được thử từ trên xuống. Dùng các mũi tên cạnh mỗi quy tắc để đặt quy tắc hẹp (`github.com/your-org/design-system/*` → “Design system”) lên trên quy tắc rộng (`github.com/your-org/*` → “Work”). Quy tắc khớp đầu tiên sẽ xếp trang, các quy tắc còn lại bị bỏ qua.
+
+</Section>
+
+<Section id="benefit" title="Bạn được gì">
+
+Các nhóm của bạn luôn cập nhật mà bạn không phải tự xếp gì cả. Một trang bạn mở hôm thứ Ba đã nằm sẵn trong nhóm dự án của nó vào thứ Sáu, và tìm trong nhóm đó là thấy.
+
+</Section>
+
+<Section id="habits" title="Thói quen tốt">
+
+- **Đặt quy tắc cho những trang bạn mở hằng ngày,** không phải mọi trang chỉ ghé một lần.
+- **Mỗi tên miền hoặc đường dẫn dự án một quy tắc**, quy tắc cụ thể trước.
+- **Kết hợp quy tắc với mỗi dự án một nhóm:** xem [sắp xếp tab theo dự án](/blog/organize-tabs-by-project). Lập trình viên sẽ tìm thấy thêm mẫu trong [quản lý tab cho lập trình viên](/blog/tab-management-for-developers).
+- **Thỉnh thoảng dọn dẹp** bằng **Loại bỏ thẻ trùng lặp** ở những nhóm mà quy tắc thường xuyên thêm tab.
+
+</Section>
+
+<Section id="plans" title="Miễn phí và Pro">
+
+<ComparisonTable
+  head={['', 'Miễn phí', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Quy tắc URL', '3', 'Không giới hạn'],
+    ['Mẫu, thứ tự, mọi tùy chọn ở trên', 'Có', 'Có'],
+  ]}
+/>
+
+Quy tắc URL được lưu trong trình duyệt nơi bạn tạo chúng. Nếu gói Pro kết thúc, các quy tắc bạn đã có vẫn tiếp tục xếp tab; chỉ việc thêm quy tắc thứ tư mới cần [Pro](/pricing).
+
+<InstallCta>Viết ba quy tắc hôm nay và thôi xếp tab bằng tay. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+</Section>

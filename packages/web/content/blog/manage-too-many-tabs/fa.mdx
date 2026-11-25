@@ -1,0 +1,246 @@
+export const post = {
+  slug: 'manage-too-many-tabs',
+  title: 'زبانه‌های باز زیادی دارید؟ روالی چهارمرحله‌ای که در هر مرورگری جواب می‌دهد',
+  seoTitle: 'زبانه‌های باز زیاد؟ مدیریت زبانه‌ها در هر مرورگر',
+  description:
+    'تعداد زبانه‌های باز (تب‌های باز) زیاد شده؟ روالی چهارمرحله‌ای برای Chrome، Edge و Firefox، و اینکه TabMerger چطور همهٔ پنجره‌ها را با یک کلیک ذخیره می‌کند تا بی‌آنکه چیزی از دست برود ببندیدشان.',
+  shareSummary: 'ببندید، گروه کنید، ذخیره کنید، زمان‌بندی کنید: روالی برای زبانه‌ها در Chrome، Edge و Firefox.',
+  dek: 'کارهای تمام‌شده را ببندید، کارهای جاری را گروه کنید، بقیه را با یک کلیک ذخیره کنید و بگذارید ذخیرهٔ خودکار این نظم را نگه دارد.',
+  published: '2026-11-21',
+  updated: '2026-11-21',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'بهینه‌سازی حافظهٔ Chrome در یک نمایهٔ تازهٔ Chrome 157 خاموش بود.', source: 'chrome://settings/performance، ۲۰ نوامبر ۲۰۲۶' },
+    { text: 'Edge 158 زبانه‌های غیرفعال را به خواب می‌برد؛ به‌طور پیش‌فرض پس از ۱۵ دقیقه.', source: 'edge://settings، ۲۰ نوامبر ۲۰۲۶' },
+    {
+      text: 'میان‌بر Ctrl+Shift+A در Chrome و Firefox میان زبانه‌های باز جستجو می‌کند.',
+      source: 'راهنمای Chrome؛ میان‌برهای Firefox 159',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'منوی زبانه در Firefox گزینهٔ «بستن زبانه‌های تکراری» را دارد.', source: 'Firefox 159' },
+  ],
+  faq: [
+    {
+      question: 'چند زبانه یعنی خیلی زیاد؟',
+      answer:
+        'عدد ثابتی وجود ندارد. وقتی دیگر نمی‌توانید عنوان زبانه‌ها را بخوانید، بدون گشتن زبانه‌ای را پیدا نمی‌کنید یا مرورگر دربارهٔ عملکرد هشدار می‌دهد، زبانه‌ها زیاد شده‌اند.',
+    },
+    {
+      question: 'چطور دیگر این‌همه زبانه باز نکنم؟',
+      answer:
+        'هر روز زبانه‌های تمام‌شده را ببندید، زبانه‌های کار امروز را گروه کنید، بقیه را جایی ذخیره کنید که بشود در آن جستجو کرد، و هفته‌ای یک بار مرتب‌سازی کوتاهی انجام دهید.',
+    },
+    {
+      question: 'آیا زبانه‌های باز رایانه را کند می‌کنند؟',
+      answer:
+        'ممکن است، چون هر صفحهٔ باز حافظه مصرف می‌کند. بهینه‌سازی حافظهٔ Chrome و زبانه‌های خواب Edge حافظهٔ زبانه‌هایی را که از آنها استفاده نمی‌کنید آزاد می‌کنند؛ وقتی برگردید، دوباره بارگیری می‌شوند.',
+    },
+    {
+      question: 'بستن زبانه‌هایی که شاید بعداً لازم شوند امن است؟',
+      answer:
+        'بله، اگر اول ذخیره‌شان کنید: یک پوشهٔ نشانک، یک مدیر جلسه یا TabMerger نشانی را نگه می‌دارد تا دوباره بازش کنید. راهنمای ما برای ذخیرهٔ همهٔ زبانه‌های باز را ببینید.',
+      link: { text: 'ذخیرهٔ همهٔ زبانه‌های باز', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp', alt: 'بخش Now Open (هم‌اکنون باز) در TabMerger با سه پنجرهٔ مرورگر و ۱۸ زبانه، پوستهٔ روشن' },
+    { src: '/blog/manage-too-many-tabs/tm-now-open-dark.webp', alt: 'بخش Now Open (هم‌اکنون باز) در TabMerger با سه پنجرهٔ مرورگر و ۱۸ زبانه، پوستهٔ تیره' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-light.webp', alt: 'تنظیمات TabMerger، زبانهٔ Data (داده‌ها): گزینهٔ Auto-save open tabs (ذخیرهٔ خودکار زبانه‌های باز) روشن است و When open tabs pass (وقتی زبانه‌های باز بیشتر شوند از) روی 30 open tabs تنظیم شده، پوستهٔ روشن' },
+    { src: '/blog/manage-too-many-tabs/tm-auto-save-threshold-dark.webp', alt: 'تنظیمات TabMerger، زبانهٔ Data (داده‌ها): گزینهٔ Auto-save open tabs (ذخیرهٔ خودکار زبانه‌های باز) روشن است و When open tabs pass (وقتی زبانه‌های باز بیشتر شوند از) روی 30 open tabs تنظیم شده، پوستهٔ تیره' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'تنظیمات Chrome، بخش Performance (عملکرد)، با کلید Memory Saver (بهینه‌سازی حافظه)' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'تنظیمات Edge، بخش Performance، با گزینهٔ Automatically put tabs to sleep روشن و تنظیم‌شده روی ۱۵ دقیقه' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'save-tabs', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/manage-too-many-tabs/tm-now-open-light.webp' },
+  ogImage: { src: '/blog/manage-too-many-tabs/og.png', alt: 'زبانه‌های باز زیادی دارید؟ روالی چهارمرحله‌ای که در هر مرورگری جواب می‌دهد: راهنمای TabMerger، با سه پنجرهٔ مرورگر در یک جا' },
+  toc: [
+    { id: 'quick', label: 'پاسخ کوتاه' },
+    { id: 'how-many', label: 'چند تا یعنی زیاد؟' },
+    { id: 'close', label: '۱. ببندید' },
+    { id: 'group', label: '۲. گروه کنید' },
+    { id: 'save', label: '۳. ذخیره کنید' },
+    { id: 'schedule', label: '۴. مرتب‌سازی را زمان‌بندی کنید' },
+    { id: 'memory', label: 'از مرورگر کمک بگیرید' },
+    { id: 'tabmerger', label: 'با TabMerger' },
+    { id: 'faq', label: 'پرسش‌های متداول' },
+  ],
+  browserSections: ['close', 'memory'],
+  browserFact: {
+    label: 'تنظیم حافظه',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Settings → System and performance → Performance',
+      firefox: 'راست‌کلیک روی زبانه ← تخلیهٔ زبانه از حافظه',
+    },
+  },
+}
+
+<QuickAnswer>
+
+چهار مرحله را به همین ترتیب انجام دهید: هر زبانه‌ای را که کارتان با آن تمام شده **ببندید**، زبانه‌های کاری را که پیش رو دارید **گروه کنید**، زبانه‌های «شاید بعداً» را جایی که بشود در آن جستجو کرد **ذخیره کنید**، و هفته‌ای یک بار ده دقیقه مرتب‌سازی را **زمان‌بندی کنید**. این روال در Chrome، Edge و Firefox جواب می‌دهد. مرحله‌ای که بیشترین جا را باز می‌کند ذخیره کردن است، و [TabMerger](/features) آن را به یک کلیک تبدیل می‌کند: همهٔ پنجره‌های باز در یک گروه نام‌دار ذخیره می‌شوند که هر وقت خواستید می‌توانید در آن جستجو کنید و دوباره بازش کنید.
+
+</QuickAnswer>
+
+<InstallCta>همهٔ پنجره‌های باز را با یک کلیک ذخیره کنید و بی‌آنکه چیزی از دست برود ببندیدشان. رایگان برای Chrome، Edge و Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="how-many" title="چند زبانه یعنی خیلی زیاد؟">
+
+عدد جادویی وجود ندارد و ما هم عددی از خودمان نمی‌سازیم. زبانه‌ها (تب‌ها) وقتی مشکل می‌شوند که دیگر کارشان را انجام ندهند، یعنی چیزهایی را که به‌زودی سراغشان برمی‌گردید دم دست نگه ندارند. به این نشانه‌ها دقت کنید:
+
+- نوار زبانه فقط نمادها را نشان می‌دهد و دیگر نمی‌توانید عنوان‌ها را بخوانید.
+- صفحه‌ای را باز می‌کنید و می‌بینید از قبل باز بوده، آن هم دو بار.
+- زبانه‌ها را «محض احتیاط» باز نگه می‌دارید، چون بستنشان مثل گم کردنشان است.
+- مرورگر هشدار می‌دهد. Chrome وقتی عملکرد ضعیف را تشخیص دهد **هشدارهای مشکل عملکرد** (<bdi dir="ltr">Performance issue alerts</bdi>) را نشان می‌دهد که غیرفعال کردن زبانه‌ها را پیشنهاد می‌کنند.
+
+آخری مشکل مرورگر است و راه‌حل دارد (پایین‌تر). سه مورد اول مشکل نظم و ترتیب است، و این روال همین را حل می‌کند.
+
+تصویرهای مرورگر رابط انگلیسی را نشان می‌دهند؛ هر جا نام فارسی گزینه فرق دارد، بار اول نام انگلیسی هم در پرانتز آمده است.
+
+</Section>
+
+<Section id="close" title="۱. کارهای تمام‌شده را ببندید">
+
+از ساده‌ترین برد شروع کنید. زبانه‌هایی را که کارشان تمام شده ببندید: جستجویی که جوابش را گرفته‌اید، مقاله‌ای که خوانده‌اید، صفحهٔ پرداخت.
+
+- <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>W</Kbd></bdi> (در Mac، <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>W</Kbd></bdi>) در هر سه مرورگر زبانهٔ فعلی را می‌بندد.
+- یکی را اضافه بستید؟ <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd></bdi> دوباره بازش می‌کند. بیشتر در فهرست [میان‌برهای صفحه‌کلید برای زبانه‌ها](/blog/tab-keyboard-shortcuts).
+
+<BrowserPanels section="close">
+<BrowserPanel browser="chrome">
+
+<bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi> (در Mac، <bdi dir="ltr"><Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi>) را بزنید تا **جستجوی زبانه‌ها** (<bdi dir="ltr">Tab Search</bdi>) باز شود: فهرستی از همهٔ زبانه‌های باز که هر ردیفش دکمهٔ بستن دارد. زبانه‌های تمام‌شده را مستقیم از همین فهرست ببندید.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+در فهرست میان‌برهای صفحه‌کلید Edge کلیدی برای جستجو میان زبانه‌های باز نیست، پس در طول نوار زبانه پیش بروید: روی زبانه‌ای که کارتان با آن تمام شده کلیک کنید و <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>W</Kbd></bdi> را بزنید.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd></bdi> همهٔ زبانه‌هایتان را فهرست می‌کند تا تمام‌شده‌ها را پیدا کنید و ببندید.
+- روی هر زبانه‌ای راست‌کلیک کنید و **بستن زبانه‌های تکراری** (<bdi dir="ltr">Close Duplicate Tabs</bdi>) را بزنید تا تکراری‌ها یک‌جا پاک شوند.
+
+TabMerger تکراری‌ها را در **همهٔ** پنجره‌ها هم‌زمان پاک می‌کند؛ ببینید [چطور زبانه‌های تکراری را ببندیم](/blog/close-duplicate-tabs).
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>بستن فقط برای زبانه‌هایی امن است که درباره‌شان مطمئنید. هر چیزی که درباره‌اش تردید دارید به مرحلهٔ ۳ می‌رود، نه به سطل زباله.</Catch>
+
+</Section>
+
+<Section id="group" title="۲. زبانه‌های کار امروز را گروه کنید">
+
+گروه‌های زبانه به چند زبانه نام و رنگ می‌دهند و می‌شود آنها را به یک برچسب جمع کرد. Chrome، Edge و Firefox همه این قابلیت را دارند: روی یک زبانه راست‌کلیک کنید و آن را به گروه تازه‌ای اضافه کنید.
+
+برای هر کاری که امروز واقعاً رویش کار می‌کنید یک گروه نگه دارید و گروه‌هایی را که به آنها نگاه نمی‌کنید جمع کنید. گروه جمع‌شده به اندازهٔ یک زبانه جا می‌گیرد. شیوهٔ ذخیره، همگام‌سازی و باز کردن دوبارهٔ گروه‌ها در هر مرورگر فرق دارد؛ [راهنمای گروه‌های زبانه در Chrome](/blog/chrome-tab-groups) جزئیات و محدودیت‌ها را توضیح می‌دهد.
+
+</Section>
+
+<Section id="save" title="۳. زبانه‌های «شاید بعداً» را ذخیره کنید">
+
+این مرحله است که واقعاً نوار زبانه را کوتاه می‌کند. زبانه‌ای که شاید هفتهٔ بعد لازمش داشته باشید لازم نیست باز بماند؛ فقط باید پیدا شدنی باشد.
+
+- **پنجره را نشانک‌گذاری کنید.** <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd></bdi> همهٔ زبانه‌های پنجرهٔ فعلی را در یک پوشهٔ نشانک تازه ذخیره می‌کند. راهنمای ما برای [ذخیرهٔ همهٔ زبانه‌های باز](/blog/save-all-open-tabs) این کار را برای هر مرورگر توضیح می‌دهد.
+- **از مدیر جلسه استفاده کنید.** پنجره‌های کامل را با نام ذخیره می‌کند و با یک کلیک برمی‌گرداند. ببینید [مدیر جلسهٔ مرورگر چه می‌کند](/blog/browser-session-manager) و چه فرقی با نشانک دارد.
+- **بعداً بخوانید.** اگر مقاله است، فهرست خواندن بهتر از زبانه است. مطمئن نیستید صفحه‌ای کجا برود؟ [راهنمای زبانه یا نشانک](/blog/tabs-vs-bookmarks) ما جدولی برای تصمیم‌گیری دارد.
+
+بعد چیزهایی را که ذخیره کردید ببندید. ترفند همین است: ذخیره کردن است که بستن را امن می‌کند.
+
+</Section>
+
+<Section id="schedule" title="۴. یک مرتب‌سازی هفتگی در تقویم بگذارید">
+
+زبانه‌ها دوباره زیاد می‌شوند. یک مرتب‌سازی کوتاه و منظم، بدون نیاز به اراده، تعدادشان را پایین نگه می‌دارد:
+
+1. هفته‌ای یک بار پوشه‌ها یا گروه‌های ذخیره‌شده را باز کنید.
+2. هر چه را دیگر لازم ندارید حذف کنید. اگر یک ماه بازش نکرده‌اید، احتمالاً بعد از این هم باز نمی‌کنید.
+3. پنجره‌هایی را که در طول هفته ذخیره کردید ببندید.
+
+اگر پژوهش بخشی از کارتان است (دانشجویان، تحلیلگران، توسعه‌دهندگانی که مستندات می‌خوانند)، برای هر پروژه یک گروه ذخیره‌شده نگه دارید و وقتی پروژه تمام شد مرتبش کنید، نه زودتر.
+
+</Section>
+
+<Section id="memory" title="بگذارید مرورگر حافظه را آزاد کند">
+
+مرورگرها می‌توانند بدون بستن زبانه‌های بی‌کار، جلوی مصرف حافظه‌شان را بگیرند. زبانه در نوار می‌ماند و وقتی رویش کلیک کنید دوباره بارگیری می‌شود.
+
+<BrowserPanels section="memory">
+<BrowserPanel browser="chrome">
+
+**بهینه‌سازی حافظه** (<bdi dir="ltr">Memory Saver</bdi>) را روشن کنید: **تنظیمات ← عملکرد** (<bdi dir="ltr">Settings → Performance</bdi>)، یا `chrome://settings/performance` را در نوار نشانی جای‌گذاری کنید.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="تنظیمات Chrome، بخش Performance (عملکرد)، با کلید Memory Saver (بهینه‌سازی حافظه)" width={1600} height={524} eager boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">گزینهٔ <bdi dir="ltr">Memory Saver</bdi> (بهینه‌سازی حافظه) در Chrome، خاموش در یک نمایهٔ تازهٔ Chrome 157.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+گزینهٔ <bdi dir="ltr">**Automatically put tabs to sleep**</bdi> را در <bdi dir="ltr">**Settings → System and performance → Performance**</bdi> روشن کنید و انتخاب کنید یک زبانه چقدر صبر کند تا به خواب برود.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="تنظیمات Edge، بخش Performance، با گزینهٔ Automatically put tabs to sleep روشن و تنظیم‌شده روی ۱۵ دقیقه" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">زبانه‌های خواب Edge به‌طور پیش‌فرض روشن‌اند: زبانه‌های غیرفعال پس از ۱۵ دقیقه به خواب می‌روند.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+روی یک زبانه راست‌کلیک کنید و **تخلیهٔ زبانه از حافظه** (<bdi dir="ltr">Unload Tab</bdi>) را بزنید تا حافظه‌اش را دستی آزاد کنید.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>این به رایانه کمک می‌کند، نه به شما. پنجاه زبانهٔ خواب هنوز همان پنجاه زبانه‌اند که باید از نظر بگذرانید. از آن کنار این روال استفاده کنید، نه به جای آن.</Catch>
+
+</Section>
+
+<Section id="tabmerger" title="با TabMerger انجامش دهید">
+
+[TabMerger](/features)، افزونهٔ رایگان ما برای Chrome، Edge و Firefox، مرحله‌های ۳ و ۴ را به چند کلیک تبدیل می‌کند. **هم‌اکنون باز** همهٔ پنجره‌های باز و زبانه‌هایشان را یک‌جا نشان می‌دهد تا کل انبوه زبانه‌ها را یک‌باره ببینید. با **ادغام با وضعیت فعلی** همه را در یک گروه نام‌دار ذخیره کنید، پنجره‌ها را ببندید و هر زبانه‌ای را، چه باز باشد، چه ذخیره‌شده و چه تازه بسته‌شده، با <bdi dir="ltr"><Kbd>Ctrl</Kbd>+<Kbd>K</Kbd></bdi> دوباره پیدا کنید. کند شدن رایانه اغلب اولین نشانهٔ زیاد بودن زبانه‌هاست؛ [ببینید ذخیره و بستن چطور حافظه را آزاد می‌کند](/blog/too-many-tabs-slow-browser).
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-now-open" alt="بخش Now Open (هم‌اکنون باز) در TabMerger با سه پنجرهٔ مرورگر و ۱۸ زبانه، پوستهٔ روشن" darkAlt="بخش Now Open (هم‌اکنون باز) در TabMerger با سه پنجرهٔ مرورگر و ۱۸ زبانه، پوستهٔ تیره" boxes={[{ id: 'now-open-summary', label: 'پنجره‌ها و زبانه‌های باز' }]} source="TabMerger 3.16.1">بخش <bdi dir="ltr">Now Open</bdi> (هم‌اکنون باز): سه پنجره و ۱۸ زبانه، پیش از مرتب‌سازی.</ThemedScreenshot>
+
+برای مرتب‌سازی هفتگی، **تنظیمات ← داده‌ها ← ذخیرهٔ خودکار زبانه‌های باز** می‌تواند زبانه‌های بازتان را طبق یک برنامهٔ زمانی، یا همین که از ۲۰، ۳۰، ۵۰، ۷۵ یا ۱۰۰ زبانهٔ باز بگذرید، به‌صورت یک گروه تازه ذخیره کند. طرح رایگان ۲ ذخیرهٔ خودکار آخر را نگه می‌دارد و آنها جزو سقف ۵ گروه و ۵۰ زبانهٔ آن حساب می‌شوند؛ Pro همه را نگه می‌دارد. برای روالی که نگذارد انبوه زبانه‌ها برگردد، [روال روزانهٔ زبانه‌ها با TabMerger](/blog/tabmerger-daily-workflow) را ببینید.
+
+<ThemedScreenshot src="/blog/manage-too-many-tabs/tm-auto-save-threshold" alt="تنظیمات TabMerger، زبانهٔ Data (داده‌ها): گزینهٔ Auto-save open tabs (ذخیرهٔ خودکار زبانه‌های باز) روشن است و When open tabs pass (وقتی زبانه‌های باز بیشتر شوند از) روی 30 open tabs تنظیم شده، پوستهٔ روشن" darkAlt="تنظیمات TabMerger، زبانهٔ Data (داده‌ها): گزینهٔ Auto-save open tabs (ذخیرهٔ خودکار زبانه‌های باز) روشن است و When open tabs pass (وقتی زبانه‌های باز بیشتر شوند از) روی 30 open tabs تنظیم شده، پوستهٔ تیره" boxes={[{ id: 'threshold', label: 'وقتی زبانه‌های باز بیشتر شوند از' }]} source="TabMerger 3.16.1">گزینهٔ <bdi dir="ltr">Auto-save open tabs</bdi> (ذخیرهٔ خودکار زبانه‌های باز)، تنظیم‌شده تا همین که بیش از ۳۰ زبانه باز شد کار کند.</ThemedScreenshot>
+
+زبانه‌های ذخیره‌شده وقتی از عمری که انتخاب کرده‌اید (۷، ۱۴، ۳۰ یا ۶۰ روز) بگذرند یک نقطهٔ کهربایی هم می‌گیرند، و منوی **⋯** هر گروه گزینهٔ **حذف زبانه‌های تکراری** را دارد.
+
+<InstallCta>رایگان برای Chrome، Edge و Firefox. برای شروع به حساب کاربری نیازی نیست.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="پرسش‌های متداول">
+
+<Faq items={post.faq} />
+
+</Section>

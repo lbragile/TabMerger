@@ -1,0 +1,145 @@
+export const post = {
+  slug: 'tab-management-for-developers',
+  title: '開発者のためのタブ管理：1プロジェクトに1グループ',
+  navTitle: '開発者のためのタブ管理',
+  seoTitle: '開発者向けタブ管理術：プロジェクト・ドキュメント・URLルール',
+  description:
+    'ドキュメント、プルリクエスト、localhost、ダッシュボード。プロジェクトごとに TabMerger のグループを1つ用意し、URLルールでタブを自動で振り分け、どのドキュメントもショートカット1つで検索できる、開発者向けのタブ整理術です。',
+  shareSummary: 'プロジェクトごとに1グループ。URLルールがタブを自動で振り分け、ドキュメントはショートカット1つで。',
+  dek: 'ブラウザは IDE の半分。だから同じ構造にしましょう。プロジェクトごとに1グループ、振り分けは自動で。',
+  published: '2026-12-08',
+  updated: '2026-12-08',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'URLルールは、一致した新しいタブをグループにコピーします。* はワイルドカードです。', source: 'TabMerger 3.16.1' },
+    { text: 'ルールは http:// や https:// を除いたアドレスと照合するので、localhost:3000/* も使えます。', source: 'TabMerger 3.16.1 のソースコード' },
+    { text: '無料プランの URLルールは3つまで。Pro は無制限です。', source: 'TabMerger の料金', href: '/pricing' },
+    { text: 'Ctrl+K では group:、window:、tag:、closed: で絞り込めます。', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: '開発者はブラウザのタブをどう整理すればいいですか？',
+      answer:
+        'プロジェクトやチケットごとに TabMerger のグループを1つ用意し、URLルールで新しいタブを正しいグループに自動で振り分け、Ctrl+K の検索でどのドキュメントにもすぐ移動します。タスクを切り替えるときは、プロジェクトのタブを保存してから閉じましょう。',
+    },
+    {
+      question: 'URL に応じてタブを自動でグループに振り分けられますか？',
+      answer:
+        'はい、TabMerger の URLルールで可能です。github.com/your-org/* のようなパターンを設定すると、一致する新しいタブがすべてグループに送られます。タブは開いたままで、グループにはそのコピーが保存されます。無料プランはルール3つまで、Pro は無制限です。',
+    },
+    {
+      question: 'localhost でも使えますか？',
+      answer: 'はい。ルールは http:// や https:// の部分を無視するので、localhost:3000/* のようなパターンで開発サーバーのページに一致します。',
+    },
+    {
+      question: 'ドキュメントのタブをすばやく見つけるには？',
+      answer: 'TabMerger で Ctrl+K を押し、タイトルやアドレスの一部を入力します。group:"Docs" を加えると、1つのグループだけを検索できます。',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp', alt: 'TabMerger の「URL Rules」（URLルール）ダイアログ。github.com/lbragile/* のルールでタブを「Work」グループに送る設定。ライトテーマ' },
+    { src: '/blog/tab-management-for-developers/tm-url-rules-dark.webp', alt: 'TabMerger の「URL Rules」（URLルール）ダイアログ。github.com/lbragile/* のルールでタブを「Work」グループに送る設定。ダークテーマ' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-light.webp', alt: '「Work」グループに、URLルールによって新しく開いた「Issues」タブが追加された様子。ライトテーマ' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-dark.webp', alt: '「Work」グループに、URLルールによって新しく開いた「Issues」タブが追加された様子。ダークテーマ' },
+  ],
+  tags: ['developers', 'tab-management', 'tab-manager', 'browser-productivity'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp' },
+  ogImage: { src: '/blog/tab-management-for-developers/og.png', alt: '開発者のためのタブ管理：TabMerger のガイド。URLルールが GitHub のタブをグループに振り分けている' },
+  toc: [
+    { id: 'quick', label: '簡単な答え' },
+    { id: 'setup', label: '1プロジェクトに1グループ' },
+    { id: 'rules', label: 'タブを自動で振り分ける' },
+    { id: 'find', label: 'ドキュメントをすぐ見つける' },
+    { id: 'switch', label: 'プロジェクトをすっきり切り替える' },
+    { id: 'faq', label: 'よくある質問' },
+  ],
+}
+
+<QuickAnswer>
+
+プロジェクトごとに [TabMerger](/features) のグループを用意し、振り分けは **URLルール**（URL rules）に任せましょう。`github.com/your-org/*` や `localhost:3000/*` のようなパターンを設定すれば、一致する新しいタブが自動で正しいグループに入ります。どのドキュメントも <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> で見つかり、タスクを切り替えるときはプロジェクトのウィンドウを保存して閉じるだけ。何もなくさず、探し回る必要もありません。
+
+</QuickAnswer>
+
+<InstallCta>プロジェクトごとに1グループ、振り分けは URLルールにおまかせ。Chrome、Edge、Firefox 向けに無料。</InstallCta>
+
+<Section id="setup" title="開発者はタブをどう整理すべき？">
+
+コードと同じように、プロジェクト単位で整理します。典型的なプロジェクトには4種類のタブがあります。
+
+<ComparisonTable
+  head={['種類', '例', '置き場所']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['作業中のもの', 'プルリクエスト、Issue、チケット', 'プロジェクトのグループの専用ウィンドウ'],
+    ['ドキュメントとリファレンス', 'API ドキュメント、MDN、仕様書', 'プロジェクトのグループ内の「Docs」ウィンドウ'],
+    ['ローカルとステージング', 'localhost、プレビューデプロイ', '実行中は開いておき、URLルールで保存'],
+    ['ダッシュボード', 'CI、ログ、監視', '固定したウィンドウ、またはプロジェクトのグループ'],
+  ]}
+/>
+
+TabMerger では1つのグループに複数のウィンドウを入れられるので、1つのプロジェクトのグループで「PRs」「Docs」「Local」を分けておけます。ウィンドウの名前は **⋯** メニューから変更でき、グループにはブランチ名やチケット番号をメモとして残せます。
+
+</Section>
+
+<Section id="rules" title="タブを正しいグループに自動で振り分けるには？">
+
+TabMerger の **URLルール** はタブを見張っています。タブがルールに一致するアドレスを開くか読み込みを終えると、そのルールのグループにコピーが保存されます。タブ自体は開いたままです。
+
+1. **設定 → 一般**（Settings → General）を開き、**URLルール** の **管理**（Manage）を押します。
+2. **ルールを追加**（Add rule）を押し、パターンを入力してグループを選びます。`*` はワイルドカードで、最初に一致したルールが適用されます。
+3. **保存**（Save）を押します。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="URLルールの動作例" steps={[{ title: 'ルール' }, { title: '結果' }]}>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-url-rules" alt="TabMerger の「URL Rules」（URLルール）ダイアログ。github.com/lbragile/* のルールでタブを「Work」グループに送る設定。ライトテーマ" darkAlt="TabMerger の「URL Rules」（URLルール）ダイアログ。github.com/lbragile/* のルールでタブを「Work」グループに送る設定。ダークテーマ" boxes={[{ id: 'rule', label: 'パターン' }]} source="TabMerger 3.16.1">ルールは1つだけ：github.com/lbragile/ 以下はすべて「Work」へ。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-rule-result" alt="「Work」グループに、URLルールによって新しく開いた「Issues」タブが追加された様子。ライトテーマ" darkAlt="「Work」グループに、URLルールによって新しく開いた「Issues」タブが追加された様子。ダークテーマ" boxes={[{ id: 'new-tab', label: 'ルールで追加' }]} source="TabMerger 3.16.1">リポジトリの「Issues」ページを開くと、自動で「Work」に振り分けられました。</ThemedScreenshot>
+</Carousel>
+
+使いやすいパターンの例：
+
+- `github.com/your-org/*`：プロジェクトのすべてのリポジトリ、PR、Issue
+- `localhost:3000/*`：開発サーバー（ルールは `http://` と `https://` を無視します）
+- `docs.your-framework.dev/*`：何度も開き直すドキュメント
+
+無料プランのルールは3つまで、[Pro](/pricing) は無制限です。パターンのオプションやルールの順序は、[URLルールでタブを自動で振り分ける方法](/blog/auto-sort-tabs-with-url-rules)で詳しく紹介しています。
+
+</Section>
+
+<Section id="find" title="ドキュメントのページをショートカット1つで見つけるには？">
+
+TabMerger で <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> を押し、タイトルやアドレスの一部を数文字入力します。開いているタブ、保存したタブ、最近閉じたタブがすべて検索対象です。`group:"Docs" fetch`、`window:"Local"`、1時間前に閉じたページなら `closed:` のようにフィルターで絞り込めます。詳しくは[数百のタブから1つを見つける方法](/blog/find-a-tab-among-hundreds)をご覧ください。
+
+グループのメニューには、長いドキュメントのウィンドウに便利な **URL順に並べ替え**（Sort by URL）や、同じ Issue が5つ開いているときの **重複タブを削除**（Deduplicate tabs）もあります。
+
+</Section>
+
+<Section id="switch" title="文脈を失わずにプロジェクトを切り替えるには？">
+
+1. プロジェクトのグループで **現在の内容と統合**（Merge with current）を選び、開いているウィンドウを保存します。保存済みの内容を上書きしたいときは **現在の内容で置き換え**（Replace with current）を使います。
+2. ウィンドウを閉じます。
+3. その作業に戻るときはグループを開き直すだけ。PR もドキュメントもダッシュボードも、離れたときのままです。
+
+<InstallCta>Chrome、Edge、Firefox 向けに無料。アカウントなしで始められます。</InstallCta>
+
+キーボード中心で作業したい方は[タブのキーボード ショートカット一覧](/blog/tab-keyboard-shortcuts)を、全般的な整理術は[タブが多すぎるときの整理術](/blog/manage-too-many-tabs)をご覧ください。
+
+</Section>
+
+<Section id="faq" title="よくある質問">
+
+<Faq items={post.faq} />
+
+</Section>

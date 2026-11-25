@@ -1,0 +1,173 @@
+export const post = {
+  slug: 'onetab-alternatives',
+  title: 'جایگزین‌های OneTab، و چطور فهرست‌هایتان را بدون از دست دادن حتی یک زبانه منتقل کنید',
+  navTitle: 'جایگزین‌های OneTab و روش جابه‌جایی',
+  seoTitle: 'جایگزین OneTab (با همگام‌سازی) و روش برون‌بری فهرست‌ها',
+  description:
+    'دنبال جایگزین OneTab هستید؟ OneTab امروز چه می‌کند (حالا همگام‌سازی هم دارد)، کدام ابزارها کارهایی را می‌کنند که OneTab نمی‌کند، و چطور فهرست‌هایتان را برون‌بری و جای دیگری درون‌ریزی کنید.',
+  shareSummary: 'جایگزین‌های OneTab، همگام‌سازی تازهٔ OneTab و راهی امن برای جابه‌جایی فهرست‌هایتان.',
+  dek: 'پیش از حذف هر چیزی برون‌بری کنید: حذف OneTab فهرستش را پاک می‌کند.',
+  published: '2026-11-27',
+  updated: '2026-11-27',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'OneTab قابلیت Backup & Sync پولی با رمزگذاری سرتاسری دارد.',
+      source: 'one-tab.com/sync',
+      href: 'https://www.one-tab.com/sync',
+    },
+    {
+      text: 'حذف OneTab زبانه‌های ذخیره‌شده را پاک می‌کند.',
+      source: 'one-tab.com',
+      href: 'https://www.one-tab.com/',
+    },
+    { text: 'یک مجوز OneTab تا ۱۰۰ مرورگر یا نمایه را همگام می‌کند.', source: 'one-tab.com/sync' },
+    { text: 'TabMerger هر فهرست OneTab را به گروهی جداگانه تبدیل می‌کند.', source: 'آزموده در TabMerger 3.16.1، ۲۰ نوامبر ۲۰۲۶' },
+  ],
+  faq: [
+    {
+      question: 'آیا جایگزینی برای OneTab با همگام‌سازی هست؟',
+      answer:
+        'بله. TabMerger Pro گروه‌ها و نشست‌های شما را با رمزگذاری سرتاسری در Chrome و Edge و Firefox همگام می‌کند. Toby و Workona و Tab Session Manager هم همگام‌سازی دارند، و OneTab حالا Backup & Sync پولی ارائه می‌دهد.',
+    },
+    {
+      question: 'چطور از OneTab برون‌بری کنم؟',
+      answer:
+        'OneTab را باز کنید، «درون‌ریزی و برون‌ریزی» را انتخاب کنید و متن را کپی کنید. هر خط یک نشانی و یک عنوان است و یک خط خالی فهرست‌ها را از هم جدا می‌کند. آن را به‌صورت فایل .txt ذخیره کنید.',
+    },
+    {
+      question: 'اگر OneTab را حذف کنم، زبانه‌هایم از دست می‌روند؟',
+      answer: 'بله. خود وب‌سایت OneTab هشدار می‌دهد که حذف آن زبانه‌های ذخیره‌شده را پاک می‌کند. اول برون‌بری کنید و فایل را نگه دارید.',
+    },
+    {
+      question: 'می‌توانم OneTab را به TabMerger درون‌ریزی کنم؟',
+      answer: 'بله. تنظیمات ← داده‌ها ← درون‌ریزی فایل، فایل .txt برون‌بری را انتخاب و تأیید کنید. هر فهرست OneTab همراه با عنوان‌ها به یک گروه TabMerger تبدیل می‌شود.',
+    },
+  ],
+  images: [
+    { src: '/blog/onetab-alternatives/tm-settings-import-light.webp', alt: 'تنظیمات TabMerger، زبانهٔ Data (داده‌ها)، با دکمهٔ Import file (درون‌ریزی فایل) زیر Import & export (درون‌ریزی و برون‌بری)، پوستهٔ روشن' },
+    { src: '/blog/onetab-alternatives/tm-settings-import-dark.webp', alt: 'تنظیمات TabMerger، زبانهٔ Data (داده‌ها)، با دکمهٔ Import file (درون‌ریزی فایل) زیر Import & export (درون‌ریزی و برون‌بری)، پوستهٔ تیره' },
+    { src: '/blog/onetab-alternatives/tm-import-confirm-light.webp', alt: 'پنجرهٔ گفت‌وگوی TabMerger که برای فایل onetab.txt می‌پرسد Import 2 groups? (2 گروه درون‌ریزی شوند؟)، پوستهٔ روشن' },
+    { src: '/blog/onetab-alternatives/tm-import-confirm-dark.webp', alt: 'پنجرهٔ گفت‌وگوی TabMerger که برای فایل onetab.txt می‌پرسد Import 2 groups? (2 گروه درون‌ریزی شوند؟)، پوستهٔ تیره' },
+    { src: '/blog/onetab-alternatives/tm-imported-groups-light.webp', alt: 'نوار کناری TabMerger با گروه‌های تازهٔ Imported 1 و Imported 2 که دومی چهار زبانه را نشان می‌دهد، پوستهٔ روشن' },
+    { src: '/blog/onetab-alternatives/tm-imported-groups-dark.webp', alt: 'نوار کناری TabMerger با گروه‌های تازهٔ Imported 1 و Imported 2 که دومی چهار زبانه را نشان می‌دهد، پوستهٔ تیره' },
+  ],
+  tags: ['comparison', 'tab-manager', 'save-tabs', 'session-management'],
+  sources: [
+    { title: 'OneTab', publisher: 'one-tab.com', url: 'https://www.one-tab.com/', checked: '2026-11-20' },
+    { title: 'OneTab Backup & Sync', publisher: 'one-tab.com', url: 'https://www.one-tab.com/sync', checked: '2026-11-20' },
+    {
+      title: 'OneTab',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/onetab/chphlpgkkbolifaimnlloiipkdnihall',
+      checked: '2026-11-20',
+    },
+    { title: 'Session Buddy', publisher: 'sessionbuddy.com', url: 'https://sessionbuddy.com/', checked: '2026-11-20' },
+    {
+      title: 'Tab Session Manager',
+      publisher: 'Chrome Web Store',
+      url: 'https://chromewebstore.google.com/detail/tab-session-manager/iaiomicjabeggjcfkbimgmglanimpnae',
+      checked: '2026-11-20',
+    },
+    { title: 'Toby pricing', publisher: 'gettoby.com', url: 'https://www.gettoby.com/pricing', checked: '2026-11-20' },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/onetab-alternatives/tm-imported-groups-light.webp' },
+  ogImage: { src: '/blog/onetab-alternatives/og.png', alt: 'کارت عنوان «OneTab alternatives, and how to move your lists without losing a tab»: راهنمای TabMerger، همراه با دو فهرست درون‌ریزی‌شده از OneTab' },
+  toc: [
+    { id: 'quick', label: 'پاسخ کوتاه' },
+    { id: 'today', label: 'OneTab امروز چه می‌کند' },
+    { id: 'alternatives', label: 'جایگزین‌ها' },
+    { id: 'export', label: 'برون‌بری از OneTab' },
+    { id: 'import', label: 'درون‌ریزی به TabMerger' },
+    { id: 'faq', label: 'پرسش‌های متداول' },
+  ],
+}
+
+<QuickAnswer>
+
+اول برون‌بری کنید: در OneTab گزینهٔ **درون‌ریزی و برون‌ریزی** (<bdi dir="ltr">Import & Export</bdi>) را انتخاب کنید، متن را کپی کنید و آن را به‌صورت فایل <bdi dir="ltr">`.txt`</bdi> ذخیره کنید، چون حذف OneTab فهرستش را پاک می‌کند. سپس آن را به **TabMerger** درون‌ریزی کنید؛ TabMerger هر فهرست را به گروهی نام‌دار تبدیل می‌کند و چیزهایی را اضافه می‌کند که یک فهرست تنها ندارد: پنجره‌هایی که جدا می‌مانند، یک جست‌وجو در زبانه‌های باز، ذخیره‌شده و اخیراً بسته‌شده، ذخیرهٔ خودکار، و همگام‌سازی با رمزگذاری سرتاسری در Chrome و Edge و Firefox. گزینه‌های دیگر: <bdi dir="ltr">**Tab Session Manager**</bdi> برای نشست‌هایی که خودکار ذخیره می‌شوند، <bdi dir="ltr">**Session Buddy**</bdi> برای بازیابی محلی پس از کرش، و **Toby** برای یک تختهٔ بصری.
+
+</QuickAnswer>
+
+<InstallCta>فهرست‌های OneTab را به گروه‌های نام‌دار و جست‌وجوپذیر بیاورید. رایگان برای Chrome و Edge و Firefox.</InstallCta>
+
+<Section id="today" title="OneTab امروز چه می‌کند؟">
+
+بسیاری از مطلب‌ها دربارهٔ OneTab قدیمی شده‌اند، پس این همان چیزی است که وب‌سایت خودش می‌گوید (بررسی‌شده در ۲۰ نوامبر ۲۰۲۶):
+
+- یک کلیک زبانه‌هایتان را برای صرفه‌جویی در حافظه به یک فهرست تبدیل می‌کند. می‌توانید آن‌ها را یکی‌یکی یا همه را با هم بازیابی کنید.
+- فهرست‌ها پس از بستن OneTab، راه‌اندازی دوبارهٔ مرورگر یا رایانه، و کرش مرورگر باقی می‌مانند.
+- روی Chrome و Firefox و Edge و Safari کار می‌کند و پوشه، یادداشت، و درون‌ریزی و برون‌بری دارد.
+- **حالا همگام‌سازی دارد.** <bdi dir="ltr">Backup & Sync</bdi> یک اشتراک سالانهٔ پولی است: تغییرات در مرورگرهای دیگرتان نمایش داده می‌شوند و یک پشتیبان ابری خودکار با رمزگذاری سرتاسری هم دارد. یک مجوز تا ۱۰۰ مرورگر یا نمایه را پوشش می‌دهد، و اگر اشتراک را متوقف کنید زبانه‌هایتان می‌مانند؛ فقط همگام‌سازی متوقف می‌شود.
+- **حذف آن زبانه‌هایتان را پاک می‌کند.** دقیقاً به همین دلیل، یادداشت عیب‌یابی OneTab هشدار می‌دهد که برای رفع مشکل آن را دوباره نصب نکنید.
+
+پس همگام‌سازی به‌تنهایی دیگر این دو را از هم جدا نمی‌کند. چیزی که TabMerger اضافه می‌کند ساختار است: گروه‌هایی که پنجره‌ها را جدا نگه می‌دارند، یک جست‌وجو در زبانه‌های باز، ذخیره‌شده و اخیراً بسته‌شده، ذخیرهٔ خودکار زبانه‌های باز، و همان ابزار در Chrome و Edge و Firefox.
+
+</Section>
+
+<Section id="alternatives" title="کدام جایگزین OneTab را انتخاب کنید؟">
+
+<ComparisonTable
+  head={['اگر می‌خواهید', 'سراغ این بروید', 'چرا']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['گروه‌هایی که چند پنجره را در بر می‌گیرند، یک جست‌وجو، همگام‌سازی رمزگذاری‌شده', 'TabMerger', 'گروه‌های نام‌دار، جست‌وجو در زبانه‌های باز، ذخیره‌شده و بسته‌شده، ذخیرهٔ خودکار؛ همگام‌سازی در Pro، همیشه با رمزگذاری سرتاسری'],
+    ['همگام‌سازی رایگان', 'Tab Session Manager', 'همگام‌سازی ابری، ذخیرهٔ خودکار هنگام بستن و طبق زمان‌بندی؛ بدون طرح پولی'],
+    ['بازیابی رایگان پس از کرش، بدون حساب کاربری', 'Session Buddy', 'تاریخچهٔ نشست‌ها روی دستگاه شما؛ بدون همگام‌سازی'],
+    ['یک تختهٔ بصری', 'Toby', 'مجموعه‌ها در صفحهٔ زبانهٔ جدید؛ رایگان تا ۶۰ زبانهٔ ذخیره‌شده'],
+    ['بسته شدن خودکار زبانه‌های بی‌استفاده', 'Tab Wrangler', 'زبانه‌های بی‌استفاده را می‌بندد و برای باز کردن دوباره نگه می‌دارد'],
+  ]}
+/>
+
+هر کدام از این ابزارها بر اساس وب‌سایت یا صفحهٔ فروشگاه خودش توصیف شده است. برای مقایسهٔ ده ابزار کنار هم، [مقایسهٔ بهترین افزونه‌های مدیریت زبانه](/blog/best-tab-manager-extensions) را ببینید؛ برای اینکه بدانید نشست چیست و چرا مهم است، [مدیر نشست مرورگر چه می‌کند](/blog/browser-session-manager) را ببینید. قیمت‌ها در [صفحهٔ مقایسهٔ ما](/compare) آمده است.
+
+</Section>
+
+<Section id="export" title="چطور فهرست‌هایم را از OneTab برون‌بری کنم؟">
+
+1. OneTab را باز کنید (با نماد آن در نوار ابزار، یا صفحهٔ OneTab اگر سنجاق شده است).
+2. گزینهٔ **درون‌ریزی و برون‌ریزی** (<bdi dir="ltr">Import & Export</bdi>) را انتخاب کنید.
+3. متن کادر برون‌بری را کپی کنید. OneTab برای این کار دکمهٔ **کپی به کلیپ‌بورد** (<bdi dir="ltr">Copy to clipboard</bdi>) دارد.
+4. آن را در یک ویرایشگر متن ساده (<bdi dir="ltr">Notepad</bdi>، یا <bdi dir="ltr">TextEdit</bdi> در حالت متن ساده) بچسبانید و با نام <bdi dir="ltr">`onetab.txt`</bdi> ذخیره کنید.
+
+قالب ساده است: هر زبانه در یک خط به شکل <bdi dir="ltr">`address | title`</bdi>، و یک خط خالی بین فهرست‌ها. یک خط این شکلی است: <bdi dir="ltr">`https://nodejs.org/en/docs | Documentation | Node.js`</bdi>.
+
+<Catch>برون‌بری شامل نشانی‌ها و عنوان‌هاست. نام فهرست‌ها، یادداشت‌ها و پوشه‌ها منتقل نمی‌شوند، پس پیش از جابه‌جایی یادداشت کنید کدام فهرست مربوط به چه بود.</Catch>
+
+{/* Screenshot still to capture by hand (needs OneTab installed): OneTab's Import & Export page. */}
+
+</Section>
+
+<Section id="import" title="چطور برون‌بری OneTab را به TabMerger درون‌ریزی کنم؟">
+
+[TabMerger](/features)، افزونهٔ رایگان ما برای Chrome و Edge و Firefox، فایل OneTab را مستقیم می‌خواند. هیچ چیزی بارگذاری نمی‌شود: فایل در مرورگر خودتان خوانده می‌شود.
+
+1. TabMerger را باز کنید، سپس **تنظیمات ← داده‌ها** (<bdi dir="ltr">Settings → Data</bdi>).
+2. زیر **درون‌ریزی و برون‌بری** (<bdi dir="ltr">Import & export</bdi>)، روی **درون‌ریزی فایل** (<bdi dir="ltr">Import file</bdi>) بزنید و فایل <bdi dir="ltr">`.txt`</bdi> خود را انتخاب کنید.
+3. تأیید کنید. هر فهرست OneTab به گروهی جداگانه با نام «<bdi dir="ltr">Imported 1</bdi>»، «<bdi dir="ltr">Imported 2</bdi>» و به همین ترتیب تبدیل می‌شود و عنوان زبانه‌ها حفظ می‌شود.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="درون‌ریزی برون‌بری OneTab" steps={[{ title: 'درون‌ریزی فایل' }, { title: 'تأیید' }, { title: 'گروه‌های شما' }]}>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-settings-import" alt="تنظیمات TabMerger، زبانهٔ Data (داده‌ها)، با دکمهٔ Import file (درون‌ریزی فایل) زیر Import & export (درون‌ریزی و برون‌بری)، پوستهٔ روشن" darkAlt="تنظیمات TabMerger، زبانهٔ Data (داده‌ها)، با دکمهٔ Import file (درون‌ریزی فایل) زیر Import & export (درون‌ریزی و برون‌بری)، پوستهٔ تیره" boxes={[{ id: 'import-file', label: 'درون‌ریزی فایل' }]} source="TabMerger 3.16.1"><bdi dir="ltr">Settings → Data</bdi> (تنظیمات ← داده‌ها): <bdi dir="ltr">Import file</bdi> (درون‌ریزی فایل) فایل‌های <bdi dir="ltr">.txt</bdi> از OneTab، نشانک‌های <bdi dir="ltr">.html</bdi> و فایل‌های <bdi dir="ltr">.json</bdi> از TabMerger را می‌پذیرد.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-import-confirm" alt="پنجرهٔ گفت‌وگوی TabMerger که برای فایل onetab.txt می‌پرسد Import 2 groups? (2 گروه درون‌ریزی شوند؟)، پوستهٔ روشن" darkAlt="پنجرهٔ گفت‌وگوی TabMerger که برای فایل onetab.txt می‌پرسد Import 2 groups? (2 گروه درون‌ریزی شوند؟)، پوستهٔ تیره" boxes={[{ id: 'import-confirm', label: 'درون‌ریزی' }]} source="TabMerger 3.16.1">دو فهرست OneTab، دو گروه، که کنار گروه‌هایی که از قبل دارید اضافه شده‌اند.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/onetab-alternatives/tm-imported-groups" alt="نوار کناری TabMerger با گروه‌های تازهٔ Imported 1 و Imported 2 که دومی چهار زبانه را نشان می‌دهد، پوستهٔ روشن" darkAlt="نوار کناری TabMerger با گروه‌های تازهٔ Imported 1 و Imported 2 که دومی چهار زبانه را نشان می‌دهد، پوستهٔ تیره" boxes={[{ id: 'imported', label: 'گروه‌های درون‌ریزی‌شده' }]} source="TabMerger 3.16.1">فهرست‌های درون‌ریزی‌شده به شکل گروه. نامشان را از منوی هر گروه تغییر دهید.</ThemedScreenshot>
+</Carousel>
+
+همهٔ قالب‌هایی که TabMerger درون‌ریزی می‌کند در [درون‌ریزی زبانه‌ها به TabMerger](/blog/import-tabs-into-tabmerger) توضیح داده شده است. چند نکته که خوب است بدانید:
+
+- خط‌هایی که نشانی وب کامل نیستند (یا اسکریپتی را اجرا می‌کنند) نادیده گرفته می‌شوند، و TabMerger در پایان درون‌ریزی می‌گوید چند خط بودند.
+- در طرح Free، درون‌ریزی‌ای که شما را از ۵ گروه یا ۵۰ زبانه فراتر ببرد، پیش از اضافه شدن هر چیزی متوقف می‌شود. Pro محدودیتی ندارد.
+- تا گروه‌ها را بررسی نکرده‌اید OneTab را نصب نگه دارید. بعد از آن می‌توانید حذفش کنید.
+
+<InstallCta>رایگان برای Chrome و Edge و Firefox. فهرست‌های OneTab را هم با خودتان بیاورید.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="پرسش‌های متداول">
+
+<Faq items={post.faq} />
+
+</Section>

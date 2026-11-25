@@ -1,0 +1,150 @@
+export const post = {
+  slug: 'tabs-as-a-to-do-list',
+  title: 'Pakai tab sebagai daftar tugas, tanpa membiarkannya terbuka',
+  navTitle: 'Tab sebagai daftar tugas',
+  seoTitle: 'Jadikan tab browser daftar tugas (to-do list) dengan catatan dan pengingat',
+  description:
+    'Simpan tab “nanti saya baca” sebagai daftar tugas sungguhan di TabMerger: catatan di setiap tab, pengingat yang muncul saat waktunya tiba, judul yang jelas, dan satu klik untuk membersihkan tab yang terlalu lama dibiarkan.',
+  shareSummary: 'Catatan, pengingat, dan pembersihan tab usang: daftar tugas dari tab, dengan tabnya ditutup.',
+  dek: 'Setiap tab yang terbuka adalah janji untuk kembali. Tulis alasannya, tentukan waktunya, lalu tutup.',
+  published: '2026-12-16',
+  updated: '2026-12-16',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Pengingat: dalam 30 menit, 1 jam, 3 jam, 24 jam, atau pada tanggal dan jam tertentu.', source: 'TabMerger 3.16.1' },
+    { text: 'Pengingat menampilkan notifikasi browser; mengekliknya membuka tab.', source: 'TabMerger 3.16.1, kode sumber' },
+    { text: 'Tab yang disimpan lebih dari 7, 14, 30, atau 60 hari lalu (Anda yang memilih) ditandai usang.', source: 'TabMerger 3.16.1' },
+    { text: 'Catatan, pengingat, dan ganti nama semuanya ada di paket Gratis.', source: 'Harga TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Bagaimana cara menjadikan tab sebagai daftar tugas?',
+      answer:
+        'Simpan tab ke grup TabMerger seperti “Minggu ini”, tambahkan catatan di setiap tab tentang apa yang harus dilakukan, pasang pengingat pada yang punya tenggat, dan hapus tab setelah selesai. Lalu tutup tabnya: daftarnya tetap ada di TabMerger.',
+    },
+    {
+      question: 'Bisakah saya mendapat pengingat untuk kembali ke sebuah tab?',
+      answer:
+        'Bisa. Klik kanan tab yang tersimpan dan pilih Ingatkan saya…: pilih 30 menit, 1 jam, 3 jam, Besok (24 jam dari sekarang), atau tanggal dan jam, dengan catatan opsional. Notifikasi browser muncul pada waktu itu, dan mengekliknya membuka tab.',
+    },
+    {
+      question: 'Apa itu tab usang?',
+      answer:
+        'Tab yang Anda simpan lebih lama dari ambang batas usang Anda (30 hari, kecuali Anda mengubahnya di Pengaturan → Umum). Tab itu mendapat titik kecil, dan header grup menawarkan untuk menghapus semuanya sekaligus.',
+    },
+    {
+      question: 'Apakah pengingat berfungsi di perangkat saya yang lain?',
+      answer: 'Pengingat memberi tahu Anda di browser tempat Anda memasangnya. Dengan Pro, tab dan waktu pengingatnya tersinkron ke perangkat Anda yang lain bersama grupnya.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp', alt: 'Grup “This week” dengan catatan di satu tab, tab yang diganti namanya dengan pengingat, dan dua tab usang, tema terang' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-dark.webp', alt: 'Grup “This week” dengan catatan di satu tab, tab yang diganti namanya dengan pengingat, dan dua tab usang, tema gelap' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-light.webp', alt: 'Opsi pengingat TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Besok), tanggal dan jam, serta catatan, tema terang' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-dark.webp', alt: 'Opsi pengingat TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Besok), tanggal dan jam, serta catatan, tema gelap' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'research'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp' },
+  ogImage: { src: '/blog/tabs-as-a-to-do-list/og.png', alt: 'Pakai tab sebagai daftar tugas: grup TabMerger dengan catatan, pengingat, dan tab usang' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'problem', label: 'Tab sebagai janji' },
+    { id: 'why', label: 'Mengapa cara kerjanya begini' },
+    { id: 'steps', label: 'Susun daftarnya' },
+    { id: 'remind', label: 'Pasang pengingat' },
+    { id: 'benefit', label: 'Yang Anda dapatkan' },
+    { id: 'habits', label: 'Kebiasaan baik' },
+    { id: 'plans', label: 'Gratis vs Pro' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Simpan tab “nanti saja” Anda ke grup [TabMerger](/features) seperti “Minggu ini”. Klik kanan sebuah tab untuk **Tambah catatan** (Add note) berisi apa yang harus dilakukan, **Ingatkan saya…** (Remind me…) untuk menentukan kapan, atau **Ganti nama tab** (Rename tab) untuk judul yang terbaca seperti tugas. Hapus tab setelah selesai. Tab yang terlalu lama dibiarkan mendapat titik usang, dan satu tombol di header grup membersihkannya. Lalu tutup tabnya: daftarnya ada di TabMerger, bukan di bilah tab Anda.
+
+</QuickAnswer>
+
+<InstallCta>Daftar tugas dari tab, dengan tabnya ditutup. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+<Section id="problem" title="Setiap tab yang terbuka adalah janji">
+
+Artikel yang harus dibaca sebelum Kamis. Issue yang perlu dipilah sebelum stand-up. Jadwal kereta yang perlu dicek setelah tanggalnya pasti. Masing-masing tetap terbuka karena menutupnya terasa seperti melupakannya. Seminggu kemudian jumlahnya empat puluh, tak ada yang ingat kenapa separuhnya ada di sana, dan yang penting malah tertutup yang lain.
+
+Tab tidak bisa memberi tahu kenapa Anda membukanya atau kapan tenggatnya. Daftar tugas bisa.
+
+</Section>
+
+<Section id="why" title="Mengapa alat daftar tugas TabMerger bekerja seperti ini">
+
+- **Catatan menempel di tab.** Catatan terikat pada tab itu sendiri, jadi alasannya ikut bersama tautan: ke sesi, cadangan, dan ekspor, serta ke perangkat Anda yang lain dengan Pro.
+- **Judul yang terbaca seperti tugas.** **Ganti nama tab** memberi tab judul buatan Anda, ditandai “diganti nama”, dan **Atur ulang ke judul asli** (Reset to original title) membatalkannya. “Pilah issue baru” adalah tugas; “Issues · lbragile/TabMerger” adalah nama halaman.
+- **Pengingat yang tak terlewat.** Pada waktu yang Anda pilih, browser menampilkan notifikasi berisi judul tab dan catatan Anda. Notifikasi tetap di layar sampai Anda menanganinya, dan mengekliknya membuka tab. Pengingat dipasang ulang setelah browser dimulai ulang, jadi restart tidak menghilangkannya.
+- **Usang artinya Anda menyimpannya beberapa waktu lalu.** Tab yang disimpan lebih lama dari ambang batas Anda (7, 14, 30, atau 60 hari; 30 kecuali Anda mengubahnya) mendapat titik berwarna grupnya, dan header grup menampilkan **Hapus N tab usang** (Remove N stale tabs). Tab “suatu hari nanti” yang lama bersih dengan satu klik.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-todo-group" alt="Grup “This week” dengan catatan di satu tab, tab yang diganti namanya dengan pengingat, dan dua tab usang, tema terang" darkAlt="Grup “This week” dengan catatan di satu tab, tab yang diganti namanya dengan pengingat, dan dua tab usang, tema gelap" boxes={[{ id: 'note', label: 'Catatan di tab' }, { id: 'reminder', label: 'Pengingat terpasang' }, { id: 'stale', label: 'Bersihkan tab usang' }]} source="TabMerger 3.16.1">Daftar minggu ini: kenapa, kapan, dan apa yang sudah menunggu terlalu lama.</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="Susun daftarnya">
+
+1. Buat grup yang dinamai sesuai rentang waktunya, seperti “Minggu ini” (“This week” di tangkapan layar), dengan **Tambah Grup** (Add Group) di bilah samping.
+2. Seret tab dari **Sedang Terbuka** (Now Open) ke grup itu. Tab yang terbuka tertutup dan salinannya disimpan (Batalkan mengembalikannya).
+3. Klik kanan setiap tab: **Tambah catatan** untuk apa yang harus dilakukan, **Ganti nama tab** untuk judul seperti tugas.
+4. Beri bintang pada jendela atau grup yang sedang Anda kerjakan, agar tetap di atas.
+5. Setelah tugas selesai, klik kanan tab dan pilih **Hapus tab** (Remove tab).
+
+</Section>
+
+<Section id="remind" title="Pasang pengingat">
+
+Klik kanan tab dan pilih **Ingatkan saya…**. Pilih **30 menit**, **1 jam**, **3 jam**, atau **Besok** (24 jam dari sekarang), atau atur tanggal dan jam; tambahkan catatan jika mau. Jam kecil di tab menunjukkan ada pengingat; klik kanan lagi untuk **Edit pengingat** (Edit reminder) atau **Hapus pengingat** (Clear reminder).
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-reminder" alt="Opsi pengingat TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Besok), tanggal dan jam, serta catatan, tema terang" darkAlt="Opsi pengingat TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Besok), tanggal dan jam, serta catatan, tema gelap" boxes={[{ id: 'remind-in', label: 'Ingatkan saya dalam…' }]} source="TabMerger 3.16.1">Waktu cepat atau waktu yang pasti, plus catatan untuk diri Anda nanti.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Yang Anda dapatkan">
+
+Bilah tab Anda hanya berisi apa yang sedang Anda kerjakan saat ini. Semua yang lain punya alasan yang tertulis di sampingnya dan, bila perlu, waktu saat ia akan kembali kepada Anda. Tak ada yang bergantung pada ingatan, dan tak ada yang dibiarkan terbuka sekadar berjaga-jaga.
+
+</Section>
+
+<Section id="habits" title="Kebiasaan baik">
+
+- **Tulis catatan sebagai tindakan:** “Ringkas untuk Kamis”, bukan “menarik”.
+- **Pasang pengingat hanya untuk yang punya tenggat.** Sisanya menunggu di daftar.
+- **Bersihkan tab usang setiap minggu.** Kalau sudah menunggu 30 hari, jarang yang mendesak.
+- **Satu daftar per rentang waktu:** “Hari ini”, “Minggu ini”, “Suatu hari”. Pindahkan tab di antaranya dengan **Pindahkan ke grup** (Move to group).
+- Untuk pekerjaan yang penuh sumber, lihat [mengatur tab untuk riset](/blog/organize-tabs-for-research); untuk sepanjang hari, [alur kerja tab harian dengan TabMerger](/blog/tabmerger-daily-workflow).
+
+</Section>
+
+<Section id="plans" title="Gratis vs Pro">
+
+<ComparisonTable
+  head={['', 'Gratis', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Catatan, pengingat, tab yang diganti namanya, tab usang', 'Ya', 'Ya'],
+    ['Tab di daftar Anda', 'Total 50', 'Tanpa batas'],
+    ['Daftar di perangkat Anda yang lain', 'Tidak', 'Ya, termasuk catatan dan waktu pengingat'],
+  ]}
+/>
+
+Semua alat daftar tugas ada di paket Gratis. [Pro](/pricing) menambah ruang dan sinkronisasi. Pengingat memberi tahu Anda di browser tempat Anda memasangnya.
+
+<InstallCta>Tutup tabnya, tepati janjinya. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,187 @@
+export const post = {
+  slug: 'find-a-tab-among-hundreds',
+  title: 'सैकड़ों टैब में से एक टैब कैसे ढूँढें',
+  navTitle: 'सैकड़ों टैब में से एक टैब ढूँढें',
+  seoTitle: 'Chrome, Edge और Firefox में खुले टैब कैसे सर्च करें',
+  description:
+    'खुले टैब सेकंडों में सर्च करें: Chrome, Edge और Firefox का बिल्ट-इन टैब सर्च, और TabMerger का Ctrl+K, जो group: और closed: जैसे फ़िल्टर के साथ खुले, सेव किए और बंद किए टैब एक साथ ढूँढता है।',
+  shareSummary: 'Chrome, Edge और Firefox में खुले टैब सर्च करें, और सेव या बंद किए टैब भी ढूँढें।',
+  dek: 'आइकन जितने छोटे टैब एक-एक करके देखना बंद करें। एक शॉर्टकट, टाइटल के कुछ अक्षर, और आप सीधे वहीं।',
+  published: '2026-11-29',
+  updated: '2026-11-29',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Chrome में Ctrl+Shift+A से टैब सर्च खुलता है।',
+      source: 'Chrome सहायता',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Firefox 159 में Ctrl+Shift+A सभी टैब की सूची खोलता है।', source: 'Firefox 159 के कीबोर्ड शॉर्टकट' },
+    { text: 'TabMerger का Ctrl+K खुले, सेव किए और हाल ही में बंद किए टैब एक साथ सर्च करता है।', source: 'TabMerger 3.16.1' },
+    { text: 'TabMerger के फ़िल्टर: group:, window:, tag: और closed:।', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'मैं अपने खुले टैब कैसे सर्च करूँ?',
+      answer:
+        'TabMerger में Ctrl+K दबाकर टाइप करें: यह खुले, सेव किए और हाल ही में बंद किए टैब एक साथ सर्च करता है। ब्राउज़र में बिल्ट-इन तौर पर, Chrome में टैब सर्च है (Ctrl+Shift+A या पता बार में @tabs), और Firefox Ctrl+Shift+A से सभी टैब की सूची दिखाता है।',
+    },
+    {
+      question: 'क्या टैब सर्च का कोई शॉर्टकट है?',
+      answer: 'Chrome और Firefox में Ctrl+Shift+A (Mac पर Chrome में ⌘+Shift+A), और TabMerger के अंदर Ctrl+K। Microsoft की Edge शॉर्टकट सूची में टैब सर्च के लिए कोई की नहीं दी गई है।',
+    },
+    {
+      question: 'क्या बंद किए हुए टैब भी सर्च किए जा सकते हैं?',
+      answer: 'हाँ, TabMerger में: सर्च की शुरुआत closed: से करें, तो सिर्फ़ हाल ही में बंद किए टैब में खोज होगी। मुफ़्त प्लान इन्हें 2 दिन रखता है, Pro 30 दिन।',
+    },
+    {
+      question: 'क्या दूसरे डिवाइस के टैब भी सर्च किए जा सकते हैं?',
+      answer:
+        'TabMerger Pro आपके सेव किए ग्रुप को डिवाइस के बीच एंड-टू-एंड एन्क्रिप्शन के साथ सिंक करता है, इसलिए वही Ctrl+K उन्हें हर जगह ढूँढ लेता है। बिल्ट-इन तरीकों के लिए कंप्यूटरों के बीच टैब ले जाने वाली हमारी गाइड देखें।',
+      link: { text: 'कंप्यूटरों के बीच टैब ले जाने वाली हमारी गाइड', href: '/blog/move-tabs-between-computers' },
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'TabMerger सर्च खुला और खाली, जिसमें group:, window:, tag: और closed: फ़िल्टर की सूची है, लाइट थीम' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'TabMerger सर्च खुला और खाली, जिसमें group:, window:, tag: और closed: फ़िल्टर की सूची है, डार्क थीम' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp', alt: 'TabMerger में group:"Work" pull की सर्च, जो Work ग्रुप में सेव किया टैब Pull requests ढूँढती है, लाइट थीम' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-dark.webp', alt: 'TabMerger में group:"Work" pull की सर्च, जो Work ग्रुप में सेव किया टैब Pull requests ढूँढती है, डार्क थीम' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-light.webp', alt: 'TabMerger में tag:Sprint की सर्च, जो Chrome टैब ग्रुप Sprint के तीन खुले टैब दिखाती है, लाइट थीम' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-dark.webp', alt: 'TabMerger में tag:Sprint की सर्च, जो Chrome टैब ग्रुप Sprint के तीन खुले टैब दिखाती है, डार्क थीम' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-21',
+      note: 'Firefox की जानकारी सीधे Firefox 159.0.1 की अपनी की-परिभाषाओं और मेन्यू टेक्स्ट से ली गई है; इस पेज ने हमारी स्वचालित जाँच को रोक दिया।',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp' },
+  ogImage: { src: '/blog/find-a-tab-among-hundreds/og.png', alt: '“How to find one tab among hundreds”: फ़िल्टर की गई टैब सर्च के साथ एक TabMerger गाइड' },
+  toc: [
+    { id: 'quick', label: 'छोटा जवाब' },
+    { id: 'tabmerger', label: 'Ctrl+K से सब कुछ सर्च करें' },
+    { id: 'filters', label: 'खोज को सीमित करने वाले फ़िल्टर' },
+    { id: 'builtin', label: 'बिल्ट-इन टैब सर्च' },
+    { id: 'tips', label: 'टैब ढूँढना आसान बनाएँ' },
+    { id: 'faq', label: 'अक्सर पूछे जाने वाले प्रश्न' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'बिल्ट-इन टैब सर्च',
+    values: { chrome: 'Ctrl+Shift+A या @tabs', edge: 'Search tabs (कोई शॉर्टकट नहीं दिया गया)', firefox: 'Ctrl+Shift+A' },
+  },
+}
+
+<QuickAnswer>
+
+[TabMerger](/features) में <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (Mac पर <Kbd>⌘</Kbd>+<Kbd>K</Kbd>) दबाएँ और कुछ अक्षर टाइप करें: टैब चाहे **खुला हो, किसी ग्रुप में सेव हो या हाल ही में बंद हुआ हो**, यह उसे ढूँढ लेता है, और `group:` व `closed:` जैसे फ़िल्टर सैकड़ों टैब को एक तक सीमित कर देते हैं। बिल्ट-इन तौर पर, Chrome का **टैब सर्च** (Tab Search) (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) और Firefox का **सभी टैब सूचीबद्ध करें** (List all tabs) (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) सिर्फ़ अभी खुले टैब में सर्च करते हैं।
+
+</QuickAnswer>
+
+<InstallCta>कोई भी टैब, खुला, सेव किया या बंद किया, एक कीस्ट्रोक में ढूँढें। Chrome, Edge और Firefox के लिए मुफ़्त।</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Ctrl+K से सब कुछ सर्च करें">
+
+ब्राउज़र का टैब सर्च सिर्फ़ वही जानता है जो उस ब्राउज़र में अभी खुला है। लेकिन जिस टैब की आपको ज़रूरत है, वह अक्सर कहीं और होता है: उस विंडो में जिसे आपने कल सेव किया था, या उसमें जिसे एक घंटे पहले बंद किया था। TabMerger यह सब एक ही बॉक्स से सर्च करता है:
+
+1. TabMerger खोलें और <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> दबाएँ।
+2. टाइटल या पते का कुछ हिस्सा टाइप करें। नतीजों में खुले, सेव किए और हाल ही में बंद किए टैब एक साथ दिखते हैं, और हर टैब पर लिखा होता है कि वह कहाँ है।
+3. ऐरो की और <Kbd>Enter</Kbd> से कोई एक चुनें।
+
+सभी फ़िल्टर, नतीजों का क्रम और छिपाने या धुंधला करने वाला व्यू [TabMerger से अपने सभी टैब सर्च करें](/blog/search-all-your-tabs-with-tabmerger) में समझाए गए हैं।
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="TabMerger सर्च खुला और खाली, जिसमें group:, window:, tag: और closed: फ़िल्टर की सूची है, लाइट थीम" darkAlt="TabMerger सर्च खुला और खाली, जिसमें group:, window:, tag: और closed: फ़िल्टर की सूची है, डार्क थीम" boxes={[{ id: 'search-input', label: 'सर्च' }]} source="TabMerger 3.16.1">Ctrl+K से सर्च खुलता है, और टाइप करने से पहले ही फ़िल्टर की सूची दिखती है।</ThemedScreenshot>
+
+</Section>
+
+<Section id="filters" title="कौन-से फ़िल्टर खोज को सीमित करते हैं?">
+
+सीधे सही जगह पहुँचने के लिए सर्च की शुरुआत किसी फ़िल्टर से करें:
+
+<ComparisonTable
+  head={['फ़िल्टर', 'क्या ढूँढता है']}
+  rows={[
+    [<code>group:"Work"</code>, 'ऐसे ग्रुप के टैब जिसके नाम में “Work” हो'],
+    [<code>window:"Docs"</code>, 'ऐसी विंडो के टैब जिसके नाम में “Docs” हो'],
+    [<code>tag:Sprint</code>, 'ऐसे Chrome टैब ग्रुप के टैब जिसके लेबल में “Sprint” हो'],
+    [<code>closed:</code>, 'सिर्फ़ हाल ही में बंद किए गए टैब'],
+  ]}
+/>
+
+फ़िल्टर को शब्दों के साथ मिलाएँ: `group:"Work" pull` सैकड़ों टैब के बीच भी आपके Work ग्रुप का पुल-रिक्वेस्ट वाला टैब ढूँढ लेता है। नाम के बाद शब्द जोड़ने हों तो नाम को कोट्स में रखें; बिना कोट्स वाला फ़िल्टर लाइन का बाकी हिस्सा ले लेता है।
+
+<Carousel label="फ़िल्टर वाली सर्च" steps={[{ title: 'group: फ़िल्टर' }, { title: 'tag: फ़िल्टर' }]}>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-group-filter" alt="TabMerger में group:&quot;Work&quot; pull की सर्च, जो Work ग्रुप में सेव किया टैब Pull requests ढूँढती है, लाइट थीम" darkAlt="TabMerger में group:&quot;Work&quot; pull की सर्च, जो Work ग्रुप में सेव किया टैब Pull requests ढूँढती है, डार्क थीम" boxes={[{ id: 'search-input', label: 'ग्रुप फ़िल्टर' }]} source="TabMerger 3.16.1">एक ग्रुप, एक शब्द: वही सेव किया टैब जो आप चाहते थे।</ThemedScreenshot>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-tag-filter" alt="TabMerger में tag:Sprint की सर्च, जो Chrome टैब ग्रुप Sprint के तीन खुले टैब दिखाती है, लाइट थीम" darkAlt="TabMerger में tag:Sprint की सर्च, जो Chrome टैब ग्रुप Sprint के तीन खुले टैब दिखाती है, डार्क थीम" boxes={[{ id: 'search-input', label: 'tag:Sprint' }]} source="TabMerger 3.16.1">tag: किसी Chrome टैब ग्रुप के टैब ढूँढता है।</ThemedScreenshot>
+</Carousel>
+
+हाल ही में बंद किए टैब मुफ़्त प्लान में 2 दिन और [Pro](/pricing) में 30 दिन रखे जाते हैं, इसलिए ज़रूरत हो तो `closed:` हफ़्तों पीछे तक जाता है।
+
+</Section>
+
+<Section id="builtin" title="बिना एक्सटेंशन के खुले टैब कैसे सर्च करें?">
+
+हर ब्राउज़र अभी खुले टैब में सर्च कर सकता है:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+- **टैब सर्च** (Tab Search) खोलने के लिए <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (Mac पर <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) दबाएँ, कीवर्ड टाइप करें और कोई टैब चुनें। हर लाइन पर बंद करने का बटन भी होता है।
+- या पता बार में `@tabs` टाइप करें, <Kbd>Tab</Kbd> या <Kbd>Space</Kbd> दबाएँ, और टाइप करें।
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge 158 के मेन्यू में **Search tabs** (टैब सर्च करें) है, लेकिन Microsoft की कीबोर्ड शॉर्टकट सूची इसके लिए कोई की नहीं देती। बहुत सारे टैब हों तो <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> किसी टैब पर उसकी जगह के हिसाब से ले जाते हैं और <Kbd>Ctrl</Kbd>+<Kbd>9</Kbd> आखिरी टैब पर।
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- **सभी टैब सूचीबद्ध करें** (List all tabs) के लिए <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (Mac पर <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) दबाएँ और उनमें सर्च करें।
+- पता बार के सर्च शॉर्टकट में एक **टैब** सर्च मोड भी है।
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>ये सिर्फ़ उस ब्राउज़र में अभी खुले टैब देखते हैं। जो टैब आपने बंद कर दिया या कहीं और सेव किया, वह नहीं दिखेगा।</Catch>
+
+और कीज़ हमारी [टैब कीबोर्ड शॉर्टकट गाइड](/blog/tab-keyboard-shortcuts) में हैं।
+
+</Section>
+
+<Section id="tips" title="अगली बार टैब ढूँढना आसान कैसे बनाएँ?">
+
+- **काम के हिसाब से ग्रुप बनाएँ।** नाम वाले ग्रुप “200 टैब में से एक” को “Work ग्रुप” बना देते हैं। हमारा [बहुत सारे टैब संभालने का तरीका](/blog/manage-too-many-tabs) बताता है कि कैसे।
+- **जो काम पूरा हो गया उसे बंद करें,** सेव करने के बाद। कम खुले टैब यानी छोटी नतीजों की सूची।
+- **ज़रूरी टैब का नाम बदलें।** TabMerger में आप सेव किए टैब को अपना टाइटल दे सकते हैं, ताकि वह उस शब्द से मेल खाए जिसे आप सर्च करेंगे।
+
+<InstallCta>Chrome, Edge और Firefox के लिए मुफ़्त। शुरू करने के लिए अकाउंट की ज़रूरत नहीं।</InstallCta>
+
+</Section>
+
+<Section id="faq" title="अक्सर पूछे जाने वाले प्रश्न">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -1,0 +1,145 @@
+export const post = {
+  slug: 'tab-management-for-developers',
+  title: 'Gestión de pestañas para desarrolladores: un proyecto, un grupo',
+  navTitle: 'Gestión de pestañas para desarrolladores',
+  seoTitle: 'Gestión de pestañas para desarrolladores: proyectos, docs y reglas de URL',
+  description:
+    'Documentación, pull requests, localhost y dashboards: una forma de organizar las pestañas para desarrolladores con un grupo de TabMerger por proyecto, reglas de URL que archivan las pestañas solas y una búsqueda que encuentra cualquier página de docs con una tecla.',
+  shareSummary: 'Un grupo por proyecto, reglas de URL que archivan tus pestañas y la documentación a una tecla.',
+  dek: 'Tu navegador es la mitad de tu IDE. Dale la misma estructura: un grupo por proyecto, que se llena solo.',
+  published: '2026-12-08',
+  updated: '2026-12-08',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Las reglas de URL copian las pestañas nuevas que coinciden en un grupo, con * como comodín.', source: 'TabMerger 3.16.1' },
+    { text: 'Las reglas comparan la dirección sin http:// ni https://, así que localhost:3000/* funciona.', source: 'Código fuente de TabMerger 3.16.1' },
+    { text: 'El plan gratuito tiene 3 reglas de URL; Pro no tiene límite.', source: 'Precios de TabMerger', href: '/pricing' },
+    { text: 'Ctrl+K filtra por group:, window:, tag: y closed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: '¿Cómo deberían organizar los desarrolladores las pestañas del navegador?',
+      answer:
+        'Un grupo de TabMerger por proyecto o ticket, reglas de URL que archivan las pestañas nuevas en el grupo correcto de forma automática y la búsqueda con Ctrl+K para saltar a cualquier página de documentación. Guarda y cierra las pestañas de un proyecto cuando cambies de tarea.',
+    },
+    {
+      question: '¿Se pueden ordenar las pestañas en grupos automáticamente según la URL?',
+      answer:
+        'Sí, con las reglas de URL de TabMerger: un patrón como github.com/your-org/* envía cada pestaña nueva que coincida a un grupo. La pestaña sigue abierta; se guarda una copia en el grupo. El plan gratuito tiene 3 reglas y Pro, ilimitadas.',
+    },
+    {
+      question: '¿Funciona con localhost?',
+      answer: 'Sí. Las reglas ignoran la parte http:// o https://, así que un patrón como localhost:3000/* coincide con las páginas de tu servidor de desarrollo.',
+    },
+    {
+      question: '¿Cómo encuentro rápido una pestaña de documentación?',
+      answer: 'Pulsa Ctrl+K en TabMerger y escribe parte del título o de la dirección; añade group:"Docs" para buscar solo en un grupo.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp', alt: 'Diálogo «URL Rules» (Reglas de URL) de TabMerger con la regla github.com/lbragile/* que envía pestañas al grupo «Work», tema claro' },
+    { src: '/blog/tab-management-for-developers/tm-url-rules-dark.webp', alt: 'Diálogo «URL Rules» (Reglas de URL) de TabMerger con la regla github.com/lbragile/* que envía pestañas al grupo «Work», tema oscuro' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-light.webp', alt: 'El grupo «Work» con la pestaña «Issues» recién abierta, añadida por la regla de URL, tema claro' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-dark.webp', alt: 'El grupo «Work» con la pestaña «Issues» recién abierta, añadida por la regla de URL, tema oscuro' },
+  ],
+  tags: ['developers', 'tab-management', 'tab-manager', 'browser-productivity'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp' },
+  ogImage: { src: '/blog/tab-management-for-developers/og.png', alt: 'Tarjeta con el título «Tab management for developers»: una guía de TabMerger, con una regla de URL que archiva pestañas de GitHub en un grupo' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'setup', label: 'Un proyecto, un grupo' },
+    { id: 'rules', label: 'Archivar pestañas automáticamente' },
+    { id: 'find', label: 'Encontrar cualquier doc al instante' },
+    { id: 'switch', label: 'Cambiar de proyecto sin desorden' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Dale a cada proyecto su propio grupo de [TabMerger](/features) y deja que las **Reglas de URL** (URL rules) archiven por ti: un patrón como `github.com/your-org/*` o `localhost:3000/*` envía automáticamente cada pestaña nueva que coincida al grupo correcto. Encuentra cualquier página de documentación con <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> y, cuando cambies de tarea, guarda las ventanas del proyecto y ciérralas. Nada se pierde y no hay que rebuscar.
+
+</QuickAnswer>
+
+<InstallCta>Un grupo por proyecto, que las reglas de URL llenan por ti. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+<Section id="setup" title="¿Cómo debería organizar sus pestañas un desarrollador?">
+
+Igual que organizas el código: por proyecto. Un proyecto típico tiene cuatro tipos de pestañas:
+
+<ComparisonTable
+  head={['Tipo', 'Ejemplos', 'Dónde va']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['Trabajo en curso', 'Pull requests, issues, el ticket', 'El grupo del proyecto, en su propia ventana'],
+    ['Documentación y referencia', 'Docs de la API, MDN, una especificación', 'Una ventana «Docs» en el grupo del proyecto'],
+    ['Local y staging', 'localhost, despliegues de vista previa', 'Abiertas mientras se ejecuta; las guarda una regla de URL'],
+    ['Dashboards', 'CI, logs, monitorización', 'Una ventana fija o el grupo del proyecto'],
+  ]}
+/>
+
+En TabMerger, un grupo puede contener varias ventanas, así que un mismo grupo de proyecto mantiene separadas «PRs», «Docs» y «Local». Cambia el nombre de una ventana desde su menú **⋯** y añade al grupo una nota con la rama o el número de ticket.
+
+</Section>
+
+<Section id="rules" title="¿Cómo archivo las pestañas en el grupo correcto automáticamente?">
+
+Las **Reglas de URL** de TabMerger vigilan tus pestañas. Cuando una pestaña se abre o termina de cargar una dirección que coincide con una regla, se guarda una copia en el grupo de esa regla; la pestaña sigue abierta.
+
+1. Abre **Ajustes → General** (Settings → General), busca **Reglas de URL** y pulsa **Gestionar** (Manage).
+2. Pulsa **Agregar regla** (Add rule), escribe un patrón y elige el grupo. `*` es un comodín; gana la primera regla que coincida.
+3. Pulsa **Guardar** (Save).
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Una regla de URL en acción" steps={[{ title: 'La regla' }, { title: 'El resultado' }]}>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-url-rules" alt="Diálogo «URL Rules» (Reglas de URL) de TabMerger con la regla github.com/lbragile/* que envía pestañas al grupo «Work», tema claro" darkAlt="Diálogo «URL Rules» (Reglas de URL) de TabMerger con la regla github.com/lbragile/* que envía pestañas al grupo «Work», tema oscuro" boxes={[{ id: 'rule', label: 'El patrón' }]} source="TabMerger 3.16.1">Una regla: todo lo que esté bajo github.com/lbragile/ va a «Work».</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-rule-result" alt="El grupo «Work» con la pestaña «Issues» recién abierta, añadida por la regla de URL, tema claro" darkAlt="El grupo «Work» con la pestaña «Issues» recién abierta, añadida por la regla de URL, tema oscuro" boxes={[{ id: 'new-tab', label: 'Añadida por la regla' }]} source="TabMerger 3.16.1">Al abrir la página «Issues» del repositorio, se archivó sola en «Work».</ThemedScreenshot>
+</Carousel>
+
+Patrones que funcionan bien:
+
+- `github.com/your-org/*` para todos los repositorios, PR e issues de un proyecto
+- `localhost:3000/*` para tu servidor de desarrollo (las reglas ignoran `http://` y `https://`)
+- `docs.your-framework.dev/*` para la documentación que abres una y otra vez
+
+El plan gratuito incluye 3 reglas; [Pro](/pricing) no tiene límite. Todas las opciones de los patrones, y el orden de las reglas, están en [ordenar pestañas automáticamente con reglas de URL](/blog/auto-sort-tabs-with-url-rules).
+
+</Section>
+
+<Section id="find" title="¿Cómo encuentro una página de documentación con una tecla?">
+
+Pulsa <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> en TabMerger y escribe unas letras del título o de la dirección. Los resultados incluyen pestañas abiertas, guardadas y cerradas recientemente. Acota la búsqueda con filtros: `group:"Docs" fetch`, `window:"Local"` o `closed:` para la página que cerraste hace una hora. Más en [cómo encontrar una pestaña entre cientos](/blog/find-a-tab-among-hundreds).
+
+Los menús de grupo también tienen **Ordenar por URL** (Sort by URL), práctico para una ventana larga de documentación, y **Quitar duplicadas** (Deduplicate tabs) para las cinco copias del mismo issue.
+
+</Section>
+
+<Section id="switch" title="¿Cómo cambio de proyecto sin perder el contexto?">
+
+1. En el grupo del proyecto, elige **Combinar con lo actual** (Merge with current) para guardar sus ventanas abiertas. **Reemplazar con lo actual** (Replace with current) sobrescribe en cambio la copia guardada.
+2. Cierra las ventanas.
+3. Cuando vuelvas a él, abre de nuevo el grupo: cada PR, cada documento y cada dashboard, donde los dejaste.
+
+<InstallCta>Gratis para Chrome, Edge y Firefox. No necesitas cuenta para empezar.</InstallCta>
+
+Para trabajar con el teclado, consulta los [atajos de teclado para pestañas](/blog/tab-keyboard-shortcuts); para la rutina general, [cómo gestionar demasiadas pestañas](/blog/manage-too-many-tabs).
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

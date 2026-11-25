@@ -1,0 +1,160 @@
+export const post = {
+  slug: 'organize-tabs-by-project',
+  title: 'Organiser ses onglets par projet : un groupe pour chaque projet',
+  navTitle: 'Organiser ses onglets par projet',
+  seoTitle: 'Comment organiser les onglets du navigateur par projet avec TabMerger',
+  description:
+    'Donnez à chaque projet son propre groupe TabMerger, avec des fenêtres nommées pour chaque partie du travail, des notes pour le contexte et une archive pour les projets terminés. Pourquoi les groupes fonctionnent ainsi, étape par étape.',
+  shareSummary: 'Un groupe par projet, des fenêtres nommées à l’intérieur et une archive pour le travail fini.',
+  dek: 'Changer de projet ne devrait pas vouloir dire fouiller dans ses onglets. Donnez à chacun un endroit à ouvrir, fermer et archiver.',
+  published: '2026-12-15',
+  updated: '2026-12-15',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Un groupe TabMerger contient plusieurs fenêtres, chacune avec son propre nom et sa propre note.', source: 'TabMerger 3.16.1' },
+    { text: 'Les groupes favoris restent en haut de la barre latérale.', source: 'Code source de TabMerger 3.16.1' },
+    { text: 'Les groupes archivés sont en lecture seule et reviennent avec « Restaurer ».', source: 'TabMerger 3.16.1' },
+    { text: 'La version gratuite compte 5 groupes et 50 onglets, groupes archivés inclus ; Pro n’a pas de limite.', source: 'Tarifs de TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Quelle est la meilleure façon d’organiser ses onglets par projet ?',
+      answer:
+        'Donnez à chaque projet un groupe TabMerger et divisez-le en fenêtres nommées pour les parties du travail (par exemple Design, Développement, Retours). Ajoutez une note de groupe avec le contexte, mettez en favori les projets de la semaine et archivez un projet une fois terminé.',
+    },
+    {
+      question: 'Un groupe peut-il contenir plusieurs fenêtres ?',
+      answer: 'Oui. Un groupe TabMerger contient autant de fenêtres que vous voulez. Chaque fenêtre peut avoir son propre nom, sa note et son étoile, et s’ouvre comme une fenêtre de navigateur à part.',
+    },
+    {
+      question: 'Que fait l’archivage d’un groupe ?',
+      answer:
+        'Il déplace le groupe dans la section « Archivés » de la barre latérale, en lecture seule : il ne gêne plus, mais il n’a pas disparu. Un clic sur un onglet l’ouvre toujours, et « Restaurer » remet le groupe dans votre liste.',
+    },
+    {
+      question: 'Les groupes d’onglets Chrome sont-ils conservés quand je les enregistre ?',
+      answer: 'Oui. Les onglets enregistrés gardent le nom et la couleur de leur groupe d’onglets Chrome : un projet que vous aviez regroupé dans la barre d’onglets garde cette structure dans TabMerger.',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp', alt: 'Le groupe « Website redesign » avec trois fenêtres nommées, Design, Build et Feedback, thème clair' },
+    { src: '/blog/organize-tabs-by-project/tm-project-group-dark.webp', alt: 'Le groupe « Website redesign » avec trois fenêtres nommées, Design, Build et Feedback, thème sombre' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-light.webp', alt: 'Le menu contextuel d’un groupe dans la barre latérale, avec Archive group (Archiver le groupe), thème clair' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-dark.webp', alt: 'Le menu contextuel d’un groupe dans la barre latérale, avec Archive group (Archiver le groupe), thème sombre' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-light.webp', alt: 'Un groupe archivé, en lecture seule, avec un bouton Restore (Restaurer) et la section Archived (Archivés) ouverte dans la barre latérale, thème clair' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-dark.webp', alt: 'Un groupe archivé, en lecture seule, avec un bouton Restore (Restaurer) et la section Archived (Archivés) ouverte dans la barre latérale, thème sombre' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-by-project/og.png', alt: 'Organiser ses onglets par projet avec TabMerger : un groupe avec les fenêtres Design, Build et Feedback' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'problem', label: 'Quand les projets partagent une barre d’onglets' },
+    { id: 'why', label: 'Pourquoi les groupes fonctionnent ainsi' },
+    { id: 'steps', label: 'Préparer un projet' },
+    { id: 'archive', label: 'Archiver le travail terminé' },
+    { id: 'benefit', label: 'Ce que vous y gagnez' },
+    { id: 'habits', label: 'Bonnes habitudes' },
+    { id: 'plans', label: 'Gratuit ou Pro' },
+    { id: 'faq', label: 'Questions fréquentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Donnez à chaque projet son propre groupe [TabMerger](/features). À l’intérieur, gardez une fenêtre nommée par partie du travail (« Design », « Développement », « Retours ») et une note de groupe avec le contexte. Mettez en favori les projets de la semaine pour qu’ils restent en haut, et quand l’un d’eux est terminé, **Archiver le groupe** (Archive group) le range en lecture seule, sans supprimer un seul onglet.
+
+</QuickAnswer>
+
+<InstallCta>Un endroit pour chaque projet, à un clic de l’ouverture. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+<Section id="problem" title="Quand trois projets partagent une seule barre d’onglets">
+
+Vous refaites un site web, rédigez un rapport et préparez un voyage. Dès mercredi, le navigateur contient les trois : des maquettes à côté de recherches de vols, une pull request entre deux sources du rapport. Changer de projet oblige à parcourir toute la barre, et fermer quoi que ce soit paraît risqué, car vous ne savez plus à quel projet appartient chaque onglet.
+
+Les groupes d’onglets du navigateur aident dans une fenêtre, mais un projet tient rarement dans une seule fenêtre, et une fois la fenêtre fermée, impossible de savoir où sont passés ces onglets.
+
+</Section>
+
+<Section id="why" title="Pourquoi les groupes TabMerger fonctionnent ainsi">
+
+- **Un groupe est un projet, pas une fenêtre.** Chaque groupe contient autant de fenêtres que le travail l’exige, et chaque fenêtre s’ouvre comme une fenêtre de navigateur à part. C’est l’allure réelle d’un projet : les onglets de design ici, ceux du développement là.
+- **Les noms et les notes portent le contexte.** On peut renommer les fenêtres et leur ajouter une note, tout comme au groupe. Des mois plus tard, « Retours » et une note qui dit ce qui a été décidé valent mieux qu’une rangée de favicons.
+- **Les favoris trient à votre place.** Les groupes favoris restent en haut de la barre latérale, et les fenêtres favorites passent en premier dans leur groupe.
+- **Archiver, c’est ranger, pas supprimer.** Un groupe archivé quitte votre liste pour la section **Archivés** (Archived) et passe en lecture seule, pour que rien ne bouge par accident. Ses onglets s’ouvrent toujours d’un clic, et **Restaurer** (Restore) le fait revenir.
+- **La structure de votre navigateur est conservée.** Les onglets enregistrés gardent le nom et la couleur de leur groupe d’onglets Chrome : un projet déjà regroupé dans la barre d’onglets garde sa forme.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-project-group" alt="Le groupe « Website redesign » avec trois fenêtres nommées, Design, Build et Feedback, thème clair" darkAlt="Le groupe « Website redesign » avec trois fenêtres nommées, Design, Build et Feedback, thème sombre" boxes={[{ id: 'windows', label: 'Fenêtres par étape' }]} source="TabMerger 3.16.1">Un projet, trois fenêtres, chacune nommée d’après sa partie du travail.</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="Préparer un projet en cinq étapes">
+
+1. Cliquez sur **Ajouter un groupe** (Add Group) dans la barre latérale et donnez-lui le nom du projet. Cliquez sur sa pastille de couleur pour choisir une couleur.
+2. Ouvrez les pages du projet, puis choisissez **Fusionner avec l’actuel** (Merge with current) dans le menu **⋯** du groupe pour y enregistrer les fenêtres ouvertes.
+3. Renommez chaque fenêtre depuis son menu **⋯** (**Renommer la fenêtre**, Rename window) d’après la partie du travail qu’elle contient.
+4. Ajoutez une note de groupe (**Ajouter une note**, Add note, dans le menu **⋯**) avec le contexte : l’échéance, le ticket, ce que « terminé » veut dire.
+5. Mettez le groupe en favori (l’étoile à côté de son nom) tant que le projet est actif.
+
+Pour déplacer plus tard des onglets d’un projet à l’autre, faites-les glisser sur un groupe de la barre latérale, ou utilisez **Déplacer vers un groupe** (Move to group) et **Copier vers un groupe** (Copy to group) dans le menu contextuel de l’onglet. **Réunir les fenêtres** (Unite windows) et **Séparer les fenêtres** (Split windows) remanient un groupe en une seule étape.
+
+</Section>
+
+<Section id="archive" title="Archiver le travail terminé">
+
+Quand un projet est terminé, faites un clic droit sur son groupe dans la barre latérale et choisissez **Archiver le groupe**. Il passe dans la section **Archivés**, en lecture seule : vous pouvez toujours ouvrir n’importe lequel de ses onglets, et **Restaurer** remet tout le groupe dans votre liste.
+
+<Carousel label="Archiver un projet" steps={[{ title: 'Archiver' }, { title: 'Archivé' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archive-menu" alt="Le menu contextuel d’un groupe dans la barre latérale, avec Archive group (Archiver le groupe), thème clair" darkAlt="Le menu contextuel d’un groupe dans la barre latérale, avec Archive group (Archiver le groupe), thème sombre" boxes={[{ id: 'archive', label: 'Archiver le groupe' }]} source="TabMerger 3.16.1">Faites un clic droit sur le groupe dans la barre latérale.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archived" alt="Un groupe archivé, en lecture seule, avec un bouton Restore (Restaurer) et la section Archived (Archivés) ouverte dans la barre latérale, thème clair" darkAlt="Un groupe archivé, en lecture seule, avec un bouton Restore (Restaurer) et la section Archived (Archivés) ouverte dans la barre latérale, thème sombre" boxes={[{ id: 'banner', label: 'Lecture seule jusqu’à la restauration' }]} source="TabMerger 3.16.1">Rangé, mais toujours à un clic de l’ouverture.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="benefit" title="Ce que vous y gagnez">
+
+Changer de projet revient à ouvrir un groupe au lieu de fouiller une barre d’onglets. Vous pouvez fermer toutes les fenêtres d’un projet sur lequel vous ne travaillez pas, en sachant exactement où sont ses onglets, et votre barre latérale n’affiche que ce qui est en cours.
+
+</Section>
+
+<Section id="habits" title="Bonnes habitudes">
+
+- **Un groupe par projet, pas par sujet.** « Refonte du site », pas « Liens design ».
+- **Nommez les fenêtres d’après des étapes ou des rôles**, pas d’après des sites : « Retours » dure plus longtemps que « GitHub ».
+- **Gardez une poignée de favoris au maximum.** Une étoile veut dire « cette semaine ».
+- **Archivez le jour de la livraison.** Un projet archivé reste à un clic, il n’y a donc aucune raison de le garder dans votre liste.
+- **Laissez les règles d’URL classer les nouveaux onglets** pour les projets chargés : voir [trier automatiquement ses onglets avec des règles d’URL](/blog/auto-sort-tabs-with-url-rules). Pour les projets riches en recherches, [organiser ses onglets pour la recherche](/blog/organize-tabs-for-research) ajoute notes et rappels.
+
+</Section>
+
+<Section id="plans" title="Gratuit ou Pro">
+
+<ComparisonTable
+  head={['', 'Gratuit', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Groupes', '5 (groupes archivés compris)', 'Illimité'],
+    ['Onglets', '50', 'Illimité'],
+    ['Fenêtres, noms, notes, favoris, archive', 'Oui', 'Oui'],
+    ['Vos projets sur vos autres appareils', 'Non', 'Oui, chiffrés de bout en bout'],
+  ]}
+/>
+
+Tous les outils d’organisation présentés ici font partie de la version gratuite ; les limites portent sur le nombre de groupes et d’onglets. [Pro](/pricing) les supprime et synchronise vos projets entre vos appareils.
+
+<InstallCta>Chaque projet dans son propre groupe, dans Chrome, Edge et Firefox. Gratuit pour commencer.</InstallCta>
+
+Pour toute la routine autour de vos projets, voir [une routine quotidienne pour vos onglets avec TabMerger](/blog/tabmerger-daily-workflow).
+
+</Section>
+
+<Section id="faq" title="Questions fréquentes">
+
+<Faq items={post.faq} />
+
+</Section>

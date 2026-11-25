@@ -1,0 +1,270 @@
+export const post = {
+  slug: 'restore-tabs-after-crash',
+  title: 'Comment récupérer vos onglets après un plantage, une mise à jour ou une fermeture accidentelle',
+  navTitle: 'Récupérer vos onglets après un plantage',
+  seoTitle: 'Restaurer les onglets après un plantage dans Chrome, Edge et Firefox',
+  description:
+    'Le navigateur s’est fermé et vos onglets ont disparu ? Pour restaurer les onglets après un plantage, suivez ces étapes dans l’ordre : rouvrir, l’historique, vos autres appareils, puis les réglages qui évitent que cela se reproduise.',
+  shareSummary: 'Onglets perdus après un plantage ou un redémarrage ? Les étapes pour les récupérer, dans l’ordre.',
+  dek: 'Essayez d’abord les solutions rapides, dans l’ordre. La plupart des sessions perdues reviennent en moins d’une minute.',
+  published: '2026-11-24',
+  updated: '2026-11-24',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'D’après l’aide de Chrome sur les plantages, Ctrl+Shift+T rouvre les onglets que vous aviez ouverts.',
+      source: 'Aide Chrome',
+      href: 'https://support.google.com/chrome/answer/142063',
+    },
+    { text: 'Le menu Historique de Firefox propose « Restaurer la session précédente ».', source: 'Firefox 159' },
+    {
+      text: 'Chrome n’affiche les onglets de vos autres appareils que si la synchronisation « Historique et onglets » est activée.',
+      source: 'Aide Chrome',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'La page Historique d’Edge a sa propre liste « Recently closed ».', source: 'edge://history, Edge 157' },
+  ],
+  faq: [
+    {
+      question: 'Comment récupérer mes onglets après la fermeture de Chrome ?',
+      answer:
+        'Rouvrez Chrome et appuyez sur Ctrl+Shift+T (⌘+Shift+T sur Mac), plusieurs fois si besoin. Si cela ne suffit pas, ouvrez l’historique avec Ctrl+H et regardez parmi les onglets récemment fermés.',
+    },
+    {
+      question: 'Pourquoi mes onglets ne se sont-ils pas restaurés ?',
+      answer:
+        'En général, parce que le réglage de démarrage ouvre une page Nouvel onglet, que les onglets étaient dans une fenêtre privée, que vous avez fermé les fenêtres une par une avant de quitter, ou que vous avez ouvert un autre profil.',
+    },
+    {
+      question: 'Puis-je restaurer les onglets d’hier ?',
+      answer: 'Pas sous forme de session, mais chaque page visitée se trouve dans l’historique (Ctrl+H), sauf si vous l’avez effacé. Une session enregistrée ou l’enregistrement automatique reste la méthode fiable.',
+    },
+    {
+      question: 'Comment éviter que cela se reproduise ?',
+      answer: 'Activez le réglage de démarrage et enregistrez vos onglets ouverts avant les moments à risque, comme les mises à jour. Notre guide pour enregistrer tous les onglets ouverts explique les deux.',
+      link: { text: 'enregistrer tous les onglets ouverts', href: '/blog/save-all-open-tabs' },
+    },
+  ],
+  images: [
+    { src: '/blog/save-all-open-tabs/edge-history.webp', alt: 'Historique d’Edge avec « All », « Recently closed » et « Tabs from other devices » dans la barre latérale' },
+    { src: '/blog/save-all-open-tabs/chrome-startup-setting.webp', alt: 'Paramètres de Chrome, « On startup » (Au démarrage), avec « Continue where you left off » (Reprendre où vous avez arrêté) sélectionné' },
+    { src: '/blog/save-all-open-tabs/edge-startup-setting.webp', alt: 'Paramètres d’Edge, « Start, home, and new tab page », avec « Open tabs from the previous session » sélectionné' },
+    { src: '/blog/save-all-open-tabs/firefox-startup.webp', alt: 'Paramètres de Firefox, « Home and startup » (Accueil et démarrage), avec « Open previous windows and tabs » (Ouvrir les fenêtres et onglets précédents) coché' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-light.webp', alt: 'Paramètres de TabMerger, « Data » (Données) : « Auto-save open tabs » (Enregistrer automatiquement les onglets ouverts) activé, avec l’horaire réglé sur « Every 30 minutes » (Toutes les 30 minutes), thème clair' },
+    { src: '/blog/restore-tabs-after-crash/tm-auto-save-schedule-dark.webp', alt: 'Paramètres de TabMerger, « Data » (Données) : « Auto-save open tabs » (Enregistrer automatiquement les onglets ouverts) activé, avec l’horaire réglé sur « Every 30 minutes » (Toutes les 30 minutes), thème sombre' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-light.webp', alt: 'TabMerger, « Recently closed » (Fermés récemment), aujourd’hui : trois onglets fermés avec l’heure de fermeture de chacun, thème clair' },
+    { src: '/blog/restore-tabs-after-crash/tm-recently-closed-dark.webp', alt: 'TabMerger, « Recently closed » (Fermés récemment), aujourd’hui : trois onglets fermés avec l’heure de fermeture de chacun, thème sombre' },
+  ],
+  tags: ['restore-closed-tabs', 'session-management', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Choose your homepage and startup pages',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/95314',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Restore previous session',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/restore-previous-session',
+      checked: '2026-11-20',
+      note: 'Les noms des menus de Firefox ont été relevés dans Firefox 159.0.1 lui-même ; cette page a bloqué notre vérification automatique.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/restore-tabs-after-crash/cover-edge-light.webp' },
+  ogImage: { src: '/blog/restore-tabs-after-crash/og.png', alt: 'Carte titre « How to get your tabs back after a crash, an update or an accidental quit » : un guide TabMerger, avec une liste d’onglets récemment fermés' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'first', label: '1. Rouvrir, puis Ctrl+Shift+T' },
+    { id: 'recover', label: '2. L’historique, navigateur par navigateur' },
+    { id: 'devices', label: '3. Vos autres appareils' },
+    { id: 'why', label: 'Pourquoi rien n’a été restauré' },
+    { id: 'prevent', label: 'La prochaine fois' },
+    { id: 'faq', label: 'Questions fréquentes' },
+  ],
+  browserSections: ['first', 'recover', 'devices', 'prevent'],
+  browserFact: {
+    label: 'Historique',
+    values: { chrome: 'chrome://history', edge: 'edge://history', firefox: 'Ctrl+Shift+H (Bibliothèque)' },
+  },
+}
+
+<QuickAnswer>
+
+Rouvrez le navigateur et appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> sur Mac), encore et encore, jusqu’à ce que vos fenêtres soient revenues. Si cela ne marche pas, ouvrez l’historique (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) et rouvrez-les depuis les onglets **récemment fermés** ; dans Firefox, utilisez **Historique → Restaurer la session précédente** (« History → Restore Previous Session »). Il en manque encore ? Regardez les **onglets de vos autres appareils**, puis cherchez les pages elles-mêmes dans l’historique. La prochaine fois, laissez [TabMerger](/features) enregistrer automatiquement vos onglets ouverts selon un horaire : un plantage ne vous coûtera jamais plus de quelques minutes.
+
+</QuickAnswer>
+
+<InstallCta>Ne perdez plus jamais une fenêtre : enregistrez automatiquement vos onglets ouverts selon un horaire. Gratuit pour Chrome, Edge et Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="first" title="1. Rouvrez le navigateur, puis appuyez sur Ctrl+Shift+T">
+
+N’ouvrez pas de nouveaux onglets avant : partez d’une fenêtre vide, pour récupérer exactement ce que contient la liste des derniers onglets fermés du navigateur.
+
+<BrowserPanels section="first">
+<BrowserPanel browser="chrome">
+
+1. Lancez Chrome. S’il propose de restaurer vos pages, acceptez.
+2. Appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> sur Mac). C’est ce que recommande l’aide de Chrome sur les plantages : le raccourci rouvre les onglets qui étaient ouverts avant.
+3. Appuyez de nouveau pour chaque fenêtre perdue. Chrome rouvre les onglets et les fenêtres dans l’ordre où ils ont été fermés.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Lancez Edge. S’il propose de restaurer vos pages, acceptez.
+2. Appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> sur Mac) pour rouvrir le dernier onglet fermé, et encore pour continuer à remonter.
+3. Il vous manque une fenêtre entière ? Passez directement à l’étape 2, l’historique.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Lancez Firefox. S’il propose de restaurer vos pages, acceptez.
+2. Appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>T</Kbd> sur Mac). Firefox 159 associe ce raccourci à une commande qui restaure le dernier onglet, la dernière fenêtre ou la dernière session fermés : après un redémarrage, il peut donc ramener toute la session précédente.
+3. <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>N</Kbd> rouvre une fenêtre fermée ; appuyez une fois par fenêtre.
+
+</BrowserPanel>
+</BrowserPanels>
+
+La liste complète des raccourcis se trouve dans notre [guide des raccourcis clavier pour les onglets](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="recover" title="2. Rouvrez depuis l’historique">
+
+Si le raccourci ne ramène rien, l’historique du navigateur sait encore ce qui était ouvert.
+
+<BrowserPanels section="recover">
+<BrowserPanel browser="chrome">
+
+1. Cliquez sur **⋮ → Historique** (« History »). Le sous-menu liste les onglets et fenêtres récemment fermés.
+2. Cliquez sur une fenêtre pour rouvrir tous ses onglets.
+3. Rien ? Appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> et cherchez une page dont vous vous souvenez.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Appuyez sur <Kbd>Ctrl</Kbd>+<Kbd>H</Kbd> pour ouvrir l’**Historique**.
+2. Choisissez **Recently closed** (récemment fermés) et rouvrez la fenêtre ou les onglets perdus.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-history.webp" alt="Historique d’Edge avec « All », « Recently closed » et « Tabs from other devices » dans la barre latérale" width={1600} height={611} boxes={[{ id: 'recently-closed' }]} source="edge://history · Edge 157.0.4341.60">La page Historique d’Edge, avec « Recently closed » dans la barre latérale.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Ouvrez le menu **Historique** (« History » ; appuyez sur <Kbd>Alt</Kbd> pour afficher la barre de menus) ou **☰ → Historique**.
+2. Choisissez **Restaurer la session précédente** (« Restore Previous Session ») pour récupérer toutes les fenêtres de la dernière fois.
+3. Ou choisissez dans **Fenêtres récemment fermées** et **Onglets récemment fermés**.
+
+Si c’est Firefox lui-même qui a planté, il peut ouvrir une page **Restauration de session** (« Restore Session ») qui annonce « Désolé, nous ne parvenons pas à récupérer vos pages. ». **Afficher les onglets précédents** (« View Previous Tabs ») vous permet de décocher un onglet qui pourrait causer le plantage avant d’appuyer sur **Restaurer la session**.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox History menu with Restore Previous Session. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="devices" title="3. Regardez sur vos autres appareils">
+
+Si vous étiez connecté et que la synchronisation était active, les onglets perdus figurent peut-être encore sur un autre appareil.
+
+<BrowserPanels section="devices">
+<BrowserPanel browser="chrome">
+
+Chrome affiche les onglets de vos autres appareils dans l’historique, mais seulement si la synchronisation **Historique et onglets** (« History and tabs ») est activée : **Paramètres → Google et vous** (« Settings → You and Google »), sélectionnez le nom de votre compte, puis activez **Historique et onglets**.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Ouvrez l’historique (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) et choisissez **Tabs from other devices** (onglets d’autres appareils) dans la barre latérale.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Ouvrez **Firefox View** et regardez sous **Onglets d’autres appareils** (« Tabs from other devices »). Il faut Firefox Sync, avec la synchronisation des onglets ouverts activée.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox View, Tabs from other devices. */}
+
+</BrowserPanel>
+</BrowserPanels>
+
+</Section>
+
+<Section id="why" title="Pourquoi mes onglets ne se sont-ils pas restaurés ?">
+
+- **Le réglage de démarrage ouvre une page Nouvel onglet.** Seule l’option de démarrage « session précédente » rouvre vos onglets à chaque lancement ; la section suivante montre où la trouver dans votre navigateur.
+- **Ils étaient dans une fenêtre privée.** Les fenêtres Incognito et InPrivate ne sont jamais restaurées.
+- **Vous avez fermé les fenêtres une par une.** Au démarrage, le navigateur restaure ce qui était ouvert au moment où il a été *quitté*. Les fenêtres fermées avant ne figurent que dans l’historique.
+- **Vous avez ouvert un autre profil.** Chaque profil a sa propre session ; vérifiez l’icône du profil.
+
+</Section>
+
+<Section id="prevent" title="Faites en sorte que cela ne se reproduise pas">
+
+Activez dès maintenant le réglage de démarrage : ce seul changement couvre les mises à jour et les redémarrages.
+
+<BrowserPanels section="prevent">
+<BrowserPanel browser="chrome">
+
+**Paramètres → Au démarrage → Reprendre où vous avez arrêté** (« Settings → On startup → Continue where you left off »). Ou collez `chrome://settings/onStartup` dans la barre d’adresse.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/chrome-startup-setting.webp" alt="Paramètres de Chrome, « On startup » (Au démarrage), avec « Continue where you left off » (Reprendre où vous avez arrêté) sélectionné" width={1600} height={655} boxes={[{ id: 'startup-option' }]} source="chrome://settings/onStartup · Chrome 157.0.8103.79">Le réglage Au démarrage de Chrome, réglé pour rouvrir la dernière session.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+**Paramètres → Start, home, and new tab page → On startup → Open tabs from the previous session**. Ou collez `edge://settings/startHomeNTP` dans la barre d’adresse.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/edge-startup-setting.webp" alt="Paramètres d’Edge, « Start, home, and new tab page », avec « Open tabs from the previous session » sélectionné" width={1600} height={636} boxes={[{ id: 'startup-option' }]} source="edge://settings/startHomeNTP · Edge 157.0.4341.60">La page « Start, home, and new tab page » d’Edge, réglée pour rouvrir la dernière session.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+**Paramètres → Accueil et démarrage → Démarrage → Ouvrir les fenêtres et onglets précédents** (« Settings → Home and startup → Startup → Open previous windows and tabs »). Ou collez `about:preferences#home` dans la barre d’adresse.
+
+<AnnotatedFigure src="/blog/save-all-open-tabs/firefox-startup.webp" alt="Paramètres de Firefox, « Home and startup » (Accueil et démarrage), avec « Open previous windows and tabs » (Ouvrir les fenêtres et onglets précédents) coché" width={940} height={760} boxes={[{ id: 'startup-option' }]} source="about:preferences#home · Firefox 159.0.1">Les paramètres Accueil et démarrage de Firefox, avec « Ouvrir les fenêtres et onglets précédents » coché.</AnnotatedFigure>
+
+</BrowserPanel>
+</BrowserPanels>
+
+La restauration au démarrage ne peut rien pour une fenêtre fermée par erreur la semaine dernière. Pour cela, il vous faut une copie enregistrée : ajoutez les fenêtres aux favoris ou utilisez un [gestionnaire de sessions](/blog/browser-session-manager). Notre guide pour [enregistrer tous les onglets ouverts](/blog/save-all-open-tabs) compare les options.
+
+[TabMerger](/features), notre extension gratuite pour Chrome, Edge et Firefox, peut faire l’enregistrement à votre place. **Paramètres → Données → Enregistrer automatiquement les onglets ouverts** enregistre vos onglets ouverts dans un groupe selon un horaire (de toutes les 15 minutes à tous les jours). **Fermés récemment** conserve chaque onglet et chaque fenêtre que vous fermez, classés par jour : 2 jours en gratuit, 30 avec Pro. Le fonctionnement des deux et leurs réglages sont expliqués dans [Ne plus jamais perdre un onglet](/blog/never-lose-a-tab-again).
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Enregistrer selon un horaire et retrouver les onglets fermés" steps={[{ title: 'Enregistrement auto' }, { title: 'Fermés récemment' }]}>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-auto-save-schedule" alt="Paramètres de TabMerger, « Data » (Données) : « Auto-save open tabs » (Enregistrer automatiquement les onglets ouverts) activé, avec l’horaire réglé sur « Every 30 minutes » (Toutes les 30 minutes), thème clair" darkAlt="Paramètres de TabMerger, « Data » (Données) : « Auto-save open tabs » (Enregistrer automatiquement les onglets ouverts) activé, avec l’horaire réglé sur « Every 30 minutes » (Toutes les 30 minutes), thème sombre" boxes={[{ id: 'schedule', label: 'Horaire' }]} source="TabMerger 3.16.1">« Auto-save open tabs » (Enregistrer automatiquement les onglets ouverts) toutes les 30 minutes : une copie à jour de vos onglets ouverts, quoi qu’il arrive au navigateur.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/restore-tabs-after-crash/tm-recently-closed" alt="TabMerger, « Recently closed » (Fermés récemment), aujourd’hui : trois onglets fermés avec l’heure de fermeture de chacun, thème clair" darkAlt="TabMerger, « Recently closed » (Fermés récemment), aujourd’hui : trois onglets fermés avec l’heure de fermeture de chacun, thème sombre" boxes={[{ id: 'today-row', label: 'Aujourd\'hui' }]} source="TabMerger 3.16.1">« Recently closed » (Fermés récemment) : les onglets fermés aujourd’hui, avec l’heure à laquelle chacun a été fermé.</ThemedScreenshot>
+</Carousel>
+
+<InstallCta>Gratuit pour Chrome, Edge et Firefox. Aucun compte nécessaire pour commencer.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Questions fréquentes">
+
+<Faq items={post.faq} />
+
+</Section>

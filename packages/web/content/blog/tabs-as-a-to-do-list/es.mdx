@@ -1,0 +1,150 @@
+export const post = {
+  slug: 'tabs-as-a-to-do-list',
+  title: 'Usa tus pestañas como lista de tareas, sin dejarlas abiertas',
+  navTitle: 'Pestañas como lista de tareas',
+  seoTitle: 'Pestañas del navegador como lista de tareas, con notas y recordatorios',
+  description:
+    'Convierte las pestañas de “tengo que leer esto” en una lista de tareas de verdad en TabMerger: una nota en cada pestaña, un recordatorio que aparece a su hora, un título claro y un clic para barrer las que llevan demasiado tiempo.',
+  shareSummary: 'Notas, recordatorios y limpieza de inactivas: una lista de tareas hecha de pestañas, ya cerradas.',
+  dek: 'Cada pestaña abierta es una promesa de volver. Apunta por qué, pon una hora y ciérrala.',
+  published: '2026-12-16',
+  updated: '2026-12-16',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Recordatorios: en 30 minutos, 1 hora, 3 horas, 24 horas o en una fecha y hora.', source: 'TabMerger 3.16.1' },
+    { text: 'Un recordatorio muestra una notificación del navegador; al hacer clic se abre la pestaña.', source: 'TabMerger 3.16.1, código fuente' },
+    { text: 'Las pestañas guardadas hace más de 7, 14, 30 o 60 días (tú eliges) se marcan como inactivas.', source: 'TabMerger 3.16.1' },
+    { text: 'Las notas, los recordatorios y el cambio de nombre están todos en el plan gratuito.', source: 'Precios de TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '¿Cómo convierto mis pestañas en una lista de tareas?',
+      answer:
+        'Guarda las pestañas en un grupo de TabMerger como “Esta semana”, añade a cada una una nota con lo que tienes que hacer, pon recordatorios en las que tienen fecha y quita una pestaña cuando la termines. Luego cierra las pestañas: la lista se queda en TabMerger.',
+    },
+    {
+      question: '¿Puedo recibir un recordatorio para volver a una pestaña?',
+      answer:
+        'Sí. Haz clic derecho en una pestaña guardada y elige Recordarme…: escoge 30 min, 1 hora, 3 horas, Mañana (dentro de 24 horas) o una fecha y hora, con una nota opcional. A esa hora aparece una notificación del navegador, y al hacer clic en ella se abre la pestaña.',
+    },
+    {
+      question: '¿Qué son las pestañas inactivas?',
+      answer:
+        'Las pestañas que guardaste hace más tiempo que tu umbral de inactividad (30 días, salvo que lo cambies en Ajustes → General). Llevan un pequeño punto, y la cabecera del grupo ofrece quitarlas todas de una vez.',
+    },
+    {
+      question: '¿Los recordatorios funcionan en mis otros dispositivos?',
+      answer: 'Un recordatorio te avisa en el navegador donde lo pusiste. Con Pro, la pestaña y la hora de su recordatorio se sincronizan con tus otros dispositivos junto con el grupo.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp', alt: 'Un grupo “This week” con una nota en una pestaña, una pestaña renombrada con un recordatorio y dos pestañas inactivas, tema claro' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-dark.webp', alt: 'Un grupo “This week” con una nota en una pestaña, una pestaña renombrada con un recordatorio y dos pestañas inactivas, tema oscuro' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-light.webp', alt: 'Opciones de recordatorio de TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Mañana), una fecha y hora, y una nota, tema claro' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-dark.webp', alt: 'Opciones de recordatorio de TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Mañana), una fecha y hora, y una nota, tema oscuro' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'research'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp' },
+  ogImage: { src: '/blog/tabs-as-a-to-do-list/og.png', alt: 'Usa tus pestañas como lista de tareas: un grupo de TabMerger con notas, un recordatorio y pestañas inactivas' },
+  toc: [
+    { id: 'quick', label: 'Respuesta rápida' },
+    { id: 'problem', label: 'Pestañas como promesas' },
+    { id: 'why', label: 'Por qué funciona así' },
+    { id: 'steps', label: 'Arma la lista' },
+    { id: 'remind', label: 'Pon un recordatorio' },
+    { id: 'benefit', label: 'Lo que ganas' },
+    { id: 'habits', label: 'Buenos hábitos' },
+    { id: 'plans', label: 'Gratis o Pro' },
+    { id: 'faq', label: 'Preguntas frecuentes' },
+  ],
+}
+
+<QuickAnswer>
+
+Guarda tus pestañas de “para luego” en un grupo de [TabMerger](/features) como “Esta semana”. Haz clic derecho en una pestaña para **Agregar nota** (Add note) con lo que hay que hacer, **Recordarme…** (Remind me…) para decidir cuándo, o **Renombrar pestaña** (Rename tab) para darle un título que se lea como una tarea. Quita la pestaña cuando la termines. Las que llevan demasiado tiempo reciben un punto de inactividad, y un botón en la cabecera del grupo las limpia. Luego cierra las pestañas: la lista vive en TabMerger, no en tu barra de pestañas.
+
+</QuickAnswer>
+
+<InstallCta>Una lista de tareas hecha de pestañas, con las pestañas cerradas. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+<Section id="problem" title="Cada pestaña abierta es una promesa">
+
+Un artículo que leer antes del jueves. Una incidencia que revisar antes de la reunión diaria. Un horario de trenes que consultar cuando se fijen las fechas. Cada una sigue abierta porque cerrarla se siente como olvidarla. Una semana después hay cuarenta, nadie recuerda por qué está la mitad, y la que importaba queda detrás de todas las demás.
+
+Una pestaña no puede decirte por qué la abriste ni para cuándo es. Una lista de tareas sí.
+
+</Section>
+
+<Section id="why" title="Por qué las herramientas de tareas de TabMerger funcionan así">
+
+- **La nota vive en la pestaña.** Una nota va unida a la pestaña misma, así que el motivo viaja con el enlace: a las sesiones, las copias de seguridad y las exportaciones, y a tus otros dispositivos con Pro.
+- **Un título que se lee como una tarea.** **Renombrar pestaña** le da a una pestaña tu propio título, marcado como “renombrada”, y **Restablecer título original** (Reset to original title) lo deshace. “Revisar incidencias nuevas” es una tarea; “Issues · lbragile/TabMerger” es el nombre de una página.
+- **Recordatorios que no se te escapan.** A la hora que elijas, el navegador muestra una notificación con el título de la pestaña y tu nota. Se queda en pantalla hasta que la atiendas, y al hacer clic se abre la pestaña. Los recordatorios se vuelven a programar tras reiniciar el navegador, así que un reinicio no los pierde.
+- **Inactiva significa que la guardaste hace tiempo.** Una pestaña guardada hace más tiempo que tu umbral (7, 14, 30 o 60 días; 30 salvo que lo cambies) recibe un punto del color de su grupo, y la cabecera del grupo muestra **Quitar N pestañas inactivas** (Remove N stale tabs). Las viejas pestañas de “algún día” desaparecen con un clic.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-todo-group" alt="Un grupo “This week” con una nota en una pestaña, una pestaña renombrada con un recordatorio y dos pestañas inactivas, tema claro" darkAlt="Un grupo “This week” con una nota en una pestaña, una pestaña renombrada con un recordatorio y dos pestañas inactivas, tema oscuro" boxes={[{ id: 'note', label: 'Una nota en la pestaña' }, { id: 'reminder', label: 'Hay un recordatorio' }, { id: 'stale', label: 'Limpiar pestañas inactivas' }]} source="TabMerger 3.16.1">La lista de esta semana: por qué, cuándo y qué lleva demasiado tiempo esperando.</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="Arma la lista">
+
+1. Crea con **Agregar grupo** (Add Group), en la barra lateral, un grupo con el nombre del plazo, como “Esta semana” (“This week” en las capturas).
+2. Arrastra pestañas desde **Abiertas ahora** (Now Open) hasta él. La pestaña abierta se cierra y se guarda una copia (Deshacer la recupera).
+3. Haz clic derecho en cada pestaña: **Agregar nota** para lo que hay que hacer, **Renombrar pestaña** para un título con forma de tarea.
+4. Destaca con una estrella la ventana o el grupo que estás despachando, para que se quede arriba.
+5. Cuando termines una tarea, haz clic derecho en la pestaña y elige **Quitar pestaña** (Remove tab).
+
+</Section>
+
+<Section id="remind" title="Pon un recordatorio">
+
+Haz clic derecho en la pestaña y elige **Recordarme…**. Escoge **30 min**, **1 hora**, **3 horas** o **Mañana** (dentro de 24 horas), o fija una fecha y hora; añade una nota si quieres. Un reloj en la pestaña indica que tiene un recordatorio; vuelve a hacer clic derecho para **Editar recordatorio** (Edit reminder) o **Quitar recordatorio** (Clear reminder).
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-reminder" alt="Opciones de recordatorio de TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Mañana), una fecha y hora, y una nota, tema claro" darkAlt="Opciones de recordatorio de TabMerger: 30 min, 1 hour, 3 hours, Tomorrow (Mañana), una fecha y hora, y una nota, tema oscuro" boxes={[{ id: 'remind-in', label: 'Recordarme en…' }]} source="TabMerger 3.16.1">Una hora rápida o una exacta, más una nota para tu yo del futuro.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Lo que ganas">
+
+Tu barra de pestañas solo tiene lo que estás haciendo ahora. Todo lo demás lleva escrito al lado su motivo y, cuando importa, una hora en la que volverá a ti. Nada depende de que te acuerdes, y nada se queda abierto por si acaso.
+
+</Section>
+
+<Section id="habits" title="Buenos hábitos">
+
+- **Escribe la nota como una acción:** “Resumir para el jueves”, no “interesante”.
+- **Pon recordatorios solo a lo que tiene plazo.** Lo demás espera en la lista.
+- **Limpia las pestañas inactivas cada semana.** Si esperó 30 días, rara vez es urgente.
+- **Una lista por horizonte:** “Hoy”, “Esta semana”, “Algún día”. Mueve pestañas entre ellas con **Mover al grupo** (Move to group).
+- Para trabajos con muchas fuentes, mira [cómo organizar pestañas para investigar](/blog/organize-tabs-for-research); para el día completo, [un flujo de trabajo diario con TabMerger](/blog/tabmerger-daily-workflow).
+
+</Section>
+
+<Section id="plans" title="Gratis o Pro">
+
+<ComparisonTable
+  head={['', 'Gratis', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Notas, recordatorios, pestañas renombradas, pestañas inactivas', 'Sí', 'Sí'],
+    ['Pestañas en tus listas', '50 en total', 'Ilimitadas'],
+    ['Listas en tus otros dispositivos', 'No', 'Sí, con notas y horas de recordatorio'],
+  ]}
+/>
+
+Todas las herramientas de tareas están en el plan gratuito. [Pro](/pricing) suma espacio y sincronización. Un recordatorio te avisa en el navegador donde lo pusiste.
+
+<InstallCta>Cierra las pestañas, cumple las promesas. Gratis para Chrome, Edge y Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Preguntas frecuentes">
+
+<Faq items={post.faq} />
+
+</Section>

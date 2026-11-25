@@ -1,0 +1,149 @@
+export const post = {
+  slug: 'tabmerger-free-vs-pro',
+  title: 'TabMerger gratuit ou Pro : ce que comprend exactement chaque offre',
+  navTitle: 'TabMerger gratuit ou Pro',
+  seoTitle: 'TabMerger gratuit ou Pro : limites, synchronisation, prix et ce qui se passe si vous résiliez',
+  description:
+    'Tout ce que comprend l’offre gratuite de TabMerger, tout ce qu’ajoute Pro, comment les limites sont appliquées et ce que deviennent vos onglets si une offre Pro prend fin. Sans petits caractères.',
+  shareSummary: 'Ce que l’offre gratuite comprend, ce que Pro ajoute et ce qui se passe si vous résiliez.',
+  dek: 'L’offre gratuite est un gestionnaire d’onglets complet. Pro, c’est pour plus d’onglets, plus d’ordinateurs et des sauvegardes auxquelles vous n’avez jamais à penser.',
+  published: '2026-12-20',
+  updated: '2026-12-20',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Gratuit : 5 groupes, 50 onglets, 3 règles d’URL, 3 sessions, aucun compte nécessaire.', source: 'Tarifs de TabMerger', href: '/pricing' },
+    { text: 'Pro : US$3.99 par mois ou US$42.99 par an, sans limites et avec une synchronisation chiffrée.', source: 'Tarifs de TabMerger', href: '/pricing' },
+    { text: 'Tout ce qui passe par nos serveurs est vérifié par le serveur, pas seulement par l’application.', source: 'Code source de TabMerger 3.16.1' },
+    { text: 'Si Pro prend fin, rien n’est supprimé.', source: 'Code source de TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'TabMerger est-il gratuit ?',
+      answer:
+        'Oui. L’offre gratuite ne demande aucun compte et comprend les groupes, les sessions, la recherche, l’enregistrement automatique, « Fermés récemment », les règles d’URL, l’import et l’export, dans ses limites : 5 groupes, 50 onglets, 3 règles d’URL et 3 sessions.',
+    },
+    {
+      question: 'Qu’apporte TabMerger Pro ?',
+      answer:
+        'Aucune limite sur les groupes, les onglets, les règles ou les sessions ; une synchronisation chiffrée de bout en bout entre appareils ; des sauvegardes chiffrées automatiques ; tous les enregistrements automatiques conservés ; 30 jours de « Fermés récemment » au lieu de 2 ; et une assistance prioritaire.',
+    },
+    {
+      question: 'Combien coûte TabMerger Pro ?',
+      answer: 'US$3.99 par mois ou US$42.99 par an (environ 10 % de moins qu’en payant au mois). Vous pouvez résilier à tout moment et gardez Pro jusqu’à la fin de la période payée.',
+    },
+    {
+      question: 'Que deviennent mes onglets si je résilie Pro ?',
+      answer:
+        'Rien n’est supprimé. Les groupes et onglets au-delà des limites de l’offre gratuite restent sur votre appareil, verrouillés, jusqu’à ce que vous repassiez à Pro ou fassiez de la place. Les nouvelles modifications ne sont plus synchronisées ; ce qui est déjà dans votre compte y reste.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabmerger-free-vs-pro/tm-over-limit-light.webp', alt: 'TabMerger avec l’offre gratuite et 7 groupes enregistrés : les deux derniers sont verrouillés et une bannière propose Pro, thème clair' },
+    { src: '/blog/tabmerger-free-vs-pro/tm-over-limit-dark.webp', alt: 'TabMerger avec l’offre gratuite et 7 groupes enregistrés : les deux derniers sont verrouillés et une bannière propose Pro, thème sombre' },
+  ],
+  tags: ['tabmerger-guides', 'tab-manager', 'comparison', 'browser-productivity'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabmerger-free-vs-pro/tm-over-limit-light.webp' },
+  ogImage: { src: '/blog/tabmerger-free-vs-pro/og.png', alt: 'TabMerger gratuit ou Pro : l’offre gratuite avec deux groupes verrouillés au-delà de sa limite' },
+  toc: [
+    { id: 'quick', label: 'Réponse rapide' },
+    { id: 'problem', label: 'Gratuit ou payant ?' },
+    { id: 'compare', label: 'Côte à côte' },
+    { id: 'why', label: 'Pourquoi la limite est ici' },
+    { id: 'enforce', label: 'Comment les limites sont vérifiées' },
+    { id: 'cancel', label: 'Si Pro prend fin' },
+    { id: 'choose', label: 'Quelle offre choisir' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+L’offre **gratuite** est un gestionnaire d’onglets complet, sans compte : 5 groupes, 50 onglets, 3 règles d’URL et 3 sessions, plus la recherche, l’enregistrement automatique (les 2 plus récents conservés), 2 jours de « Fermés récemment », l’import et l’export. **Pro** (US$3.99 par mois ou US$42.99 par an) supprime toutes les limites et ajoute la synchronisation chiffrée de bout en bout entre appareils, des sauvegardes chiffrées automatiques, tous les enregistrements automatiques conservés et 30 jours de « Fermés récemment ». Si Pro prend fin, rien n’est supprimé.
+
+</QuickAnswer>
+
+<InstallCta>Commencez gratuitement, sans compte. Chrome, Edge et Firefox.</InstallCta>
+
+<Section id="problem" title="Gratuit ou payant : la vraie question">
+
+Avant d’installer un gestionnaire d’onglets, la plupart des gens se demandent deux choses : « La version gratuite sera-t-elle vraiment utile ? » et « Si je paie puis que j’arrête, est-ce que je perds mes onglets ? » Les deux méritent une réponse franche. Voici donc tout ce que comprend chaque offre, comment c’est appliqué et ce qui se passe aux limites.
+
+</Section>
+
+<Section id="compare" title="Gratuit et Pro, côte à côte">
+
+<ComparisonTable
+  head={['', 'Gratuit', 'Pro']}
+  rowHeaders
+  minWidth="34rem"
+  rows={[
+    ['Prix', 'US$0, aucun compte nécessaire', 'US$3.99 par mois ou US$42.99 par an'],
+    ['Groupes', 'Jusqu’à 5', 'Illimités'],
+    ['Onglets', 'Jusqu’à 50', 'Illimités'],
+    ['Règles d’URL', 'Jusqu’à 3', 'Illimitées'],
+    ['Sessions', 'Jusqu’à 3, dans ce navigateur', 'Illimitées, synchronisées entre appareils'],
+    ['Enregistrer automatiquement les onglets ouverts', 'Les 2 plus récents conservés', 'Tous conservés'],
+    ['Onglets fermés récemment', 'Vos 2 derniers jours', 'Vos 30 derniers jours'],
+    ['Recherche, notes, rappels, import et export', 'Oui', 'Oui'],
+    ['Glisser-déposer, raccourcis clavier', 'Oui', 'Oui'],
+    ['Synchronisation cloud entre appareils (chiffrée de bout en bout)', 'Non, stocké sur cet appareil', 'Oui'],
+    ['Sauvegardes chiffrées automatiques', 'Non', 'Oui'],
+    ['Liens de partage, Paramètres → Appareils', 'Non', 'Oui'],
+    ['Assistance', 'Oui', 'Prioritaire'],
+  ]}
+/>
+
+La [page des tarifs](/pricing) fait foi pour les prix ; l’offre annuelle coûte environ 10 % de moins que douze paiements mensuels.
+
+</Section>
+
+<Section id="why" title="Pourquoi la limite entre les offres est placée là">
+
+La ligne suit les coûts. Tout ce qui tourne uniquement dans votre navigateur ne nous coûte rien à offrir, donc l’offre gratuite reçoit le gestionnaire d’onglets entier : groupes, recherche, enregistrement automatique, « Fermés récemment », règles d’URL, import et export, avec des limites taillées pour le travail quotidien d’une personne.
+
+Pro paie ce qui tourne sur nos serveurs : la synchronisation et le stockage de vos groupes, sessions et sauvegardes chiffrés, ainsi que les onglets ouverts que vos appareils partagent dans Paramètres → Appareils. Pro lève aussi les limites locales, pour ceux dont les onglets ont dépassé 5 groupes et 50 onglets.
+
+</Section>
+
+<Section id="enforce" title="Comment les limites sont vérifiées">
+
+- **Sur votre appareil :** les limites de groupes, d’onglets, de règles et de sessions, la rotation de l’enregistrement automatique et la durée de conservation de « Fermés récemment » sont appliquées par l’extension. Ces données ne quittent jamais votre navigateur, il n’y a donc rien à vérifier pour un serveur.
+- **Sur nos serveurs :** toute fonction qui stocke des données chez nous (synchronisation, sessions et sauvegardes dans votre compte, onglets ouverts de vos appareils, liens de partage, configuration du chiffrement) est refusée par la base de données pour un compte sans offre Pro active. Un bouton masqué n’est jamais le seul verrou.
+
+Quand vous approchez des limites de l’offre gratuite, TabMerger vous le signale par une bannière et vous propose Pro ; il ne supprime jamais vos groupes ni vos onglets pour faire de la place.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabmerger-free-vs-pro/tm-over-limit" alt="TabMerger avec l’offre gratuite et 7 groupes enregistrés : les deux derniers sont verrouillés et une bannière propose Pro, thème clair" darkAlt="TabMerger avec l’offre gratuite et 7 groupes enregistrés : les deux derniers sont verrouillés et une bannière propose Pro, thème sombre" boxes={[{ id: 'banner', label: 'Avis de l’offre gratuite' }, { id: 'locked', label: 'Au-delà de la limite' }]} source="TabMerger 3.16.1">Sept groupes avec l’offre gratuite : les cinq premiers fonctionnent normalement, les deux derniers sont conservés mais verrouillés.</ThemedScreenshot>
+
+</Section>
+
+<Section id="cancel" title="Si une offre Pro prend fin">
+
+Vous gardez Pro jusqu’à la fin de la période payée. Ensuite :
+
+- **Rien n’est supprimé.** Les groupes et onglets au-delà des limites de l’offre gratuite restent sur votre appareil, affichés avec un cadenas, jusqu’à ce que vous repassiez à Pro ou en retiriez d’autres pour faire de la place.
+- **Vos règles d’URL continuent de fonctionner**, même si vous en avez plus de 3 ; seul l’ajout de nouvelles règles au-delà de 3 demande Pro.
+- **La synchronisation s’arrête pour les nouvelles modifications.** Ce qui est déjà dans votre compte y reste ; dans le tableau de bord, vous pouvez toujours ouvrir ou supprimer les sessions enregistrées et télécharger ou supprimer les sauvegardes.
+- **Tout ce qui est local continue de fonctionner :** recherche, enregistrement automatique (les nouveaux enregistrements automatiques tournent, les 2 plus récents sont conservés), « Fermés récemment » (de retour à 2 jours), import et export.
+
+</Section>
+
+<Section id="choose" title="Quelle offre vous convient">
+
+- **Restez sur l’offre gratuite** si vous utilisez un seul ordinateur et suivez une poignée de projets : elle est complète, privée par défaut et ne demande aucun compte.
+- **Choisissez Pro** si vous travaillez sur plus d’un ordinateur, gardez plus de 5 groupes ou 50 onglets, ou voulez des sauvegardes et un mois d’onglets fermés sans y penser.
+
+Vous hésitez ? Commencez avec l’offre gratuite ; passer à Pro plus tard conserve tout ce que vous avez déjà. Pour la routine qui fait fonctionner l’une ou l’autre offre, voyez [une routine quotidienne des onglets avec TabMerger](/blog/tabmerger-daily-workflow) ; pour la façon dont la synchronisation protège vos données, [synchroniser ses onglets entre appareils](/blog/sync-tabs-between-devices-with-tabmerger).
+
+<InstallCta>Gratuit pour un ordinateur, Pro quand il vous en faut plus. Chrome, Edge et Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

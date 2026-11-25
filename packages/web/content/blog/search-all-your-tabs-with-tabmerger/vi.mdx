@@ -1,0 +1,175 @@
+export const post = {
+  slug: 'search-all-your-tabs-with-tabmerger',
+  title: 'Tìm trong mọi tab với TabMerger: Ctrl+K và các bộ lọc',
+  navTitle: 'Tìm trong mọi tab của bạn',
+  seoTitle: 'Tìm tab đang mở, đã lưu và đã đóng cùng lúc với TabMerger',
+  description:
+    'Một ô tìm kiếm cho mọi tab của bạn: đang mở, đã lưu trong nhóm hay đã đóng trong tuần này. Cách tính năng tìm tab bằng Ctrl+K của TabMerger hoạt động, từng bộ lọc (group:, window:, tag:, closed:) và vì sao nó khớp theo cách đó.',
+  shareSummary: 'Tab đang mở, đã lưu và đã đóng trong một ô tìm kiếm, cùng bộ lọc thu hẹp chỉ bằng một phím.',
+  dek: 'Đang mở, đã lưu hay vừa đóng một giờ trước: gõ vài chữ cái là tab hiện ra, được tô sáng.',
+  published: '2026-12-14',
+  updated: '2026-12-14',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Ctrl+K (⌘+K trên Mac) tìm cùng lúc trong tab đang mở, đã lưu và vừa đóng gần đây.', source: 'TabMerger 3.16.1' },
+    { text: 'Bộ lọc: group:, window:, tag: (nhãn nhóm thẻ Chrome) và closed:.', source: 'TabMerger 3.16.1' },
+    { text: 'Kết quả khớp là chuỗi chữ cái chính xác, không bao giờ khớp mờ, nên kết quả nào cũng có phần tô sáng.', source: 'Mã nguồn TabMerger 3.16.1' },
+    { text: 'Tìm kiếm và mọi bộ lọc đều miễn phí.', source: 'Bảng giá TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Làm sao để tìm trong mọi tab cùng lúc?',
+      answer:
+        'Mở TabMerger và nhấn Ctrl+K (⌘+K trên Mac), rồi gõ một phần tiêu đề hoặc địa chỉ trang. Kết quả gồm các tab đang mở, mọi nhóm đã lưu và, bên dưới, những tab bạn vừa đóng gần đây.',
+    },
+    {
+      question: 'Làm sao để chỉ tìm trong một nhóm?',
+      answer:
+        'Gõ group: rồi chọn nhóm trong danh sách; TabMerger điền sẵn group:"Name". Sau đó thêm từ khóa phía sau, ví dụ group:"Thesis sources" wiki.',
+    },
+    {
+      question: 'Tôi có tìm được tab đã đóng không?',
+      answer: 'Có. Bắt đầu tìm bằng closed: để chỉ liệt kê các tab và cửa sổ vừa đóng gần đây. Chọn một mục để mở lại; Ctrl-nhấp hoặc nhấp chuột giữa sẽ mở lại ở chế độ nền.',
+    },
+    {
+      question: 'Vì sao gõ sai chính tả thì tìm không ra trang?',
+      answer:
+        'TabMerger khớp các chữ cái đúng như bạn gõ (không phân biệt hoa thường), không bao giờ khớp các chữ cái rải rác trong tiêu đề. Nhờ vậy kết quả luôn dễ đoán: kết quả nào cũng có phần khớp được tô sáng, và phần tô sáng nào cũng là chỗ khớp thật.',
+    },
+    {
+      question: 'Tìm kiếm có miễn phí không?',
+      answer: 'Có, tìm kiếm và mọi bộ lọc đều có trong gói Free. Pro lưu tab đã đóng trong 30 ngày để tìm, thay vì 2 ngày.',
+    },
+  ],
+  images: [
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-light.webp', alt: 'Ô tìm kiếm của TabMerger mở bằng Ctrl+K, liệt kê các tìm kiếm mẫu cho react, group:, window:, tag: và closed:, giao diện sáng' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-examples-dark.webp', alt: 'Ô tìm kiếm của TabMerger mở bằng Ctrl+K, liệt kê các tìm kiếm mẫu cho react, group:, window:, tag: và closed:, giao diện tối' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-light.webp', alt: 'Tìm docs trong TabMerger: bốn kết quả từ Now Open (Đang Mở) và Reading list, docs được tô sáng trong từng địa chỉ, giao diện sáng' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-results-dark.webp', alt: 'Tìm docs trong TabMerger: bốn kết quả từ Now Open (Đang Mở) và Reading list, docs được tô sáng trong từng địa chỉ, giao diện tối' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-light.webp', alt: 'Tìm kiếm TabMerger khi đã gõ window:, liệt kê các cửa sổ Window, Papers và Tools để chọn, giao diện sáng' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker-dark.webp', alt: 'Tìm kiếm TabMerger khi đã gõ window:, liệt kê các cửa sổ Window, Papers và Tools để chọn, giao diện tối' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp', alt: 'Nhóm Thesis sources khi đang tìm wiki trong nhóm, kết quả khớp duy nhất được tô sáng và các tab còn lại bị làm mờ, giao diện sáng' },
+    { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-dark.webp', alt: 'Nhóm Thesis sources khi đang tìm wiki trong nhóm, kết quả khớp duy nhất được tô sáng và các tab còn lại bị làm mờ, giao diện tối' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'tab-manager', 'browser-tips'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/search-all-your-tabs-with-tabmerger/tm-search-dim-light.webp' },
+  ogImage: { src: '/blog/search-all-your-tabs-with-tabmerger/og.png', alt: 'Tìm trong mọi tab với TabMerger: kết quả cho docs từ tab đang mở và đã lưu' },
+  toc: [
+    { id: 'quick', label: 'Trả lời nhanh' },
+    { id: 'problem', label: 'Tab đó ở đâu nhỉ?' },
+    { id: 'why', label: 'Vì sao tìm kiếm hoạt động như vậy' },
+    { id: 'steps', label: 'Tìm từng bước' },
+    { id: 'filters', label: 'Mọi bộ lọc' },
+    { id: 'panel', label: 'Sau khi tìm' },
+    { id: 'benefit', label: 'Bạn tiết kiệm được gì' },
+    { id: 'habits', label: 'Thói quen tốt' },
+    { id: 'plans', label: 'Free hay Pro' },
+    { id: 'faq', label: 'Câu hỏi thường gặp' },
+  ],
+}
+
+<QuickAnswer>
+
+Mở [TabMerger](/features) và nhấn <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> trên Mac). Gõ vài chữ cái của tiêu đề hoặc địa chỉ: kết quả lấy từ các tab đang mở, mọi nhóm đã lưu và, bên dưới, những tab bạn vừa đóng gần đây, mỗi kết quả đều ghi rõ nó nằm ở đâu. Thu hẹp bằng `group:`, `window:`, `tag:` hoặc `closed:`, rồi nhấn <Kbd>Enter</Kbd> để đến thẳng tab đó.
+
+</QuickAnswer>
+
+<InstallCta>Mọi tab của bạn, chỉ cách một lần tìm. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+<Section id="problem" title="“Tab đó ở đâu nhỉ?”">
+
+Bạn biết trang đó có thật. Hôm thứ Ba bạn còn mở nó, cạnh pull request. Nó nằm ở cửa sổ làm việc hay cửa sổ đọc? Bạn đã lưu nó vào nhóm hay đã đóng? Tính năng tìm tab có sẵn của trình duyệt chỉ thấy những gì đang mở trong trình duyệt đó lúc này; lịch sử thấy mọi thứ bạn từng truy cập, nhưng không biết bạn cố ý giữ lại gì.
+
+Điều bạn cần là một ô biết hết: cái gì đang mở, cái gì bạn đã lưu và cái gì bạn đã đóng tuần này. Ô đó chính là <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> trong TabMerger. (Về tính năng tìm tab có sẵn của trình duyệt, xem [cách tìm một tab giữa hàng trăm tab](/blog/find-a-tab-among-hundreds).)
+
+</Section>
+
+<Section id="why" title="Vì sao tìm kiếm của TabMerger hoạt động như vậy">
+
+- **Mọi thứ trong một danh sách.** Tab đang mở, nhóm đã lưu và tab vừa đóng gần đây cùng trả lời một câu hỏi (“nó ở đâu?”), nên chúng hiện ra cùng nhau. Mỗi kết quả có một huy hiệu ghi nhóm của nó, kèm nhãn nhóm thẻ Chrome nếu có.
+- **Chính xác, không khớp mờ.** Kết quả là tab có tiêu đề hoặc địa chỉ chứa các chữ cái bạn gõ thành một chuỗi liền, không phân biệt hoa thường. Các chữ cái rải rác trong tiêu đề không bao giờ được tính. Đây là chủ ý: kết quả nào cũng có phần tô sáng, và phần tô sáng nào cũng là chỗ khớp thật, nên bạn có thể tin những gì mình thấy.
+- **Khớp tốt nhất lên đầu.** Kết quả khớp chính xác đứng trên tiêu đề bắt đầu bằng chữ bạn gõ, tiếp theo là từ bắt đầu bằng chữ đó, rồi đến chỗ khớp ở bất kỳ đâu. Danh sách hiện 12 kết quả hàng đầu, nên tab cần tìm nằm gần trên cùng.
+- **Chọn, không cần đánh vần.** Gõ `group:`, `window:` hoặc `tag:` sẽ mở danh sách nhóm, cửa sổ hoặc nhãn của bạn để chọn. TabMerger điền tên trong dấu ngoặc kép, nên tên dài có dấu cách vẫn chạy ngon.
+- **Tab đã đóng không chen ngang.** Tối đa 3 tab vừa đóng hiện ở dưới các kết quả đã lưu; bắt đầu bằng `closed:` để chỉ xem tab đã đóng.
+- **Chỉ cần bàn phím.** <Kbd>↑</Kbd> <Kbd>↓</Kbd> để di chuyển, <Kbd>Enter</Kbd> để mở, <Kbd>Esc</Kbd> hoặc <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> để đóng. Đóng ô tìm kiếm vẫn giữ nguyên những gì bạn đã gõ, nên bạn có thể quay lại.
+
+</Section>
+
+<Section id="steps" title="Tìm từng bước">
+
+1. Mở TabMerger và nhấn <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> trên Mac), hoặc nhấp vào ô tìm kiếm ở trên cùng.
+2. Khi chưa gõ gì, ô tìm kiếm gợi ý vài lượt tìm để thử. Nhấp vào một gợi ý để bắt đầu từ đó.
+3. Gõ vài chữ cái của tiêu đề hoặc địa chỉ, chẳng hạn `docs`. Các chỗ khớp được tô sáng.
+4. Nhấn <Kbd>Enter</Kbd> trên một tab: TabMerger mở nhóm của tab đó và đưa tiêu điểm đến tab ấy. Với tab đã đóng, <Kbd>Enter</Kbd> sẽ mở lại tab.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Tìm kiếm trong TabMerger" steps={[{ title: 'Ctrl+K' }, { title: 'Kết quả' }, { title: 'window:' }]}>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-examples" alt="Ô tìm kiếm của TabMerger mở bằng Ctrl+K, liệt kê các tìm kiếm mẫu cho react, group:, window:, tag: và closed:, giao diện sáng" darkAlt="Ô tìm kiếm của TabMerger mở bằng Ctrl+K, liệt kê các tìm kiếm mẫu cho react, group:, window:, tag: và closed:, giao diện tối" boxes={[{ id: 'search-input', label: 'Ô tìm kiếm' }, { id: 'examples', label: 'Tìm kiếm gợi ý' }]} source="TabMerger 3.16.1">Ô tìm kiếm trống gợi ý cho bạn nơi bắt đầu.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-results" alt="Tìm docs trong TabMerger: bốn kết quả từ Now Open (Đang Mở) và Reading list, docs được tô sáng trong từng địa chỉ, giao diện sáng" darkAlt="Tìm docs trong TabMerger: bốn kết quả từ Now Open (Đang Mở) và Reading list, docs được tô sáng trong từng địa chỉ, giao diện tối" boxes={[{ id: 'search-input', label: 'docs' }]} source="TabMerger 3.16.1">Tab đang mở và đã lưu trong một danh sách, mỗi tab ghi rõ nhóm của nó.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-window-picker" alt="Tìm kiếm TabMerger khi đã gõ window:, liệt kê các cửa sổ Window, Papers và Tools để chọn, giao diện sáng" darkAlt="Tìm kiếm TabMerger khi đã gõ window:, liệt kê các cửa sổ Window, Papers và Tools để chọn, giao diện tối" boxes={[{ id: 'search-input', label: 'Bộ lọc window:' }, { id: 'pick-window', label: 'Các cửa sổ bạn đã đặt tên' }]} source="TabMerger 3.16.1">Gõ window: rồi chọn; không cần đánh vần tên.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="filters" title="Mọi bộ lọc, kèm ví dụ">
+
+<ComparisonTable
+  head={['Bộ lọc', 'Tìm thấy', 'Ví dụ']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['(từ thông thường)', 'Tab có tiêu đề hoặc địa chỉ chứa các từ đó, và nhóm theo tên', 'pull request'],
+    ['group:', 'Tab trong một nhóm', 'group:"Thesis sources" wiki'],
+    ['window:', 'Tab trong một cửa sổ (đặt tên từ menu ⋯ của nó)', 'window:"Papers"'],
+    ['tag:', 'Tab trong nhóm thẻ Chrome có nhãn đó', 'tag:"Sprint"'],
+    ['closed:', 'Chỉ tab và cửa sổ vừa đóng gần đây', 'closed: seat'],
+  ]}
+/>
+
+Bộ lọc kết hợp được với từ khóa và với nhau. Hãy dùng dấu ngoặc kép khi thêm từ sau bộ lọc: nếu không, bộ lọc sẽ lấy hết phần còn lại của dòng, nên `group:Work pull` sẽ tìm nhóm tên “Work pull”. Chọn từ danh sách thì dấu ngoặc kép được thêm sẵn cho bạn.
+
+</Section>
+
+<Section id="panel" title="Sau khi tìm: ẩn hoặc làm mờ phần còn lại">
+
+Đóng ô tìm kiếm bằng <Kbd>Esc</Kbd> và tìm kiếm vẫn có hiệu lực ở khung chính. Thanh bên cho thấy mỗi nhóm có bao nhiêu kết quả khớp (“Tìm thấy 1”), và trong một nhóm, các tab không khớp mặc định bị **ẩn**. Muốn giữ nguyên bố cục để dễ định hướng? Trong **Cài đặt → Chung** (Settings → General), đặt **Các thẻ không khớp với tìm kiếm** (Tabs that do not match a search) thành **Làm mờ** (Dim): tab nào cũng giữ nguyên chỗ, được làm mờ, còn các chỗ khớp được tô sáng. **Xóa tìm kiếm** (Clear search) sẽ kết thúc tìm kiếm.
+
+Khi có tab bị ẩn, việc kéo để sắp xếp lại tạm dừng (“Xóa tìm kiếm để di chuyển các mục”): khi một số hàng bị khuất, chỗ mà tab được thả xuống sẽ chỉ là đoán mò.
+
+<ThemedScreenshot src="/blog/search-all-your-tabs-with-tabmerger/tm-search-dim" alt="Nhóm Thesis sources khi đang tìm wiki trong nhóm, kết quả khớp duy nhất được tô sáng và các tab còn lại bị làm mờ, giao diện sáng" darkAlt="Nhóm Thesis sources khi đang tìm wiki trong nhóm, kết quả khớp duy nhất được tô sáng và các tab còn lại bị làm mờ, giao diện tối" boxes={[{ id: 'match', label: 'Chỗ khớp' }]} source="TabMerger 3.16.1">Chế độ làm mờ: chỗ khớp nổi bật, mọi thứ khác vẫn ở nguyên chỗ cũ.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="Bạn tiết kiệm được gì">
+
+Việc dò từng cửa sổ đầy biểu tượng 16 pixel và cuộn lịch sử giờ chỉ còn vài lần gõ phím. Cách này hoạt động như nhau dù bạn giữ bao nhiêu tab: một nhóm bạn lưu từ mấy tháng trước cũng gần như tab bạn vừa mở một phút trước. Chính điều đó giúp bạn yên tâm đóng cửa sổ: mọi thứ bạn đã lưu chỉ cách một lần tìm.
+
+</Section>
+
+<Section id="habits" title="Thói quen tốt">
+
+- **Tìm theo địa chỉ, không chỉ tiêu đề.** `github.com/your-org` hoặc `localhost:3000` tìm ra những trang có tiêu đề na ná nhau.
+- **Đặt tên cho cửa sổ bạn hay tìm.** “Papers”, “PRs”, “Docs”: rồi `window:` sẽ đưa bạn đến đó.
+- **Bắt đầu bằng `closed:`** khi bạn biết mình đã đóng tab; danh sách ngắn hơn và chỉ có thứ bạn cần.
+- **Kết hợp tìm kiếm với nhóm.** Nhóm của bạn càng gọn gàng (xem [quy trình làm việc với tab mỗi ngày](/blog/tabmerger-daily-workflow)), bộ lọc `group:` càng thu hẹp được nhiều.
+
+</Section>
+
+<Section id="plans" title="Free hay Pro">
+
+Tìm kiếm, mọi bộ lọc, danh sách chọn và Ẩn hoặc Làm mờ đều có trong gói Free, không cần tài khoản. Khác biệt duy nhất là tab đã đóng được giữ lại bao lâu: Free giữ các tab bạn đóng trong 2 ngày gần nhất, Pro trong 30 ngày gần nhất. Và với nhóm và tab không giới hạn của Pro, đơn giản là có nhiều thứ hơn để tìm. Xem [trang bảng giá](/pricing).
+
+<InstallCta>Tìm bất kỳ tab nào bạn đã giữ chỉ bằng một phím. Miễn phí cho Chrome, Edge và Firefox.</InstallCta>
+
+Muốn dùng bàn phím nhiều hơn ngoài tìm kiếm, xem [phím tắt cho tab](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="faq" title="Câu hỏi thường gặp">
+
+<Faq items={post.faq} />
+
+</Section>

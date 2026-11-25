@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'chrome-tab-groups',
+  title: 'Chrome-Tabgruppen: speichern, wieder öffnen und synchronisieren',
+  seoTitle: 'Tabgruppen in Chrome: speichern, öffnen, synchronisieren (und ihre Grenzen)',
+  description:
+    'So funktionieren Tabgruppen in Chrome: erstellen, minimieren, schließen und gespeichert wieder öffnen, was mit deinen anderen Geräten synchronisiert wird und was Erweiterungen sehen können und was nicht.',
+  shareSummary: 'Tabgruppen in Chrome erstellen, speichern, wieder öffnen und synchronisieren, und ihre Grenzen.',
+  dek: 'Eine geschlossene Gruppe ist nicht weg, sondern gespeichert. Hier erfährst du, wo sie landet, was dir auf andere Geräte folgt und was nicht.',
+  published: '2026-11-23',
+  updated: '2026-11-23',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: '„Gruppe schließen“ speichert die Gruppe; wieder öffnen kannst du sie über die Lesezeichenleiste oder ⋮ → Tabgruppen.',
+      source: 'Chrome-Hilfe',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Löschen oder „Gruppierung aufheben“ entfernt die Gruppe auf allen angemeldeten Geräten.', source: 'Chrome-Hilfe' },
+    {
+      text: 'chrome.tabGroups sieht nur Gruppen in geöffneten Fenstern.',
+      source: 'Doku zu chrome.tabGroups',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'Beide Tabgruppen-Einstellungen für die Lesezeichenleiste waren in einem frischen Chrome 157 aktiv.', source: 'chrome://settings/appearance, 20. Nov. 2026' },
+  ],
+  faq: [
+    {
+      question: 'Wie speichere ich eine Tabgruppe in Chrome?',
+      answer:
+        'Klicke mit der rechten Maustaste auf den Namen der Gruppe und wähle „Gruppe schließen“. Chrome behält sie, und du öffnest sie über die Lesezeichenleiste oder über ⋮ → Tabgruppen wieder.',
+    },
+    {
+      question: 'Werden Chrome-Tabgruppen zwischen Geräten synchronisiert?',
+      answer:
+        'Gespeicherte Gruppen folgen deinem Google-Konto: Die Chrome-Hilfe warnt, dass das Löschen einer Gruppe oder das Aufheben ihrer Gruppierung sie auf allen Geräten entfernt, die mit demselben Konto angemeldet sind.',
+    },
+    {
+      question: 'Was ist der Unterschied zwischen „Gruppe schließen“ und „Gruppe löschen“?',
+      answer: '„Gruppe schließen“ schließt die Tabs und behält die Gruppe, damit du sie später wieder öffnen kannst. „Gruppe löschen“ entfernt sie, auch auf deinen anderen Geräten.',
+    },
+    {
+      question: 'Kann eine Tab-Manager-Erweiterung meine geschlossenen Chrome-Gruppen speichern?',
+      answer:
+        'Nicht, solange sie geschlossen sind: Die Erweiterungs-API beschreibt nur Gruppen in geöffneten Fenstern. Öffne die Gruppe zuerst wieder und speichere sie dann mit der Erweiterung.',
+    },
+  ],
+  images: [
+    { src: '/blog/chrome-tab-groups/chrome-tab-groups-setting.webp', alt: 'Chrome-Einstellungen, „Appearance“ (Darstellung), mit den beiden aktivierten Optionen „Show tab groups in bookmarks bar“ (Tabgruppen in Lesezeichenleiste anzeigen) und „Automatically pin new tab groups created on any device to the bookmarks bar“ (Neue Tabgruppen automatisch an die Lesezeichenleiste anpinnen)' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp', alt: 'TabMerger, „Now Open“ (Jetzt geöffnet): sechs Tabs, drei blau als „Sprint“ und drei grün als „Thesis“ markiert, helles Design' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-dark.webp', alt: 'TabMerger, „Now Open“ (Jetzt geöffnet): sechs Tabs, drei blau als „Sprint“ und drei grün als „Thesis“ markiert, dunkles Design' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-light.webp', alt: 'Die TabMerger-Gruppe „Sprint + thesis“ mit denselben sechs Tabs und ihren Markierungen „Sprint“ und „Thesis“, helles Design' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-dark.webp', alt: 'Die TabMerger-Gruppe „Sprint + thesis“ mit denselben sechs Tabs und ihren Markierungen „Sprint“ und „Thesis“, dunkles Design' },
+  ],
+  tags: ['chrome', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (tab groups with the keyboard)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp' },
+  ogImage: { src: '/blog/chrome-tab-groups/og.png', alt: 'Titelkarte „Chrome tab groups: how to save, reopen and sync them“: eine TabMerger-Anleitung, mit Tabs, die nach ihrer Chrome-Gruppe markiert sind' },
+  toc: [
+    { id: 'quick', label: 'Kurze Antwort' },
+    { id: 'basics', label: 'Erstellen und minimieren' },
+    { id: 'save', label: 'Speichern und wieder öffnen' },
+    { id: 'sync', label: 'Werden sie synchronisiert?' },
+    { id: 'limits', label: 'Die Grenzen' },
+    { id: 'tabmerger', label: 'Gruppen dauerhaft behalten' },
+    { id: 'faq', label: 'Häufige Fragen' },
+  ],
+}
+
+<QuickAnswer>
+
+Klicke mit der rechten Maustaste auf einen Tab und wähle **Tab zu Gruppe hinzufügen** („Add tab to group“), um eine Gruppe anzulegen; gib ihr dann einen Namen und eine Farbe. Um eine Gruppe zu speichern, klicke mit der rechten Maustaste auf ihren Namen und wähle **Gruppe schließen** („Close group“): Chrome behält sie, und du öffnest sie über die Lesezeichenleiste oder über **⋮ → Tabgruppen** („Tab groups“) wieder. Gespeicherte Gruppen folgen deinem Google-Konto: Löschst du eine, ist sie überall gelöscht. Damit deine Gruppen dauerhaft sicher sind, speichere sie in [TabMerger](/features): Es behält für jeden Tab den Namen und die Farbe seiner Chrome-Gruppe und ordnet die Tabs beim erneuten Öffnen wieder in Gruppen ein.
+
+</QuickAnswer>
+
+<InstallCta>Bewahre deine Chrome-Tabgruppen sicher, durchsuchbar und synchronisiert auf. Kostenlos für Chrome, Edge und Firefox.</InstallCta>
+
+<Section id="basics" title="Wie funktionieren Tabgruppen in Chrome?">
+
+Eine Tabgruppe ist eine beschriftete, farbige Reihe von Tabs in einem Fenster.
+
+1. Klicke mit der rechten Maustaste auf einen Tab und wähle **Tab zu Gruppe hinzufügen** → **Neue Gruppe** („New group“) oder eine vorhandene Gruppe.
+2. Gib der Gruppe einen Namen und wähle eine Farbe. Mit einem Rechtsklick auf den Namen kannst du sie später umbenennen, umfärben oder ihr einen neuen Tab hinzufügen.
+3. Ziehe einen Tab in die Gruppe, um ihn hinzuzufügen; mit Rechtsklick auf einen Tab → **Aus Gruppe entfernen** („Remove from group“) nimmst du ihn wieder heraus.
+4. Klicke auf den Namen der Gruppe, um sie auf ein einzelnes Label zu minimieren, und noch einmal, um sie wieder zu maximieren.
+
+Mit der Tastatur: Drücke <Kbd>F6</Kbd>, bis die Tabs den Fokus haben, gehe mit <Kbd>Tab</Kbd> zur Gruppe, und die Menütaste öffnet das Gruppenmenü. <Kbd>Space</Kbd> oder <Kbd>Enter</Kbd> minimiert die Gruppe, und <Kbd>Ctrl</Kbd>+<Kbd>←</Kbd>/<Kbd>→</Kbd> verschiebt sie.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with Close group and Delete group. */}
+
+</Section>
+
+<Section id="save" title="Wie speichere ich eine Tabgruppe und hole sie zurück?">
+
+**Gruppe schließen** ist Chromes Speichern-Knopf. Die Tabs werden geschlossen, die Gruppe nicht: Chrome behält sie und führt sie an zwei Stellen auf.
+
+- **Lesezeichenleiste:** ein Rastersymbol mit dem Namen der Gruppe. Ein Klick darauf öffnet sie wieder.
+- **⋮-Menü → Tabgruppen:** deine gespeicherten Gruppen.
+
+Zwei Einstellungen unter **Einstellungen → Darstellung** („Settings → Appearance“) steuern den Teil mit der Lesezeichenleiste. Beide waren in einem frischen Chrome-157-Profil aktiv.
+
+<AnnotatedFigure src="/blog/chrome-tab-groups/chrome-tab-groups-setting.webp" alt="Chrome-Einstellungen, „Appearance“ (Darstellung), mit den beiden aktivierten Optionen „Show tab groups in bookmarks bar“ (Tabgruppen in Lesezeichenleiste anzeigen) und „Automatically pin new tab groups created on any device to the bookmarks bar“ (Neue Tabgruppen automatisch an die Lesezeichenleiste anpinnen)" width={1600} height={844} eager boxes={[{ id: 'tab-groups-setting', label: 'In der Lesezeichenleiste zeigen' }, { id: 'auto-pin', label: 'Neue Gruppen anpinnen' }]} source="chrome://settings/appearance · Chrome 157.0.8103.80">Die beiden Tabgruppen-Einstellungen auf Chromes Seite „Appearance“ (Darstellung).</AnnotatedFigure>
+
+<Catch>Eine gespeicherte Gruppe enthält nur Adressen. Sie ist keine Sicherung: Löschst du sie ein einziges Mal, ist sie von allen Geräten verschwunden.</Catch>
+
+</Section>
+
+<Section id="sync" title="Werden Tabgruppen zwischen Geräten synchronisiert?">
+
+Ja, über dein Google-Konto. Die Chrome-Hilfe benennt die Nebenwirkung ausdrücklich: Wenn du eine Gruppe **löschst** oder ihre **Gruppierung aufhebst** („Ungroup“), wird sie auf deinem Gerät *und* auf allen anderen Geräten entfernt, die mit demselben Konto angemeldet sind. Die Einstellung **Neue Tabgruppen automatisch an die Lesezeichenleiste anpinnen** („Automatically pin new tab groups created on any device to the bookmarks bar“) pinnt außerdem Gruppen an, die du anderswo erstellt hast.
+
+Was das in der Praxis bedeutet:
+
+- Gruppen, die du auf einem Computer erstellst, können auf einem anderen auftauchen, der mit demselben Konto angemeldet ist; genau darauf bezieht sich die Anpinnen-Einstellung.
+- Wer auf dem Laptop aufräumt, löscht dieselben Gruppen auch auf dem Desktop-PC.
+
+Auch Firefox 159 hat Tabgruppen, mit **Gruppe speichern und schließen** („Save and close group“) und einer Liste **Geschlossene Gruppen** („Closed Groups“); die Schritte und Screenshots dieser Anleitung beziehen sich auf Chrome. Für Firefox gibt es eine eigene Anleitung: [Tabgruppen in Firefox](/blog/firefox-tab-groups).
+
+</Section>
+
+<Section id="limits" title="Wo stoßen Tabgruppen an ihre Grenzen?">
+
+- **Jeweils ein Fenster.** Eine Gruppe lebt in einem Fenster. Wer „alles, was ich offen habe“ aus drei Fenstern speichern will, braucht drei oder mehr Gruppen.
+- **Nur Adressen.** Wie ein Lesezeichen öffnet eine gespeicherte Gruppe die Seite neu: Scrollposition und Formulareingaben sind weg.
+- **Für Erweiterungen unsichtbar, solange sie geschlossen ist.** Die `chrome.tabGroups`-API beschreibt Gruppen, die in einem geöffneten Fenster liegen: Jede Gruppe, die sie zurückgibt, hat eine `windowId`, das Schließen einer Gruppe löst `onRemoved` aus, und es gibt keinen Aufruf, der gespeicherte, geschlossene Gruppen auflistet. Ein Tab-Manager kann eine Gruppe, die du geschlossen hast, erst sichern, wenn du sie wieder öffnest.
+- **Löschen wandert mit.** Die Synchronisierung, die Gruppen so praktisch macht, trägt auch einen Fehler auf jedes Gerät.
+
+Unsere Anleitung zum [Speichern aller offenen Tabs](/blog/save-all-open-tabs) vergleicht Gruppen mit Lesezeichen, der Wiederherstellung beim Start und Sitzungsmanagern, und die [Routine gegen zu viele Tabs](/blog/manage-too-many-tabs) zeigt, wo Gruppen im Alltag ihren Platz haben.
+
+</Section>
+
+<Section id="tabmerger" title="Gruppen dauerhaft behalten mit TabMerger">
+
+[TabMerger](/features), unsere kostenlose Erweiterung für Chrome, Edge und Firefox, liest deine geöffneten Chrome-Tabgruppen. **Jetzt geöffnet** markiert jeden Tab mit dem Namen und der Farbe seiner Gruppe, und wenn du ein Fenster in einer TabMerger-Gruppe speicherst, bleiben diese Markierungen erhalten. Dort gespeichert, bleiben die Tabs unberührt, wenn eine Chrome-Gruppe auf einem anderen Gerät gelöscht wird.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Chrome-Tabgruppen in TabMerger speichern" steps={[{ title: 'Jetzt geöffnet' }, { title: 'Gespeicherte Gruppe' }]}>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-now-open-groups" alt="TabMerger, „Now Open“ (Jetzt geöffnet): sechs Tabs, drei blau als „Sprint“ und drei grün als „Thesis“ markiert, helles Design" darkAlt="TabMerger, „Now Open“ (Jetzt geöffnet): sechs Tabs, drei blau als „Sprint“ und drei grün als „Thesis“ markiert, dunkles Design" boxes={[{ id: 'group-badge-1', label: 'Gruppe Sprint' }, { id: 'group-badge-4', label: 'Gruppe Thesis' }]} source="TabMerger 3.16.1">Zwei Chrome-Tabgruppen, Sprint und Thesis, so wie „Now Open“ (Jetzt geöffnet) sie zeigt.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-saved-groups" alt="Die TabMerger-Gruppe „Sprint + thesis“ mit denselben sechs Tabs und ihren Markierungen „Sprint“ und „Thesis“, helles Design" darkAlt="Die TabMerger-Gruppe „Sprint + thesis“ mit denselben sechs Tabs und ihren Markierungen „Sprint“ und „Thesis“, dunkles Design" boxes={[{ id: 'group-badge-1', label: 'Gruppe Sprint' }, { id: 'group-badge-4', label: 'Gruppe Thesis' }]} source="TabMerger 3.16.1">Nach „Merge with current“ (Mit aktueller zusammenführen): Die gespeicherte Gruppe behält für jeden Tab seine Chrome-Gruppe.</ThemedScreenshot>
+</Carousel>
+
+Öffnest du das gespeicherte Fenster wieder in Chrome oder Edge, kehren seine Tabs mit denselben Namen und Farben in Tabgruppen zurück.
+
+<InstallCta>Kostenlos für Chrome, Edge und Firefox. Zum Start ist kein Konto nötig.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="Häufige Fragen">
+
+<Faq items={post.faq} />
+
+</Section>

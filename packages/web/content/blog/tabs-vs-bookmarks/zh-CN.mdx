@@ -1,0 +1,162 @@
+export const post = {
+  slug: 'tabs-vs-bookmarks',
+  title: '标签页还是书签：哪些该开着，哪些该保存',
+  navTitle: '标签页还是书签',
+  seoTitle: '标签页和书签怎么选：什么时候开着，什么时候保存',
+  description:
+    '该加书签，还是让标签页开着？一张快速决策表，覆盖阅读、项目工作和参考页面，再加上折中方案：可以搜索、一键重新打开的已保存标签页分组。',
+  shareSummary: '加书签还是开着？一张决策表，以及已保存分组这个折中方案。',
+  dek: '打开的标签页属于今天，书签属于未来几年，介于两者之间的都该放进已保存的分组。',
+  published: '2026-11-28',
+  updated: '2026-11-28',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: '在三款浏览器中，Ctrl+Shift+D 都会把窗口中的所有标签页加入书签。', source: 'Chrome 和 Edge 帮助；Firefox 159 快捷键' },
+    { text: 'TabMerger 分组可保存整个窗口并附上备注，一键即可重新打开。', source: 'TabMerger 3.16.1' },
+    { text: 'TabMerger 的 Ctrl+K 可同时搜索已打开、已保存和最近关闭的标签页。', source: 'TabMerger 3.16.1' },
+    { text: '免费版可保存 5 个分组和 50 个标签页；Pro 不限数量并支持同步。', source: 'TabMerger 定价', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '应该加书签，还是让标签页开着？',
+      answer:
+        '只让今天要用的开着。进行中的工作保存为 TabMerger 分组，之后能以窗口的形式重新打开；未来几个月或几年还会用到的页面就加书签。',
+    },
+    {
+      question: '打开的标签页会拖慢浏览器吗？',
+      answer: '每个打开的页面都会占用内存。最简单的办法是保存暂时不用的标签页，然后关掉它们；可参阅我们关于标签页太多导致浏览器变慢的指南。',
+      link: { text: '标签页太多导致浏览器变慢的指南', href: '/blog/too-many-tabs-slow-browser' },
+    },
+    {
+      question: '书签和已保存的标签页分组有什么区别？',
+      answer:
+        '书签是文件夹里的一个页面。TabMerger 分组会保存整个窗口的标签页，附带名称、颜色和备注，并能一次全部重新打开。',
+    },
+    {
+      question: '可以把书签变成标签页分组吗？',
+      answer: '可以。把书签导出为 HTML 文件，然后在 TabMerger 的“设置 → 数据”中导入：每个顶层文件夹都会成为一个分组。',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-light.webp', alt: 'TabMerger 分组 Read this week（本周要读），包含 4 个已保存的标签页和一条分组备注，浅色主题' },
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-dark.webp', alt: 'TabMerger 分组 Read this week（本周要读），包含 4 个已保存的标签页和一条分组备注，深色主题' },
+  ],
+  tags: ['tab-management', 'bookmarks', 'save-tabs', 'tab-manager', 'browser-productivity'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-vs-bookmarks/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/tabs-vs-bookmarks/og.png', alt: '标签页还是书签：TabMerger 指南，配图为一个保存了本周要读的标签页的分组' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'decide', label: '决策表' },
+    { id: 'tabs', label: '何时让标签页开着' },
+    { id: 'bookmarks', label: '何时加书签' },
+    { id: 'middle', label: '折中方案' },
+    { id: 'tabmerger', label: '在 TabMerger 中操作' },
+    { id: 'faq', label: '常见问题' },
+  ],
+}
+
+<QuickAnswer>
+
+只有**今天**要用的标签页才让它开着。如果**几个月甚至几年后**还想用，就加书签。介于两者之间的（下周要继续的项目、阅读清单、进行中的调研），就在 [TabMerger](/features) 中把这些标签页保存为一个**分组**：整个窗口都会保留下来，可以用 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> 搜索，一键就能回到屏幕上。
+
+</QuickAnswer>
+
+<InstallCta>一键把今天的标签页保存为分组。免费用于 Chrome、Edge 和 Firefox。</InstallCta>
+
+<Section id="decide" title="该加书签，还是让标签页开着？">
+
+只问自己一个问题：**我什么时候还会用到它**？
+
+<ComparisonTable
+  head={['你需要它的时间…', '最佳去处', '原因']}
+  rowHeaders
+  highlight={1}
+  minWidth="34rem"
+  rows={[
+    ['接下来几小时内', '打开的标签页', '你正在用它'],
+    ['本周晚些时候，和其他标签页一起', 'TabMerger 分组', '整组标签页一键恢复成一个窗口'],
+    ['有空时再读', '带备注的 TabMerger 分组', '一份可以搜索的“稍后阅读”清单'],
+    ['时停时续的项目', 'TabMerger 分组', '各窗口分开保存，按保存时的样子重新打开'],
+    ['未来几个月或几年的参考资料', '书签', '由浏览器同步，用文件夹整理'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabs" title="什么时候该让标签页开着？">
+
+打开的标签页就是你的办公桌：放着你此刻正在处理的东西。它们触手可及，还会保留位置、滚动进度和你输入的内容。这也是它们的代价：每个打开的页面都占用内存，超过二三十个后，标题会缩成图标，想找的标签页就淹没其中了。
+
+如果当天下班前还会回来看，就让它开着。其余的都是杂乱；我们的[标签页太多时的整理流程](/blog/manage-too-many-tabs)会告诉你如何在几分钟内清理干净。
+
+</Section>
+
+<Section id="bookmarks" title="什么时候加书签才是对的？">
+
+书签就是你的文件柜：一个页面，想存多久就存多久，放在文件夹里，登录后还由浏览器同步。
+
+- <Kbd>Ctrl</Kbd>+<Kbd>D</Kbd>（Mac 上为 <Kbd>⌘</Kbd>+<Kbd>D</Kbd>）把当前标签页加入书签。
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> 把窗口中的所有标签页加入一个新的书签文件夹，Chrome、Edge 和 Firefox 都适用。
+
+<Catch>书签一次只能保存一个窗口，只记下网址，也不会告诉你哪些页面原本是一起的。用来做参考资料库很好，用在进行中的工作上就不太顺手了。</Catch>
+
+</Section>
+
+<Section id="middle" title="那介于两者之间的呢？">
+
+大多数标签页既不属于“今天”，也不属于“永远”。它们是下周的项目、打算读的文章、做到一半的比较。这个中间地带正是标签页管理器的用武之地，这也是为什么把[所有打开的标签页保存](/blog/save-all-open-tabs)为一个分组，比一直开着或一个文件夹一个文件夹地加书签都要好：
+
+- **保存整个窗口，而不是零散页面**。整组标签页保持在一起，还是你原来的那些窗口。
+- **可以命名、设颜色、加备注**，“周二那次调研”一眼就能找到。
+- 可以和打开的、最近关闭的标签页**一起搜索**。
+- **一键重新打开**全部内容，用完再关掉。
+
+在做调研？[为调研整理标签页](/blog/organize-tabs-for-research)在此基础上加入了备注和提醒。
+
+</Section>
+
+<Section id="tabmerger" title="在 TabMerger 中操作">
+
+[TabMerger](/features) 让这个折中方案变成点两下就完成的习惯：
+
+1. 点击**添加分组**并命名，比如“本周要读”（截图中为“Read this week”）。
+2. 打开分组的 **⋯** 菜单，选择**与当前合并**：所有打开的窗口都会保存进去。
+3. 从分组的 **⋯** 菜单添加备注，然后关闭这些窗口。桌面清爽了，什么也没丢。
+4. 到时候打开分组，重新打开这些标签页；<Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> 一按就能找到其中任意一个。
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-vs-bookmarks/tm-read-later-group" alt="TabMerger 分组 Read this week（本周要读），包含 4 个已保存的标签页和一条分组备注，浅色主题" darkAlt="TabMerger 分组 Read this week（本周要读），包含 4 个已保存的标签页和一条分组备注，深色主题" boxes={[{ id: 'group-note', label: '分组备注' }, { id: 'group-row', label: '分组' }]} source="TabMerger 3.16.1">把阅读清单做成分组，再给未来的自己留一条备注。</ThemedScreenshot>
+
+已经攒了多年的书签？把它们导出为 HTML，然后在**设置 → 数据**中导入该文件：每个顶层文件夹都会成为一个 TabMerger 分组。免费版可容纳 5 个分组和 50 个标签页；[Pro](/pricing) 取消限制，并在电脑之间以端到端加密同步你的分组。
+
+<InstallCta>免费用于 Chrome、Edge 和 Firefox。无需账号即可开始使用。</InstallCta>
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

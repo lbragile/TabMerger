@@ -1,0 +1,162 @@
+export const post = {
+  slug: 'tabs-vs-bookmarks',
+  title: 'Tab vs bookmark: mana yang dibiarkan terbuka dan mana yang disimpan',
+  navTitle: 'Tab vs bookmark',
+  seoTitle: 'Tab vs Bookmark: Kapan Membiarkan Tab Terbuka atau Menyimpannya',
+  description:
+    'Bookmark atau biarkan tabnya terbuka? Tabel keputusan singkat untuk bacaan, pekerjaan proyek, dan halaman referensi, plus jalan tengahnya: grup tab tersimpan yang bisa dicari dan dibuka lagi dengan sekali klik.',
+  shareSummary: 'Bookmark atau biarkan terbuka? Tabel keputusan, dan jalan tengahnya: grup tersimpan.',
+  dek: 'Tab terbuka untuk hari ini. Bookmark untuk bertahun-tahun. Semua yang di antaranya masuk ke grup tersimpan.',
+  published: '2026-11-28',
+  updated: '2026-11-28',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Ctrl+Shift+D mem-bookmark semua tab di jendela, di ketiga browser.', source: 'Bantuan Chrome dan Edge; pintasan Firefox 159' },
+    { text: 'Grup TabMerger menyimpan jendela utuh, lengkap dengan catatan, dan membukanya lagi dengan sekali klik.', source: 'TabMerger 3.16.1' },
+    { text: 'Ctrl+K di TabMerger mencari tab yang terbuka, tersimpan, dan baru ditutup sekaligus.', source: 'TabMerger 3.16.1' },
+    { text: 'Gratis menampung 5 grup dan 50 tab; Pro tanpa batas dan tersinkron.', source: 'Harga TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Sebaiknya bookmark atau biarkan tab terbuka?',
+      answer:
+        'Biarkan terbuka hanya yang Anda perlukan hari ini. Simpan pekerjaan yang sedang berjalan sebagai grup TabMerger agar terbuka lagi sebagai jendela, dan bookmark halaman yang akan Anda perlukan selama berbulan-bulan atau bertahun-tahun.',
+    },
+    {
+      question: 'Apakah tab yang terbuka membuat browser lambat?',
+      answer: 'Setiap halaman yang terbuka memakai memori. Cara paling sederhana adalah menyimpan tab yang tidak sedang dipakai lalu menutupnya; lihat panduan kami tentang terlalu banyak tab dan browser yang lambat.',
+      link: { text: 'terlalu banyak tab dan browser yang lambat', href: '/blog/too-many-tabs-slow-browser' },
+    },
+    {
+      question: 'Apa bedanya bookmark dengan grup tab tersimpan?',
+      answer:
+        'Bookmark adalah satu halaman di dalam folder. Grup TabMerger menyimpan jendela tab secara utuh, dengan nama, warna, dan catatan, lalu membuka semuanya sekaligus.',
+    },
+    {
+      question: 'Bisakah bookmark diubah menjadi grup tab?',
+      answer: 'Bisa. Ekspor bookmark Anda sebagai file HTML lalu impor di TabMerger lewat Pengaturan → Data: setiap folder tingkat atas menjadi satu grup.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-light.webp', alt: 'Grup TabMerger Read this week berisi empat tab tersimpan dan catatan grup, tema terang' },
+    { src: '/blog/tabs-vs-bookmarks/tm-read-later-group-dark.webp', alt: 'Grup TabMerger Read this week berisi empat tab tersimpan dan catatan grup, tema gelap' },
+  ],
+  tags: ['tab-management', 'bookmarks', 'save-tabs', 'tab-manager', 'browser-productivity'],
+  sources: [
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-vs-bookmarks/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/tabs-vs-bookmarks/og.png', alt: 'Tab vs bookmark: panduan TabMerger, dengan grup tab tersimpan untuk dibaca minggu ini' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'decide', label: 'Tabel keputusan' },
+    { id: 'tabs', label: 'Kapan tab dibiarkan terbuka' },
+    { id: 'bookmarks', label: 'Kapan memakai bookmark' },
+    { id: 'middle', label: 'Jalan tengah' },
+    { id: 'tabmerger', label: 'Lakukan di TabMerger' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Biarkan tab terbuka hanya jika Anda akan memakainya **hari ini**. Bookmark jika Anda masih akan memerlukannya **berbulan-bulan atau bertahun-tahun lagi**. Untuk semua yang ada di antaranya (proyek yang akan dilanjutkan minggu depan, daftar bacaan, riset yang sedang berjalan) simpan tab sebagai **grup** di [TabMerger](/features): seluruh jendela tetap tersimpan, bisa dicari dengan <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>, dan kembali ke layar dengan sekali klik.
+
+</QuickAnswer>
+
+<InstallCta>Simpan tab hari ini sebagai grup dengan sekali klik. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+<Section id="decide" title="Bookmark atau biarkan tabnya terbuka?">
+
+Ajukan satu pertanyaan: **kapan saya akan memerlukan ini lagi?**
+
+<ComparisonTable
+  head={['Anda memerlukannya…', 'Tempat terbaik', 'Alasannya']}
+  rowHeaders
+  highlight={1}
+  minWidth="34rem"
+  rows={[
+    ['Dalam beberapa jam ke depan', 'Tab yang terbuka', 'Anda sedang memakainya'],
+    ['Nanti minggu ini, bersama tab lain', 'Grup TabMerger', 'Seluruh set kembali sebagai jendela, dengan sekali klik'],
+    ['Untuk dibaca saat ada waktu', 'Grup TabMerger dengan catatan', 'Satu daftar “baca nanti” yang bisa dicari'],
+    ['Untuk proyek yang berhenti lalu berlanjut', 'Grup TabMerger', 'Menjaga jendela tetap terpisah, dibuka lagi persis seperti saat disimpan'],
+    ['Sebagai referensi selama berbulan-bulan atau bertahun-tahun', 'Bookmark', 'Disinkronkan oleh browser, tertata dalam folder'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabs" title="Kapan sebuah tab sebaiknya tetap terbuka?">
+
+Tab yang terbuka adalah meja kerja Anda: hal yang sedang Anda kerjakan saat ini. Tab bisa dijangkau seketika dan tetap menyimpan posisinya, posisi gulir, serta apa pun yang sudah Anda ketik. Itu juga harganya: setiap halaman yang terbuka memakai memori, dan setelah lewat dua puluhan tab, judulnya menyusut menjadi ikon dan tab yang Anda cari pun hilang.
+
+Biarkan tab terbuka jika Anda akan kembali ke sana sebelum hari berakhir. Selebihnya hanya bikin berantakan; [rutinitas mengatasi terlalu banyak tab](/blog/manage-too-many-tabs) kami menunjukkan cara membereskannya dalam hitungan menit.
+
+</Section>
+
+<Section id="bookmarks" title="Kapan bookmark menjadi pilihan yang tepat?">
+
+Bookmark adalah lemari arsip Anda: satu halaman, disimpan selama yang Anda mau, di dalam folder, dan disinkronkan oleh browser saat Anda login.
+
+- <Kbd>Ctrl</Kbd>+<Kbd>D</Kbd> (<Kbd>⌘</Kbd>+<Kbd>D</Kbd> di Mac) mem-bookmark tab saat ini.
+- <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> mem-bookmark semua tab di jendela ke dalam folder baru, di Chrome, Edge, dan Firefox.
+
+<Catch>bookmark menyimpan satu jendela setiap kali, hanya menyimpan alamatnya, dan tidak memberi tahu halaman mana yang saling terkait. Bagus untuk perpustakaan referensi, tapi merepotkan untuk pekerjaan yang sedang berjalan.</Catch>
+
+</Section>
+
+<Section id="middle" title="Lalu bagaimana dengan semua yang di antaranya?">
+
+Sebagian besar tab bukan untuk “hari ini” atau “selamanya”. Tab itu adalah proyek minggu depan, artikel yang ingin Anda baca, perbandingan yang baru setengah jalan. Jalan tengah inilah gunanya pengelola tab, dan itulah sebabnya [menyimpan semua tab yang terbuka](/blog/save-all-open-tabs) sebagai grup lebih baik daripada membiarkannya terbuka atau mem-bookmark-nya satu folder demi satu folder:
+
+- **Jendela utuh, bukan halaman satu per satu.** Setnya tetap bersama, di jendela yang Anda miliki.
+- **Diberi nama, warna, dan catatan,** sehingga “riset hari Selasa” mudah ditemukan.
+- **Bisa dicari** bersama tab yang terbuka dan yang baru ditutup.
+- **Sekali klik untuk membuka lagi** semuanya, lalu tutup kembali setelah selesai.
+
+Sedang riset? [Mengatur tab untuk riset](/blog/organize-tabs-for-research) menambahkan catatan dan pengingat.
+
+</Section>
+
+<Section id="tabmerger" title="Lakukan di TabMerger">
+
+[TabMerger](/features) mengubah jalan tengah ini menjadi kebiasaan dua klik:
+
+1. Klik **Tambah Grup** dan beri nama, misalnya “Baca minggu ini” (di tangkapan layar: “Read this week”).
+2. Buka menu **⋯** grup lalu pilih **Gabungkan dengan sesi saat ini**: setiap jendela yang terbuka disimpan ke dalamnya.
+3. Tambahkan catatan dari menu **⋯** grup, lalu tutup jendelanya. Meja Anda bersih dan tidak ada yang hilang.
+4. Saat waktunya tiba, buka grup itu dan buka lagi tabnya; <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> menemukan tab mana pun dengan satu tekan tombol.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-vs-bookmarks/tm-read-later-group" alt="Grup TabMerger Read this week berisi empat tab tersimpan dan catatan grup, tema terang" darkAlt="Grup TabMerger Read this week berisi empat tab tersimpan dan catatan grup, tema gelap" boxes={[{ id: 'group-note', label: 'Catatannya' }, { id: 'group-row', label: 'Grupnya' }]} source="TabMerger 3.16.1">Daftar bacaan sebagai grup, dengan catatan untuk diri Anda di masa depan.</ThemedScreenshot>
+
+Sudah punya bookmark bertahun-tahun? Ekspor sebagai HTML lalu impor filenya di **Pengaturan → Data**: setiap folder tingkat atas menjadi grup TabMerger. Versi gratis menampung 5 grup dan 50 tab; [Pro](/pricing) menghapus batas itu dan menyinkronkan grup Anda antarkomputer dengan enkripsi end-to-end.
+
+<InstallCta>Gratis untuk Chrome, Edge, dan Firefox. Tidak perlu akun untuk mulai.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

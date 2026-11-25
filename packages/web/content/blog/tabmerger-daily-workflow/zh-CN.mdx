@@ -1,0 +1,184 @@
+export const post = {
+  slug: 'tabmerger-daily-workflow',
+  title: '用 TabMerger 打造每天的标签页管理习惯',
+  navTitle: '每天的标签页管理习惯',
+  seoTitle: '用 TabMerger 管理浏览器标签页：从早到晚的每日标签页整理流程',
+  description:
+    '用 TabMerger 管理浏览器标签页的简单日常流程：一键打开当天要用的标签页，新标签页随手归类、随时找得到，一天结束时全部保存，不留任何打开的窗口。',
+  shareSummary: '一键打开当天的标签页，随时找得到，收工时什么都不会丢。',
+  dek: '三个习惯，每个只需几次点击：从保存好的一组标签页开始，随手归类，收工时全部保存。',
+  published: '2026-12-11',
+  updated: '2026-12-11',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: '分组可以保存整个窗口的标签页，窗口关闭后依然保存着。', source: 'TabMerger 3.16.1' },
+    { text: '会话一次恢复所有已保存的分组，每个窗口都恢复成保存时的样子。', source: 'TabMerger 3.16.1 源代码' },
+    { text: 'Ctrl+K 可同时搜索已打开、已保存和最近关闭的标签页。', source: 'TabMerger 3.16.1' },
+    { text: '免费版：5 个分组、50 个标签页、3 个会话。Pro：不设限制，另含同步。', source: 'TabMerger 价格', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: '浏览器标签页最好的日常管理方法是什么？',
+      answer:
+        '每天从一组保存好的标签页开始，而不是从昨天剩下的一堆开始；新标签页随手归入分组；一天结束时把打开的内容保存好再关闭。TabMerger 每一步只需几次点击，忘记的那几天还有自动保存兜底。',
+    },
+    {
+      question: '使用这套流程需要账户吗？',
+      answer: '不需要。分组、会话、搜索、自动保存和最近关闭的标签页在免费版中无需账户即可使用。只有设备间同步等 Pro 功能才需要账户。',
+    },
+    {
+      question: '在 Chrome、Edge 和 Firefox 中都能用吗？',
+      answer: '能。TabMerger 在 Chrome、Edge 和 Firefox 上免费使用，三者的流程完全相同。',
+    },
+    {
+      question: '分组和会话有什么区别？',
+      answer:
+        '分组是一组保存好的标签页，包含一个或多个窗口，你可以打开、编辑并继续添加。会话是所有已保存分组在同一时刻的命名快照，会一起恢复。',
+    },
+  ],
+  images: [
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp', alt: 'TabMerger 中的四个已保存分组（Work、Reading list、Thesis sources、Trip to Lisbon）和一个已保存会话“Monday plan”，浅色主题' },
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-dark.webp', alt: 'TabMerger 中的四个已保存分组（Work、Reading list、Thesis sources、Trip to Lisbon）和一个已保存会话“Monday plan”，深色主题' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-light.webp', alt: 'TabMerger 的“Now Open”（当前打开）列出两个已打开的浏览器窗口和六个标签页，浅色主题' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-dark.webp', alt: 'TabMerger 的“Now Open”（当前打开）列出两个已打开的浏览器窗口和六个标签页，深色主题' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp' },
+  ogImage: { src: '/blog/tabmerger-daily-workflow/og.png', alt: '用 TabMerger 打造每天的标签页管理习惯，侧边栏中有已保存的分组和一个会话' },
+  toc: [
+    { id: 'quick', label: '简短回答' },
+    { id: 'problem', label: '标签页为什么越堆越多' },
+    { id: 'idea', label: 'TabMerger 的思路' },
+    { id: 'morning', label: '早上' },
+    { id: 'day', label: '白天' },
+    { id: 'evening', label: '晚上' },
+    { id: 'net', label: '安全网' },
+    { id: 'plans', label: '免费版与 Pro' },
+    { id: 'series', label: '完整系列' },
+    { id: 'faq', label: '常见问题' },
+  ],
+}
+
+<QuickAnswer>
+
+把标签页放在 [TabMerger](/features) 的分组里，而不是放在打开的窗口里。**早上**：恢复一个已保存的会话，或只打开你需要的那个分组。**白天**：把新标签页归入分组，用 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> 找到其中任何一个。**晚上**：把打开的内容保存到对应分组，然后关闭窗口。忘记的部分有自动保存和“最近关闭”接住。每天只需几次点击，每天早上都从你想留下的标签页开始。
+
+</QuickAnswer>
+
+<InstallCta>明天从需要的标签页开始，而不是昨天那一堆。适用于 Chrome、Edge 和 Firefox，免费。</InstallCta>
+
+<Section id="problem" title="标签页为什么每天越堆越多？">
+
+想象一个普通的星期二。你打开邮件和日历，然后是一个拉取请求，再是它需要的三个文档页面。同事发来一个你想稍后再读的链接。到午饭时已经有两个窗口，到晚上有四个。你没有关掉它们，因为其中一些标签页还“在处理中”，关掉后要找回来就得去翻历史记录。
+
+于是浏览器成了待办清单。它本来就不是为此设计的：标签栏没有名称，没有分区，也没法在不丢失的前提下把工作收起来。每天都从昨天的残留开始，浏览器越来越慢，而你要找的那个标签页，只是第三个窗口里某处一个 16 像素的图标。
+
+</Section>
+
+<Section id="idea" title="TabMerger 怎么解决这个问题？">
+
+TabMerger 把浏览器混在一起的两件事分开：哪些是**打开着的**，哪些是**要留下的**。
+
+- **当前打开**实时显示你打开的窗口和标签页。它始终排在列表第一位，无法删除，所以随时一键可达。
+- **分组**是你要留下的内容。每个分组包含一个或多个标签页窗口，带有名称、备注和颜色，窗口关闭后依然保存着。
+- **会话**是所有分组合在一起的命名快照，适合想一次把所有内容都找回来的日子。
+
+既然留下标签页不再需要让它一直开着，你就可以放心关闭窗口。整套流程就是这样。
+
+<ScreenshotThemeToggle />
+
+<Carousel label="留下的和打开的，并排对照" steps={[{ title: '你的分组' }, { title: '当前打开' }]}>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-workspace" alt="TabMerger 中的四个已保存分组（Work、Reading list、Thesis sources、Trip to Lisbon）和一个已保存会话“Monday plan”，浅色主题" darkAlt="TabMerger 中的四个已保存分组（Work、Reading list、Thesis sources、Trip to Lisbon）和一个已保存会话“Monday plan”，深色主题" boxes={[{ id: 'groups', label: '你保存的分组' }, { id: 'session', label: '一个已保存的会话' }]} source="TabMerger 3.16.1">四个分组对应一周里的四件事，一个会话把它们全部找回。</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-now-open" alt="TabMerger 的“Now Open”（当前打开）列出两个已打开的浏览器窗口和六个标签页，浅色主题" darkAlt="TabMerger 的“Now Open”（当前打开）列出两个已打开的浏览器窗口和六个标签页，深色主题" boxes={[{ id: 'now-open-summary', label: '当前打开的内容' }]} source="TabMerger 3.16.1">“Now Open”（当前打开）：此刻打开的一切，按窗口逐一列出。</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="morning" title="早上：从保存好的一组开始">
+
+根据当天的情况，有两种开始方式：
+
+1. **一次全部打开**。在侧边栏打开**会话**部分，恢复你的会话。恢复会关闭已打开的窗口，并在原处打开保存的窗口，每个窗口都和保存时一样，所以 TabMerger 会先询问。
+2. **只打开一个项目**。在侧边栏右键点击一个分组，选择**在新窗口中全部打开**。其他内容都不受影响。
+
+包含确认步骤原因的分步说明，请看[用保存的标签页开始一天的工作](/blog/start-your-workday-with-saved-tabs)。
+
+</Section>
+
+<Section id="day" title="白天：随手归类">
+
+- **收起一个标签页**：把它从当前打开拖到侧边栏的某个分组上，它就保存在那里，打开的标签页随之关闭（撤销可以把它找回来）。也可以用键盘快捷键（[完整列表](/blog/tab-keyboard-shortcuts)）。
+- **让规则替你归类**。URL 规则会自动把匹配的新标签页复制到分组中；请看[用 URL 规则自动整理标签页](/blog/auto-sort-tabs-with-url-rules)。
+- **什么都能找到**：按 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>（Mac 上为 <Kbd>⌘</Kbd>+<Kbd>K</Kbd>），已打开、已保存和最近关闭的标签页都在同一个列表里。所有筛选条件见[用 TabMerger 搜索所有标签页](/blog/search-all-your-tabs-with-tabmerger)。
+- **给自己留个备注**：在标签页上写备注，或设一个提醒以后再回来看；[为研究整理标签页](/blog/organize-tabs-for-research)里两种都有介绍。
+- **清理重复项**：使用**去除重复标签页**；详情见[关闭重复的标签页](/blog/close-duplicate-tabs)。
+
+</Section>
+
+<Section id="evening" title="晚上：先保存，再关闭">
+
+1. 打开你工作时用的分组，再打开它的 **⋯** 菜单。**与当前合并**会把打开的窗口添加进去；**替换为当前**会用打开的窗口替换已保存的窗口。
+2. 关闭窗口。标签页都在分组里，明天早上的那一步会在那里找到它们。
+3. 对所有分组的状态满意吗？点击**保存当前会话**（**会话**旁边的书签按钮），用“Monday plan”这样的名称为它们拍一张快照。
+
+让这一切奏效的习惯是：**保存分组，关闭窗口**。带到明天的窗口越少，浏览器越快，找东西的时间也越短。
+
+</Section>
+
+<Section id="net" title="安全网：为忘记保存的日子准备">
+
+没人能每天晚上都记得保存。有两个功能来补上这个缺口：
+
+- **自动保存已打开的标签页**（设置 → 数据）会按计划，或在打开的标签页超过你设定的数量时，把它们保存为一个新分组。
+- **最近关闭**按天保留你关闭的标签页和窗口，用 <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> 加上 `closed:` 就能搜索它们。
+
+这两个功能如何工作、为什么这样设计，详见[再也不丢失标签页](/blog/never-lose-a-tab-again)。如果浏览器崩溃，请看[崩溃后找回标签页](/blog/restore-tabs-after-crash)。
+
+</Section>
+
+<Section id="plans" title="免费版包含什么，Pro 增加什么">
+
+<ComparisonTable
+  head={['', '免费版', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['分组和标签页', '5 个分组、50 个标签页', '无限制'],
+    ['会话', '3 个，仅限本浏览器', '无限制，可同步'],
+    ['URL 规则', '3', '无限制'],
+    ['自动保存', '保留最新 2 个', '全部保留'],
+    ['最近关闭', '最近 2 天', '最近 30 天'],
+    ['搜索、备注、导入和导出', '是', '是'],
+    ['跨设备同步、自动备份', '否', '是'],
+  ]}
+/>
+
+免费版无需账户即可运行这整套流程；Pro 取消限制并增加同步。详情见[价格页面](/pricing)。
+
+<InstallCta>同一套流程，适用于每个浏览器：Chrome、Edge 和 Firefox。免费开始，无需账户。</InstallCta>
+
+</Section>
+
+<Section id="series" title="TabMerger 指南完整系列">
+
+每篇指南讲一个功能，并说明它为什么这样设计：
+
+1. [用保存的标签页开始一天的工作](/blog/start-your-workday-with-saved-tabs)：每天早上恢复会话和分组。
+2. [再也不丢失标签页](/blog/never-lose-a-tab-again)：自动保存和“最近关闭”。
+3. [搜索所有标签页](/blog/search-all-your-tabs-with-tabmerger)：<Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> 及其筛选条件。
+4. [按项目整理标签页](/blog/organize-tabs-by-project)：分组、命名窗口和归档。
+5. [把标签页当作待办清单](/blog/tabs-as-a-to-do-list)：备注、提醒和闲置的标签页。
+6. [用 URL 规则自动整理标签页](/blog/auto-sort-tabs-with-url-rules)：会自己归位的标签页。
+7. [在设备之间同步标签页](/blog/sync-tabs-between-devices-with-tabmerger)：端到端加密，以及我们的服务器能看到什么。
+8. [把标签页导入 TabMerger](/blog/import-tabs-into-tabmerger)：OneTab 列表、书签和备份。
+9. [TabMerger 免费版与 Pro](/blog/tabmerger-free-vs-pro)：每个方案具体包含什么。
+
+</Section>
+
+<Section id="faq" title="常见问题">
+
+<Faq items={post.faq} />
+
+</Section>

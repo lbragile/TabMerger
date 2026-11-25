@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'export-open-tabs',
+  title: 'Açık sekmeleri dışa aktarma',
+  navTitle: 'Açık sekmeleri dışa aktarın',
+  seoTitle: 'Chrome, Edge ve Firefox’ta açık sekmeleri dışa aktarma',
+  description:
+    'Tüm açık sekmeleri başlık ve adresleriyle saklayacağınız bir dosyaya aktarın: TabMerger’ın tek tıkla JSON dışa aktarımı (açık sekmeler ve kayıtlı gruplar bir arada) ya da tarayıcının yer imi dışa aktarımı, adım adım.',
+  shareSummary: 'Tüm açık sekmeleri tek tıkla bir dosyaya aktarın, sonra istediğiniz yere geri yükleyin.',
+  dek: 'Size ait bir dosya, ayakta kalmasını umduğunuz bir oturumdan iyidir. TabMerger’da tek tık, tarayıcıda birkaç tık.',
+  published: '2026-12-02',
+  updated: '2026-12-02',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger’daki “JSON olarak dışa aktar”, açık sekmelerinizi ve kayıtlı her grubu tek bir dosyaya kaydeder.', source: 'TabMerger 3.16.1’de test edildi, 21 Kas 2026' },
+    { text: 'TabMerger; JSON, yer imi HTML’si ve OneTab metin dosyalarını içe aktarır.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome, yer imlerini yer imi yöneticisinin menüsünden dışa aktarır.',
+      source: 'Chrome Yardım',
+      href: 'https://support.google.com/chrome/answer/96816',
+    },
+    { text: 'Ctrl+Shift+D, üç tarayıcıda da penceredeki tüm sekmeleri yer imlerine ekler.', source: 'Chrome ve Edge yardımı; Firefox 159 kısayolları' },
+  ],
+  faq: [
+    {
+      question: 'Tüm sekme URL’lerini nasıl kopyalarım?',
+      answer:
+        'En hızlı eksiksiz kopya, TabMerger’daki Ayarlar → Veri → JSON olarak dışa aktar seçeneğidir: her açık sekmenin ve her kayıtlı grubun başlığını ve adresini içeren tek bir dosya. Eklentisiz yöntemde pencerenin sekmelerini yer imlerine ekleyin (Ctrl+Shift+D) ve yer imlerinizi HTML olarak dışa aktarın.',
+    },
+    {
+      question: 'Tüm pencerelerdeki sekmeleri tek seferde dışa aktarabilir miyim?',
+      answer: 'Evet, TabMerger ile: “Şu An Açık” tüm açık pencereleri kapsar ve JSON dışa aktarımı onu da içerir. Yer imi yöntemi ise pencere pencere çalışır.',
+    },
+    {
+      question: 'Dosyayı nasıl tekrar içe aktarırım?',
+      answer: 'TabMerger’da Ayarlar → Veri → Dosya içe aktar seçeneği; TabMerger JSON, yer imi HTML’si ve OneTab metin dosyalarını okur ve bunları grup olarak ekler.',
+    },
+    {
+      question: 'Dışa aktarım gizli mi?',
+      answer: 'Evet. Dosya tarayıcınızda oluşturulur ve bilgisayarınıza kaydedilir; hiçbir şey yüklenmez. Sayfalarınızın listesini içerdiği için güvenli bir yerde saklayın.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: 'TabMerger “Settings” (Ayarlar), “Data” (Veri) sekmesi; “Import & export” (İçe ve dışa aktarma) altında “Export JSON” (JSON olarak dışa aktar) ve “Import file” (Dosya içe aktar) düğmeleri, açık tema' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: 'TabMerger “Settings” (Ayarlar), “Data” (Veri) sekmesi; “Import & export” (İçe ve dışa aktarma) altında “Export JSON” (JSON olarak dışa aktar) ve “Import file” (Dosya içe aktar) düğmeleri, koyu tema' },
+  ],
+  tags: ['save-tabs', 'bookmarks', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Import Chrome bookmarks & settings (export section)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/export-open-tabs/tm-settings-export-light.webp' },
+  ogImage: { src: '/blog/export-open-tabs/og.png', alt: 'Açık sekmeleri dışa aktarma: “Export JSON” (JSON olarak dışa aktar) düğmesiyle bir TabMerger rehberi' },
+  toc: [
+    { id: 'quick', label: 'Kısa cevap' },
+    { id: 'tabmerger', label: 'Tek tıkla dışa aktarma' },
+    { id: 'inside', label: 'Dosyada neler var' },
+    { id: 'builtin', label: 'Yer imi yöntemi' },
+    { id: 'import', label: 'Geri getirme' },
+    { id: 'faq', label: 'SSS' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Yer imlerini dışa aktarma',
+    values: { chrome: 'Yer imi yöneticisi → ⋮ → Yer İşaretlerini Dışa Aktar', edge: 'Favorites → Export favorites', firefox: 'Arşiv → Yer imlerini HTML olarak dışa aktar…' },
+  },
+}
+
+<QuickAnswer>
+
+[TabMerger](/features)’ı açın, **Ayarlar → Veri** (Settings → Data) bölümüne gidin ve **JSON olarak dışa aktar** (Export JSON) düğmesine basın. Tek tık, **her penceredeki her açık sekmenin** başlığını ve adresini, ayrıca kaydettiğiniz her grubu içeren bir dosya kaydeder. Eklentisiz yöntemde bir pencerenin sekmelerini <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> ile yer imlerine ekleyip yer imlerinizi HTML dosyası olarak dışa aktarabilirsiniz; her seferinde bir pencere.
+
+</QuickAnswer>
+
+<InstallCta>Her penceredeki her açık sekmeyi tek tıkla dışa aktarın. Chrome, Edge ve Firefox için ücretsiz.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Tüm açık sekmelerimi tek tıkla nasıl dışa aktarırım?">
+
+1. TabMerger’ı açın ve hesap simgesine → **Ayarlar** seçeneğine tıklayın.
+2. **Veri** sekmesini açın.
+3. **İçe ve dışa aktarma** altında **JSON olarak dışa aktar** düğmesine basın. Dosya hemen, `tabmerger-backup-2026-11-21.json` gibi bir adla iner.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="TabMerger “Settings” (Ayarlar), “Data” (Veri) sekmesi; “Import & export” (İçe ve dışa aktarma) altında “Export JSON” (JSON olarak dışa aktar) ve “Import file” (Dosya içe aktar) düğmeleri, açık tema" darkAlt="TabMerger “Settings” (Ayarlar), “Data” (Veri) sekmesi; “Import & export” (İçe ve dışa aktarma) altında “Export JSON” (JSON olarak dışa aktar) ve “Import file” (Dosya içe aktar) düğmeleri, koyu tema" boxes={[{ id: 'export-json', label: 'JSON olarak dışa aktar' }, { id: 'import-file', label: 'Dosya içe aktar' }]} source="TabMerger 3.16.1">Settings → Data (Ayarlar → Veri): çıkış için bir düğme, geri dönüş için bir düğme.</ThemedScreenshot>
+
+Ücretsiz plan dahil her planda vardır ve dosya tarayıcınızda oluşturulur: hiçbir şey yüklenmez.
+
+</Section>
+
+<Section id="inside" title="Dışa aktarılan dosyada neler var?">
+
+Gruplarınızın bir JSON listesi. Önce şu an açık olan pencereleriniz ve sekmeleriniz, yani **Şu An Açık** (Now Open) gelir, ardından kayıtlı her grup. Gerçek bir dışa aktarımdan:
+
+<ComparisonTable
+  head={['Alan', 'Dışa aktarımdan örnek']}
+  rows={[
+    [<code>name</code>, '“Now Open”, “Work”, “Reading list”'],
+    [<code>windows[]</code>, 'Her pencere için bir giriş, her biri kendi sekmeleriyle'],
+    [<code>tabs[].title</code>, '“Spaced repetition - Wikipedia”'],
+    [<code>tabs[].url</code>, <code>https://en.wikipedia.org/wiki/Spaced_repetition</code>],
+    [<code>color</code>, <code>rgba(59, 130, 246, 1)</code>],
+  ]}
+/>
+
+JSON düz metindir, bu yüzden her betik ya da metin düzenleyici onu okuyabilir: adresleri çekip çıkarın, Markdown listesine dönüştürün ya da dosyayı yedek olarak saklayın.
+
+</Section>
+
+<Section id="builtin" title="Eklenti olmadan sekmeleri nasıl dışa aktarırım?">
+
+Tarayıcılar açık sekmeleri doğrudan dışa aktarmaz ama yer imlerini aktarır. Bu yüzden önce sekmeleri yer imlerine ekleyin, sonra dışa aktarın:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+1. Her pencerede <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> (Mac’te <Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd>) tuşlarına basın ve sekmeleri yeni bir klasöre kaydedin.
+2. **⋮ → Yer işaretleri ve listeler → Yer imi yöneticisi** (Bookmarks and lists → Bookmark Manager) yolunu açın.
+3. Üstte **⋮ → Yer İşaretlerini Dışa Aktar** (Export bookmarks) seçeneğini açın. Chrome tüm yer imlerini bir HTML dosyasına kaydeder.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Her pencerede <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> tuşlarına basarak tüm sekmeleri yeni bir klasörde sık kullanılanlara ekleyin.
+2. Sık kullanılanları (Favorites) açmak için <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> tuşlarına basın.
+3. Sayfanın menüsünden **Export favorites** seçeneğini seçin ve HTML dosyasını kaydedin.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Her pencerede <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>D</Kbd> tuşlarına basarak tüm sekmeleri yeni bir klasörde yer imlerine ekleyin.
+2. “Arşiv” (Library) penceresini açmak için <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>O</Kbd> tuşlarına basın.
+3. **Yer imlerini HTML olarak dışa aktar…** (Export Bookmarks to HTML…) seçeneğini seçin ve dosyayı kaydedin.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>her seferinde tek pencere, yalnızca o sekmeleri değil *tüm* yer imlerinizi dışa aktarır ve dosya hangi sekmelerin birlikte açık olduğunu bilmez.</Catch>
+
+</Section>
+
+<Section id="import" title="Sekmeleri nasıl geri getiririm?">
+
+TabMerger’da **Ayarlar → Veri → Dosya içe aktar** (Settings → Data → Import file) üç dosya türünü de okur ve bunları mevcut gruplarınızın yanına grup olarak ekler:
+
+- **TabMerger JSON**: “JSON olarak dışa aktar” ile oluşturulur, kayıtlı gruplarınızı ve pencerelerinizi olduğu gibi içerir. Dosyadaki “Şu An Açık” eklenmez (bunlar dışa aktaran tarayıcının açık sekmeleriydi); açık pencereleri geri istiyorsanız dışa aktarmadan önce bir gruba kaydedin.
+- **Yer imi HTML’si**: herhangi bir tarayıcıdan; en üst düzeydeki her klasör bir grup olur.
+- **OneTab metni**: her OneTab listesi bir grup olur. [OneTab alternatifleri rehberimize](/blog/onetab-alternatives) göz atın.
+
+Bu da dışa aktarmayı, hesap olmadan [sekmeleri başka bir bilgisayara taşımanın](/blog/move-tabs-between-computers) en basit yolu yapar. Otomatik olsun mu istersiniz? [Pro](/pricing), en yeni 10 otomatik yedeği saklar ve gruplarınızı cihazlar arasında uçtan uca şifreli olarak eşitler. Sekmeleri hiç dosya olmadan sonraya saklamak için [tüm açık sekmeleri kaydetme](/blog/save-all-open-tabs) rehberine; bir sekme setini başkasına göndermek için [bir sekme setini paylaşma](/blog/share-a-set-of-tabs) rehberine bakın.
+
+<InstallCta>Chrome, Edge ve Firefox için ücretsiz. Başlamak için hesap gerekmez.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="SSS">
+
+<Faq items={post.faq} />
+
+</Section>

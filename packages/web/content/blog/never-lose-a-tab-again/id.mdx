@@ -1,0 +1,174 @@
+export const post = {
+  slug: 'never-lose-a-tab-again',
+  title: 'Jangan pernah kehilangan tab lagi: simpan otomatis dan buka kembali tab yang ditutup',
+  navTitle: 'Jangan pernah kehilangan tab lagi',
+  seoTitle: 'Simpan tab yang terbuka secara otomatis dan pulihkan tab yang ditutup dengan TabMerger',
+  description:
+    'Simpan tab yang terbuka secara otomatis, sesuai jadwal atau saat jumlahnya melewati angka tertentu, dan kembalikan tab atau jendela apa pun yang Anda tutup. Cara kerja simpan otomatis dan “Baru ditutup” di TabMerger, beserta alasannya.',
+  shareSummary: 'Tab yang terbuka tersimpan sesuai jadwal, dan setiap jendela yang ditutup cukup satu pencarian.',
+  dek: 'Anda tidak perlu ingat untuk menyimpan. Atur sekali, dan setiap tab yang terbuka punya salinannya.',
+  published: '2026-12-13',
+  updated: '2026-12-13',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Simpan otomatis berjalan dari setiap 15 menit hingga sehari sekali, atau saat tab yang terbuka melewati angka antara 20 dan 100.', source: 'TabMerger 3.16.1' },
+    { text: 'Tab yang sudah tersimpan di grup dilewati; jendela pribadi tidak pernah disimpan.', source: 'TabMerger 3.16.1' },
+    { text: 'Paket Gratis menyimpan 2 simpanan otomatis terbaru; Pro menyimpan semuanya.', source: 'Harga TabMerger', href: '/pricing' },
+    { text: '“Baru ditutup” menyimpan 2 hari terakhir Anda di paket Gratis, 30 hari di Pro.', source: 'Harga TabMerger', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'Bagaimana cara menyimpan tab yang terbuka secara otomatis?',
+      answer:
+        'Di TabMerger, buka Pengaturan → Data dan aktifkan “Simpan otomatis tab yang terbuka”. Pilih jadwal (dari setiap 15 menit hingga sehari sekali), jumlah tab terbuka yang memicu penyimpanan, atau keduanya. Setiap kali berjalan, tab yang terbuka disimpan sebagai grup baru.',
+    },
+    {
+      question: 'Apakah simpan otomatis akan memenuhi TabMerger dengan duplikat?',
+      answer:
+        'Tidak. Tab yang alamatnya sudah tersimpan di grup mana pun dilewati, dan halaman yang terbuka di beberapa tab disimpan sekali saja. Jika semuanya sudah tersimpan, tidak ada yang disimpan.',
+    },
+    {
+      question: 'Apakah simpan otomatis perlu TabMerger dalam keadaan terbuka?',
+      answer: 'Tidak. Fitur ini berjalan di latar belakang ekstensi selama browser terbuka, dan memeriksa apakah ada penyimpanan yang terlewat saat browser dimulai.',
+    },
+    {
+      question: 'Bagaimana cara mengembalikan jendela yang saya tutup?',
+      answer:
+        'Tekan Ctrl+K di TabMerger lalu ketik closed: untuk menampilkan tab dan jendela yang baru ditutup, atau buka “Baru ditutup” di bilah samping. Memilih jendela yang ditutup akan memulihkan seluruh jendela itu.',
+    },
+    {
+      question: 'Apa yang disimpan paket Gratis, dan apa tambahan dari Pro?',
+      answer:
+        'Paket Gratis menyimpan 2 simpanan otomatis terbaru (pertahankan salah satunya sebagai grup agar tidak hilang) dan tab yang Anda tutup selama 2 hari terakhir. Pro menyimpan setiap simpanan otomatis dan 30 hari tab yang ditutup, serta menambahkan cadangan otomatis terenkripsi dan tab terbuka dari perangkat Anda yang lain.',
+    },
+  ],
+  images: [
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-light.webp', alt: 'TabMerger “Settings” (Pengaturan), “Data”: “Auto-save open tabs” (Simpan otomatis tab yang terbuka) aktif, setiap jam dan saat tab terbuka melewati 50, dengan “Auto-save now” (Simpan otomatis sekarang), tema terang' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-save-settings-dark.webp', alt: 'TabMerger “Settings” (Pengaturan), “Data”: “Auto-save open tabs” (Simpan otomatis tab yang terbuka) aktif, setiap jam dan saat tab terbuka melewati 50, dengan “Auto-save now” (Simpan otomatis sekarang), tema gelap' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp', alt: 'Grup di bagian “Auto-saved” (Disimpan otomatis) dengan dua jendela dan tujuh tab, serta tombol “Keep as group” (Pertahankan sebagai grup), tema terang' },
+    { src: '/blog/never-lose-a-tab-again/tm-auto-saved-dark.webp', alt: 'Grup di bagian “Auto-saved” (Disimpan otomatis) dengan dua jendela dan tujuh tab, serta tombol “Keep as group” (Pertahankan sebagai grup), tema gelap' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-light.webp', alt: 'Pencarian closed: di TabMerger menampilkan jendela dengan 3 tab yang ditutup hari ini, tema terang' },
+    { src: '/blog/never-lose-a-tab-again/tm-closed-window-dark.webp', alt: 'Pencarian closed: di TabMerger menampilkan jendela dengan 3 tab yang ditutup hari ini, tema gelap' },
+  ],
+  tags: ['tabmerger-guides', 'save-tabs', 'restore-closed-tabs', 'session-management'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/never-lose-a-tab-again/tm-auto-saved-light.webp' },
+  ogImage: { src: '/blog/never-lose-a-tab-again/og.png', alt: 'Jangan pernah kehilangan tab lagi: grup yang disimpan otomatis di TabMerger dengan tombol “Keep as group” (Pertahankan sebagai grup)' },
+  toc: [
+    { id: 'quick', label: 'Jawaban singkat' },
+    { id: 'problem', label: 'Bagaimana tab hilang' },
+    { id: 'why', label: 'Mengapa cara kerjanya begini' },
+    { id: 'steps', label: 'Aktifkan' },
+    { id: 'closed', label: 'Baru ditutup' },
+    { id: 'benefit', label: 'Apa untungnya' },
+    { id: 'habits', label: 'Kebiasaan baik' },
+    { id: 'plans', label: 'Gratis vs Pro' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Aktifkan **Pengaturan → Data → Simpan otomatis tab yang terbuka** (Settings → Data → Auto-save open tabs) di [TabMerger](/features) lalu pilih jadwal, jumlah tab, atau keduanya. Sejak itu, tab yang terbuka disimpan otomatis sebagai grup baru, tanpa mengulang yang sudah tersimpan. Tidak sengaja menutup sesuatu? <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> dan `closed:` menemukan setiap tab dan jendela yang baru Anda tutup, dan membuka kembali seluruh jendela dengan satu klik.
+
+</QuickAnswer>
+
+<InstallCta>Salinan setiap tab yang terbuka, disimpan untuk Anda sesuai jadwal. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+<Section id="problem" title="Bagaimana tab sebenarnya hilang">
+
+Jarang sekali karena satu crash besar. Lebih sering hal kecil: Anda menutup jendela yang salah, justru yang berisi tiga puluh tab riset tadi pagi. Pembaruan memulai ulang browser dan hanya satu dari tiga jendela yang kembali. Anda beres-beres hari Jumat dan hari Senin butuh halaman yang sudah Anda tutup. Saat itu tab tersebut ada di suatu tempat di Riwayat, di antara ratusan halaman lain, kalau Anda masih ingat namanya.
+
+Menyimpan secara manual memang menyelesaikannya, di hari-hari Anda ingat. Simpan otomatis untuk hari-hari lainnya.
+
+Untuk mengembalikan tab setelah crash atau restart paksa dengan alat bawaan setiap browser, lihat [cara mengembalikan tab setelah crash](/blog/restore-tabs-after-crash). Panduan ini membahas cara memastikan Anda selalu punya salinan.
+
+</Section>
+
+<Section id="why" title="Mengapa simpan otomatis bekerja seperti ini">
+
+Setiap aturan simpan otomatis di TabMerger ada agar salinannya berguna, bukan sekadar ada:
+
+- **Menyimpan ke grup baru**, dinamai sesuai waktunya (“Disimpan otomatis 21 Nov, 20.28”), dengan jendela utuh dan urutan tab tetap. Tidak ada yang Anda simpan sebelumnya yang diubah. Setiap simpanan otomatis baru mendapat warna yang berbeda dari sebelumnya, jadi mudah dibedakan.
+- **Dua pemicu, karena tab menumpuk dengan dua cara.** **Jadwal** (setiap 15 atau 30 menit, setiap jam, setiap 2 atau 4 jam, atau setiap hari) menangani kerja yang stabil. **Jumlah tab** (20, 30, 50, 75, atau 100 tab terbuka) menangani lonjakan riset yang melampaui jadwal apa pun.
+- **Satu lonjakan disimpan sekali.** Pemicu jumlah aktif saat Anda melewati batasnya, lalu menunggu sampai Anda kembali di batas itu atau di bawahnya, dan minimal 10 menit, sebelum bisa aktif lagi. Membuka sepuluh tab berturut-turut tidak membuat sepuluh grup.
+- **Tanpa duplikat.** Tab yang alamatnya sudah ada di salah satu grup Anda dilewati, dan halaman yang terbuka di beberapa tab disimpan sekali. Jika semuanya sudah tersimpan, tidak ada yang disimpan dan Anda diberi tahu.
+- **Yang pribadi tetap pribadi.** Jendela pribadi tidak pernah disimpan. Halaman milik TabMerger sendiri tidak diikutkan; tab yang disematkan dan halaman browser tetap disimpan.
+- **Tidak perlu Anda.** Simpan otomatis berjalan di latar belakang ekstensi selama browser terbuka, dan memeriksa apakah sudah waktunya menyimpan saat browser dimulai. Notifikasi opsional memberi tahu Anda setelah setiap penyimpanan; baris status di Pengaturan menampilkan hasil terakhir.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Simpan otomatis di TabMerger" steps={[{ title: 'Pengaturan' }, { title: 'Grup simpanan otomatis' }]}>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-save-settings" alt="TabMerger “Settings” (Pengaturan), “Data”: “Auto-save open tabs” (Simpan otomatis tab yang terbuka) aktif, setiap jam dan saat tab terbuka melewati 50, dengan “Auto-save now” (Simpan otomatis sekarang), tema terang" darkAlt="TabMerger “Settings” (Pengaturan), “Data”: “Auto-save open tabs” (Simpan otomatis tab yang terbuka) aktif, setiap jam dan saat tab terbuka melewati 50, dengan “Auto-save now” (Simpan otomatis sekarang), tema gelap" boxes={[{ id: 'schedule', label: 'Seberapa sering menyimpan' }, { id: 'threshold', label: 'Pemicu jumlah tab terbuka' }, { id: 'run-now', label: 'Simpan sekarang juga' }]} source="TabMerger 3.16.1">Setiap jam, dan setiap kali tab terbuka melewati 50.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-auto-saved" alt="Grup di bagian “Auto-saved” (Disimpan otomatis) dengan dua jendela dan tujuh tab, serta tombol “Keep as group” (Pertahankan sebagai grup), tema terang" darkAlt="Grup di bagian “Auto-saved” (Disimpan otomatis) dengan dua jendela dan tujuh tab, serta tombol “Keep as group” (Pertahankan sebagai grup), tema gelap" boxes={[{ id: 'keep', label: 'Pertahankan sebagai grup' }]} source="TabMerger 3.16.1">Hasilnya: kedua jendela yang terbuka, disimpan sebagai grup. Pertahankan agar tersimpan selamanya.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="steps" title="Aktifkan dalam empat langkah">
+
+1. Buka TabMerger, lalu **Pengaturan** (Settings, di menu akun) → **Data**.
+2. Aktifkan **Simpan otomatis tab yang terbuka** (Auto-save open tabs). (Di Pro fitur ini sudah aktif, setiap jam.)
+3. Pilih **Jadwal** (Schedule), angka di **Saat tab terbuka melebihi** (When open tabs pass), atau keduanya. Aktifkan **Tampilkan notifikasi** (Show a notification) jika Anda ingin diberi tahu setelah setiap penyimpanan.
+4. Tekan **Simpan otomatis sekarang** (Auto-save now) sekali untuk melihat hasilnya: grup baru di bawah **Disimpan otomatis** (Auto-saved) di bilah samping.
+
+Menemukan simpanan otomatis yang ingin Anda simpan selamanya? Buka dan tekan **Pertahankan sebagai grup** (Keep as group): grup itu pindah ke grup Anda dan tidak pernah dihapus otomatis.
+
+</Section>
+
+<Section id="closed" title="Baru ditutup: separuh lain jaring pengaman">
+
+Simpan otomatis menangani yang sedang terbuka; **Baru ditutup** (Recently closed) menangani yang baru saja Anda tutup. Setiap tab dan jendela yang Anda tutup disimpan per hari, hanya di perangkat ini, dan jendela pribadi tidak pernah dicatat.
+
+- Buka **Baru ditutup** di bilah samping untuk menelusuri per hari, atau tekan <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> dan mulai dengan `closed:` untuk mencarinya.
+- **Jendela** yang ditutup tampil sebagai satu entri (“Jendela · 3 tab”): pilih, dan seluruh jendela kembali.
+- <Kbd>Ctrl</Kbd>-klik (<Kbd>⌘</Kbd>-klik di Mac) atau klik tengah sebuah hasil untuk membukanya kembali di latar belakang.
+
+<ThemedScreenshot src="/blog/never-lose-a-tab-again/tm-closed-window" alt="Pencarian closed: di TabMerger menampilkan jendela dengan 3 tab yang ditutup hari ini, tema terang" darkAlt="Pencarian closed: di TabMerger menampilkan jendela dengan 3 tab yang ditutup hari ini, tema gelap" boxes={[{ id: 'search-input', label: 'Filter closed:' }, { id: 'closed-window', label: 'Seluruh jendela yang ditutup' }]} source="TabMerger 3.16.1">Jendela yang tidak sengaja ditutup, cukup satu pencarian.</ThemedScreenshot>
+
+Trik pencarian lainnya ada di [cari di semua tab Anda dengan TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+
+</Section>
+
+<Section id="benefit" title="Apa untungnya">
+
+Kemungkinan terburuk menyusut dari “tab-tab itu hilang” menjadi “saya kehilangan yang saya buka sejak penyimpanan terakhir”. Dengan jadwal setiap jam, restart yang gagal paling banyak membuat Anda kehilangan tab baru selama satu jam; jendela yang Anda tutup sendiri ada di “Baru ditutup”. Mengembalikan keduanya cukup satu pencarian, bukan satu sore di Riwayat.
+
+</Section>
+
+<Section id="habits" title="Kebiasaan baik">
+
+- **Sesuaikan jadwal dengan ritme Anda.** Setiap jam cocok untuk sebagian besar hari; setiap 15 menit cocok untuk riset berat.
+- **Tambahkan jumlah tab jika Anda membuka tab secara beruntun.** 50 adalah awal yang baik.
+- **Pertahankan, lalu bersihkan.** Jika simpanan otomatis berisi sesuatu yang layak disimpan, tekan **Pertahankan sebagai grup** dan ganti namanya; hapus sisanya.
+- **Tetap simpan dengan sengaja.** Simpan otomatis adalah jaring pengaman, bukan rencana: simpan grup bernama untuk proyek sungguhan (lihat [alur kerja tab harian](/blog/tabmerger-daily-workflow)).
+
+</Section>
+
+<Section id="plans" title="Gratis vs Pro">
+
+<ComparisonTable
+  head={['', 'Gratis', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Simpan otomatis tab yang terbuka', 'Mati sampai Anda mengaktifkannya; 2 terbaru disimpan', 'Aktif secara bawaan; semua disimpan'],
+    ['Simpanan otomatis dan batas paket', 'Dihitung dalam batas 5 grup dan 50 tab', 'Tanpa batas'],
+    ['Baru ditutup', '2 hari terakhir Anda', '30 hari terakhir Anda'],
+    ['Cadangan otomatis terenkripsi untuk grup Anda', 'Tidak', 'Setiap jam hingga mingguan, 10 terbaru disimpan'],
+    ['Tab terbuka dari perangkat Anda yang lain', 'Tidak', 'Pengaturan → Perangkat'],
+  ]}
+/>
+
+Di paket Gratis, setiap simpanan otomatis baru menggantikan yang paling lama begitu sudah ada 2; **Pertahankan sebagai grup** mengeluarkan satu dari rotasi. Saat mendekati batas 50 tab, simpan otomatis menyimpan tab yang masih muat dan memberi tahu Anda. Cadangan dan tab dari perangkat Anda disimpan di akun Anda dengan enkripsi end-to-end, dan server kami menolak menyimpannya untuk akun tanpa Pro. Detailnya di [halaman harga](/pricing).
+
+<InstallCta>Atur sekali, dan tak perlu lagi khawatir soal jendela yang tertutup. Gratis untuk Chrome, Edge, dan Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

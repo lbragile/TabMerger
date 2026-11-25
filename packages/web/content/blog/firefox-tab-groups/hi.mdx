@@ -1,0 +1,134 @@
+export const post = {
+  slug: 'firefox-tab-groups',
+  title: 'Firefox टैब ग्रुप: इन्हें सेव करने, फिर से खोलने और हमेशा के लिए रखने का तरीका',
+  navTitle: 'Firefox टैब ग्रुप',
+  seoTitle: 'Firefox टैब ग्रुप: सेव करें, फिर से खोलें, सिंक करें (और इनकी सीमाएँ)',
+  description:
+    'Firefox 159 में टैब ग्रुप कैसे काम करते हैं: ग्रुप बनाना, रंग देना, समेटना, सेव करके बंद करना और बाद में फिर से खोलना, Firefox Sync किन चीज़ों को सिंक करता है, और TabMerger से अपने ग्रुप हर डिवाइस पर सुरक्षित कैसे रखें।',
+  shareSummary: 'Firefox टैब ग्रुप बनाएँ, सेव करें, फिर से खोलें और संभालें, और Firefox Sync क्या सिंक करता है।',
+  dek: 'Firefox में अब ग्रुप सेव करके बंद किए जा सकते हैं। जानिए वे कहाँ जाते हैं और उन्हें हमेशा के लिए कैसे रखें।',
+  published: '2026-12-07',
+  updated: '2026-12-07',
+  testedOn: ['Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Save and close group किसी ग्रुप को बाद में फिर से खोलने के लिए रख लेता है।', source: 'Firefox 159 के मेन्यू का टेक्स्ट' },
+    { text: 'बंद किए गए ग्रुप Closed Groups और Recent tab groups में दिखते हैं।', source: 'Firefox 159 के मेन्यू का टेक्स्ट' },
+    { text: 'Firefox Sync की सेटिंग में “टैबों को खोलें” है, पर टैब ग्रुप के लिए कोई अलग विकल्प नहीं है।', source: 'Firefox 159 की सेटिंग का टेक्स्ट' },
+    { text: 'ग्रुप के मेन्यू से उसके सारे लिंक एक साथ कॉपी किए जा सकते हैं।', source: 'Firefox 159 के मेन्यू का टेक्स्ट' },
+  ],
+  faq: [
+    {
+      question: 'Firefox में टैब ग्रुप कैसे सेव करें?',
+      answer: 'ग्रुप के लेबल पर राइट-क्लिक करें और Save and close group चुनें। बाद में उसे Closed Groups या Tab groups सूची से फिर से खोलें।',
+    },
+    {
+      question: 'क्या Firefox टैब ग्रुप सिंक होते हैं?',
+      answer:
+        'Firefox 159 की Sync सेटिंग में बुकमार्क्स, इतिहास, “टैबों को खोलें” और दूसरी चीज़ें हैं, पर टैब ग्रुप के लिए कोई अलग विकल्प नहीं है। हर डिवाइस पर वही ग्रुप रखने के लिए TabMerger Pro उन्हें एंड-टू-एंड एन्क्रिप्शन के साथ सिंक करता है।',
+    },
+    {
+      question: 'Save and close group और Delete group में क्या अंतर है?',
+      answer: 'Save and close group ग्रुप को बाद में फिर से खोलने के लिए रख लेता है। Delete group उसे हटा देता है; Ungroup tabs टैब खुले रखता है, पर ग्रुप हटा देता है।',
+    },
+    {
+      question: 'क्या मैं Firefox टैब ग्रुप के सारे लिंक कॉपी कर सकता हूँ?',
+      answer: 'हाँ: Firefox 159 के ग्रुप मेन्यू में Copy links in group है। TabMerger पूरे ग्रुप को JSON फ़ाइल में एक्सपोर्ट भी कर सकता है।',
+    },
+  ],
+  images: [
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp', alt: 'TabMerger ग्रुप Home renovation, जिसमें तीन सेव की गई विंडो और नौ टैब हैं, कुछ टैब पर उनके टैब ग्रुप Kitchen और Quotes का टैग है, लाइट थीम' },
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-dark.webp', alt: 'TabMerger ग्रुप Home renovation, जिसमें तीन सेव की गई विंडो और नौ टैब हैं, कुछ टैब पर उनके टैब ग्रुप Kitchen और Quotes का टैग है, डार्क थीम' },
+  ],
+  tags: ['firefox', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Tab groups in Firefox',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/tab-groups',
+      checked: '2026-11-21',
+      note: 'Menu names and settings were read from Firefox 159.0.1’s own interface text; this page blocked our automated check.',
+    },
+    {
+      title: 'Firefox Sync: what it is and how it works',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/firefox-sync-what-it-is-and-how-it-works',
+      checked: '2026-11-21',
+      note: 'The list of synced data was read from Firefox 159.0.1’s settings text.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-23',
+  cover: { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp' },
+  ogImage: { src: '/blog/firefox-tab-groups/og.png', alt: '“Firefox tab groups: how to save, reopen and keep them” टाइटल कार्ड: TabMerger की एक गाइड, दो विंडो वाले एक सेव किए गए ग्रुप के साथ' },
+  toc: [
+    { id: 'quick', label: 'झटपट जवाब' },
+    { id: 'basics', label: 'ग्रुप बनाएँ' },
+    { id: 'save', label: 'सेव करें और फिर से खोलें' },
+    { id: 'sync', label: 'क्या ये सिंक होते हैं?' },
+    { id: 'tabmerger', label: 'हमेशा के लिए रखें' },
+    { id: 'faq', label: 'अक्सर पूछे जाने वाले सवाल' },
+  ],
+}
+
+<QuickAnswer>
+
+Firefox में ग्रुप शुरू करने के लिए एक टैब को दूसरे टैब पर खींचें, या किसी टैब पर राइट-क्लिक करें। ग्रुप को बाद के लिए रखने हेतु उसके लेबल पर राइट-क्लिक करें और **Save and close group** (ग्रुप सेव करके बंद करें) चुनें; उसे **Closed Groups** (बंद किए गए ग्रुप) या **Tab groups** (टैब ग्रुप की सूची) से फिर से खोलें। Firefox Sync की सेटिंग में टैब ग्रुप के लिए कोई अलग विकल्प नहीं है, इसलिए हर डिवाइस पर वही ग्रुप पाने और उन्हें बाकी सब चीज़ों के साथ खोज पाने के लिए उन्हें [TabMerger](/features) में सेव करें।
+
+</QuickAnswer>
+
+<InstallCta>अपने Firefox ग्रुप सेव, खोजने लायक और सिंक रखें। Firefox, Chrome और Edge के लिए मुफ़्त।</InstallCta>
+
+<Section id="basics" title="Firefox टैब ग्रुप कैसे काम करते हैं?">
+
+Firefox 159 के अपने इंटरफ़ेस के मुताबिक (हिंदी Firefox में भी ग्रुप के ये विकल्प अंग्रेज़ी में दिखते हैं):
+
+1. **बनाएँ:** एक टैब को दूसरे टैब पर खींचें, या किसी टैब पर राइट-क्लिक करके उसे नए ग्रुप में जोड़ें। Firefox एक **Name** (नाम) और एक रंग माँगता है (नीला, सियान, ग्रे, हरा, नारंगी, गुलाबी, बैंगनी, लाल या पीला)।
+2. **समेटें:** ग्रुप के लेबल पर क्लिक करें, ताकि वह सिमटकर एक टैब जितना चौड़ा रह जाए।
+3. **संभालें:** लेबल पर राइट-क्लिक करने पर **Save and close group**, **Ungroup tabs** (टैब का ग्रुप हटाएँ), **Delete group** (ग्रुप मिटाएँ), **Move group to new window** (ग्रुप को नई विंडो में ले जाएँ), **Copy links in group** (ग्रुप के लिंक कॉपी करें) और **Share group** (ग्रुप शेयर करें) मिलते हैं।
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's tab group editor with Name, colours and Save and close group. */}
+
+</Section>
+
+<Section id="save" title="ग्रुप को सेव करके वापस कैसे पाएँ?">
+
+- **सेव करें:** ग्रुप के लेबल पर राइट-क्लिक → **Save and close group**। टैब बंद हो जाते हैं; ग्रुप बना रहता है।
+- **फिर से खोलें:** किसी टैब पर राइट-क्लिक → ग्रुप में जोड़ें → **Closed Groups**, या **Tab groups** सूची खोलें (वहाँ Firefox **Recent tab groups** यानी हाल के टैब ग्रुप दिखाता है), ग्रुप चुनें, फिर **Reopen tab group** (टैब ग्रुप फिर से खोलें)।
+- **मिटाएँ:** **Delete group** उसे हमेशा के लिए हटा देता है।
+
+<Catch>सेव किया गया ग्रुप इसी Firefox प्रोफ़ाइल में रहता है। यह बैकअप नहीं है, और जहाँ तक Sync की सेटिंग से पता चलता है, यह आपके साथ दूसरे डिवाइस पर नहीं जाता।</Catch>
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's Tab groups list with a closed group. */}
+
+</Section>
+
+<Section id="sync" title="क्या Firefox टैब ग्रुप सिंक होते हैं?">
+
+Firefox 159 की **Sync** सेटिंग में लिखा है कि क्या-क्या सिंक होता है: **बुकमार्क्स, इतिहास, टैबों को खोलें, Passwords, पते, Payment methods, ऐड-ऑन और सेटिंग** (Bookmarks, History, Open tabs, Passwords, Addresses, Payment methods, Add-ons and Settings)। “टैबों को खोलें” का विवरण है “सभी संकलित उपकरणों पर खुली हुई वस्तुओं की सूची”। टैब ग्रुप के लिए कोई अलग विकल्प नहीं है, इसलिए यह भरोसा न करें कि सेव किया गया ग्रुप आपके दूसरे कंप्यूटर पर दिखेगा।
+
+Chrome में यही चीज़ देखने के लिए हमारी [Chrome टैब ग्रुप गाइड](/blog/chrome-tab-groups) पढ़ें; वहाँ ग्रुप Google खाते के ज़रिए सिंक होते हैं।
+
+</Section>
+
+<Section id="tabmerger" title="TabMerger से अपने ग्रुप हमेशा के लिए रखें">
+
+[TabMerger](/features) Firefox, Chrome और Edge में चलता है, और वे ग्रुप संभालकर रखता है जो ब्राउज़र नहीं रख पाता:
+
+1. **समूह जोड़ें** पर क्लिक करें, उसे नाम दें, फिर उसके **⋯** मेन्यू में **वर्तमान के साथ विलय करें** चुनें: हर खुली विंडो और टैब उसमें सेव हो जाता है।
+2. विंडो बंद कर दें। ग्रुप हर टैब के साथ बना रहता है, और <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> से खोजा जा सकता है।
+3. जब चाहें, एक टैब, एक विंडो या सब कुछ फिर से खोलें।
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/firefox-tab-groups/tm-kept-groups" alt="TabMerger ग्रुप Home renovation, जिसमें तीन सेव की गई विंडो और नौ टैब हैं, कुछ टैब पर उनके टैब ग्रुप Kitchen और Quotes का टैग है, लाइट थीम" darkAlt="TabMerger ग्रुप Home renovation, जिसमें तीन सेव की गई विंडो और नौ टैब हैं, कुछ टैब पर उनके टैब ग्रुप Kitchen और Quotes का टैग है, डार्क थीम" boxes={[{ id: 'summary', label: 'सेव की गई विंडो और टैब' }]} source="TabMerger 3.16.1">सेव किया गया ग्रुप: तीन विंडो, नौ टैब, फिर से खोलने के लिए तैयार।</ThemedScreenshot>
+
+[Pro](/pricing) पर आपके ग्रुप आपके सभी डिवाइस पर Firefox, Chrome और Edge के बीच एंड-टू-एंड एन्क्रिप्शन के साथ सिंक होते हैं, इसलिए सर्वर उन्हें पढ़ नहीं सकता। ऐसी और आदतें [बहुत ज़्यादा टैब वाला रूटीन](/blog/manage-too-many-tabs) में पढ़ें।
+
+<InstallCta>Firefox, Chrome और Edge के लिए मुफ़्त। शुरू करने के लिए किसी खाते की ज़रूरत नहीं।</InstallCta>
+
+</Section>
+
+<Section id="faq" title="अक्सर पूछे जाने वाले सवाल">
+
+<Faq items={post.faq} />
+
+</Section>
