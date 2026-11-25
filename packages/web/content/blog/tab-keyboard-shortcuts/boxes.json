@@ -1,0 +1,32 @@
+{
+  "edge-extension-shortcuts": [
+    {
+      "id": "save-shortcuts",
+      "label": "The four save commands, all set: Alt+Shift+S, O, Comma, Period",
+      "l": "50.26%",
+      "t": "41.34%",
+      "w": "19.79%",
+      "h": "49.05%"
+    }
+  ],
+  "tm-search-dark": [
+    {
+      "id": "search-input",
+      "label": "Search box",
+      "l": "21.83%",
+      "t": "0.43%",
+      "w": "56.35%",
+      "h": "10.30%"
+    }
+  ],
+  "tm-search-light": [
+    {
+      "id": "search-input",
+      "label": "Search box",
+      "l": "21.83%",
+      "t": "0.43%",
+      "w": "56.35%",
+      "h": "10.30%"
+    }
+  ]
+}

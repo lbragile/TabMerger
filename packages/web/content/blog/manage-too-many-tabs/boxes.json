@@ -1,0 +1,62 @@
+{
+  "chrome-memory-saver": [
+    {
+      "id": "memory-saver",
+      "label": "Memory Saver",
+      "l": "29.00%",
+      "t": "25.94%",
+      "w": "59.78%",
+      "h": "18.23%"
+    }
+  ],
+  "edge-sleeping-tabs": [
+    {
+      "id": "sleeping-tabs",
+      "label": "Automatically put tabs to sleep",
+      "l": "6.47%",
+      "t": "68.29%",
+      "w": "23.40%",
+      "h": "7.04%"
+    }
+  ],
+  "tm-auto-save-threshold-dark": [
+    {
+      "id": "threshold",
+      "label": "When open tabs pass",
+      "l": "25.95%",
+      "t": "49.27%",
+      "w": "47.10%",
+      "h": "6.80%"
+    }
+  ],
+  "tm-auto-save-threshold-light": [
+    {
+      "id": "threshold",
+      "label": "When open tabs pass",
+      "l": "25.95%",
+      "t": "49.27%",
+      "w": "47.10%",
+      "h": "6.80%"
+    }
+  ],
+  "tm-now-open-dark": [
+    {
+      "id": "now-open-summary",
+      "label": "3 Windows ◆ 18 Tabs",
+      "l": "30.70%",
+      "t": "8.77%",
+      "w": "15.91%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-now-open-light": [
+    {
+      "id": "now-open-summary",
+      "label": "3 Windows ◆ 18 Tabs",
+      "l": "30.70%",
+      "t": "8.77%",
+      "w": "15.91%",
+      "h": "4.80%"
+    }
+  ]
+}

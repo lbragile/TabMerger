@@ -281,7 +281,7 @@
     "title": "Pindah dari OneTab?",
     "lead": "Daftar Anda masuk sebagai grup, lengkap dengan judulnya. Tidak ada yang keluar dari browser Anda.",
     "steps": {
-      "export": "Di OneTab, buka <b>Export / Import URLs</b> lalu tekan <b>Copy to clipboard</b>.",
+      "export": "Di OneTab, buka <b>Impor & Ekspor</b> lalu tekan <b>Salin ke papan klip</b>.",
       "save": "Tempel ke file teks biasa (Notepad, atau TextEdit dalam mode teks biasa) lalu simpan sebagai <b><code>.txt</code></b>.",
       "open": "Di TabMerger, buka <b>Pengaturan → Data</b>, tekan <b>Impor</b>, lalu pilih file <code>.txt</code>.",
       "import": "Konfirmasi. Setiap grup OneTab menjadi grup tersendiri, bernama \"Imported 1\", \"Imported 2\", dan seterusnya.",

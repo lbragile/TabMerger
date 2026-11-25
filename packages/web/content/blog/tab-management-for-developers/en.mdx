@@ -1,0 +1,145 @@
+export const post = {
+  slug: 'tab-management-for-developers',
+  title: 'Tab management for developers: one project, one group',
+  navTitle: 'Tab management for developers',
+  seoTitle: 'Tab Management for Developers: Projects, Docs and URL Rules',
+  description:
+    'Docs, pull requests, localhost and dashboards: a tab setup for developers with one TabMerger group per project, URL rules that file tabs automatically, and search that finds any doc page in a keystroke.',
+  shareSummary: 'One group per project, URL rules that file tabs for you, and docs found in a keystroke.',
+  dek: 'Your browser is half your IDE. Give it the same structure: a group per project, filed for you.',
+  published: '2026-12-08',
+  updated: '2026-12-08',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'URL rules copy matching new tabs into a group, with * as a wildcard.', source: 'TabMerger 3.16.1' },
+    { text: 'Rules match the address without http:// or https://, so localhost:3000/* works.', source: 'TabMerger 3.16.1 source' },
+    { text: 'Free has 3 URL rules; Pro has no limit.', source: 'TabMerger pricing', href: '/pricing' },
+    { text: 'Ctrl+K filters by group:, window:, tag: and closed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'How should developers organise browser tabs?',
+      answer:
+        'One TabMerger group per project or ticket, URL rules that file new tabs into the right group automatically, and Ctrl+K search to jump to any doc page. Save and close a project’s tabs when you switch tasks.',
+    },
+    {
+      question: 'Can tabs be sorted into groups automatically by URL?',
+      answer:
+        'Yes, with TabMerger’s URL rules: a pattern like github.com/your-org/* sends every matching new tab to a group. The tab stays open; a copy is saved in the group. Free has 3 rules, Pro unlimited.',
+    },
+    {
+      question: 'Does it work with localhost?',
+      answer: 'Yes. Rules ignore the http:// or https:// part, so a pattern like localhost:3000/* matches your dev server’s pages.',
+    },
+    {
+      question: 'How do I find a docs tab quickly?',
+      answer: 'Press Ctrl+K in TabMerger and type part of the title or address; add group:"Docs" to search one group only.',
+    },
+  ],
+  images: [
+    { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp', alt: 'TabMerger URL Rules dialog with the rule github.com/lbragile/* sending tabs to the Work group, light theme' },
+    { src: '/blog/tab-management-for-developers/tm-url-rules-dark.webp', alt: 'TabMerger URL Rules dialog with the rule github.com/lbragile/* sending tabs to the Work group, dark theme' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-light.webp', alt: 'The Work group with the newly opened Issues tab added by the URL rule, light theme' },
+    { src: '/blog/tab-management-for-developers/tm-rule-result-dark.webp', alt: 'The Work group with the newly opened Issues tab added by the URL rule, dark theme' },
+  ],
+  tags: ['developers', 'tab-management', 'tab-manager', 'browser-productivity'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tab-management-for-developers/tm-url-rules-light.webp' },
+  ogImage: { src: '/blog/tab-management-for-developers/og.png', alt: 'Tab management for developers: a TabMerger guide, with a URL rule filing GitHub tabs into a group' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'setup', label: 'One project, one group' },
+    { id: 'rules', label: 'File tabs automatically' },
+    { id: 'find', label: 'Find any doc fast' },
+    { id: 'switch', label: 'Switch projects cleanly' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Give every project its own [TabMerger](/features) group, then let **URL rules** do the filing: a pattern such as `github.com/your-org/*` or `localhost:3000/*` sends each matching new tab to the right group automatically. Find any docs page with <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>, and when you switch tasks, save the project’s windows and close them. Nothing lost, nothing to dig through.
+
+</QuickAnswer>
+
+<InstallCta>One group per project, filed for you by URL rules. Free for Chrome, Edge and Firefox.</InstallCta>
+
+<Section id="setup" title="How should a developer organise tabs?">
+
+The same way you organise code: by project. A typical project has four kinds of tabs:
+
+<ComparisonTable
+  head={['Kind', 'Examples', 'Where it goes']}
+  rowHeaders
+  minWidth="36rem"
+  rows={[
+    ['Work in progress', 'Pull requests, issues, the ticket', 'The project’s group, its own window'],
+    ['Docs and reference', 'API docs, MDN, a spec', 'A “Docs” window in the project group'],
+    ['Local and staging', 'localhost, preview deploys', 'Open while running; saved by a URL rule'],
+    ['Dashboards', 'CI, logs, monitoring', 'A pinned window, or the project group'],
+  ]}
+/>
+
+In TabMerger, a group can hold several windows, so one project group can keep “PRs”, “Docs” and “Local” apart. Rename a window from its **⋯** menu, and add a group note with the branch or ticket number.
+
+</Section>
+
+<Section id="rules" title="How do I file tabs into the right group automatically?">
+
+TabMerger’s **URL rules** watch your tabs. When a tab opens or finishes loading an address that matches a rule, a copy is saved into that rule’s group; the tab itself stays open.
+
+1. Open **Settings → General**, find **URL rules** and press **Manage**.
+2. Press **Add rule**, type a pattern and pick the group. `*` is a wildcard; the first matching rule wins.
+3. Press **Save**.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="A URL rule at work" steps={[{ title: 'The rule' }, { title: 'The result' }]}>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-url-rules" alt="TabMerger URL Rules dialog with the rule github.com/lbragile/* sending tabs to the Work group, light theme" darkAlt="TabMerger URL Rules dialog with the rule github.com/lbragile/* sending tabs to the Work group, dark theme" boxes={[{ id: 'rule', label: 'The pattern' }]} source="TabMerger 3.16.1">One rule: anything under github.com/lbragile/ goes to Work.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tab-management-for-developers/tm-rule-result" alt="The Work group with the newly opened Issues tab added by the URL rule, light theme" darkAlt="The Work group with the newly opened Issues tab added by the URL rule, dark theme" boxes={[{ id: 'new-tab', label: 'Added by the rule' }]} source="TabMerger 3.16.1">Opening the repo’s Issues page filed it into Work on its own.</ThemedScreenshot>
+</Carousel>
+
+Patterns that work well:
+
+- `github.com/your-org/*` for every repo, PR and issue of a project
+- `localhost:3000/*` for your dev server (rules ignore `http://` and `https://`)
+- `docs.your-framework.dev/*` for the docs you keep reopening
+
+Free includes 3 rules; [Pro](/pricing) has no limit. Every pattern option, and rule order, is in [auto-sort tabs with URL rules](/blog/auto-sort-tabs-with-url-rules).
+
+</Section>
+
+<Section id="find" title="How do I find a docs page in a keystroke?">
+
+Press <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> in TabMerger and type a few letters of the title or address. Results cover open, saved and recently closed tabs. Narrow it down with filters: `group:"Docs" fetch`, `window:"Local"`, or `closed:` for the page you closed an hour ago. More in [how to find one tab among hundreds](/blog/find-a-tab-among-hundreds).
+
+Group menus also have **Sort by URL**, handy for a long docs window, and **Deduplicate tabs** for the five copies of the same issue.
+
+</Section>
+
+<Section id="switch" title="How do I switch projects without losing context?">
+
+1. In the project’s group, choose **Merge with current** to save its open windows (or **Replace with current** to overwrite the saved copy).
+2. Close the windows.
+3. When you’re back on it, reopen the group: every PR, doc and dashboard, where you left them.
+
+<InstallCta>Free for Chrome, Edge and Firefox. No account needed to start.</InstallCta>
+
+For keyboard-first workflows, see [tab keyboard shortcuts](/blog/tab-keyboard-shortcuts); for the general routine, [managing too many tabs](/blog/manage-too-many-tabs).
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

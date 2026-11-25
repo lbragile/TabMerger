@@ -1,0 +1,42 @@
+{
+  "tm-rule-result-dark": [
+    {
+      "id": "new-tab",
+      "label": "Added by the rule",
+      "l": "33.08%",
+      "t": "33.93%",
+      "w": "47.42%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-rule-result-light": [
+    {
+      "id": "new-tab",
+      "label": "Added by the rule",
+      "l": "33.08%",
+      "t": "33.93%",
+      "w": "47.42%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-url-rules-dark": [
+    {
+      "id": "rule",
+      "label": "github.com/lbragile/* → Work",
+      "l": "27.83%",
+      "t": "44.43%",
+      "w": "31.11%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-url-rules-light": [
+    {
+      "id": "rule",
+      "label": "github.com/lbragile/* → Work",
+      "l": "27.83%",
+      "t": "44.43%",
+      "w": "31.11%",
+      "h": "4.80%"
+    }
+  ]
+}

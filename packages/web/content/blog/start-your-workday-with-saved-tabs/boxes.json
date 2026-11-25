@@ -1,0 +1,98 @@
+{
+  "tm-open-group-dark": [
+    {
+      "id": "open-all",
+      "label": "Open all in new window",
+      "l": "0.20%",
+      "t": "35.09%",
+      "w": "27.85%",
+      "h": "12.23%"
+    }
+  ],
+  "tm-open-group-light": [
+    {
+      "id": "open-all",
+      "label": "Open all in new window",
+      "l": "0.20%",
+      "t": "35.09%",
+      "w": "27.85%",
+      "h": "12.23%"
+    }
+  ],
+  "tm-restore-confirm-dark": [
+    {
+      "id": "close-all",
+      "label": "Close all windows",
+      "l": "52.03%",
+      "t": "53.60%",
+      "w": "19.64%",
+      "h": "8.80%"
+    }
+  ],
+  "tm-restore-confirm-light": [
+    {
+      "id": "close-all",
+      "label": "Close all windows",
+      "l": "52.03%",
+      "t": "53.60%",
+      "w": "19.64%",
+      "h": "8.80%"
+    }
+  ],
+  "tm-save-session-dark": [
+    {
+      "id": "session-name",
+      "label": "Session name",
+      "l": "24.33%",
+      "t": "31.10%",
+      "w": "51.35%",
+      "h": "8.13%"
+    },
+    {
+      "id": "description",
+      "label": "Description",
+      "l": "24.33%",
+      "t": "43.10%",
+      "w": "51.35%",
+      "h": "15.13%"
+    }
+  ],
+  "tm-save-session-light": [
+    {
+      "id": "session-name",
+      "label": "Session name",
+      "l": "24.33%",
+      "t": "31.10%",
+      "w": "51.35%",
+      "h": "8.13%"
+    },
+    {
+      "id": "description",
+      "label": "Description",
+      "l": "24.33%",
+      "t": "43.10%",
+      "w": "51.35%",
+      "h": "15.13%"
+    }
+  ],
+  "tm-session-view-dark": [
+    {
+      "id": "restore-session",
+      "label": "Restore session",
+      "l": "70.78%",
+      "t": "10.35%",
+      "w": "18.02%",
+      "h": "7.47%"
+    }
+  ],
+  "tm-session-view-light": [
+    {
+      "id": "restore-session",
+      "label": "Restore session",
+      "l": "70.78%",
+      "t": "10.35%",
+      "w": "18.02%",
+      "h": "7.47%"
+    }
+  ]
+}

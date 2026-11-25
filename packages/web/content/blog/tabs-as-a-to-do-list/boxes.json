@@ -1,0 +1,74 @@
+{
+  "tm-reminder-dark": [
+    {
+      "id": "remind-in",
+      "label": "Remind me in…",
+      "l": "36.45%",
+      "t": "39.93%",
+      "w": "56.60%",
+      "h": "4.63%"
+    }
+  ],
+  "tm-reminder-light": [
+    {
+      "id": "remind-in",
+      "label": "Remind me in…",
+      "l": "36.45%",
+      "t": "39.93%",
+      "w": "56.60%",
+      "h": "4.63%"
+    }
+  ],
+  "tm-todo-group-dark": [
+    {
+      "id": "stale",
+      "label": "Clear stale tabs",
+      "l": "91.20%",
+      "t": "8.10%",
+      "w": "4.60%",
+      "h": "6.13%"
+    },
+    {
+      "id": "note",
+      "label": "A note on the tab",
+      "l": "90.83%",
+      "t": "21.93%",
+      "w": "3.60%",
+      "h": "4.80%"
+    },
+    {
+      "id": "reminder",
+      "label": "A reminder is set",
+      "l": "90.83%",
+      "t": "25.93%",
+      "w": "3.60%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-todo-group-light": [
+    {
+      "id": "stale",
+      "label": "Clear stale tabs",
+      "l": "91.20%",
+      "t": "8.10%",
+      "w": "4.60%",
+      "h": "6.13%"
+    },
+    {
+      "id": "note",
+      "label": "A note on the tab",
+      "l": "90.83%",
+      "t": "21.93%",
+      "w": "3.60%",
+      "h": "4.80%"
+    },
+    {
+      "id": "reminder",
+      "label": "A reminder is set",
+      "l": "90.83%",
+      "t": "25.93%",
+      "w": "3.60%",
+      "h": "4.80%"
+    }
+  ]
+}

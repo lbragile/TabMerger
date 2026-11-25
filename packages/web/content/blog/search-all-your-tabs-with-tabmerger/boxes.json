@@ -1,0 +1,114 @@
+{
+  "tm-search-dim-dark": [
+    {
+      "id": "match",
+      "label": "The match",
+      "l": "33.08%",
+      "t": "30.77%",
+      "w": "53.72%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-search-dim-light": [
+    {
+      "id": "match",
+      "label": "The match",
+      "l": "33.08%",
+      "t": "30.77%",
+      "w": "53.72%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-search-examples-dark": [
+    {
+      "id": "search-input",
+      "label": "Ctrl+K",
+      "l": "21.83%",
+      "t": "0.43%",
+      "w": "56.35%",
+      "h": "10.30%"
+    },
+    {
+      "id": "examples",
+      "label": "Try these searches",
+      "l": "23.33%",
+      "t": "10.93%",
+      "w": "16.26%",
+      "h": "4.47%"
+    }
+  ],
+  "tm-search-examples-light": [
+    {
+      "id": "search-input",
+      "label": "Ctrl+K",
+      "l": "21.83%",
+      "t": "0.43%",
+      "w": "56.35%",
+      "h": "10.30%"
+    },
+    {
+      "id": "examples",
+      "label": "Try these searches",
+      "l": "23.33%",
+      "t": "10.93%",
+      "w": "16.26%",
+      "h": "4.47%"
+    }
+  ],
+  "tm-search-results-dark": [
+    {
+      "id": "search-input",
+      "label": "docs",
+      "l": "21.83%",
+      "t": "0.43%",
+      "w": "56.35%",
+      "h": "10.30%"
+    }
+  ],
+  "tm-search-results-light": [
+    {
+      "id": "search-input",
+      "label": "docs",
+      "l": "21.83%",
+      "t": "0.43%",
+      "w": "56.35%",
+      "h": "10.30%"
+    }
+  ],
+  "tm-search-window-picker-dark": [
+    {
+      "id": "search-input",
+      "label": "window:",
+      "l": "21.83%",
+      "t": "0.43%",
+      "w": "56.35%",
+      "h": "10.30%"
+    },
+    {
+      "id": "pick-window",
+      "label": "Pick a window",
+      "l": "23.33%",
+      "t": "10.27%",
+      "w": "12.97%",
+      "h": "4.47%"
+    }
+  ],
+  "tm-search-window-picker-light": [
+    {
+      "id": "search-input",
+      "label": "window:",
+      "l": "21.83%",
+      "t": "0.43%",
+      "w": "56.35%",
+      "h": "10.30%"
+    },
+    {
+      "id": "pick-window",
+      "label": "Pick a window",
+      "l": "23.33%",
+      "t": "10.27%",
+      "w": "12.97%",
+      "h": "4.47%"
+    }
+  ]
+}

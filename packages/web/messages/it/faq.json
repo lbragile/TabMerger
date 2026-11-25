@@ -33,6 +33,6 @@
   },
   "downgrade": {
     "question": "Che cosa succede ai miei gruppi se passo a un piano inferiore?",
-    "answer": "Se passi da Pro a Free, i tuoi gruppi restano nel cloud per 30 giorni. Le schede locali vengono sempre conservate. Puoi esportare tutto prima del downgrade."
+    "answer": "Non si perde nulla. I tuoi gruppi restano sui tuoi dispositivi, e quelli oltre i limiti del piano Free vengono conservati, bloccati, finché non torni a Pro o non fai spazio. Anche le copie già nel tuo account restano: nella dashboard puoi ancora aprire o eliminare le sessioni salvate e scaricare o eliminare i backup. Solo le nuove modifiche smettono di sincronizzarsi, finché non torni a Pro."
   }
 }

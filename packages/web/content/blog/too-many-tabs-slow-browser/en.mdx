@@ -1,0 +1,170 @@
+export const post = {
+  slug: 'too-many-tabs-slow-browser',
+  title: 'Do too many tabs slow your computer down?',
+  navTitle: 'Too many tabs, slow computer',
+  seoTitle: 'Too Many Tabs Slowing Your Computer? How to Fix It',
+  description:
+    'Open tabs use memory, and a browser full of them can slow everything down. Turn on the browser’s tab-sleeping setting, and save and close the tabs you aren’t using with TabMerger, without losing a single one.',
+  shareSummary: 'Why open tabs slow things down, and how to free memory without losing them.',
+  dek: 'The fastest tab is the one that isn’t open. Save it, close it, and get it back in a click.',
+  published: '2026-12-04',
+  updated: '2026-12-04',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Chrome’s Memory Saver frees memory from inactive tabs.',
+      source: 'Chrome Help',
+      href: 'https://support.google.com/chrome/answer/12929150',
+    },
+    { text: 'Edge 158 puts inactive tabs to sleep, after 15 minutes by default.', source: 'edge://settings, Nov 20, 2026' },
+    { text: 'Firefox 159 can unload a tab from its right-click menu.', source: 'Firefox 159 menu text' },
+    { text: 'TabMerger saves every open window, then closes them in one click.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'Does having many tabs use more memory?',
+      answer:
+        'Yes. Every open page keeps its content in memory, and pages that run scripts or play media also use the processor. How much depends on the sites, so tab count alone doesn’t tell you.',
+    },
+    {
+      question: 'Will closing tabs make my computer faster?',
+      answer:
+        'Closing tabs frees the memory they use. Save them first with TabMerger (Merge with current, then Close all windows) and you lose nothing: reopen any of them in a click.',
+    },
+    {
+      question: 'Is Memory Saver or sleeping tabs enough?',
+      answer:
+        'They free memory from idle tabs while keeping them in the tab strip, which helps the computer. The tabs are still there to scan, though; saving and closing them helps you too.',
+    },
+    {
+      question: 'How do I see which tab uses the most memory?',
+      answer: 'In Chrome, press Shift+Esc to open the Chrome Task Manager and look for the tabs using the most memory.',
+    },
+  ],
+  images: [
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-light.webp', alt: 'TabMerger Now Open menu with Close all windows, Close all browser windows in this group, highlighted, light theme' },
+    { src: '/blog/too-many-tabs-slow-browser/tm-close-all-menu-dark.webp', alt: 'TabMerger Now Open menu with Close all windows, Close all browser windows in this group, highlighted, dark theme' },
+    { src: '/blog/manage-too-many-tabs/chrome-memory-saver.webp', alt: 'Chrome Settings, Performance, with the Memory Saver switch' },
+    { src: '/blog/manage-too-many-tabs/edge-sleeping-tabs.webp', alt: 'Edge Settings, Performance, with Automatically put tabs to sleep on and set to 15 minutes' },
+  ],
+  tags: ['tab-management', 'browser-productivity', 'browser-tips', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Personalize Chrome performance',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/12929150',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Fix Chrome if it crashes or won’t open',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/142063',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/too-many-tabs-slow-browser/cover-chrome-light.webp' },
+  ogImage: { src: '/blog/too-many-tabs-slow-browser/og.png', alt: 'Do too many tabs slow your computer down? A TabMerger guide, with the Close all windows menu' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'why', label: 'Why tabs slow things down' },
+    { id: 'tabmerger', label: 'Save and close in one go' },
+    { id: 'browser', label: 'Let the browser sleep tabs' },
+    { id: 'which', label: 'Find the heavy tab' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'Memory setting',
+    values: {
+      chrome: 'chrome://settings/performance',
+      edge: 'Settings → System and performance → Performance',
+      firefox: 'Right-click a tab → Unload Tab',
+    },
+  },
+}
+
+<QuickAnswer>
+
+Yes: every open tab uses memory, and enough of them slow the whole computer down. The biggest win is to **close the tabs you aren’t using, without losing them**. In [TabMerger](/features), choose **Merge with current** to save every open window into a group, then **Close all windows**: the memory is freed and every tab is one click away. For the tabs you keep open, turn on **Memory Saver** (Chrome) or **sleeping tabs** (Edge).
+
+</QuickAnswer>
+
+<InstallCta>Save every window, close them all, get the memory back. Free for Chrome, Edge and Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="why" title="Why do open tabs slow your computer down?">
+
+Each open tab is a live web page: its text, images and scripts stay in memory, and busy pages (video, live feeds, web apps) keep using the processor too. When the browser and your other apps need more memory than the computer has, everything gets slower. Chrome’s own crash help lists running out of memory as a cause of crashes, and its first fix is closing tabs.
+
+How much a tab costs depends entirely on the site, so there’s no safe number. The practical rule: if you haven’t looked at it today, it shouldn’t be open.
+
+</Section>
+
+<Section id="tabmerger" title="How do I close tabs without losing them?">
+
+This is where [TabMerger](/features) shines. Two steps, every window at once:
+
+1. Click **Add Group**, then choose **Merge with current** in its **⋯** menu: every open window and tab is saved into the group.
+2. Right-click **Now Open** in the sidebar and choose **Close all windows**. The browser windows close; the group keeps every tab.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/too-many-tabs-slow-browser/tm-close-all-menu" alt="TabMerger Now Open menu with Close all windows, Close all browser windows in this group, highlighted, light theme" darkAlt="TabMerger Now Open menu with Close all windows, Close all browser windows in this group, highlighted, dark theme" boxes={[{ id: 'close-all', label: 'Close all windows' }]} source="TabMerger 3.16.1">After saving, one menu item closes every open window.</ThemedScreenshot>
+
+When you need them again, open the group and reopen one tab, one window or everything. <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> finds any saved tab in a keystroke, and auto-save can do the saving on a schedule. More habits in our [too-many-tabs routine](/blog/manage-too-many-tabs).
+
+</Section>
+
+<Section id="browser" title="How do I make the browser sleep idle tabs?">
+
+For tabs you keep open, the browser can free their memory while they sit unused. They reload when you click them.
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+Turn on **Memory Saver**: **Settings → Performance**, or paste `chrome://settings/performance` into the address bar. Pick how soon tabs go inactive: Moderate, Balanced or Maximum.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/chrome-memory-saver.webp" alt="Chrome Settings, Performance, with the Memory Saver switch" width={1600} height={524} boxes={[{ id: 'memory-saver' }]} source="chrome://settings/performance · Chrome 157.0.8103.80">Chrome’s Memory Saver, off in a fresh Chrome 157 profile.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Check **Automatically put tabs to sleep** under **Settings → System and performance → Performance**, and pick how long a tab waits before it sleeps.
+
+<AnnotatedFigure src="/blog/manage-too-many-tabs/edge-sleeping-tabs.webp" alt="Edge Settings, Performance, with Automatically put tabs to sleep on and set to 15 minutes" width={1600} height={855} boxes={[{ id: 'sleeping-tabs' }]} source="edge://settings · Edge 158.0.4370.33">Edge’s sleeping tabs, on by default: inactive tabs sleep after 15 minutes.</AnnotatedFigure>
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+Right-click a tab and choose **Unload Tab** to free its memory now; select several tabs first to unload them together.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>sleeping tabs still crowd the tab strip. They help the computer, not your focus.</Catch>
+
+</Section>
+
+<Section id="which" title="How do I find the tab that’s slowing things down?">
+
+In Chrome, press <Kbd>Shift</Kbd>+<Kbd>Esc</Kbd> to open the **Chrome Task Manager** and look for the tabs using the most memory. Save the heavy ones to a TabMerger group and close them.
+
+{/* Screenshot still to capture by hand (needs a visible browser): the Chrome Task Manager window sorted by memory. */}
+
+<InstallCta>Free for Chrome, Edge and Firefox. No account needed to start.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

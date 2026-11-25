@@ -33,6 +33,6 @@
   },
   "downgrade": {
     "question": "Planımı düşürürsem gruplarıma ne olur?",
-    "answer": "Pro'dan Ücretsiz plana geçerseniz gruplarınız 30 gün boyunca bulutta kalır. Yerel sekmeleriniz her zaman korunur. Planınızı düşürmeden önce her şeyi dışa aktarabilirsiniz."
+    "answer": "Hiçbir şey kaybolmaz. Gruplarınız cihazlarınızda kalır; Ücretsiz planın sınırlarını aşanlar ise yeniden Pro'ya geçene veya yer açana kadar kilitli olarak saklanır. Hesabınızdaki kopyalar da yerinde kalır: panelde kayıtlı oturumlarınızı açmaya veya silmeye, yedeklerinizi indirmeye veya silmeye devam edebilirsiniz. Yalnızca yeni değişiklikler, yeniden Pro'ya geçene kadar eşitlenmez."
   }
 }

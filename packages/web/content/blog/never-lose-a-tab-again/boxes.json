@@ -1,0 +1,110 @@
+{
+  "tm-auto-save-settings-dark": [
+    {
+      "id": "schedule",
+      "label": "Schedule",
+      "l": "25.95%",
+      "t": "42.60%",
+      "w": "47.10%",
+      "h": "6.80%"
+    },
+    {
+      "id": "threshold",
+      "label": "When open tabs pass",
+      "l": "25.95%",
+      "t": "49.27%",
+      "w": "47.10%",
+      "h": "6.80%"
+    },
+    {
+      "id": "run-now",
+      "label": "Auto-save now",
+      "l": "57.99%",
+      "t": "73.43%",
+      "w": "15.06%",
+      "h": "7.47%"
+    }
+  ],
+  "tm-auto-save-settings-light": [
+    {
+      "id": "schedule",
+      "label": "Schedule",
+      "l": "25.95%",
+      "t": "42.60%",
+      "w": "47.10%",
+      "h": "6.80%"
+    },
+    {
+      "id": "threshold",
+      "label": "When open tabs pass",
+      "l": "25.95%",
+      "t": "49.27%",
+      "w": "47.10%",
+      "h": "6.80%"
+    },
+    {
+      "id": "run-now",
+      "label": "Auto-save now",
+      "l": "57.99%",
+      "t": "73.43%",
+      "w": "15.06%",
+      "h": "7.47%"
+    }
+  ],
+  "tm-auto-saved-dark": [
+    {
+      "id": "keep",
+      "label": "Keep as group",
+      "l": "83.99%",
+      "t": "8.18%",
+      "w": "15.31%",
+      "h": "6.13%"
+    }
+  ],
+  "tm-auto-saved-light": [
+    {
+      "id": "keep",
+      "label": "Keep as group",
+      "l": "83.99%",
+      "t": "8.18%",
+      "w": "15.31%",
+      "h": "6.13%"
+    }
+  ],
+  "tm-closed-window-dark": [
+    {
+      "id": "search-input",
+      "label": "closed:",
+      "l": "21.83%",
+      "t": "0.43%",
+      "w": "56.35%",
+      "h": "10.30%"
+    },
+    {
+      "id": "closed-window",
+      "label": "A closed window",
+      "l": "26.08%",
+      "t": "14.93%",
+      "w": "12.56%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-closed-window-light": [
+    {
+      "id": "search-input",
+      "label": "closed:",
+      "l": "21.83%",
+      "t": "0.43%",
+      "w": "56.35%",
+      "h": "10.30%"
+    },
+    {
+      "id": "closed-window",
+      "label": "A closed window",
+      "l": "26.08%",
+      "t": "14.93%",
+      "w": "12.56%",
+      "h": "4.80%"
+    }
+  ]
+}

@@ -1,0 +1,117 @@
+export const post = {
+  slug: 'organize-tabs-for-research',
+  title: 'How to organise tabs for research: notes, reminders and sources',
+  navTitle: 'Organise tabs for research',
+  seoTitle: 'How to Organize Browser Tabs for Research (Notes, Sessions, Sources)',
+  description:
+    'A research tab workflow: a TabMerger group per project, a note on every source that matters, reminders to come back, sessions to pause a whole project, and an export of your sources when you write up.',
+  shareSummary: 'A group per project, notes on sources, reminders, and an export when you write up.',
+  dek: 'Forty tabs of sources is a library, not a mess, if each one says why it’s there.',
+  published: '2026-12-09',
+  updated: '2026-12-09',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Any saved tab can carry a note and a reminder.', source: 'TabMerger 3.16.1' },
+    { text: 'Reminders: 30 min, 1 hour, 3 hours, tomorrow, or a date and time.', source: 'TabMerger 3.16.1' },
+    { text: 'A session saves all your groups to restore together; Free keeps 3.', source: 'TabMerger pricing', href: '/pricing' },
+    { text: 'Export JSON lists every source’s title and address.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'How do I keep track of sources in my browser?',
+      answer:
+        'Save each project’s tabs as a TabMerger group and add a note to every source you’ll cite: why it matters, which section, which chapter. Ctrl+K searches titles and addresses across all your groups.',
+    },
+    {
+      question: 'Can I set a reminder to come back to a tab?',
+      answer: 'Yes. Right-click a saved tab in TabMerger and choose Remind me…: 30 minutes, 1 hour, 3 hours, tomorrow, or a date and time, with an optional note.',
+    },
+    {
+      question: 'Should research tabs be bookmarks?',
+      answer: 'For work in progress, a saved group is better: it keeps the set together with notes and reopens in one click. Bookmark the few you’ll want for years.',
+      link: { text: 'Bookmark', href: '/blog/tabs-vs-bookmarks' },
+    },
+    {
+      question: 'How do I get a list of my sources out?',
+      answer: 'Settings → Data → Export JSON saves every group’s titles and addresses in one file you can turn into a reference list.',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp', alt: 'TabMerger group Thesis sources with a tab’s menu open: Move to group, Add note, Remind me…, Rename tab, Remove tab, light theme' },
+    { src: '/blog/organize-tabs-for-research/tm-tab-menu-dark.webp', alt: 'TabMerger group Thesis sources with a tab’s menu open: Move to group, Add note, Remind me…, Rename tab, Remove tab, dark theme' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-light.webp', alt: 'TabMerger reminder picker under a tab: 30 min, 1 hour, 3 hours, Tomorrow, a date and time, and an optional note, light theme' },
+    { src: '/blog/organize-tabs-for-research/tm-reminder-dark.webp', alt: 'TabMerger reminder picker under a tab: 30 min, 1 hour, 3 hours, Tomorrow, a date and time, and an optional note, dark theme' },
+  ],
+  tags: ['research', 'tab-management', 'save-tabs', 'session-management'],
+  sources: [
+    { title: 'Manage tabs in Chrome', publisher: 'Google Chrome Help', url: 'https://support.google.com/chrome/answer/2391819', checked: '2026-11-21' },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-for-research/tm-tab-menu-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-for-research/og.png', alt: 'How to organise tabs for research: a TabMerger guide, with a tab’s note and reminder options' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'project', label: 'A group per project' },
+    { id: 'notes', label: 'Notes and reminders' },
+    { id: 'sessions', label: 'Pause a whole project' },
+    { id: 'export', label: 'Export your sources' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Give each research project its own [TabMerger](/features) group, and add a **note** to every source you’ll use, saying why it matters. Set a **reminder** on the ones you need to revisit, save a **session** to pause the whole project and bring it back in one click, and **export** the group to a file when you write up your references.
+
+</QuickAnswer>
+
+<InstallCta>Turn forty source tabs into an annotated, searchable library. Free for Chrome, Edge and Firefox.</InstallCta>
+
+<Section id="project" title="How do I organise a research project’s tabs?">
+
+1. Click **Add Group** and name it after the project, say “Thesis sources”.
+2. Open the group’s **⋯** menu and choose **Merge with current**: every tab you have open is saved into it.
+3. Close the windows when you’re done for the day. The group keeps everything, and <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> finds any source by title or address later.
+
+Keep one window per strand (papers, data, background) inside the group, and give each a name. Half the battle with research tabs is deciding what’s worth keeping; our [tabs vs bookmarks guide](/blog/tabs-vs-bookmarks) helps you decide.
+
+</Section>
+
+<Section id="notes" title="How do I annotate sources and come back to them?">
+
+Right-click any saved tab:
+
+- **Add note**: why this source matters. A note icon marks tabs that have one.
+- **Remind me…**: 30 minutes, 1 hour, 3 hours, tomorrow, or a date and time you pick, with an optional note. TabMerger shows a browser notification when it’s due.
+- **Rename tab**: replace a cryptic page title (“[1706.03762]”) with something you’ll search for.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Notes and reminders on a source" steps={[{ title: 'Tab menu' }, { title: 'Reminder' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-tab-menu" alt="TabMerger group Thesis sources with a tab’s menu open: Move to group, Add note, Remind me…, Rename tab, Remove tab, light theme" darkAlt="TabMerger group Thesis sources with a tab’s menu open: Move to group, Add note, Remind me…, Rename tab, Remove tab, dark theme" boxes={[{ id: 'add-note', label: 'Add note' }, { id: 'remind-me', label: 'Remind me…' }]} source="TabMerger 3.16.1">Right-click a source to annotate it; the first tab already has a note.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-for-research/tm-reminder" alt="TabMerger reminder picker under a tab: 30 min, 1 hour, 3 hours, Tomorrow, a date and time, and an optional note, light theme" darkAlt="TabMerger reminder picker under a tab: 30 min, 1 hour, 3 hours, Tomorrow, a date and time, and an optional note, dark theme" boxes={[{ id: 'remind-in', label: 'Remind me in…' }]} source="TabMerger 3.16.1">Pick when to come back, and add a note for future you.</ThemedScreenshot>
+</Carousel>
+
+To run a whole reading list this way, see [using tabs as a to-do list](/blog/tabs-as-a-to-do-list).
+
+</Section>
+
+<Section id="sessions" title="How do I pause a whole project and come back later?">
+
+**Save current session** (in the sidebar’s Sessions section) takes a named snapshot of all your saved groups; **Restore session** brings them back together. Use it at milestones, like “Before the lit review”, so you can return to that exact set later. Free keeps 3 sessions in the browser; [Pro](/pricing) keeps unlimited sessions and syncs them between your devices, end-to-end encrypted. More on sessions in [what a session manager does](/blog/browser-session-manager).
+
+</Section>
+
+<Section id="export" title="How do I export my sources when I write up?">
+
+Open **Settings → Data** and press **Export JSON**. The file lists every group, window and tab with its title and address, ready to turn into a reference list with a short script or a text editor. Details and a field-by-field example are in [how to export your open tabs](/blog/export-open-tabs).
+
+<InstallCta>Free for Chrome, Edge and Firefox. No account needed to start.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

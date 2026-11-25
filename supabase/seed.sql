@@ -157,3 +157,13 @@ begin
   on conflict (id) do nothing;
 
 end $$;
+
+-- Blog deploy sync (035): the SHA-256 of a fixed, LOCAL-ONLY dev token, so
+-- `sync_blog_posts(p_slugs, 'tabmerger-local-blog-sync')` works against the local stack.
+-- This token is public (it is in this repo): never store this hash in a hosted project. seed.sql
+-- only runs on the local stack (`supabase db reset`); each hosted project gets its own random
+-- token, set by hand (see docs/database-schema.md, "Blog deploy sync"). `do nothing` so that, if
+-- this seed ever ran against a hosted project, it could not overwrite that project's real hash.
+insert into private.blog_sync_settings (id, token_sha256)
+values (true, sha256(convert_to('tabmerger-local-blog-sync', 'UTF8')))
+on conflict (id) do nothing;

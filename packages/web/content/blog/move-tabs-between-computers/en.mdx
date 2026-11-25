@@ -1,0 +1,165 @@
+export const post = {
+  slug: 'move-tabs-between-computers',
+  title: 'How to move your tabs to another computer',
+  navTitle: 'Move tabs to another computer',
+  seoTitle: 'How to Transfer Tabs to Another Computer (Chrome, Edge, Firefox)',
+  description:
+    'Move open tabs from one computer to another: browser sync and tabs from other devices, send-tab features, a file you carry over, or TabMerger Pro’s end-to-end encrypted sync across Chrome, Edge and Firefox.',
+  shareSummary: 'Get your tabs from one computer to the other: sync, send tab, a file, or encrypted sync.',
+  dek: 'Laptop to desktop, work to home, old PC to new: four ways to bring your tabs along.',
+  published: '2026-12-03',
+  updated: '2026-12-03',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'TabMerger Pro syncs groups and sessions end-to-end encrypted, across Chrome, Edge and Firefox.', source: 'TabMerger pricing and features', href: '/pricing' },
+    { text: 'TabMerger’s Export JSON and Import file move everything on the Free plan.', source: 'TabMerger 3.16.1' },
+    {
+      text: 'Chrome lists other devices’ tabs only with History and tabs sync on.',
+      source: 'Chrome Help',
+      href: 'https://support.google.com/chrome/answer/165139',
+    },
+    { text: 'Firefox can send a tab to another device from the tab’s menu.', source: 'Firefox 159 menu text' },
+  ],
+  faq: [
+    {
+      question: 'How do I send tabs to my phone or laptop?',
+      answer:
+        'Within one browser, sign in on both devices and use its sync: Chrome and Edge list tabs from other devices in History, and Firefox can send a tab from its right-click menu. Across browsers, TabMerger Pro syncs your saved groups between them.',
+    },
+    {
+      question: 'Can I move tabs from Chrome to Firefox?',
+      answer:
+        'Browser sync stays inside one browser. TabMerger works in Chrome, Edge and Firefox: export a JSON file and import it on the other side for free, or let Pro sync keep them in step.',
+    },
+    {
+      question: 'Do I need an account?',
+      answer: 'Not for a file: TabMerger’s Export JSON and Import file need no account. Browser sync and TabMerger Pro sync do.',
+    },
+    {
+      question: 'Is synced tab data private?',
+      answer:
+        'TabMerger Pro encrypts groups and sessions on your device before they’re synced, so the server can’t read them. Browser sync privacy depends on the browser’s own settings.',
+    },
+  ],
+  images: [
+    { src: '/blog/export-open-tabs/tm-settings-export-light.webp', alt: 'TabMerger Settings, Data, with the Export JSON and Import file buttons under Import & export, light theme' },
+    { src: '/blog/export-open-tabs/tm-settings-export-dark.webp', alt: 'TabMerger Settings, Data, with the Export JSON and Import file buttons under Import & export, dark theme' },
+  ],
+  tags: ['save-tabs', 'tab-manager', 'session-management', 'cross-browser', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Get your bookmarks, passwords, and more on all your devices',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/165139',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Import Chrome bookmarks & settings',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/96816',
+      checked: '2026-11-21',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/move-tabs-between-computers/tm-merge-menu-light.webp' },
+  ogImage: { src: '/blog/move-tabs-between-computers/og.png', alt: 'How to move your tabs to another computer: a TabMerger guide, with the Export JSON and Import file buttons' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'pick', label: 'Which way to use' },
+    { id: 'tabmerger', label: 'With TabMerger' },
+    { id: 'browser', label: 'With browser sync' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['browser'],
+  browserFact: {
+    label: 'Other devices’ tabs',
+    values: { chrome: 'History → Tabs from other devices', edge: 'History → Tabs from other devices', firefox: 'Firefox View → Tabs from other devices' },
+  },
+}
+
+<QuickAnswer>
+
+For a one-off move, use [TabMerger](/features)’s **Settings → Data → Export JSON** on the old computer and **Import file** on the new one: every saved group comes across (save your open windows into a group first), free, no account, in any of Chrome, Edge and Firefox. To keep two computers in step, **TabMerger Pro** syncs your groups and sessions automatically, end-to-end encrypted. Staying in one browser? Sign in on both and use its sync.
+
+</QuickAnswer>
+
+<InstallCta>Carry every tab to your new computer in two clicks. Free for Chrome, Edge and Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="pick" title="Which way should you use?">
+
+<ComparisonTable
+  head={['You want to…', 'Best way']}
+  rowHeaders
+  minWidth="34rem"
+  rows={[
+    ['Move everything once, to a new computer', 'TabMerger Export JSON → Import file (Free)'],
+    ['Keep two or more computers in step', 'TabMerger Pro sync, end-to-end encrypted'],
+    ['Move between different browsers', 'TabMerger (file on Free, sync on Pro)'],
+    ['Grab one tab from your other device, same browser', 'Browser sync or send tab'],
+  ]}
+/>
+
+</Section>
+
+<Section id="tabmerger" title="How do I move tabs with TabMerger?">
+
+**Once, with a file (Free):**
+
+1. On the old computer, save the open windows you want to move into a group (**Merge with current** in a group’s **⋯** menu). The import adds saved groups; the file’s Now Open is left out, because those were the old browser’s open tabs.
+2. Open TabMerger → **Settings → Data** → **Export JSON**.
+3. Copy the file to the new computer (a USB stick, email to yourself, a cloud drive).
+4. On the new computer, install TabMerger, then **Settings → Data** → **Import file**. Your groups appear next to any you already have.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/export-open-tabs/tm-settings-export" alt="TabMerger Settings, Data, with the Export JSON and Import file buttons under Import & export, light theme" darkAlt="TabMerger Settings, Data, with the Export JSON and Import file buttons under Import & export, dark theme" boxes={[{ id: 'export-json', label: 'Export JSON' }, { id: 'import-file', label: 'Import file' }]} source="TabMerger 3.16.1">Export on one computer, import on the other.</ThemedScreenshot>
+
+**Always, with sync ([Pro](/pricing)):** sign in to TabMerger on each computer and your groups and sessions follow you, in Chrome, Edge or Firefox. Everything is encrypted on your device before it’s synced, so the server can’t read your tabs. Pro also shows the tabs open on your other devices and restores them here, and keeps automatic backups. How it works, and what our server can and can’t see: [sync tabs between devices](/blog/sync-tabs-between-devices-with-tabmerger).
+
+More on what the file contains in [how to export your open tabs](/blog/export-open-tabs).
+
+</Section>
+
+<Section id="browser" title="How do I move tabs with the browser’s own sync?">
+
+This works when both computers use the same browser and you sign in to it on both:
+
+<BrowserPanels section="browser">
+<BrowserPanel browser="chrome">
+
+1. Sign in to Chrome on both computers.
+2. Turn on **History and tabs**: **Settings → You and Google**, select your account name, then turn it on.
+3. On the other computer, open History (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) and choose **Tabs from other devices**.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+1. Sign in to Edge on both computers and turn on sync.
+2. On the other computer, open History (<Kbd>Ctrl</Kbd>+<Kbd>H</Kbd>) and choose **Tabs from other devices**.
+3. Edge 158 also has **Send tab to your devices** for a single page.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+1. Sign in to Firefox on both computers, with open tabs syncing on.
+2. Right-click a tab and choose **Send to Device** to push it to the other computer.
+3. Or open **Firefox View** there and look under **Tabs from other devices**.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>browser sync only works inside one browser, only shows what’s open on the other device right now, and doesn’t keep tabs you’ve closed. For your whole set of tabs, across browsers, use TabMerger.</Catch>
+
+Lost tabs after a crash on the old machine? Start with [how to restore tabs after a crash](/blog/restore-tabs-after-crash). For the bigger picture, see [what a session manager does](/blog/browser-session-manager).
+
+<InstallCta>Free for Chrome, Edge and Firefox. No account needed to start.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

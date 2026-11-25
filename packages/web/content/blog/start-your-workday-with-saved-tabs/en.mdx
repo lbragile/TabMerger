@@ -1,0 +1,166 @@
+export const post = {
+  slug: 'start-your-workday-with-saved-tabs',
+  title: 'Start your workday with saved tabs',
+  navTitle: 'Start your workday with saved tabs',
+  seoTitle: 'Open the Same Tabs Every Morning with TabMerger Sessions',
+  description:
+    'Open your work tabs every morning in one click: save your groups as a TabMerger session, restore it each day, or open just one group. Why restoring asks first, and what Free and Pro include.',
+  shareSummary: 'Your morning tabs in one click: save a session once, restore it every day.',
+  dek: 'Set it up once: your mail, calendar, board and docs, back in their own windows every morning.',
+  published: '2026-12-12',
+  updated: '2026-12-12',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'A session is a named snapshot of all your saved groups.', source: 'TabMerger 3.16.1 source' },
+    { text: 'Restoring closes the open windows (after asking) and reopens each saved window.', source: 'TabMerger 3.16.1' },
+    { text: 'The windows a restore closes are kept in Recently closed.', source: 'TabMerger 3.16.1 source' },
+    { text: 'Free: 3 sessions in this browser. Pro: unlimited, synced across devices.', source: 'TabMerger pricing', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'How do I open the same tabs every morning?',
+      answer:
+        'Put your daily tabs in TabMerger groups, then save a session (the bookmark button next to Sessions in the sidebar). Each morning, restore that session: TabMerger reopens every saved window with its tabs in order.',
+    },
+    {
+      question: 'Why does restoring a session close my windows?',
+      answer:
+        'A session is meant to replace what is open with what you saved, so you start clean instead of on top of yesterday’s tabs. TabMerger asks before it closes anything, and the windows it closes go to Recently closed, so you can reopen them.',
+    },
+    {
+      question: 'Can I open one group without closing anything?',
+      answer: 'Yes. Right-click the group in the sidebar and choose Open all in new window. Your other windows stay as they are.',
+    },
+    {
+      question: 'Does a session save my open tabs?',
+      answer:
+        'No, it saves your saved groups. To include what is open, first add it to a group with Merge with current (in the group’s ⋯ menu), then save the session.',
+    },
+    {
+      question: 'How many sessions can I save for free?',
+      answer: 'Free keeps 3 sessions in your browser. Pro has no limit and syncs sessions across your devices, encrypted end to end.',
+    },
+  ],
+  images: [
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-save-session-light.webp', alt: 'TabMerger Save Session dialog with the name Workday, a description and a purple colour, light theme' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-save-session-dark.webp', alt: 'TabMerger Save Session dialog with the name Workday, a description and a cyan colour, dark theme' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-session-view-light.webp', alt: 'The Workday session with three groups, four windows and nine tabs, and a Restore session button, light theme' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-session-view-dark.webp', alt: 'The Workday session with three groups, four windows and nine tabs, and a Restore session button, dark theme' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-restore-confirm-light.webp', alt: 'TabMerger asking Restore this session? with Cancel and Close all windows buttons, light theme' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-restore-confirm-dark.webp', alt: 'TabMerger asking Restore this session? with Cancel and Close all windows buttons, dark theme' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-open-group-light.webp', alt: 'The sidebar right-click menu of the Work group with Open all in new window, light theme' },
+    { src: '/blog/start-your-workday-with-saved-tabs/tm-open-group-dark.webp', alt: 'The sidebar right-click menu of the Work group with Open all in new window, dark theme' },
+  ],
+  tags: ['tabmerger-guides', 'session-management', 'save-tabs', 'browser-productivity'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/start-your-workday-with-saved-tabs/tm-restore-confirm-light.webp' },
+  ogImage: { src: '/blog/start-your-workday-with-saved-tabs/og.png', alt: 'Start your workday with saved tabs: the Workday session in TabMerger with a Restore session button' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'problem', label: 'The morning rebuild' },
+    { id: 'why', label: 'Why sessions work this way' },
+    { id: 'steps', label: 'Set it up' },
+    { id: 'one-group', label: 'Open just one group' },
+    { id: 'benefit', label: 'What you get back' },
+    { id: 'habits', label: 'Good habits' },
+    { id: 'plans', label: 'Free vs Pro' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Keep your daily tabs in [TabMerger](/features) groups, then press **Save current session** (the bookmark button next to **Sessions** in the sidebar) and name it “Workday”. Every morning, restore it: TabMerger asks first, closes the open windows and reopens each saved window with its tabs in order. Need only one project? Right-click its group and choose **Open all in new window**.
+
+</QuickAnswer>
+
+<InstallCta>Your whole morning setup in one click. Free for Chrome, Edge and Firefox.</InstallCta>
+
+<Section id="problem" title="The morning rebuild">
+
+Most mornings start the same way. Mail, the calendar, the team board, the pull request you were reviewing, the doc you were writing. You open them one by one, from bookmarks, from History, from memory. Some days the browser restored yesterday’s windows instead, so you start with forty tabs and close thirty-five of them.
+
+Either way, the first minutes of the day go to rebuilding a workspace you already had. And the browser’s own restore brings back whatever happened to be open, not what you meant to work on.
+
+</Section>
+
+<Section id="why" title="Why TabMerger sessions work the way they do">
+
+Each choice behind sessions answers a part of that problem:
+
+- **A session saves your groups, not whatever is open.** Your groups are the tabs you chose to keep, already named and sorted. A session snapshots all of them under one name, so restoring gives you your plan, not yesterday’s clutter. (The live Now Open view and the guided tour’s practice groups are left out on purpose.)
+- **Restoring replaces, and asks first.** To start clean, a restore closes the open windows before reopening the saved ones. That is destructive, so it always asks (**Close all windows** or **Cancel**), from the session view and from the sidebar alike.
+- **Nothing you close is thrown away.** The windows a restore closes go to **Recently closed** (on by default), so a tab you still needed is a click away.
+- **Each window comes back as a window.** Saved windows reopen separately, tabs in their saved order. A window saved from a private window reopens as one when the extension is allowed in private windows; otherwise it opens as a normal window and TabMerger tells you why.
+- **Saved in your browser first.** A session is written to your browser before anything else, so saving works offline. On Pro it then uploads, end-to-end encrypted, to reach your other devices.
+
+</Section>
+
+<Section id="steps" title="Set it up: save once, restore every day">
+
+1. Put the day’s tabs into groups. Open a group’s **⋯** menu and choose **Merge with current** to add your open windows to it.
+2. In the sidebar, press the bookmark button next to **Sessions** (**Save current session**). Give it a name, an optional description and a colour, then press **Save**.
+3. Tomorrow morning, open TabMerger, click the session under **Sessions** and press **Restore session** (or the restore button on its row).
+4. Confirm with **Close all windows**. Your saved windows open, one by one, with their tabs in order.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Saving and restoring a session" steps={[{ title: 'Save' }, { title: 'Session' }, { title: 'Confirm' }]}>
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-save-session" alt="TabMerger Save Session dialog with the name Workday, a description and a purple colour, light theme" darkAlt="TabMerger Save Session dialog with the name Workday, a description and a cyan colour, dark theme" boxes={[{ id: 'session-name', label: 'The session name' }, { id: 'description', label: 'An optional description' }]} source="TabMerger 3.16.1">Name it after the routine it brings back.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-session-view" alt="The Workday session with three groups, four windows and nine tabs, and a Restore session button, light theme" darkAlt="The Workday session with three groups, four windows and nine tabs, and a Restore session button, dark theme" boxes={[{ id: 'restore-session', label: 'Restore session' }]} source="TabMerger 3.16.1">The session lists every group, window and tab it will reopen.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-restore-confirm" alt="TabMerger asking Restore this session? with Cancel and Close all windows buttons, light theme" darkAlt="TabMerger asking Restore this session? with Cancel and Close all windows buttons, dark theme" boxes={[{ id: 'close-all', label: 'Close all windows' }]} source="TabMerger 3.16.1">Restoring always asks first, because it closes what is open.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="one-group" title="Open just one group instead">
+
+Some mornings you only need one project. Right-click its group in the sidebar and choose **Open all in new window**: every web page in the group opens together in one new window, and nothing else is closed. To open a single saved window, use **Open in browser** in that window’s **⋯** menu; to open one tab, click it.
+
+<ThemedScreenshot src="/blog/start-your-workday-with-saved-tabs/tm-open-group" alt="The sidebar right-click menu of the Work group with Open all in new window, light theme" darkAlt="The sidebar right-click menu of the Work group with Open all in new window, dark theme" boxes={[{ id: 'open-all', label: 'Open all in new window' }]} source="TabMerger 3.16.1">One group, one window, everything else left alone.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="What you get back">
+
+The rebuild becomes one click and one confirmation. You start from the tabs you planned to use, in the windows you arranged, instead of from whatever survived yesterday. And because a restore only reopens what you saved, the clutter stays gone.
+
+</Section>
+
+<Section id="habits" title="Good habits">
+
+- **Keep one session per routine:** “Workday”, “Writing”, “Monday planning”. Fewer, clearer sessions beat a long list.
+- **Refresh a session when your setup changes.** A session is a snapshot: edits to your groups afterwards don’t change it. Save a new one and delete the old.
+- **Close the day with your groups, not your windows.** Add today’s new tabs to their groups (see [a daily tab workflow](/blog/tabmerger-daily-workflow)), then close the windows.
+- **Use a session for whole-day switches, a group for one project.** Restoring is for “start my day”; **Open all in new window** is for “open this project next to what I have”.
+
+</Section>
+
+<Section id="plans" title="Free vs Pro">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Sessions', 'Up to 3, in this browser', 'Unlimited'],
+    ['Restore and Open all in new window', 'Yes', 'Yes'],
+    ['Sessions on your other devices', 'No', 'Yes, encrypted end to end'],
+    ['Groups and tabs to put in a session', '5 groups, 50 tabs', 'Unlimited'],
+  ]}
+/>
+
+Free sessions never leave your browser. Uploading a session to your account is refused by our server unless the account has Pro, so syncing is a Pro feature in fact, not only in the menus. See the [pricing page](/pricing).
+
+<InstallCta>Save your morning once, restore it every day. Free for Chrome, Edge and Firefox.</InstallCta>
+
+For the rest of the routine, see [a daily tab workflow with TabMerger](/blog/tabmerger-daily-workflow); for what sessions are in general, [what a browser session manager is](/blog/browser-session-manager).
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

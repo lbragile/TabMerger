@@ -4,6 +4,8 @@
  * generated index agrees with the parsed post, and a locale without a file falls back to English.
  * Nothing here names a locale: it asserts invariants over whatever files exist.
  */
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { BLOG_SOURCES as GENERATED_SOURCES } from '@/generated/blog'
 import { PUBLIC_LOCALES } from '@/i18n/locales'
@@ -104,6 +106,7 @@ describe('post files', () => {
       title: f.post.title,
       description: f.post.description,
       shareSummary: f.post.shareSummary,
+      navTitle: f.post.navTitle,
       published: f.post.published,
       images: f.post.images.map((i) => i.src),
       tags: f.post.tags,
@@ -219,6 +222,55 @@ describe('locale fallback', () => {
     expect(isBlogSlug(undefined)).toBe(false)
     expect(postLocales('no-such-post')).toEqual([])
     expect(postSummary('no-such-post')).toBeUndefined()
+  })
+})
+
+describe('tag labels', () => {
+  const MESSAGES_DIR = join(__dirname, '..', 'messages')
+  const locales = readdirSync(MESSAGES_DIR).filter((name) => existsSync(join(MESSAGES_DIR, name, 'blog.json')))
+
+  it('covers every public locale', () => {
+    for (const locale of PUBLIC_LOCALES) expect(locales).toContain(locale)
+  })
+
+  it.each(locales)('%s labels every tag in the vocabulary, as one hyphenated, lowercase word group', (locale) => {
+    const tags = (JSON.parse(readFileSync(join(MESSAGES_DIR, locale, 'blog.json'), 'utf8')) as { tags: Record<string, string> }).tags
+    expect(Object.keys(tags).sort()).toEqual(Object.values(BLOG_TAGS).sort())
+    for (const label of Object.values(tags)) {
+      expect(label.trim()).toBe(label)
+      expect(label).not.toMatch(/\s/)
+      expect(label).toBe(label.toLocaleLowerCase(locale))
+    }
+  })
+})
+
+describe('links between posts', () => {
+  // Every `/blog/<slug>` a post links to (markdown links and `href: '/blog/...'` in its data).
+  const postLinks = (source: string) =>
+    [...source.matchAll(/(?:\]\(|href:\s*')\/blog\/([a-z0-9-]+)(?:[#?][^)']*)?[)']/g)].map((m) => m[1])
+
+  it.each(files.map((f) => [`${f.slug}/${f.locale}`, f] as const))('%s links only to posts that exist', (_, f) => {
+    for (const slug of postLinks(blogSource(f.slug, f.locale))) {
+      if (slug === 'tags') continue
+      expect(BLOG_SLUGS, `link to /blog/${slug}`).toContain(slug)
+    }
+  })
+})
+
+describe('browser panels', () => {
+  // Browser-specific steps and screenshots sit in <BrowserPanels section> groups, one browser shown
+  // at a time; the switcher's tabs control them through `browserSections`.
+  it.each(byName)('%s: every panel group is listed in browserSections (and back), once, with all three browsers', (_, f) => {
+    const source = blogSource(f.slug, f.locale)
+    const groups = [...source.matchAll(/<BrowserPanels section="([a-z0-9-]+)">([\s\S]*?)<\/BrowserPanels>/g)]
+    const sections = groups.map((m) => m[1])
+    expect(new Set(sections).size).toBe(sections.length)
+    expect([...sections].sort()).toEqual([...f.post.browserSections].sort())
+    for (const [, section, body] of groups) {
+      const browsers = [...body.matchAll(/<BrowserPanel browser="([a-z]+)">/g)].map((m) => m[1])
+      expect(browsers, section).toEqual(['chrome', 'edge', 'firefox'])
+    }
+    expect(source.includes('<BrowserSwitcher />')).toBe(sections.length > 0)
   })
 })
 

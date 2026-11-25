@@ -1,0 +1,62 @@
+{
+  "tm-after-dark": [
+    {
+      "id": "summary",
+      "label": "2 Windows ◆ 5 Tabs",
+      "l": "30.70%",
+      "t": "8.77%",
+      "w": "15.11%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-after-light": [
+    {
+      "id": "summary",
+      "label": "2 Windows ◆ 5 Tabs",
+      "l": "30.70%",
+      "t": "8.77%",
+      "w": "15.11%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-before-dark": [
+    {
+      "id": "summary",
+      "label": "2 Windows ◆ 8 Tabs",
+      "l": "30.70%",
+      "t": "8.77%",
+      "w": "15.11%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-before-light": [
+    {
+      "id": "summary",
+      "label": "2 Windows ◆ 8 Tabs",
+      "l": "30.70%",
+      "t": "8.77%",
+      "w": "15.11%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-confirm-dark": [
+    {
+      "id": "confirm",
+      "label": "Remove 3 duplicates",
+      "l": "49.83%",
+      "t": "61.10%",
+      "w": "25.85%",
+      "h": "7.47%"
+    }
+  ],
+  "tm-confirm-light": [
+    {
+      "id": "confirm",
+      "label": "Remove 3 duplicates",
+      "l": "49.83%",
+      "t": "61.10%",
+      "w": "25.85%",
+      "h": "7.47%"
+    }
+  ]
+}

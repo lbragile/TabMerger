@@ -33,6 +33,6 @@
   },
   "downgrade": {
     "question": "Was passiert mit meinen Gruppen, wenn ich downgrade?",
-    "answer": "Wenn du von Pro auf Kostenlos wechselst, bleiben deine Gruppen 30 Tage lang in der Cloud. Deine lokalen Tabs bleiben immer erhalten. Du kannst vor dem Downgrade alles exportieren."
+    "answer": "Es geht nichts verloren. Deine Gruppen bleiben auf deinen Geräten; was über die Grenzen des kostenlosen Plans hinausgeht, bleibt erhalten, aber gesperrt, bis du wieder upgradest oder Platz schaffst. Die Kopien in deinem Konto bleiben ebenfalls: Im Dashboard kannst du deine gespeicherten Sitzungen weiterhin öffnen oder löschen und deine Backups herunterladen oder löschen. Nur neue Änderungen werden nicht mehr synchronisiert, bis du wieder upgradest."
   }
 }

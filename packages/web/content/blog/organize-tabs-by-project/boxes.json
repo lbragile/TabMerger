@@ -1,0 +1,62 @@
+{
+  "tm-archive-menu-dark": [
+    {
+      "id": "archive",
+      "label": "Archive group",
+      "l": "0.20%",
+      "t": "42.09%",
+      "w": "27.85%",
+      "h": "9.85%"
+    }
+  ],
+  "tm-archive-menu-light": [
+    {
+      "id": "archive",
+      "label": "Archive group",
+      "l": "0.20%",
+      "t": "42.09%",
+      "w": "27.85%",
+      "h": "9.85%"
+    }
+  ],
+  "tm-archived-dark": [
+    {
+      "id": "banner",
+      "label": "Read-only until restored",
+      "l": "32.95%",
+      "t": "16.35%",
+      "w": "57.82%",
+      "h": "4.63%"
+    }
+  ],
+  "tm-archived-light": [
+    {
+      "id": "banner",
+      "label": "Read-only until restored",
+      "l": "32.95%",
+      "t": "16.35%",
+      "w": "57.82%",
+      "h": "4.63%"
+    }
+  ],
+  "tm-project-group-dark": [
+    {
+      "id": "windows",
+      "label": "Windows by stage",
+      "l": "34.08%",
+      "t": "17.10%",
+      "w": "8.01%",
+      "h": "41.80%"
+    }
+  ],
+  "tm-project-group-light": [
+    {
+      "id": "windows",
+      "label": "Windows by stage",
+      "l": "34.08%",
+      "t": "17.10%",
+      "w": "8.01%",
+      "h": "41.80%"
+    }
+  ]
+}

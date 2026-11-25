@@ -33,6 +33,6 @@
   },
   "downgrade": {
     "question": "Co stanie się z moimi grupami po obniżeniu planu?",
-    "answer": "Po przejściu z Pro na plan darmowy Twoje grupy pozostaną w chmurze przez 30 dni. Lokalne karty są zawsze zachowywane. Przed obniżeniem planu możesz wszystko wyeksportować."
+    "answer": "Nic nie przepada. Twoje grupy zostają na Twoich urządzeniach, a te ponad limity planu darmowego są zachowane, ale zablokowane, dopóki nie wrócisz do Pro albo nie zrobisz miejsca. Kopie, które są już na Twoim koncie, też zostają: w panelu nadal możesz otwierać lub usuwać zapisane sesje oraz pobierać lub usuwać kopie zapasowe. Tylko nowe zmiany przestają się synchronizować, dopóki nie wrócisz do Pro."
   }
 }

@@ -1,0 +1,38 @@
+{
+  "tm-settings-export-dark": [
+    {
+      "id": "export-json",
+      "label": "Export JSON",
+      "l": "24.33%",
+      "t": "54.77%",
+      "w": "16.18%",
+      "h": "7.47%"
+    },
+    {
+      "id": "import-file",
+      "label": "Import file",
+      "l": "39.90%",
+      "t": "54.77%",
+      "w": "14.82%",
+      "h": "7.47%"
+    }
+  ],
+  "tm-settings-export-light": [
+    {
+      "id": "export-json",
+      "label": "Export JSON",
+      "l": "24.33%",
+      "t": "54.77%",
+      "w": "16.18%",
+      "h": "7.47%"
+    },
+    {
+      "id": "import-file",
+      "label": "Import file",
+      "l": "39.90%",
+      "t": "54.77%",
+      "w": "14.82%",
+      "h": "7.47%"
+    }
+  ]
+}

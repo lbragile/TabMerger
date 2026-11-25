@@ -33,6 +33,6 @@
   },
   "downgrade": {
     "question": "O que acontece com meus grupos se eu fizer downgrade?",
-    "answer": "Se você fizer downgrade do Pro para o Gratuito, seus grupos permanecem na nuvem por 30 dias. Suas abas locais são sempre mantidas. Você pode exportar tudo antes do downgrade."
+    "answer": "Nada se perde. Seus grupos continuam nos seus dispositivos, e os que passarem dos limites do plano Gratuito ficam guardados, bloqueados, até você voltar ao Pro ou liberar espaço. As cópias que já estão na sua conta também continuam lá: no painel, você ainda pode abrir ou excluir suas sessões salvas e baixar ou excluir seus backups. Só as novas alterações deixam de ser sincronizadas, até você voltar ao Pro."
   }
 }

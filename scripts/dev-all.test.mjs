@@ -4,7 +4,7 @@
 
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { dockerDesktopLauncher, isSupabaseStillStarting, labelFor, PROCESSES, spawnArgs } from './dev-all.mjs'
+import { blogSyncStep, dockerDesktopLauncher, isSupabaseStillStarting, labelFor, LOCAL_BLOG_SYNC_TOKEN, PROCESSES, spawnArgs } from './dev-all.mjs'
 
 test('isSupabaseStillStarting: a database container still starting is retried', () => {
   assert.equal(
@@ -72,4 +72,16 @@ test('PROCESSES: runs web, ext and stripe, and only stripe is optional', () => {
 test('PROCESSES: stripe forwards to the web app webhook route', () => {
   const stripe = PROCESSES.find((p) => p.name === 'stripe')
   assert.deepEqual(stripe.args, ['listen', '--forward-to', 'localhost:3000/api/webhooks/stripe'])
+})
+
+test('blogSyncStep: runs the web sync script with .env.local and the local token', () => {
+  const step = blogSyncStep({})
+  assert.equal(step.command, 'node')
+  assert.deepEqual(step.args, ['packages/web/scripts/sync-blog-posts.mjs', '--env-file', 'packages/web/.env.local'])
+  assert.deepEqual(step.env, { BLOG_SYNC_TOKEN: LOCAL_BLOG_SYNC_TOKEN })
+  assert.equal(LOCAL_BLOG_SYNC_TOKEN, 'tabmerger-local-blog-sync')
+})
+
+test('blogSyncStep: a token already in the environment wins', () => {
+  assert.deepEqual(blogSyncStep({ BLOG_SYNC_TOKEN: 'other' }).env, { BLOG_SYNC_TOKEN: 'other' })
 })

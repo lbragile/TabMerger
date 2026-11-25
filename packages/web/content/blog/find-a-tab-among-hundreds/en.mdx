@@ -1,0 +1,187 @@
+export const post = {
+  slug: 'find-a-tab-among-hundreds',
+  title: 'How to find one tab among hundreds',
+  navTitle: 'Find a tab among hundreds',
+  seoTitle: 'How to Search Open Tabs in Chrome, Edge and Firefox',
+  description:
+    'Search your open tabs in seconds: the built-in tab search in Chrome, Edge and Firefox, and TabMerger’s Ctrl+K, which finds open, saved and closed tabs at once with filters like group: and closed:.',
+  shareSummary: 'Search open tabs in Chrome, Edge and Firefox, and find saved or closed ones too.',
+  dek: 'Stop scanning icon-sized tabs. One shortcut, a few letters of the title, and you’re there.',
+  published: '2026-11-29',
+  updated: '2026-11-29',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Ctrl+Shift+A opens Tab Search in Chrome.',
+      source: 'Chrome Help',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Firefox 159 binds Ctrl+Shift+A to a list of all tabs.', source: 'Firefox 159 keyset' },
+    { text: 'TabMerger’s Ctrl+K searches open, saved and recently closed tabs together.', source: 'TabMerger 3.16.1' },
+    { text: 'TabMerger filters: group:, window:, tag: and closed:.', source: 'TabMerger 3.16.1' },
+  ],
+  faq: [
+    {
+      question: 'How do I search my open tabs?',
+      answer:
+        'In TabMerger press Ctrl+K and type: it searches open, saved and recently closed tabs together. Built in, Chrome has Tab Search (Ctrl+Shift+A or @tabs in the address bar), and Firefox lists all tabs with Ctrl+Shift+A.',
+    },
+    {
+      question: 'Is there a tab search shortcut?',
+      answer: 'Ctrl+Shift+A in Chrome and Firefox (⌘+Shift+A in Chrome on a Mac), and Ctrl+K inside TabMerger. Microsoft’s shortcut list for Edge gives tab search no key.',
+    },
+    {
+      question: 'Can I search tabs I already closed?',
+      answer: 'Yes, in TabMerger: start your search with closed: to look only through recently closed tabs. Free keeps 2 days of them, Pro 30.',
+    },
+    {
+      question: 'Can I search tabs on my other devices?',
+      answer:
+        'TabMerger Pro syncs your saved groups between devices end-to-end encrypted, so the same Ctrl+K finds them everywhere. Our guide to moving tabs between computers covers the built-in options.',
+      link: { text: 'moving tabs between computers', href: '/blog/move-tabs-between-computers' },
+    },
+  ],
+  images: [
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-light.webp', alt: 'TabMerger search open and empty, listing the filters group:, window:, tag: and closed:, light theme' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-filters-dark.webp', alt: 'TabMerger search open and empty, listing the filters group:, window:, tag: and closed:, dark theme' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp', alt: 'TabMerger search for group:"Work" pull, finding the saved tab Pull requests in the Work group, light theme' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-dark.webp', alt: 'TabMerger search for group:"Work" pull, finding the saved tab Pull requests in the Work group, dark theme' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-light.webp', alt: 'TabMerger search for tag:Sprint, listing the three open tabs in the Chrome tab group Sprint, light theme' },
+    { src: '/blog/find-a-tab-among-hundreds/tm-search-tag-filter-dark.webp', alt: 'TabMerger search for tag:Sprint, listing the three open tabs in the Chrome tab group Sprint, dark theme' },
+  ],
+  tags: ['tab-management', 'browser-tips', 'tab-manager', 'chrome', 'edge', 'firefox'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome (Tab Search)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts in Microsoft Edge',
+      publisher: 'Microsoft Support',
+      url: 'https://support.microsoft.com/en-us/microsoft-edge/keyboard-shortcuts-in-microsoft-edge-50d3edab-30d9-c7e4-21ce-37fe2713cfad',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Keyboard shortcuts - Perform common Firefox tasks quickly',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/keyboard-shortcuts-perform-firefox-tasks-quickly',
+      checked: '2026-11-21',
+      note: 'Firefox entries were read from Firefox 159.0.1’s own key definitions and menu text; this page blocked our automated check.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/find-a-tab-among-hundreds/tm-search-group-filter-light.webp' },
+  ogImage: { src: '/blog/find-a-tab-among-hundreds/og.png', alt: 'How to find one tab among hundreds: a TabMerger guide, with a filtered tab search' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'tabmerger', label: 'Search everything with Ctrl+K' },
+    { id: 'filters', label: 'Filters that narrow it down' },
+    { id: 'builtin', label: 'Built-in tab search' },
+    { id: 'tips', label: 'Make tabs easier to find' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+  browserSections: ['builtin'],
+  browserFact: {
+    label: 'Built-in tab search',
+    values: { chrome: 'Ctrl+Shift+A or @tabs', edge: 'Search tabs (no shortcut listed)', firefox: 'Ctrl+Shift+A' },
+  },
+}
+
+<QuickAnswer>
+
+Press <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> on a Mac) in [TabMerger](/features) and type a few letters: it finds the tab whether it’s **open, saved in a group or recently closed**, and filters like `group:` and `closed:` narrow hundreds of tabs to one. Built in, Chrome’s **Tab Search** (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) and Firefox’s **list all tabs** (<Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd>) search what’s open right now.
+
+</QuickAnswer>
+
+<InstallCta>Find any tab, open, saved or closed, in a keystroke. Free for Chrome, Edge and Firefox.</InstallCta>
+
+<BrowserSwitcher />
+
+<Section id="tabmerger" title="Search everything with Ctrl+K">
+
+A browser’s tab search only knows what’s open in that browser right now. The tab you need is often somewhere else: in a window you saved yesterday, or one you closed an hour ago. TabMerger searches all of it from one box:
+
+1. Open TabMerger and press <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+2. Type part of the title or address. Results show open tabs, saved tabs and recently closed tabs together, each tagged with where it lives.
+3. Pick one with the arrow keys and <Kbd>Enter</Kbd>.
+
+Every filter, the ranking and the hide-or-dim view are covered in [search all your tabs with TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-filters" alt="TabMerger search open and empty, listing the filters group:, window:, tag: and closed:, light theme" darkAlt="TabMerger search open and empty, listing the filters group:, window:, tag: and closed:, dark theme" boxes={[{ id: 'search-input', label: 'Search' }]} source="TabMerger 3.16.1">Ctrl+K opens search, with the filters listed before you type.</ThemedScreenshot>
+
+</Section>
+
+<Section id="filters" title="Which filters narrow it down?">
+
+Start your search with a filter to jump straight to the right place:
+
+<ComparisonTable
+  head={['Filter', 'Finds']}
+  rows={[
+    [<code>group:"Work"</code>, 'Tabs in a group whose name contains “Work”'],
+    [<code>window:"Docs"</code>, 'Tabs in a window whose name contains “Docs”'],
+    [<code>tag:Sprint</code>, 'Tabs in a Chrome tab group whose label contains “Sprint”'],
+    [<code>closed:</code>, 'Only your recently closed tabs'],
+  ]}
+/>
+
+Combine a filter with words: `group:"Work" pull` finds the pull-request tab in your Work group, even among hundreds. Put the name in quotes when you add words after it; an unquoted filter takes the rest of the line.
+
+<Carousel label="Filtered searches" steps={[{ title: 'group: filter' }, { title: 'tag: filter' }]}>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-group-filter" alt="TabMerger search for group:&quot;Work&quot; pull, finding the saved tab Pull requests in the Work group, light theme" darkAlt="TabMerger search for group:&quot;Work&quot; pull, finding the saved tab Pull requests in the Work group, dark theme" boxes={[{ id: 'search-input', label: 'group filter' }]} source="TabMerger 3.16.1">One group, one word: the saved tab you wanted.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/find-a-tab-among-hundreds/tm-search-tag-filter" alt="TabMerger search for tag:Sprint, listing the three open tabs in the Chrome tab group Sprint, light theme" darkAlt="TabMerger search for tag:Sprint, listing the three open tabs in the Chrome tab group Sprint, dark theme" boxes={[{ id: 'search-input', label: 'tag:Sprint' }]} source="TabMerger 3.16.1">tag: finds the tabs of a Chrome tab group.</ThemedScreenshot>
+</Carousel>
+
+Recently closed tabs are kept for 2 days on Free and 30 on [Pro](/pricing), so `closed:` reaches back weeks when you need it to.
+
+</Section>
+
+<Section id="builtin" title="How do I search open tabs without an extension?">
+
+Each browser can search the tabs that are open right now:
+
+<BrowserPanels section="builtin">
+<BrowserPanel browser="chrome">
+
+- Press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> on a Mac) to open **Tab Search**, type keywords and pick a tab. Each row also has a close button.
+- Or type `@tabs` in the address bar, press <Kbd>Tab</Kbd> or <Kbd>Space</Kbd>, and type.
+
+</BrowserPanel>
+<BrowserPanel browser="edge">
+
+Edge 158’s menus include **Search tabs**, but Microsoft’s keyboard shortcut list gives it no key. With many tabs, <Kbd>Ctrl</Kbd>+<Kbd>1</Kbd>…<Kbd>8</Kbd> jump to a tab by position and <Kbd>Ctrl</Kbd>+<Kbd>9</Kbd> to the last one.
+
+</BrowserPanel>
+<BrowserPanel browser="firefox">
+
+- Press <Kbd>Ctrl</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> (<Kbd>⌘</Kbd>+<Kbd>Shift</Kbd>+<Kbd>A</Kbd> on a Mac) to **list all tabs** and search them.
+- The address bar also has a **Tabs** search mode, among its search shortcuts.
+
+</BrowserPanel>
+</BrowserPanels>
+
+<Catch>these only see the tabs open in that browser, now. A tab you closed or saved elsewhere won’t show up.</Catch>
+
+More keys are in our [tab keyboard shortcuts reference](/blog/tab-keyboard-shortcuts).
+
+</Section>
+
+<Section id="tips" title="How do I make tabs easier to find next time?">
+
+- **Group by task.** Named groups turn “one of 200 tabs” into “the Work group”. Our [too-many-tabs routine](/blog/manage-too-many-tabs) shows how.
+- **Close what you’ve finished,** after saving it. Fewer open tabs means shorter result lists.
+- **Rename the tabs that matter.** TabMerger lets you give a saved tab a custom title, so it matches the word you’ll search for.
+
+<InstallCta>Free for Chrome, Edge and Firefox. No account needed to start.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

@@ -33,6 +33,15 @@ export const KNOWN_ISSUES: KnownIssue[] = [
     workaround: 'When reporting a bug, give the version shown in TabMerger’s Settings instead.',
   },
   {
+    id: 'edge-save-shortcuts-not-set',
+    area: 'Extension',
+    title: 'Older Edge installs keep three save shortcuts unset',
+    details:
+      'If you installed TabMerger in Edge before version 3.16.2, edge://extensions/shortcuts still shows “Not set” for “Save all other tabs”, “Save tabs to the left” and “Save tabs to the right”, because Edge keeps an install’s shortcuts across updates. New installs get Alt+Shift+O, Alt+Shift+Comma and Alt+Shift+Period for them.',
+    workaround: 'Open edge://extensions/shortcuts and pick keys for the three commands.',
+  },
+
+  {
     id: 'change-lost-if-popup-closes-instantly',
     area: 'Extension',
     title: 'A change made the instant before the popup closes may not be saved',

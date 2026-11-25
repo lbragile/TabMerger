@@ -33,6 +33,6 @@
   },
   "downgrade": {
     "question": "¿Qué pasa con mis grupos si bajo de plan?",
-    "answer": "Si pasas de Pro a Gratis, tus grupos permanecen en la nube durante 30 días. Tus pestañas locales siempre se conservan. Puedes exportarlo todo antes de bajar de plan."
+    "answer": "No se pierde nada. Tus grupos se quedan en tus dispositivos, y los que superen los límites del plan Gratis se conservan bloqueados hasta que vuelvas a mejorar tu plan o hagas espacio. Las copias que ya están en tu cuenta también se quedan: en el panel puedes seguir abriendo o eliminando tus sesiones guardadas y descargando o eliminando tus copias de seguridad. Solo los cambios nuevos dejan de sincronizarse hasta que vuelvas a mejorar tu plan."
   }
 }

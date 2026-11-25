@@ -1,0 +1,160 @@
+export const post = {
+  slug: 'organize-tabs-by-project',
+  title: 'Organize tabs by project: one group, one project',
+  navTitle: 'Organize tabs by project',
+  seoTitle: 'How to Organize Browser Tabs by Project with TabMerger',
+  description:
+    'Give every project its own TabMerger group, with named windows for each part of the work, notes for context, and an archive for finished projects. Why groups work this way, step by step.',
+  shareSummary: 'One group per project, named windows inside it, and an archive for finished work.',
+  dek: 'Switching projects shouldn’t mean hunting through tabs. Give each one a home you can open, close and archive.',
+  published: '2026-12-15',
+  updated: '2026-12-15',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'A TabMerger group holds several windows, each with its own name and note.', source: 'TabMerger 3.16.1' },
+    { text: 'Starred groups stay at the top of the sidebar.', source: 'TabMerger 3.16.1 source' },
+    { text: 'Archived groups are read-only and come back with Restore.', source: 'TabMerger 3.16.1' },
+    { text: 'Free has 5 groups and 50 tabs, archived groups included; Pro has no limit.', source: 'TabMerger pricing', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'What is the best way to organize tabs by project?',
+      answer:
+        'Give each project one TabMerger group, and split it into named windows for the parts of the work (for example Design, Build, Feedback). Add a group note with the context, star the projects you’re on this week, and archive a project when it’s done.',
+    },
+    {
+      question: 'Can one group hold more than one window?',
+      answer: 'Yes. A TabMerger group holds any number of windows. Each window can have its own name, note and star, and opens as its own browser window.',
+    },
+    {
+      question: 'What does archiving a group do?',
+      answer:
+        'It moves the group into the Archived section of the sidebar, read-only, so it’s out of the way but not gone. Clicking a tab still opens it, and Restore brings the group back to your list.',
+    },
+    {
+      question: 'Do Chrome tab groups survive when I save them?',
+      answer: 'Yes. Saved tabs keep their Chrome tab group name and colour, so a project you grouped in the tab strip keeps that structure inside TabMerger.',
+    },
+  ],
+  images: [
+    { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp', alt: 'The Website redesign group with three named windows, Design, Build and Feedback, light theme' },
+    { src: '/blog/organize-tabs-by-project/tm-project-group-dark.webp', alt: 'The Website redesign group with three named windows, Design, Build and Feedback, dark theme' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-light.webp', alt: 'The sidebar right-click menu of a group with Archive group, light theme' },
+    { src: '/blog/organize-tabs-by-project/tm-archive-menu-dark.webp', alt: 'The sidebar right-click menu of a group with Archive group, dark theme' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-light.webp', alt: 'An archived group, read-only, with a Restore button and the Archived section open in the sidebar, light theme' },
+    { src: '/blog/organize-tabs-by-project/tm-archived-dark.webp', alt: 'An archived group, read-only, with a Restore button and the Archived section open in the sidebar, dark theme' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/organize-tabs-by-project/tm-project-group-light.webp' },
+  ogImage: { src: '/blog/organize-tabs-by-project/og.png', alt: 'Organize tabs by project with TabMerger: one group with Design, Build and Feedback windows' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'problem', label: 'When projects share a tab strip' },
+    { id: 'why', label: 'Why groups work this way' },
+    { id: 'steps', label: 'Set up a project' },
+    { id: 'archive', label: 'Archive finished work' },
+    { id: 'benefit', label: 'What you get' },
+    { id: 'habits', label: 'Good habits' },
+    { id: 'plans', label: 'Free vs Pro' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Give every project its own [TabMerger](/features) group. Inside it, keep one named window per part of the work (“Design”, “Build”, “Feedback”) and a group note with the context. Star the projects you’re on this week so they stay at the top, and when one is done, **Archive group** puts it away, read-only, without deleting a tab.
+
+</QuickAnswer>
+
+<InstallCta>A home for every project, one click from open. Free for Chrome, Edge and Firefox.</InstallCta>
+
+<Section id="problem" title="When three projects share one tab strip">
+
+You’re redesigning a website, writing a report and planning a trip. By Wednesday the browser holds all three: mockups next to flight searches, a pull request between two report sources. Switching projects means scanning the whole strip, and closing anything feels risky, because you can’t tell which project it belongs to.
+
+The browser’s own tab groups help inside one window, but a project rarely fits in one window, and closing the window closes the question of where those tabs went.
+
+</Section>
+
+<Section id="why" title="Why TabMerger groups work the way they do">
+
+- **A group is a project, not a window.** Each group holds as many windows as the work needs, and each window opens as its own browser window. That matches how projects really look: the design tabs here, the build tabs there.
+- **Names and notes carry the context.** Windows can be renamed and have their own note; so can the group. Months later, “Feedback” and a note saying what was decided beat a row of favicons.
+- **Stars sort, so you don’t have to.** Starred groups stay at the top of the sidebar; starred windows stay first inside their group.
+- **Archiving is putting away, not deleting.** An archived group leaves your list for the **Archived** section and becomes read-only, so nothing moves by accident. Its tabs still open with a click, and **Restore** brings it back.
+- **Your browser’s structure is kept.** Saved tabs keep their Chrome tab group name and colour, so a project you already grouped in the tab strip keeps that shape.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-project-group" alt="The Website redesign group with three named windows, Design, Build and Feedback, light theme" darkAlt="The Website redesign group with three named windows, Design, Build and Feedback, dark theme" boxes={[{ id: 'windows', label: 'Windows by stage' }]} source="TabMerger 3.16.1">One project, three windows, each named after its part of the work.</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="Set up a project in five steps">
+
+1. Press **Add Group** in the sidebar and name it after the project. Click its colour dot to pick a colour.
+2. Open the project’s pages, then choose **Merge with current** in the group’s **⋯** menu to save the open windows into it.
+3. Rename each window from its **⋯** menu (**Rename window**) after the part of the work it holds.
+4. Add a group note (**Add note** in the **⋯** menu) with the context: the deadline, the ticket, what “done” means.
+5. Star the group (the star next to its name) while it’s an active project.
+
+To move tabs between projects later, drag them onto a group in the sidebar, or use **Move to group** and **Copy to group** in the tab’s right-click menu. **Unite windows** and **Split windows** reshape a group in one step.
+
+</Section>
+
+<Section id="archive" title="Archive finished work">
+
+When a project is done, right-click its group in the sidebar and choose **Archive group**. It moves to the **Archived** section, read-only: you can still open any of its tabs, and **Restore** brings the whole group back to your list.
+
+<Carousel label="Archiving a project" steps={[{ title: 'Archive' }, { title: 'Archived' }]}>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archive-menu" alt="The sidebar right-click menu of a group with Archive group, light theme" darkAlt="The sidebar right-click menu of a group with Archive group, dark theme" boxes={[{ id: 'archive', label: 'Archive group' }]} source="TabMerger 3.16.1">Right-click the group in the sidebar.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/organize-tabs-by-project/tm-archived" alt="An archived group, read-only, with a Restore button and the Archived section open in the sidebar, light theme" darkAlt="An archived group, read-only, with a Restore button and the Archived section open in the sidebar, dark theme" boxes={[{ id: 'banner', label: 'Read-only until restored' }]} source="TabMerger 3.16.1">Out of the way, still one click from open.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="benefit" title="What you get">
+
+Switching projects becomes opening a group instead of searching a tab strip. You can close every window of a project you’re not working on, knowing exactly where its tabs are, and your sidebar shows only what’s current.
+
+</Section>
+
+<Section id="habits" title="Good habits">
+
+- **One group per project, not per topic.** “Website redesign”, not “Design links”.
+- **Name windows after stages or roles**, not after sites: “Feedback” lasts longer than “GitHub”.
+- **Star at most a handful.** Stars mean “this week”.
+- **Archive on the day it ships.** An archived project is still one click away, so there’s no reason to keep it in your list.
+- **Let URL rules file new tabs** for busy projects: see [auto-sort tabs with URL rules](/blog/auto-sort-tabs-with-url-rules). For research-heavy projects, [organizing tabs for research](/blog/organize-tabs-for-research) adds notes and reminders.
+
+</Section>
+
+<Section id="plans" title="Free vs Pro">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Groups', '5 (archived groups count)', 'Unlimited'],
+    ['Tabs', '50', 'Unlimited'],
+    ['Windows, names, notes, stars, archive', 'Yes', 'Yes'],
+    ['Your projects on your other devices', 'No', 'Yes, encrypted end to end'],
+  ]}
+/>
+
+Every organizing tool here is on the Free plan; the limits are the number of groups and tabs. [Pro](/pricing) removes them and syncs your projects between devices.
+
+<InstallCta>Every project in its own group, in Chrome, Edge and Firefox. Free to start.</InstallCta>
+
+For the whole routine around projects, see [a daily tab workflow with TabMerger](/blog/tabmerger-daily-workflow).
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

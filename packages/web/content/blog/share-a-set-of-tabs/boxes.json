@@ -1,0 +1,22 @@
+{
+  "tm-selection-share-dark": [
+    {
+      "id": "share",
+      "label": "Share",
+      "l": "74.74%",
+      "t": "92.93%",
+      "w": "10.16%",
+      "h": "6.80%"
+    }
+  ],
+  "tm-selection-share-light": [
+    {
+      "id": "share",
+      "label": "Share",
+      "l": "74.74%",
+      "t": "92.93%",
+      "w": "10.16%",
+      "h": "6.80%"
+    }
+  ]
+}

@@ -1,0 +1,172 @@
+export const post = {
+  slug: 'chrome-tab-groups',
+  title: 'Chrome tab groups: how to save, reopen and sync them',
+  seoTitle: 'Chrome Tab Groups: Save, Reopen and Sync (and Their Limits)',
+  description:
+    'How Chrome tab groups work: create, collapse, close and reopen a saved group, what syncs to your other devices, and what extensions can and can’t see.',
+  shareSummary: 'Create, save, reopen and sync Chrome tab groups, and where they fall short.',
+  dek: 'A closed group isn’t gone: it’s saved. Here’s where it goes, what follows you to other devices, and what doesn’t.',
+  published: '2026-11-23',
+  updated: '2026-11-23',
+  testedOn: ['Chrome 157.0.8103.80', 'Edge 158.0.4370.33', 'Firefox 159.0.1'],
+  keyFacts: [
+    {
+      text: 'Closing a group saves it; reopen it from the bookmarks bar or ⋮ → Tab groups.',
+      source: 'Chrome Help',
+      href: 'https://support.google.com/chrome/answer/2391819',
+    },
+    { text: 'Deleting or ungrouping removes the group on every signed-in device.', source: 'Chrome Help' },
+    {
+      text: 'chrome.tabGroups only sees groups in open windows.',
+      source: 'chrome.tabGroups docs',
+      href: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+    },
+    { text: 'Both tab-group bookmarks-bar settings were on in a fresh Chrome 157.', source: 'chrome://settings/appearance, Nov 20, 2026' },
+  ],
+  faq: [
+    {
+      question: 'How do I save a tab group in Chrome?',
+      answer:
+        'Right-click the group’s name and choose Close group. Chrome keeps it, and you reopen it from the bookmarks bar or from ⋮ → Tab groups.',
+    },
+    {
+      question: 'Do Chrome tab groups sync between devices?',
+      answer:
+        'Saved groups follow your Google Account: Chrome’s help warns that deleting or ungrouping a group removes it on every device signed in to the same account.',
+    },
+    {
+      question: 'What’s the difference between Close group and Delete group?',
+      answer: 'Close group closes the tabs and keeps the group to reopen later. Delete group removes it, on your other devices too.',
+    },
+    {
+      question: 'Can a tab manager extension save my closed Chrome groups?',
+      answer:
+        'Not while they’re closed: the extension API only describes groups in open windows. Reopen the group first, then save it with the extension.',
+    },
+  ],
+  images: [
+    { src: '/blog/chrome-tab-groups/chrome-tab-groups-setting.webp', alt: 'Chrome Settings, Appearance, with Show tab groups in bookmarks bar and Automatically pin new tab groups created on any device to the bookmarks bar both on' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp', alt: 'TabMerger Now Open: six tabs, three tagged Sprint in blue and three tagged Thesis in green, light theme' },
+    { src: '/blog/chrome-tab-groups/tm-now-open-groups-dark.webp', alt: 'TabMerger Now Open: six tabs, three tagged Sprint in blue and three tagged Thesis in green, dark theme' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-light.webp', alt: 'The TabMerger group Sprint + thesis holding the same six tabs with their Sprint and Thesis tags, light theme' },
+    { src: '/blog/chrome-tab-groups/tm-saved-groups-dark.webp', alt: 'The TabMerger group Sprint + thesis holding the same six tabs with their Sprint and Thesis tags, dark theme' },
+  ],
+  tags: ['chrome', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Manage tabs in Chrome',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/2391819',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'chrome.tabGroups API reference',
+      publisher: 'Chrome for Developers',
+      url: 'https://developer.chrome.com/docs/extensions/reference/api/tabGroups',
+      checked: '2026-11-20',
+    },
+    {
+      title: 'Chrome keyboard shortcuts (tab groups with the keyboard)',
+      publisher: 'Google Chrome Help',
+      url: 'https://support.google.com/chrome/answer/157179',
+      checked: '2026-11-20',
+    },
+  ],
+  screenshotsCaptured: '2026-11-20',
+  cover: { src: '/blog/chrome-tab-groups/tm-now-open-groups-light.webp' },
+  ogImage: { src: '/blog/chrome-tab-groups/og.png', alt: 'Chrome tab groups: how to save, reopen and sync them. A TabMerger guide, with tabs tagged by their Chrome group' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'basics', label: 'Create and collapse' },
+    { id: 'save', label: 'Save and reopen' },
+    { id: 'sync', label: 'Do they sync?' },
+    { id: 'limits', label: 'The limits' },
+    { id: 'tabmerger', label: 'Keep groups for good' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Right-click a tab and choose **Add tab to group** to start a group, then name it and pick a colour. To save a group, right-click its name and choose **Close group**: Chrome keeps it, and you reopen it from the bookmarks bar or from **⋮ → Tab groups**. Saved groups follow your Google Account, so deleting one deletes it everywhere. To keep groups safe for good, save them in [TabMerger](/features): it keeps each tab’s Chrome group name and colour, and puts them back into groups when you reopen them.
+
+</QuickAnswer>
+
+<InstallCta>Keep your Chrome tab groups safe, searchable and synced. Free for Chrome, Edge and Firefox.</InstallCta>
+
+<Section id="basics" title="How do Chrome tab groups work?">
+
+A tab group is a labelled, coloured run of tabs in one window.
+
+1. Right-click a tab and choose **Add tab to group** → **New group** (or an existing one).
+2. Name the group and pick a colour. Right-click the name later to rename, recolour or add a new tab to it.
+3. Drag a tab into the group to add it; right-click a tab → **Remove from group** to take it out.
+4. Click the group’s name to collapse it to a single label, and again to expand it.
+
+From the keyboard: press <Kbd>F6</Kbd> until the tabs are focused, <Kbd>Tab</Kbd> to the group, then the Menu key opens the group menu. <Kbd>Space</Kbd> or <Kbd>Enter</Kbd> collapses it, and <Kbd>Ctrl</Kbd>+<Kbd>←</Kbd>/<Kbd>→</Kbd> moves it.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Chrome tab-group right-click menu with Close group and Delete group. */}
+
+</Section>
+
+<Section id="save" title="How do I save a tab group and get it back?">
+
+**Close group** is Chrome’s save button. The tabs close, the group doesn’t: Chrome keeps it and lists it in two places.
+
+- **Bookmarks bar:** a grid icon with the group’s name. Click it to reopen.
+- **⋮ menu → Tab groups:** your saved groups.
+
+Two settings under **Settings → Appearance** control the bookmarks-bar part. Both were on in a fresh Chrome 157 profile.
+
+<AnnotatedFigure src="/blog/chrome-tab-groups/chrome-tab-groups-setting.webp" alt="Chrome Settings, Appearance, with Show tab groups in bookmarks bar and Automatically pin new tab groups created on any device to the bookmarks bar both on" width={1600} height={844} eager boxes={[{ id: 'tab-groups-setting', label: 'Show in bookmarks bar' }, { id: 'auto-pin', label: 'Pin new groups' }]} source="chrome://settings/appearance · Chrome 157.0.8103.80">The two tab-group settings in Chrome’s Appearance page.</AnnotatedFigure>
+
+<Catch>a saved group only holds addresses. It isn’t a backup: delete it once and it’s gone from every device.</Catch>
+
+</Section>
+
+<Section id="sync" title="Do tab groups sync between devices?">
+
+Yes, through your Google Account. Chrome’s help is explicit about the side effect: when you **delete** a group, or **ungroup** its tabs, the group is removed on your device *and* on every other device signed in with the same account. The **Automatically pin new tab groups created on any device** setting also pins groups you made elsewhere.
+
+What that means in practice:
+
+- Groups you make on one computer can turn up on another signed in to the same account; that’s what the pin setting refers to.
+- Cleaning up on a laptop deletes the same groups on your desktop.
+
+Firefox 159 has tab groups too, with **Save and close group** and a **Closed Groups** list; this guide’s steps and screenshots are Chrome’s. Firefox users: see [Firefox tab groups](/blog/firefox-tab-groups).
+
+</Section>
+
+<Section id="limits" title="Where do tab groups fall short?">
+
+- **One window each.** A group lives in one window. Saving “everything I have open” across three windows means three or more groups.
+- **Addresses only.** Like bookmarks, a saved group reopens the page fresh: scroll position and form input are gone.
+- **Hidden from extensions while closed.** The `chrome.tabGroups` API describes groups that are in an open window: every group it returns has a `windowId`, closing a group fires `onRemoved`, and there’s no call that lists saved, closed groups. A tab manager can’t back up a group you closed until you reopen it.
+- **Deletes travel.** The sync that makes groups handy also spreads a mistake to every device.
+
+Our guide to [saving all open tabs](/blog/save-all-open-tabs) compares groups with bookmarks, startup restore and session managers, and the [too-many-tabs routine](/blog/manage-too-many-tabs) shows where groups fit day to day.
+
+</Section>
+
+<Section id="tabmerger" title="Keep your groups for good with TabMerger">
+
+[TabMerger](/features), our free extension for Chrome, Edge and Firefox, reads your open Chrome tab groups. **Now Open** tags each tab with its group’s name and colour, and saving a window into a TabMerger group keeps those tags. Saved there, the tabs aren’t touched when a Chrome group is deleted on another device.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Saving Chrome tab groups in TabMerger" steps={[{ title: 'Now Open' }, { title: 'Saved group' }]}>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-now-open-groups" alt="TabMerger Now Open: six tabs, three tagged Sprint in blue and three tagged Thesis in green, light theme" darkAlt="TabMerger Now Open: six tabs, three tagged Sprint in blue and three tagged Thesis in green, dark theme" boxes={[{ id: 'group-badge-1', label: 'Sprint group' }, { id: 'group-badge-4', label: 'Thesis group' }]} source="TabMerger 3.16.1">Two Chrome tab groups, Sprint and Thesis, as Now Open shows them.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/chrome-tab-groups/tm-saved-groups" alt="The TabMerger group Sprint + thesis holding the same six tabs with their Sprint and Thesis tags, light theme" darkAlt="The TabMerger group Sprint + thesis holding the same six tabs with their Sprint and Thesis tags, dark theme" boxes={[{ id: 'group-badge-1', label: 'Sprint group' }, { id: 'group-badge-4', label: 'Thesis group' }]} source="TabMerger 3.16.1">After Merge with current: the saved group keeps each tab’s Chrome group.</ThemedScreenshot>
+</Carousel>
+
+Open the saved window again in Chrome or Edge and its tabs go back into tab groups with the same names and colours.
+
+<InstallCta>Free for Chrome, Edge and Firefox. No account needed to start.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

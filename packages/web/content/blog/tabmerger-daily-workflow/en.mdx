@@ -1,0 +1,184 @@
+export const post = {
+  slug: 'tabmerger-daily-workflow',
+  title: 'A daily tab workflow with TabMerger',
+  navTitle: 'A daily tab workflow',
+  seoTitle: 'A Daily Tab Workflow with TabMerger: Morning to Evening',
+  description:
+    'A simple routine for your browser tabs with TabMerger: open the day’s tabs in one click, keep new tabs filed and findable, and end the day with everything saved and nothing left open.',
+  shareSummary: 'Open the day’s tabs in one click, keep them findable, and close the day with nothing lost.',
+  dek: 'Three habits, a few clicks each: start from a saved set, keep tabs filed as you go, and close the day with everything saved.',
+  published: '2026-12-11',
+  updated: '2026-12-11',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Groups hold whole windows of tabs and stay saved after the windows close.', source: 'TabMerger 3.16.1' },
+    { text: 'A session restores every saved group at once, each window as it was saved.', source: 'TabMerger 3.16.1 source' },
+    { text: 'Ctrl+K searches open, saved and recently closed tabs together.', source: 'TabMerger 3.16.1' },
+    { text: 'Free: 5 groups, 50 tabs, 3 sessions. Pro: no limits, plus sync.', source: 'TabMerger pricing', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'What is the best daily routine for browser tabs?',
+      answer:
+        'Start the day from a saved set of tabs instead of yesterday’s leftovers, file new tabs into groups as you go, and end the day by saving what is open and closing it. TabMerger does each step in a few clicks, and auto-save covers the days you forget.',
+    },
+    {
+      question: 'Do I need an account to use this workflow?',
+      answer: 'No. Groups, sessions, search, auto-save and recently closed tabs all work on the Free plan without an account. An account is only needed for Pro features such as sync between devices.',
+    },
+    {
+      question: 'Does it work in Chrome, Edge and Firefox?',
+      answer: 'Yes. TabMerger is free for Chrome, Edge and Firefox, and the workflow is the same in all three.',
+    },
+    {
+      question: 'What is the difference between a group and a session?',
+      answer:
+        'A group is one saved set of tabs, one or more windows, that you open, edit and add to. A session is a named snapshot of all your saved groups at once, which you restore together.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp', alt: 'TabMerger with four saved groups (Work, Reading list, Thesis sources, Trip to Lisbon) and a saved session, Monday plan, light theme' },
+    { src: '/blog/tabmerger-daily-workflow/tm-workspace-dark.webp', alt: 'TabMerger with four saved groups (Work, Reading list, Thesis sources, Trip to Lisbon) and a saved session, Monday plan, dark theme' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-light.webp', alt: 'TabMerger Now Open listing two open browser windows with six tabs, light theme' },
+    { src: '/blog/tabmerger-daily-workflow/tm-now-open-dark.webp', alt: 'TabMerger Now Open listing two open browser windows with six tabs, dark theme' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'tab-manager'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabmerger-daily-workflow/tm-workspace-light.webp' },
+  ogImage: { src: '/blog/tabmerger-daily-workflow/og.png', alt: 'A daily tab workflow with TabMerger, with saved groups and a session in the sidebar' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'problem', label: 'Why tabs pile up' },
+    { id: 'idea', label: 'How TabMerger thinks' },
+    { id: 'morning', label: 'Morning' },
+    { id: 'day', label: 'During the day' },
+    { id: 'evening', label: 'Evening' },
+    { id: 'net', label: 'The safety net' },
+    { id: 'plans', label: 'Free vs Pro' },
+    { id: 'series', label: 'The full series' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Keep your tabs in [TabMerger](/features) groups, not in open windows. **Morning:** restore a saved session, or open just the group you need. **During the day:** file new tabs into groups and find any of them with <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>. **Evening:** save what’s open into its group and close the windows. Auto-save and Recently closed catch whatever you forget. It takes a few clicks a day, and you start every morning with the tabs you meant to keep.
+
+</QuickAnswer>
+
+<InstallCta>Start tomorrow with the right tabs, not yesterday’s pile. Free for Chrome, Edge and Firefox.</InstallCta>
+
+<Section id="problem" title="Why do tabs pile up every day?">
+
+Picture a normal Tuesday. You open mail and the calendar, then a pull request, then the three docs pages it needs. A colleague sends a link you want to read later. By lunch there are two windows; by evening, four. You don’t close them, because some of those tabs are still “in progress”, and finding them again would mean digging through History.
+
+So the browser becomes the to-do list. It was never built for that: a tab strip has no names, no sections, and no way to put work away without losing it. Each day starts with yesterday’s leftovers, the browser gets slower, and the one tab you need is a 16-pixel icon somewhere in window three.
+
+</Section>
+
+<Section id="idea" title="How does TabMerger fix it?">
+
+TabMerger separates two things the browser mixes up: what is **open** and what is **kept**.
+
+- **Now Open** is a live view of your open windows and tabs. It is always first in the list and can’t be deleted, so it is always one click away.
+- **Groups** are what you keep. Each group holds one or more windows of tabs, with names, notes and colours, and it stays saved after the windows close.
+- **Sessions** are named snapshots of all your groups together, for the days you want everything back at once.
+
+Because keeping no longer depends on leaving a tab open, you can close windows freely. That is the whole workflow.
+
+<ScreenshotThemeToggle />
+
+<Carousel label="Kept and open, side by side" steps={[{ title: 'Your groups' }, { title: 'Now Open' }]}>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-workspace" alt="TabMerger with four saved groups (Work, Reading list, Thesis sources, Trip to Lisbon) and a saved session, Monday plan, light theme" darkAlt="TabMerger with four saved groups (Work, Reading list, Thesis sources, Trip to Lisbon) and a saved session, Monday plan, dark theme" boxes={[{ id: 'groups', label: 'Your saved groups' }, { id: 'session', label: 'A saved session' }]} source="TabMerger 3.16.1">Four groups for four parts of the week, and a session that brings them all back.</ThemedScreenshot>
+<ThemedScreenshot src="/blog/tabmerger-daily-workflow/tm-now-open" alt="TabMerger Now Open listing two open browser windows with six tabs, light theme" darkAlt="TabMerger Now Open listing two open browser windows with six tabs, dark theme" boxes={[{ id: 'now-open-summary', label: 'What is open' }]} source="TabMerger 3.16.1">Now Open: whatever is open right now, window by window.</ThemedScreenshot>
+</Carousel>
+
+</Section>
+
+<Section id="morning" title="Morning: start from a saved set">
+
+Two ways to start, depending on the day:
+
+1. **Everything at once.** Open the **Sessions** section in the sidebar and restore your session. TabMerger asks first, because restoring closes the open windows and opens the saved ones in their place, each window as it was saved.
+2. **One project only.** Right-click a group in the sidebar and choose **Open all in new window**. Nothing else is touched.
+
+The step-by-step version, with the reasons behind the confirmation, is in [start your workday with saved tabs](/blog/start-your-workday-with-saved-tabs).
+
+</Section>
+
+<Section id="day" title="During the day: file as you go">
+
+- **Put a tab away** by dragging it from Now Open onto a group in the sidebar: it is saved there and the open tab closes (Undo brings it back). Or use a keyboard shortcut ([the full list](/blog/tab-keyboard-shortcuts)).
+- **Let rules file tabs for you.** URL rules copy matching new tabs into a group automatically; see [auto-sort tabs with URL rules](/blog/auto-sort-tabs-with-url-rules).
+- **Find anything** with <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> (<Kbd>⌘</Kbd>+<Kbd>K</Kbd> on a Mac): open, saved and recently closed tabs in one list. Every filter is in [search all your tabs with TabMerger](/blog/search-all-your-tabs-with-tabmerger).
+- **Leave yourself a note** on a tab, or a reminder to come back to it; [organizing tabs for research](/blog/organize-tabs-for-research) shows both.
+- **Clear out copies** with **Deduplicate tabs**; more in [closing duplicate tabs](/blog/close-duplicate-tabs).
+
+</Section>
+
+<Section id="evening" title="Evening: save, then close">
+
+1. Open the group you worked in, then its **⋯** menu. **Merge with current** adds your open windows to it; **Replace with current** swaps the saved windows for the open ones.
+2. Close the windows. The tabs are in the group, where tomorrow’s morning step will find them.
+3. Happy with how all your groups look? **Save current session** (the bookmark button next to **Sessions**) to snapshot them under a name such as “Monday plan”.
+
+The habit that makes it work: **save the group, close the windows.** The fewer windows you carry into tomorrow, the faster the browser and the shorter the hunt.
+
+</Section>
+
+<Section id="net" title="The safety net: for the days you forget">
+
+Nobody saves every evening. Two features cover the gap:
+
+- **Auto-save open tabs** (Settings → Data) saves your open tabs as a new group on a schedule, or when your open tabs pass a number you choose.
+- **Recently closed** keeps the tabs and windows you close, by day, and <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> with `closed:` searches them.
+
+How both work, and why they behave as they do, is in [never lose a tab again](/blog/never-lose-a-tab-again). For a browser crash, see [getting your tabs back after a crash](/blog/restore-tabs-after-crash).
+
+</Section>
+
+<Section id="plans" title="What’s free, and what Pro adds">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Groups and tabs', '5 groups, 50 tabs', 'Unlimited'],
+    ['Sessions', '3, in this browser', 'Unlimited, synced'],
+    ['URL rules', '3', 'Unlimited'],
+    ['Auto-save', 'Newest 2 kept', 'All kept'],
+    ['Recently closed', 'Your last 2 days', 'Your last 30 days'],
+    ['Search, notes, import & export', 'Yes', 'Yes'],
+    ['Sync across devices, automatic backups', 'No', 'Yes'],
+  ]}
+/>
+
+The Free plan runs this whole workflow, without an account; Pro removes the limits and adds sync. Details on the [pricing page](/pricing).
+
+<InstallCta>One routine, every browser: Chrome, Edge and Firefox. Free to start, no account needed.</InstallCta>
+
+</Section>
+
+<Section id="series" title="The full TabMerger guides series">
+
+One feature per guide, with the reasons it works the way it does:
+
+1. [Start your workday with saved tabs](/blog/start-your-workday-with-saved-tabs): sessions and groups, restored each morning.
+2. [Never lose a tab again](/blog/never-lose-a-tab-again): auto-save and Recently closed.
+3. [Search all your tabs](/blog/search-all-your-tabs-with-tabmerger): <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd> and its filters.
+4. [Organize tabs by project](/blog/organize-tabs-by-project): groups, named windows and the archive.
+5. [Tabs as a to-do list](/blog/tabs-as-a-to-do-list): notes, reminders and stale tabs.
+6. [Auto-sort tabs with URL rules](/blog/auto-sort-tabs-with-url-rules): tabs that file themselves.
+7. [Sync tabs between devices](/blog/sync-tabs-between-devices-with-tabmerger): end-to-end encrypted, and what our server can see.
+8. [Import tabs into TabMerger](/blog/import-tabs-into-tabmerger): OneTab lists, bookmarks and backups.
+9. [TabMerger Free vs Pro](/blog/tabmerger-free-vs-pro): exactly what each plan includes.
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

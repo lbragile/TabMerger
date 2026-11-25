@@ -33,6 +33,6 @@
   },
   "downgrade": {
     "question": "Que deviennent mes groupes si je rétrograde ?",
-    "answer": "Si vous passez de Pro à Gratuit, vos groupes restent dans le cloud pendant 30 jours. Vos onglets locaux sont toujours conservés. Vous pouvez tout exporter avant de rétrograder."
+    "answer": "Rien n’est perdu. Vos groupes restent sur vos appareils, et ceux qui dépassent les limites du plan Gratuit sont conservés, verrouillés, jusqu’à ce que vous repassiez à Pro ou fassiez de la place. Les copies déjà dans votre compte y restent aussi : dans le tableau de bord, vous pouvez toujours ouvrir ou supprimer vos sessions enregistrées, et télécharger ou supprimer vos sauvegardes. Seules les nouvelles modifications ne sont plus synchronisées, jusqu’à ce que vous repassiez à Pro."
   }
 }

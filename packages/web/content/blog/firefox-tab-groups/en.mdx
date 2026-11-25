@@ -1,0 +1,134 @@
+export const post = {
+  slug: 'firefox-tab-groups',
+  title: 'Firefox tab groups: how to save, reopen and keep them',
+  navTitle: 'Firefox tab groups',
+  seoTitle: 'Firefox Tab Groups: Save, Reopen, Sync and Their Limits',
+  description:
+    'How Firefox tab groups work in Firefox 159: create, colour, collapse, save and close a group and reopen it later, what Firefox Sync covers, and how to keep groups safe across devices with TabMerger.',
+  shareSummary: 'Create, save, reopen and keep Firefox tab groups, and what Firefox Sync covers.',
+  dek: 'Firefox’s groups can be saved and closed now. Here’s where they go, and how to keep them for good.',
+  published: '2026-12-07',
+  updated: '2026-12-07',
+  testedOn: ['Firefox 159.0.1'],
+  keyFacts: [
+    { text: 'Save and close group keeps a group to reopen later.', source: 'Firefox 159 menu text' },
+    { text: 'Closed groups are listed under Closed Groups and Recent tab groups.', source: 'Firefox 159 menu text' },
+    { text: 'Firefox Sync’s settings list Open tabs, with no separate entry for tab groups.', source: 'Firefox 159 settings text' },
+    { text: 'A group’s menu can copy all of its links at once.', source: 'Firefox 159 menu text' },
+  ],
+  faq: [
+    {
+      question: 'How do I save a tab group in Firefox?',
+      answer: 'Right-click the group’s label and choose Save and close group. Reopen it later from Closed Groups or the Tab groups list.',
+    },
+    {
+      question: 'Do Firefox tab groups sync?',
+      answer:
+        'Firefox 159’s Sync settings list Bookmarks, History, Open tabs and others, with no separate entry for tab groups. To keep the same groups on every device, TabMerger Pro syncs them end-to-end encrypted.',
+    },
+    {
+      question: 'What’s the difference between Save and close and Delete group?',
+      answer: 'Save and close keeps the group to reopen later. Delete group removes it; Ungroup tabs keeps the tabs open but drops the group.',
+    },
+    {
+      question: 'Can I copy all the links in a Firefox tab group?',
+      answer: 'Yes: Firefox 159’s group menu has Copy links in group. TabMerger can also export whole groups to a JSON file.',
+    },
+  ],
+  images: [
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp', alt: 'TabMerger group Home renovation holding three saved windows with nine tabs, some tagged with their tab groups Kitchen and Quotes, light theme' },
+    { src: '/blog/firefox-tab-groups/tm-kept-groups-dark.webp', alt: 'TabMerger group Home renovation holding three saved windows with nine tabs, some tagged with their tab groups Kitchen and Quotes, dark theme' },
+  ],
+  tags: ['firefox', 'tab-management', 'browser-tips', 'save-tabs'],
+  sources: [
+    {
+      title: 'Tab groups in Firefox',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/tab-groups',
+      checked: '2026-11-21',
+      note: 'Menu names and settings were read from Firefox 159.0.1’s own interface text; this page blocked our automated check.',
+    },
+    {
+      title: 'Firefox Sync: what it is and how it works',
+      publisher: 'Mozilla Support',
+      url: 'https://support.mozilla.org/kb/firefox-sync-what-it-is-and-how-it-works',
+      checked: '2026-11-21',
+      note: 'The list of synced data was read from Firefox 159.0.1’s settings text.',
+    },
+  ],
+  screenshotsCaptured: '2026-11-23',
+  cover: { src: '/blog/firefox-tab-groups/tm-kept-groups-light.webp' },
+  ogImage: { src: '/blog/firefox-tab-groups/og.png', alt: 'Firefox tab groups: how to save, reopen and keep them. A TabMerger guide, with a saved group of two windows' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'basics', label: 'Create a group' },
+    { id: 'save', label: 'Save and reopen' },
+    { id: 'sync', label: 'Do they sync?' },
+    { id: 'tabmerger', label: 'Keep them for good' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Drag one tab onto another, or right-click a tab, to start a group in Firefox. To keep it for later, right-click the group’s label and choose **Save and close group**; reopen it from **Closed Groups** or the **Tab groups** list. Firefox Sync’s settings have no separate entry for tab groups, so to keep the same groups on every device, and searchable alongside everything else, save them in [TabMerger](/features).
+
+</QuickAnswer>
+
+<InstallCta>Keep your Firefox groups saved, searchable and synced. Free for Firefox, Chrome and Edge.</InstallCta>
+
+<Section id="basics" title="How do Firefox tab groups work?">
+
+From Firefox 159’s own interface:
+
+1. **Create:** drag one tab onto another, or right-click a tab and add it to a new group. Firefox asks for a **Name** and a colour (blue, cyan, gray, green, orange, pink, purple, red or yellow).
+2. **Collapse:** click the group’s label to fold it to one tab’s width.
+3. **Manage:** right-click the label for **Save and close group**, **Ungroup tabs**, **Delete group**, **Move group to new window**, **Copy links in group** and **Share group**.
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's tab group editor with Name, colours and Save and close group. */}
+
+</Section>
+
+<Section id="save" title="How do I save a group and get it back?">
+
+- **Save:** right-click the group’s label → **Save and close group**. The tabs close; the group is kept.
+- **Reopen:** right-click a tab → move to group → **Closed Groups**, or open the **Tab groups** list (Firefox shows **Recent tab groups** there) and choose the group, then **Reopen tab group**.
+- **Delete:** **Delete group** removes it for good.
+
+<Catch>a saved group lives in this Firefox profile. It isn’t a backup and, as far as Sync’s settings show, it doesn’t follow you to another device.</Catch>
+
+{/* Screenshot still to capture by hand (needs a visible browser): Firefox's Tab groups list with a closed group. */}
+
+</Section>
+
+<Section id="sync" title="Do Firefox tab groups sync?">
+
+Firefox 159’s **Sync** settings list what it syncs: **Bookmarks, History, Open tabs, Passwords, Addresses, Payment methods, Add-ons and Settings**. “Open tabs” is described as “a list of what’s open on all synced devices”. There’s no separate entry for tab groups, so don’t count on a saved group appearing on your other computer.
+
+For the same idea in Chrome, see [Chrome tab groups](/blog/chrome-tab-groups), which do sync through a Google Account.
+
+</Section>
+
+<Section id="tabmerger" title="Keep your groups for good with TabMerger">
+
+[TabMerger](/features) runs in Firefox, Chrome and Edge, and keeps groups the browser can’t:
+
+1. Click **Add Group**, name it, then choose **Merge with current** in its **⋯** menu: every open window and tab is saved into it.
+2. Close the windows. The group stays, with every tab, searchable with <Kbd>Ctrl</Kbd>+<Kbd>K</Kbd>.
+3. Reopen one tab, one window or everything, any time.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/firefox-tab-groups/tm-kept-groups" alt="TabMerger group Home renovation holding three saved windows with nine tabs, some tagged with their tab groups Kitchen and Quotes, light theme" darkAlt="TabMerger group Home renovation holding three saved windows with nine tabs, some tagged with their tab groups Kitchen and Quotes, dark theme" boxes={[{ id: 'summary', label: 'Windows and tabs saved' }]} source="TabMerger 3.16.1">A saved group: three windows, nine tabs, ready to reopen.</ThemedScreenshot>
+
+On [Pro](/pricing), your groups sync between Firefox, Chrome and Edge on all your devices, end-to-end encrypted, so the server can’t read them. More habits in the [too-many-tabs routine](/blog/manage-too-many-tabs).
+
+<InstallCta>Free for Firefox, Chrome and Edge. No account needed to start.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

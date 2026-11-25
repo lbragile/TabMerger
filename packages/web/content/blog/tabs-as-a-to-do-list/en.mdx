@@ -1,0 +1,150 @@
+export const post = {
+  slug: 'tabs-as-a-to-do-list',
+  title: 'Use your tabs as a to-do list, without leaving them open',
+  navTitle: 'Tabs as a to-do list',
+  seoTitle: 'Turn Browser Tabs into a To-Do List with Notes and Reminders',
+  description:
+    'Keep “I need to read this” tabs as a real to-do list in TabMerger: a note on each tab, a reminder that pops up when it’s time, a clear title, and a one-click sweep of tabs that sat too long.',
+  shareSummary: 'Notes, reminders and a stale-tab sweep: a to-do list made of tabs, with the tabs closed.',
+  dek: 'Every open tab is a promise to come back. Write down why, set a time, and close it.',
+  published: '2026-12-16',
+  updated: '2026-12-16',
+  testedOn: ['TabMerger 3.16.1', 'Chromium 149.0.7827.55'],
+  keyFacts: [
+    { text: 'Reminders: in 30 minutes, 1 hour, 3 hours, 24 hours, or at a date and time.', source: 'TabMerger 3.16.1' },
+    { text: 'A reminder shows a browser notification; clicking it opens the tab.', source: 'TabMerger 3.16.1 source' },
+    { text: 'Tabs saved longer ago than 7, 14, 30 or 60 days (your choice) are marked stale.', source: 'TabMerger 3.16.1' },
+    { text: 'Notes, reminders and renaming are all on the Free plan.', source: 'TabMerger pricing', href: '/pricing' },
+  ],
+  faq: [
+    {
+      question: 'How do I turn tabs into a to-do list?',
+      answer:
+        'Save the tabs into a TabMerger group such as “This week”, add a note to each one saying what to do, set reminders on the time-sensitive ones, and remove a tab when it’s done. Then close the tabs: the list stays in TabMerger.',
+    },
+    {
+      question: 'Can I get a reminder to come back to a tab?',
+      answer:
+        'Yes. Right-click a saved tab and choose Remind me…: pick 30 min, 1 hour, 3 hours, Tomorrow (24 hours from now) or a date and time, with an optional note. A browser notification appears at that time, and clicking it opens the tab.',
+    },
+    {
+      question: 'What are stale tabs?',
+      answer:
+        'Tabs you saved longer ago than your stale threshold (30 days unless you change it in Settings → General). They get a small dot, and the group’s header offers to remove them all at once.',
+    },
+    {
+      question: 'Do reminders work on my other devices?',
+      answer: 'A reminder notifies you in the browser where you set it. With Pro, the tab and its reminder time sync to your other devices along with the group.',
+    },
+  ],
+  images: [
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp', alt: 'A This week group with a note on one tab, a renamed tab with a reminder, and two stale tabs, light theme' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-dark.webp', alt: 'A This week group with a note on one tab, a renamed tab with a reminder, and two stale tabs, dark theme' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-light.webp', alt: 'TabMerger reminder options: 30 min, 1 hour, 3 hours, Tomorrow, a date and time, and a note, light theme' },
+    { src: '/blog/tabs-as-a-to-do-list/tm-reminder-dark.webp', alt: 'TabMerger reminder options: 30 min, 1 hour, 3 hours, Tomorrow, a date and time, and a note, dark theme' },
+  ],
+  tags: ['tabmerger-guides', 'tab-management', 'browser-productivity', 'research'],
+  sources: [],
+  screenshotsCaptured: '2026-11-21',
+  cover: { src: '/blog/tabs-as-a-to-do-list/tm-todo-group-light.webp' },
+  ogImage: { src: '/blog/tabs-as-a-to-do-list/og.png', alt: 'Use your tabs as a to-do list: a TabMerger group with notes, a reminder and stale tabs' },
+  toc: [
+    { id: 'quick', label: 'Quick answer' },
+    { id: 'problem', label: 'Tabs as promises' },
+    { id: 'why', label: 'Why it works this way' },
+    { id: 'steps', label: 'Build the list' },
+    { id: 'remind', label: 'Set a reminder' },
+    { id: 'benefit', label: 'What you get' },
+    { id: 'habits', label: 'Good habits' },
+    { id: 'plans', label: 'Free vs Pro' },
+    { id: 'faq', label: 'FAQ' },
+  ],
+}
+
+<QuickAnswer>
+
+Save your “later” tabs into a [TabMerger](/features) group such as “This week”. Right-click a tab to **Add note** (what to do with it), **Remind me…** (when), or **Rename tab** (a title that reads like a task). Remove a tab when it’s done. Tabs that sat too long get a stale dot, and one button in the group’s header clears them. Then close the tabs: the list lives in TabMerger, not in your tab strip.
+
+</QuickAnswer>
+
+<InstallCta>A to-do list made of tabs, with the tabs closed. Free for Chrome, Edge and Firefox.</InstallCta>
+
+<Section id="problem" title="Every open tab is a promise">
+
+An article to read before Thursday. An issue to triage before stand-up. A train timetable to check once the dates are fixed. Each one stays open because closing it feels like forgetting it. A week later there are forty, nobody remembers why half of them are there, and the one that mattered is behind the rest.
+
+A tab can’t tell you why you opened it or when it’s due. A to-do list can.
+
+</Section>
+
+<Section id="why" title="Why TabMerger’s to-do tools work the way they do">
+
+- **The note lives on the tab.** A note is attached to the tab itself, so the reason travels with the link, into sessions, backups and exports, and to your other devices with Pro.
+- **A title that reads like a task.** **Rename tab** gives a tab your own title, marked “renamed”, and **Reset to original title** undoes it. “Triage new issues” is a to-do; “Issues · lbragile/TabMerger” is a page name.
+- **Reminders you can’t miss.** At the time you pick, the browser shows a notification with the tab’s title and your note. It stays on screen until you deal with it, and clicking it opens the tab. Reminders are set again after a browser restart, so a restart doesn’t lose them.
+- **Stale means you saved it a while ago.** A tab saved longer ago than your threshold (7, 14, 30 or 60 days; 30 unless you change it) gets a dot in its group’s colour, and the group header shows **Remove N stale tabs**. Old “someday” tabs get cleared in one click.
+
+<ScreenshotThemeToggle />
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-todo-group" alt="A This week group with a note on one tab, a renamed tab with a reminder, and two stale tabs, light theme" darkAlt="A This week group with a note on one tab, a renamed tab with a reminder, and two stale tabs, dark theme" boxes={[{ id: 'note', label: 'A note on the tab' }, { id: 'reminder', label: 'A reminder is set' }, { id: 'stale', label: 'Clear stale tabs' }]} source="TabMerger 3.16.1">This week’s list: why, when, and what’s been waiting too long.</ThemedScreenshot>
+
+</Section>
+
+<Section id="steps" title="Build the list">
+
+1. Make a group named after the time frame, such as “This week”, with **Add Group** in the sidebar.
+2. Drag tabs from **Now Open** onto it. The open tab closes and a copy is saved (Undo brings it back).
+3. Right-click each tab: **Add note** for what to do, **Rename tab** for a task-like title.
+4. Star the window or group you’re working through, so it stays at the top.
+5. When a task is done, right-click the tab and choose **Remove tab**.
+
+</Section>
+
+<Section id="remind" title="Set a reminder">
+
+Right-click the tab and choose **Remind me…**. Pick **30 min**, **1 hour**, **3 hours** or **Tomorrow** (24 hours from now), or set a date and time; add a note if you like. A clock on the tab shows a reminder is set; right-click again to **Edit reminder** or **Clear reminder**.
+
+<ThemedScreenshot src="/blog/tabs-as-a-to-do-list/tm-reminder" alt="TabMerger reminder options: 30 min, 1 hour, 3 hours, Tomorrow, a date and time, and a note, light theme" darkAlt="TabMerger reminder options: 30 min, 1 hour, 3 hours, Tomorrow, a date and time, and a note, dark theme" boxes={[{ id: 'remind-in', label: 'Remind me in…' }]} source="TabMerger 3.16.1">A quick time, or an exact one, plus a note for future you.</ThemedScreenshot>
+
+</Section>
+
+<Section id="benefit" title="What you get">
+
+Your tab strip holds only what you’re doing right now. Everything else has a reason written next to it and, where it matters, a time it will come back to you. Nothing depends on remembering, and nothing stays open just in case.
+
+</Section>
+
+<Section id="habits" title="Good habits">
+
+- **Write the note as an action:** “Summarise for Thursday”, not “interesting”.
+- **Remind only what has a deadline.** Everything else waits in the list.
+- **Sweep stale tabs weekly.** If it waited 30 days, it’s rarely urgent.
+- **One list per horizon:** “Today”, “This week”, “Someday”. Move tabs between them with **Move to group**.
+- For source-heavy work, see [organizing tabs for research](/blog/organize-tabs-for-research); for the full day, [a daily tab workflow with TabMerger](/blog/tabmerger-daily-workflow).
+
+</Section>
+
+<Section id="plans" title="Free vs Pro">
+
+<ComparisonTable
+  head={['', 'Free', 'Pro']}
+  rowHeaders
+  minWidth="30rem"
+  rows={[
+    ['Notes, reminders, renamed tabs, stale tabs', 'Yes', 'Yes'],
+    ['Tabs in your lists', '50 in all', 'Unlimited'],
+    ['Lists on your other devices', 'No', 'Yes, notes and reminder times included'],
+  ]}
+/>
+
+Every to-do tool is on the Free plan. [Pro](/pricing) adds room and sync. A reminder notifies you in the browser where you set it.
+
+<InstallCta>Close the tabs, keep the promises. Free for Chrome, Edge and Firefox.</InstallCta>
+
+</Section>
+
+<Section id="faq" title="FAQ">
+
+<Faq items={post.faq} />
+
+</Section>

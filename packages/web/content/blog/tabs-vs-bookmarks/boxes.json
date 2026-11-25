@@ -1,0 +1,38 @@
+{
+  "tm-read-later-group-dark": [
+    {
+      "id": "group-note",
+      "label": "The group note",
+      "l": "91.70%",
+      "t": "8.43%",
+      "w": "4.10%",
+      "h": "5.47%"
+    },
+    {
+      "id": "group-row",
+      "label": "Read this week",
+      "l": "0.83%",
+      "t": "25.52%",
+      "w": "28.60%",
+      "h": "4.80%"
+    }
+  ],
+  "tm-read-later-group-light": [
+    {
+      "id": "group-note",
+      "label": "The group note",
+      "l": "91.70%",
+      "t": "8.43%",
+      "w": "4.10%",
+      "h": "5.47%"
+    },
+    {
+      "id": "group-row",
+      "label": "Read this week",
+      "l": "0.83%",
+      "t": "25.52%",
+      "w": "28.60%",
+      "h": "4.80%"
+    }
+  ]
+}
