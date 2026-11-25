@@ -35,7 +35,8 @@ describe('the slug list', () => {
     const scheduled = Object.entries(GENERATED_SOURCES)
       .filter(([, locales]) => !locales.en?.placeholder && locales.en?.published > today)
       .map(([slug]) => slug)
-    for (const slug of scheduled) expect(blogSlugs()).toContain(slug)
+    const slugs = blogSlugs()
+    for (const slug of scheduled) expect(slugs).toContain(slug)
   })
 })
 
