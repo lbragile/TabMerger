@@ -55,6 +55,7 @@ vi.mock('@/lib/analytics', () => ({ trackEvent: vi.fn() }))
 vi.mock('@/lib/toast', () => ({ toast: { info: vi.fn(), success: vi.fn(), error: vi.fn() } }))
 
 import { useApplyOrganize } from '@/hooks/useApplyOrganize'
+import { APP_SETTINGS_QUERY_KEY, DEFAULT_APP_SETTINGS } from '@/hooks/useAppSettings'
 import { GROUPS_QUERY_KEY } from '@/hooks/useGroups'
 import { useUndoRedo } from '@/hooks/useUndoRedo'
 import { useUIStore } from '@/stores/uiStore'
@@ -132,6 +133,26 @@ describe('useApplyOrganize', () => {
     expect(ids()).toEqual(['now', 'a', 'b', 'c', 'd'])
     expect(store.state.available.find((g) => g.id === 'c')?.archived).toBeFalsy()
     expect(store.state.available.find((g) => g.id === 'b')?.name).toBe('b')
+  })
+
+  it('with "Auto-deduplicate on merge" on, a merge leaves out the tabs the target already has (still one step)', async () => {
+    store.state.available[1] = group('a', { windows: [win([tab('b'), tab('a')])] })
+    const { result, qc } = setup()
+    qc.setQueryData(APP_SETTINGS_QUERY_KEY, { ...DEFAULT_APP_SETTINGS, autoDedupOnMerge: true })
+    await act(async () => {
+      await result.current.apply.mutateAsync([{ type: 'merge', sourceGroupId: 'a', targetGroupId: 'b' }])
+    })
+    expect(store.state.available.find((g) => g.id === 'b')?.windows.map((w) => w.tabs.map((t) => t.title))).toEqual([['b'], ['a']])
+    expect(steps()).toBe(1)
+  })
+
+  it('with the setting off (the default), a merge keeps every tab', async () => {
+    store.state.available[1] = group('a', { windows: [win([tab('b'), tab('a')])] })
+    const { result } = setup()
+    await act(async () => {
+      await result.current.apply.mutateAsync([{ type: 'merge', sourceGroupId: 'a', targetGroupId: 'b' }])
+    })
+    expect(store.state.available.find((g) => g.id === 'b')?.windows.map((w) => w.tabs.map((t) => t.title))).toEqual([['b'], ['b', 'a']])
   })
 
   it('hard-deletes merged-away groups remotely (never archived ones), retargets their URL rules and tracks it', async () => {

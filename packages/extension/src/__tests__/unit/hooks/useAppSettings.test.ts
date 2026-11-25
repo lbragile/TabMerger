@@ -3,7 +3,7 @@ import { createElement, type ReactNode } from 'react'
 import { renderHook, waitFor } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AUTO_BACKUP_MESSAGE } from '@tabmerger/shared'
-import { DEFAULT_APP_SETTINGS, useAppSettings, useSaveAppSettings } from '@/hooks/useAppSettings'
+import { APP_SETTINGS_QUERY_KEY, DEFAULT_APP_SETTINGS, readAutoDedupOnMerge, useAppSettings, useSaveAppSettings } from '@/hooks/useAppSettings'
 
 const h = vi.hoisted(() => ({ stored: undefined as unknown, setSetting: vi.fn() }))
 vi.mock('@/lib/localDb', () => ({
@@ -38,6 +38,33 @@ describe('automatic backup settings defaults', () => {
     h.stored = old
     const { result } = renderHook(() => useAppSettings(), { wrapper })
     await waitFor(() => expect(result.current.data).toEqual(old))
+  })
+})
+
+describe('readAutoDedupOnMerge', () => {
+  it('is off by default', async () => {
+    expect(DEFAULT_APP_SETTINGS.autoDedupOnMerge).toBe(false)
+    expect(await readAutoDedupOnMerge(new QueryClient())).toBe(false)
+  })
+
+  it('uses the cached settings when the popup has them', async () => {
+    const qc = new QueryClient()
+    qc.setQueryData(APP_SETTINGS_QUERY_KEY, { ...DEFAULT_APP_SETTINGS, autoDedupOnMerge: true })
+    h.stored = { ...DEFAULT_APP_SETTINGS, autoDedupOnMerge: false }
+    expect(await readAutoDedupOnMerge(qc)).toBe(true)
+  })
+
+  it('reads the stored settings when nothing is cached, and only `true` counts as on', async () => {
+    h.stored = { ...DEFAULT_APP_SETTINGS, autoDedupOnMerge: true }
+    expect(await readAutoDedupOnMerge(new QueryClient())).toBe(true)
+    h.stored = { ...DEFAULT_APP_SETTINGS, autoDedupOnMerge: 'yes' }
+    expect(await readAutoDedupOnMerge(new QueryClient())).toBe(false)
+  })
+
+  it('is off when the settings cannot be read', async () => {
+    const qc = new QueryClient()
+    vi.spyOn(qc, 'ensureQueryData').mockRejectedValueOnce(new Error('IDB closed'))
+    expect(await readAutoDedupOnMerge(qc)).toBe(false)
   })
 })
 

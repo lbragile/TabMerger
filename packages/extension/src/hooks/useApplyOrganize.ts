@@ -8,6 +8,7 @@ import { getSidebarDisplayOrder } from '@/lib/sidebarOrder';
 import { trackEvent } from '@/lib/analytics';
 import { useUIStore } from '@/stores/uiStore';
 import { GROUPS_QUERY_KEY } from '@/hooks/useGroups';
+import { readAutoDedupOnMerge } from '@/hooks/useAppSettings';
 import type { GroupsState, UrlRule } from '@/lib/types';
 
 /** `useUrlRules`' query key (not exported there; the rules list re-reads after a merge retargets them). */
@@ -62,12 +63,13 @@ export function useApplyOrganize() {
 
   return useMutation({
     mutationFn: async (actions: OrganizeAction[]): Promise<{ applied: number }> => {
+      const dedupOnMerge = await readAutoDedupOnMerge(qc);
       const before = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
       const viewedId = before?.available[useUIStore.getState().activeGroupIndex]?.id;
       const outcome: { result?: OrganizeResult } = {};
       const next = await updateGroupsState(
         (fresh) => {
-          const result = applyOrganizeActions(fresh, actions);
+          const result = applyOrganizeActions(fresh, actions, Date.now(), { dedupOnMerge });
           outcome.result = result;
           return result.applied.length > 0 ? result.state : null; // nothing applies: no write, no step
         },

@@ -155,3 +155,4 @@
 - [One-row fit across locales](learnings_one_row_fit_across_locales.md) — offsetTop probe per locale, Arial/Verdana font proxies, Save session Color row 398px budget
 - [Store-search listing copy](learnings_store_search_listing.md) — Chrome 5-repeat rule + keyword count, Edge search terms, AMO categories API; heredoc eats backslashes
 - [Blog screenshot boxes](learnings_blog_screenshot_boxes.md) — DOM-measured annotation boxes; Edge web components hide roles; Radix menus aria-hide the popup
+- [Command shortcuts + merge dedup](learnings_command_shortcuts_and_merge_dedup.md) — browsers refuse undocumented keys (Alt+Shift+C/P/R/W/X/Z); headless commands.getAll probe; readAutoDedupOnMerge

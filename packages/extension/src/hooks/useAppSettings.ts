@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import {
   AUTO_BACKUP_MESSAGE,
   AUTO_SAVE_MESSAGE,
@@ -123,6 +123,20 @@ async function readAppSettings(): Promise<AppSettings> {
     return { ...settings, rememberClosedTabs: await getRememberClosedTabs() };
   } catch {
     return settings;
+  }
+}
+
+/**
+ * Whether "Auto-deduplicate on merge" is on, read when a merge is about to run: the popup's cached
+ * settings when it has read them, otherwise a read from IndexedDB. Anything but `true`, and a
+ * failed read, counts as off (the default).
+ */
+export async function readAutoDedupOnMerge(qc: QueryClient): Promise<boolean> {
+  try {
+    const settings = await qc.ensureQueryData({ queryKey: APP_SETTINGS_QUERY_KEY, queryFn: readAppSettings });
+    return settings?.autoDedupOnMerge === true;
+  } catch {
+    return false;
   }
 }
 

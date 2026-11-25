@@ -11,6 +11,8 @@ import { resolveIncognito } from '@/lib/incognito';
 import { deleteRulesForGroupIds, retargetRulesToGroup } from '@/hooks/useUrlRules';
 import { createGroup, createWindow, sortWindowsByStarred, getGroupInfo } from '@/lib/utils';
 import { copyLiveTab, copyLiveWindowKeepingStar } from '@/lib/dndMove';
+import { dedupeMergedWindows } from '@/lib/deduplication';
+import { readAutoDedupOnMerge } from '@/hooks/useAppSettings';
 import { type AiApplyResult, type AiGroupSuggestion, applyAiSuggestionsToState } from '@/lib/aiAutoGroup';
 
 /** What `useApplyAIGroups` reports back: `AiApplyResult` without the state. */
@@ -754,38 +756,53 @@ export function useReplaceWithCurrent() {
  * copies that keep their star (see `copyLiveWindowKeepingStar`).
  * Unlike `useReplaceWithCurrent`, the group's existing windows are kept, after the copies.
  * Starred windows stay first: starred copies, the group's starred windows, unstarred copies,
- * then the group's unstarred windows.
+ * then the group's unstarred windows. With "Auto-deduplicate on merge" on, the result has no two
+ * tabs with the same URL: the group's own tab stays and the copy is left out (`dedupeMergedWindows`).
+ * Now Open itself is never changed.
  */
 export function useMergeWithCurrent() {
+  const qc = useQueryClient();
   const mutate = useGroupsMutation();
 
   return useMutation({
-    mutationFn: (groupIndex: number) =>
-      mutate((prev) => {
+    mutationFn: async (groupIndex: number) => {
+      const dedup = await readAutoDedupOnMerge(qc);
+      return mutate((prev) => {
         const available = [...prev.available];
         const currentWindows = available[0].windows.map(copyLiveWindowKeepingStar);
+        const own = available[groupIndex].windows;
+        const merged = dedup ? dedupeMergedWindows(own, currentWindows) : { kept: own, added: currentWindows };
         available[groupIndex] = {
           ...available[groupIndex],
-          windows: sortWindowsByStarred([...currentWindows, ...available[groupIndex].windows]),
+          windows: sortWindowsByStarred([...merged.added, ...merged.kept]),
           updatedAt: Date.now(),
           pendingSync: true
         };
         available[groupIndex].info = getGroupInfo(available[groupIndex]);
         return { ...prev, available };
-      })
+      });
+    }
   });
 }
 
+/**
+ * Combines all of a group's windows into its first window, tabs in reading order. With
+ * "Auto-deduplicate on merge" on, a saved group's united window keeps only the first tab of each
+ * URL. Not Now Open's: its tabs are the real browser tabs, and removing one would close it.
+ */
 export function useUniteWindows() {
+  const qc = useQueryClient();
   const mutate = useGroupsMutation();
 
   return useMutation({
-    mutationFn: (groupIndex: number) =>
-      mutate((prev) => {
+    mutationFn: async (groupIndex: number) => {
+      const dedup = await readAutoDedupOnMerge(qc);
+      return mutate((prev) => {
         const available = [...prev.available];
         const group = available[groupIndex];
         const allTabs = group.windows.flatMap((w) => w.tabs);
-        const united = { ...group.windows[0], tabs: allTabs };
+        const joined = { ...group.windows[0], tabs: allTabs };
+        const united = dedup && !group.permanent ? dedupeMergedWindows([joined]).kept[0] : joined;
         available[groupIndex] = {
           ...group,
           windows: [united],
@@ -794,7 +811,8 @@ export function useUniteWindows() {
         };
         available[groupIndex].info = getGroupInfo(available[groupIndex]);
         return { ...prev, available };
-      })
+      });
+    }
   });
 }
 
@@ -1282,7 +1300,8 @@ export function useMergeGroups() {
   const mutate = useGroupsMutation();
 
   return useMutation({
-    mutationFn: (groupIds: string[]) => {
+    mutationFn: async (groupIds: string[]) => {
+      const dedup = await readAutoDedupOnMerge(qc);
       const prevState = qc.getQueryData<GroupsState>(GROUPS_QUERY_KEY);
       const viewedId = prevState?.available[useUIStore.getState().activeGroupIndex]?.id;
       let targetId = '';
@@ -1295,9 +1314,11 @@ export function useMergeGroups() {
 
         const [target, ...sources] = groups;
         const sourceIds = new Set(sources.map((g) => g.id));
+        const incoming = sources.flatMap((g) => g.windows);
+        const windows = dedup ? dedupeMergedWindows(target.windows, incoming) : { kept: target.windows, added: incoming };
         const merged: Group = {
           ...target,
-          windows: sortWindowsByStarred([...target.windows, ...sources.flatMap((g) => g.windows)]),
+          windows: sortWindowsByStarred([...windows.kept, ...windows.added]),
           updatedAt: Date.now(),
           pendingSync: true
         };

@@ -13,11 +13,20 @@ function collectErrors(page: Page): string[] {
 }
 
 test.describe('Blog', () => {
-  test('the index lists the post with no console errors', async ({ page }) => {
+  test('the index lists posts that open, with no console errors', async ({ page }) => {
     const errors = collectErrors(page)
     await page.goto('/blog')
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
-    await expect(page.locator(`a[href="${POST}"]`).first()).toBeVisible()
+    // Page 1 shows the newest posts only (`next dev` lists scheduled ones too), so open whichever
+    // post is listed first rather than a fixed slug.
+    const titles = page.locator('article[aria-labelledby^="post-"] :is(h2, h3) a')
+    await expect(titles.first()).toBeVisible()
+    expect(await titles.count()).toBeGreaterThan(1)
+    const href = await titles.first().getAttribute('href')
+    expect(href).toMatch(/^\/blog\/[a-z0-9-]+$/)
+    const res = await page.goto(href!)
+    expect(res?.status()).toBe(200)
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
     expect(errors.filter((e) => !/favicon|Failed to load resource/i.test(e))).toEqual([])
   })
 
@@ -186,8 +195,14 @@ test.describe('Blog', () => {
   test('the share menu opens, and LinkedIn copies the post text and shows the notice', async ({ page, context }) => {
     await context.grantPermissions(['clipboard-read', 'clipboard-write'])
     await page.goto(POST)
-    await page.getByRole('button', { name: 'Share', exact: true }).click()
-    await expect(page.getByRole('list', { name: 'Share this article' })).toBeVisible()
+    const share = page.getByRole('button', { name: 'Share', exact: true })
+    const menu = page.getByRole('list', { name: 'Share this article' })
+    // The button is in the server HTML but opens the menu only once the page has hydrated (a click
+    // before that does nothing), so retry until then. Never click an open menu: that closes it.
+    await expect(async () => {
+      if ((await share.getAttribute('aria-expanded')) !== 'true') await share.click()
+      await expect(menu).toBeVisible({ timeout: 1000 })
+    }).toPass()
     // The composer opens in a new tab: don't navigate to LinkedIn from a test.
     await page.context().route(/linkedin\.com/, (route) => route.abort())
     await page.getByRole('link', { name: 'Share on LinkedIn' }).click()
